@@ -11,6 +11,11 @@ import { mode, EnviornmentTypes } from "./config/Appconfig";
 import arrLogic from "./logic/index.jsx";
 import AppReducer from "./reducers";
 import AppRoutes from "./routes/";
+import "assets/scss/theme.scss";
+import "assets/css/argon-design-system-react.min.css";
+import "assets/css/argon-design-system-react.css.map";
+import "assets/vendor/nucleo/css/nucleo.css"
+import "assets/vendor/font-awesome/css/font-awesome.min.css"
 /**
  *
  */
