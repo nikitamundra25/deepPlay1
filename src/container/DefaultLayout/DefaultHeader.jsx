@@ -12,10 +12,29 @@ import {
   Col,
   UncontrolledTooltip
 } from "reactstrap";
+import Login from "../Auth/Login/index.jsx"
 
 class DefaultHeader extends React.Component {
-  
+  constructor(props) {
+    super(props);
+    this.state = {}
+  }
+
+  handleLoginModel = () => {
+    const { modelInfoReducer } = this.props;
+    const { modelDetails } = modelInfoReducer;
+    const { loginModelOpen } = modelDetails;
+    this.props.modelOpenRequest({
+      loginModelOpen: !loginModelOpen
+    })
+  }
+
   render() {
+    const { modelInfoReducer } = this.props;
+    const { modelDetails } = modelInfoReducer;
+    const { loginModelOpen } = modelDetails;
+    console.log("RRRRRRRRRRRRRRR", loginModelOpen);
+
     return (
       <>
         <header className="header-global">
@@ -48,9 +67,7 @@ class DefaultHeader extends React.Component {
                   </Row>
                 </div>
                 <Nav className="navbar-nav-hover align-items-lg-center" navbar>
-                  <Link to="/login">
-                    <span className="nav-link-inner--text text-white pr-4">Login</span>
-                  </Link>
+                  <span onClick={this.handleLoginModel} className="nav-link-inner--text text-white pr-4">Login</span>
                   {" "}
                   <Link to={"/signup"}>
                     <span className="nav-link-inner--text text-white pr-2">Signup</span>
@@ -126,6 +143,10 @@ class DefaultHeader extends React.Component {
             </Container>
           </Navbar>
         </header>
+        <Login
+          openLoginModel={loginModelOpen}
+          handleLoginModel={this.handleLoginModel}
+        />
       </>
     );
   }

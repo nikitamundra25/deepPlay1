@@ -5,9 +5,12 @@ import { connect } from "react-redux";
 // core components
 class Login extends React.Component {
   render() {
+    const { openLoginModel, handleLoginModel } = this.props
     return (
       <>
         <LoginComponent
+          openLoginModel={openLoginModel}
+          handleLoginModel={handleLoginModel}
           {...this.props}
         />
       </>

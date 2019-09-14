@@ -8,8 +8,8 @@ import { createStore, applyMiddleware } from "redux";
 import logger from "redux-logger";
 import { createLogicMiddleware } from "redux-logic";
 import { mode, EnviornmentTypes } from "./config/Appconfig";
-import arrLogic from "./logic/index.jsx";
-import AppReducer from "./reducers";
+import arrLogic from "./logic/index";
+import AppReducer from "./reducers/index";
 import AppRoutes from "./routes/";
 import "assets/scss/theme.scss";
 import "assets/css/argon-design-system-react.min.css";
@@ -20,7 +20,7 @@ import "assets/vendor/font-awesome/css/font-awesome.min.css"
  *
  */
 const logicMiddleware = createLogicMiddleware(arrLogic);
-const history = createBrowserHistory({ basename: "/dev" });
+const history = createBrowserHistory({ basename: "/" });
 const middlewares = [logicMiddleware, routerMiddleware(history)];
 if (mode === EnviornmentTypes.DEV) {
    middlewares.push(logger);

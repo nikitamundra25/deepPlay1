@@ -1,4 +1,6 @@
 import { createAction } from "redux-actions";
+
+export * from "./ModalOperation";
 //
 export const redirectTo = createAction("REDIRET_TO");
 //

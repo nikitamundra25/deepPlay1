@@ -2,6 +2,7 @@ import { combineReducers } from "redux";
 import { handleActions } from "redux-actions";
 import { routerReducer } from "react-router-redux";
 
+import { modelInfoReducer } from "./ModelOperation";
 
 export const mainReducer = handleActions(
   {
@@ -21,6 +22,7 @@ export const mainReducer = handleActions(
  */
 const AppReducer = combineReducers({
   mainReducer,
+  modelInfoReducer,
   routing: routerReducer
 });
 
