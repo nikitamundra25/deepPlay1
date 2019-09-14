@@ -3,14 +3,16 @@ import { Document } from "mongoose";
 import { UserModel } from "../models";
 import {
   GenerateToken,
-  comparePassword,
   ValidationFormatter,
   encryptPassword
 } from "../common";
 import { IUser } from "../interfaces"
-import { generateSalt, hashPassword } from "../common/password"
+import {comparePassword } from "../common/password"
 
 import { ValidationError, Result, validationResult } from "express-validator";
+
+/* Title:- Login For User
+Prams:- email and password */
 
 const login = async (req: Request, res: Response): Promise<any> => {
   try {
@@ -52,13 +54,14 @@ const login = async (req: Request, res: Response): Promise<any> => {
 /*
 /* 
 */
+
+/* Title:- Signup For User
+Prams:- email,password,firstName,lastName,profileImage,roleType */
+
 const signup = async (req: Request, res: Response): Promise<any> => {
   try {
     const { body } = req;
-
-    var salt = generateSalt(6);
-    body.salt = salt
-    body.password = hashPassword(body.password, salt);
+    body.password = encryptPassword(body.password);
     const result: Document | null | any = await UserModel.findOne({
       email: body.email
     });
@@ -73,7 +76,7 @@ const signup = async (req: Request, res: Response): Promise<any> => {
         lastName: body.lastName,
         email: body.email,
         password: body.password,
-        salt: body.salt,
+        salt: "",
         loggedInIp: "",
         loggedInAt: new Date(),
         profileImage: body.profileImage || "",
