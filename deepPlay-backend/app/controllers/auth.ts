@@ -7,7 +7,7 @@ import {
   encryptPassword
 } from "../common";
 import { IUser } from "../interfaces"
-import {comparePassword } from "../common/password"
+import { comparePassword } from "../common/password"
 
 import { ValidationError, Result, validationResult } from "express-validator";
 
@@ -87,11 +87,20 @@ const signup = async (req: Request, res: Response): Promise<any> => {
         roleType: body.roleType || "isUnclassified",
         status: true
       }
-      const userResult = new UserModel(userData)
+      const userResult: Document | any = new UserModel(userData)
       await userResult.save();
+
+      const token = await GenerateToken({
+        id: userResult._id,
+        firstName: userResult.firstName,
+        lastName: userResult.lastName,
+        email: userResult.lastName,
+        role: userResult.roleType
+      });
 
       return res.status(200).json({
         message: "User added successfully.",
+        token: token,
         userData: userResult,
         success: true
       })

@@ -11,7 +11,9 @@ import { mode, EnviornmentTypes } from "./config/Appconfig";
 import arrLogic from "./logic/index.jsx";
 import AppReducer from "./reducers/index.jsx";
 import AppRoutes from "./routes/";
+import "react-toastify/dist/ReactToastify.css";
 import "assets/scss/theme.scss";
+import "./App.scss";
 import "assets/css/argon-design-system-react.min.css";
 import "assets/css/argon-design-system-react.css.map";
 import "assets/vendor/nucleo/css/nucleo.css"

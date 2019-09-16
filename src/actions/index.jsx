@@ -2,6 +2,7 @@ import { createAction } from "redux-actions";
 
 export * from "./ModalOperation.jsx";
 export * from "./Login.jsx"
+export * from "./Signup.jsx"
 //
 export const redirectTo = createAction("REDIRET_TO");
 //
