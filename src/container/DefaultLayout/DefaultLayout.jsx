@@ -4,18 +4,21 @@ import DefaultHeader from "./DefaultHeader"
 import DefaultFooter from "./DefaultFooter"
 import routes from "../../routes";
 import { Route, Switch } from "react-router-dom";
-import { modelOpenRequest } from "../../actions/index"
+import { modelOpenRequest, loginRequest, logoutRequest } from "../../actions/index.jsx"
 
 // core components
 class DefaultLayout extends React.Component {
 
   render() {
-    const { modelInfoReducer, modelOperate } = this.props
+    const { modelInfoReducer, modelOperate, loginRequest, logoutRequest, loginReducer } = this.props
     return (
       <>
         <DefaultHeader
           modelInfoReducer={modelInfoReducer}
           modelOpenRequest={modelOperate}
+          loginRequest={loginRequest}
+          logoutRequest={logoutRequest}
+          loginReducer={loginReducer}
         />
         <>
           <Suspense fallback={""}>
@@ -47,10 +50,13 @@ class DefaultLayout extends React.Component {
 }
 
 const mapStateToProps = state => ({
-  modelInfoReducer: state.modelInfoReducer
+  modelInfoReducer: state.modelInfoReducer,
+  loginReducer: state.loginReducer
 });
 const mapDispatchToProps = dispatch => ({
-  modelOperate: data => { modelOpenRequest(data) }
+  modelOperate: data => dispatch(modelOpenRequest(data)),
+  loginRequest: data => dispatch(loginRequest(data)),
+  logoutRequest: data => dispatch(logoutRequest(data)),
 });
 export default connect(
   mapStateToProps,

@@ -14,4 +14,9 @@ export const AppRoutes = {
     name: "Signup",
     exact: true
   },
+  DASHBOARD: {
+    url: "/dashboard",
+    name: "Dashboard",
+    exact: true
+  },
 };

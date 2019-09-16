@@ -1,5 +1,5 @@
 import { handleActions } from "redux-actions";
-import { modelActions } from "../actions/index";
+import { modelActions } from "../actions/index.jsx";
 
 const initialAuthState = {
   modelDetails: {

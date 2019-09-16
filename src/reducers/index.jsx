@@ -2,7 +2,8 @@ import { combineReducers } from "redux";
 import { handleActions } from "redux-actions";
 import { routerReducer } from "react-router-redux";
 
-import { modelInfoReducer } from "./ModelOperation";
+import { modelInfoReducer } from "./ModelOperation.jsx";
+import { loginReducer } from "./Login.jsx";
 
 export const mainReducer = handleActions(
   {
@@ -23,6 +24,7 @@ export const mainReducer = handleActions(
 const AppReducer = combineReducers({
   mainReducer,
   modelInfoReducer,
+  loginReducer,
   routing: routerReducer
 });
 
