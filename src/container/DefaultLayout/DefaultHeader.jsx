@@ -12,27 +12,27 @@ import {
   Col,
   UncontrolledTooltip
 } from "reactstrap";
-import Login from "../Auth/Login/index.jsx"
+import Login from "../Auth/Login/index.jsx";
 
 class DefaultHeader extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       isUserLoggedIn: false
-    }
+    };
   }
 
   componentDidMount = () => {
     if (localStorage.getItem("token")) {
       this.setState({
         isUserLoggedIn: true
-      })
+      });
     } else {
       this.setState({
         isUserLoggedIn: false
-      })
+      });
     }
-  }
+  };
 
   handleLoginModel = () => {
     const { modelInfoReducer } = this.props;
@@ -41,8 +41,8 @@ class DefaultHeader extends React.Component {
       modelDetails: {
         loginModelOpen: !modelDetails.loginModelOpen
       }
-    })
-  }
+    });
+  };
 
   render() {
     const { modelInfoReducer, loginRequest, logoutRequest } = this.props;
@@ -81,16 +81,28 @@ class DefaultHeader extends React.Component {
                   </Row>
                 </div>
                 <Nav className="navbar-nav-hover align-items-lg-center" navbar>
-                  {
-                    !isUserLoggedIn ?
-                      <React.Fragment>
-                        <span onClick={this.handleLoginModel} className="nav-link-inner--text text-white pr-4">Login</span>
-                        <Link to={"/signup"}>
-                          <span className="nav-link-inner--text text-white pr-2">Signup</span>
-                        </Link>
-                      </React.Fragment> :
-                      <span onClick={e => logoutRequest(e)} className="nav-link-inner--text text-white pr-4">Logout</span>
-                  }
+                  {!isUserLoggedIn ? (
+                    <React.Fragment>
+                      <span
+                        onClick={this.handleLoginModel}
+                        className="nav-link-inner--text text-white pr-4"
+                      >
+                        Login
+                      </span>
+                      <Link to={"/signup"}>
+                        <span className="nav-link-inner--text text-white pr-2">
+                          Signup
+                        </span>
+                      </Link>
+                    </React.Fragment>
+                  ) : (
+                    <span
+                      onClick={e => logoutRequest(e)}
+                      className="nav-link-inner--text text-white pr-4 cursor_pointer"
+                    >
+                      Logout
+                    </span>
+                  )}
                 </Nav>
                 <Nav className="align-items-lg-center ml-lg-auto" navbar>
                   <NavItem>

@@ -1,0 +1,81 @@
+body {
+  .ct-sidebar {
+    .dashboard-left-wrap {
+      margin-right: -15px;
+      margin-left: -15px;
+      padding-top: 2rem;
+      padding-bottom: 1rem;
+      background: #fff;
+      display: table-cell;
+      position: relative;
+      box-shadow: 0 0.5rem 1.25rem 0 rgba(0, 0, 0, 0.28);
+      width: 17rem;
+      z-index: 200;
+      .dashboard-left {
+        padding: 1.25rem;
+      }
+      .dashboard-left-nav {
+        padding-left: 0px;
+      }
+      .dashboard-left-nav li {
+        list-style: none;
+        position: relative;
+      }
+      .dashboard-left-nav li {
+        color: #172b4d;
+        font-weight: 1000;
+      }
+    }
+  }
+  .dashboard-right-wrap {
+    float: right;
+    width: calc(100% - 250px);
+    position: relative;
+    padding-right: 0;
+  }
+  .dashboard-right-profile {
+    display: flex;
+    border-top: 1px solid rgba(var(--sk_foreground_low_solid, 221, 221, 221), 1);
+    border-bottom: 0;
+    margin: 0 0 -1px 0;
+    top: -1px;
+    position: relative;
+  }
+  .btn-btn-right {
+    margin: auto;
+    margin-right: 44px;
+  }
+  .user-profile {
+    margin: 20px auto 10px;
+  }
+  .profileAvtar {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    margin: 0 auto;
+    overflow: hidden;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+  }
+  .settingForm {
+    max-width: 850px;
+    margin: auto;
+  }
+  .setting-account-type {
+    /* margin-top: 44px; */
+    width: 100%;
+    border-bottom: 1px solid #172b4d;
+    line-height: 0.1em;
+    margin: 31px 0px 38px;
+  }
+  .control {
+    margin-left: 45px;
+  }
+  .btn-btn-save {
+    margin-top: 25px;
+    margin-left: 12px;
+  }
+}

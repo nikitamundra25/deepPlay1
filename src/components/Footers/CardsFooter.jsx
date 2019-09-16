@@ -36,7 +36,7 @@ class CardsFooter extends React.Component {
   render() {
     return (
       <>
-        <footer className="footer has-cards">
+        <footer className="footer has-cards" >
           <Container className="container-lg">
             <Row>
               <Col className="mb-5 mb-md-0" md="6">

@@ -4,7 +4,8 @@ import { AppRoutes } from "./config/AppRoutes";
 const Login = React.lazy(() => import("./container/Auth/Login"));
 const Signup = React.lazy(() => import("./container/Auth/Signup"));
 const HomePage = React.lazy(() => import("./container/HomePage"));
-const Dashboard = React.lazy(() => import("./container/Dashboard"))
+const Dashboard = React.lazy(() => import("./container/Dashboard"));
+const Settings = React.lazy(() => import("./container/Settings"));
 const routes = [
   {
     path: AppRoutes.HOME_PAGE.url,
@@ -30,7 +31,11 @@ const routes = [
     name: AppRoutes.DASHBOARD.name,
     component: Dashboard
   },
+  {
+    path: AppRoutes.SETTINGS.exact,
+    name: AppRoutes.SETTINGS.name,
+    component: Settings
+  }
 ];
-
 
 export default routes;

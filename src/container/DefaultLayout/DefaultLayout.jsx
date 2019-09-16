@@ -5,6 +5,7 @@ import DefaultFooter from "./DefaultFooter"
 import routes from "../../routes";
 import { Route, Switch } from "react-router-dom";
 import { modelOpenRequest, loginRequest, logoutRequest } from "../../actions/index.jsx"
+import DefaultSidebar from "./DefaultSidebar";
 
 // core components
 class DefaultLayout extends React.Component {
@@ -42,7 +43,7 @@ class DefaultLayout extends React.Component {
             </Switch>
           </Suspense>
         </>
-
+         <DefaultSidebar />
         <DefaultFooter />
       </>
     );
