@@ -1,17 +1,28 @@
 import React, { Suspense } from "react";
 import { connect } from "react-redux";
-import DefaultHeader from "./DefaultHeader"
-import DefaultFooter from "./DefaultFooter"
+import DefaultHeader from "./DefaultHeader";
+import DefaultFooter from "./DefaultFooter";
 import routes from "../../routes";
 import { Route, Switch } from "react-router-dom";
-import { modelOpenRequest, loginRequest, logoutRequest } from "../../actions/index.jsx"
 import DefaultSidebar from "./DefaultSidebar";
+import {
+  modelOpenRequest,
+  loginRequest,
+  logoutRequest,
+  signupRequest
+} from "../../actions/index.jsx";
 
 // core components
 class DefaultLayout extends React.Component {
-
   render() {
-    const { modelInfoReducer, modelOperate, loginRequest, logoutRequest, loginReducer } = this.props
+    const {
+      modelInfoReducer,
+      modelOperate,
+      loginRequest,
+      logoutRequest,
+      loginReducer,
+      signupRequest
+    } = this.props;
     return (
       <>
         <DefaultHeader
@@ -20,6 +31,7 @@ class DefaultLayout extends React.Component {
           loginRequest={loginRequest}
           logoutRequest={logoutRequest}
           loginReducer={loginReducer}
+          signupRequest={signupRequest}
         />
         <>
           <Suspense fallback={""}>
@@ -32,10 +44,7 @@ class DefaultLayout extends React.Component {
                     exact={route.exact}
                     name={route.name}
                     render={props => (
-                      <route.component
-                        {...props}
-                        {...this.props}
-                      />
+                      <route.component {...props} {...this.props} />
                     )}
                   />
                 ) : null;
@@ -43,7 +52,7 @@ class DefaultLayout extends React.Component {
             </Switch>
           </Suspense>
         </>
-         <DefaultSidebar />
+        <DefaultSidebar />
         <DefaultFooter />
       </>
     );
@@ -58,6 +67,7 @@ const mapDispatchToProps = dispatch => ({
   modelOperate: data => dispatch(modelOpenRequest(data)),
   loginRequest: data => dispatch(loginRequest(data)),
   logoutRequest: data => dispatch(logoutRequest(data)),
+  signupRequest: data => dispatch(signupRequest(data))
 });
 export default connect(
   mapStateToProps,

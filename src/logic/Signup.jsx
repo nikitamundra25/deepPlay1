@@ -1,25 +1,22 @@
 import { createLogic } from "redux-logic";
 import { ApiHelper } from "../helper"
 import {
-  loginAction,
+  signupActions,
   modelOpenRequest,
-  // redirectTo,
-  loginSuccess,
-  logoutSuccess
+  signupSuccess,
 } from "../actions";
-//import { logger } from "helper/Logger";
-import { toast } from "react-toastify";
 import { AppRoutes } from "../config/AppRoutes"
+import { toast } from "react-toastify";
 /**
  *
  */
-const loginLogic = createLogic({
-  type: loginAction.LOGIN_REQUEST,
+const signupLogic = createLogic({
+  type: signupActions.SIGNUP_REQUEST,
   async process({ action }, dispatch, done) {
     let api = new ApiHelper();
     let result = await api.FetchFromServer(
       "/auth",
-      "/login",
+      "/signup",
       "POST",
       false,
       undefined,
@@ -34,12 +31,12 @@ const loginLogic = createLogic({
       dispatch(
         modelOpenRequest({
           modelDetails: {
-            loginModelOpen: false
+            signupModelOpen: false
           }
         })
       )
       dispatch(
-        loginSuccess({ isLoginSuccess: true })
+        signupSuccess({ isLoginSuccess: true })
       )
       window.location.href = AppRoutes.DASHBOARD.url;
       done();
@@ -49,19 +46,6 @@ const loginLogic = createLogic({
 /**
  *
  */
-const logOutLogic = createLogic({
-  type: loginAction.LOGOUT_REQUEST,
-  async process({ action }, dispatch, done) {
-    dispatch(logoutSuccess({ isLoginSuccess: false }))
-    localStorage.removeItem("token");
-    window.location.href = AppRoutes.HOME_PAGE.url
-    done();
-  }
-});
-/**
- *
- */
-export const LoginLogics = [
-  loginLogic,
-  logOutLogic
+export const SignupLogics = [
+  signupLogic
 ];

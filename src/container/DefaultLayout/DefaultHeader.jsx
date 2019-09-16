@@ -12,7 +12,8 @@ import {
   Col,
   UncontrolledTooltip
 } from "reactstrap";
-import Login from "../Auth/Login/index.jsx";
+import Login from "../Auth/Login/index.jsx"
+import Signup from "../Auth/Signup/index.jsx";
 
 class DefaultHeader extends React.Component {
   constructor(props) {
@@ -41,13 +42,22 @@ class DefaultHeader extends React.Component {
       modelDetails: {
         loginModelOpen: !modelDetails.loginModelOpen
       }
-    });
-  };
+    })
+  }
+  handleSignupModel = () => {
+    const { modelInfoReducer } = this.props;
+    const { modelDetails } = modelInfoReducer;
+    this.props.modelOpenRequest({
+      modelDetails: {
+        signupModelOpen: !modelDetails.signupModelOpen
+      }
+    })
+  }
 
   render() {
-    const { modelInfoReducer, loginRequest, logoutRequest } = this.props;
+    const { modelInfoReducer, loginRequest, logoutRequest, signupRequest } = this.props;
     const { modelDetails } = modelInfoReducer;
-    const { loginModelOpen } = modelDetails;
+    const { loginModelOpen, signupModelOpen } = modelDetails;
     const { isUserLoggedIn } = this.state;
     return (
       <>
@@ -81,28 +91,18 @@ class DefaultHeader extends React.Component {
                   </Row>
                 </div>
                 <Nav className="navbar-nav-hover align-items-lg-center" navbar>
-                  {!isUserLoggedIn ? (
-                    <React.Fragment>
-                      <span
-                        onClick={this.handleLoginModel}
-                        className="nav-link-inner--text text-white pr-4"
-                      >
-                        Login
-                      </span>
-                      <Link to={"/signup"}>
-                        <span className="nav-link-inner--text text-white pr-2">
-                          Signup
-                        </span>
-                      </Link>
-                    </React.Fragment>
-                  ) : (
-                    <span
-                      onClick={e => logoutRequest(e)}
-                      className="nav-link-inner--text text-white pr-4 cursor_pointer"
-                    >
-                      Logout
-                    </span>
-                  )}
+                  {
+                    !isUserLoggedIn ?
+                      <React.Fragment>
+                        <span
+                          onClick={this.handleLoginModel}
+                          className="nav-link-inner--text text-white pr-4 cusror_pointer">Login</span>
+                        <span
+                          onClick={this.handleSignupModel}
+                          className="nav-link-inner--text text-white pr-2 cusror_pointer">Signup</span>
+                      </React.Fragment> :
+                      <span onClick={e => logoutRequest(e)} className="nav-link-inner--text text-white pr-4">Logout</span>
+                  }
                 </Nav>
                 <Nav className="align-items-lg-center ml-lg-auto" navbar>
                   <NavItem>
@@ -178,6 +178,11 @@ class DefaultHeader extends React.Component {
           openLoginModel={loginModelOpen}
           handleLoginModel={this.handleLoginModel}
           loginRequest={loginRequest}
+        />
+        <Signup
+          openSignupModel={signupModelOpen}
+          handleSignupModel={this.handleSignupModel}
+          signupRequest={signupRequest}
         />
       </>
     );

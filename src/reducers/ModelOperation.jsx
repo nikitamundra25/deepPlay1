@@ -3,7 +3,8 @@ import { modelActions } from "../actions/index.jsx";
 
 const initialAuthState = {
   modelDetails: {
-    loginModelOpen: false
+    loginModelOpen: false,
+    signupModelOpen: false
   }
 };
 
