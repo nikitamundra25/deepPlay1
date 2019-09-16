@@ -1,11 +1,7 @@
 import React, { Component } from "react";
 import { Button, FormGroup, Form, Input, Label, Row, Col } from "reactstrap";
-import userProfile from "../../assets/img/icons/common/boy.svg";
+
 class SettingComponent extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {};
-  }
   render() {
     return (
       <div className="col-md-12 col-sm-12 dashboard-right-wrap">
@@ -114,8 +110,8 @@ class SettingComponent extends Component {
           <b>Permanently delete this account </b>
           <p>Be careful- this will delete your data and cannot be undone.</p>
         </h4>
-        <Button color="default" type="button" className="btn-btn-save">
-          Delete
+        <Button color="danger" type="button" className="btn-btn-save">
+          Delete Account
         </Button>
       </div>
     );

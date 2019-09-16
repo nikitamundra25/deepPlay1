@@ -1,7 +1,8 @@
 import { createAction } from "redux-actions";
 
 export * from "./ModalOperation.jsx";
-export * from "./Login.jsx"
+export * from "./Login.jsx";
+export * from "./profileInfo.jsx";
 //
 export const redirectTo = createAction("REDIRET_TO");
 //

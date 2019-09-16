@@ -2,10 +2,7 @@ import React from "react";
 import { NavLink } from "react-router-dom";
 import "../../App.scss";
 class DefaultSidebar extends React.Component {
-  constructor(props) {
-    super(props);
-  }
-
+  
   render() {
     // if (!this.props.loginstatus.isloggedIn) {
     //   this.props.history.push("/login");
