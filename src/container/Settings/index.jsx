@@ -1,6 +1,6 @@
 import React from "react";
 import SettingComponent from "../../components/Settings";
-//import profileRequest from "../../actions/profileInfo";
+import { profileRequest } from "../../actions";
 import { connect } from "react-redux";
 // core components
 class Setting extends React.Component {
@@ -22,11 +22,11 @@ const mapStateToProps = state => {
 };
 
 const mapDispatchToProps = dispatch => {
-  // return {
-  //   getProfile: () => {
-  //     dispatch(profileRequest());
-  //   }
-  // };
+  return {
+    getProfile: () => {
+      dispatch(profileRequest());
+    }
+  };
 };
 
 export default connect(

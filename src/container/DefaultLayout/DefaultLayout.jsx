@@ -23,6 +23,7 @@ class DefaultLayout extends React.Component {
       loginReducer,
       signupRequest
     } = this.props;
+
     return (
       <>
         <DefaultHeader
@@ -52,7 +53,7 @@ class DefaultLayout extends React.Component {
             </Switch>
           </Suspense>
         </>
-        <DefaultSidebar />
+        {localStorage.token ? <DefaultSidebar /> : null}
         <DefaultFooter />
       </>
     );
