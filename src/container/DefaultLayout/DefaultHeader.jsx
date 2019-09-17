@@ -4,14 +4,10 @@ import {
   UncontrolledCollapse,
   NavbarBrand,
   Navbar,
-  NavItem,
-  NavLink,
   Nav,
   Container,
   Row,
   Col,
-  UncontrolledTooltip,
-  Button
 } from "reactstrap";
 import Login from "../Auth/Login/index.jsx"
 import Signup from "../Auth/Signup/index.jsx";
@@ -92,17 +88,17 @@ class DefaultHeader extends React.Component {
                   </Row>
                 </div>
                 <Nav className="navbar-nav-hover align-items-lg-center " navbar>
-                {
+                  {
                     !isUserLoggedIn ?
                       <React.Fragment>
                         <span
                           onClick={this.handleLoginModel}
-                          className="nav-link-inner--text text-white pr-4 cusror_pointer">Login</span>
+                          className="nav-link-inner--text pr-4 cusror_pointer">Login</span>
                         <span
                           onClick={this.handleSignupModel}
-                          className="nav-link-inner--text text-white pr-2 cusror_pointer">Signup</span>
+                          className="nav-link-inner--text pr-2 cusror_pointer">Signup</span>
                       </React.Fragment> :
-                      <span onClick={e => logoutRequest(e)} className="nav-link-inner--text text-white pr-4">Logout</span>
+                      <span onClick={e => logoutRequest(e)} className="nav-link-inner--text pr-4">Logout</span>
                   }
                 </Nav>
               </UncontrolledCollapse>

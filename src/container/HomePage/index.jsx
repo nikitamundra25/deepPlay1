@@ -47,7 +47,7 @@ class HomePage extends React.Component {
             <Col md="4">
               <div className="play-list-block">
                 <div className="play-list-img">
-                  <img src="https://www.t-nation.com/system/publishing/articles/10005529/original/6-Reasons-You-Should-Never-Open-a-Gym.png?1509471214" />
+                  <img src="https://www.t-nation.com/system/publishing/articles/10005529/original/6-Reasons-You-Should-Never-Open-a-Gym.png?1509471214" alt="img"/>
                 </div>
                 <div className="play-list-text">
                   <div className="play-list-number">
@@ -62,7 +62,7 @@ class HomePage extends React.Component {
             <Col md="4">
               <div className="play-list-block">
                 <div className="play-list-img">
-                  <img src="https://www.t-nation.com/system/publishing/articles/10005529/original/6-Reasons-You-Should-Never-Open-a-Gym.png?1509471214" />
+                  <img src="https://www.t-nation.com/system/publishing/articles/10005529/original/6-Reasons-You-Should-Never-Open-a-Gym.png?1509471214" alt="img"/>
                 </div>
                 <div className="play-list-text">
                   <div className="play-list-number">
@@ -77,7 +77,7 @@ class HomePage extends React.Component {
             <Col md="4">
               <div className="play-list-block">
                 <div className="play-list-img">
-                  <img src="https://www.t-nation.com/system/publishing/articles/10005529/original/6-Reasons-You-Should-Never-Open-a-Gym.png?1509471214" />
+                  <img src="https://www.t-nation.com/system/publishing/articles/10005529/original/6-Reasons-You-Should-Never-Open-a-Gym.png?1509471214" alt="img"/>
                 </div>
                 <div className="play-list-text">
                   <div className="play-list-number">
@@ -92,7 +92,7 @@ class HomePage extends React.Component {
             <Col md="4">
               <div className="play-list-block">
                 <div className="play-list-img">
-                  <img src="https://www.t-nation.com/system/publishing/articles/10005529/original/6-Reasons-You-Should-Never-Open-a-Gym.png?1509471214" />
+                  <img src="https://www.t-nation.com/system/publishing/articles/10005529/original/6-Reasons-You-Should-Never-Open-a-Gym.png?1509471214" alt="img"/>
                 </div>
                 <div className="play-list-text">
                   <div className="play-list-number">
@@ -107,7 +107,7 @@ class HomePage extends React.Component {
             <Col md="4">
               <div className="play-list-block">
                 <div className="play-list-img">
-                  <img src="https://www.t-nation.com/system/publishing/articles/10005529/original/6-Reasons-You-Should-Never-Open-a-Gym.png?1509471214" />
+                  <img src="https://www.t-nation.com/system/publishing/articles/10005529/original/6-Reasons-You-Should-Never-Open-a-Gym.png?1509471214" alt="img"/>
                 </div>
                 <div className="play-list-text">
                   <div className="play-list-number">
@@ -122,7 +122,7 @@ class HomePage extends React.Component {
             <Col md="4">
               <div className="play-list-block">
                 <div className="play-list-img">
-                  <img src="https://www.t-nation.com/system/publishing/articles/10005529/original/6-Reasons-You-Should-Never-Open-a-Gym.png?1509471214" />
+                  <img src="https://www.t-nation.com/system/publishing/articles/10005529/original/6-Reasons-You-Should-Never-Open-a-Gym.png?1509471214" alt="img"/>
                 </div>
                 <div className="play-list-text">
                   <div className="play-list-number">
