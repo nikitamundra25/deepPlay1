@@ -94,7 +94,7 @@ class SettingComponent extends Component {
             className="custom-control-input"
             id="customRadio5"
             name="Teacher"
-            cehecked={profileInfoReducer.roleType === "teacher"}
+            checked={profileInfoReducer.roleType === "teacher"}
             type="radio"
           />
           <label className="custom-control-label" htmlFor="customRadio5">
