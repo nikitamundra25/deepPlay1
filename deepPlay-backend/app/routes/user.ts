@@ -4,5 +4,5 @@ import { ValidateAdminToken } from "../common";
 
 const UserRouter: express.Router = express.Router();
 
-UserRouter.get("/profileInfo", ValidateAdminToken, getUserInfo);
+UserRouter.get("/getProfileInfo", ValidateAdminToken, getUserInfo);
 export default UserRouter;

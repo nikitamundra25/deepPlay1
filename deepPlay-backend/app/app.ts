@@ -42,10 +42,10 @@ app.get("/", (req: express.Request, res: express.Response) => {
   console.log("req", req.query);
   return res.sendFile(path.join(__dirname, "..", "build", "index.html"));
 });
-app.get("/*", (req: express.Request, res: express.Response) => {
-  console.log("req", req.query);
-  return res.sendFile(path.join(__dirname, "..", "build", "index.html"));
-});
+// app.get("/*", (req: express.Request, res: express.Response) => {
+//   console.log("req", req.query);
+//   return res.sendFile(path.join(__dirname, "..", "build", "index.html"));
+// });
 /**
  *
  */
@@ -53,9 +53,6 @@ const port: number = Number(process.env.PORT) || 8000;
 /**
  *
  */
-app.listen(
-  port,
-  (): void => {
-    console.log(`App running on port ${port}!`);
-  }
-);
+app.listen(port, (): void => {
+  console.log(`App running on port ${port}!`);
+});

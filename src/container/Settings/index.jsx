@@ -5,19 +5,21 @@ import { connect } from "react-redux";
 // core components
 class Setting extends React.Component {
   componentDidMount = () => {
-    //this.props.getProfile();
+    this.props.getProfile();
   };
   render() {
+    console.log("888888", this.props.profileInfoReducer);
     return (
       <>
-        <SettingComponent />
+        <SettingComponent
+          profileInfoReducer = {this.props.profileInfoReducer} />
       </>
     );
   }
 }
 const mapStateToProps = state => {
   return {
-    loginState: state.LoginReducer
+    profileInfoReducer: state.profileInfoReducer.profileInfo
   };
 };
 

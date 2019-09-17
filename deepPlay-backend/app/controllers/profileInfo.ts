@@ -5,8 +5,8 @@ import { IUser } from "../interfaces";
 
 const getUserInfo = async (req: Request, res: Response): Promise<any> => {
   try {
-    const {currentUser} = req;
-    const headToken: Request | any = currentUser
+    const { currentUser } = req;
+    const headToken: Request | any = currentUser;
     const result = await UserModel.findById(headToken.id);
     res.status(200).json({
       result,

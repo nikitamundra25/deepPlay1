@@ -11,13 +11,14 @@ const profileInfoLogic = createLogic({
   async process({ action }, dispatch, done) {
     let api = new ApiHelper();
     let result = await api.FetchFromServer(
-      "/auth",
-      "/signup",
+      "user",
+      "/getProfileInfo",
       "GET",
       true,
       undefined,
       undefined
     );
+    console.log("result", result);
     if (result.isError) {
       toast.error(result.messages[0]);
       done();
@@ -26,7 +27,7 @@ const profileInfoLogic = createLogic({
       dispatch(
         profileSuccess({
           showLoader: false,
-          profileInfo: data.data.data
+          profileInfo: result.data.result
         })
       );
       done();

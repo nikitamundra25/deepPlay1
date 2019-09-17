@@ -3,6 +3,8 @@ import { Button, FormGroup, Form, Input, Label, Row, Col } from "reactstrap";
 
 class SettingComponent extends Component {
   render() {
+    const { profileInfoReducer } = this.props;
+
     return (
       <div className="col-md-12 col-sm-12 dashboard-right-wrap">
         <h1>Settings</h1>
@@ -20,7 +22,11 @@ class SettingComponent extends Component {
         </div>
         <div className="user-profile">
           <div className="profileAvtar">
-            <img alt="..." src={require("assets/img/icons/common/boy.svg")} />
+            {profileInfoReducer.profileImage ? (
+              <img alt="..." src={profileInfoReducer.profileImage} />
+            ) : (
+              <img alt="..." src={require("assets/img/icons/common/boy.svg")} />
+            )}
           </div>
         </div>
         <div className="settingForm">
@@ -31,8 +37,10 @@ class SettingComponent extends Component {
                   <Label for="firstName">First Name</Label>
                   <Input
                     id="exampleFormControlInput1"
+                    className="capitalize"
                     placeholder="firstName"
                     type="text"
+                    value={profileInfoReducer.firstName}
                   />
                 </FormGroup>
               </Col>
@@ -41,8 +49,10 @@ class SettingComponent extends Component {
                   <Label for="lastName">Last Name</Label>
                   <Input
                     id="exampleFormControlInput1"
+                    className="capitalize"
                     placeholder="lastName"
                     type="text"
+                    value={profileInfoReducer.lastName}
                   />
                 </FormGroup>
               </Col>
@@ -55,6 +65,7 @@ class SettingComponent extends Component {
                     id="exampleFormControlInput1"
                     placeholder="name@example.com"
                     type="email"
+                    value={profileInfoReducer.email}
                   />
                 </FormGroup>
               </Col>
@@ -65,6 +76,7 @@ class SettingComponent extends Component {
                     id="exampleFormControlInput1"
                     placeholder="*******"
                     type="password"
+                    value={profileInfoReducer.password}
                   />
                 </FormGroup>
               </Col>
@@ -81,7 +93,8 @@ class SettingComponent extends Component {
           <input
             className="custom-control-input"
             id="customRadio5"
-            name="custom-radio-2"
+            name="Teacher"
+            cehecked={profileInfoReducer.roleType === "teacher"}
             type="radio"
           />
           <label className="custom-control-label" htmlFor="customRadio5">
@@ -91,9 +104,10 @@ class SettingComponent extends Component {
         <div className="custom-control custom-radio mb-3 control ">
           <input
             className="custom-control-input"
-            defaultChecked
+            //defaultChecked
             id="customRadio6"
-            name="custom-radio-2"
+            name="Student"
+            checked={profileInfoReducer.roleType === "student"}
             type="radio"
           />
           <label className="custom-control-label" htmlFor="customRadio6">
