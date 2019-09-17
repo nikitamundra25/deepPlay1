@@ -13,10 +13,10 @@ import AppReducer from "./reducers/index.jsx";
 import AppRoutes from "./routes/";
 import "assets/css/argon-design-system-react.min.css";
 import "assets/css/argon-design-system-react.css.map";
-import "assets/vendor/nucleo/css/nucleo.css"
-import "assets/vendor/font-awesome/css/font-awesome.min.css"
+import "assets/vendor/nucleo/css/nucleo.css";
+import "assets/vendor/font-awesome/css/font-awesome.min.css";
 import "assets/scss/theme.scss";
-import "./App.scss"
+import "./App.scss";
 /**
  *
  */
