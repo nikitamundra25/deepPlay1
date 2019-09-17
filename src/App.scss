@@ -4,8 +4,13 @@ $textColor: #293845;
 $videoAddBannerBorder: #9eadba;
 $videoAddBannerBack: #dfe7ed;
 
-.cusror_pointer{
-  cursor: pointer;
+body{
+  .cusror_pointer{
+    cursor: pointer;
+  }
+  .modal-backdrop.show {
+    opacity: 0.7;
+  }
 }
 
 .dashboard-left-wrap {

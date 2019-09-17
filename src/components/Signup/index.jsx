@@ -13,7 +13,9 @@ import {
   Modal,
   Row,
   Col,
-  FormFeedback
+  FormFeedback,
+  ModalBody,
+  ModalHeader
 } from "reactstrap";
 // core components
 import Validator from "js-object-validation";
@@ -63,7 +65,7 @@ class SignupComponent extends React.Component {
       let res = (value).match(/^(?:[0-9]+[a-z]|[a-z]+[0-9])[a-z0-9]*$/i);
       if (res) {
         console.log(value);
-        
+
         this.setState({
           passwordStrength: "strong"
         })
@@ -127,12 +129,14 @@ class SignupComponent extends React.Component {
           size="sm"
           isOpen={openSignupModel}
           toggle={handleSignupModel}
+          backdrop={"static"}
         >
-          <div className="modal-body p-0">
+          <ModalHeader toggle={handleSignupModel}>Sign Up</ModalHeader>
+          <ModalBody className="modal-body p-0">
             <Card className="bg-secondary shadow border-0">
-              <CardHeader className="bg-transparent pb-5">
+              <CardHeader className="bg-transparent pb-2">
                 <div className="text-muted text-center mt-2 mb-3">
-                  <small>Sign in with</small>
+                  <small>Sign up with</small>
                 </div>
                 <div className="btn-wrapper text-center">
                   <Button
@@ -165,9 +169,9 @@ class SignupComponent extends React.Component {
                   </Button>
                 </div>
               </CardHeader>
-              <CardBody className="px-lg-5">
+              <CardBody className="px-lg-3">
                 <div className="text-center text-muted mb-4">
-                  <small>Or sign in with credentials</small>
+                  <small>Or sign up and generate your credentials</small>
                 </div>
                 <Form role="form" onSubmit={this.handleSignupRequest}>
                   <FormGroup>
@@ -319,7 +323,7 @@ class SignupComponent extends React.Component {
                 </Form>
               </CardBody>
             </Card>
-          </div>
+          </ModalBody>
         </Modal>
       </>
     );

@@ -11,7 +11,9 @@ import {
   InputGroupText,
   InputGroup,
   Modal,
-  FormFeedback
+  FormFeedback,
+  ModalBody,
+  ModalHeader
 } from "reactstrap";
 import Validator from "js-object-validation";
 import { LoginValidations, LoginValidationsMessaages } from "../../validations";
@@ -28,12 +30,12 @@ class LoginComponent extends React.Component {
     }
   }
 
-  componentDidUpdate = ({openLoginModel}) =>{
+  componentDidUpdate = ({ openLoginModel }) => {
     if (openLoginModel !== this.props.openLoginModel) {
       this.setState({
         email: "",
         password: "",
-        errors: {} 
+        errors: {}
       })
     }
   }
@@ -86,10 +88,12 @@ class LoginComponent extends React.Component {
           size="sm"
           isOpen={openLoginModel}
           toggle={handleLoginModel}
+          backdrop={"static"}
         >
-          <div className="modal-body p-0">
+          <ModalHeader toggle={handleLoginModel}>Sign In</ModalHeader>
+          <ModalBody className="modal-body p-0">
             <Card className="bg-secondary shadow border-0">
-              <CardHeader className="bg-transparent pb-5">
+              <CardHeader className="bg-transparent pb-2">
                 <div className="text-muted text-center mt-2 mb-3">
                   <small>Sign in with</small>
                 </div>
@@ -124,7 +128,7 @@ class LoginComponent extends React.Component {
                   </Button>
                 </div>
               </CardHeader>
-              <CardBody className="px-lg-5 py-lg-5">
+              <CardBody className="px-lg-5">
                 <div className="text-center text-muted mb-4">
                   <small>Or sign in with credentials</small>
                 </div>
@@ -192,7 +196,7 @@ class LoginComponent extends React.Component {
                 </Form>
               </CardBody>
             </Card>
-          </div>
+          </ModalBody>
         </Modal>
       </>
     );
