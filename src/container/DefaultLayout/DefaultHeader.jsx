@@ -52,7 +52,7 @@ class DefaultHeader extends React.Component {
   }
 
   render() {
-    const { modelInfoReducer, loginRequest, logoutRequest, signupRequest } = this.props;
+    const { modelInfoReducer, loginRequest, logoutRequest, signupRequest, socialLoginRequest } = this.props;
     const { modelDetails } = modelInfoReducer;
     const { loginModelOpen, signupModelOpen } = modelDetails;
     const { isUserLoggedIn } = this.state;
@@ -98,7 +98,7 @@ class DefaultHeader extends React.Component {
                           onClick={this.handleSignupModel}
                           className="nav-link-inner--text pr-2 cusror_pointer">Signup</span>
                       </React.Fragment> :
-                      <span onClick={e => logoutRequest(e)} className="nav-link-inner--text pr-4">Logout</span>
+                      <span onClick={e => logoutRequest(e)} className="nav-link-inner--text cusror_pointer pr-4">Logout</span>
                   }
                 </Nav>
               </UncontrolledCollapse>
@@ -109,6 +109,7 @@ class DefaultHeader extends React.Component {
           openLoginModel={loginModelOpen}
           handleLoginModel={this.handleLoginModel}
           loginRequest={loginRequest}
+          socialLoginRequest={socialLoginRequest}
         />
         <Signup
           openSignupModel={signupModelOpen}

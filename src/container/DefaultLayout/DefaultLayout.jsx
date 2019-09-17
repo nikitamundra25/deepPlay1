@@ -9,7 +9,8 @@ import {
   modelOpenRequest,
   loginRequest,
   logoutRequest,
-  signupRequest
+  signupRequest,
+  socialLoginRequest
 } from "../../actions/index.jsx";
 
 // core components
@@ -31,7 +32,8 @@ class DefaultLayout extends React.Component {
       loginRequest,
       logoutRequest,
       loginReducer,
-      signupRequest
+      signupRequest,
+      socialLoginRequest
     } = this.props;
     const isLoggedIn = localStorage.getItem("token")
     const routePath = this.props.location.pathname
@@ -44,6 +46,7 @@ class DefaultLayout extends React.Component {
           logoutRequest={logoutRequest}
           loginReducer={loginReducer}
           signupRequest={signupRequest}
+          socialLoginRequest={socialLoginRequest}
         />
         <>
           <Suspense fallback={""}>
@@ -79,7 +82,8 @@ const mapDispatchToProps = dispatch => ({
   modelOperate: data => dispatch(modelOpenRequest(data)),
   loginRequest: data => dispatch(loginRequest(data)),
   logoutRequest: data => dispatch(logoutRequest(data)),
-  signupRequest: data => dispatch(signupRequest(data))
+  signupRequest: data => dispatch(signupRequest(data)),
+  socialLoginRequest: data => dispatch(socialLoginRequest(data))
 });
 export default connect(
   mapStateToProps,
