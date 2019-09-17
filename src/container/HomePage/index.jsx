@@ -39,15 +39,15 @@ class HomePage extends React.Component {
             <Col md="4">
               <div className="play-list-block  d-flex h-100">
                 <div className="add-play-list-block d-flex  justify-content-center align-items-center text-center flex-column">
-                <div className="h4 font-dark-bold">Create your own set to learn or teach</div>
-                <Button className="fill-btn btn mt-4"> Create Now</Button>
+                  <div className="h4 font-dark-bold">Create your own set to learn or teach</div>
+                  <Button className="fill-btn btn mt-4"> Create Now</Button>
                 </div>
               </div>
             </Col>
             <Col md="4">
               <div className="play-list-block">
                 <div className="play-list-img">
-                  <img src="https://www.t-nation.com/system/publishing/articles/10005529/original/6-Reasons-You-Should-Never-Open-a-Gym.png?1509471214" />
+                  <img src="https://www.t-nation.com/system/publishing/articles/10005529/original/6-Reasons-You-Should-Never-Open-a-Gym.png?1509471214" alt="img"/>
                 </div>
                 <div className="play-list-text">
                   <div className="play-list-number">
@@ -62,7 +62,7 @@ class HomePage extends React.Component {
             <Col md="4">
               <div className="play-list-block">
                 <div className="play-list-img">
-                  <img src="https://www.t-nation.com/system/publishing/articles/10005529/original/6-Reasons-You-Should-Never-Open-a-Gym.png?1509471214" />
+                  <img src="https://www.t-nation.com/system/publishing/articles/10005529/original/6-Reasons-You-Should-Never-Open-a-Gym.png?1509471214" alt="img"/>
                 </div>
                 <div className="play-list-text">
                   <div className="play-list-number">
@@ -77,7 +77,7 @@ class HomePage extends React.Component {
             <Col md="4">
               <div className="play-list-block">
                 <div className="play-list-img">
-                  <img src="https://www.t-nation.com/system/publishing/articles/10005529/original/6-Reasons-You-Should-Never-Open-a-Gym.png?1509471214" />
+                  <img src="https://www.t-nation.com/system/publishing/articles/10005529/original/6-Reasons-You-Should-Never-Open-a-Gym.png?1509471214" alt="img"/>
                 </div>
                 <div className="play-list-text">
                   <div className="play-list-number">
@@ -92,7 +92,7 @@ class HomePage extends React.Component {
             <Col md="4">
               <div className="play-list-block">
                 <div className="play-list-img">
-                  <img src="https://www.t-nation.com/system/publishing/articles/10005529/original/6-Reasons-You-Should-Never-Open-a-Gym.png?1509471214" />
+                  <img src="https://www.t-nation.com/system/publishing/articles/10005529/original/6-Reasons-You-Should-Never-Open-a-Gym.png?1509471214" alt="img"/>
                 </div>
                 <div className="play-list-text">
                   <div className="play-list-number">
@@ -107,7 +107,7 @@ class HomePage extends React.Component {
             <Col md="4">
               <div className="play-list-block">
                 <div className="play-list-img">
-                  <img src="https://www.t-nation.com/system/publishing/articles/10005529/original/6-Reasons-You-Should-Never-Open-a-Gym.png?1509471214" />
+                  <img src="https://www.t-nation.com/system/publishing/articles/10005529/original/6-Reasons-You-Should-Never-Open-a-Gym.png?1509471214" alt="img"/>
                 </div>
                 <div className="play-list-text">
                   <div className="play-list-number">
@@ -122,7 +122,7 @@ class HomePage extends React.Component {
             <Col md="4">
               <div className="play-list-block">
                 <div className="play-list-img">
-                  <img src="https://www.t-nation.com/system/publishing/articles/10005529/original/6-Reasons-You-Should-Never-Open-a-Gym.png?1509471214" />
+                  <img src="https://www.t-nation.com/system/publishing/articles/10005529/original/6-Reasons-You-Should-Never-Open-a-Gym.png?1509471214" alt="img"/>
                 </div>
                 <div className="play-list-text">
                   <div className="play-list-number">
@@ -139,21 +139,21 @@ class HomePage extends React.Component {
         <section className="home-message-section">
           <Row className="mb-5">
             <Col md="12" className="mb-5 text-center">
-              <h6 className="h2 text-center font-weight-bold theme-heading mb-5">
-              Store and learn all your movements in one place
+              <h6 className="h2 text-center theme-heading font-weight-bold mb-5">
+                Store and learn all your movements in one place
               </h6>
               <Button className="fill-btn btn home-message-btn">Get Started</Button>
             </Col>
-            </Row>
-            </section>
+          </Row>
+        </section>
       </Container>
-        );
-      }
-    }
-    
+    );
+  }
+}
+
 const mapStateToProps = state => ({});
 const mapDispatchToProps = dispatch => ({});
-        export default connect(
-          mapStateToProps,
-          mapDispatchToProps
-        )(HomePage);
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(HomePage);

@@ -4,19 +4,58 @@ import {
   UncontrolledCollapse,
   NavbarBrand,
   Navbar,
-  NavItem,
-  NavLink,
   Nav,
   Container,
   Row,
   Col,
-  UncontrolledTooltip,
-  Button
 } from "reactstrap";
+import Login from "../Auth/Login/index.jsx"
+import Signup from "../Auth/Signup/index.jsx";
 
 class DefaultHeader extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      isUserLoggedIn: false
+    };
+  }
+
+  componentDidMount = () => {
+    if (localStorage.getItem("token")) {
+      this.setState({
+        isUserLoggedIn: true
+      });
+    } else {
+      this.setState({
+        isUserLoggedIn: false
+      });
+    }
+  };
+
+  handleLoginModel = () => {
+    const { modelInfoReducer } = this.props;
+    const { modelDetails } = modelInfoReducer;
+    this.props.modelOpenRequest({
+      modelDetails: {
+        loginModelOpen: !modelDetails.loginModelOpen
+      }
+    })
+  }
+  handleSignupModel = () => {
+    const { modelInfoReducer } = this.props;
+    const { modelDetails } = modelInfoReducer;
+    this.props.modelOpenRequest({
+      modelDetails: {
+        signupModelOpen: !modelDetails.signupModelOpen
+      }
+    })
+  }
 
   render() {
+    const { modelInfoReducer, loginRequest, logoutRequest, signupRequest } = this.props;
+    const { modelDetails } = modelInfoReducer;
+    const { loginModelOpen, signupModelOpen } = modelDetails;
+    const { isUserLoggedIn } = this.state;
     return (
       <>
         <header className="header-global theme-header">
@@ -49,21 +88,33 @@ class DefaultHeader extends React.Component {
                   </Row>
                 </div>
                 <Nav className="navbar-nav-hover align-items-lg-center " navbar>
-                  <Link to="/login" className="light-btn btn">
-                    Log In
-                  </Link>
-                  {" "}
-                  <Link to="/signup" className="fill-btn btn mr-0">
-                  Sign Up
-                  </Link>
-                  <Link to={"/signup"}>
-                  </Link>
+                  {
+                    !isUserLoggedIn ?
+                      <React.Fragment>
+                        <span
+                          onClick={this.handleLoginModel}
+                          className="nav-link-inner--text pr-4 cusror_pointer">Login</span>
+                        <span
+                          onClick={this.handleSignupModel}
+                          className="nav-link-inner--text pr-2 cusror_pointer">Signup</span>
+                      </React.Fragment> :
+                      <span onClick={e => logoutRequest(e)} className="nav-link-inner--text pr-4">Logout</span>
+                  }
                 </Nav>
               </UncontrolledCollapse>
             </Container>
           </Navbar>
         </header>
-    
+        <Login
+          openLoginModel={loginModelOpen}
+          handleLoginModel={this.handleLoginModel}
+          loginRequest={loginRequest}
+        />
+        <Signup
+          openSignupModel={signupModelOpen}
+          handleSignupModel={this.handleSignupModel}
+          signupRequest={signupRequest}
+        />
       </>
     );
   }
