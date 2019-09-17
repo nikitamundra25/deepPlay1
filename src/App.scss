@@ -1,11 +1,15 @@
 $theme: #949494;
 $lightTheme: #c2c2c2;
+$balckColor: #000;
+$whiteColor: #fff;
 $textColor: #293845;
 $videoAddBannerBorder: #9eadba;
 $videoAddBannerBack: #dfe7ed;
-
-body{
-  .cusror_pointer{
+$dashboardTextColor: #455358;
+$dashboardTextLight: #868686;
+// @import "./assets/scss/custom/variables.scss";
+body {
+  .cusror_pointer {
     cursor: pointer;
   }
   .modal-backdrop.show {
@@ -13,38 +17,6 @@ body{
   }
 }
 
-.dashboard-left-wrap {
-margin-right: -15px;
-margin-left: -15px;
-padding-top: 2rem;
-padding-bottom: 1rem;
-background: #fff;
-display: table-cell;
-position: relative;
-box-shadow: 0 0.5rem 1.25rem 0 rgba(0, 0, 0, 0.28);
-width: 17rem;
-z-index: 200;
-  .dashboard-left {
-    padding: 1.25rem;
-  }
-  .dashboard-left-nav {
-    padding-left: 0px;
-  }
-  .dashboard-left-nav li {
-    list-style: none;
-    position: relative;
-  }
-  .dashboard-left-nav li {
-    color: #172b4d;
-    font-weight: 1000;
-  }
-}
-.dashboard-right-wrap {
-  float: right;
-  width: calc(100% - 250px);
-  position: relative;
-  padding-right: 0;
-}
 .dashboard-right-profile {
   display: flex;
   border-top: 1px solid rgba(var(--sk_foreground_low_solid, 221, 221, 221), 1);
@@ -91,10 +63,16 @@ z-index: 200;
 }
 
 .theme-header {
+  background-color: $balckColor;
+  color: $whiteColor;
+  z-index: 9;
+  position: fixed;
+  width: 100%;
+  top: 0px;
   .header-title {
     font-size: 34px;
     font-weight: bold;
-    color: $theme;
+    color: $whiteColor;
   }
 }
 .font-dark-bold {
@@ -187,7 +165,7 @@ z-index: 200;
   .add-play-list-block {
     border: 2px dashed $videoAddBannerBack;
     height: 100%;
-    padding: 15px;  
+    padding: 15px;
   }
   .play-list-block {
     padding-bottom: 30px;
@@ -197,5 +175,118 @@ z-index: 200;
   .home-message-btn {
     width: 100%;
     max-width: 150px;
+  }
+}
+.dashboard-full-section {
+  display: flex;
+  max-width: 100%;
+  margin-top: 0px;
+  padding-top: 85px;
+  background: #f0f0f0;
+  .dashboard-left-wrap {
+    height: 100%;
+    display: block;
+    max-width: 100%;
+  }
+  .app-sidebar {
+    position: fixed;
+    height: 100%;
+    width: 250px;
+    bottom: 0px;
+    top: 85px;
+    .dashboard-left-wrap {
+      overflow: auto;
+      margin: 0px;
+      width: 100%;
+    }
+  }
+  .dashboard-right-wrap {
+    padding: 40px;
+    margin-left: 250px;
+    width: 100%;
+    position: relative;
+  }
+  a {
+    color: $dashboardTextColor;
+  }
+  .dashboard-left-wrap {
+    background: $whiteColor;
+    position: relative;
+    box-shadow: 0 0.5rem 1.25rem 0 rgba(0, 0, 0, 0.28);
+  }
+  .content-header {
+    color: $dashboardTextColor;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    .content-title {
+      color: $dashboardTextColor;
+      font-size: 28px;
+      font-weight: 600;
+    }
+    .dashboard-right-content {
+      font-weight: 600;
+      font-size: 20px;
+    }
+  }
+  .draft-wrap {
+    background: $dashboardTextColor;
+    color: #fff;
+  }
+  .badge-wrap {
+    padding: 0px 5px;
+  }
+  .cotent-tile {
+    padding: 0px 15px;
+  }
+  .card {
+    padding: 15px;
+  }
+  .tile-wrap {
+    border-radius: 5px;
+    box-shadow: 0px 0px 3px 0px #cacaca;
+    margin-top: 15px;
+    padding: 5px 0px;
+  }
+  .content-heading-tile {
+    font-weight: bold;
+    color: #455358;
+    font-size: 20px;
+  }
+  .content-number-tile {
+    color: #868686;
+    font-size: 14px;
+  }
+  .cotent-text-tile {
+    width: 100%;
+  }
+  .cotent-img-tile {
+    min-width: 90px;
+    max-width: 100%;
+    height: 90px;
+    background-size: cover;
+    background-position: center center;
+  }
+  .bottom-content-tile {
+    padding: 0px 15px;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    .teacher-profile-img {
+      box-shadow: 0px 0px 2px 0px #535353;
+      min-width: 30px;
+      border-radius: 50%;
+      height: 30px;
+    }
+    .bottom-text-tile{
+       color:$dashboardTextColor;
+       margin:0px 5px;
+       font-size: 12px;
+       font-weight: bold;
+    }
+    .bottom-light-tile{
+      // @extend .bottom-text-tile;   
+      color: $dashboardTextLight;
+    }
   }
 }

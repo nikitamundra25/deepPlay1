@@ -8,11 +8,11 @@ class DefaultSidebar extends React.Component {
     //   this.props.history.push("/login");
     // }
     return (
-      <div className="ct-sidebar col-12 col-md-3 col-xl-2 app-sidebar">
+   
         <div className="dashboard-left-wrap">
           <div className="dashboard-left">
-            <ul className="dashboard-left-nav">
-              <li className="">
+            <ul className="list-group list-group-flush">
+              <li className="list-group-item">
                 <NavLink
                   activeClassName="active"
                   aria-current="page"
@@ -22,26 +22,26 @@ class DefaultSidebar extends React.Component {
                   Home
                 </NavLink>
               </li>
-              <li className="">
+              <li className="list-group-item">
                 <NavLink to="/premium-content" activeClassName="active">
                   <i className="fas fa-calendar-minus"></i>
                   Premium content
                 </NavLink>
               </li>
 
-              <li className="">
+              <li className="list-group-item">
                 <NavLink to="/settings" activeClassName="active">
                   <i className="fas fa-cog"></i>
                   Settings
                 </NavLink>
               </li>
-              <li className="">
+              <li className="list-group-item">
                 <NavLink to="/sets" activeClassName="active">
                   <i className="fad fa-folders"></i>
                   Sets
                 </NavLink>
               </li>
-              <li className="">
+              <li className=" ">
                 <NavLink to="/folders" activeClassName="active">
                   <i className="fas fa-folder"></i>
                   Folders
@@ -50,7 +50,7 @@ class DefaultSidebar extends React.Component {
             </ul>
           </div>
         </div>
-      </div>
+   
     );
   }
 }

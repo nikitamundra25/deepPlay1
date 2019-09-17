@@ -139,7 +139,7 @@ class HomePage extends React.Component {
         <section className="home-message-section">
           <Row className="mb-5">
             <Col md="12" className="mb-5 text-center">
-              <h6 className="h2 text-center font-weight-bold mb-5">
+              <h6 className="h2 text-center theme-heading font-weight-bold mb-5">
                 Store and learn all your movements in one place
               </h6>
               <Button className="fill-btn btn home-message-btn">Get Started</Button>
