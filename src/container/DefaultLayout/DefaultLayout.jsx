@@ -46,8 +46,14 @@ class DefaultLayout extends React.Component {
           signupRequest={signupRequest}
         />
         <>
+        
+        <div className="dashboard-full-section">
+        {isLoggedIn && routePath !== "/" ?
+           <div className="ct-sidebar app-sidebar">
+        <DefaultSidebar /></div> : null}
           <Suspense fallback={""}>
             <Switch>
+            
               {routes.map((route, idx) => {
                 return route.component ? (
                   <Route
@@ -61,11 +67,14 @@ class DefaultLayout extends React.Component {
                   />
                 ) : null;
               })}
+             
             </Switch>
           </Suspense>
+          </div>
         </>
-        {isLoggedIn && routePath !== "/" ? <DefaultSidebar /> : null}
-        <DefaultFooter />
+        {isLoggedIn && routePath !== "/" ?
+           null :  <DefaultFooter />}
+       
       </>
     );
   }

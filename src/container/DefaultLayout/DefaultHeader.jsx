@@ -61,10 +61,10 @@ class DefaultHeader extends React.Component {
         <header className="header-global theme-header">
           <Navbar
             className="navbar-main "
-            expand="lg"
+            // expand="lg"
             id="navbar-main"
           >
-            <Container>
+           
               <NavbarBrand className="mr-lg-5" to="/" tag={Link}>
                 <h3 className="mb-0 header-title">Deep Play</h3>
               </NavbarBrand>
@@ -102,7 +102,7 @@ class DefaultHeader extends React.Component {
                   }
                 </Nav>
               </UncontrolledCollapse>
-            </Container>
+        
           </Navbar>
         </header>
         <Login
