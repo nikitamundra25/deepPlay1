@@ -10,25 +10,26 @@ import {
   Container,
   Row,
   Col,
-  UncontrolledTooltip
+  UncontrolledTooltip,
+  Button
 } from "reactstrap";
 
 class DefaultHeader extends React.Component {
-  
+
   render() {
     return (
       <>
-        <header className="header-global">
+        <header className="header-global theme-header">
           <Navbar
-            className="navbar-main navbar-dark bg-default"
+            className="navbar-main "
             expand="lg"
             id="navbar-main"
           >
             <Container>
               <NavbarBrand className="mr-lg-5" to="/" tag={Link}>
-                <h3 className={"text-white"}>Deep Play</h3>
+                <h3 className="mb-0 header-title">Deep Play</h3>
               </NavbarBrand>
-              <UncontrolledCollapse navbar toggler="#navbar_global">
+              <UncontrolledCollapse navbar toggler="#navbar_global" className="justify-content-end">
                 <div className="navbar-collapse-header">
                   <Row>
                     <Col className="collapse-brand" xs="6">
@@ -47,85 +48,22 @@ class DefaultHeader extends React.Component {
                     </Col>
                   </Row>
                 </div>
-                <Nav className="navbar-nav-hover align-items-lg-center" navbar>
-                  <Link to="/login">
-                    <span className="nav-link-inner--text text-white pr-4">Login</span>
+                <Nav className="navbar-nav-hover align-items-lg-center " navbar>
+                  <Link to="/login" className="light-btn btn">
+                    Log In
                   </Link>
                   {" "}
-                  <Link to={"/signup"}>
-                    <span className="nav-link-inner--text text-white pr-2">Signup</span>
+                  <Link to="/signup" className="fill-btn btn mr-0">
+                  Sign Up
                   </Link>
-                </Nav>
-                <Nav className="align-items-lg-center ml-lg-auto" navbar>
-                  <NavItem>
-                    <NavLink
-                      className="nav-link-icon"
-                      href="https://www.facebook.com/creativetim"
-                      id="tooltip333589074"
-                      target="_blank"
-                    >
-                      <i className="fa fa-facebook-square" />
-                      <span className="nav-link-inner--text d-lg-none ml-2">
-                        Facebook
-                      </span>
-                    </NavLink>
-                    <UncontrolledTooltip delay={0} target="tooltip333589074">
-                      Like us on Facebook
-                    </UncontrolledTooltip>
-                  </NavItem>
-                  <NavItem>
-                    <NavLink
-                      className="nav-link-icon"
-                      href="https://www.instagram.com/creativetimofficial"
-                      id="tooltip356693867"
-                      target="_blank"
-                    >
-                      <i className="fa fa-instagram" />
-                      <span className="nav-link-inner--text d-lg-none ml-2">
-                        Instagram
-                      </span>
-                    </NavLink>
-                    <UncontrolledTooltip delay={0} target="tooltip356693867">
-                      Follow us on Instagram
-                    </UncontrolledTooltip>
-                  </NavItem>
-                  <NavItem>
-                    <NavLink
-                      className="nav-link-icon"
-                      href="https://twitter.com/creativetim"
-                      id="tooltip184698705"
-                      target="_blank"
-                    >
-                      <i className="fa fa-twitter-square" />
-                      <span className="nav-link-inner--text d-lg-none ml-2">
-                        Twitter
-                      </span>
-                    </NavLink>
-                    <UncontrolledTooltip delay={0} target="tooltip184698705">
-                      Follow us on Twitter
-                    </UncontrolledTooltip>
-                  </NavItem>
-                  <NavItem>
-                    <NavLink
-                      className="nav-link-icon"
-                      href="https://github.com/creativetimofficial/argon-design-system-react"
-                      id="tooltip112445449"
-                      target="_blank"
-                    >
-                      <i className="fa fa-github" />
-                      <span className="nav-link-inner--text d-lg-none ml-2">
-                        Github
-                      </span>
-                    </NavLink>
-                    <UncontrolledTooltip delay={0} target="tooltip112445449">
-                      Star us on Github
-                    </UncontrolledTooltip>
-                  </NavItem>
+                  <Link to={"/signup"}>
+                  </Link>
                 </Nav>
               </UncontrolledCollapse>
             </Container>
           </Navbar>
         </header>
+    
       </>
     );
   }

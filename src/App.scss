@@ -1,0 +1,115 @@
+$theme: #949494;
+$lightTheme: #c2c2c2;
+$textColor: #293845;
+$videoAddBannerBorder: #9eadba;
+$videoAddBannerBack: #dfe7ed;
+
+.theme-header {
+  .header-title {
+    font-size: 34px;
+    font-weight: bold;
+    color: $theme;
+  }
+}
+.font-dark-bold {
+  font-weight: bold;
+}
+.btn {
+  text-transform: capitalize;
+  padding: 8px 20px;
+  box-shadow: none !important;
+  transform: none;
+  font-size: 16px;
+  &:hover {
+    box-shadow: none;
+  }
+  &.light-btn {
+    border: 2px solid $lightTheme;
+    color: $theme;
+    background: transparent;
+  }
+}
+.banner-heading {
+  font-weight: bold;
+  font-size: 37px;
+  color: $textColor;
+}
+.banner-content {
+  font-weight: 600;
+  font-size: 18px;
+  color: $textColor;
+}
+.fill-btn {
+  border: 2px solid $theme;
+  color: #fff;
+  background: $theme;
+  &:hover {
+    color: #fff;
+    background: $theme;
+    border: 2px solid $theme;
+  }
+}
+
+.home-video-section {
+  margin-bottom: 80px;
+  padding-bottom: 80px;
+  border-bottom: 2px dashed $videoAddBannerBack;
+  .video-add-banner {
+    cursor: pointer;
+    height: 100%;
+    background: $videoAddBannerBack;
+    border: 2px dashed $videoAddBannerBorder;
+    .play-ic-wrap {
+      width: 90px;
+      height: 90px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: $videoAddBannerBorder;
+      border-radius: 50%;
+      font-size: 55px;
+      padding-left: 8px;
+      color: $videoAddBannerBack;
+    }
+  }
+}
+.theme-heading {
+  font-weight: bold;
+  color: $textColor;
+}
+.play-list-collection {
+  .play-list-img {
+    height: 180px;
+    overflow: hidden;
+    position: relative;
+    img {
+      height: 100%;
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+    }
+  }
+  .play-list-text {
+    padding: 10px 15px;
+    border: solid $videoAddBannerBorder;
+    border-width: 0px 2px 2px 2px;
+    .play-list-heading {
+      font-weight: bold;
+    }
+  }
+  .add-play-list-block {
+    border: 2px dashed $videoAddBannerBack;
+    height: 100%;
+    padding: 15px;  
+  }
+  .play-list-block {
+    padding-bottom: 30px;
+  }
+}
+.home-message-section {
+  .home-message-btn {
+    width: 100%;
+    max-width: 150px;
+  }
+}
