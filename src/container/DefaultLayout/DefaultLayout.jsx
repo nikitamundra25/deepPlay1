@@ -14,6 +14,16 @@ import {
 
 // core components
 class DefaultLayout extends React.Component {
+
+  componentDidMount() {
+    const token = localStorage.getItem("token")
+    if (!token) {
+      this.props.redirectTo("/")
+    }
+  }
+  /*
+  /*  
+  */
   render() {
     const {
       modelInfoReducer,
@@ -23,7 +33,8 @@ class DefaultLayout extends React.Component {
       loginReducer,
       signupRequest
     } = this.props;
-
+    const isLoggedIn = localStorage.getItem("token")
+    const routePath = this.props.location.pathname
     return (
       <>
         <DefaultHeader
@@ -53,7 +64,7 @@ class DefaultLayout extends React.Component {
             </Switch>
           </Suspense>
         </>
-        {localStorage.token ? <DefaultSidebar /> : null}
+        {isLoggedIn && routePath !== "/" ? <DefaultSidebar /> : null}
         <DefaultFooter />
       </>
     );
