@@ -31,16 +31,47 @@ class SignupComponent extends React.Component {
       firstName: "",
       lastName: "",
       confirmPassword: "",
-      roleType: true,
+      roleType: false,
+      passwordStrength: "week",
       errors: {}
     }
   }
+  componentDidUpdate = ({ openSignupModel }) => {
+    if (openSignupModel !== this.props.openSignupModel) {
+      this.setState({
+        email: "",
+        password: "",
+        firstName: "",
+        lastName: "",
+        confirmPassword: "",
+        roleType: false,
+        errors: {}
+      })
+    }
+  }
+  /*
+  /* 
+  */
   handleChange = e => {
     const { name, value, checked } = e.target;
     if (name === "roleType") {
       this.setState({
         roleType: checked
       })
+    }
+    if (name === "password") {
+      let res = (value).match(/^(?:[0-9]+[a-z]|[a-z]+[0-9])[a-z0-9]*$/i);
+      if (res) {
+        console.log(value);
+        
+        this.setState({
+          passwordStrength: "strong"
+        })
+      } else {
+        this.setState({
+          passwordStrength: "week"
+        })
+      }
     }
     this.setState({
       [name]: value
@@ -86,7 +117,8 @@ class SignupComponent extends React.Component {
       lastName,
       confirmPassword,
       roleType,
-      errors
+      errors,
+      passwordStrength
     } = this.state;
     return (
       <>
@@ -225,9 +257,9 @@ class SignupComponent extends React.Component {
                       <div className="text-muted font-italic">
                         <small>
                           password strength:{" "}
-                          <span className="text-success font-weight-700">
-                            strong
-                      </span>
+                          <span className={`${passwordStrength === "week" ? "text-danger" : "text-success"} font-weight-700`}>
+                            {passwordStrength}
+                          </span>
                         </small>
                       </div> :
                       null

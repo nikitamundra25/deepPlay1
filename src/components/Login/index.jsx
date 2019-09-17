@@ -27,6 +27,17 @@ class LoginComponent extends React.Component {
       errors: {}
     }
   }
+
+  componentDidUpdate = ({openLoginModel}) =>{
+    if (openLoginModel !== this.props.openLoginModel) {
+      this.setState({
+        email: "",
+        password: "",
+        errors: {} 
+      })
+    }
+  }
+
   handleChange = e => {
     const { name, value } = e.target;
     this.setState({
