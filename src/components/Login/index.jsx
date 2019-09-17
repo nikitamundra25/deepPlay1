@@ -11,7 +11,11 @@ import {
   InputGroupText,
   InputGroup,
   Modal,
+  FormFeedback
 } from "reactstrap";
+import Validator from "js-object-validation";
+import { LoginValidations, LoginValidationsMessaages } from "../../validations";
+import { logger } from "helper/Logger";
 
 // core components
 class LoginComponent extends React.Component {
@@ -19,7 +23,8 @@ class LoginComponent extends React.Component {
     super(props);
     this.state = {
       email: "",
-      password: ""
+      password: "",
+      errors: {}
     }
   }
   handleChange = e => {
@@ -33,18 +38,36 @@ class LoginComponent extends React.Component {
   */
   handleLoginRequest = e => {
     e.preventDefault();
-    const payload = {
-      email: this.state.email,
-      password: this.state.password,
+    this.setState({
+      errors: {}
+    });
+    try {
+      const { isValid, errors } = Validator(
+        this.state,
+        LoginValidations,
+        LoginValidationsMessaages
+      );
+      if (!isValid) {
+        this.setState({
+          errors
+        });
+        return;
+      }
+      const payload = {
+        email: this.state.email,
+        password: this.state.password,
+      }
+      this.props.loginRequest(payload)
+    } catch (error) {
+      logger(error);
     }
-    this.props.loginRequest(payload)
   }
   /*
   /* 
   */
   render() {
     const { openLoginModel, handleLoginModel } = this.props
-    const { email, password } = this.state;
+    const { email, password, errors } = this.state;
     return (
       <>
         <Modal
@@ -104,10 +127,14 @@ class LoginComponent extends React.Component {
                       </InputGroupAddon>
                       <Input
                         placeholder="Email"
+                        className={errors.email ? "is-invalid" : ""}
                         onChange={this.handleChange}
                         name={"email"}
                         value={email}
                         type="email" />
+                      <FormFeedback>
+                        {errors.email ? errors.email : null}
+                      </FormFeedback>
                     </InputGroup>
                   </FormGroup>
                   <FormGroup>
@@ -120,9 +147,13 @@ class LoginComponent extends React.Component {
                       <Input
                         placeholder="Password"
                         onChange={this.handleChange}
+                        className={errors.password ? "is-invalid" : ""}
                         value={password}
                         name={"password"}
                         type="password" />
+                      <FormFeedback>
+                        {errors.password ? errors.password : null}
+                      </FormFeedback>
                     </InputGroup>
                   </FormGroup>
                   <div className="custom-control custom-control-alternative custom-checkbox">
