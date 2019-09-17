@@ -13,7 +13,9 @@ import {
   Modal,
   Row,
   Col,
-  FormFeedback
+  FormFeedback,
+  ModalBody,
+  ModalHeader
 } from "reactstrap";
 // core components
 import Validator from "js-object-validation";
@@ -31,16 +33,47 @@ class SignupComponent extends React.Component {
       firstName: "",
       lastName: "",
       confirmPassword: "",
-      roleType: true,
+      roleType: false,
+      passwordStrength: "week",
       errors: {}
     }
   }
+  componentDidUpdate = ({ openSignupModel }) => {
+    if (openSignupModel !== this.props.openSignupModel) {
+      this.setState({
+        email: "",
+        password: "",
+        firstName: "",
+        lastName: "",
+        confirmPassword: "",
+        roleType: false,
+        errors: {}
+      })
+    }
+  }
+  /*
+  /* 
+  */
   handleChange = e => {
     const { name, value, checked } = e.target;
     if (name === "roleType") {
       this.setState({
         roleType: checked
       })
+    }
+    if (name === "password") {
+      let res = (value).match(/^(?:[0-9]+[a-z]|[a-z]+[0-9])[a-z0-9]*$/i);
+      if (res) {
+        console.log(value);
+
+        this.setState({
+          passwordStrength: "strong"
+        })
+      } else {
+        this.setState({
+          passwordStrength: "week"
+        })
+      }
     }
     this.setState({
       [name]: value
@@ -86,7 +119,8 @@ class SignupComponent extends React.Component {
       lastName,
       confirmPassword,
       roleType,
-      errors
+      errors,
+      passwordStrength
     } = this.state;
     return (
       <>
@@ -95,12 +129,14 @@ class SignupComponent extends React.Component {
           size="sm"
           isOpen={openSignupModel}
           toggle={handleSignupModel}
+          backdrop={"static"}
         >
-          <div className="modal-body p-0">
+          <ModalHeader toggle={handleSignupModel}>Sign Up</ModalHeader>
+          <ModalBody className="modal-body p-0">
             <Card className="bg-secondary shadow border-0">
-              <CardHeader className="bg-transparent pb-5">
+              <CardHeader className="bg-transparent pb-2">
                 <div className="text-muted text-center mt-2 mb-3">
-                  <small>Sign in with</small>
+                  <small>Sign up with</small>
                 </div>
                 <div className="btn-wrapper text-center">
                   <Button
@@ -133,9 +169,9 @@ class SignupComponent extends React.Component {
                   </Button>
                 </div>
               </CardHeader>
-              <CardBody className="px-lg-5">
+              <CardBody className="px-lg-3">
                 <div className="text-center text-muted mb-4">
-                  <small>Or sign in with credentials</small>
+                  <small>Or sign up and generate your credentials</small>
                 </div>
                 <Form role="form" onSubmit={this.handleSignupRequest}>
                   <FormGroup>
@@ -225,9 +261,9 @@ class SignupComponent extends React.Component {
                       <div className="text-muted font-italic">
                         <small>
                           password strength:{" "}
-                          <span className="text-success font-weight-700">
-                            strong
-                      </span>
+                          <span className={`${passwordStrength === "week" ? "text-danger" : "text-success"} font-weight-700`}>
+                            {passwordStrength}
+                          </span>
                         </small>
                       </div> :
                       null
@@ -287,7 +323,7 @@ class SignupComponent extends React.Component {
                 </Form>
               </CardBody>
             </Card>
-          </div>
+          </ModalBody>
         </Modal>
       </>
     );

@@ -11,7 +11,13 @@ import {
   InputGroupText,
   InputGroup,
   Modal,
+  FormFeedback,
+  ModalBody,
+  ModalHeader
 } from "reactstrap";
+import Validator from "js-object-validation";
+import { LoginValidations, LoginValidationsMessaages } from "../../validations";
+import { logger } from "helper/Logger";
 
 // core components
 class LoginComponent extends React.Component {
@@ -19,9 +25,21 @@ class LoginComponent extends React.Component {
     super(props);
     this.state = {
       email: "",
-      password: ""
+      password: "",
+      errors: {}
     }
   }
+
+  componentDidUpdate = ({ openLoginModel }) => {
+    if (openLoginModel !== this.props.openLoginModel) {
+      this.setState({
+        email: "",
+        password: "",
+        errors: {}
+      })
+    }
+  }
+
   handleChange = e => {
     const { name, value } = e.target;
     this.setState({
@@ -33,18 +51,36 @@ class LoginComponent extends React.Component {
   */
   handleLoginRequest = e => {
     e.preventDefault();
-    const payload = {
-      email: this.state.email,
-      password: this.state.password,
+    this.setState({
+      errors: {}
+    });
+    try {
+      const { isValid, errors } = Validator(
+        this.state,
+        LoginValidations,
+        LoginValidationsMessaages
+      );
+      if (!isValid) {
+        this.setState({
+          errors
+        });
+        return;
+      }
+      const payload = {
+        email: this.state.email,
+        password: this.state.password,
+      }
+      this.props.loginRequest(payload)
+    } catch (error) {
+      logger(error);
     }
-    this.props.loginRequest(payload)
   }
   /*
   /* 
   */
   render() {
     const { openLoginModel, handleLoginModel } = this.props
-    const { email, password } = this.state;
+    const { email, password, errors } = this.state;
     return (
       <>
         <Modal
@@ -52,10 +88,12 @@ class LoginComponent extends React.Component {
           size="sm"
           isOpen={openLoginModel}
           toggle={handleLoginModel}
+          backdrop={"static"}
         >
-          <div className="modal-body p-0">
+          <ModalHeader toggle={handleLoginModel}>Sign In</ModalHeader>
+          <ModalBody className="modal-body p-0">
             <Card className="bg-secondary shadow border-0">
-              <CardHeader className="bg-transparent pb-5">
+              <CardHeader className="bg-transparent pb-2">
                 <div className="text-muted text-center mt-2 mb-3">
                   <small>Sign in with</small>
                 </div>
@@ -90,7 +128,7 @@ class LoginComponent extends React.Component {
                   </Button>
                 </div>
               </CardHeader>
-              <CardBody className="px-lg-5 py-lg-5">
+              <CardBody className="px-lg-5">
                 <div className="text-center text-muted mb-4">
                   <small>Or sign in with credentials</small>
                 </div>
@@ -104,10 +142,14 @@ class LoginComponent extends React.Component {
                       </InputGroupAddon>
                       <Input
                         placeholder="Email"
+                        className={errors.email ? "is-invalid" : ""}
                         onChange={this.handleChange}
                         name={"email"}
                         value={email}
                         type="email" />
+                      <FormFeedback>
+                        {errors.email ? errors.email : null}
+                      </FormFeedback>
                     </InputGroup>
                   </FormGroup>
                   <FormGroup>
@@ -120,9 +162,13 @@ class LoginComponent extends React.Component {
                       <Input
                         placeholder="Password"
                         onChange={this.handleChange}
+                        className={errors.password ? "is-invalid" : ""}
                         value={password}
                         name={"password"}
                         type="password" />
+                      <FormFeedback>
+                        {errors.password ? errors.password : null}
+                      </FormFeedback>
                     </InputGroup>
                   </FormGroup>
                   <div className="custom-control custom-control-alternative custom-checkbox">
@@ -150,7 +196,7 @@ class LoginComponent extends React.Component {
                 </Form>
               </CardBody>
             </Card>
-          </div>
+          </ModalBody>
         </Modal>
       </>
     );
