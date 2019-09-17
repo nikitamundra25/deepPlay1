@@ -19,4 +19,9 @@ export const AppRoutes = {
     name: "Dashboard",
     exact: true
   },
+  SETTINGS: {
+    url: "/setting",
+    name: "Settings",
+    exact: true
+  }
 };

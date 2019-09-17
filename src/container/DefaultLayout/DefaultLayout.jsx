@@ -1,14 +1,19 @@
 import React, { Suspense } from "react";
 import { connect } from "react-redux";
-import DefaultHeader from "./DefaultHeader"
-import DefaultFooter from "./DefaultFooter"
+import DefaultHeader from "./DefaultHeader";
+import DefaultFooter from "./DefaultFooter";
 import routes from "../../routes";
 import { Route, Switch } from "react-router-dom";
-import { modelOpenRequest, loginRequest, logoutRequest, signupRequest } from "../../actions/index.jsx"
+import DefaultSidebar from "./DefaultSidebar";
+import {
+  modelOpenRequest,
+  loginRequest,
+  logoutRequest,
+  signupRequest
+} from "../../actions/index.jsx";
 
 // core components
 class DefaultLayout extends React.Component {
-
   render() {
     const {
       modelInfoReducer,
@@ -16,7 +21,9 @@ class DefaultLayout extends React.Component {
       loginRequest,
       logoutRequest,
       loginReducer,
-      signupRequest } = this.props
+      signupRequest
+    } = this.props;
+
     return (
       <>
         <DefaultHeader
@@ -38,10 +45,7 @@ class DefaultLayout extends React.Component {
                     exact={route.exact}
                     name={route.name}
                     render={props => (
-                      <route.component
-                        {...props}
-                        {...this.props}
-                      />
+                      <route.component {...props} {...this.props} />
                     )}
                   />
                 ) : null;
@@ -49,7 +53,7 @@ class DefaultLayout extends React.Component {
             </Switch>
           </Suspense>
         </>
-
+        {localStorage.token ? <DefaultSidebar /> : null}
         <DefaultFooter />
       </>
     );

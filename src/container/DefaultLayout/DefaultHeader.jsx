@@ -20,20 +20,20 @@ class DefaultHeader extends React.Component {
     super(props);
     this.state = {
       isUserLoggedIn: false
-    }
+    };
   }
 
   componentDidMount = () => {
     if (localStorage.getItem("token")) {
       this.setState({
         isUserLoggedIn: true
-      })
+      });
     } else {
       this.setState({
         isUserLoggedIn: false
-      })
+      });
     }
-  }
+  };
 
   handleLoginModel = () => {
     const { modelInfoReducer } = this.props;
