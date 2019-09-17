@@ -4,20 +4,21 @@ import { Route, Switch, withRouter } from "react-router-dom";
 import { redirectTo } from "../actions/index.jsx";
 import "../App.scss";
 // Pages
-const DefaultLayout = React.lazy(() => import("../container/DefaultLayout/DefaultLayout"));
+const DefaultLayout = React.lazy(() =>
+  import("../container/DefaultLayout/DefaultLayout")
+);
 
 const Routes = [
   {
     exact: false,
     path: "/",
     name: "Home",
-    //component: !localStorage.getItem("token") ? HomePage : DefaultLayout
     component: DefaultLayout
   }
 ];
 
 class AppRoutes extends Component {
-  componentDidMount() { }
+  componentDidMount() {}
   render() {
     return (
       <>
