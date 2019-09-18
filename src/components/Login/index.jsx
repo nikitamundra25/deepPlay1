@@ -84,18 +84,18 @@ class LoginComponent extends React.Component {
     return (
       <>
         <Modal
-          className="modal-dialog-centered"
+          className="modal-dialog-centered log-user-model"
           size="sm"
           isOpen={openLoginModel}
           toggle={handleLoginModel}
           backdrop={"static"}
         >
-          <ModalHeader toggle={handleLoginModel}>Sign In</ModalHeader>
-          <ModalBody className="modal-body p-0">
+          <ModalHeader toggle={handleLoginModel}></ModalHeader>
+          <ModalBody className="modal-body p-0 ">
             <Card className="bg-secondary shadow border-0">
-              <CardHeader className="bg-transparent pb-2">
-                <div className="text-muted text-center mt-2 mb-3">
-                  <small>Sign in with</small>
+              <CardHeader className="bg-transparent">
+                <div className=" login-heading text-center mt-2 mb-3">
+              Sign in with
                 </div>
                 <div className="btn-wrapper text-center">
                   <Button
@@ -128,9 +128,9 @@ class LoginComponent extends React.Component {
                   </Button>
                 </div>
               </CardHeader>
-              <CardBody className="px-lg-5">
-                <div className="text-center text-muted mb-4">
-                  <small>Or sign in with credentials</small>
+              <CardBody className="px-lg-5 ">
+                <div className="text-center login-heading mb-4">
+                Or sign in with credentials
                 </div>
                 <Form onSubmit={this.handleLoginRequest}>
                   <FormGroup className="mb-3">

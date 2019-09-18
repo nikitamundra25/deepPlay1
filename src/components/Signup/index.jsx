@@ -131,9 +131,9 @@ class SignupComponent extends React.Component {
           toggle={handleSignupModel}
           backdrop={"static"}
         >
-          <ModalHeader toggle={handleSignupModel}>Sign Up</ModalHeader>
+          {/* <ModalHeader toggle={handleSignupModel}>Sign Up</ModalHeader> */}
           <ModalBody className="modal-body p-0">
-            <Card className="bg-secondary shadow border-0">
+            <Card className="bg-secondaryborder-0">
               <CardHeader className="bg-transparent pb-2">
                 <div className="text-muted text-center mt-2 mb-3">
                   <small>Sign up with</small>
