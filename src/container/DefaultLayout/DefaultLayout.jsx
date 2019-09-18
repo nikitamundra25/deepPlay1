@@ -49,35 +49,36 @@ class DefaultLayout extends React.Component {
           socialLoginRequest={socialLoginRequest}
         />
         <>
-        
-        <div className="dashboard-full-section">
-        {isLoggedIn && routePath !== "/" ?
-           <div className="ct-sidebar app-sidebar">
-        <DefaultSidebar /></div> : null}
-          <Suspense fallback={""}>
-            <Switch>
-            
-              {routes.map((route, idx) => {
-                return route.component ? (
-                  <Route
-                    key={idx}
-                    path={route.path}
-                    exact={route.exact}
-                    name={route.name}
-                    render={props => (
-                      <route.component {...props} {...this.props} />
-                    )}
-                  />
-                ) : null;
-              })}
-             
-            </Switch>
-          </Suspense>
+          <div className={"theme-container"}>
+            <div className="dashboard-full-section">
+              {isLoggedIn && routePath !== "/" ?
+                <div className="ct-sidebar app-sidebar">
+                  <DefaultSidebar /></div> : null}
+              <div className={"dashboard-right-wrap"}>
+                <Suspense fallback={""}>
+                  <Switch>
+                    {routes.map((route, idx) => {
+                      return route.component ? (
+                        <Route
+                          key={idx}
+                          path={route.path}
+                          exact={route.exact}
+                          name={route.name}
+                          render={props => (
+                            <route.component {...props} {...this.props} />
+                          )}
+                        />
+                      ) : null;
+                    })}
+                  </Switch>
+                </Suspense>
+              </div>
+            </div>
           </div>
         </>
         {isLoggedIn && routePath !== "/" ?
-           null :  <DefaultFooter />}
-       
+          null : <DefaultFooter />}
+
       </>
     );
   }

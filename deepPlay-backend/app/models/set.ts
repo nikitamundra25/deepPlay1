@@ -2,7 +2,7 @@ import Mongoose from "mongoose";
 import { Schema } from "express-validator";
 const Schema = Mongoose.Schema;
 
-const folderSchema: Mongoose.Schema = new Schema({
+const setSchema: Mongoose.Schema = new Schema({
   title: {
     type: String,
     default: null
@@ -18,6 +18,13 @@ const folderSchema: Mongoose.Schema = new Schema({
   sharableLink: {
     type: String
   },
+  folderId: [
+    {
+      type: Schema.Types.ObjectId,
+      ref: "folder",
+      required: true
+    }
+  ],
   userId: {
     type: Schema.Types.ObjectId,
     ref: "user",
@@ -41,4 +48,4 @@ const folderSchema: Mongoose.Schema = new Schema({
   }
 });
 
-export const FolderModel = Mongoose.model("folder", folderSchema);
+export const SetModel = Mongoose.model("set", setSchema);

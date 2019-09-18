@@ -217,6 +217,9 @@ class LoginComponent extends React.Component {
                       </FormFeedback>
                     </InputGroup>
                   </FormGroup>
+                  <div className={"text-center text-primary cursor_pointer"}>
+                      Forgot password?
+                  </div>
                   <div className="text-center">
                     <Button
                       className="my-4"

@@ -9,7 +9,7 @@ $dashboardTextColor: #455358;
 $dashboardTextLight: #868686;
 // @import "./assets/scss/custom/variables.scss";
 body {
-  .cusror_pointer {
+  .cursor_pointer {
     cursor: pointer;
   }
   .modal-backdrop.show {
@@ -136,6 +136,14 @@ body {
       color: $videoAddBannerBack;
     }
   }
+}
+.theme-container{
+  width: 100%;
+  padding-right: 15px;
+  padding-left: 15px;
+  margin-right: auto;
+  margin-left: auto;
+  max-width: 1600px;
 }
 .theme-heading {
   font-weight: bold;

@@ -23,5 +23,15 @@ export const AppRoutes = {
     url: "/setting",
     name: "Settings",
     exact: true
+  },
+  FOLDERS:{
+    url: "/folder",
+    name: "Folder",
+    exact: true,
+  },
+  SETS:{
+    url: "/set",
+    name: "Set",
+    exact: true,
   }
 };
