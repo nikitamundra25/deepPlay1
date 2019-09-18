@@ -5,7 +5,7 @@ import {
   modelOpenRequest,
   // redirectTo,
   loginSuccess,
-  logoutSuccess
+  logoutSuccess,
 } from "../actions";
 //import { logger } from "helper/Logger";
 import { toast } from "react-toastify";
@@ -61,7 +61,47 @@ const logOutLogic = createLogic({
 /**
  *
  */
+const socialLoginLogic = createLogic({
+  type: loginAction.SOCIAL_LOGIN_REQUEST,
+  async process({ action }, dispatch, done) {
+    let api = new ApiHelper();
+    let result = await api.FetchFromServer(
+      "/auth",
+      "/socialLogin",
+      "POST",
+      false,
+      undefined,
+      action.payload
+    );
+    if (result.isError || !result.data.userData) {
+      toast.error(result.messages[0]);
+      done();
+      return;
+    } else {
+      localStorage.setItem("token", result.data.token)
+      if (result.data.message) {
+        toast.success(result.data.message)
+      }
+      dispatch(
+        modelOpenRequest({
+          modelDetails: {
+            loginModelOpen: false
+          }
+        })
+      )
+      dispatch(
+        loginSuccess({ isLoginSuccess: true })
+      )
+      window.location.href = AppRoutes.DASHBOARD.url;
+      done();
+    }
+  }
+});
+/**
+ *
+ */
 export const LoginLogics = [
   loginLogic,
-  logOutLogic
+  logOutLogic,
+  socialLoginLogic
 ];
