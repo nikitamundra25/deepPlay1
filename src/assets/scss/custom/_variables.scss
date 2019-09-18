@@ -19,8 +19,8 @@ $gray-300: #dee2e6 !default;
 $gray-400: #ced4da !default;
 $gray-500: #adb5bd !default;
 $gray-600: #8898aa !default;   // Line footer color
-$gray-700: #525f7f !default;   // Line p color
-$gray-800: #32325d !default;   // Line heading color
+$gray-700: #1e1e1e !default;   // Line p color
+$gray-800: #444444 !default;   // Line heading color
 $gray-900: #212529 !default;
 $black:    #000 !default;
 
@@ -885,3 +885,12 @@ $footer-link-color: $gray-600 !default;
 $footer-link-hover-color: $gray-700 !default;
 $footer-heading-color: $gray-600 !default;
 $footer-heading-font-size: $font-size-sm !default;
+
+
+// black and whites color define
+$theme: #949494;
+$lightTheme: #c2c2c2;
+$textColor: #293845;
+$videoAddBannerBorder: #9eadba;
+$videoAddBannerBack: #dfe7ed;
+

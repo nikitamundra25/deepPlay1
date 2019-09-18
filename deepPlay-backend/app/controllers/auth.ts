@@ -26,10 +26,16 @@ const login = async (req: Request, res: Response): Promise<any> => {
         message: "User not found."
       });
     }
-    if (!comparePassword(password, result.password)) {
+    if (result.password) {
+      if (!comparePassword(password, result.password)) {
+        return res.status(400).json({
+          message: "Password didn't match."
+        });
+      }
+    } else {
       return res.status(400).json({
-        message: "Email and Password didn't match."
-      });
+        message: "Password didn't match."
+      })
     }
 
     const token = await GenerateToken({
@@ -51,13 +57,9 @@ const login = async (req: Request, res: Response): Promise<any> => {
     });
   }
 };
-/*
-/* 
-*/
 
 /* Title:- Signup For User
 Prams:- email,password,firstName,lastName,profileImage,roleType */
-
 const signup = async (req: Request, res: Response): Promise<any> => {
   try {
     const { body } = req;
@@ -112,10 +114,81 @@ const signup = async (req: Request, res: Response): Promise<any> => {
     });
   }
 };
+/* Title:- Social Signup For User
+Prams:- accessToken,email,firstName,lastName */
+const socialSignup = async (req: Request, res: Response) => {
+  const { body } = req;
+  try {
+    if (body.accessToken) {
+      const userData: Document | null = await UserModel.findOne({ email: body.email })
+      if (!userData) {
+        const userSignup: IUser = {
+          firstName: body.firstName,
+          lastName: body.lastName,
+          email: body.email,
+          password: null,
+          salt: "",
+          loggedInIp: "",
+          loggedInAt: new Date(),
+          profileImage: body.profileImage || "",
+          createdAt: new Date(),
+          isDeleted: false,
+          updatedAt: new Date(),
+          verifyToken: "",
+          roleType: "isUnclassified",
+          status: true
+        }
+        const userResult: Document | any = new UserModel(userSignup)
+        await userResult.save();
+
+        const token = await GenerateToken({
+          id: userResult._id,
+          firstName: userResult.firstName,
+          lastName: userResult.lastName,
+          email: userResult.lastName,
+          role: userResult.roleType
+        });
+        return res.status(200).json({
+          message: "User Regitered Successfully.",
+          token: token,
+          userData: userResult,
+          success: true
+        })
+      } else {
+        const result: Document | null | any = await UserModel.findOne({
+          email: body.email
+        });
+        const token = await GenerateToken({
+          id: result._id,
+          firstName: result.firstName,
+          lastName: result.lastName,
+          email: result.lastName,
+          role: result.roleType
+        });
+        return res.status(200).json({
+          token: token,
+          userData: result,
+          success: true
+        })
+      }
+    } else {
+      return res.status(400).json({
+        message: "Access token is missing!",
+        success: false
+      })
+    }
+  } catch (error) {
+    console.log(error);
+    res.status(500).send({
+      message: error.message
+    });
+  }
+}
 /**
  *
  */
 export {
   login,
-  signup
+  signup,
+  socialSignup
 };
