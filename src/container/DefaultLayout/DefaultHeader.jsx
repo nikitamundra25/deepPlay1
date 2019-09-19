@@ -78,20 +78,21 @@ class DefaultHeader extends React.Component {
             <NavbarBrand className="mr-lg-5" to="/" tag={Link}>
               <h3 className="mb-0 header-title">Deep Play</h3>
             </NavbarBrand>
-            <Nav className="navbar-nav-hover align-items-lg-center " navbar>
-              {
-                !isUserLoggedIn ?
-                  <React.Fragment>
-                    <span
-                      onClick={this.handleLoginModel}
-                      className="nav-link-inner--text pr-4 cursor_pointer">Login</span>
-                    <span
-                      onClick={this.handleSignupModel}
-                      className="nav-link-inner--text pr-2 cursor_pointer">Signup</span>
-                  </React.Fragment> :
-                  <span onClick={e => logoutRequest(e)} className="nav-link-inner--text cursor_pointer pr-4">Logout</span>
-              }
-            </Nav>
+            <Nav className="navbar-nav-hover login-in-wrap align-items-center " navbar>
+                  {
+                    !isUserLoggedIn ?
+                      <React.Fragment>
+                        <span
+                          onClick={this.handleLoginModel}
+                          className="nav-link-inner--text pr-4 cusror_pointer">Login</span>
+                        <span
+                          onClick={this.handleSignupModel}
+                          className="nav-link-inner--text pr-2 cusror_pointer">Signup</span>
+                      </React.Fragment> :
+                      <span onClick={e => logoutRequest(e)} className="nav-link-inner--text pr-4">Logout</span>
+                  }
+                </Nav>
+           
             <UncontrolledCollapse navbar toggler="#navbar_global" className="justify-content-end">
               <div className="navbar-collapse-header">
                 <Row>
