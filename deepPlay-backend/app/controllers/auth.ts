@@ -4,15 +4,21 @@ import { UserModel } from "../models";
 import {
   GenerateToken,
   ValidationFormatter,
-  encryptPassword
+  encryptPassword,
+  Email,
+  AvailiableTemplates,
+  encrypt,
+  decrypt
 } from "../common";
 import { IUser } from "../interfaces"
 import { comparePassword } from "../common/password"
-
+import { webURL } from "../config/app"
 import { ValidationError, Result, validationResult } from "express-validator";
+import { from } from "rxjs";
 
 /* Title:- Login For User
-Prams:- email and password */
+Prams:- email and password 
+Created By:- Rishabh Bula*/
 
 const login = async (req: Request, res: Response): Promise<any> => {
   try {
@@ -59,7 +65,9 @@ const login = async (req: Request, res: Response): Promise<any> => {
 };
 
 /* Title:- Signup For User
-Prams:- email,password,firstName,lastName,profileImage,roleType */
+Prams:- email,password,firstName,lastName,profileImage,roleType 
+Created By:- Rishabh Bula*/
+
 const signup = async (req: Request, res: Response): Promise<any> => {
   try {
     const { body } = req;
@@ -114,8 +122,11 @@ const signup = async (req: Request, res: Response): Promise<any> => {
     });
   }
 };
+
 /* Title:- Social Signup For User
-Prams:- accessToken,email,firstName,lastName */
+Prams:- accessToken,email,firstName,lastName
+Created By:- Rishabh Bula */
+
 const socialSignup = async (req: Request, res: Response) => {
   const { body } = req;
   try {
@@ -184,11 +195,178 @@ const socialSignup = async (req: Request, res: Response) => {
     });
   }
 }
+
+/*  Title:- User forgot Password
+Prams:- email
+Created By:- Rishabh Bula */
+
+const userForgotPassword = async (req: Request, res: Response): Promise<any> => {
+  try {
+    const errors: Result<ValidationError> = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(422).json({
+        message: ValidationFormatter(errors.mapped())
+      });
+    }
+    const { body } = req;
+    const { email } = body;
+    const result: Document | null | any = await UserModel.findOne({
+      email: email
+    });
+    if (result === null) {
+      return res.status(400).json({
+        message: "Email not found."
+      });
+    }
+    const encryptedUserId = encrypt(result.id);
+    const encrypteUserEmail = encrypt(result.email);
+    const encrypteVerifyToken = encrypt(
+      result.email + result.id
+    );
+    const emailVar = new Email(req);
+    await emailVar.setTemplate(AvailiableTemplates.FORGET_PASSWORD, {
+      fullName: result.firstName + " " + result.lastName,
+      email: encrypteUserEmail,
+      userId: encryptedUserId,
+      verifyToken: encrypteVerifyToken,
+      resetPageUrl: webURL
+    });
+    await UserModel.updateOne(
+      {
+        email: result.email
+      },
+      {
+        verifyToken: encrypteVerifyToken
+      }
+    );
+    await emailVar.sendEmail(body.email);
+    return res.status(200).json({
+      responsecode: 200,
+      message:
+        "Reset password link have been send successfully to your registered email address.",
+      success: true
+    });
+  } catch (error) {
+    console.log("this is forgot password error", error);
+    return res.status(500).json({
+      message: error.message ? error.message : "Unexpected error occure.",
+      success: false
+    });
+  }
+};
+
+/*  Title:- User Veryfy Link
+Prams:- verification, token,
+Created By:- Rishabh Bula */
+
+const userVerifyLink = async (req: Request, res: Response): Promise<any> => {
+  try {
+    const errors: Result<ValidationError> = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(422).json({
+        message: ValidationFormatter(errors.mapped())
+      });
+    }
+    const { body } = req;
+    const decryptedUserId = decrypt(body.verification);
+    const decryptedUserEmail = decrypt(body.user);
+    const userData: Document | any | null = await UserModel.findOne({
+      email: decryptedUserEmail,
+      _id: decryptedUserId,
+      verifyToken: body.token
+    });
+    if (!userData) {
+      return res.status(400).json({
+        responsecode: 400,
+        message: "Your session has been expired.",
+        success: false
+      });
+    }
+    return res.status(200).json({
+      message: "Link verified successfully!",
+      data: userData,
+      success: true
+    });
+  } catch (error) {
+    console.log("this is verify link error", error);
+    return res.status(500).json({
+      message: error.message ? error.message : "Unexpected error occure.",
+      success: false
+    });
+  }
+};
+
+/*  Title:- User Reset Password
+Prams:- user, password 
+Created By:- Rishabh Bula*/
+
+const userResetpassword = async (req: Request, res: Response): Promise<any> => {
+  try {
+    const errors: Result<ValidationError> = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(422).json({
+        message: ValidationFormatter(errors.mapped())
+      });
+    }
+    const { body } = req;
+    const decryptedUserEmail = decrypt(body.user);
+    const userData: Document | any | null = await UserModel.findOne({ email: decryptedUserEmail });
+    if (!userData) {
+      return res.status(400).json({
+        responsecode: 400,
+        message: "Email not registered.",
+        success: false
+      });
+    }
+    const encryptedUserpassword = encryptPassword(
+      body.password
+    );
+    if (!userData.verifyToken) {
+      return res.status(400).json({
+        responsecode: 400,
+        message: "Your session has been expired.",
+        success: false
+      });
+    }
+    const result = await UserModel.findByIdAndUpdate(
+      {
+        _id: userData.id
+      },
+      {
+        $set: {
+          password: encryptedUserpassword,
+          verifyToken: null
+        }
+      }
+    );
+    if (result) {
+      return res.status(200).json({
+        message: "Password updated successfully!",
+        success: true
+      });
+    } else {
+      return res.status(400).json({
+        responsecode: 400,
+        message: "Your session has been expired.",
+        success: false
+      });
+    }
+  } catch (error) {
+    console.log("this is Reset password error", error);
+    return res.status(500).json({
+      message: error.message ? error.message : "Unexpected error occure.",
+      success: false
+    });
+  }
+};
 /**
  *
  */
 export {
   login,
   signup,
-  socialSignup
+  socialSignup,
+  userForgotPassword,
+  userVerifyLink,
+  userResetpassword
 };

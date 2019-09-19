@@ -6,6 +6,7 @@ import {
   // redirectTo,
   loginSuccess,
   logoutSuccess,
+  forgotPasswordSuccess
 } from "../actions";
 //import { logger } from "helper/Logger";
 import { toast } from "react-toastify";
@@ -100,8 +101,46 @@ const socialLoginLogic = createLogic({
 /**
  *
  */
+const forgetPasswordLogic = createLogic({
+  type: loginAction.FORGET_PASSWORD_REQUEST,
+  async process({ action }, dispatch, done) {
+   let api = new ApiHelper();
+    let result = await api.FetchFromServer(
+      "/auth",
+      "/forgotPassword",
+      "POST",
+      false,
+      undefined,
+      action.payload
+    );
+    if (result.isError) {
+      toast.error(result.messages[0]);
+      done();
+      return;
+    } else {
+      toast.success(result.messages[0]);
+      dispatch(forgotPasswordSuccess(
+        {
+          isSendingLink: false
+        }
+      ))
+      dispatch(
+        modelOpenRequest({
+          modelDetails: {
+            forgotPasswordModalOpen: false
+          }
+        })
+      )
+      done();
+    }
+  }
+});
+/**
+ *
+ */
 export const LoginLogics = [
   loginLogic,
   logOutLogic,
-  socialLoginLogic
+  socialLoginLogic,
+  forgetPasswordLogic
 ];

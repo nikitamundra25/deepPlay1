@@ -51,9 +51,20 @@ class DefaultHeader extends React.Component {
   }
 
   render() {
-    const { modelInfoReducer, loginRequest, logoutRequest, signupRequest, socialLoginRequest } = this.props;
+    const {
+      modelInfoReducer,
+      loginRequest,
+      logoutRequest,
+      signupRequest,
+      socialLoginRequest,
+      loginReducer, 
+      forgotPasswordRequest,
+      modelOpenRequest } = this.props;
     const { modelDetails } = modelInfoReducer;
-    const { loginModelOpen, signupModelOpen } = modelDetails;
+    const {
+      loginModelOpen,
+      signupModelOpen,
+      forgotPasswordModalOpen } = modelDetails;
     const { isUserLoggedIn } = this.state;
     return (
       <>
@@ -109,6 +120,11 @@ class DefaultHeader extends React.Component {
           handleLoginModel={this.handleLoginModel}
           loginRequest={loginRequest}
           socialLoginRequest={socialLoginRequest}
+          openForgotPasswordModel={forgotPasswordModalOpen}
+          modelOpenRequest={modelOpenRequest}
+          forgotPasswordRequest={forgotPasswordRequest}
+          modelInfoReducer={modelInfoReducer}
+          loginReducer={loginReducer}
         />
         <Signup
           openSignupModel={signupModelOpen}

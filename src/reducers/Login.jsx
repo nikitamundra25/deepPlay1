@@ -3,6 +3,7 @@ import { loginAction, signupActions } from "./../actions";
 
 const initialState = {
    isLoginSuccess: false,
+   isSendingLink: false
 };
 
 export const loginReducer = handleActions(
@@ -19,6 +20,18 @@ export const loginReducer = handleActions(
    {
       [signupActions.SIGNUP_SUCCESS]: (state, { payload }) => ({
          isLoginSuccess: payload.isLoginSuccess
+      }),
+   },
+   {
+      [loginAction.FORGET_PASSWORD_REQUEST]: (state, { payload }) => ({
+         ...state,
+         isSendingLink: true
+      }),
+   },
+   {
+      [loginAction.FORGET_PASSWORD_SUCCESS]: (state, { payload }) => ({
+         ...state,
+         isSendingLink: false
       }),
    },
    initialState

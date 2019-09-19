@@ -6,6 +6,7 @@ const Dashboard = React.lazy(() => import("./container/Dashboard"));
 const Settings = React.lazy(() => import("./container/Settings"));
 const Folders = React.lazy(() => import("./container/Folders"));
 const Sets = React.lazy(() => import("./container/Sets"));
+const ResetPassword = React.lazy(() => import("./container/Auth/ResetPassword"));
 
 const routes = [
   {
@@ -37,6 +38,12 @@ const routes = [
     name: AppRoutes.SETTINGS.name,
     exact: AppRoutes.SETTINGS.exact,
     component: Settings
+  },
+  {
+    path: AppRoutes.RESET_PASSWORD.url,
+    exact: AppRoutes.RESET_PASSWORD.exact,
+    name: AppRoutes.RESET_PASSWORD.name,
+    component: ResetPassword
   },
 ];
 

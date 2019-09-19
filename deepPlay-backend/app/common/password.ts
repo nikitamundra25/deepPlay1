@@ -1,5 +1,5 @@
 import bcrypt from "bcrypt";
-import crypto, { Hash } from "crypto";
+import crypto, { Hash, Cipher, Decipher } from "crypto";
 /**
  * Encrypt the password using bcrypt algo
  */
@@ -44,7 +44,22 @@ const verifyPassword = (
   var pwd: string = hash.update(password + "-" + salt).digest("hex");
   return pwd == hashedPassword;
 };
-
+//Encrypt Email and Id
+var algorithm: string = 'aes-256-cbc';
+var password: string = 'password';
+const encrypt = (text: string) => {
+  const cipher:Cipher = crypto.createCipher(algorithm, password );
+  var crypted:string = cipher.update(text.toString(), 'utf8', 'hex');
+  crypted += cipher.final('hex');
+  return crypted;
+}
+// Dycript Email and Id
+const decrypt = (text: string) => {
+  const decipher:Decipher = crypto.createDecipher(algorithm, password );
+  var dec:string = decipher.update(text, 'hex', 'utf8');
+  dec += decipher.final('utf8');
+  return dec;
+}
 /**
  *
  */
@@ -56,5 +71,7 @@ export {
   generateSalt,
   hashPassword,
   verifyPassword,
+  encrypt,
+  decrypt,
   JWTSecrete
 };
