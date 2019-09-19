@@ -2,11 +2,14 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import { Route, Switch, withRouter } from "react-router-dom";
 import { redirectTo } from "../actions/index.jsx";
+import {AppRoutes as routesData}  from "../config/AppRoutes";
 import "../App.scss";
 // Pages
 const DefaultLayout = React.lazy(() =>
-  import("../container/DefaultLayout/DefaultLayout")
+import("../container/DefaultLayout/DefaultLayout")
 );
+const Login = React.lazy(() => import("../container/Auth/Login"));
+const Signup = React.lazy(() => import("../container/Auth/Signup"));
 
 const Routes = [
   {
@@ -14,7 +17,19 @@ const Routes = [
     path: "/",
     name: "Home",
     component: DefaultLayout
-  }
+  },
+  {
+    path: routesData.LOGIN.url,
+    exact: routesData.LOGIN.exact,
+    name: routesData.LOGIN.name,
+    component: Login
+  },
+  {
+    path: routesData.SIGNUP.url,
+    exact: routesData.SIGNUP.exact,
+    name: routesData.SIGNUP.name,
+    component: Signup
+  },
 ];
 
 class AppRoutes extends Component {

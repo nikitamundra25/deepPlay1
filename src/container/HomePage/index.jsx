@@ -22,7 +22,7 @@ class HomePage extends React.Component {
               {/* <iframe width="560" title={"Dance"} height="315" src="https://www.youtube.com/embed/nrDtcsyd-U4" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe> */}
               <div className="d-flex video-add-banner justify-content-center align-items-center">
                 <span className="play-ic-wrap">
-                  <i class="fa fa-play" aria-hidden="true"></i>
+                  <i className="fa fa-play" aria-hidden="true"></i>
                 </span>
               </div>
             </Col>

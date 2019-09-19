@@ -4,7 +4,7 @@ import { Button, FormGroup, Form, Input, Label, Row, Col } from "reactstrap";
 class SettingComponent extends Component {
   render() {
     return (
-      <div className="col-md-12 col-sm-12 dashboard-right-wrap">
+      <div className="col-md-12 col-sm-12">
         <h1>Settings</h1>
         <div className="dashboard-right-profile">
           <h6>PROFILE </h6>
@@ -25,7 +25,7 @@ class SettingComponent extends Component {
         </div>
         <div className="settingForm">
           <Form>
-            <Row>
+            <Row className={"m-0"}>
               <Col md="6">
                 <FormGroup>
                   <Label for="firstName">First Name</Label>

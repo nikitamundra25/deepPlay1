@@ -23,6 +23,10 @@ import {
   SingupValidations,
   SingupValidationsMessaages
 } from "../../validations";
+import FacebookLogin from 'react-facebook-login';
+import GoogleLogin from 'react-google-login';
+import { toast } from "react-toastify";
+import { logger } from "helper/Logger";
 
 class SignupComponent extends React.Component {
   constructor(props) {
@@ -54,6 +58,62 @@ class SignupComponent extends React.Component {
   /*
   /* 
   */
+  /*
+   /* 
+   */
+  handleFacebookLogin = (response) => {
+    try {
+      const name = response.name.split(" ")
+      const payload = {
+        email: response.email,
+        firstName: name[0],
+        lastName: name[1],
+        profileImage: response.picture.data.url,
+        accessToken: response.accessToken
+      }
+      this.setState({
+        email: payload.email,
+        firstName: payload.firstName,
+        lastName: payload.lastName,
+      })
+    } catch (error) {
+      logger(error)
+      if (!toast.isActive(this.toastId)) {
+        this.toastId = toast.error(
+          error
+        );
+      }
+    }
+  }
+  /*
+  /* 
+  */
+  handleGoogleLogin = (response) => {
+    try {
+      const payload = {
+        email: response.profileObj.email,
+        firstName: response.profileObj.givenName,
+        lastName: response.profileObj.familyName,
+        profileImage: response.profileObj.imageUrl,
+        accessToken: response.accessToken
+      }
+      this.setState({
+        email: payload.email,
+        firstName: payload.firstName,
+        lastName: payload.lastName,
+      })
+    } catch (error) {
+      logger(error)
+      if (!toast.isActive(this.toastId)) {
+        this.toastId = toast.error(
+          error
+        );
+      }
+    }
+  }
+  /*
+  /* 
+  */
   handleChange = e => {
     const { name, value, checked } = e.target;
     if (name === "roleType") {
@@ -64,8 +124,6 @@ class SignupComponent extends React.Component {
     if (name === "password") {
       let res = (value).match(/^(?:[0-9]+[a-z]|[a-z]+[0-9])[a-z0-9]*$/i);
       if (res) {
-        console.log(value);
-
         this.setState({
           passwordStrength: "strong"
         })
@@ -139,34 +197,33 @@ class SignupComponent extends React.Component {
                   <small>Sign up with</small>
                 </div>
                 <div className="btn-wrapper text-center">
-                  <Button
-                    className="btn-neutral btn-icon"
-                    color="default"
-                    href="#pablo"
-                    onClick={e => e.preventDefault()}
-                  >
-                    <span className="btn-inner--icon">
-                      <img
-                        alt="..."
-                        src={require("assets/img/icons/common/facebook.svg")}
-                      />
-                    </span>
-                    <span className="btn-inner--text">Facebook</span>
-                  </Button>
-                  <Button
-                    className="btn-neutral btn-icon"
-                    color="default"
-                    href="#pablo"
-                    onClick={e => e.preventDefault()}
-                  >
-                    <span className="btn-inner--icon">
-                      <img
-                        alt="..."
-                        src={require("assets/img/icons/common/google.svg")}
-                      />
-                    </span>
-                    <span className="btn-inner--text">Google</span>
-                  </Button>
+                  <span className="btn-inner--icon pr-2">
+                    <img
+                      alt="..."
+                      src={require("assets/img/icons/common/facebook.svg")}
+                      width={20}
+                      height={20}
+                    />
+                    <FacebookLogin
+                      appId="429677604320021"
+                      autoLoad={false}
+                      fields="name,email,picture"
+                      textButton={"Facebook"}
+                      callback={this.handleFacebookLogin}
+                      cssClass={"btn-neutral btn-icon btn btn-default"}
+                      icon={"assets/img/icons/common/facebook.svg"}
+                    />
+                  </span>
+                  <span className="btn-inner--icon">
+                    <GoogleLogin
+                      clientId="52209426453-64s7do5ib1j1s3e9fhgnjgmvi3931vqm.apps.googleusercontent.com"
+                      buttonText="Google"
+                      className={"btn-neutral btn-icon btn btn-default"}
+                      onSuccess={this.handleGoogleLogin}
+                      onFailure={this.handleGoogleLogin}
+                      cookiePolicy={'single_host_origin'}
+                    />
+                  </span>
                 </div>
               </CardHeader>
               <CardBody className="px-lg-3">

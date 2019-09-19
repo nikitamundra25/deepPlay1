@@ -18,7 +18,9 @@ import {
 import Validator from "js-object-validation";
 import { LoginValidations, LoginValidationsMessaages } from "../../validations";
 import { logger } from "helper/Logger";
-
+import FacebookLogin from 'react-facebook-login';
+import GoogleLogin from 'react-google-login';
+import { toast } from "react-toastify";
 // core components
 class LoginComponent extends React.Component {
   constructor(props) {
@@ -45,6 +47,51 @@ class LoginComponent extends React.Component {
     this.setState({
       [name]: value
     })
+  }
+  /*
+  /* 
+  */
+  handleFacebookLogin = (response) => {
+    try {
+      const name = response.name.split(" ")
+      const payload = {
+        email: response.email,
+        firstName: name[0],
+        lastName: name[1],
+        profileImage: response.picture.data.url,
+        accessToken: response.accessToken
+      }
+      this.props.socialLoginRequest(payload)
+    } catch (error) {
+      logger(error)
+      if (!toast.isActive(this.toastId)) {
+        this.toastId = toast.error(
+          error
+        );
+      }
+    }
+  }
+  /*
+  /* 
+  */
+  handleGoogleLogin = (response) => {
+    try {
+      const payload = {
+        email: response.profileObj.email,
+        firstName: response.profileObj.givenName,
+        lastName: response.profileObj.familyName,
+        profileImage: response.profileObj.imageUrl,
+        accessToken: response.accessToken
+      }
+    this.props.socialLoginRequest(payload)
+    } catch (error) {
+      logger(error)
+      if (!toast.isActive(this.toastId)) {
+        this.toastId = toast.error(
+          error
+        );
+      }
+    }
   }
   /*
   /* 
@@ -98,34 +145,33 @@ class LoginComponent extends React.Component {
               Sign in with
                 </div>
                 <div className="btn-wrapper text-center">
-                  <Button
-                    className="btn-neutral btn-icon"
-                    color="default"
-                    href="#pablo"
-                    onClick={e => e.preventDefault()}
-                  >
-                    <span className="btn-inner--icon">
-                      <img
-                        alt="..."
-                        src={require("assets/img/icons/common/facebook.svg")}
-                      />
-                    </span>
-                    <span className="btn-inner--text">Facebook</span>
-                  </Button>
-                  <Button
-                    className="btn-neutral btn-icon"
-                    color="default"
-                    href="#pablo"
-                    onClick={e => e.preventDefault()}
-                  >
-                    <span className="btn-inner--icon">
-                      <img
-                        alt="..."
-                        src={require("assets/img/icons/common/google.svg")}
-                      />
-                    </span>
-                    <span className="btn-inner--text">Google</span>
-                  </Button>
+                  <span className="btn-inner--icon pr-2">
+                    <img
+                      alt="..."
+                      src={require("assets/img/icons/common/facebook.svg")}
+                      width={20}
+                      height={20}
+                    />
+                    <FacebookLogin
+                      appId="429677604320021"
+                      autoLoad={false}
+                      fields="name,email,picture"
+                      textButton={"Facebook"}
+                      callback={this.handleFacebookLogin}
+                      cssClass={"btn-neutral btn-icon btn btn-default"}
+                      icon={"assets/img/icons/common/facebook.svg"}
+                    />
+                  </span>
+                  <span className="btn-inner--icon">
+                    <GoogleLogin
+                      clientId="52209426453-64s7do5ib1j1s3e9fhgnjgmvi3931vqm.apps.googleusercontent.com"
+                      buttonText="Google"
+                      className={"btn-neutral btn-icon btn btn-default"}
+                      onSuccess={this.handleGoogleLogin}
+                      onFailure={this.handleGoogleLogin}
+                      cookiePolicy={'single_host_origin'}
+                    />
+                  </span>
                 </div>
               </CardHeader>
               <CardBody className="px-lg-5 ">
@@ -171,23 +217,22 @@ class LoginComponent extends React.Component {
                       </FormFeedback>
                     </InputGroup>
                   </FormGroup>
-                  <div className="custom-control custom-control-alternative custom-checkbox">
-                    <input
-                      className="custom-control-input"
-                      id=" customCheckLogin"
-                      type="checkbox"
-                    />
-                    <label
-                      className="custom-control-label"
-                      htmlFor=" customCheckLogin"
-                    >
-                      <span className="text-muted">Remember me</span>
-                    </label>
+                  <div className={"text-center text-primary cursor_pointer"}>
+                      Forgot password?
                   </div>
                   <div className="text-center">
                     <Button
-                      className="my-4"
-                      color="primary"
+                      className="my-4 btn-black btn-block"
+                      // color="primary"
+                      
+                      type="submit"
+                    >
+                      Sign in
+                    </Button>
+                    <Button
+                      className="my-4 btn-black btn-line-black btn-block"
+                      // color="primary"
+                      
                       type="submit"
                     >
                       Sign in

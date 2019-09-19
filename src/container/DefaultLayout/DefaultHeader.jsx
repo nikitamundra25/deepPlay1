@@ -5,7 +5,6 @@ import {
   NavbarBrand,
   Navbar,
   Nav,
-  Container,
   Row,
   Col,
 } from "reactstrap";
@@ -52,7 +51,7 @@ class DefaultHeader extends React.Component {
   }
 
   render() {
-    const { modelInfoReducer, loginRequest, logoutRequest, signupRequest } = this.props;
+    const { modelInfoReducer, loginRequest, logoutRequest, signupRequest, socialLoginRequest } = this.props;
     const { modelDetails } = modelInfoReducer;
     const { loginModelOpen, signupModelOpen } = modelDetails;
     const { isUserLoggedIn } = this.state;
@@ -64,11 +63,11 @@ class DefaultHeader extends React.Component {
             // expand="lg"
             id="navbar-main"
           >
-           
-              <NavbarBrand className="mr-lg-5" to="/" tag={Link}>
-                <h3 className="mb-0 header-title">Deep Play</h3>
-              </NavbarBrand>
-              <Nav className="navbar-nav-hover login-in-wrap align-items-center " navbar>
+
+            <NavbarBrand className="mr-lg-5" to="/" tag={Link}>
+              <h3 className="mb-0 header-title">Deep Play</h3>
+            </NavbarBrand>
+            <Nav className="navbar-nav-hover login-in-wrap align-items-center " navbar>
                   {
                     !isUserLoggedIn ?
                       <React.Fragment>
@@ -82,47 +81,35 @@ class DefaultHeader extends React.Component {
                       <span onClick={e => logoutRequest(e)} className="nav-link-inner--text pr-4">Logout</span>
                   }
                 </Nav>
-              <UncontrolledCollapse navbar toggler="#navbar_global" className="justify-content-end">
-                <div className="navbar-collapse-header">
-                  <Row>
-                    <Col className="collapse-brand" xs="6">
-                      <Link to="/">
-                        <img
-                          alt="..."
-                          src={require("assets/img/brand/argon-react.png")}
-                        />
-                      </Link>
-                    </Col>
-                    <Col className="collapse-close" xs="6">
-                      <button className="navbar-toggler" id="navbar_global">
-                        <span />
-                        <span />
-                      </button>
-                    </Col>
-                  </Row>
-                </div>
-                {/* <Nav className="navbar-nav-hover align-items-lg-center " navbar>
-                  {
-                    !isUserLoggedIn ?
-                      <React.Fragment>
-                        <span
-                          onClick={this.handleLoginModel}
-                          className="nav-link-inner--text pr-4 cusror_pointer">Login</span>
-                        <span
-                          onClick={this.handleSignupModel}
-                          className="nav-link-inner--text pr-2 cusror_pointer">Signup</span>
-                      </React.Fragment> :
-                      <span onClick={e => logoutRequest(e)} className="nav-link-inner--text pr-4">Logout</span>
-                  }
-                </Nav> */}
-              </UncontrolledCollapse>
-        
+           
+            <UncontrolledCollapse navbar toggler="#navbar_global" className="justify-content-end">
+              <div className="navbar-collapse-header">
+                <Row>
+                  <Col className="collapse-brand" xs="6">
+                    <Link to="/">
+                      <img
+                        alt="..."
+                        src={require("assets/img/brand/argon-react.png")}
+                      />
+                    </Link>
+                  </Col>
+                  <Col className="collapse-close" xs="6">
+                    <button className="navbar-toggler" id="navbar_global">
+                      <span />
+                      <span />
+                    </button>
+                  </Col>
+                </Row>
+              </div>
+            </UncontrolledCollapse>
+
           </Navbar>
         </header>
         <Login
           openLoginModel={loginModelOpen}
           handleLoginModel={this.handleLoginModel}
           loginRequest={loginRequest}
+          socialLoginRequest={socialLoginRequest}
         />
         <Signup
           openSignupModel={signupModelOpen}

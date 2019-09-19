@@ -9,7 +9,7 @@ $dashboardTextColor: #455358;
 $dashboardTextLight: #868686;
 // @import "./assets/scss/custom/variables.scss";
 body {
-  .cusror_pointer {
+  .cursor_pointer {
     cursor: pointer;
   }
   .modal-backdrop.show {
@@ -138,6 +138,14 @@ body {
       color: $videoAddBannerBack;
     }
   }
+}
+.theme-container{
+  width: 100%;
+  padding-right: 15px;
+  padding-left: 15px;
+  margin-right: auto;
+  margin-left: auto;
+  max-width: 1600px;
 }
 .theme-heading {
   font-weight: bold;
@@ -335,22 +343,28 @@ body {
 .btn-black {
   background: $balckColor;
   border: $balckColor;
+  color: $whiteColor;
   &:hover {
     background: #343434;
     border: #343434;
+    color: $whiteColor;
   }
 }
 .btn-line-black {
   color: $balckColor;
   background: transparent;
-  border: $balckColor;
+  border:1px solid $balckColor;
   &:hover {
-    color: $balckColor;
+    color: #343434;
     background: transparent;
-    border: $balckColor;
+    border:1px solid #343434;
   }
 }
 .custom-checkbox .custom-control-input:checked ~ .custom-control-label::before {
   border-color: #000;
   background-color: #000;
+}
+.forgot-password-wrap{
+  color: #000;
+  font-weight: bold;
 }

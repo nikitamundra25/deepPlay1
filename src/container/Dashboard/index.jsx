@@ -1,15 +1,12 @@
 import React from "react";
 import { connect } from "react-redux";
-import { Row, Col, Badge, Container } from "reactstrap";
+import { Row, Col, Badge } from "reactstrap";
 
 // core components
 class Dashboard extends React.Component {
   render() {
     return (
-      // <Container>
-      //   Dashboard Works!!
-      // </Container>
-      <div className="dashboard-right-wrap">
+      <div className="">
         <div className="dashboard-right-section">
 
           <div className="page-body">
@@ -23,7 +20,7 @@ class Dashboard extends React.Component {
                   <div className="badge-wrap">
                     <Badge variant="secondary" className="draft-wrap">
                       DRAFT
-      </Badge>
+                    </Badge>
                   </div>
                   <div className="cotent-tile d-flex">
                     <div className="cotent-text-tile">
@@ -48,7 +45,7 @@ class Dashboard extends React.Component {
                   <div className="badge-wrap">
                     <Badge variant="secondary" className="draft-wrap">
                       DRAFT
-      </Badge>
+                    </Badge>
                   </div>
                   <div className="cotent-tile d-flex">
                     <div className="cotent-text-tile">
@@ -73,7 +70,7 @@ class Dashboard extends React.Component {
                   <div className="badge-wrap">
                     <Badge variant="secondary" className="draft-wrap">
                       DRAFT
-      </Badge>
+                    </Badge>
                   </div>
                   <div className="cotent-tile d-flex">
                     <div className="cotent-text-tile">
@@ -98,7 +95,7 @@ class Dashboard extends React.Component {
                   <div className="badge-wrap">
                     <Badge variant="secondary" className="draft-wrap">
                       DRAFT
-      </Badge>
+                    </Badge>
                   </div>
                   <div className="cotent-tile d-flex">
                     <div className="cotent-text-tile">
@@ -123,7 +120,7 @@ class Dashboard extends React.Component {
                   <div className="badge-wrap">
                     <Badge variant="secondary" className="draft-wrap">
                       DRAFT
-      </Badge>
+                    </Badge>
                   </div>
                   <div className="cotent-tile d-flex">
                     <div className="cotent-text-tile">
