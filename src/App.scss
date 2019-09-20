@@ -12,6 +12,9 @@ body {
   .cursor_pointer {
     cursor: pointer;
   }
+  .modal-text-center {
+    text-align: center;
+  }
   .modal-backdrop.show {
     opacity: 0.5;
   }
@@ -139,7 +142,7 @@ body {
     }
   }
 }
-.theme-container{
+.theme-container {
   width: 100%;
   padding-right: 15px;
   padding-left: 15px;
@@ -185,6 +188,9 @@ body {
   .home-message-btn {
     width: 100%;
     max-width: 150px;
+  }
+  .capitalize {
+    text-transform: capitalize;
   }
 }
 .dashboard-full-section {
