@@ -6,12 +6,12 @@ import { Row, Col, Badge } from "reactstrap";
 class Dashboard extends React.Component {
   render() {
     return (
-      <div className="">
+      <div className="dashboard-right-wrap">
         <div className="dashboard-right-section">
 
           <div className="page-body">
             <div className="content-header">
-              <span className="content-title">RECENT</span>
+              <span className="content-title">RECENT</span> 
               <a className="dashboard-right-content" href="#">View all</a>
             </div>
             <Row>

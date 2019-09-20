@@ -49,12 +49,13 @@ class DefaultLayout extends React.Component {
           socialLoginRequest={socialLoginRequest}
         />
         <>
-          <div className={"theme-container"}>
+        
             <div className="dashboard-full-section">
+          <div className={"theme-container"}>
               {isLoggedIn && routePath !== "/" ?
                 <div className="ct-sidebar app-sidebar">
                   <DefaultSidebar /></div> : null}
-              <div className={"dashboard-right-wrap"}>
+              
                 <Suspense fallback={""}>
                   <Switch>
                     {routes.map((route, idx) => {
@@ -74,7 +75,7 @@ class DefaultLayout extends React.Component {
                 </Suspense>
               </div>
             </div>
-          </div>
+          
         </>
         {isLoggedIn && routePath !== "/" ?
           null : <DefaultFooter />}

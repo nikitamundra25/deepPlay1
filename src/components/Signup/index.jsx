@@ -183,27 +183,20 @@ class SignupComponent extends React.Component {
     return (
       <>
         <Modal
-          className="modal-dialog-centered"
-          size="sm"
+          className="modal-dialog-centered log-user-model"
           isOpen={openSignupModel}
           toggle={handleSignupModel}
           backdrop={"static"}
         >
-          {/* <ModalHeader toggle={handleSignupModel}>Sign Up</ModalHeader> */}
+          <ModalHeader toggle={handleSignupModel}></ModalHeader>
           <ModalBody className="modal-body p-0">
             <Card className="bg-secondaryborder-0">
-              <CardHeader className="bg-transparent pb-2">
-                <div className="text-muted text-center mt-2 mb-3">
-                  <small>Sign up with</small>
+            <CardHeader   >
+                <div className=" login-heading text-center mt-2 mb-3">
+              Sign up with
                 </div>
-                <div className="btn-wrapper text-center">
-                  <span className="btn-inner--icon pr-2">
-                    <img
-                      alt="..."
-                      src={require("assets/img/icons/common/facebook.svg")}
-                      width={20}
-                      height={20}
-                    />
+                <div className="btn-wrapper text-center social-media-wrap">
+                  <span className="btn-inner--icon mr-2 facebook-wrap">
                     <FacebookLogin
                       appId="429677604320021"
                       autoLoad={false}
@@ -211,10 +204,10 @@ class SignupComponent extends React.Component {
                       textButton={"Facebook"}
                       callback={this.handleFacebookLogin}
                       cssClass={"btn-neutral btn-icon btn btn-default"}
-                      icon={"assets/img/icons/common/facebook.svg"}
+                      icon={"fa-facebook"}
                     />
                   </span>
-                  <span className="btn-inner--icon">
+                  <span className="btn-inner--icon google-wrap">
                     <GoogleLogin
                       clientId="52209426453-64s7do5ib1j1s3e9fhgnjgmvi3931vqm.apps.googleusercontent.com"
                       buttonText="Google"
@@ -226,6 +219,7 @@ class SignupComponent extends React.Component {
                   </span>
                 </div>
               </CardHeader>
+            
               <CardBody className="px-lg-3">
                 <div className="text-center text-muted mb-4">
                   <small>Or sign up and generate your credentials</small>
@@ -312,8 +306,7 @@ class SignupComponent extends React.Component {
                         {errors.password ? errors.password : null}
                       </FormFeedback>
                     </InputGroup>
-                  </FormGroup>
-                  {
+                    {
                     password ?
                       <div className="text-muted font-italic">
                         <small>
@@ -325,6 +318,8 @@ class SignupComponent extends React.Component {
                       </div> :
                       null
                   }
+                  </FormGroup>
+             
                   <FormGroup>
                     <InputGroup className="input-group-alternative">
                       <InputGroupAddon addonType="prepend">
@@ -345,10 +340,7 @@ class SignupComponent extends React.Component {
                         {errors.confirmPassword ? errors.confirmPassword : null}
                       </FormFeedback>
                     </InputGroup>
-                  </FormGroup>
-                  <Row className="my-4">
-                    <Col xs="12">
-                      <div className="custom-control custom-control-alternative custom-checkbox">
+                    <div className="custom-control custom-control-alternative custom-checkbox mt-2 mb-4">
                         <Input
                           className="custom-control-input"
                           id="customCheckRegister"
@@ -366,15 +358,24 @@ class SignupComponent extends React.Component {
                           </span>
                         </label>
                       </div>
-                    </Col>
-                  </Row>
+                  </FormGroup>
+                  
                   <div className="text-center">
                     <Button
-                      className="mt-4"
-                      color="primary"
+                      className="mb-4 btn-black btn-block"
+                      color=" "
+                      
                       type="submit"
                     >
-                      Create account
+                      Sign up
+                    </Button>
+                    <Button
+                      className="my-4 btn-black btn-line-black btn-block"
+                      color=" "
+                      
+                      type="submit"
+                    >
+                   Already have an account? Sign in
                     </Button>
                   </div>
                 </Form>
