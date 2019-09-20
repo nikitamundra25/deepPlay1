@@ -6,11 +6,11 @@ export const SidebarComponent = [
     url: AppRoutes.DASHBOARD.url,
     icon: "ni ni-album-2"
   },
-  {
-    name: AppRoutes.ADD_MOVE.name,
-    url: AppRoutes.ADD_MOVE.url,
-    icon: "ni ni-album-2"
-  },
+  // {
+  //   name: AppRoutes.ADD_MOVE.name,
+  //   url: AppRoutes.ADD_MOVE.url,
+  //   icon: "ni ni-album-2"
+  // },
   {
     name: AppRoutes.SETS.name,
     url: AppRoutes.SETS.url,
