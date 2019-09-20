@@ -117,7 +117,7 @@ class ForgotPasswordComponent extends React.Component {
                     >
                       {
                         isSendingLink ?
-                          "Sending..." :
+                          "Plaese Wait..." :
                           "Send Link"
                       }
                     </Button>

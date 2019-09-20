@@ -11,10 +11,10 @@ class DefaultSidebar extends React.Component {
         <div className="dashboard-left">
           <ul className="list-group list-group-flush">
             {
-              SidebarComponent.map((items) => {
+              SidebarComponent.map((items, index) => {
                 return (
-                  <>
-                    <li className="list-group-item">
+                  <React.Fragment key={index}>
+                    <li className="list-group-item" >
                       <NavLink
                         activeClassName="active"
                         aria-current="page"
@@ -24,7 +24,7 @@ class DefaultSidebar extends React.Component {
                         <span>{" "}{items.name}</span>
                       </NavLink>
                     </li>
-                  </>
+                  </React.Fragment>
                 )
               })
             }

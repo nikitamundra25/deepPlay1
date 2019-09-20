@@ -11,7 +11,8 @@ import { Document } from "mongoose";
 export const AvailiableTemplates = {
    FORGET_PASSWORD: "forgotPassword",
    STATUS_CHANGE: "statusChange",
-   EMAIL_CHANGE: "emailChange"
+   EMAIL_CHANGE: "emailChange",
+   SIGNUP_CONFIRM: "signupConfirm"
 };
 export class Email {
    host: string | null;
@@ -42,6 +43,9 @@ export class Email {
             break;
          case AvailiableTemplates.EMAIL_CHANGE:
             this.subject = "[Deep Play] Email Change";
+            break;
+         case AvailiableTemplates.SIGNUP_CONFIRM:
+            this.subject = "[Deep Play] Welcome to Deep Play";
             break;
          default:
             throw new Error("Invalid template name");

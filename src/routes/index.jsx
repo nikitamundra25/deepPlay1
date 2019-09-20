@@ -9,6 +9,7 @@ const DefaultLayout = React.lazy(() =>
 import("../container/DefaultLayout/DefaultLayout")
 );
 const ResetPassword = React.lazy(() => import("../container/Auth/ResetPassword"));
+const Page404 = React.lazy(() => import("../components/Page404"));
 
 const Routes = [
   {
@@ -22,7 +23,13 @@ const Routes = [
     path: routesData.RESET_PASSWORD.url,
     name: routesData.RESET_PASSWORD.name,
     component: ResetPassword
-  }
+  },
+  {
+    exact: true,
+    path: "/404",
+    name: "Page 404",
+    component: Page404
+  },
 ];
 
 class AppRoutes extends Component {

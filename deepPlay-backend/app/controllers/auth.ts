@@ -108,6 +108,12 @@ const signup = async (req: Request, res: Response): Promise<any> => {
         role: userResult.roleType
       });
 
+      const emailVar = new Email(req);
+      await emailVar.setTemplate(AvailiableTemplates.SIGNUP_CONFIRM, {
+        firstName: userResult.firstName,
+        lastName: userResult.lastName,
+      });
+      await emailVar.sendEmail(body.email);
       return res.status(200).json({
         message: "User added successfully.",
         token: token,

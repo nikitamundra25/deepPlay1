@@ -42,7 +42,7 @@ class DefaultLayout extends React.Component {
     return (
       <>
         {
-          routePath !== "/resetPassword" ?
+          (routePath !== "/resetPassword") ?
             <DefaultHeader
               modelInfoReducer={modelInfoReducer}
               modelOpenRequest={modelOperate}

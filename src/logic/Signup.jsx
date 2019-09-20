@@ -28,6 +28,8 @@ const signupLogic = createLogic({
       return;
     } else {
       localStorage.setItem("token", result.data.token)
+      window.location.href = AppRoutes.DASHBOARD.url;
+      toast.success(result.messages[0]);
       dispatch(
         modelOpenRequest({
           modelDetails: {
@@ -38,7 +40,6 @@ const signupLogic = createLogic({
       dispatch(
         signupSuccess({ isLoginSuccess: true })
       )
-      window.location.href = AppRoutes.DASHBOARD.url;
       done();
     }
   }

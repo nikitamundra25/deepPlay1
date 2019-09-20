@@ -131,6 +131,7 @@ class DefaultHeader extends React.Component {
           openSignupModel={signupModelOpen}
           handleSignupModel={this.handleSignupModel}
           signupRequest={signupRequest}
+          loginReducer={loginReducer}
         />
       </>
     );

@@ -169,7 +169,7 @@ class SignupComponent extends React.Component {
   /* 
   */
   render() {
-    const { openSignupModel, handleSignupModel } = this.props
+    const { openSignupModel, handleSignupModel, loginReducer } = this.props
     const {
       email,
       password,
@@ -180,6 +180,8 @@ class SignupComponent extends React.Component {
       errors,
       passwordStrength
     } = this.state;
+    const { loadingVariable } = loginReducer
+
     return (
       <>
         <Modal
@@ -189,7 +191,7 @@ class SignupComponent extends React.Component {
           toggle={handleSignupModel}
           backdrop={"static"}
         >
-          {/* <ModalHeader toggle={handleSignupModel}>Sign Up</ModalHeader> */}
+          <ModalHeader toggle={handleSignupModel} />
           <ModalBody className="modal-body p-0">
             <Card className="bg-secondaryborder-0">
               <CardHeader className="bg-transparent pb-2">
@@ -373,8 +375,13 @@ class SignupComponent extends React.Component {
                       className="mt-4"
                       color="primary"
                       type="submit"
+                      disabled={loadingVariable.isSignupLoading ? true : false}
                     >
-                      Create account
+                      {
+                        loadingVariable.isSignupLoading ?
+                          "Please wait..." :
+                          "Create account"
+                      }
                     </Button>
                   </div>
                 </Form>

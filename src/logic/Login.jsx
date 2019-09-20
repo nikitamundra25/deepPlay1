@@ -3,7 +3,7 @@ import { ApiHelper } from "../helper"
 import {
   loginAction,
   modelOpenRequest,
-  // redirectTo,
+  redirectTo,
   loginSuccess,
   logoutSuccess,
   forgotPasswordSuccess
@@ -104,7 +104,7 @@ const socialLoginLogic = createLogic({
 const forgetPasswordLogic = createLogic({
   type: loginAction.FORGET_PASSWORD_REQUEST,
   async process({ action }, dispatch, done) {
-   let api = new ApiHelper();
+    let api = new ApiHelper();
     let result = await api.FetchFromServer(
       "/auth",
       "/forgotPassword",
@@ -118,12 +118,8 @@ const forgetPasswordLogic = createLogic({
       done();
       return;
     } else {
+      dispatch(forgotPasswordSuccess())
       toast.success(result.messages[0]);
-      dispatch(forgotPasswordSuccess(
-        {
-          isSendingLink: false
-        }
-      ))
       dispatch(
         modelOpenRequest({
           modelDetails: {
@@ -138,9 +134,62 @@ const forgetPasswordLogic = createLogic({
 /**
  *
  */
+const verifyResetTokenLogic = createLogic({
+  type: loginAction.VALIDATE_RESET_REQUEST,
+  async process({ action }, dispatch, done) {
+    let api = new ApiHelper();
+    let result = await api.FetchFromServer(
+      "/auth",
+      "/verifylink",
+      "POST",
+      false,
+      undefined,
+      action.payload
+    );
+    if (result.isError) {
+      toast.error(result.messages[0]);
+      dispatch(redirectTo({ path: "/404" }));
+      done();
+      return;
+    } else {
+      done();
+    }
+  }
+});
+/**
+ *
+ */
+const resetPasswordLogic = createLogic({
+  type: loginAction.RESET_PASSSWORD_REQUEST,
+  async process({ action }, dispatch, done) {
+    let api = new ApiHelper();
+    let result = await api.FetchFromServer(
+      "/auth",
+      "/resetPassword",
+      "POST",
+      false,
+      undefined,
+      action.payload
+    );
+    if (result.isError) {
+      toast.error(result.messages[0]);
+      done();
+      return;
+    } else {
+      toast.success(result.messages[0]);
+      dispatch(redirectTo({ path: "/" }));
+      done();
+    }
+  }
+});
+/**
+ *
+ */
 export const LoginLogics = [
   loginLogic,
   logOutLogic,
   socialLoginLogic,
-  forgetPasswordLogic
+  forgetPasswordLogic,
+  verifyResetTokenLogic,
+  resetPasswordLogic
 ];

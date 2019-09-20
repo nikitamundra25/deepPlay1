@@ -21,7 +21,7 @@ export const logoutSuccess = createAction(loginAction.LOGOUT_SUCCESS);
 
 export const forgotPasswordRequest = createAction(loginAction.FORGET_PASSWORD_REQUEST);
 export const forgotPasswordSuccess = createAction(loginAction.FORGET_PASSWORD_SUCCESS)
-export const validateResetRequest = createAction(loginAction.VALIDATE_RESET_REQUEST)
+export const validateResetToken = createAction(loginAction.VALIDATE_RESET_REQUEST)
 export const resetPasswordRequest = createAction(loginAction.RESET_PASSSWORD_REQUEST);
 
 export const socialLoginRequest = createAction(loginAction.SOCIAL_LOGIN_REQUEST);
