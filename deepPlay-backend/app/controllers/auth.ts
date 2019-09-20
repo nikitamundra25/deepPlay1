@@ -1,13 +1,9 @@
 import { Request, Response } from "express";
 import { Document } from "mongoose";
 import { UserModel } from "../models";
-import {
-  GenerateToken,
-  ValidationFormatter,
-  encryptPassword
-} from "../common";
-import { IUser } from "../interfaces"
-import { comparePassword } from "../common/password"
+import { GenerateToken, ValidationFormatter, encryptPassword } from "../common";
+import { IUser } from "../interfaces";
+import { comparePassword } from "../common/password";
 
 import { ValidationError, Result, validationResult } from "express-validator";
 
@@ -19,7 +15,8 @@ const login = async (req: Request, res: Response): Promise<any> => {
     const { body } = req;
     const { email, password } = body;
     const result: Document | null | any = await UserModel.findOne({
-      email
+      email,
+      isDeleted: false
     }).select("firstName lastName email password");
     if (result === null) {
       return res.status(400).json({
@@ -35,7 +32,7 @@ const login = async (req: Request, res: Response): Promise<any> => {
     } else {
       return res.status(400).json({
         message: "Password didn't match."
-      })
+      });
     }
 
     const token = await GenerateToken({
@@ -71,7 +68,7 @@ const signup = async (req: Request, res: Response): Promise<any> => {
       return res.status(400).json({
         message: "Email already exist",
         success: false
-      })
+      });
     } else {
       const userData: IUser = {
         firstName: body.firstName,
@@ -88,8 +85,8 @@ const signup = async (req: Request, res: Response): Promise<any> => {
         verifyToken: "",
         roleType: body.roleType || "isUnclassified",
         status: true
-      }
-      const userResult: Document | any = new UserModel(userData)
+      };
+      const userResult: Document | any = new UserModel(userData);
       await userResult.save();
 
       const token = await GenerateToken({
@@ -105,7 +102,7 @@ const signup = async (req: Request, res: Response): Promise<any> => {
         token: token,
         userData: userResult,
         success: true
-      })
+      });
     }
   } catch (error) {
     console.log(error);
@@ -120,13 +117,15 @@ const socialSignup = async (req: Request, res: Response) => {
   const { body } = req;
   try {
     if (body.accessToken) {
-      const userData: Document | null = await UserModel.findOne({ email: body.email })
+      const userData: Document | null = await UserModel.findOne({
+        email: body.email
+      });
       if (!userData) {
         const userSignup: IUser = {
           firstName: body.firstName,
           lastName: body.lastName,
           email: body.email,
-          password: null,
+          password: "",
           salt: "",
           loggedInIp: "",
           loggedInAt: new Date(),
@@ -137,8 +136,8 @@ const socialSignup = async (req: Request, res: Response) => {
           verifyToken: "",
           roleType: "isUnclassified",
           status: true
-        }
-        const userResult: Document | any = new UserModel(userSignup)
+        };
+        const userResult: Document | any = new UserModel(userSignup);
         await userResult.save();
 
         const token = await GenerateToken({
@@ -153,7 +152,7 @@ const socialSignup = async (req: Request, res: Response) => {
           token: token,
           userData: userResult,
           success: true
-        })
+        });
       } else {
         const result: Document | null | any = await UserModel.findOne({
           email: body.email
@@ -169,13 +168,13 @@ const socialSignup = async (req: Request, res: Response) => {
           token: token,
           userData: result,
           success: true
-        })
+        });
       }
     } else {
       return res.status(400).json({
         message: "Access token is missing!",
         success: false
-      })
+      });
     }
   } catch (error) {
     console.log(error);
@@ -183,12 +182,8 @@ const socialSignup = async (req: Request, res: Response) => {
       message: error.message
     });
   }
-}
+};
 /**
  *
  */
-export {
-  login,
-  signup,
-  socialSignup
-};
+export { login, signup, socialSignup };

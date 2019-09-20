@@ -1,4 +1,3 @@
-
 export interface IUser {
   firstName: String;
   lastName: String;
@@ -25,4 +24,10 @@ export interface IUserTokenData {
   randomKey?: string;
   parentId?: string;
   subdomain?: string;
+}
+
+export interface IDataToUpdate {
+  firstName: string;
+  lastName: string;
+  roleType: String;
 }

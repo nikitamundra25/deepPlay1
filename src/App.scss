@@ -12,6 +12,9 @@ body {
   .cursor_pointer {
     cursor: pointer;
   }
+  .modal-text-center {
+    text-align: center;
+  }
   .modal-backdrop.show {
     opacity: 0.5;
   }
@@ -41,6 +44,9 @@ body {
 }
 
 .theme-header {
+  .navbar-main.navbar{
+    padding: 0.5em;
+  }
   background-color: $balckColor;
   color: $whiteColor;
   z-index: 9;
@@ -79,12 +85,12 @@ body {
 }
 .banner-heading {
   font-weight: bold;
-  font-size: 37px;
+  font-size: 30px;
   color: $textColor;
 }
 .banner-content {
   font-weight: 600;
-  font-size: 18px;
+  font-size: 16px;
   color: $textColor;
 }
 .fill-btn {
@@ -138,6 +144,8 @@ body {
     height: 180px;
     overflow: hidden;
     position: relative;
+    background-size: cover;
+    background-position: center center;
     img {
       height: 100%;
       position: absolute;
@@ -168,12 +176,15 @@ body {
     width: 100%;
     max-width: 150px;
   }
+  .capitalize {
+    text-transform: capitalize;
+  }
 }
 .dashboard-full-section {
   display: flex;
   max-width: 100%;
   margin-top: 0px;
-  padding-top: 85px;
+  padding-top: 68px;
   background: #f0f0f0;
   .dashboard-left-wrap {
     height: 100%;
@@ -185,15 +196,29 @@ body {
     height: 100%;
     width: 250px;
     bottom: 0px;
-    top: 85px;
+    top: 68px;
     .dashboard-left-wrap {
       overflow: auto;
       margin: 0px;
       width: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: 0px 0px 30px 0px;
+      .profile-wrap{
+        padding-bottom: 50px;
+        .profile-img{
+          width: 80px;
+          height: 80px;
+        }
+        .profile-text-tile{
+          font-size: 16px;
+        }
+      }
     }
   }
   .dashboard-right-wrap {
-    padding: 40px;
+    padding: 10px 40px 40px 40px;
     margin-left: 250px;
     width: calc(100% - 250px);
     min-height: 100vh;
@@ -214,7 +239,7 @@ body {
     justify-content: space-between;
     .content-title {
       color: $dashboardTextColor;
-      font-size: 28px;
+      font-size: 24px;
       font-weight: 600;
     }
     .dashboard-right-content {
@@ -244,7 +269,7 @@ body {
   .content-heading-tile {
     font-weight: bold;
     color: #455358;
-    font-size: 20px;
+    font-size: 16px;
   }
   .content-number-tile {
     color: #868686;
@@ -294,17 +319,21 @@ body {
     background: #fff;
   }
 }
-.log-user-model {
+.auth-user-model {
+  
   .login-heading {
     color: #000;
     font-weight: 600;
-    font-size: 20px;
+    font-size: 18px;
   }
   .card-header {
     padding-bottom: 25px;
   }
   .card-body {
     background: #dfe7ed;
+  }
+  .auth-subheading{
+    font-size: 16px;  
   }
 }
 .modal-header {
@@ -355,13 +384,13 @@ body {
     button {
       transform: none;
       color: #415e9b;
-      font-size: 17px;
+      font-size: 15px;
     }
     &.google-wrap button {
       padding: 0px 20px !important;
       & > span {
         color: #ed5a4e;
-        font-size: 17px;
+        font-size: 15px;
         padding: 8px !important;
       }
       & > div {
@@ -437,20 +466,20 @@ body {
   justify-content: center;
   padding: 0px 15px 0px 0px !important;
   &::after {
-    border-top: 0.6em solid;
-    border-right: 0.6em solid transparent;
-    border-left: 0.6em solid transparent;
+    border-top: 0.4em solid;
+    border-right: 0.4em solid transparent;
+    border-left: 0.4em solid transparent;
   }
 }
 .user-wrap {
   display: flex;
   align-items: center;
   .user-img {
-    width: 32px;
+    width: 26px;
   }
   .user-text {
     padding: 0px 15px 0px 8px;
-    font-size: 22px;
+    font-size: 18px;
   }
 }
 .nav-main-section {
@@ -485,11 +514,29 @@ body {
     background-position: center center;
     border-radius: 50%;
     margin: auto;
+    overflow: hidden;
+    border: 2px solid #ccc;
+    position: relative;
+  }
+  .changeProfile{
+    position: absolute;
+    cursor: pointer;
+    left: 0px;
+    bottom: -3px;
+    background: rgba(0, 0, 0, 0.75);
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100%;
+    color: #fff;
+    text-align: center;
+    font-size: 12px;
+    height: 30px;
+    padding-top: 1px; 
   }
 }
 .form-wrap {
   label {
-    font-size: 18px;
+    font-size: 14px;
     font-weight: 600;
   }
   &.settingForm {
@@ -498,6 +545,30 @@ body {
   }
 }
 .account-type-wrap{
-  // max-width: 400px;
-  // margin: auto;
+  max-width: 400px;
+ 
+}
+.theme-container.dashboard-container {
+  padding: 0px;
+}
+.custom-radio .custom-control-input{ 
+  &~ .custom-control-label{
+  color: #151515;}
+  &:checked~ .custom-control-label::before{
+  background-color: #000!important;
+  border-color: #000!important;
+}
+&:active~ .custom-control-label::before{
+  background-color: #000!important;
+  border-color: #000!important;
+}
+}
+.form-control{
+  border: 1px solid #898989;
+  color: #000;
+}
+.auth-btn-wrap{
+  button{
+    font-size: 14px;
+  }
 }

@@ -30,6 +30,14 @@ class DefaultSidebar extends React.Component {
             }
           </ul>
         </div>
+        <div className="profile-wrap" >
+          <div className="profile-img-tile">
+            <div className="profile-img">
+              <img alt="..." src="/static/media/boy.9a3a77b0.svg" className="w-100" />
+            </div>
+          </div>
+          <div className="profile-text-tile color-black"><div className="font-weight-bold text-center mt-2">JOHN DIE</div></div>
+        </div>
       </div>
     );
   }

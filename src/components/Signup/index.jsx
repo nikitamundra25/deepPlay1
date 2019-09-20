@@ -183,10 +183,11 @@ class SignupComponent extends React.Component {
     return (
       <>
         <Modal
-          className="modal-dialog-centered log-user-model"
+          className="modal-dialog-centered auth-user-model"
           isOpen={openSignupModel}
           toggle={handleSignupModel}
           backdrop={"static"}
+          size={"sm"}
         >
           <ModalHeader toggle={handleSignupModel}></ModalHeader>
           <ModalBody className="modal-body p-0">
@@ -220,9 +221,10 @@ class SignupComponent extends React.Component {
                 </div>
               </CardHeader>
             
-              <CardBody className="px-lg-3">
-                <div className="text-center text-muted mb-4">
-                  <small>Or sign up and generate your credentials</small>
+              <CardBody className="px-lg-5">
+               
+                <div className="text-center login-heading mb-4 auth-subheading">
+                Or sign up and generate your credentials
                 </div>
                 <Form role="form" onSubmit={this.handleSignupRequest}>
                   <FormGroup>
@@ -360,7 +362,7 @@ class SignupComponent extends React.Component {
                       </div>
                   </FormGroup>
                   
-                  <div className="text-center">
+                  <div className="text-center auth-btn-wrap">
                     <Button
                       className="mb-4 btn-black btn-block"
                       color=" "

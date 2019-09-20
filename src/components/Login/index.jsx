@@ -131,10 +131,11 @@ class LoginComponent extends React.Component {
     return (
       <>
         <Modal
-          className="modal-dialog-centered log-user-model"
+          className="modal-dialog-centered auth-user-model"
           isOpen={openLoginModel}
           toggle={handleLoginModel}
           backdrop={"static"}
+          size={"sm"}
         >
           <ModalHeader toggle={handleLoginModel}></ModalHeader>
           <ModalBody className="modal-body p-0 ">
@@ -167,8 +168,8 @@ class LoginComponent extends React.Component {
                   </span>
                 </div>
               </CardHeader>
-              <CardBody className="px-lg-3">
-                <div className="text-center login-heading mb-4">
+              <CardBody className="px-lg-5">
+                <div className="text-center login-heading mb-4 auth-subheading">
                 Or sign in with credentials
                 </div>
                 <Form onSubmit={this.handleLoginRequest}>
@@ -213,7 +214,7 @@ class LoginComponent extends React.Component {
                   <div className={"text-center cursor_pointer forgot-password-wrap"}>
                       Forgot password?
                   </div>
-                  <div className="text-center">
+                  <div className="text-center auth-btn-wrap">
                     <Button
                       className="my-4 btn-black btn-block"
                       color=" "
