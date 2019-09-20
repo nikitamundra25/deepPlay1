@@ -16,7 +16,7 @@ import {
   SingupValidationsMessaages
 } from "../../validations";
 import UploadImage from "./uploadImageModal";
-
+import { AppConfig } from "../../config/Appconfig";
 class SettingComponent extends Component {
   constructor(props) {
     super(props);
@@ -158,7 +158,10 @@ class SettingComponent extends Component {
         <div className="user-profile">
           <div className="profileAvtar">
             {file ? (
-              <img alt="..." src={this.state.file} />
+              <img
+                alt="..."
+                src={` ${AppConfig.API_ENDPOINT}${this.state.file}`}
+              />
             ) : (
               <img alt="..." src={require("assets/img/icons/common/boy.svg")} />
             )}

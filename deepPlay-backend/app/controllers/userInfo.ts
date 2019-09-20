@@ -78,7 +78,7 @@ const imageUpload = async (req: Request, res: Response) => {
       const fileName = [
         currentUser.id,
         randomConst,
-        "_company_logo.",
+        "profile_img.",
         type || "png"
       ].join("");
 
@@ -93,22 +93,11 @@ const imageUpload = async (req: Request, res: Response) => {
           "images-thumbnail",
           fileName
         );
+        const thumbnailImg: string = path.join("images-thumbnail", fileName);
         await resizeImage(originalImagePath, thumbnailImagePath, 200);
         const uploadimg = await UserModel.findByIdAndUpdate(currentUser.id, {
-          profileImage: thumbnailImagePath
+          profileImage: thumbnailImg
         });
-        const thubPath =
-          req.protocol +
-          "://" +
-          req.headers.host +
-          "/api/files/images-thumbnail/" +
-          fileName;
-        const thumbnailImg: string = path.join(
-          req.protocol + "://" + req.headers.host + "/images-thumbnail",
-          fileName
-        );
-        const thumbnailName = path.join();
-        console.log("thumbnailName");
 
         if (uploadimg) {
           return res.status(200).json({
