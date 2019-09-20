@@ -37,8 +37,13 @@ class DefaultLayout extends React.Component {
       socialLoginRequest,
       forgotPasswordRequest
     } = this.props;
-    const isLoggedIn = localStorage.getItem("token")
-    const routePath = this.props.location.pathname
+    let isLoggedIn
+    if (localStorage.getItem("token")) {
+      isLoggedIn = true 
+    }else{
+      isLoggedIn = false
+    }
+   const routePath = this.props.location.pathname
     return (
       <>
         {
@@ -57,11 +62,11 @@ class DefaultLayout extends React.Component {
         <>
           <div className={"theme-container"}>
             <div className={routePath !== "/resetPassword" ? "dashboard-full-section" : ""}>
-              {isLoggedIn && (routePath !== "/" || routePath !== "/resetPassword") ?
+              {isLoggedIn && (routePath !== "/" && routePath !== "/resetPassword") ?
                 <div className="ct-sidebar app-sidebar">
                   <DefaultSidebar /></div> : null}
               {
-                isLoggedIn && (routePath !== "/" || routePath !== "/resetPassword") ?
+                isLoggedIn && (routePath !== "/" && routePath !== "/resetPassword") ?
                   <div className={"dashboard-right-wrap"}>
                     <Suspense fallback={""}>
                       <Switch>
@@ -102,7 +107,7 @@ class DefaultLayout extends React.Component {
             </div>
           </div>
         </>
-        {isLoggedIn && (routePath !== "/" || routePath !== "/resetPassword") ?
+        {isLoggedIn && (routePath !== "/" && routePath !== "/resetPassword") ?
           null :
           routePath !== "/resetPassword" ?
             <DefaultFooter /> : null

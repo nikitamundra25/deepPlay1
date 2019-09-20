@@ -180,7 +180,7 @@ class SignupComponent extends React.Component {
       errors,
       passwordStrength
     } = this.state;
-    const { loadingVariable } = loginReducer
+    const { isSignupLoading } = loginReducer
 
     return (
       <>
@@ -375,10 +375,10 @@ class SignupComponent extends React.Component {
                       className="mt-4"
                       color="primary"
                       type="submit"
-                      disabled={loadingVariable.isSignupLoading ? true : false}
+                      disabled={isSignupLoading ? true : false}
                     >
                       {
-                        loadingVariable.isSignupLoading ?
+                        isSignupLoading ?
                           "Please wait..." :
                           "Create account"
                       }

@@ -2,11 +2,9 @@ import { handleActions } from "redux-actions";
 import { loginAction, signupActions } from "./../actions";
 
 const initialState = {
-   loadingVariable: {
-      isLoginSuccess: false,
-      isSendingLink: false,
-      isSignupLoading: false
-   }
+   isLoginSuccess: false,
+   isSendingLink: false,
+   isSignupLoading: false
 };
 
 export const loginReducer = handleActions(

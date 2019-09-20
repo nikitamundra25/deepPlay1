@@ -5,7 +5,8 @@ const initialAuthState = {
   modelDetails: {
     loginModelOpen: false,
     signupModelOpen: false,
-    forgotPasswordModalOpen: false
+    forgotPasswordModalOpen: false,
+    uploadImageModalOpen: false
   }
 };
 

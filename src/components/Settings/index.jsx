@@ -118,9 +118,13 @@ class SettingComponent extends Component {
   };
 
   handleOpen = () => {
-    this.setState({
-      modal: !this.state.modal
-    });
+    const { modelInfoReducer } = this.props;
+    const { modelDetails } = modelInfoReducer;
+    this.props.modelOperate({
+      modelDetails: {
+        uploadImageModalOpen: !modelDetails.uploadImageModalOpen
+      }
+    })
   };
 
   handleImage = data => {
@@ -128,7 +132,7 @@ class SettingComponent extends Component {
   };
 
   render() {
-    const { profileInfoReducer } = this.props;
+    const { profileInfoReducer, modelInfoReducer } = this.props;
     const {
       isDisabled,
       firstName,
@@ -138,6 +142,9 @@ class SettingComponent extends Component {
       errors,
       imgError
     } = this.state;
+    const { modelDetails } = modelInfoReducer;
+    const { uploadImageModalOpen } = modelDetails;
+
     console.log("file", this.state.file);
     return (
       <div className="col-md-12 col-sm-12">
@@ -163,15 +170,15 @@ class SettingComponent extends Component {
                 src={` ${AppConfig.API_ENDPOINT}${this.state.file}`}
               />
             ) : (
-              <img alt="..." src={require("assets/img/icons/common/boy.svg")} />
-            )}
+                <img alt="..." src={require("assets/img/icons/common/boy.svg")} />
+              )}
             {!isDisabled ? (
               <span className="changeProfile" onClick={this.handleOpen}>
                 Change Profile
               </span>
             ) : (
-              ""
-            )}
+                ""
+              )}
           </div>
           {imgError ? <div className="text-danger"> {imgError} </div> : null}
         </div>
@@ -291,7 +298,7 @@ class SettingComponent extends Component {
         <UploadImage
           handleImage={this.handleImage}
           handleOpen={this.handleOpen}
-          modal={this.state.modal}
+          modal={uploadImageModalOpen}
         />
       </div>
     );
