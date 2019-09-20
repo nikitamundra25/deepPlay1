@@ -65,7 +65,7 @@ export const ValidateAdminToken = async (
       JWTSecrete
     ) as IUserTokenData;
     const currentUser: Document | null | any = await UserModel.findOne({
-      isDeleted: false,
+       isDeleted: false,
       _id: Mongoose.Types.ObjectId(tokenData.id)
     });
     if (!currentUser) {

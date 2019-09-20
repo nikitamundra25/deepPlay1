@@ -12,9 +12,10 @@ const app: express.Application = express();
 app.use(bodyParser.urlencoded({ extended: false }));
 
 // parse application/json
-app.use(bodyParser.json());
+app.use(bodyParser.json({ limit: "50mb" }));
 
-app.use(express.static(path.join(__dirname, "..", "build")));
+app.use("/", express.static(path.join(__dirname, "public")));
+app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
 const corsOption = {
   origin: true,
@@ -40,12 +41,9 @@ app.use("/api/v1", router);
  */
 app.get("/", (req: express.Request, res: express.Response) => {
   console.log("req", req.query);
-  return res.sendFile(path.join(__dirname, "..", "build", "index.html"));
+  return res.sendFile(path.join(__dirname, "public", "index.html"));
 });
-app.get("/*", (req: express.Request, res: express.Response) => {
-  console.log("req", req.query);
-  return res.sendFile(path.join(__dirname, "..", "build", "index.html"));
-});
+
 /**
  *
  */
@@ -53,9 +51,6 @@ const port: number = Number(process.env.PORT) || 8000;
 /**
  *
  */
-app.listen(
-  port,
-  (): void => {
-    console.log(`App running on port ${port}!`);
-  }
-);
+app.listen(port, (): void => {
+  console.log(`App running on port ${port}!`);
+});
