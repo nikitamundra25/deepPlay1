@@ -125,7 +125,7 @@ const socialSignup = async (req: Request, res: Response) => {
           firstName: body.firstName,
           lastName: body.lastName,
           email: body.email,
-          password: null,
+          password: "",
           salt: "",
           loggedInIp: "",
           loggedInAt: new Date(),

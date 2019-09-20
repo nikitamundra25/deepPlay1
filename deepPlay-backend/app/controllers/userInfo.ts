@@ -34,7 +34,7 @@ const editUserInfo = async (req: Request, res: Response): Promise<any> => {
       lastName,
       roleType
     };
-    const checkProperties = (dataToUpdate: Object) => {
+    const checkProperties = (dataToUpdate: any) => {
       for (var i in dataToUpdate) {
         if (dataToUpdate[i] !== null && dataToUpdate[i] != "") return false;
       }
@@ -63,9 +63,10 @@ const types: any = {
   U: "webp"
 };
 /* ---------------User Image Upload---------------- */
-const imageUpload = async (req, res) => {
+const imageUpload = async (req: Request, res: Response) => {
   try {
-    const { body, currentUser } = req;
+    let { body, currentUser: tempCurrentUser } = req;
+    const currentUser = tempCurrentUser || { id: "" };
     if (body.imageData !== undefined || body.imageData !== "") {
       const base64Image = body.imageData.replace(
         /^data:image\/\w+;base64,/,

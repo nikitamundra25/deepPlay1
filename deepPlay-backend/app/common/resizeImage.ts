@@ -1,8 +1,12 @@
 const Jimp = require("jimp");
 
-export const resizeImage = async (sourcePath, destinationPath, width) => {
+export const resizeImage = async (
+  sourcePath: string,
+  destinationPath: string,
+  width: number
+) => {
   return new Promise((resolve, reject) => {
-    Jimp.read(sourcePath, function(err, lenna) {
+    Jimp.read(sourcePath, function(err: any, lenna: any) {
       if (err) {
         console.log("*********** Resize Error =>", err);
         reject(new Error(err));

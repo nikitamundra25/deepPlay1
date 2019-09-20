@@ -14,8 +14,8 @@ app.use(bodyParser.urlencoded({ extended: false }));
 // parse application/json
 app.use(bodyParser.json({ limit: "50mb" }));
 
-app.use("/public", express.static(path.join(__dirname, "..", "public")));
-app.use(express.static(path.join(__dirname, "..", "build")));
+app.use("/", express.static(path.join(__dirname, "public")));
+app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
 const corsOption = {
   origin: true,
@@ -41,12 +41,9 @@ app.use("/api/v1", router);
  */
 app.get("/", (req: express.Request, res: express.Response) => {
   console.log("req", req.query);
-  return res.sendFile(path.join(__dirname, "..", "app", "index.html"));
+  return res.sendFile(path.join(__dirname, "public", "index.html"));
 });
-// app.get("/*", (req: express.Request, res: express.Response) => {
-//   console.log("req", req.query);
-//   return res.sendFile(path.join(__dirname, "..", "build", "index.html"));
-// });
+
 /**
  *
  */
