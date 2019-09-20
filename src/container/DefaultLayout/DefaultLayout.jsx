@@ -39,11 +39,11 @@ class DefaultLayout extends React.Component {
     } = this.props;
     let isLoggedIn
     if (localStorage.getItem("token")) {
-      isLoggedIn = true 
-    }else{
+      isLoggedIn = true
+    } else {
       isLoggedIn = false
     }
-   const routePath = this.props.location.pathname
+    const routePath = this.props.location.pathname
     return (
       <>
         {
@@ -60,52 +60,34 @@ class DefaultLayout extends React.Component {
             /> : null
         }
         <>
-          <div className={"theme-container"}>
-            <div className={routePath !== "/resetPassword" ? "dashboard-full-section" : ""}>
-              {isLoggedIn && (routePath !== "/" && routePath !== "/resetPassword") ?
-                <div className="ct-sidebar app-sidebar">
-                  <DefaultSidebar /></div> : null}
+          <div className={routePath !== "/resetPassword" ? "dashboard-full-section" : ""}>
+            <div className={`theme-container ${routePath !== "/" ? "dashboard-container" : "home-container"}`}>
               {
                 isLoggedIn && (routePath !== "/" && routePath !== "/resetPassword") ?
-                  <div className={"dashboard-right-wrap"}>
-                    <Suspense fallback={""}>
-                      <Switch>
-                        {routes.map((route, idx) => {
-                          return route.component ? (
-                            <Route
-                              key={idx}
-                              path={route.path}
-                              exact={route.exact}
-                              name={route.name}
-                              render={props => (
-                                <route.component {...props} {...this.props} />
-                              )}
-                            />
-                          ) : null;
-                        })}
-                      </Switch>
-                    </Suspense>
-                  </div> :
-                  <Suspense fallback={""}>
-                    <Switch>
-                      {routes.map((route, idx) => {
-                        return route.component ? (
-                          <Route
-                            key={idx}
-                            path={route.path}
-                            exact={route.exact}
-                            name={route.name}
-                            render={props => (
-                              <route.component {...props} {...this.props} />
-                            )}
-                          />
-                        ) : null;
-                      })}
-                    </Switch>
-                  </Suspense>
+                  <div className="ct-sidebar app-sidebar">
+                    <DefaultSidebar /></div> :
+                  null
               }
+              <Suspense fallback={""}>
+                <Switch>
+                  {routes.map((route, idx) => {
+                    return route.component ? (
+                      <Route
+                        key={idx}
+                        path={route.path}
+                        exact={route.exact}
+                        name={route.name}
+                        render={props => (
+                          <route.component {...props} {...this.props} />
+                        )}
+                      />
+                    ) : null;
+                  })}
+                </Switch>
+              </Suspense>
             </div>
           </div>
+
         </>
         {isLoggedIn && (routePath !== "/" && routePath !== "/resetPassword") ?
           null :
