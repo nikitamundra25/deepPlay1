@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import { UserModel } from "../models";
 import { resizeImage } from "../common/resizeImage";
+import { IDataToUpdate } from "../interfaces/users";
 import fs from "fs";
 const path = require("path");
 const __basedir = path.join(__dirname, "../public");
@@ -29,12 +30,12 @@ const editUserInfo = async (req: Request, res: Response): Promise<any> => {
     const { body, currentUser } = req;
     const headToken: Request | any = currentUser;
     const { firstName, lastName, roleType } = body;
-    let dataToUpdate: Object = {
+    let dataToUpdate: IDataToUpdate = {
       firstName,
       lastName,
       roleType
     };
-    const checkProperties = (dataToUpdate: any) => {
+    const checkProperties: object = (dataToUpdate: IDataToUpdate) => {
       for (var i in dataToUpdate) {
         if (dataToUpdate[i] !== null && dataToUpdate[i] != "") return false;
       }
@@ -62,6 +63,7 @@ const types: any = {
   R: "gif",
   U: "webp"
 };
+
 /* ---------------User Image Upload---------------- */
 const imageUpload = async (req: Request, res: Response) => {
   try {
