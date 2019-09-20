@@ -16,6 +16,9 @@ body {
     opacity: 0.5;
   }
 }
+.color-black {
+  color: #000;
+}
 .dashboard-right-profile {
   display: flex;
   border-top: 1px solid rgba(var(--sk_foreground_low_solid, 221, 221, 221), 1);
@@ -28,31 +31,7 @@ body {
   margin: auto;
   margin-right: 44px;
 }
-.user-profile {
-  margin: 20px auto 10px;
-}
-.profileAvtar {
-  width: 150px;
-  height: 150px;
-  border-radius: 50%;
-  margin: 0 auto;
-  overflow: hidden;
-  position: relative;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-}
-.settingForm {
-  max-width: 850px;
-  margin: auto;
-}
-.setting-account-type {
-  width: 100%;
-  border-bottom: 1px solid #172b4d;
-  line-height: 0.1em;
-  margin: 31px 0px 38px;
-}
+
 .control {
   margin-left: 45px;
 }
@@ -413,7 +392,7 @@ body {
   }
 }
 .nav-main-section {
-  .nav-link-inner--text{
+  .nav-link-inner--text {
     cursor: pointer;
   }
   .dropdown-menu {
@@ -430,11 +409,12 @@ body {
     .dropdown-item {
       cursor: pointer;
       font-size: 16px;
-    &:hover{
+      &:hover {
         background-color: #c2c2c2;
         color: #fff;
       }
-      &:active, &:focus{
+      &:active,
+      &:focus {
         background-color: #595959;
         color: #fff;
       }
@@ -455,8 +435,8 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  padding-right: 15px!important;
-  &::after{
+  padding: 0px 15px 0px 0px !important;
+  &::after {
     border-top: 0.6em solid;
     border-right: 0.6em solid transparent;
     border-left: 0.6em solid transparent;
@@ -473,8 +453,51 @@ body {
     font-size: 22px;
   }
 }
-.nav-main-section{
+.nav-main-section {
   display: flex;
-    align-items: center;
-    flex-direction: row;
+  align-items: center;
+  flex-direction: row;
+}
+
+.setting-section {
+  .card-wrap {
+    padding: 0px;
+    .card-header {
+      display: flex;
+      align-items: center;
+      background: #fff;
+      justify-content: space-between;
+      .heading-divider {
+        flex: 1;
+        border-bottom: 2px solid #898989;
+        height: 1px;
+        margin: 0px 15px;
+      }
+    }
+  }
+}
+.profile-wrap {
+  .profile-img {
+    width: 140px;
+    /* max-width: 100%; */
+    height: 140px;
+    background-size: cover;
+    background-position: center center;
+    border-radius: 50%;
+    margin: auto;
+  }
+}
+.form-wrap {
+  label {
+    font-size: 18px;
+    font-weight: 600;
+  }
+  &.settingForm {
+    max-width: 850px;
+    margin: auto;
+  }
+}
+.account-type-wrap{
+  // max-width: 400px;
+  // margin: auto;
 }

@@ -51,7 +51,7 @@ class DefaultLayout extends React.Component {
         <>
         
             <div className="dashboard-full-section">
-          <div className={"theme-container"}>
+          <div className={`theme-container ${routePath !== "/"? "dashboard-container":"home-container"}`}>
               {isLoggedIn && routePath !== "/" ?
                 <div className="ct-sidebar app-sidebar">
                   <DefaultSidebar /></div> : null}

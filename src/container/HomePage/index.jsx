@@ -9,14 +9,6 @@ class HomePage extends React.Component {
     return (
       <Container>
         <section className="home-video-section mt-5">
-        <UncontrolledDropdown setActiveFromChild>
-                      <DropdownToggle tag="a" className="nav-link" caret>
-                        Dropdown
-          </DropdownToggle>
-                      <DropdownMenu>
-                        <DropdownItem tag="a" href="/blah" active>Link</DropdownItem>
-                      </DropdownMenu>
-                    </UncontrolledDropdown>
           <Row className="mb-5">
             <Col md="6" className="d-flex flex-column justify-content-between ">
               <div className="banner-text">
