@@ -104,8 +104,7 @@ const imageUpload = async (req: Request, res: Response) => {
           "/api/files/images-thumbnail/" +
           fileName;
         const thumbnailImg: string = path.join(
-          req.protocol + "://" + req.headers.host + "/public",
-          "images-thumbnail",
+          req.protocol + "://" + req.headers.host + "/images-thumbnail",
           fileName
         );
         const thumbnailName = path.join();
