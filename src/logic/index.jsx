@@ -3,7 +3,7 @@ import { push } from "react-router-redux";
 
 import { LoginLogics } from "./Login.jsx";
 import { SignupLogics } from "./Signup.jsx";
-import { profileInfoLogics } from "./profileInfo.jsx";
+import { profileInfoLogics } from "./userInfo";
 
 export const redirectToLogic = createLogic({
   type: "REDIRET_TO",
