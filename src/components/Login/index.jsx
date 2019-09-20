@@ -218,7 +218,6 @@ class LoginComponent extends React.Component {
                     <Button
                       className="my-4 btn-black btn-block"
                       color=" "
-                      
                       type="submit"
                     >
                       Sign in

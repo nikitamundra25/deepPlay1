@@ -185,7 +185,6 @@ body {
   max-width: 100%;
   margin-top: 0px;
   padding-top: 68px;
-  background: #f0f0f0;
   .dashboard-left-wrap {
     height: 100%;
     display: block;
@@ -328,6 +327,7 @@ body {
   }
   .card-header {
     padding-bottom: 25px;
+    background: #fff;
   }
   .card-body {
     background: #dfe7ed;
@@ -340,14 +340,28 @@ body {
   padding: 0px;
   border: none;
   .close {
+    width: 40px;
+    height: 40px;
     position: absolute;
-    right: -46px;
+    right: 0px;
+    top: 0px;
+    z-index: 1;
+    border-radius: 50%;
+    outline: none;
+    background: #58646f;
     opacity: 1;
     padding: 0px;
-    top: 26px;
+    border: 2px solid #9ca3ad;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    &:hover{
+      opacity: 1!important;
+    }
     span {
       color: #fff;
-      font-size: 53px;
+      font-size: 32px;
+      line-height: 23px;
     }
   }
 }
@@ -564,11 +578,17 @@ body {
 }
 }
 .form-control{
-  border: 1px solid #898989;
   color: #000;
+  &::placeholder{
+    color: #636363;
+  }
 }
 .auth-btn-wrap{
   button{
     font-size: 14px;
+    white-space: pre-wrap;
   }
+}
+.forgot-password-wrap{
+ .card-header{ padding: 0;} 
 }

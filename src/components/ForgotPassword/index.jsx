@@ -3,6 +3,7 @@ import {
   Button,
   Card,
   CardBody,
+  CardHeader,
   FormGroup,
   Form,
   Input,
@@ -78,19 +79,25 @@ class ForgotPasswordComponent extends React.Component {
     return (
       <>
         <Modal
-          className="modal-dialog-centered"
+          className="modal-dialog-centered auth-user-model forgot-password-wrap"
           size="sm"
           isOpen={openForgotPasswordModel}
           toggle={handleForgotPasswordModel}
           backdrop={"static"}
-        >
-          <ModalHeader toggle={handleForgotPasswordModel}>Forgot Password</ModalHeader>
+        > 
+          <ModalHeader toggle={handleForgotPasswordModel}></ModalHeader>
           <ModalBody className="modal-body p-0">
             <Card className="bg-secondary shadow border-0">
+            <CardHeader>
+                <div className=" login-heading text-center mt-2 mb-3">
+              Sign in with
+                </div>
+             
+              </CardHeader>
               <CardBody className="px-lg-5">
                 <Form onSubmit={this.handleForgotPasswardRequest}>
                   <FormGroup className="mb-3">
-                    <InputGroup className="input-group-alternative">
+                    <InputGroup className="">
                       <InputGroupAddon addonType="prepend">
                         <InputGroupText>
                           <i className="ni ni-email-83" />
@@ -110,12 +117,12 @@ class ForgotPasswordComponent extends React.Component {
                   </FormGroup>
                   <div className="text-center">
                     <Button
-                      className="my-4"
-                      color="primary"
+                      className="my-4 btn-black btn-block"
+                      color=" "
                       type="submit"
                       disabled={isSendingLink ? true : false}
                     >
-                      {
+                 {
                         isSendingLink ?
                           "Plaese Wait..." :
                           "Send Link"
