@@ -29,7 +29,7 @@ class SetComponent extends React.Component {
                   </DropdownToggle>
                   <DropdownMenu>
                     <li>
-                      <DropdownItem tag={Link} to="/setting">
+                      <DropdownItem tag={Link} to="/move">
                         Create Move
                       </DropdownItem>
                     </li>

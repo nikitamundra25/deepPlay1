@@ -49,7 +49,7 @@ class MoveComponent extends React.Component {
           url: result
         });
         if (this.state.isPaste) {
-          window.location.href = "./setting";
+          this.props.redirectTo("/setting")
         } else {
           this.handleKeyboardEvent();
         }
@@ -60,7 +60,7 @@ class MoveComponent extends React.Component {
 
   handleKeyboardEvent = e => {
     if (e.charCode === 13) {
-    window.location.href = "./setting";
+      this.props.redirectTo("/setting")
     }
   };
 
@@ -69,9 +69,7 @@ class MoveComponent extends React.Component {
       isPaste: true
     });
   };
-  handlePasteEvent = () => {
-    console.log("$$$$$$$$$$$$$$$$$$$$$$");
-  }
+
   render() {
     const { errors, url } = this.state;
     return (
@@ -120,7 +118,9 @@ class MoveComponent extends React.Component {
                   onChange={this.handleChange}
                   value={url}
                 />
-                {errors ? <p style={{ color: "red" }}> {errors} </p> : null}
+                {errors && url ? (
+                  <p style={{ color: "red" }}> {errors} </p>
+                ) : null}
               </FormGroup>
             </Col>
           </Row>
