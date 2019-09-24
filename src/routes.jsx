@@ -8,6 +8,7 @@ const Folders = React.lazy(() => import("./container/Folders"));
 const Sets = React.lazy(() => import("./container/Sets"));
 const ResetPassword = React.lazy(() => import("./container/Auth/ResetPassword"));
 const Page404 = React.lazy(() => import("./components/Page404"));
+const Move = React.lazy(() => import("./container/Move"));
 
 const routes = [
   {
@@ -52,6 +53,12 @@ const routes = [
     name: "Page 404",
     component: Page404
   },
+  {
+    path: AppRoutes.MOVE.url,
+    name: AppRoutes.MOVE.name,
+    exact: AppRoutes.MOVE.exact,
+    component: Move
+  }
 ];
 
 export default routes;

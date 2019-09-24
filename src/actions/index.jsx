@@ -4,6 +4,7 @@ export * from "./ModalOperation.jsx";
 export * from "./Login.jsx";
 export * from "./profileInfo.jsx";
 export * from "./Signup.jsx"
+export * from "./Sets.jsx";
 //
 export const redirectTo = createAction("REDIRET_TO");
 //

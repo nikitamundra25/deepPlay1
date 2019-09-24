@@ -63,6 +63,7 @@ class DefaultHeader extends React.Component {
       socialLoginRequest,
       loginReducer,
       forgotPasswordRequest,
+      profileInfoReducer,
       modelOpenRequest } = this.props;
     const { modelDetails } = modelInfoReducer;
     const {
@@ -70,6 +71,7 @@ class DefaultHeader extends React.Component {
       signupModelOpen,
       forgotPasswordModalOpen } = modelDetails;
     const { isUserLoggedIn } = this.state;
+    const profiledata = profileInfoReducer && profileInfoReducer.profileInfo ? profileInfoReducer.profileInfo : null
     return (
       <>
         <header className="header-global theme-header ">
@@ -102,10 +104,13 @@ class DefaultHeader extends React.Component {
                       <DropdownToggle tag="a" className="nav-link user-section" caret>
                         <div className="user-wrap">
                           <div className="user-img">
-                            <img src="./assets/img/profile-ic.png" className="w-100" />
+                            <img src="./assets/img/profile-ic.png" className="w-100" alt={"img"} />
                           </div>
                           <div className="user-text">
-                            John die
+                            {
+                              profiledata ?
+                                `${profiledata.firstName}${" "} ${profiledata.lastName}` : ""
+                            }
                           </div>
                         </div>
                       </DropdownToggle>

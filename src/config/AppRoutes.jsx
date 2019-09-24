@@ -29,14 +29,24 @@ export const AppRoutes = {
     name: "Settings",
     exact: true
   },
-  FOLDERS:{
+  FOLDERS: {
     url: "/folder",
     name: "Folder",
-    exact: true,
+    exact: true
   },
-  SETS:{
+  SETS: {
     url: "/set",
     name: "Set",
-    exact: true,
+    exact: true
+  },
+  CREATE_SET: {
+    url: "/create-set",
+    name: "CreateSet",
+    exact: true
+  },
+  MOVE: {
+    url: "/move",
+    name: "Move",
+    exact: true
   }
 };

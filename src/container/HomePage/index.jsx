@@ -1,8 +1,14 @@
 import React from "react";
 import { connect } from "react-redux";
 import { Container, Row, Col, Button } from "reactstrap";
-import { UncontrolledDropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap';
-
+// import { UncontrolledDropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap';
+const homePageImage = [
+  "https://images.pexels.com/photos/67636/rose-blue-flower-rose-blooms-67636.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500",
+  "https://p.bigstockphoto.com/GeFvQkBbSLaMdpKXF1Zv_bigstock-Aerial-View-Of-Blue-Lakes-And--227291596.jpg",
+  "https://images.pexels.com/photos/462118/pexels-photo-462118.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500",
+  "https://helpx.adobe.com/content/dam/help/en/stock/how-to/visual-reverse-image-search/jcr_content/main-pars/image/visual-reverse-image-search-v2_intro.jpg",
+  "https://i.pinimg.com/originals/26/94/93/269493fbeb10e31ad3867248e3f68b94.jpg",
+]
 // core components
 class HomePage extends React.Component {
   render() {
@@ -45,93 +51,27 @@ class HomePage extends React.Component {
                 </div>
               </div>
             </Col>
-            <Col md="4">
-              <div className="play-list-block">
-                <div className="play-list-img" style={{ backgroundImage: 'url("' + "https://images.pexels.com/photos/67636/rose-blue-flower-rose-blooms-67636.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500" + '")' }}>
-                 
-                </div>
-                <div className="play-list-text">
-                  <div className="play-list-number">
-                    25 Moves
-              </div>
-                  <div className="play-list-heading h6 ">
-                    Salsa Footwork
-              </div>
-                </div>
-              </div>
-            </Col>
-            <Col md="4">
-              <div className="play-list-block">
-              <div className="play-list-img" style={{ backgroundImage: 'url("' + "https://p.bigstockphoto.com/GeFvQkBbSLaMdpKXF1Zv_bigstock-Aerial-View-Of-Blue-Lakes-And--227291596.jpg" + '")' }}>
-                 </div>
-           
-                <div className="play-list-text">
-                  <div className="play-list-number">
-                    25 Moves
-              </div>
-                  <div className="play-list-heading h6 ">
-                    Salsa Footwork
-              </div>
-                </div>
-              </div>
-            </Col>
-            <Col md="4">
-              <div className="play-list-block">
-              <div className="play-list-img" style={{ backgroundImage: 'url("' + "https://images.pexels.com/photos/462118/pexels-photo-462118.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500" + '")' }}>
-                 </div>
-                <div className="play-list-text">
-                  <div className="play-list-number">
-                    25 Moves
-              </div>
-                  <div className="play-list-heading h6 ">
-                    Salsa Footwork
-              </div>
-                </div>
-              </div>
-            </Col>
-            <Col md="4">
-              <div className="play-list-block">
-              <div className="play-list-img" style={{ backgroundImage: 'url("' + "https://helpx.adobe.com/content/dam/help/en/stock/how-to/visual-reverse-image-search/jcr_content/main-pars/image/visual-reverse-image-search-v2_intro.jpg" + '")' }}>
-         </div>
-                <div className="play-list-text">
-                  <div className="play-list-number">
-                    25 Moves
-              </div>
-                  <div className="play-list-heading h6 ">
-                    Salsa Footwork
-              </div>
-                </div>
-              </div>
-            </Col>
-            <Col md="4">
-              <div className="play-list-block">
-              
-                <div className="play-list-img" style={{ backgroundImage: 'url("' + "https://i.pinimg.com/originals/26/94/93/269493fbeb10e31ad3867248e3f68b94.jpg" + '")' }}>
-                 </div>
-                <div className="play-list-text">
-                  <div className="play-list-number">
-                    25 Moves
-              </div>
-                  <div className="play-list-heading h6 ">
-                    Salsa Footwork
-              </div>
-                </div>
-              </div>
-            </Col>
-            <Col md="4">
-              <div className="play-list-block">
-              <div className="play-list-img" style={{ backgroundImage: 'url("' + "https://i.pinimg.com/originals/26/94/93/269493fbeb10e31ad3867248e3f68b94.jpg" + '")' }}>
-                 </div>
-                <div className="play-list-text">
-                  <div className="play-list-number">
-                    25 Moves
-              </div>
-                  <div className="play-list-heading h6 ">
-                    Salsa Footwork
-              </div>
-                </div>
-              </div>
-            </Col>
+            {
+              homePageImage.map((images, index) => {
+                return (
+                  <Col md="4" key={index}>
+                    <div className="play-list-block">
+                      <div className="play-list-img" style={{ backgroundImage: 'url("' + images + '")' }}>
+
+                      </div>
+                      <div className="play-list-text">
+                        <div className="play-list-number">
+                          25 Moves
+                        </div>
+                        <div className="play-list-heading h6 ">
+                          Salsa Footwork
+                        </div>
+                      </div>
+                    </div>
+                  </Col>
+                )
+              })
+            }
           </Row>
         </section>
         <section className="home-message-section">

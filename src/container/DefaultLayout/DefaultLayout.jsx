@@ -35,7 +35,8 @@ class DefaultLayout extends React.Component {
       loginReducer,
       signupRequest,
       socialLoginRequest,
-      forgotPasswordRequest
+      forgotPasswordRequest,
+      profileInfoReducer
     } = this.props;
     let isLoggedIn
     if (localStorage.getItem("token")) {
@@ -55,44 +56,72 @@ class DefaultLayout extends React.Component {
               logoutRequest={logoutRequest}
               loginReducer={loginReducer}
               signupRequest={signupRequest}
+              profileInfoReducer={profileInfoReducer}
               socialLoginRequest={socialLoginRequest}
               forgotPasswordRequest={forgotPasswordRequest}
             /> : null
         }
         <>
           <div className={routePath !== "/resetPassword" ? "dashboard-full-section" : ""}>
-            <div className={`theme-container ${routePath !== "/" ? "dashboard-container" : "home-container"}`}>
+            <div className={`theme-container ${routePath !== "/" ? "dashboard-container " : "home-container"}`}>
               {
                 isLoggedIn && (routePath !== "/" && routePath !== "/resetPassword") ?
                   <div className="ct-sidebar app-sidebar">
-                    <DefaultSidebar /></div> :
+                    <DefaultSidebar
+                      profileInfoReducer={profileInfoReducer}
+                    /></div> :
                   null
               }
-              <Suspense fallback={""}>
-                <Switch>
-                  {routes.map((route, idx) => {
-                    return route.component ? (
-                      <Route
-                        key={idx}
-                        path={route.path}
-                        exact={route.exact}
-                        name={route.name}
-                        render={props => (
-                          <route.component {...props} {...this.props} />
-                        )}
-                      />
-                    ) : null;
-                  })}
-                </Switch>
-              </Suspense>
+              {
+                isLoggedIn && (routePath !== "/" && routePath !== "/resetPassword") ?
+                  <div className="dashboard-right-wrap">
+                    <div className="dashboard-right-section">
+                      <Suspense fallback={""}>
+                        <Switch>
+                          {routes.map((route, idx) => {
+                            return route.component ? (
+                              <Route
+                                key={idx}
+                                path={route.path}
+                                exact={route.exact}
+                                name={route.name}
+                                render={props => (
+                                  <route.component {...props} {...this.props} />
+                                )}
+                              />
+                            ) : null;
+                          })}
+                        </Switch>
+                      </Suspense>
+                    </div>
+                  </div> :
+                  <Suspense fallback={""}>
+                    <Switch>
+                      {routes.map((route, idx) => {
+                        return route.component ? (
+                          <Route
+                            key={idx}
+                            path={route.path}
+                            exact={route.exact}
+                            name={route.name}
+                            render={props => (
+                              <route.component {...props} {...this.props} />
+                            )}
+                          />
+                        ) : null;
+                      })}
+                    </Switch>
+                  </Suspense>
+              }
             </div>
           </div>
 
         </>
-        {isLoggedIn && (routePath !== "/" && routePath !== "/resetPassword") ?
-          null :
-          routePath !== "/resetPassword" ?
-            <DefaultFooter /> : null
+        {
+          isLoggedIn && (routePath !== "/" && routePath !== "/resetPassword") ?
+            null :
+            routePath !== "/resetPassword" ?
+              <DefaultFooter /> : null
         }
 
       </>
@@ -102,7 +131,8 @@ class DefaultLayout extends React.Component {
 
 const mapStateToProps = state => ({
   modelInfoReducer: state.modelInfoReducer,
-  loginReducer: state.loginReducer
+  loginReducer: state.loginReducer,
+  profileInfoReducer: state.profileInfoReducer
 });
 const mapDispatchToProps = dispatch => ({
   modelOperate: data => dispatch(modelOpenRequest(data)),

@@ -6,6 +6,7 @@ import {
   redirectTo,
   loginSuccess,
   logoutSuccess,
+  profileSuccess,
   forgotPasswordSuccess
 } from "../actions";
 //import { logger } from "helper/Logger";
@@ -39,6 +40,11 @@ const loginLogic = createLogic({
           }
         })
       )
+      dispatch(
+        profileSuccess({
+          profileInfo: result.data.userData
+        })
+      );
       dispatch(
         loginSuccess({ isLoginSuccess: true })
       )

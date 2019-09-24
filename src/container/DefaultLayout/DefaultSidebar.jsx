@@ -6,6 +6,8 @@ import { SidebarComponent } from "../../components/Sidebar";
 class DefaultSidebar extends React.Component {
 
   render() {
+    const { profileInfoReducer } = this.props
+    const profiledata = profileInfoReducer && profileInfoReducer.profileInfo ? profileInfoReducer.profileInfo : null
     return (
       <div className="dashboard-left-wrap">
         <div className="dashboard-left">
@@ -36,7 +38,14 @@ class DefaultSidebar extends React.Component {
               <img alt="..." src="/static/media/boy.9a3a77b0.svg" className="w-100" />
             </div>
           </div>
-          <div className="profile-text-tile color-black"><div className="font-weight-bold text-center mt-2">JOHN DIE</div></div>
+          <div className="profile-text-tile color-black">
+            <div className="font-weight-bold text-center mt-2">
+              {
+                profiledata ?
+                  `${profiledata.firstName}${" "} ${profiledata.lastName}` : ""
+              }
+            </div>
+          </div>
         </div>
       </div>
     );

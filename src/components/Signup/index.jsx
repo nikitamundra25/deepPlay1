@@ -11,8 +11,6 @@ import {
   InputGroupText,
   InputGroup,
   Modal,
-  Row,
-  Col,
   FormFeedback,
   ModalBody,
   ModalHeader

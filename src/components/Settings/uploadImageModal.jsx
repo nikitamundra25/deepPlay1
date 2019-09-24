@@ -25,6 +25,7 @@ class UploadImage extends Component {
     file.map(async (data, i) => {
       let picReader = new FileReader();
       let scope = this;
+      // eslint-disable-next-line
       const type = data.type;
       await picReader.addEventListener("load", async event => {
         var image = new Image();
@@ -90,7 +91,7 @@ class UploadImage extends Component {
                 <Dropzone
                   onDrop={this.onSelectFile}
                   accept="image/*"
-                  multiple={true}
+                  multiple={false}
                 >
                   {({ getRootProps, getInputProps }) => {
                     return (

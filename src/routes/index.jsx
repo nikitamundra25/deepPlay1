@@ -30,6 +30,7 @@ const Routes = [
     name: "Page 404",
     component: Page404
   },
+ 
 ];
 
 class AppRoutes extends Component {

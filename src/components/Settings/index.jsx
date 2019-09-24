@@ -1,7 +1,16 @@
 import React, { Component } from "react";
 import {
-  Button, FormGroup, Form, Input, Label, Row, Col, Card, CardText, CardBody,
-  CardTitle, CardSubtitle, CardHeader
+  Button,
+  FormGroup,
+  Form,
+  Input,
+  Label,
+  Row,
+  Col,
+  Card,
+  CardBody,
+  CardTitle,
+  CardHeader
 } from "reactstrap";
 import Validator from "js-object-validation";
 import Swal from "sweetalert2";
@@ -98,7 +107,7 @@ class SettingComponent extends Component {
   handleDelete = () => {
     Swal.fire({
       title: "Are you sure?",
-      text: "You want to delete this account permanently!",
+      text: "You want to delete your account permanently!",
       type: "warning",
       showCancelButton: true,
       confirmButtonColor: "#3085d6",
@@ -141,8 +150,8 @@ class SettingComponent extends Component {
 
     console.log("file", this.state.file);
     return (
-      <div className="dashboard-right-wrap">
-        <div className="dashboard-right-section setting-section">
+      <div>
+        <div className="setting-section">
           <div className="page-body">
             <div className="content-header mb-3">
               <span className="content-title">SETTINGS</span>
