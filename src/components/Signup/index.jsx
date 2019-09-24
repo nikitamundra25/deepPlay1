@@ -370,14 +370,6 @@ class SignupComponent extends React.Component {
                       color=" "
 
                       type="submit"
-                    >
-                      Sign up
-                    </Button>
-                    <Button
-                      className="my-4 btn-black btn-line-black btn-block"
-                      color=" "
-
-                      type="submit"
                       disabled={isSignupLoading ? true : false}
                     >
                       {
@@ -385,6 +377,13 @@ class SignupComponent extends React.Component {
                           "Please wait..." :
                           "Create account"
                       }
+                    </Button>
+                    <Button
+                      className="my-4 btn-black btn-line-black btn-block"
+                      color=" "
+
+                      type="button"
+                    >
                       Already have an account? Sign in
                     </Button>
                   </div>
