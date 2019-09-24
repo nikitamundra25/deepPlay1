@@ -9,7 +9,7 @@ import {
   Label,
   UncontrolledTooltip
 } from "reactstrap";
-import "./index.css";
+import "./index.scss";
 class CreateSetComponent extends React.Component {
   constructor(props) {
     super(props);

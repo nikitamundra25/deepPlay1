@@ -13,7 +13,7 @@ import {
   Input
 } from "reactstrap";
 import { Link } from "react-router-dom";
-import "./index.css";
+import "./index.scss";
 // core components
 class SetComponent extends React.Component {
   render() {

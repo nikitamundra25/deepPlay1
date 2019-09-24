@@ -1,5 +1,5 @@
 import { handleActions } from "redux-actions";
-import { SetsAction } from "./../actions";
+import { SetsAction } from "../actions";
 const initialState = {
   allSetList: ""
 };

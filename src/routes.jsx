@@ -6,6 +6,8 @@ const Dashboard = React.lazy(() => import("./container/Dashboard"));
 const Settings = React.lazy(() => import("./container/Settings"));
 const Folders = React.lazy(() => import("./container/Folders"));
 const Sets = React.lazy(() => import("./container/Sets"));
+const ResetPassword = React.lazy(() => import("./container/Auth/ResetPassword"));
+const Page404 = React.lazy(() => import("./components/Page404"));
 const Move = React.lazy(() => import("./container/Move"));
 
 const routes = [
@@ -38,6 +40,18 @@ const routes = [
     name: AppRoutes.SETTINGS.name,
     exact: AppRoutes.SETTINGS.exact,
     component: Settings
+  },
+  {
+    path: AppRoutes.RESET_PASSWORD.url,
+    exact: AppRoutes.RESET_PASSWORD.exact,
+    name: AppRoutes.RESET_PASSWORD.name,
+    component: ResetPassword
+  },
+  {
+    exact: true,
+    path: "/404",
+    name: "Page 404",
+    component: Page404
   },
   {
     path: AppRoutes.MOVE.url,

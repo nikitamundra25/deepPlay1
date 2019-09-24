@@ -1,7 +1,7 @@
 import React from "react";
 import { Button, Row, Col, FormGroup, Input } from "reactstrap";
 import Dropzone from "react-dropzone";
-import "./index.css";
+import "./index.scss";
 // core components
 class MoveComponent extends React.Component {
   constructor(props) {
@@ -69,7 +69,9 @@ class MoveComponent extends React.Component {
       isPaste: true
     });
   };
-
+  handlePasteEvent = () => {
+    console.log("$$$$$$$$$$$$$$$$$$$$$$");
+  }
   render() {
     const { errors, url } = this.state;
     return (
@@ -111,6 +113,7 @@ class MoveComponent extends React.Component {
                   className="capitalize"
                   placeholder="Paste YouTube URL"
                   type="text"
+                  onpaste={this.handlePasteEvent}
                   name="url"
                   onPaste={this.paste}
                   onKeyPress={this.handleKeyboardEvent}

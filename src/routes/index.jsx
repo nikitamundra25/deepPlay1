@@ -8,8 +8,8 @@ import "../App.scss";
 const DefaultLayout = React.lazy(() =>
 import("../container/DefaultLayout/DefaultLayout")
 );
-const Login = React.lazy(() => import("../container/Auth/Login"));
-const Signup = React.lazy(() => import("../container/Auth/Signup"));
+const ResetPassword = React.lazy(() => import("../container/Auth/ResetPassword"));
+const Page404 = React.lazy(() => import("../components/Page404"));
 
 const Routes = [
   {
@@ -19,16 +19,16 @@ const Routes = [
     component: DefaultLayout
   },
   {
-    path: routesData.LOGIN.url,
-    exact: routesData.LOGIN.exact,
-    name: routesData.LOGIN.name,
-    component: Login
+    exact: true,
+    path: routesData.RESET_PASSWORD.url,
+    name: routesData.RESET_PASSWORD.name,
+    component: ResetPassword
   },
   {
-    path: routesData.SIGNUP.url,
-    exact: routesData.SIGNUP.exact,
-    name: routesData.SIGNUP.name,
-    component: Signup
+    exact: true,
+    path: "/404",
+    name: "Page 404",
+    component: Page404
   },
  
 ];

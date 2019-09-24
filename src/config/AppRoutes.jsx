@@ -14,6 +14,11 @@ export const AppRoutes = {
     name: "Signup",
     exact: true
   },
+  RESET_PASSWORD:{
+    url: "/resetPassword",
+    name: "Reset Password",
+    exact: true,
+  },
   DASHBOARD: {
     url: "/dashboard",
     name: "Dashboard",

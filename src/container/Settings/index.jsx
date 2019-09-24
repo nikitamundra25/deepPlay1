@@ -4,7 +4,8 @@ import {
   profileRequest,
   updateProfileRequest,
   deleteUserAccountRequest,
-  uploadImageRequest
+  uploadImageRequest,
+  modelOpenRequest
 } from "../../actions";
 import { connect } from "react-redux";
 // core components
@@ -25,16 +26,19 @@ class Setting extends React.Component {
   //   this.props.uploadProfileImage(file);
   // };
   render() {
+    const { modelOperate, modelInfoReducer } = this.props
     return (
       <>
         <SettingComponent
           profileInfoReducer={this.props.userData}
           handleData={this.handleData}
           onDelete={this.onDelete}
-          profileImageThumb= {this.props.profileImage}
+          profileImageThumb={this.props.profileImage}
           uploadImage={file =>
             this.props.uploadProfileImage({ imageData: file })
           }
+          modelOperate={modelOperate}
+          modelInfoReducer={modelInfoReducer}
         />
       </>
     );
@@ -43,7 +47,8 @@ class Setting extends React.Component {
 const mapStateToProps = state => {
   return {
     userData: state.profileInfoReducer.profileInfo,
-    profileImage: state.profileImage.profileImage.profileThumbnail
+    profileImage: state.profileImage.profileImage.profileThumbnail,
+    modelInfoReducer: state.modelInfoReducer,
   };
 };
 
@@ -60,7 +65,8 @@ const mapDispatchToProps = dispatch => {
     },
     uploadProfileImage: payload => {
       dispatch(uploadImageRequest(payload));
-    }
+    },
+    modelOperate: data => dispatch(modelOpenRequest(data)),
   };
 };
 
