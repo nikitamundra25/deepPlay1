@@ -131,27 +131,21 @@ class LoginComponent extends React.Component {
     return (
       <>
         <Modal
-          className="modal-dialog-centered"
-          size="sm"
+          className="modal-dialog-centered auth-user-model"
           isOpen={openLoginModel}
           toggle={handleLoginModel}
           backdrop={"static"}
+          size={"sm"}
         >
-          <ModalHeader toggle={handleLoginModel}>Sign In</ModalHeader>
-          <ModalBody className="modal-body p-0">
+          <ModalHeader toggle={handleLoginModel}></ModalHeader>
+          <ModalBody className="modal-body p-0 ">
             <Card className="bg-secondary shadow border-0">
-              <CardHeader className="bg-transparent pb-2">
-                <div className="text-muted text-center mt-2 mb-3">
-                  <small>Sign in with</small>
+              <CardHeader>
+                <div className=" login-heading text-center mt-2 mb-3">
+              Sign in with
                 </div>
-                <div className="btn-wrapper text-center">
-                  <span className="btn-inner--icon pr-2">
-                    <img
-                      alt="..."
-                      src={require("assets/img/icons/common/facebook.svg")}
-                      width={20}
-                      height={20}
-                    />
+                <div className="btn-wrapper text-center social-media-wrap">
+                  <span className="btn-inner--icon mr-2 facebook-wrap">
                     <FacebookLogin
                       appId="429677604320021"
                       autoLoad={false}
@@ -159,10 +153,10 @@ class LoginComponent extends React.Component {
                       textButton={"Facebook"}
                       callback={this.handleFacebookLogin}
                       cssClass={"btn-neutral btn-icon btn btn-default"}
-                      icon={"assets/img/icons/common/facebook.svg"}
+                      icon={"fa-facebook"}
                     />
                   </span>
-                  <span className="btn-inner--icon">
+                  <span className="btn-inner--icon google-wrap">
                     <GoogleLogin
                       clientId="52209426453-64s7do5ib1j1s3e9fhgnjgmvi3931vqm.apps.googleusercontent.com"
                       buttonText="Google"
@@ -175,8 +169,8 @@ class LoginComponent extends React.Component {
                 </div>
               </CardHeader>
               <CardBody className="px-lg-5">
-                <div className="text-center text-muted mb-4">
-                  <small>Or sign in with credentials</small>
+                <div className="text-center login-heading mb-4 auth-subheading">
+                Or sign in with credentials
                 </div>
                 <Form onSubmit={this.handleLoginRequest}>
                   <FormGroup className="mb-3">
@@ -217,16 +211,25 @@ class LoginComponent extends React.Component {
                       </FormFeedback>
                     </InputGroup>
                   </FormGroup>
-                  <div className={"text-center text-primary cursor_pointer"}>
+                  <div onClick={this.props.handleForgotPasswordModel} className={"text-center cursor_pointer forgot-password-wrap"}>
                       Forgot password?
                   </div>
-                  <div className="text-center">
+                  <div className="text-center auth-btn-wrap">
                     <Button
-                      className="my-4"
-                      color="primary"
+                      className="my-4 btn-black btn-block"
+                      color=" "
                       type="submit"
                     >
                       Sign in
+                    </Button>
+                  
+                    <Button
+                      className="my-4 btn-black btn-line-black btn-block"
+                      color=" "
+                      
+                      type="submit"
+                    >
+                    Don't have an account? Sign Up
                     </Button>
                   </div>
                 </Form>

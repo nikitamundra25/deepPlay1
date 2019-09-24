@@ -35,7 +35,7 @@ const editUserInfo = async (req: Request, res: Response): Promise<any> => {
       lastName,
       roleType
     };
-    const checkProperties: object = (dataToUpdate: IDataToUpdate) => {
+    const checkProperties: object = (dataToUpdate: IDataToUpdate | any) => {
       for (var i in dataToUpdate) {
         if (dataToUpdate[i] !== null && dataToUpdate[i] != "") return false;
       }
@@ -47,6 +47,27 @@ const editUserInfo = async (req: Request, res: Response): Promise<any> => {
         $set: dataToUpdate
       });
     }
+    return res.status(200).json({
+      message: "Profile details udpated successfully."
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).send({
+      message: error.message
+    });
+  }
+};
+
+// --------------update Roletype info---------------------
+const editRoleTypeInfo = async (req: Request, res: Response): Promise<any> => {
+  try {
+    const { body, currentUser } = req;
+    const headToken: Request | any = currentUser;
+    const { roleType } = body;
+
+    await UserModel.findByIdAndUpdate(headToken.id, {
+      $set: roleType
+    });
     return res.status(200).json({
       message: "Profile details udpated successfully."
     });
@@ -145,4 +166,10 @@ const deleteUserAccount = async (req: Request, res: Response): Promise<any> => {
     });
   }
 };
-export { getUserInfo, editUserInfo, deleteUserAccount, imageUpload };
+export {
+  getUserInfo,
+  editUserInfo,
+  editRoleTypeInfo,
+  deleteUserAccount,
+  imageUpload
+};

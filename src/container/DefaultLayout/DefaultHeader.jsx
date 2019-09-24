@@ -1,6 +1,10 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import {
+  UncontrolledDropdown,
+  DropdownToggle,
+  DropdownItem,
+  DropdownMenu,
   UncontrolledCollapse,
   NavbarBrand,
   Navbar,
@@ -51,13 +55,26 @@ class DefaultHeader extends React.Component {
   }
 
   render() {
-    const { modelInfoReducer, loginRequest, logoutRequest, signupRequest, socialLoginRequest } = this.props;
+    const {
+      modelInfoReducer,
+      loginRequest,
+      logoutRequest,
+      signupRequest,
+      socialLoginRequest,
+      loginReducer,
+      forgotPasswordRequest,
+      profileInfoReducer,
+      modelOpenRequest } = this.props;
     const { modelDetails } = modelInfoReducer;
-    const { loginModelOpen, signupModelOpen } = modelDetails;
+    const {
+      loginModelOpen,
+      signupModelOpen,
+      forgotPasswordModalOpen } = modelDetails;
     const { isUserLoggedIn } = this.state;
+    const profiledata = profileInfoReducer && profileInfoReducer.profileInfo ? profileInfoReducer.profileInfo : null
     return (
       <>
-        <header className="header-global theme-header">
+        <header className="header-global theme-header ">
           <Navbar
             className="navbar-main "
             // expand="lg"
@@ -67,18 +84,44 @@ class DefaultHeader extends React.Component {
             <NavbarBrand className="mr-lg-5" to="/" tag={Link}>
               <h3 className="mb-0 header-title">Deep Play</h3>
             </NavbarBrand>
-            <Nav className="navbar-nav-hover align-items-lg-center " navbar>
+            <Nav className="navbar-nav align-items-center nav-main-section" navbar>
               {
                 !isUserLoggedIn ?
-                  <React.Fragment>
-                    <span
-                      onClick={this.handleLoginModel}
-                      className="nav-link-inner--text pr-4 cursor_pointer">Login</span>
-                    <span
-                      onClick={this.handleSignupModel}
-                      className="nav-link-inner--text pr-2 cursor_pointer">Signup</span>
-                  </React.Fragment> :
-                  <span onClick={e => logoutRequest(e)} className="nav-link-inner--text cursor_pointer pr-4">Logout</span>
+                  <div className="nav-main-section">
+                    <React.Fragment >
+                      <span
+                        onClick={this.handleLoginModel}
+                        className="nav-link-inner--text pr-4 cusror_pointer">Login</span>
+                      <span
+                        onClick={this.handleSignupModel}
+                        className="nav-link-inner--text pr-2 cusror_pointer">Signup</span>
+                    </React.Fragment>
+                  </div>
+                  :
+                  <>
+
+                    <UncontrolledDropdown className="header-manu-wrap ">
+                      <DropdownToggle tag="a" className="nav-link user-section" caret>
+                        <div className="user-wrap">
+                          <div className="user-img">
+                            <img src="./assets/img/profile-ic.png" className="w-100" alt={"img"} />
+                          </div>
+                          <div className="user-text">
+                            {
+                              profiledata ?
+                                `${profiledata.firstName}${" "} ${profiledata.lastName}` : ""
+                            }
+                          </div>
+                        </div>
+                      </DropdownToggle>
+                      <DropdownMenu>
+                        <DropdownItem active><Link to={"/setting"}>View Profile</Link></DropdownItem>
+                        <DropdownItem ><Link to={"/dashboard"}>Dashboard</Link></DropdownItem>
+                        <DropdownItem onClick={e => logoutRequest(e)}  >logout</DropdownItem>
+                      </DropdownMenu>
+                    </UncontrolledDropdown>
+                    {/* <span onClick={e => logoutRequest(e)} className="nav-link-inner--text pr-4">Logout</span> */}
+                  </>
               }
             </Nav>
             <UncontrolledCollapse navbar toggler="#navbar_global" className="justify-content-end">
@@ -109,11 +152,17 @@ class DefaultHeader extends React.Component {
           handleLoginModel={this.handleLoginModel}
           loginRequest={loginRequest}
           socialLoginRequest={socialLoginRequest}
+          openForgotPasswordModel={forgotPasswordModalOpen}
+          modelOpenRequest={modelOpenRequest}
+          forgotPasswordRequest={forgotPasswordRequest}
+          modelInfoReducer={modelInfoReducer}
+          loginReducer={loginReducer}
         />
         <Signup
           openSignupModel={signupModelOpen}
           handleSignupModel={this.handleSignupModel}
           signupRequest={signupRequest}
+          loginReducer={loginReducer}
         />
       </>
     );

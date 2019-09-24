@@ -4,7 +4,9 @@ import { modelActions } from "../actions/index.jsx";
 const initialAuthState = {
   modelDetails: {
     loginModelOpen: false,
-    signupModelOpen: false
+    signupModelOpen: false,
+    forgotPasswordModalOpen: false,
+    uploadImageModalOpen: false
   }
 };
 

@@ -1,5 +1,16 @@
 import { ValidationError } from "express-validator";
-
+import nodemailer from "nodemailer";
+/**
+ * 
+ */
+//Email SMTP Transport
+export const smtpTransport = nodemailer.createTransport({
+  service:<string> "Gmail",
+  auth:<Object> {
+    user:<string> "test.chapter247@gmail.com",
+    pass:<string> "chapter247@@"
+  }
+});
 /**
  *
  */

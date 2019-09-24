@@ -137,8 +137,7 @@ class Register extends React.Component {
                               autoComplete="off"
                             />
                           </InputGroup>
-                        </FormGroup>
-                        <div className="text-muted font-italic">
+                          <div className="text-muted font-italic">
                           <small>
                             password strength:{" "}
                             <span className="text-success font-weight-700">
@@ -146,6 +145,8 @@ class Register extends React.Component {
                             </span>
                           </small>
                         </div>
+                        </FormGroup>
+                        
                         <Row className="my-4">
                           <Col xs="12">
                             <div className="custom-control custom-control-alternative custom-checkbox">

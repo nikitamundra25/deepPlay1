@@ -8,6 +8,7 @@ export const loginAction = {
     SOCIAL_LOGIN_REQUEST: "Social login Requested",
     SOCIAL_LOGIN_SUCCESS: "Social login Success!",
     FORGET_PASSWORD_REQUEST: "Forget Password Started!",
+    FORGET_PASSWORD_SUCCESS: "Forget Password Success!",
     VALIDATE_RESET_REQUEST: "Reset Token Validation Started!",
     RESET_PASSSWORD_REQUEST: "Reset Password Started!",
 }
@@ -18,6 +19,10 @@ export const loginSuccess = createAction(loginAction.LOGIN_SUCCESS);
 export const logoutRequest = createAction(loginAction.LOGOUT_REQUEST);
 export const logoutSuccess = createAction(loginAction.LOGOUT_SUCCESS);
 
+export const forgotPasswordRequest = createAction(loginAction.FORGET_PASSWORD_REQUEST);
+export const forgotPasswordSuccess = createAction(loginAction.FORGET_PASSWORD_SUCCESS)
+export const validateResetToken = createAction(loginAction.VALIDATE_RESET_REQUEST)
+export const resetPasswordRequest = createAction(loginAction.RESET_PASSSWORD_REQUEST);
+
 export const socialLoginRequest = createAction(loginAction.SOCIAL_LOGIN_REQUEST);
 export const socialLoginSuccess = createAction(loginAction.SOCIAL_LOGIN_SUCCESS);
-

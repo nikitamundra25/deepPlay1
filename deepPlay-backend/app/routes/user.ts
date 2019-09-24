@@ -3,7 +3,8 @@ import {
   getUserInfo,
   editUserInfo,
   deleteUserAccount,
-  imageUpload
+  imageUpload,
+  editRoleTypeInfo
 } from "./../controllers";
 import { ValidateAdminToken } from "../common";
 
@@ -11,6 +12,7 @@ const UserRouter: express.Router = express.Router();
 
 UserRouter.get("/getProfileInfo", ValidateAdminToken, getUserInfo);
 UserRouter.put("/updateUserData", ValidateAdminToken, editUserInfo);
+UserRouter.put("/editRoleType", ValidateAdminToken, editRoleTypeInfo);
 UserRouter.post("/uploadFiles", ValidateAdminToken, imageUpload);
 UserRouter.delete("/userAccountDelete", ValidateAdminToken, deleteUserAccount);
 export default UserRouter;

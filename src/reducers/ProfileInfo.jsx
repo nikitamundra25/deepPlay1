@@ -1,5 +1,5 @@
 import { handleActions } from "redux-actions";
-import { ProfileAction } from "./../actions";
+import { ProfileAction } from "../actions";
 
 const initialState = {
   profileInfo: "",

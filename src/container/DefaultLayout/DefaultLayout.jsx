@@ -10,15 +10,16 @@ import {
   loginRequest,
   logoutRequest,
   signupRequest,
-  socialLoginRequest
+  socialLoginRequest,
+  forgotPasswordRequest
 } from "../../actions/index.jsx";
 
 // core components
 class DefaultLayout extends React.Component {
-
   componentDidMount() {
+    const pathname = this.props.location.pathname
     const token = localStorage.getItem("token")
-    if (!token) {
+    if (!token && pathname !== "/resetPassword") {
       this.props.redirectTo("/")
     }
   }
@@ -33,51 +34,95 @@ class DefaultLayout extends React.Component {
       logoutRequest,
       loginReducer,
       signupRequest,
-      socialLoginRequest
+      socialLoginRequest,
+      forgotPasswordRequest,
+      profileInfoReducer
     } = this.props;
-    const isLoggedIn = localStorage.getItem("token")
+    let isLoggedIn
+    if (localStorage.getItem("token")) {
+      isLoggedIn = true
+    } else {
+      isLoggedIn = false
+    }
     const routePath = this.props.location.pathname
     return (
       <>
-        <DefaultHeader
-          modelInfoReducer={modelInfoReducer}
-          modelOpenRequest={modelOperate}
-          loginRequest={loginRequest}
-          logoutRequest={logoutRequest}
-          loginReducer={loginReducer}
-          signupRequest={signupRequest}
-          socialLoginRequest={socialLoginRequest}
-        />
+        {
+          (routePath !== "/resetPassword") ?
+            <DefaultHeader
+              modelInfoReducer={modelInfoReducer}
+              modelOpenRequest={modelOperate}
+              loginRequest={loginRequest}
+              logoutRequest={logoutRequest}
+              loginReducer={loginReducer}
+              signupRequest={signupRequest}
+              profileInfoReducer={profileInfoReducer}
+              socialLoginRequest={socialLoginRequest}
+              forgotPasswordRequest={forgotPasswordRequest}
+            /> : null
+        }
         <>
-          <div className={"theme-container"}>
-            <div className="dashboard-full-section">
-              {isLoggedIn && routePath !== "/" ?
-                <div className="ct-sidebar app-sidebar">
-                  <DefaultSidebar /></div> : null}
-              <div className={"dashboard-right-wrap"}>
-                <Suspense fallback={""}>
-                  <Switch>
-                    {routes.map((route, idx) => {
-                      return route.component ? (
-                        <Route
-                          key={idx}
-                          path={route.path}
-                          exact={route.exact}
-                          name={route.name}
-                          render={props => (
-                            <route.component {...props} {...this.props} />
-                          )}
-                        />
-                      ) : null;
-                    })}
-                  </Switch>
-                </Suspense>
-              </div>
+          <div className={routePath !== "/resetPassword" ? "dashboard-full-section" : ""}>
+            <div className={`theme-container ${routePath !== "/" ? "dashboard-container " : "home-container"}`}>
+              {
+                isLoggedIn && (routePath !== "/" && routePath !== "/resetPassword") ?
+                  <div className="ct-sidebar app-sidebar">
+                    <DefaultSidebar
+                      profileInfoReducer={profileInfoReducer}
+                    /></div> :
+                  null
+              }
+              {
+                isLoggedIn && (routePath !== "/" && routePath !== "/resetPassword") ?
+                  <div className="dashboard-right-wrap">
+                    <div className="dashboard-right-section">
+                      <Suspense fallback={""}>
+                        <Switch>
+                          {routes.map((route, idx) => {
+                            return route.component ? (
+                              <Route
+                                key={idx}
+                                path={route.path}
+                                exact={route.exact}
+                                name={route.name}
+                                render={props => (
+                                  <route.component {...props} {...this.props} />
+                                )}
+                              />
+                            ) : null;
+                          })}
+                        </Switch>
+                      </Suspense>
+                    </div>
+                  </div> :
+                  <Suspense fallback={""}>
+                    <Switch>
+                      {routes.map((route, idx) => {
+                        return route.component ? (
+                          <Route
+                            key={idx}
+                            path={route.path}
+                            exact={route.exact}
+                            name={route.name}
+                            render={props => (
+                              <route.component {...props} {...this.props} />
+                            )}
+                          />
+                        ) : null;
+                      })}
+                    </Switch>
+                  </Suspense>
+              }
             </div>
           </div>
+
         </>
-        {isLoggedIn && routePath !== "/" ?
-          null : <DefaultFooter />}
+        {
+          isLoggedIn && (routePath !== "/" && routePath !== "/resetPassword") ?
+            null :
+            routePath !== "/resetPassword" ?
+              <DefaultFooter /> : null
+        }
 
       </>
     );
@@ -86,14 +131,16 @@ class DefaultLayout extends React.Component {
 
 const mapStateToProps = state => ({
   modelInfoReducer: state.modelInfoReducer,
-  loginReducer: state.loginReducer
+  loginReducer: state.loginReducer,
+  profileInfoReducer: state.profileInfoReducer
 });
 const mapDispatchToProps = dispatch => ({
   modelOperate: data => dispatch(modelOpenRequest(data)),
   loginRequest: data => dispatch(loginRequest(data)),
   logoutRequest: data => dispatch(logoutRequest(data)),
   signupRequest: data => dispatch(signupRequest(data)),
-  socialLoginRequest: data => dispatch(socialLoginRequest(data))
+  socialLoginRequest: data => dispatch(socialLoginRequest(data)),
+  forgotPasswordRequest: data => dispatch(forgotPasswordRequest(data))
 });
 export default connect(
   mapStateToProps,
