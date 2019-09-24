@@ -7,7 +7,6 @@ import {
   Label,
   Row,
   Col,
-  FormFeedback
 } from "reactstrap";
 import Validator from "js-object-validation";
 import Swal from "sweetalert2";
@@ -104,7 +103,7 @@ class SettingComponent extends Component {
   handleDelete = () => {
     Swal.fire({
       title: "Are you sure?",
-      text: "You want to delete this account permanently!",
+      text: "You want to delete your account permanently!",
       type: "warning",
       showCancelButton: true,
       confirmButtonColor: "#3085d6",
@@ -138,7 +137,6 @@ class SettingComponent extends Component {
       errors,
       imgError
     } = this.state;
-    console.log("file", this.state.file);
     return (
       <div className="col-md-12 col-sm-12">
         <h1>Settings</h1>
@@ -223,6 +221,7 @@ class SettingComponent extends Component {
                     id="exampleFormControlInput1"
                     placeholder="name@example.com"
                     type="email"
+                    readOnly
                     value={profileInfoReducer ? profileInfoReducer.email : ""}
                   />
                 </FormGroup>

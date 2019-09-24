@@ -1,0 +1,30 @@
+.profilepic {
+  width: 55px;
+  height: 45px;
+  border-radius: 50%;
+  margin: 0 auto;
+  overflow: hidden;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  background: #bdbdc3;
+}
+.profileimg-wrap {
+  margin: 1px auto 10px;
+}
+.set-wrap {
+  margin: auto;
+  margin-top: 50px;
+}
+.fullSize-btn {
+  width: 100%;
+}
+.disable-span {
+  color: #e6e6e6;
+  cursor: not-allowed;
+}
+.capitalize{
+  text-transform: capitalize;
+}

@@ -6,6 +6,7 @@ const Dashboard = React.lazy(() => import("./container/Dashboard"));
 const Settings = React.lazy(() => import("./container/Settings"));
 const Folders = React.lazy(() => import("./container/Folders"));
 const Sets = React.lazy(() => import("./container/Sets"));
+const Move = React.lazy(() => import("./container/Move"));
 
 const routes = [
   {
@@ -38,6 +39,12 @@ const routes = [
     exact: AppRoutes.SETTINGS.exact,
     component: Settings
   },
+  {
+    path: AppRoutes.MOVE.url,
+    name: AppRoutes.MOVE.name,
+    exact: AppRoutes.MOVE.exact,
+    component: Move
+  }
 ];
 
 export default routes;

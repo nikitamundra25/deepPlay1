@@ -5,6 +5,7 @@ import { routerReducer } from "react-router-redux";
 import { modelInfoReducer } from "./ModelOperation.jsx";
 import { loginReducer } from "./Login.jsx";
 import { profileInfoReducer, profileImage } from "./profileInfo.jsx";
+import { getAllSetReducer } from "./set.jsx";
 
 export const mainReducer = handleActions(
   {
@@ -27,6 +28,7 @@ const AppReducer = combineReducers({
   modelInfoReducer,
   loginReducer,
   profileInfoReducer,
+  getAllSetReducer,
   profileImage,
   routing: routerReducer
 });

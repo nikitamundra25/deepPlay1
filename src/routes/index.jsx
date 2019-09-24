@@ -30,6 +30,7 @@ const Routes = [
     name: routesData.SIGNUP.name,
     component: Signup
   },
+ 
 ];
 
 class AppRoutes extends Component {

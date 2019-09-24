@@ -8,7 +8,6 @@ class Dashboard extends React.Component {
     return (
       <div className="">
         <div className="dashboard-right-section">
-
           <div className="page-body">
             <div className="content-header">
               <span className="content-title">RECENT</span>
