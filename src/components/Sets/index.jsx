@@ -62,13 +62,6 @@ class SetComponent extends React.Component {
               </Col>
             </Row>
           </Col>
-          <Col>
-            <div className="profileimg-wrap">
-              <div className="profilepic">
-                <i className="fas fa-user fa-2x"></i>
-              </div>
-            </div>
-          </Col>
         </Row>
         <Row>
           <Col>

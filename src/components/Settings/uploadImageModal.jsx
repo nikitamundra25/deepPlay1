@@ -52,14 +52,14 @@ class UploadImage extends Component {
     return (
       <div className="modal-text-center">
         <Modal
-          className="modal-dialog-centered"
-          size="lg"
+          className="modal-dialog-centered custom-model-wrap"
+          size="md"
           isOpen={this.props.modal}
           toggle={this.props.handleOpen}
           backdrop={"static"}
         >
           <ModalHeader>
-            <h4>Upload profile image</h4>
+            <span className="custom-title">Upload profile image</span>
 
             <button
               aria-label="Close"
@@ -81,13 +81,8 @@ class UploadImage extends Component {
               />
             ) : (
               <>
-                <img
-                  alt="..."
-                  src={require("assets/img/icons/common/picture.svg")}
-                  width="50px"
-                  height="50px"
-                />
-
+               
+               <div className="upload-file-wrap">
                 <Dropzone
                   onDrop={this.onSelectFile}
                   accept="image/*"
@@ -99,33 +94,35 @@ class UploadImage extends Component {
                         <input {...getInputProps()} />
                         <div className="add-more-img-wrap">
                           <div className="add-more-text">
-                            <h3>Drag a profile photo here </h3>
-                            <br />
-                            <Button
-                              color="default"
-                              type="button"
-                              size="sm"
-                              className="btn-btn-right"
-                            >
-                              Select a photo from your computer
-                            </Button>
+                          <img
+                  alt="..."
+                  src={require("assets/img/icons/common/picture.svg")}
+                  width="50px"
+                  height="50px"
+                />
+
+                            <div className="upload-heading">Drag a profile photo here </div>
                           </div>
                         </div>
                       </div>
                     );
                   }}
                 </Dropzone>
+                  </div>
               </>
             )}
           </ModalBody>
-          <ModalFooter>
+          <ModalFooter >
             <Button
-              color="primary"
+              color=" "
               onClick={() => this.props.handleImage(this.state.imageData)}
+              className="btn btn-black"
             >
               Set profile picture
             </Button>{" "}
-            <Button color="secondary" onClick={this.handleCancel}>
+            <Button color=" " onClick={this.handleCancel}
+            className="btn btn-line-black"
+            >
               Cancel
             </Button>
           </ModalFooter>

@@ -129,9 +129,7 @@ class CreateSetComponent extends React.Component {
               type="button"
               onClick={() => this.handleModal}
             >
-              <span aria-hidden={true} onClick={this.handleModal}>
-                <i className="far fa-times-circle"></i>
-              </span>
+          
             </button>
           </div>
           <div className="modal-body">
