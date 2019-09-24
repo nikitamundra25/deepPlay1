@@ -62,7 +62,11 @@ class DefaultLayout extends React.Component {
             /> : null
         }
         <>
-          <div className={routePath !== "/resetPassword" ? "dashboard-full-section" : ""}>
+          <div className={routePath !== "/resetPassword" ? "dashboard-full-section" : ""}
+          >
+            <div
+             className={`${routePath !== "/" ? "dashboard-container-wrap " : " "}`}
+            >
             <div className={`theme-container ${routePath !== "/" ? "dashboard-container " : "home-container"}`}>
               {
                 isLoggedIn && (routePath !== "/" && routePath !== "/resetPassword") ?
@@ -114,6 +118,7 @@ class DefaultLayout extends React.Component {
                   </Suspense>
               }
             </div>
+          </div>
           </div>
 
         </>

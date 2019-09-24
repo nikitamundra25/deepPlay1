@@ -662,3 +662,31 @@ a {
   top: 45px!important;
 }
 }
+.dashboard-container-wrap{
+  width: 100%;
+  background: #ececec;
+}
+
+.creat-set-section{
+  display: flex;
+  .card-header{
+    text-align: center;
+    padding: 10px;
+    background: none;
+    border-bottom: #ccc solid 2px;
+    .content-header {
+      justify-content: center;
+    }
+  }
+  .create-set-tile{
+    .form-group{
+      max-width: 620px;
+      margin: 15px auto 0px auto;
+    }
+    .input-group-text{
+      background: #585d5f;
+      color: #fff;
+      padding: 5px 25px;
+    }
+  }
+}
