@@ -7,7 +7,12 @@ import {
   Button,
   Modal,
   Label,
-  UncontrolledTooltip
+  Card,
+  CardBody,
+  CardHeader,
+  CardTitle,
+  UncontrolledTooltip,
+  InputGroup, InputGroupText, InputGroupAddon
 } from "reactstrap";
 import "./index.scss";
 class CreateSetComponent extends React.Component {
@@ -57,62 +62,80 @@ class CreateSetComponent extends React.Component {
   render() {
     const { title, open, description } = this.state;
     return (
-      <div>
-        <Row>
-          <h3>Create a New Set of Moves</h3>
-        </Row>
-        <Row>
-          <Col md="6">
-            <FormGroup>
-              <Input
-                id="exampleFormControlInput1"
-                className="capitalize"
-                placeholder="Enter your title here"
-                type="text"
-                name="title"
-                onChange={this.handleChange}
-                value={title}
-              />
-            </FormGroup>
-          </Col>
-          <Col>
-            <span
-              onClick={this.onAddMove}
-              className={this.state.title ? "cursor_pointer" : "disable-span"}
-              id="move"
-            >
-              <i className="fas fa-plus-square fa-2x "></i>
-            </span>
-            <UncontrolledTooltip placement="top" target="move">
-              Add a move
+      <div className="creat-set-section mt-2">
+
+
+        <Card className="w-100">
+          <CardHeader className="">
+            <div className="content-header set-header">
+              <span className="content-title">CREATE A NEW SET OF MOVES</span>
+            </div>
+          </CardHeader>
+          <CardBody className="">
+            <div className="create-set-tile">
+              <FormGroup className="flex-fill">
+              <InputGroup>
+                <Input
+                  id="exampleFormControlInput1"
+                  className="capitalize"
+                  placeholder="Enter your title here"
+                  type="text"
+                  name="title"
+                  onChange={this.handleChange}
+                  value={title}
+                />
+                  <InputGroupAddon addonType="prepend">
+          <InputGroupText>
+          <span
+                  onClick={() =>
+                    this.setState({
+                      open: !open
+                    })
+                  }
+                  className="cursor_pointer "
+                  id="description"
+                >
+                  <i className="fas fas fa-info "></i>
+                </span>
+                <UncontrolledTooltip placement="top" target="description">
+                  Add description
             </UncontrolledTooltip>
-            <span
-              onClick={() =>
-                this.setState({
-                  open: !open
-                })
-              }
-              className="cursor_pointer "
-              id="description"
-            >
-              <i className="fas fa-info-circle fa-2x"></i>
-            </span>
-            <UncontrolledTooltip placement="top" target="description">
-              Add description
+          </InputGroupText>
+        </InputGroupAddon>
+                </InputGroup>
+              </FormGroup>
+              {/* <div className="">
+                <span
+                  onClick={this.onAddMove}
+                  className={this.state.title ? "cursor_pointer" : "disable-span"}
+                  id="move"
+                >
+                  <i className="fas fa-plus-square fa-2x "></i>
+                </span>
+                <UncontrolledTooltip placement="top" target="move">
+                  Add a move
             </UncontrolledTooltip>
-          </Col>
-        </Row>
-        <Row>
-          <Button
-            color="default"
+              
+
+              </div> */}
+            </div>
+            <div className="text-center">
+            <Button
+            color=" "
             type="button"
-            className="btn-btn-save"
+            className="btn-black btn mt-3"
             disabled={!title}
             onClick={this.onAddMove}
           >
             Add a Move
           </Button>
-        </Row>
+          </div>
+          </CardBody>
+
+        </Card>
+
+
+        
         <Modal
           className="modal-dialog-centered"
           isOpen={open}
@@ -129,9 +152,7 @@ class CreateSetComponent extends React.Component {
               type="button"
               onClick={() => this.handleModal}
             >
-              <span aria-hidden={true} onClick={this.handleModal}>
-                <i className="far fa-times-circle"></i>
-              </span>
+
             </button>
           </div>
           <div className="modal-body">

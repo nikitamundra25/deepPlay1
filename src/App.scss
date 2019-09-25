@@ -19,6 +19,14 @@ body {
     opacity: 0.5;
   }
 }
+a {
+  color: inherit;
+  &:hover,
+  &:focus,
+  &:active {
+    color: inherit;
+  }
+}
 .color-black {
   color: #000;
 }
@@ -360,7 +368,7 @@ body {
     span {
       color: #fff;
       font-size: 32px;
-      line-height: 23px;
+      line-height: 20px;
     }
   }
 }
@@ -459,6 +467,7 @@ body {
       &:focus {
         background-color: #595959;
         color: #fff;
+        outline: none;
       }
       &:first-child {
         border-radius: 5px 5px 0px 0px;
@@ -593,10 +602,91 @@ body {
     padding: 0;
   }
 }
-.inner-wrap {
-  margin-top: 10%;
-  text-align: center;
-  height: 100%;
-  padding: 80px;
-  background: #c1c1c1;
+.nav-inputs-wrap {
+  flex: 1;
+  padding: 0px;
+  margin: auto;
+  align-items: center;
+  justify-content: center;
+  max-width: 790px;
+  flex-wrap: nowrap;
+}
+
+.custom-model-wrap {
+  .modal-header {
+    border: 1px solid #d7d7d7;
+    background: #323232;
+    padding: 15px;
+    .custom-title {
+      font-size: 18px;
+      color: #fff;
+    }
+  }
+  .modal-footer {
+    display: flex;
+    button {
+      flex: 1;
+    }
+  }
+}
+.upload-file-wrap {
+  border: 2px dashed #ccc;
+  padding: 15px;
+  max-width: 250px;
+  margin: 10px auto;
+  .upload-heading {
+    margin-top: 10px;
+    font-size: 14px;
+  }
+}
+.nav-main-section {
+   .nav-inputs-wrap input{
+  max-width: 300px;
+  padding: 6px;
+  height: auto;
+  &:focus{
+    box-shadow: none;
+    border-color:#fff;
+  }
+}
+ .nav-inputs-wrap button{
+  transform: none;
+  display: flex;
+  align-items: center;
+  background: #fefefe;
+  padding:8px 18px 7px 18px;
+  font-size: 12px;
+
+}
+  .nav-inputs-wrap .dropdown-menu{
+  top: 45px!important;
+}
+}
+.dashboard-container-wrap{
+  width: 100%;
+  background: #ececec;
+}
+
+.creat-set-section{
+  display: flex;
+  .card-header{
+    text-align: center;
+    padding: 10px;
+    background: none;
+    border-bottom: #ccc solid 2px;
+    .content-header {
+      justify-content: center;
+    }
+  }
+  .create-set-tile{
+    .form-group{
+      max-width: 620px;
+      margin: 15px auto 0px auto;
+    }
+    .input-group-text{
+      background: #585d5f;
+      color: #fff;
+      padding: 5px 25px;
+    }
+  }
 }
