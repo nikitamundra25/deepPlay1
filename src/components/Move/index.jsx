@@ -1,5 +1,20 @@
 import React from "react";
-import { Button, Row, Col, FormGroup, Input } from "reactstrap";
+
+import {
+  Row,
+  Col,
+  FormGroup,
+  Input,
+  Button,
+  Modal,
+  Label,
+  Card,
+  CardBody,
+  CardHeader,
+  CardTitle,
+  UncontrolledTooltip,
+  InputGroup, InputGroupText, InputGroupAddon
+} from "reactstrap";
 import Dropzone from "react-dropzone";
 import "./index.scss";
 // core components
@@ -54,62 +69,147 @@ class MoveComponent extends React.Component {
   render() {
     const { error } = this.state;
     return (
-      <div>
-        <div className="move-wrap">
-          <h3>Create a Move</h3>
-          <p>Trim any video to create a move</p>
-        </div>
-        <div className="move-wrap-inside">
-          <Row>
-            <Col md="6">
-              <Dropzone
-                onDrop={this.onSelectFile}
-                accept="video/mp4 , video/wmv ,video/avi,./webM"
-                multiple={false}
-              >
-                {({ getRootProps, getInputProps }) => {
-                  return (
-                    <div {...getRootProps()}>
-                      <input {...getInputProps()} />
-                      <div>
-                        <Button
-                          color="default"
-                          type="button"
-                          className="btn-btn-right"
-                        >
-                          Upload
-                        </Button>
-                      </div>
-                    </div>
-                  );
-                }}
-              </Dropzone>
-            </Col>
-            <Col md="6">
-              <FormGroup>
-                <Input
-                  id="url"
-                  className="capitalize"
-                  placeholder="Paste YouTube URL"
-                  type="text"
-                  onpaste={this.handlePasteEvent}
-                  name="url"
-                  onChange={this.handleChange}
-                  value={this.state.url}
+      <>
+        <div className="create-set-section step-2 mt-2 ">
+          <Card className="w-100 set-content-wrap">
+            <div className="set-content-block w-100">
+              <CardHeader className="">
+                <div className="content-header set-header flex-column">
+                  <span className="content-title">CREATE A MOVE</span>
+                  <p className="font-weight-bold">Trim any video to create a move</p>
+                </div>
+              </CardHeader>
+              <CardBody className="">
+                <div className="create-set-tile">
+                <Label className="upload-file-wrap"> 
+                <Dropzone
+                  onDrop={this.onSelectFile}
+                  accept="video/mp4 , video/wmv ,video/avi,./webM"
+                  multiple={false}
+                  id
+                >
+                  {({ getRootProps, getInputProps }) => {
+                    return (
+                      <div {...getRootProps()}>
+                        <input {...getInputProps()} />
+                        <div className="add-more-img-wrap">
+                          <div className="add-more-text">
+                          <img
+                  alt="..."
+                  src={require("assets/img/icons/common/picture.svg")}
+            className="w-100"
                 />
-                {error ? <p style={{ color: "red" }}> {error} </p> : null}
-              </FormGroup>
-            </Col>
-          </Row>
-          <iframe
-            src={this.state.url}
-            frameBorder="0"
-            allow="autoplay; encrypted-media"
-            allowFullScreen
-            title="video"
-          />
+
+                            <div className="upload-heading">Drag a profile photo here </div>
+                          </div>
+                        </div>
+                      </div>
+                    );
+                  }}
+                </Dropzone>
+                  </Label>
+                  <FormGroup className="flex-fill">
+                    <InputGroup>
+                    <Input
+                        id="url"
+                        className="capitalize pl-2"
+                        placeholder="Paste YouTube URL"
+                        type="text"
+                        onpaste={this.handlePasteEvent}
+                        name="url"
+                        onChange={this.handleChange}
+                        value={this.state.url}
+                      />
+                   
+
+                    </InputGroup>
+                    {error ? <p style={{ color: "red" }}> {error} </p> : null}
+                  </FormGroup>
+                  {/* <div className="">
+                <span
+                  onClick={this.onAddMove}
+                  className={this.state.title ? "cursor_pointer" : "disable-span"}
+                  id="move"
+                >
+                  <i className="fas fa-plus-square fa-2x "></i>
+                </span>
+                <UncontrolledTooltip placement="top" target="move">
+                  Add a move
+            </UncontrolledTooltip>
+              
+
+              </div> */}
+                </div>
+                <div className="text-center">
+                  <Button
+                    color=" "
+                    type="button"
+                    className="btn-black btn mt-3"
+
+                  >
+                    <i className="fas fa-plus mr-1"></i>
+                    Add a Move
+                  </Button>
+                </div>
+              </CardBody>
+            </div>
+          </Card>
         </div>
-      </div>
+
+        <div>
+
+          <div className="move-wrap-inside">
+            <Row>
+              <Col md="6">
+                <Dropzone
+                  onDrop={this.onSelectFile}
+                  accept="video/mp4 , video/wmv ,video/avi,./webM"
+                  multiple={false}
+                >
+                  {({ getRootProps, getInputProps }) => {
+                    return (
+                      <div {...getRootProps()}>
+                        <input {...getInputProps()} />
+                        <div>
+                          <Button
+                            color="default"
+                            type="button"
+                            className="btn-btn-right"
+                          >
+                            Upload
+                        </Button>
+                        </div>
+                      </div>
+                    );
+                  }}
+                </Dropzone>
+              </Col>
+              <Col md="6">
+                <FormGroup>
+                  <Input
+                    id="url"
+                    className="capitalize"
+                    placeholder="Paste YouTube URL"
+                    type="text"
+                    onpaste={this.handlePasteEvent}
+                    name="url"
+                    onChange={this.handleChange}
+                    value={this.state.url}
+                  />
+                  {error ? <p style={{ color: "red" }}> {error} </p> : null}
+                </FormGroup>
+              </Col>
+            </Row>
+            <iframe
+              src={this.state.url}
+              frameBorder="0"
+              allow="autoplay; encrypted-media"
+              allowFullScreen
+              title="video"
+            />
+          </div>
+        </div>
+      </>
     );
   }
 }

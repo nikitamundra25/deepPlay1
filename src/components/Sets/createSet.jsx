@@ -6,6 +6,9 @@ import {
   Input,
   Button,
   Modal,
+  ModalFooter,
+  ModalHeader,
+  ModalBody,
   Label,
   Card,
   CardBody,
@@ -62,49 +65,50 @@ class CreateSetComponent extends React.Component {
   render() {
     const { title, open, description } = this.state;
     return (
-      <div className="creat-set-section mt-2">
+      <div className="create-set-section mt-2">
+        <Card className="w-100 set-content-wrap">
+          <div className="set-content-block w-100">
+            <CardHeader className="">
+              <div className="content-header set-header">
+                <span className="content-title">CREATE A NEW SET OF MOVES</span>
+              </div>
+            </CardHeader>
+            <CardBody className="">
+              <div className="create-set-tile">
+                <FormGroup className="flex-fill">
+                  <InputGroup>
+                    <Input
+                      id="exampleFormControlInput1"
+                      className="capitalize"
+                      placeholder="Enter your title here"
+                      type="text"
+                      name="title"
+                      onChange={this.handleChange}
+                      value={title}
+                    />
+                    <InputGroupAddon addonType="prepend">
+                      <InputGroupText id="description"
+                        onClick={() =>
+                          this.setState({
+                            open: !open
+                          })
+                        }
+                      >
+                        <span
 
+                          className="cursor_pointer "
 
-        <Card className="w-100">
-          <CardHeader className="">
-            <div className="content-header set-header">
-              <span className="content-title">CREATE A NEW SET OF MOVES</span>
-            </div>
-          </CardHeader>
-          <CardBody className="">
-            <div className="create-set-tile">
-              <FormGroup className="flex-fill">
-              <InputGroup>
-                <Input
-                  id="exampleFormControlInput1"
-                  className="capitalize"
-                  placeholder="Enter your title here"
-                  type="text"
-                  name="title"
-                  onChange={this.handleChange}
-                  value={title}
-                />
-                  <InputGroupAddon addonType="prepend">
-          <InputGroupText>
-          <span
-                  onClick={() =>
-                    this.setState({
-                      open: !open
-                    })
-                  }
-                  className="cursor_pointer "
-                  id="description"
-                >
-                  <i className="fas fas fa-info "></i>
-                </span>
-                <UncontrolledTooltip placement="top" target="description">
-                  Add description
+                        >
+                          <i className="fas fas fa-info "></i>
+                        </span>
+                        <UncontrolledTooltip placement="top" target="description">
+                          Add description
             </UncontrolledTooltip>
-          </InputGroupText>
-        </InputGroupAddon>
-                </InputGroup>
-              </FormGroup>
-              {/* <div className="">
+                      </InputGroupText>
+                    </InputGroupAddon>
+                  </InputGroup>
+                </FormGroup>
+                {/* <div className="">
                 <span
                   onClick={this.onAddMove}
                   className={this.state.title ? "cursor_pointer" : "disable-span"}
@@ -118,32 +122,34 @@ class CreateSetComponent extends React.Component {
               
 
               </div> */}
-            </div>
-            <div className="text-center">
-            <Button
-            color=" "
-            type="button"
-            className="btn-black btn mt-3"
-            disabled={!title}
-            onClick={this.onAddMove}
-          >
-            Add a Move
+              </div>
+              <div className="text-center">
+                <Button
+                  color=" "
+                  type="button"
+                  className="btn-black btn mt-3"
+                  disabled={!title}
+                  onClick={this.onAddMove}
+                >
+                  <i className="fas fa-plus mr-1"></i>
+                  Add a Move
           </Button>
+              </div>
+            </CardBody>
           </div>
-          </CardBody>
-
         </Card>
 
 
-        
+
         <Modal
-          className="modal-dialog-centered"
+          className="modal-dialog-centered custom-model-wrap"
           isOpen={open}
           toggle={() => this.handleModal}
+
         >
-          <div className="modal-header">
+          <ModalHeader>
             <h5 className="modal-title" id="exampleModalLabel">
-              Description
+              <span class="custom-title">Upload profile image</span>
             </h5>
             <button
               aria-label="Close"
@@ -152,7 +158,54 @@ class CreateSetComponent extends React.Component {
               type="button"
               onClick={() => this.handleModal}
             >
+              <span aria-hidden="true">×</span>
+            </button>
+          </ModalHeader>
+          <ModalBody>
+            <FormGroup>
+            <Label for="description" className="font-weight-bold text-center">DESCRIPTION</Label>
+              <Input
+                id="exampleFormControlInput1"
+                className="capitalize"
+                type="text"
+                name="description"
+                onChange={this.handleChange}
+                value={description}
+              />
+              
+            </FormGroup>
+          </ModalBody>
 
+          <ModalFooter >
+
+            <Button
+              color="info"
+              type="button"
+              onClick={this.onSaveDesc}
+              className="btn btn-black"
+            >
+              Save changes
+            </Button>
+          </ModalFooter>
+        </Modal>
+     <Modal
+          className="modal-dialog-centered custom-model-wrap"
+          isOpen={open}
+          toggle={() => this.handleModal}
+
+        >
+          <div className="modal-header">
+            <h5 className="modal-title" id="exampleModalLabel">
+            <span class="custom-title">Upload profile image</span>
+            </h5>
+            <button
+              aria-label="Close"
+              className="close"
+              data-dismiss="modal"
+              type="button"
+              onClick={() => this.handleModal}
+            >
+                <span aria-hidden="true">×</span>
             </button>
           </div>
           <div className="modal-body">
@@ -167,17 +220,9 @@ class CreateSetComponent extends React.Component {
               />
               <Label for="description">DESCRIPTION</Label>
             </FormGroup>
-            <br />
-            <Button
-              color="info"
-              type="button"
-              onClick={this.onSaveDesc}
-              className="fullSize-btn"
-            >
-              Save changes
-            </Button>
           </div>
-        </Modal>
+
+        </Modal> 
       </div>
     );
   }
