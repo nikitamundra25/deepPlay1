@@ -188,41 +188,7 @@ class CreateSetComponent extends React.Component {
             </Button>
           </ModalFooter>
         </Modal>
-     <Modal
-          className="modal-dialog-centered custom-model-wrap"
-          isOpen={open}
-          toggle={() => this.handleModal}
-
-        >
-          <div className="modal-header">
-            <h5 className="modal-title" id="exampleModalLabel">
-            <span class="custom-title">Upload profile image</span>
-            </h5>
-            <button
-              aria-label="Close"
-              className="close"
-              data-dismiss="modal"
-              type="button"
-              onClick={() => this.handleModal}
-            >
-                <span aria-hidden="true">×</span>
-            </button>
-          </div>
-          <div className="modal-body">
-            <FormGroup>
-              <Input
-                id="exampleFormControlInput1"
-                className="capitalize"
-                type="text"
-                name="description"
-                onChange={this.handleChange}
-                value={description}
-              />
-              <Label for="description">DESCRIPTION</Label>
-            </FormGroup>
-          </div>
-
-        </Modal> 
+   
       </div>
     );
   }
