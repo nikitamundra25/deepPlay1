@@ -65,6 +65,7 @@ class MoveComponent extends React.Component {
   };
 
   paste = e => {
+    console.log("@@@@@@@@@@@@@@@",e); 
     this.setState({
       isPaste: true
     });
@@ -107,11 +108,10 @@ class MoveComponent extends React.Component {
             <Col md="6">
               <FormGroup>
                 <Input
-                  id="url"
+                  id={"url"}
                   className="capitalize"
                   placeholder="Paste YouTube URL"
                   type="text"
-                  onpaste={this.handlePasteEvent}
                   name="url"
                   onPaste={this.paste}
                   onKeyPress={this.handleKeyboardEvent}
