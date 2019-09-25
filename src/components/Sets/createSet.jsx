@@ -188,7 +188,6 @@ class CreateSetComponent extends React.Component {
             </Button>
           </ModalFooter>
         </Modal>
-   
       </div>
     );
   }

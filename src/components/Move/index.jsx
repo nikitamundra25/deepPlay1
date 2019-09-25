@@ -1,19 +1,16 @@
 import React from "react";
 
 import {
-  Row,
-  Col,
+
   FormGroup,
   Input,
   Button,
-  Modal,
-  Label,
+  Form,
   Card,
   CardBody,
   CardHeader,
-  CardTitle,
-  UncontrolledTooltip,
-  InputGroup, InputGroupText, InputGroupAddon
+  CardFooter,
+  InputGroup
 } from "reactstrap";
 import Dropzone from "react-dropzone";
 import "./index.scss";
@@ -81,7 +78,7 @@ class MoveComponent extends React.Component {
               </CardHeader>
               <CardBody className="">
                 <div className="create-set-tile">
-                <Label className="upload-file-wrap"> 
+                {/* <Label className="upload-file-wrap"> 
                 <Dropzone
                   onDrop={this.onSelectFile}
                   accept="video/mp4 , video/wmv ,video/avi,./webM"
@@ -107,9 +104,21 @@ class MoveComponent extends React.Component {
                     );
                   }}
                 </Dropzone>
-                  </Label>
-                  <FormGroup className="flex-fill">
-                    <InputGroup>
+                  </Label> */}
+                  <Form inline className="url-update-wrap">
+                  <div className="text-center mr-2">
+                  <Button
+                    color=" "
+                    type="button"
+                    className="btn-black btn mt-3"
+
+                  >
+                    <i className="fa fa-cloud-upload mr-2"></i>
+                    Upload
+                  </Button>
+                </div>
+                  <FormGroup className="flex-fill flex-column ">
+                    <InputGroup className="flex-fill w-100">
                     <Input
                         id="url"
                         className="capitalize pl-2"
@@ -123,7 +132,6 @@ class MoveComponent extends React.Component {
                    
 
                     </InputGroup>
-                    {error ? <p style={{ color: "red" }}> {error} </p> : null}
                   </FormGroup>
                   {/* <div className="">
                 <span
@@ -139,24 +147,40 @@ class MoveComponent extends React.Component {
               
 
               </div> */}
+                
+                </Form>
+                {error ? <p style={{ color: "red", marginLeft: "120px" }}> {error} </p> : null}
                 </div>
-                <div className="text-center">
-                  <Button
-                    color=" "
-                    type="button"
-                    className="btn-black btn mt-3"
-
-                  >
-                    <i className="fas fa-plus mr-1"></i>
-                    Add a Move
-                  </Button>
+              
+              </CardBody>
+            </div>
+          </Card>
+        </div>
+        <div className="create-set-section step-2 mt-2 ">
+          <Card className="w-100 set-content-wrap">
+            <div className="set-content-block w-100">
+              <CardHeader className="">
+                <div className="content-header set-header flex-column">
+                  <span className="content-title"> your move has been created!</span>
+                </div>
+              </CardHeader>
+              <CardBody className="">
+              <div className="d-flex vieos-add-section video-add-banner justify-content-center align-items-center">
+                <span className="play-ic-wrap">
+                  <i className="fa fa-play" aria-hidden="true"></i>
+                </span>
+              </div>
+              <p className="font-weight-bold mt-3 text-center h5">Would you like to create another Move from the same video?</p>
+              <div className="text-center mt-4">
+                <Button className="btn-line-black">Yes create another</Button>
+                <Button className="btn-black">No i'am done</Button>
                 </div>
               </CardBody>
             </div>
           </Card>
         </div>
 
-        <div>
+        {/* <div>
 
           <div className="move-wrap-inside">
             <Row>
@@ -208,7 +232,7 @@ class MoveComponent extends React.Component {
               title="video"
             />
           </div>
-        </div>
+        </div> */}
       </>
     );
   }
