@@ -27,7 +27,7 @@ const createSetLogic = createLogic({
           showLoader: false
         })
       );
-      window.location.href = "./move";
+      this.props.redirectTo("/move");
       done();
     }
   }

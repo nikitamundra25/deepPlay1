@@ -8,51 +8,70 @@ class MoveComponent extends React.Component {
     super(props);
     this.state = {
       url: "",
-      error: ""
+      errors: "",
+      isPaste: false
     };
   }
 
   handleChange = e => {
     const { name, value } = e.target;
     this.setState({
-      error: "",
+      errors: "",
       [name]: value
     });
 
-    // var regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
-    // var match = value.match(regExp);
-    // console.log(">>", match);
-    // if (match && match[2].length == 11) {
-    //   const finalUrl = "http://www.youtube.com/embed?v=" + match[2];
-    //   this.setState({
-    //     url: finalUrl
-    //   });
-    // } else {
-    //   console.log("not match");
-    // }
     if (value !== undefined || value !== "") {
       // eslint-disable-next-line
       var myregexp = /(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/ ]{11})/i;
       var match = value.match(myregexp);
       if (match) {
-        // myregexp.split("v=")[1].substring(0, 11);
-        // console.log("kkkkkk", myregexp);
-        // const finalUrl = "http://www.youtube.com/embed?v=" + myregexp;
-        // console.log("final", finalUrl);
-
+        this.validateYouTubeUrl(value);
         console.log("matches");
       } else {
         this.setState({
-          error: "You have entered wrong URL."
+          errors: "You have entered wrong URL."
         });
       }
     }
   };
-  handlePasteEvent = () => {
-    console.log("$$$$$$$$$$$$$$$$$$$$$$");
-  }
+
+  validateYouTubeUrl = url => {
+    let result = "";
+    if (url !== undefined || url !== "") {
+      var regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|v=|\?v=)([^#]*).*/;
+      var match = url.match(regExp);
+      if (match && match[2].length === 11) {
+        result =
+          "https://www.youtube.com/embed/" +
+          match[2] +
+          "?autoplay=0&enablejsapi=1";
+        this.setState({
+          url: result
+        });
+        if (this.state.isPaste) {
+          this.props.redirectTo("/setting")
+        } else {
+          this.handleKeyboardEvent();
+        }
+      }
+    }
+    return result;
+  };
+
+  handleKeyboardEvent = e => {
+    if (e.charCode === 13) {
+      this.props.redirectTo("/setting")
+    }
+  };
+
+  paste = e => {
+    this.setState({
+      isPaste: true
+    });
+  };
+
   render() {
-    const { error } = this.state;
+    const { errors, url } = this.state;
     return (
       <div>
         <div className="move-wrap">
@@ -94,15 +113,19 @@ class MoveComponent extends React.Component {
                   type="text"
                   onpaste={this.handlePasteEvent}
                   name="url"
+                  onPaste={this.paste}
+                  onKeyPress={this.handleKeyboardEvent}
                   onChange={this.handleChange}
-                  value={this.state.url}
+                  value={url}
                 />
-                {error ? <p style={{ color: "red" }}> {error} </p> : null}
+                {errors && url ? (
+                  <p style={{ color: "red" }}> {errors} </p>
+                ) : null}
               </FormGroup>
             </Col>
           </Row>
           <iframe
-            src={this.state.url}
+            src={url}
             frameBorder="0"
             allow="autoplay; encrypted-media"
             allowFullScreen
