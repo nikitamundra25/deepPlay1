@@ -1,91 +1,24 @@
 import React from "react";
 import {
   Row,
-  UncontrolledDropdown,
-  DropdownItem,
-  DropdownToggle,
-  DropdownMenu,
   Col,
-  FormGroup,
-  InputGroup,
-  InputGroupAddon,
-  InputGroupText,
-  Input
 } from "reactstrap";
-import { Link } from "react-router-dom";
 import "./index.scss";
 // core components
 class SetComponent extends React.Component {
   render() {
     return (
-      <div>
-        <Row>
-          <Col>
-            <Row>
-              <Col>
-                <UncontrolledDropdown>
-                  <DropdownToggle caret color="default">
-                    <i className="fas fa-plus-square"></i> &nbsp; Create
-                  </DropdownToggle>
-                  <DropdownMenu>
-                    <li>
-                      <DropdownItem tag={Link} to="/move">
-                        Create Move
-                      </DropdownItem>
-                    </li>
-                    <DropdownItem divider />
-                    <li>
-                      <DropdownItem onClick={this.props.handleSetComponent}>
-                        Create Set
-                      </DropdownItem>
-                    </li>
-                    <DropdownItem divider />
-                    <li>
-                      <DropdownItem tag={Link} to="/setting">
-                        Create Folder
-                      </DropdownItem>
-                    </li>
-                  </DropdownMenu>
-                </UncontrolledDropdown>
-              </Col>
-              <Col md="6">
-                <FormGroup>
-                  <InputGroup className="mb-4">
-                    <InputGroupAddon addonType="prepend">
-                      <InputGroupText>
-                        <i className="ni ni-zoom-split-in" />
-                      </InputGroupText>
-                    </InputGroupAddon>
-                    <Input placeholder="Search" type="text" />
-                  </InputGroup>
-                </FormGroup>
-              </Col>
-            </Row>
-          </Col>
-          <Col>
-            <div className="profileimg-wrap">
-              <div className="profilepic">
-                <i className="fas fa-user fa-2x"></i>
-              </div>
-            </div>
-          </Col>
-        </Row>
-        <Row>
-          <Col>
-            <h3>Your Sets</h3>
-          </Col>
-        </Row>
-        <Row>
-          <Col>
-            {" "}
-            <p>4 Sets total</p>{" "}
-          </Col>
-        </Row>
+      <div className="set-main-section">
+        <div className="content-header">
+          <span className="content-title">YOUR SETS</span>
+          <span className="dashboard-right-content">4 Sets total</span>
+        </div>
         <Row className="set-wrap">
           <Col md="6">
             <div className="tile-wrap card">
               <div className="cotent-tile d-flex">
                 <div className="cotent-text-tile">
+                  <div onClick={this.props.handleSetComponent}>Create Set</div>
                   <div className="content-heading-tile"> Salsa Footwork</div>
                   <div className="content-number-tile"> 46 moves</div>
                 </div>

@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import { SetModel } from "../models";
 import { ISet } from "../interfaces";
+import { body } from "express-validator";
 
 // --------------Create set---------------------
 const createSet = async (req: Request, res: Response): Promise<any> => {

@@ -11,6 +11,9 @@ import {
   Nav,
   Row,
   Col,
+  FormGroup,
+  InputGroup,
+  Input
 } from "reactstrap";
 import Login from "../Auth/Login/index.jsx"
 import Signup from "../Auth/Signup/index.jsx";
@@ -84,6 +87,47 @@ class DefaultHeader extends React.Component {
             <NavbarBrand className="mr-lg-5" to="/" tag={Link}>
               <h3 className="mb-0 header-title">Deep Play</h3>
             </NavbarBrand>
+            <Nav className="navbar-nav align-items-center nav-main-section flex-fill" >
+              <div className="nav-inputs-wrap d-flex">
+
+                <Col>
+                  <UncontrolledDropdown className="header-manu-wrap">
+                    <DropdownToggle caret color=" " className="nav-dropdown-btn">
+                      <i className="fas fa-plus-square"></i> &nbsp; Create
+                  </DropdownToggle>
+                    <DropdownMenu>
+
+                    
+
+                     
+                    
+
+                 
+
+                      <DropdownItem >
+                      
+                      </DropdownItem>
+
+                    </DropdownMenu>
+
+                    <DropdownMenu>
+                        <DropdownItem active><Link to={"/setting"}> Create Move</Link></DropdownItem>
+                        <DropdownItem onClick={this.props.handleSetComponent}>Create Set</DropdownItem>
+                        <DropdownItem tag={Link} to="/setting" >  Create Folder</DropdownItem>
+                      </DropdownMenu>
+
+                  </UncontrolledDropdown>
+                </Col>
+                <Col className="flex-fill">
+                  <FormGroup className="mb-0 fe ">
+                    <InputGroup className="">
+                      <Input placeholder="Search" type="text" />
+                    </InputGroup>
+                  </FormGroup>
+                </Col>
+              </div>
+
+            </Nav>
             <Nav className="navbar-nav align-items-center nav-main-section" navbar>
               {
                 !isUserLoggedIn ?
