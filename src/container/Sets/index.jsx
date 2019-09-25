@@ -2,7 +2,13 @@ import React from "react";
 import SetComponent from "../../components/Sets";
 import CreateSetComponent from "../../components/Sets/createSet";
 import { connect } from "react-redux";
-import { createSetRequest, getAllSetRequest } from "../../actions";
+import {
+  createSetRequest,
+  getAllSetRequest,
+  modelOpenRequest
+} from "../../actions";
+import FolderModal from "../../components/Folders/createFolderModal";
+import { createFolderRequest } from "actions/Folder";
 
 // core components
 class Set extends React.Component {
@@ -13,8 +19,8 @@ class Set extends React.Component {
     };
   }
 
-  componentDidMount = async () => {
-    await this.props.getSetList();
+  componentDidMount = () => {
+    this.props.getSetList();
   };
   onCreateSet = data => {
     this.props.onSetsCreation(data);
@@ -25,7 +31,21 @@ class Set extends React.Component {
     });
   };
 
+  handleFolderModel = () => {
+    const { modelInfoReducer } = this.props;
+    const { modelDetails } = modelInfoReducer;
+    this.props.modelOperate({
+      modelDetails: {
+        createFolderModalOpen: !modelDetails.createFolderModalOpen
+      }
+    });
+  };
+  createFolder = data => {
+    this.props.onFolderCreation(data);
+  };
+
   render() {
+    const { modelOperate, modelInfoReducer, getAllSetReducer } = this.props;
     return (
       <>
         {this.state.createSet ? (
@@ -33,23 +53,38 @@ class Set extends React.Component {
         ) : (
           <SetComponent
             handleSetComponent={this.handleSetComponent}
-            onCreateSet={this.onCreateSet}
+            handleFolderModel={this.handleFolderModel}
+            getAllSet={getAllSetReducer.allSetList}
           />
         )}
+        <FolderModal
+          modelOperate={modelOperate}
+          modelInfoReducer={modelInfoReducer}
+          createFolder={this.createFolder}
+        />
       </>
     );
   }
 }
 
-const mapStateToProps = state => ({});
+const mapStateToProps = state => {
+  return {
+    modelInfoReducer: state.modelInfoReducer,
+    getAllSetReducer: state.getAllSetReducer
+  };
+};
 const mapDispatchToProps = dispatch => {
   return {
     onSetsCreation: data => {
       dispatch(createSetRequest(data));
     },
+    onFolderCreation: data => {
+      dispatch(createFolderRequest(data));
+    },
     getSetList: () => {
       dispatch(getAllSetRequest());
-    }
+    },
+    modelOperate: data => dispatch(modelOpenRequest(data))
   };
 };
 export default connect(

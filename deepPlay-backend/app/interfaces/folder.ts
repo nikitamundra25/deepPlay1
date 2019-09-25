@@ -1,8 +1,7 @@
-export interface ISet {
+export interface IFolder {
   title: String;
   description: String;
   isPublic: Boolean;
-  folderId: String | null
   userId: String;
   sharableLink: String;
   status: Boolean;

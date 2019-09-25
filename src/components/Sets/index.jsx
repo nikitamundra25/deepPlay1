@@ -7,6 +7,8 @@ import "./index.scss";
 // core components
 class SetComponent extends React.Component {
   render() {
+    console.log(">>", this.props.getAllSet);
+
     return (
       <div className="set-main-section">
         <div className="content-header">

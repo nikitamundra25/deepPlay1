@@ -12,7 +12,8 @@ import {
   signupRequest,
   socialLoginRequest,
   forgotPasswordRequest,
-  profileRequest
+  profileRequest,
+  createFolderRequest
 } from "../../actions/index.jsx";
 
 // core components
@@ -24,9 +25,13 @@ class DefaultLayout extends React.Component {
       this.props.getProfile()
     }
     if (!token && pathname !== "/resetPassword") {
-      this.props.redirectTo("/")
+      this.props.redirectTo("/");
     }
   }
+
+  onFolderCreation = data => {
+    this.props.onFolderCreation(data);
+  };
   /*
   /*  
   */
@@ -42,97 +47,106 @@ class DefaultLayout extends React.Component {
       forgotPasswordRequest,
       profileInfoReducer
     } = this.props;
-    let isLoggedIn
+    let isLoggedIn;
     if (localStorage.getItem("token")) {
-      isLoggedIn = true
+      isLoggedIn = true;
     } else {
-      isLoggedIn = false
+      isLoggedIn = false;
     }
-    const routePath = this.props.location.pathname
+    const routePath = this.props.location.pathname;
     return (
       <>
-        {
-          (routePath !== "/resetPassword") ?
-            <DefaultHeader
-              modelInfoReducer={modelInfoReducer}
-              modelOpenRequest={modelOperate}
-              loginRequest={loginRequest}
-              logoutRequest={logoutRequest}
-              loginReducer={loginReducer}
-              signupRequest={signupRequest}
-              profileInfoReducer={profileInfoReducer}
-              socialLoginRequest={socialLoginRequest}
-              forgotPasswordRequest={forgotPasswordRequest}
-            /> : null
-        }
+        {routePath !== "/resetPassword" ? (
+          <DefaultHeader
+            modelInfoReducer={modelInfoReducer}
+            modelOpenRequest={modelOperate}
+            loginRequest={loginRequest}
+            logoutRequest={logoutRequest}
+            loginReducer={loginReducer}
+            signupRequest={signupRequest}
+            profileInfoReducer={profileInfoReducer}
+            socialLoginRequest={socialLoginRequest}
+            forgotPasswordRequest={forgotPasswordRequest}
+            onFolderCreation={this.onFolderCreation}
+            routePath={routePath}
+            isLoggedIn={isLoggedIn}
+          />
+        ) : null}
         <>
-          <div className={routePath !== "/resetPassword" ? "dashboard-full-section" : ""}
+          <div
+            className={
+              (routePath !== "/" && routePath !== "/resetPassword") ? "dashboard-full-section" : ""
+            }
           >
             <div
-             className={`${routePath !== "/" ? "dashboard-container-wrap " : " "}`}
+              className={`${
+                routePath !== "/" ? "dashboard-container-wrap " : " "
+                }`}
             >
-            <div className={`theme-container ${routePath !== "/" ? "dashboard-container " : "home-container"}`}>
-              {
-                isLoggedIn && (routePath !== "/" && routePath !== "/resetPassword") ?
-                  <div className="ct-sidebar app-sidebar">
-                    <DefaultSidebar
-                      profileInfoReducer={profileInfoReducer}
-                    /></div> :
-                  null
-              }
-              {
-                isLoggedIn && (routePath !== "/" && routePath !== "/resetPassword") ?
-                  <div className="dashboard-right-wrap">
-                    <div className="dashboard-right-section">
-                      <Suspense fallback={""}>
-                        <Switch>
-                          {routes.map((route, idx) => {
-                            return route.component ? (
-                              <Route
-                                key={idx}
-                                path={route.path}
-                                exact={route.exact}
-                                name={route.name}
-                                render={props => (
-                                  <route.component {...props} {...this.props} />
-                                )}
-                              />
-                            ) : null;
-                          })}
-                        </Switch>
-                      </Suspense>
+              <div
+                className={`theme-container ${
+                  routePath !== "/" ? "dashboard-container " : "home-container"
+                  }`}
+              >
+                {isLoggedIn &&
+                  (routePath !== "/" && routePath !== "/resetPassword") ? (
+                    <div className="ct-sidebar app-sidebar">
+                      <DefaultSidebar profileInfoReducer={profileInfoReducer} />
                     </div>
-                  </div> :
-                  <Suspense fallback={""}>
-                    <Switch>
-                      {routes.map((route, idx) => {
-                        return route.component ? (
-                          <Route
-                            key={idx}
-                            path={route.path}
-                            exact={route.exact}
-                            name={route.name}
-                            render={props => (
-                              <route.component {...props} {...this.props} />
-                            )}
-                          />
-                        ) : null;
-                      })}
-                    </Switch>
-                  </Suspense>
-              }
+                  ) : null}
+                {isLoggedIn &&
+                  (routePath !== "/" && routePath !== "/resetPassword") ? (
+                    <div className="dashboard-right-wrap">
+                      <div className="dashboard-right-section">
+                        <Suspense fallback={""}>
+                          <Switch>
+                            {routes.map((route, idx) => {
+                              return route.component ? (
+                                <Route
+                                  key={idx}
+                                  path={route.path}
+                                  exact={route.exact}
+                                  name={route.name}
+                                  render={props => (
+                                    <route.component {...props} {...this.props} />
+                                  )}
+                                />
+                              ) : null;
+                            })}
+                          </Switch>
+                        </Suspense>
+                      </div>
+                    </div>
+                  ) : (
+                    <Suspense fallback={""}>
+                      <Switch>
+                        {routes.map((route, idx) => {
+                          return route.component ? (
+                            <Route
+                              key={idx}
+                              path={route.path}
+                              exact={route.exact}
+                              name={route.name}
+                              render={props => (
+                                <route.component {...props} {...this.props} />
+                              )}
+                            />
+                          ) : null;
+                        })}
+                      </Switch>
+                    </Suspense>
+                  )}
+              </div>
             </div>
           </div>
-          </div>
-
         </>
-        {
-          isLoggedIn && (routePath !== "/" && routePath !== "/resetPassword") ?
-            null :
-            routePath !== "/resetPassword" ?
-              <DefaultFooter /> : null
+        {isLoggedIn &&
+          (routePath !== "/" &&
+            routePath !== "/resetPassword") ? null : routePath !==
+              "/resetPassword" ? (
+              <DefaultFooter />
+            ) : null
         }
-
       </>
     );
   }
@@ -150,7 +164,10 @@ const mapDispatchToProps = dispatch => ({
   signupRequest: data => dispatch(signupRequest(data)),
   socialLoginRequest: data => dispatch(socialLoginRequest(data)),
   forgotPasswordRequest: data => dispatch(forgotPasswordRequest(data)),
-  getProfile: () => dispatch(profileRequest())
+  getProfile: () => dispatch(profileRequest()),
+  onFolderCreation: data => {
+    dispatch(createFolderRequest(data));
+  }
 });
 export default connect(
   mapStateToProps,

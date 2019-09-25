@@ -1,73 +1,76 @@
 import { createLogic } from "redux-logic";
 import { ApiHelper } from "../helper";
 import {
-  createSetSuccess,
-  SetsAction,
-  getAllSetSuccess,
+  FolderAction,
   redirectTo,
+  modelOpenRequest,
+  getFolderSuccess,
   showLoader,
   hideLoader
 } from "../actions";
 import { toast } from "react-toastify";
 
-//  Create sets
-const createSetLogic = createLogic({
-  type: SetsAction.CREATE_SET_REQUEST,
+//  Create folder
+const createFolderLogic = createLogic({
+  type: FolderAction.CREATE_FOLDER_REQUEST,
   async process({ action }, dispatch, done) {
     let api = new ApiHelper();
     dispatch(showLoader());
     let result = await api.FetchFromServer(
-      "set",
-      "/createSet",
+      "folder",
+      "/createFolder",
       "POST",
       true,
       undefined,
       action.payload
     );
     if (result.isError) {
-      dispatch(hideLoader());
       toast.error(result.messages[0]);
+      dispatch(hideLoader());
       done();
       return;
     } else {
+      // toast.success(result.messages[0]);
       dispatch(hideLoader());
-      toast.success(result.messages[0]);
       dispatch(
-        createSetSuccess({
-          showLoader: false
+        modelOpenRequest({
+          modelDetails: {
+            createFolderModalOpen: false
+          }
         })
       );
-      dispatch(redirectTo({ path: "/move" }));
+      dispatch(redirectTo({ path: `/recentFolder/${result.data.Result._id}` }));
       done();
     }
   }
 });
 
-const getAllSetLogic = createLogic({
-  type: SetsAction.GET_ALL_SET_REQUEST,
+//  Recent folder
+const getRecentFolderLogic = createLogic({
+  type: FolderAction.GET_FOLDER_REQUEST,
   async process({ action }, dispatch, done) {
     let api = new ApiHelper();
     let result = await api.FetchFromServer(
-      "set",
-      "/getAllSet",
-      "GET",
+      "folder",
+      "/getFolderById",
+      "POST",
       true,
       undefined,
-      undefined
+      action.payload
     );
     if (result.isError) {
       toast.error(result.messages[0]);
       done();
       return;
     } else {
+      console.log("resulttt", result.data);
       dispatch(
-        getAllSetSuccess({
-          showLoader: false,
-          allSetList: result.data.result
+        getFolderSuccess({
+          getFolder: result.data.data
         })
       );
       done();
     }
   }
 });
-export const SetLogics = [createSetLogic, getAllSetLogic];
+export const FolderLogics = [createFolderLogic, getRecentFolderLogic];

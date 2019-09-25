@@ -15,9 +15,9 @@ import {
   InputGroup,
   Input
 } from "reactstrap";
-import Login from "../Auth/Login/index.jsx"
+import Login from "../Auth/Login/index.jsx";
 import Signup from "../Auth/Signup/index.jsx";
-
+import FolderModal from "../../components/Folders/createFolderModal";
 class DefaultHeader extends React.Component {
   constructor(props) {
     super(props);
@@ -45,8 +45,8 @@ class DefaultHeader extends React.Component {
       modelDetails: {
         loginModelOpen: !modelDetails.loginModelOpen
       }
-    })
-  }
+    });
+  };
   handleSignupModel = () => {
     const { modelInfoReducer } = this.props;
     const { modelDetails } = modelInfoReducer;
@@ -54,8 +54,22 @@ class DefaultHeader extends React.Component {
       modelDetails: {
         signupModelOpen: !modelDetails.signupModelOpen
       }
-    })
-  }
+    });
+  };
+
+  handleFolderModel = () => {
+    const { modelInfoReducer } = this.props;
+    const { modelDetails } = modelInfoReducer;
+    this.props.modelOpenRequest({
+      modelDetails: {
+        createFolderModalOpen: !modelDetails.createFolderModalOpen
+      }
+    });
+  };
+
+  createFolder = data => {
+    this.props.onFolderCreation(data);
+  };
 
   render() {
     const {
@@ -67,14 +81,20 @@ class DefaultHeader extends React.Component {
       loginReducer,
       forgotPasswordRequest,
       profileInfoReducer,
-      modelOpenRequest } = this.props;
+      modelOpenRequest,
+      isLoggedIn
+    } = this.props;
     const { modelDetails } = modelInfoReducer;
     const {
       loginModelOpen,
       signupModelOpen,
-      forgotPasswordModalOpen } = modelDetails;
+      forgotPasswordModalOpen
+    } = modelDetails;
     const { isUserLoggedIn } = this.state;
-    const profiledata = profileInfoReducer && profileInfoReducer.profileInfo ? profileInfoReducer.profileInfo : null
+    const profiledata =
+      profileInfoReducer && profileInfoReducer.profileInfo
+        ? profileInfoReducer.profileInfo
+        : null;
     return (
       <>
         <header className="header-global theme-header ">
@@ -83,92 +103,117 @@ class DefaultHeader extends React.Component {
             // expand="lg"
             id="navbar-main"
           >
-
             <NavbarBrand className="mr-lg-5" to="/" tag={Link}>
               <h3 className="mb-0 header-title">Deep Play</h3>
             </NavbarBrand>
-            <Nav className="navbar-nav align-items-center nav-main-section flex-fill" >
-              <div className="nav-inputs-wrap d-flex">
+            {
+              isLoggedIn ?
+                <Nav className="navbar-nav align-items-center nav-main-section flex-fill">
+                  <div className="nav-inputs-wrap d-flex">
+                    <Col>
+                      <UncontrolledDropdown className="header-manu-wrap">
+                        <DropdownToggle
+                          caret
+                          color=" "
+                          className="nav-dropdown-btn"
+                        >
+                          <i className="fas fa-plus-square"></i> &nbsp; Create
+                    </DropdownToggle>
+                        <DropdownMenu>
+                          <DropdownItem></DropdownItem>
+                        </DropdownMenu>
 
-                <Col>
-                  <UncontrolledDropdown className="header-manu-wrap">
-                    <DropdownToggle caret color=" " className="nav-dropdown-btn">
-                      <i className="fas fa-plus-square"></i> &nbsp; Create
-                  </DropdownToggle>
-                    <DropdownMenu>
-
-                    
-
-                     
-                    
-
-                 
-
-                      <DropdownItem >
-                      
+                        <DropdownMenu>
+                          <DropdownItem active>
+                            <Link to={"/move"}> Create Move</Link>
+                          </DropdownItem>
+                          <DropdownItem>
+                            <Link to={"/create-set"}>Create Set</Link>
+                          </DropdownItem>
+                          <DropdownItem onClick={this.handleFolderModel}>
+                            {" "}
+                            Create Folder
                       </DropdownItem>
-
-                    </DropdownMenu>
-
-                    <DropdownMenu>
-                        <DropdownItem active><Link to={"/setting"}> Create Move</Link></DropdownItem>
-                        <DropdownItem onClick={this.props.handleSetComponent}>Create Set</DropdownItem>
-                        <DropdownItem tag={Link} to="/setting" >  Create Folder</DropdownItem>
-                      </DropdownMenu>
-
-                  </UncontrolledDropdown>
-                </Col>
-                <Col className="flex-fill">
-                  <FormGroup className="mb-0 fe ">
-                    <InputGroup className="">
-                      <Input placeholder="Search" type="text" />
-                    </InputGroup>
-                  </FormGroup>
-                </Col>
-              </div>
-
-            </Nav>
-            <Nav className="navbar-nav align-items-center nav-main-section" navbar>
-              {
-                !isUserLoggedIn ?
-                  <div className="nav-main-section">
-                    <React.Fragment >
-                      <span
-                        onClick={this.handleLoginModel}
-                        className="nav-link-inner--text pr-4 cusror_pointer">Login</span>
-                      <span
-                        onClick={this.handleSignupModel}
-                        className="nav-link-inner--text pr-2 cusror_pointer">Signup</span>
-                    </React.Fragment>
+                        </DropdownMenu>
+                      </UncontrolledDropdown>
+                    </Col>
+                    <Col className="flex-fill">
+                      <FormGroup className="mb-0 fe ">
+                        <InputGroup className="">
+                          <Input placeholder="Search" type="text" />
+                        </InputGroup>
+                      </FormGroup>
+                    </Col>
                   </div>
-                  :
+                </Nav> : null
+            }
+            <Nav
+              className="navbar-nav align-items-center nav-main-section"
+              navbar
+            >
+              {!isUserLoggedIn ? (
+                <div className="nav-main-section">
+                  <React.Fragment>
+                    <span
+                      onClick={this.handleLoginModel}
+                      className="nav-link-inner--text pr-4 cusror_pointer"
+                    >
+                      Login
+                    </span>
+                    <span
+                      onClick={this.handleSignupModel}
+                      className="nav-link-inner--text pr-2 cusror_pointer"
+                    >
+                      Signup
+                    </span>
+                  </React.Fragment>
+                </div>
+              ) : (
                   <>
-
                     <UncontrolledDropdown className="header-manu-wrap ">
-                      <DropdownToggle tag="a" className="nav-link user-section" caret>
+                      <DropdownToggle
+                        tag="a"
+                        className="nav-link user-section"
+                        caret
+                      >
                         <div className="user-wrap">
                           <div className="user-img">
-                            <img src="./assets/img/profile-ic.png" className="w-100" alt={"img"} />
+                            <img
+                              src="./assets/img/profile-ic.png"
+                              className="w-100"
+                              alt={"img"}
+                            />
                           </div>
                           <div className="user-text">
-                            {
-                              profiledata ?
-                                `${profiledata.firstName}${" "} ${profiledata.lastName}` : ""
-                            }
+                            {profiledata
+                              ? `${profiledata.firstName}${" "} ${
+                              profiledata.lastName
+                              }`
+                              : ""}
                           </div>
                         </div>
                       </DropdownToggle>
                       <DropdownMenu>
-                        <DropdownItem active><Link to={"/setting"}>View Profile</Link></DropdownItem>
-                        <DropdownItem ><Link to={"/dashboard"}>Dashboard</Link></DropdownItem>
-                        <DropdownItem onClick={e => logoutRequest(e)}  >logout</DropdownItem>
+                        <DropdownItem active>
+                          <Link to={"/setting"}>View Profile</Link>
+                        </DropdownItem>
+                        <DropdownItem>
+                          <Link to={"/dashboard"}>Dashboard</Link>
+                        </DropdownItem>
+                        <DropdownItem onClick={e => logoutRequest(e)}>
+                          logout
+                      </DropdownItem>
                       </DropdownMenu>
                     </UncontrolledDropdown>
                     {/* <span onClick={e => logoutRequest(e)} className="nav-link-inner--text pr-4">Logout</span> */}
                   </>
-              }
+                )}
             </Nav>
-            <UncontrolledCollapse navbar toggler="#navbar_global" className="justify-content-end">
+            <UncontrolledCollapse
+              navbar
+              toggler="#navbar_global"
+              className="justify-content-end"
+            >
               <div className="navbar-collapse-header">
                 <Row>
                   <Col className="collapse-brand" xs="6">
@@ -188,7 +233,6 @@ class DefaultHeader extends React.Component {
                 </Row>
               </div>
             </UncontrolledCollapse>
-
           </Navbar>
         </header>
         <Login
@@ -207,6 +251,12 @@ class DefaultHeader extends React.Component {
           handleSignupModel={this.handleSignupModel}
           signupRequest={signupRequest}
           loginReducer={loginReducer}
+        />
+        <FolderModal
+          handleFolderModel={this.handleFolderModel}
+          modelInfoReducer={modelInfoReducer}
+          modelOperate={modelOpenRequest}
+          createFolder={this.createFolder}
         />
       </>
     );
