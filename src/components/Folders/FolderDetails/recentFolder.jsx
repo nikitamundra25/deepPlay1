@@ -1,7 +1,11 @@
 import React from "react";
 import { UncontrolledTooltip, Button } from "reactstrap";
 import { connect } from "react-redux";
-import { getFolderRequest, modelOpenRequest } from "../../../actions";
+import {
+  getFolderRequest,
+  modelOpenRequest,
+  getAllSetRequest
+} from "../../../actions";
 import AddSetModal from "./addSet";
 
 // core components
@@ -13,6 +17,7 @@ class RecentFolderComponent extends React.Component {
   }
 
   openAddSetModel = () => {
+    this.props.getSetList();
     const { modelInfoReducer } = this.props;
     const { modelDetails } = modelInfoReducer;
     this.props.modelOperate({
@@ -23,7 +28,13 @@ class RecentFolderComponent extends React.Component {
   };
 
   render() {
-    const { modelOperate, modelInfoReducer, getFolder } = this.props;
+    const {
+      modelOperate,
+      modelInfoReducer,
+      getFolder,
+      getAllSetReducer
+    } = this.props;
+
     return (
       <div className="page-body">
         <div className="content-header">
@@ -125,6 +136,7 @@ class RecentFolderComponent extends React.Component {
           openAddSetModel={this.openAddSetModel}
           modelInfoReducer={modelInfoReducer}
           modelOperate={modelOperate}
+          getAllSet={getAllSetReducer.allSetList}
         />
       </div>
     );
@@ -133,12 +145,16 @@ class RecentFolderComponent extends React.Component {
 const mapStateToProps = state => {
   return {
     getFolder: state.getFolderReducer.getFolder,
-    modelInfoReducer: state.modelInfoReducer
+    modelInfoReducer: state.modelInfoReducer,
+    getAllSetReducer: state.getAllSetReducer
   };
 };
 const mapDispatchToProps = dispatch => ({
   getFolderRequest: data => dispatch(getFolderRequest(data)),
-  modelOperate: data => dispatch(modelOpenRequest(data))
+  modelOperate: data => dispatch(modelOpenRequest(data)),
+  getSetList: () => {
+    dispatch(getAllSetRequest());
+  }
 });
 
 export default connect(

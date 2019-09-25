@@ -17,7 +17,7 @@ class AddSetModal extends React.Component {
   };
 
   render() {
-    const { modelInfoReducer } = this.props;
+    const { modelInfoReducer, getAllSet } = this.props;
     const { modelDetails } = modelInfoReducer;
     const { addSetModalOpen } = modelDetails;
     return (
@@ -43,56 +43,26 @@ class AddSetModal extends React.Component {
           </ModalHeader>
           <ModalBody className="modal-text-center">
             <div className="wrap-folder">
-              <Row className="set-wrap">
-                <Col md="12">
-                  <div className="tile-wrap card">
-                    <div className="cotent-tile d-flex">
-                      <div className="cotent-text-tile">
-                        <div className="content-heading-tile">
-                          {" "}
-                          Salsa Footwork
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </Col>
-              </Row>
-              <Row>
-                <Col md="12">
-                  <div className="tile-wrap card">
-                    <div className="cotent-tile d-flex">
-                      <div className="cotent-text-tile">
-                        <div className="content-heading-tile"> Group dance</div>
-                      </div>
-                    </div>
-                  </div>
-                </Col>
-              </Row>
-              <Row>
-                <Col md="12">
-                  <div className="tile-wrap card">
-                    <div className="cotent-tile d-flex">
-                      <div className="cotent-text-tile">
-                        <div className="content-heading-tile"> Zumba </div>
-                      </div>
-                    </div>
-                  </div>
-                </Col>
-              </Row>
-              <Row>
-                <Col md="12">
-                  <div className="tile-wrap card">
-                    <div className="cotent-tile d-flex">
-                      <div className="cotent-text-tile">
-                        <div className="content-heading-tile">
-                          {" "}
-                          Salsa Partnerwork
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </Col>
-              </Row>
+              {getAllSet
+                ? getAllSet.map((key, i) => {
+                    return (
+                      <Row className="set-wrap" key={i}>
+                        <Col md="12">
+                          <div className="tile-wrap card">
+                            <div className="cotent-tile d-flex">
+                              <div className="cotent-text-tile">
+                                <div className="content-heading-tile">
+                                  {" "}
+                                  {key.title}
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </Col>
+                      </Row>
+                    );
+                  })
+                : ""}
             </div>
           </ModalBody>
         </Modal>

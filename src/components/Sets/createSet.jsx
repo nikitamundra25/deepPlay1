@@ -148,14 +148,14 @@ class CreateSetComponent extends React.Component {
         >
           <ModalHeader>
             <h5 className="modal-title" id="exampleModalLabel">
-              <span class="custom-title">Upload profile image</span>
+              <span class="custom-title">Description</span>
             </h5>
             <button
               aria-label="Close"
               className="close"
               data-dismiss="modal"
               type="button"
-              onClick={() => this.handleModal}
+              onClick={this.handleModal}
             >
               <span aria-hidden="true">×</span>
             </button>

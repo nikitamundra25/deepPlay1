@@ -40,12 +40,12 @@ class Set extends React.Component {
       }
     });
   };
-    createFolder = data => {
-      this.props.onFolderCreation(data);
-    };
+  createFolder = data => {
+    this.props.onFolderCreation(data);
+  };
 
   render() {
-    const { modelOperate, modelInfoReducer } = this.props;
+    const { modelOperate, modelInfoReducer, getAllSetReducer } = this.props;
     return (
       <>
         {this.state.createSet ? (
@@ -54,6 +54,7 @@ class Set extends React.Component {
           <SetComponent
             handleSetComponent={this.handleSetComponent}
             handleFolderModel={this.handleFolderModel}
+            getAllSet={getAllSetReducer.allSetList}
           />
         )}
         <FolderModal
@@ -68,7 +69,8 @@ class Set extends React.Component {
 
 const mapStateToProps = state => {
   return {
-    modelInfoReducer: state.modelInfoReducer
+    modelInfoReducer: state.modelInfoReducer,
+    getAllSetReducer: state.getAllSetReducer
   };
 };
 const mapDispatchToProps = dispatch => {

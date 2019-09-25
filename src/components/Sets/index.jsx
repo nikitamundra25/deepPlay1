@@ -4,6 +4,8 @@ import "./index.scss";
 // core components
 class SetComponent extends React.Component {
   render() {
+    console.log(">>", this.props.getAllSet);
+
     return (
       <div className="set-main-section">
         <div className="content-header">
@@ -15,7 +17,6 @@ class SetComponent extends React.Component {
             <div className="tile-wrap card">
               <div className="cotent-tile d-flex">
                 <div className="cotent-text-tile">
-                  <div onClick={this.props.handleSetComponent}>Create Set</div>
                   <div className="content-heading-tile"> Salsa Footwork</div>
                   <div className="content-number-tile"> 46 moves</div>
                 </div>

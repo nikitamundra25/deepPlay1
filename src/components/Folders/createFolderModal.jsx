@@ -1,5 +1,14 @@
 import React from "react";
-import { Button, Modal, FormGroup, Input, Label } from "reactstrap";
+import {
+  Button,
+  Modal,
+  FormGroup,
+  Input,
+  Label,
+  ModalHeader,
+  ModalBody,
+  ModalFooter
+} from "reactstrap";
 // core components
 class FolderModal extends React.Component {
   constructor(props) {
@@ -35,35 +44,36 @@ class FolderModal extends React.Component {
   };
 
   render() {
-    const { modelInfoReducer  } = this.props;
+    const { modelInfoReducer } = this.props;
     const { modelDetails } = modelInfoReducer;
     const { createFolderModalOpen } = modelDetails;
     const { title, description } = this.state;
     return (
       <div>
         <Modal
-          className="modal-dialog-centered"
+          className="modal-dialog-centered custom-model-wrap"
           isOpen={createFolderModalOpen}
           toggle={() => this.handleOpen}
         >
-          <div className="modal-header">
+          <ModalHeader>
             <h5 className="modal-title" id="exampleModalLabel">
-              Create a New Folder
+              <span class="custom-title">Create a New Folder</span>
             </h5>
             <button
               aria-label="Close"
               className="close"
               data-dismiss="modal"
               type="button"
-              onClick={() => this.handleOpen}
+              onClick={this.handleOpen}
             >
-              <span aria-hidden={true} onClick={this.handleOpen}>
-                <i className="far fa-times-circle"></i>
-              </span>
+              <span aria-hidden="true">×</span>
             </button>
-          </div>
-          <div className="modal-body">
+          </ModalHeader>
+          <ModalBody>
             <FormGroup>
+              <Label for="title" className="font-weight-bold text-center">
+                TITLE
+              </Label>
               <Input
                 id="title"
                 type="text"
@@ -72,9 +82,11 @@ class FolderModal extends React.Component {
                 onChange={this.handleChange}
                 value={title}
               />
-              <Label for="description">TITLE</Label>
             </FormGroup>
             <FormGroup>
+              <Label for="description" className="font-weight-bold text-center">
+                DESCRIPTION
+              </Label>
               <Input
                 id="exampleFormControlInput1"
                 type="text"
@@ -83,21 +95,20 @@ class FolderModal extends React.Component {
                 onChange={this.handleChange}
                 value={description}
               />
-              <Label for="description">DESCRIPTION</Label>
             </FormGroup>
             <br />
-            <Button
-              color="info"
-              type="button"
-              onClick={this.onCreateFolder}
-              className="fullSize-btn"
-              disabled={!title}
-            >
-              Create Folder
-            </Button>
-          </div>
+            <ModalFooter>
+              <Button
+                type="button"
+                onClick={this.onCreateFolder}
+                className="btn btn-black"
+                disabled={!title}
+              >
+                Create Folder
+              </Button>
+            </ModalFooter>
+          </ModalBody>
         </Modal>
-       
       </div>
     );
   }
