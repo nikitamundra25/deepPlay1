@@ -11,7 +11,8 @@ import {
   logoutRequest,
   signupRequest,
   socialLoginRequest,
-  forgotPasswordRequest
+  forgotPasswordRequest,
+  profileRequest
 } from "../../actions/index.jsx";
 
 // core components
@@ -19,6 +20,9 @@ class DefaultLayout extends React.Component {
   componentDidMount() {
     const pathname = this.props.location.pathname
     const token = localStorage.getItem("token")
+    if (token) {
+      this.props.getProfile()
+    }
     if (!token && pathname !== "/resetPassword") {
       this.props.redirectTo("/")
     }
@@ -140,7 +144,8 @@ const mapDispatchToProps = dispatch => ({
   logoutRequest: data => dispatch(logoutRequest(data)),
   signupRequest: data => dispatch(signupRequest(data)),
   socialLoginRequest: data => dispatch(socialLoginRequest(data)),
-  forgotPasswordRequest: data => dispatch(forgotPasswordRequest(data))
+  forgotPasswordRequest: data => dispatch(forgotPasswordRequest(data)),
+  getProfile: () => dispatch(profileRequest())
 });
 export default connect(
   mapStateToProps,
