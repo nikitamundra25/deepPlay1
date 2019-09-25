@@ -12,7 +12,9 @@ import {
   CardHeader,
   CardTitle,
   UncontrolledTooltip,
-  InputGroup, InputGroupText, InputGroupAddon
+  InputGroup,
+  InputGroupText,
+  InputGroupAddon
 } from "reactstrap";
 import "./index.scss";
 class CreateSetComponent extends React.Component {
@@ -63,8 +65,6 @@ class CreateSetComponent extends React.Component {
     const { title, open, description } = this.state;
     return (
       <div className="creat-set-section mt-2">
-
-
         <Card className="w-100">
           <CardHeader className="">
             <div className="content-header set-header">
@@ -74,34 +74,34 @@ class CreateSetComponent extends React.Component {
           <CardBody className="">
             <div className="create-set-tile">
               <FormGroup className="flex-fill">
-              <InputGroup>
-                <Input
-                  id="exampleFormControlInput1"
-                  className="capitalize"
-                  placeholder="Enter your title here"
-                  type="text"
-                  name="title"
-                  onChange={this.handleChange}
-                  value={title}
-                />
+                <InputGroup>
+                  <Input
+                    id="exampleFormControlInput1"
+                    className="capitalize"
+                    placeholder="Enter your title here"
+                    type="text"
+                    name="title"
+                    onChange={this.handleChange}
+                    value={title}
+                  />
                   <InputGroupAddon addonType="prepend">
-          <InputGroupText>
-          <span
-                  onClick={() =>
-                    this.setState({
-                      open: !open
-                    })
-                  }
-                  className="cursor_pointer "
-                  id="description"
-                >
-                  <i className="fas fas fa-info "></i>
-                </span>
-                <UncontrolledTooltip placement="top" target="description">
-                  Add description
-            </UncontrolledTooltip>
-          </InputGroupText>
-        </InputGroupAddon>
+                    <InputGroupText>
+                      <span
+                        onClick={() =>
+                          this.setState({
+                            open: !open
+                          })
+                        }
+                        className="cursor_pointer "
+                        id="description"
+                      >
+                        <i className="fas fas fa-info "></i>
+                      </span>
+                      <UncontrolledTooltip placement="top" target="description">
+                        Add description
+                      </UncontrolledTooltip>
+                    </InputGroupText>
+                  </InputGroupAddon>
                 </InputGroup>
               </FormGroup>
               {/* <div className="">
@@ -120,22 +120,19 @@ class CreateSetComponent extends React.Component {
               </div> */}
             </div>
             <div className="text-center">
-            <Button
-            color=" "
-            type="button"
-            className="btn-black btn mt-3"
-            disabled={!title}
-            onClick={this.onAddMove}
-          >
-            Add a Move
-          </Button>
-          </div>
+              <Button
+                color=" "
+                type="button"
+                className="btn-black btn mt-3"
+                disabled={!title}
+                onClick={this.onAddMove}
+              >
+                Add a Move
+              </Button>
+            </div>
           </CardBody>
-
         </Card>
 
-
-        
         <Modal
           className="modal-dialog-centered"
           isOpen={open}
@@ -151,9 +148,7 @@ class CreateSetComponent extends React.Component {
               data-dismiss="modal"
               type="button"
               onClick={() => this.handleModal}
-            >
-
-            </button>
+            ></button>
           </div>
           <div className="modal-body">
             <FormGroup>

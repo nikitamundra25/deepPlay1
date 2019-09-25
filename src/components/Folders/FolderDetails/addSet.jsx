@@ -1,12 +1,5 @@
 import React from "react";
-import {
-  Button,
-  Modal,
-  FormGroup,
-  Input,
-  Label,
-  ModalHeader
-} from "reactstrap";
+import { Modal, ModalBody, ModalHeader, Row, Col } from "reactstrap";
 // core components
 class AddSetModal extends React.Component {
   constructor(props) {
@@ -30,28 +23,78 @@ class AddSetModal extends React.Component {
     return (
       <div>
         <Modal
-          className="modal-dialog-centered auth-user-model"
+          className="modal-dialog-centered custom-model-wrap"
           isOpen={addSetModalOpen}
+          size="md"
+          backdrop={"static"}
           toggle={() => this.handleOpen}
         >
-          <ModalHeader toggle={() => this.handleOpen}></ModalHeader>
-          <div className="modal-header">
-            <h5 className="modal-title" id="exampleModalLabel">
-              Add a Set
-            </h5>
+          <ModalHeader>
+            <span className="custom-title">Add a Set</span>
             <button
               aria-label="Close"
               className="close"
               data-dismiss="modal"
               type="button"
-              onClick={() => this.handleOpen}
+              onClick={this.handleOpen}
             >
-              <span aria-hidden={true} onClick={this.handleOpen}>
-                <i className="far fa-times-circle"></i>
-              </span>
+              <span aria-hidden={true}>×</span>
             </button>
-          </div>
-          <div className="modal-body">...........</div>
+          </ModalHeader>
+          <ModalBody className="modal-text-center">
+            <div className="wrap-folder">
+              <Row className="set-wrap">
+                <Col md="12">
+                  <div className="tile-wrap card">
+                    <div className="cotent-tile d-flex">
+                      <div className="cotent-text-tile">
+                        <div className="content-heading-tile">
+                          {" "}
+                          Salsa Footwork
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </Col>
+              </Row>
+              <Row>
+                <Col md="12">
+                  <div className="tile-wrap card">
+                    <div className="cotent-tile d-flex">
+                      <div className="cotent-text-tile">
+                        <div className="content-heading-tile"> Group dance</div>
+                      </div>
+                    </div>
+                  </div>
+                </Col>
+              </Row>
+              <Row>
+                <Col md="12">
+                  <div className="tile-wrap card">
+                    <div className="cotent-tile d-flex">
+                      <div className="cotent-text-tile">
+                        <div className="content-heading-tile"> Zumba </div>
+                      </div>
+                    </div>
+                  </div>
+                </Col>
+              </Row>
+              <Row>
+                <Col md="12">
+                  <div className="tile-wrap card">
+                    <div className="cotent-tile d-flex">
+                      <div className="cotent-text-tile">
+                        <div className="content-heading-tile">
+                          {" "}
+                          Salsa Partnerwork
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </Col>
+              </Row>
+            </div>
+          </ModalBody>
         </Modal>
       </div>
     );

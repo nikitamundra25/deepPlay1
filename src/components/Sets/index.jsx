@@ -1,37 +1,21 @@
 import React from "react";
-import {
-  Row,
-  UncontrolledDropdown,
-  DropdownItem,
-  DropdownToggle,
-  DropdownMenu,
-  Col,
-  FormGroup,
-  InputGroup,
-  InputGroupAddon,
-  InputGroupText,
-  Input
-} from "reactstrap";
-import { Link } from "react-router-dom";
+import { Row, Col } from "reactstrap";
 import "./index.scss";
 // core components
 class SetComponent extends React.Component {
-  
   render() {
     return (
       <div className="set-main-section">
-       <div className="content-header">
-         <span className="content-title">YOUR SETS</span>
-         <span className="dashboard-right-content">4 Sets total</span>
-         </div>
-
-      
+        <div className="content-header">
+          <span className="content-title">YOUR SETS</span>
+          <span className="dashboard-right-content">4 Sets total</span>
+        </div>
         <Row className="set-wrap">
           <Col md="6">
             <div className="tile-wrap card">
               <div className="cotent-tile d-flex">
                 <div className="cotent-text-tile">
-                <div onClick={this.props.handleSetComponent}>Create Set</div>
+                  <div onClick={this.props.handleSetComponent}>Create Set</div>
                   <div className="content-heading-tile"> Salsa Footwork</div>
                   <div className="content-number-tile"> 46 moves</div>
                 </div>

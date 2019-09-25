@@ -6,6 +6,7 @@ const Dashboard = React.lazy(() => import("./container/Dashboard"));
 const Settings = React.lazy(() => import("./container/Settings"));
 const Folders = React.lazy(() => import("./container/Folders"));
 const Sets = React.lazy(() => import("./container/Sets"));
+const CreateSets = React.lazy(() => import("./components/Sets/createSet"));
 const ResetPassword = React.lazy(() =>
   import("./container/Auth/ResetPassword")
 );
@@ -32,6 +33,12 @@ const routes = [
     name: AppRoutes.SETS.name,
     exact: AppRoutes.SETS.exact,
     component: Sets
+  },
+  {
+    path: AppRoutes.CREATE_SET.url,
+    name: AppRoutes.CREATE_SET.name,
+    exact: AppRoutes.CREATE_SET.exact,
+    component: CreateSets
   },
   {
     path: AppRoutes.FOLDERS.url,

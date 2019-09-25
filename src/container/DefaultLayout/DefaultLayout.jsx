@@ -11,18 +11,23 @@ import {
   logoutRequest,
   signupRequest,
   socialLoginRequest,
-  forgotPasswordRequest
+  forgotPasswordRequest,
+  createFolderRequest
 } from "../../actions/index.jsx";
 
 // core components
 class DefaultLayout extends React.Component {
   componentDidMount() {
-    const pathname = this.props.location.pathname
-    const token = localStorage.getItem("token")
+    const pathname = this.props.location.pathname;
+    const token = localStorage.getItem("token");
     if (!token && pathname !== "/resetPassword") {
-      this.props.redirectTo("/")
+      this.props.redirectTo("/");
     }
   }
+
+  onFolderCreation = data => {
+    this.props.onFolderCreation(data);
+  };
   /*
   /*  
   */
@@ -38,46 +43,53 @@ class DefaultLayout extends React.Component {
       forgotPasswordRequest,
       profileInfoReducer
     } = this.props;
-    let isLoggedIn
+    let isLoggedIn;
     if (localStorage.getItem("token")) {
-      isLoggedIn = true
+      isLoggedIn = true;
     } else {
-      isLoggedIn = false
+      isLoggedIn = false;
     }
-    const routePath = this.props.location.pathname
+    const routePath = this.props.location.pathname;
     return (
       <>
-        {
-          (routePath !== "/resetPassword") ?
-            <DefaultHeader
-              modelInfoReducer={modelInfoReducer}
-              modelOpenRequest={modelOperate}
-              loginRequest={loginRequest}
-              logoutRequest={logoutRequest}
-              loginReducer={loginReducer}
-              signupRequest={signupRequest}
-              profileInfoReducer={profileInfoReducer}
-              socialLoginRequest={socialLoginRequest}
-              forgotPasswordRequest={forgotPasswordRequest}
-            /> : null
-        }
+        {routePath !== "/resetPassword" ? (
+          <DefaultHeader
+            modelInfoReducer={modelInfoReducer}
+            modelOpenRequest={modelOperate}
+            loginRequest={loginRequest}
+            logoutRequest={logoutRequest}
+            loginReducer={loginReducer}
+            signupRequest={signupRequest}
+            profileInfoReducer={profileInfoReducer}
+            socialLoginRequest={socialLoginRequest}
+            forgotPasswordRequest={forgotPasswordRequest}
+            onFolderCreation={this.onFolderCreation}
+          />
+        ) : null}
         <>
-          <div className={routePath !== "/resetPassword" ? "dashboard-full-section" : ""}
+          <div
+            className={
+              routePath !== "/resetPassword" ? "dashboard-full-section" : ""
+            }
           >
             <div
-             className={`${routePath !== "/" ? "dashboard-container-wrap " : " "}`}
+              className={`${
+                routePath !== "/" ? "dashboard-container-wrap " : " "
+              }`}
             >
-            <div className={`theme-container ${routePath !== "/" ? "dashboard-container " : "home-container"}`}>
-              {
-                isLoggedIn && (routePath !== "/" && routePath !== "/resetPassword") ?
+              <div
+                className={`theme-container ${
+                  routePath !== "/" ? "dashboard-container " : "home-container"
+                }`}
+              >
+                {isLoggedIn &&
+                (routePath !== "/" && routePath !== "/resetPassword") ? (
                   <div className="ct-sidebar app-sidebar">
-                    <DefaultSidebar
-                      profileInfoReducer={profileInfoReducer}
-                    /></div> :
-                  null
-              }
-              {
-                isLoggedIn && (routePath !== "/" && routePath !== "/resetPassword") ?
+                    <DefaultSidebar profileInfoReducer={profileInfoReducer} />
+                  </div>
+                ) : null}
+                {isLoggedIn &&
+                (routePath !== "/" && routePath !== "/resetPassword") ? (
                   <div className="dashboard-right-wrap">
                     <div className="dashboard-right-section">
                       <Suspense fallback={""}>
@@ -98,7 +110,8 @@ class DefaultLayout extends React.Component {
                         </Switch>
                       </Suspense>
                     </div>
-                  </div> :
+                  </div>
+                ) : (
                   <Suspense fallback={""}>
                     <Switch>
                       {routes.map((route, idx) => {
@@ -116,19 +129,17 @@ class DefaultLayout extends React.Component {
                       })}
                     </Switch>
                   </Suspense>
-              }
+                )}
+              </div>
             </div>
           </div>
-          </div>
-
         </>
-        {
-          isLoggedIn && (routePath !== "/" && routePath !== "/resetPassword") ?
-            null :
-            routePath !== "/resetPassword" ?
-              <DefaultFooter /> : null
-        }
-
+        {isLoggedIn &&
+        (routePath !== "/" &&
+          routePath !== "/resetPassword") ? null : routePath !==
+          "/resetPassword" ? (
+          <DefaultFooter />
+        ) : null}
       </>
     );
   }
@@ -145,7 +156,10 @@ const mapDispatchToProps = dispatch => ({
   logoutRequest: data => dispatch(logoutRequest(data)),
   signupRequest: data => dispatch(signupRequest(data)),
   socialLoginRequest: data => dispatch(socialLoginRequest(data)),
-  forgotPasswordRequest: data => dispatch(forgotPasswordRequest(data))
+  forgotPasswordRequest: data => dispatch(forgotPasswordRequest(data)),
+  onFolderCreation: data => {
+    dispatch(createFolderRequest(data));
+  }
 });
 export default connect(
   mapStateToProps,

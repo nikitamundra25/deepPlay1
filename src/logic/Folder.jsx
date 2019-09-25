@@ -1,10 +1,9 @@
 import { createLogic } from "redux-logic";
 import { ApiHelper } from "../helper";
 import {
-  createFolderSuccess,
   FolderAction,
   redirectTo,
-  getFolderRequest,
+  modelOpenRequest,
   getFolderSuccess,
   showLoader,
   hideLoader
@@ -33,6 +32,13 @@ const createFolderLogic = createLogic({
     } else {
       // toast.success(result.messages[0]);
       dispatch(hideLoader());
+      dispatch(
+        modelOpenRequest({
+          modelDetails: {
+            createFolderModalOpen: false
+          }
+        })
+      );
       dispatch(redirectTo({ path: `/recentFolder/${result.data.Result._id}` }));
       done();
     }
