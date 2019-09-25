@@ -60,7 +60,6 @@ class UploadImage extends Component {
         >
           <ModalHeader>
             <h4>Upload profile image</h4>
-
             <button
               aria-label="Close"
               className="close"

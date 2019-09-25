@@ -6,6 +6,7 @@ import { modelInfoReducer } from "./ModelOperation.jsx";
 import { loginReducer } from "./Login.jsx";
 import { profileInfoReducer, profileImage } from "./ProfileInfo.jsx";
 import { getAllSetReducer } from "./Set";
+import { getFolderReducer } from "./Folder";
 
 export const mainReducer = handleActions(
   {
@@ -29,6 +30,7 @@ const AppReducer = combineReducers({
   loginReducer,
   profileInfoReducer,
   getAllSetReducer,
+  getFolderReducer,
   profileImage,
   routing: routerReducer
 });

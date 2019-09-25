@@ -16,6 +16,7 @@ import { Link } from "react-router-dom";
 import "./index.scss";
 // core components
 class SetComponent extends React.Component {
+  
   render() {
     return (
       <div>
@@ -41,7 +42,7 @@ class SetComponent extends React.Component {
                     </li>
                     <DropdownItem divider />
                     <li>
-                      <DropdownItem tag={Link} to="/setting">
+                      <DropdownItem onClick={this.props.handleFolderModel}>
                         Create Folder
                       </DropdownItem>
                     </li>

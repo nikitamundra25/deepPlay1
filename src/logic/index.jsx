@@ -4,7 +4,8 @@ import { push } from "react-router-redux";
 import { LoginLogics } from "./Login.jsx";
 import { SignupLogics } from "./Signup.jsx";
 import { profileInfoLogics } from "./userInfo";
-import {SetLogics} from "./sets";
+import { SetLogics } from "./sets";
+import { FolderLogics } from "./Folder";
 
 export const redirectToLogic = createLogic({
   type: "REDIRET_TO",
@@ -19,5 +20,6 @@ export default [
   ...SignupLogics,
   ...profileInfoLogics,
   ...SetLogics,
+  ...FolderLogics,
   redirectToLogic
 ];
