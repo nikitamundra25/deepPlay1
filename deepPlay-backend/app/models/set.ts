@@ -19,9 +19,8 @@ const setSchema: Mongoose.Schema = new Schema({
     type: String
   },
   folderId: {
-    type: Schema.Types.ObjectId,
-    ref: "folder",
-    required: true
+      type: Schema.Types.ObjectId,
+      ref: "folder",
   },
   userId: {
     type: Schema.Types.ObjectId,

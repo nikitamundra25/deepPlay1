@@ -1,5 +1,8 @@
 import React from "react";
-import { Row, Col } from "reactstrap";
+import {
+  Row,
+  Col,
+} from "reactstrap";
 import "./index.scss";
 // core components
 class SetComponent extends React.Component {
@@ -17,6 +20,7 @@ class SetComponent extends React.Component {
             <div className="tile-wrap card">
               <div className="cotent-tile d-flex">
                 <div className="cotent-text-tile">
+                  <div onClick={this.props.handleSetComponent}>Create Set</div>
                   <div className="content-heading-tile"> Salsa Footwork</div>
                   <div className="content-number-tile"> 46 moves</div>
                 </div>

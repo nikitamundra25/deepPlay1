@@ -16,7 +16,10 @@ import {
   InputGroupText,
   InputGroupAddon
 } from "reactstrap";
+import { connect } from "react-redux";
+import { createSetRequest } from "../../actions"
 import "./index.scss";
+
 class CreateSetComponent extends React.Component {
   constructor(props) {
     super(props);
@@ -44,7 +47,7 @@ class CreateSetComponent extends React.Component {
         title: this.state.title,
         description: this.state.description
       };
-      this.props.onCreateSet(data);
+      this.props.onSetsCreation(data);
     }
   };
 
@@ -142,9 +145,11 @@ class CreateSetComponent extends React.Component {
           className="modal-dialog-centered custom-model-wrap"
           isOpen={open}
           toggle={() => this.handleModal}
+
         >
           <ModalHeader>
             <h5 className="modal-title" id="exampleModalLabel">
+              <span class="custom-title">Upload profile image</span>
               <span class="custom-title">Description</span>
             </h5>
             <button
@@ -188,4 +193,17 @@ class CreateSetComponent extends React.Component {
     );
   }
 }
-export default CreateSetComponent;
+
+const mapStateToProps = state => {
+  return {
+    modelInfoReducer: state.modelInfoReducer,
+    getAllSetReducer: state.getAllSetReducer
+  };
+};
+const mapDispatchToProps = dispatch => ({
+  onSetsCreation: data => dispatch(createSetRequest(data))
+});
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(CreateSetComponent);

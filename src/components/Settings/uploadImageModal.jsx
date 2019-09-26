@@ -113,7 +113,7 @@ class UploadImage extends Component {
               </>
             )}
           </ModalBody>
-          <ModalFooter>
+          <ModalFooter >
             <Button
               color=" "
               onClick={() => this.props.handleImage(this.state.imageData)}

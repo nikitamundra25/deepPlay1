@@ -19,8 +19,8 @@ class Set extends React.Component {
     };
   }
 
-  componentDidMount = async () => {
-    await this.props.getSetList();
+  componentDidMount = () => {
+    this.props.getSetList();
   };
   onCreateSet = data => {
     this.props.onSetsCreation(data);

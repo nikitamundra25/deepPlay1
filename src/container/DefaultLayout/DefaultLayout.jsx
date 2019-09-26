@@ -12,14 +12,18 @@ import {
   signupRequest,
   socialLoginRequest,
   forgotPasswordRequest,
+  profileRequest,
   createFolderRequest
 } from "../../actions/index.jsx";
 
 // core components
 class DefaultLayout extends React.Component {
   componentDidMount() {
-    const pathname = this.props.location.pathname;
-    const token = localStorage.getItem("token");
+    const pathname = this.props.location.pathname
+    const token = localStorage.getItem("token")
+    if (token) {
+      this.props.getProfile()
+    }
     if (!token && pathname !== "/resetPassword") {
       this.props.redirectTo("/");
     }
@@ -64,82 +68,85 @@ class DefaultLayout extends React.Component {
             socialLoginRequest={socialLoginRequest}
             forgotPasswordRequest={forgotPasswordRequest}
             onFolderCreation={this.onFolderCreation}
+            routePath={routePath}
+            isLoggedIn={isLoggedIn}
           />
         ) : null}
         <>
           <div
             className={
-              routePath !== "/resetPassword" ? "dashboard-full-section" : ""
+              (routePath !== "/" && routePath !== "/resetPassword") ? "dashboard-full-section" : ""
             }
           >
             <div
               className={`${
                 routePath !== "/" ? "dashboard-container-wrap " : " "
-              }`}
+                }`}
             >
               <div
                 className={`theme-container ${
                   routePath !== "/" ? "dashboard-container " : "home-container"
-                }`}
+                  }`}
               >
                 {isLoggedIn &&
-                (routePath !== "/" && routePath !== "/resetPassword") ? (
-                  <div className="ct-sidebar app-sidebar">
-                    <DefaultSidebar profileInfoReducer={profileInfoReducer} />
-                  </div>
-                ) : null}
-                {isLoggedIn &&
-                (routePath !== "/" && routePath !== "/resetPassword") ? (
-                  <div className="dashboard-right-wrap">
-                    <div className="dashboard-right-section">
-                      <Suspense fallback={""}>
-                        <Switch>
-                          {routes.map((route, idx) => {
-                            return route.component ? (
-                              <Route
-                                key={idx}
-                                path={route.path}
-                                exact={route.exact}
-                                name={route.name}
-                                render={props => (
-                                  <route.component {...props} {...this.props} />
-                                )}
-                              />
-                            ) : null;
-                          })}
-                        </Switch>
-                      </Suspense>
+                  (routePath !== "/" && routePath !== "/resetPassword") ? (
+                    <div className="ct-sidebar app-sidebar">
+                      <DefaultSidebar profileInfoReducer={profileInfoReducer} />
                     </div>
-                  </div>
-                ) : (
-                  <Suspense fallback={""}>
-                    <Switch>
-                      {routes.map((route, idx) => {
-                        return route.component ? (
-                          <Route
-                            key={idx}
-                            path={route.path}
-                            exact={route.exact}
-                            name={route.name}
-                            render={props => (
-                              <route.component {...props} {...this.props} />
-                            )}
-                          />
-                        ) : null;
-                      })}
-                    </Switch>
-                  </Suspense>
-                )}
+                  ) : null}
+                {isLoggedIn &&
+                  (routePath !== "/" && routePath !== "/resetPassword") ? (
+                    <div className="dashboard-right-wrap">
+                      <div className="dashboard-right-section">
+                        <Suspense fallback={""}>
+                          <Switch>
+                            {routes.map((route, idx) => {
+                              return route.component ? (
+                                <Route
+                                  key={idx}
+                                  path={route.path}
+                                  exact={route.exact}
+                                  name={route.name}
+                                  render={props => (
+                                    <route.component {...props} {...this.props} />
+                                  )}
+                                />
+                              ) : null;
+                            })}
+                          </Switch>
+                        </Suspense>
+                      </div>
+                    </div>
+                  ) : (
+                    <Suspense fallback={""}>
+                      <Switch>
+                        {routes.map((route, idx) => {
+                          return route.component ? (
+                            <Route
+                              key={idx}
+                              path={route.path}
+                              exact={route.exact}
+                              name={route.name}
+                              render={props => (
+                                <route.component {...props} {...this.props} />
+                              )}
+                            />
+                          ) : null;
+                        })}
+                      </Switch>
+                    </Suspense>
+                  )}
               </div>
             </div>
           </div>
         </>
         {isLoggedIn &&
-        (routePath !== "/" &&
-          routePath !== "/resetPassword") ? null : routePath !==
-          "/resetPassword" ? (
-          <DefaultFooter />
-        ) : null}
+          (routePath !== "/" &&
+            routePath !== "/resetPassword") ? null : routePath !==
+              "/resetPassword" ? (
+              <DefaultFooter />
+            ) : null
+        }
       </>
     );
   }
@@ -157,6 +164,7 @@ const mapDispatchToProps = dispatch => ({
   signupRequest: data => dispatch(signupRequest(data)),
   socialLoginRequest: data => dispatch(socialLoginRequest(data)),
   forgotPasswordRequest: data => dispatch(forgotPasswordRequest(data)),
+  getProfile: () => dispatch(profileRequest()),
   onFolderCreation: data => {
     dispatch(createFolderRequest(data));
   }

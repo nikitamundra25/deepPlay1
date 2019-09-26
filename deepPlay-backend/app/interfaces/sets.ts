@@ -1,8 +1,8 @@
 export interface ISet {
   title: String;
   description: String;
-  folderId: String | null;
   isPublic: Boolean;
+  folderId: String | null;
   userId: String;
   sharableLink: String;
   status: Boolean;

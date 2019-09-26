@@ -1,7 +1,6 @@
 import { Request, Response } from "express";
 import { SetModel } from "../models";
 import { ISet } from "../interfaces";
-import { body } from "express-validator";
 const ObjectId = require("mongodb").ObjectId;
 // --------------Create set---------------------
 const createSet = async (req: Request, res: Response): Promise<any> => {
@@ -14,6 +13,7 @@ const createSet = async (req: Request, res: Response): Promise<any> => {
       description: body.description,
       status: true,
       userId: headToken.id,
+      folderId: body.folderId ? body.folderId : null,
       sharableLink: "",
       folderId: body.folderId || null,
       isPublic: true

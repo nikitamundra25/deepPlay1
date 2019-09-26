@@ -6,6 +6,7 @@ export * from "./profileInfo.jsx";
 export * from "./Signup.jsx";
 export * from "./Sets.jsx";
 export * from "./Folder.jsx";
+export * from "./Moves.jsx";
 //
 export const redirectTo = createAction("REDIRET_TO");
 //

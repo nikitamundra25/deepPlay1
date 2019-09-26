@@ -18,6 +18,8 @@ import {
 import Login from "../Auth/Login/index.jsx";
 import Signup from "../Auth/Signup/index.jsx";
 import FolderModal from "../../components/Folders/createFolderModal";
+import profileImage from "../../assets/img/profile-ic.png";
+
 class DefaultHeader extends React.Component {
   constructor(props) {
     super(props);
@@ -81,7 +83,8 @@ class DefaultHeader extends React.Component {
       loginReducer,
       forgotPasswordRequest,
       profileInfoReducer,
-      modelOpenRequest
+      modelOpenRequest,
+      isLoggedIn
     } = this.props;
     const { modelDetails } = modelInfoReducer;
     const {
@@ -105,44 +108,46 @@ class DefaultHeader extends React.Component {
             <NavbarBrand className="mr-lg-5" to="/" tag={Link}>
               <h3 className="mb-0 header-title">Deep Play</h3>
             </NavbarBrand>
-            <Nav className="navbar-nav align-items-center nav-main-section flex-fill">
-              <div className="nav-inputs-wrap d-flex">
-                <Col>
-                  <UncontrolledDropdown className="header-manu-wrap">
-                    <DropdownToggle
-                      caret
-                      color=" "
-                      className="nav-dropdown-btn"
-                    >
-                      <i className="fas fa-plus-square"></i> &nbsp; Create
-                    </DropdownToggle>
-                    <DropdownMenu>
-                      <DropdownItem></DropdownItem>
-                    </DropdownMenu>
+            {isLoggedIn ? (
+              <Nav className="navbar-nav align-items-center nav-main-section flex-fill">
+                <div className="nav-inputs-wrap d-flex">
+                  <Col>
+                    <UncontrolledDropdown className="header-manu-wrap">
+                      <DropdownToggle
+                        caret
+                        color=" "
+                        className="nav-dropdown-btn"
+                      >
+                        <i className="fas fa-plus-square"></i> &nbsp; Create
+                      </DropdownToggle>
+                      <DropdownMenu>
+                        <DropdownItem></DropdownItem>
+                      </DropdownMenu>
 
-                    <DropdownMenu>
-                      <DropdownItem active>
-                        <Link to={"/move"}> Create Move</Link>
-                      </DropdownItem>
-                      <DropdownItem>
-                        <Link to={"/create-set"}>Create Set</Link>
-                      </DropdownItem>
-                      <DropdownItem onClick={this.handleFolderModel}>
-                        {" "}
-                        Create Folder
-                      </DropdownItem>
-                    </DropdownMenu>
-                  </UncontrolledDropdown>
-                </Col>
-                <Col className="flex-fill">
-                  <FormGroup className="mb-0 fe ">
-                    <InputGroup className="">
-                      <Input placeholder="Search" type="text" />
-                    </InputGroup>
-                  </FormGroup>
-                </Col>
-              </div>
-            </Nav>
+                      <DropdownMenu>
+                        <DropdownItem active>
+                          <Link to={"/move"}> Create Move</Link>
+                        </DropdownItem>
+                        <DropdownItem>
+                          <Link to={"/create-set"}>Create Set</Link>
+                        </DropdownItem>
+                        <DropdownItem onClick={this.handleFolderModel}>
+                          {" "}
+                          Create Folder
+                        </DropdownItem>
+                      </DropdownMenu>
+                    </UncontrolledDropdown>
+                  </Col>
+                  <Col className="flex-fill">
+                    <FormGroup className="mb-0 fe ">
+                      <InputGroup className="">
+                        <Input placeholder="Search" type="text" />
+                      </InputGroup>
+                    </FormGroup>
+                  </Col>
+                </div>
+              </Nav>
+            ) : null}
             <Nav
               className="navbar-nav align-items-center nav-main-section"
               navbar
@@ -175,7 +180,7 @@ class DefaultHeader extends React.Component {
                       <div className="user-wrap">
                         <div className="user-img">
                           <img
-                            src="./assets/img/profile-ic.png"
+                            src={profileImage}
                             className="w-100"
                             alt={"img"}
                           />

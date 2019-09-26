@@ -19,6 +19,9 @@ body {
     opacity: 0.5;
   }
 }
+.btn{
+  border-radius:5px;
+}
 a {
   color: inherit;
   &:hover,
@@ -122,23 +125,24 @@ a {
   margin-bottom: 80px;
   padding-bottom: 80px;
   border-bottom: 2px dashed $videoAddBannerBack;
-  .video-add-banner {
-    cursor: pointer;
-    height: 100%;
-    background: $videoAddBannerBack;
-    border: 2px dashed $videoAddBannerBorder;
-    .play-ic-wrap {
-      width: 90px;
-      height: 90px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      background: $videoAddBannerBorder;
-      border-radius: 50%;
-      font-size: 55px;
-      padding-left: 8px;
-      color: $videoAddBannerBack;
-    }
+ 
+}
+.video-add-banner {
+  cursor: pointer;
+  height: 100%;
+  background: $videoAddBannerBack;
+  border: 2px dashed $videoAddBannerBorder;
+  .play-ic-wrap {
+    width: 90px;
+    height: 90px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: $videoAddBannerBorder;
+    border-radius: 50%;
+    font-size: 55px;
+    padding-left: 8px;
+    color: $videoAddBannerBack;
   }
 }
 .theme-container {
@@ -199,6 +203,7 @@ a {
   max-width: 100%;
   margin-top: 0px;
   padding-top: 68px;
+  justify-content: center;
   .dashboard-left-wrap {
     height: 100%;
     display: block;
@@ -254,6 +259,7 @@ a {
       color: $dashboardTextColor;
       font-size: 24px;
       font-weight: 600;
+      text-transform: capitalize;
     }
     .dashboard-right-content {
       font-weight: 600;
@@ -654,8 +660,9 @@ a {
 .nav-main-section {
   .nav-inputs-wrap input {
     max-width: 300px;
-    padding: 6px;
+    padding: 7px 6px;
     height: auto;
+    font-size: 16px;
     &:focus {
       box-shadow: none;
       border-color: #fff;
@@ -667,7 +674,7 @@ a {
     align-items: center;
     background: #fefefe;
     padding: 8px 18px 7px 18px;
-    font-size: 12px;
+    font-size: 16px;
   }
   .nav-inputs-wrap .dropdown-menu {
     top: 45px !important;
@@ -725,5 +732,29 @@ a {
       font-size: 20px;
       font-weight: 600;
     }
+  }
+}
+.create-set-section {
+.url-update-wrap{
+  max-width: 800px;
+  margin: auto;
+  .btn{
+  padding: 11px 15px;
+  color:#fff;
+  border-radius: 5px;
+  transform: none;
+}
+.form-group{
+  max-width: unset;
+}
+}}
+.vieos-add-section{
+  max-width: 400px;
+  height: 200px;
+  margin: auto;
+  .play-ic-wrap{
+    font-size: 35px;
+    width: 70px;
+    height: 70px;
   }
 }
