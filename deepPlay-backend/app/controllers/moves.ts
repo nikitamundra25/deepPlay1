@@ -14,51 +14,57 @@ cloudinary.config({
   api_key: CloudinaryAPIKey,
   api_secret: CloudinaryAPISecretKey
 });
+
 var up_options =
 {
   resource_type: "video",
   eager:
     [
-      { width: 960, height: 540, crop: "limit", video_codec: "h264:main:3.1", bit_rate: "3500k" }
+      { format: "webM", video_codec: "h264:main:3.1", bit_rate: "3500k" }
     ],
   eager_async: true,
-  eager_notification_url: "https://mysite.example.com/notify_endpoint",
-  public_id: "bb_bunny"
 };
-// --------------Create move---------------------
-const createMove = async (req: Request, res: Response): Promise<any> => {
+
+/* Title:- Download Youtub Video to local server
+Prams:- valid youtube video url 
+Created By:- Rishabh Bula*/
+
+const downloadVideo = async (req: Request, res: Response): Promise<any> => {
   const { body, currentUser } = req
   try {
-    const originalVideoPath = path.join(
-      __basedir,
-      "youtube-videos",
-      `TestVideo ${new Date()}`
-    );
-    let picStream: any
+    let headToken: Request | any = currentUser;
+    if (!headToken.id) {
+      res.status(400).json({
+        message: "User id not found"
+      });
+    }
+    const fileName = [
+      headToken.id,
+      "deep_play_video",
+      "webM"
+    ].join("");
 
+    const originalVideoPath = path.join(__basedir,
+      "youtube-videos", fileName);
+
+    const videoURL: string = path.join("youtube-videos", fileName);
+    let videoStream: any
     /* Download youtube videos on localserver */
-    ytdl('https://www.youtube.com/watch?v=9okSfJjpjXE')
+    ytdl(body.url)
       .pipe(
-        picStream = fs.createWriteStream(originalVideoPath)
+        videoStream = fs.createWriteStream(originalVideoPath)
       );
 
-    picStream.on('close', function () {
-      console.log('file done');
-      cloudinary.uploader.upload(originalVideoPath, (result: any) => {
-        if (result.error) {
-          return res.status(result.error.http_code).json({
-            message: result.error.message
-          })
-        } else {
-          return res.status(200).json({
-            message: "Video uploaded successfully",
-            url: result.url,
-            id: result.public_id
-          })
-        }
-      }, { resource_type: "video" })
+    const moveResult: Document | any = new MoveModel({
+      videoUrl: videoURL,
+      userId: headToken.id
     });
-
+    await moveResult.save();
+    return res.status(200).json({
+      message: "Video uploaded successfully!",
+      videoUrl: videoURL,
+      moveData: moveResult
+    })
   } catch (error) {
     console.log(error);
     res.status(500).send({
@@ -81,5 +87,5 @@ const getAllMoveById = async (req: Request, res: Response): Promise<void> => {
 };
 
 export {
-  createMove
+  downloadVideo
 };

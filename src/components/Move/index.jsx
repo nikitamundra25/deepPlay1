@@ -1,5 +1,4 @@
 import React from "react";
-
 import {
   FormGroup,
   Input,
@@ -7,11 +6,13 @@ import {
   Card,
   CardBody,
   CardHeader,
-  InputGroup,
-  FormFeedback
+  FormFeedback,
+  Form
 } from "reactstrap";
 import "./index.scss";
 import { logger } from "helper/Logger";
+import { connect } from "react-redux";
+import { downloadYoutubeVideoRequest } from "../../actions"
 
 // core components
 class MoveComponent extends React.Component {
@@ -39,7 +40,9 @@ class MoveComponent extends React.Component {
         console.log("matches");
       } else {
         this.setState({
-          errors: "You have entered wrong URL."
+          errors: {
+            validUrl: "You have entered wrong URL."
+          }
         });
       }
     }
@@ -59,9 +62,7 @@ class MoveComponent extends React.Component {
           url: result
         });
         if (this.state.isPaste) {
-          this.props.redirectTo("/setting");
-        } else {
-          this.handleKeyboardEvent();
+          this.handleMoveUpload()
         }
       }
     }
@@ -73,37 +74,41 @@ class MoveComponent extends React.Component {
       errors: {}
     });
     try {
+      console.log("$$$$$$$$$$$$$$$$", this.state.url);
+
       if (!this.state.url) {
         this.setState({
-          errors: "Enter youtube video link"
+          errors: {
+            notUrl: "Enter youtube video link"
+          }
         });
+        if (this.state.errors) {
+          return;
+        }
         return;
       }
-      // const payload = {
-      //   url: this.state.url,
-      // }
-      //this.props.loginRequest(payload)
+      const payload = {
+        url: this.state.url,
+      }
+      this.props.downloadVideo(payload)
     } catch (error) {
       logger(error);
     }
   }
 
-  handleKeyboardEvent = e => {
-    if (e.charCode === 13) {
-      this.props.redirectTo("/setting");
+  handlePasteEvent = e => {
+    if (e.target.value) {
+      this.handleChange(e)
+      this.setState({
+        isPaste: true
+      })
     }
   };
 
-  handlePasteEvent = e => {
-    this.setState({
-      isPaste: true
-    });
-  };
-
   render() {
-    const { errors } = this.state;
-    console.log("##############", errors);
-
+    const { errors, url } = this.state;
+    const { moveReducer } = this.props;
+    const { isVideoDownloading } = moveReducer;
     return (
       <>
         <div className="create-set-section step-2 mt-2 ">
@@ -117,35 +122,64 @@ class MoveComponent extends React.Component {
               </CardHeader>
               <CardBody className="">
                 <div className="create-set-tile">
-                  <FormGroup className="flex-fill">
-                    <InputGroup>
-                      <Input
-                        id="url"
-                        className={errors ? "capitalize pl-2 .boder-1-invalid is-invalid" : "capitalize pl-2 boder-1"}
-                        placeholder="Paste YouTube URL or Type URL Manually"
-                        type="text"
-                        onPaste={this.handlePasteEvent}
-                        name="url"
-                        onChange={this.handleChange}
-                        value={this.state.url}
-                      />
-                      <FormFeedback>
-                        {errors ? errors : null}
-                      </FormFeedback>
-                    </InputGroup>
-                  </FormGroup>
+                  <Form inline className="url-update-wrap">
+                    <div className="text-center mr-2">
+                      <Button
+                        color=" "
+                        type="button"
+                        className="btn-black btn mt-3"
+                        disabled={isVideoDownloading ? true : false}
+                        onClick={this.handleMoveUpload}
+                      >
+                        <i className="fa fa-cloud-upload mr-2"></i>
+                        {
+                          isVideoDownloading ?
+                            "Please wait..." :
+                            "Upload"
+                        }
+                      </Button>
+                    </div>
+                    <FormGroup className="flex-fill flex-column ">
+                      <div className="flex-fill w-100">
+                        <Input
+                          id="url"
+                          className={errors ? "capitalize pl-2 boder-1-invalid is-invalid w-100" : "capitalize pl-2 boder-1 w-100"}
+                          placeholder="Paste YouTube URL or Type URL Manually"
+                          type="text"
+                          onPaste={this.handlePasteEvent}
+                          name="url"
+                          onChange={this.handleChange}
+                          value={url}
+                        />
+                        <FormFeedback>
+                          {(errors.notUrl) ? errors.notUrl : (errors.validUrl && url) ? errors.validUrl : null}
+                        </FormFeedback>
+                      </div>
+                    </FormGroup>
+                  </Form>
                 </div>
-                <div className="text-center">
-                  <Button
-                    color=" "
-                    type="button"
-                    onClick={this.handleMoveUpload}
-                    className="btn-black btn mt-3"
-                  >
-                    Upload
-                     {" "}
-                    <i className="fas fa-upload" />
-                  </Button>
+              </CardBody>
+            </div>
+          </Card>
+        </div>
+        <div className="create-set-section step-2 mt-2 ">
+          <Card className="w-100 set-content-wrap">
+            <div className="set-content-block w-100">
+              <CardHeader className="">
+                <div className="content-header set-header flex-column">
+                  <span className="content-title"> your move has been created!</span>
+                </div>
+              </CardHeader>
+              <CardBody className="">
+                <div className="d-flex vieos-add-section video-add-banner justify-content-center align-items-center">
+                  <span className="play-ic-wrap">
+                    <i className="fa fa-play" aria-hidden="true"></i>
+                  </span>
+                </div>
+                <p className="font-weight-bold mt-3 text-center h5">Would you like to create another Move from the same video?</p>
+                <div className="text-center mt-4">
+                  <Button className="btn-line-black">Yes create another</Button>
+                  <Button className="btn-black">No i'am done</Button>
                 </div>
               </CardBody>
             </div>
@@ -156,4 +190,15 @@ class MoveComponent extends React.Component {
   }
 }
 
-export default MoveComponent;
+const mapStateToProps = state => {
+  return {
+    moveReducer: state.moveReducer,
+  };
+};
+const mapDispatchToProps = dispatch => ({
+  downloadVideo: data => dispatch(downloadYoutubeVideoRequest(data))
+});
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(MoveComponent);

@@ -1,7 +1,9 @@
 import express from "express";
-import { createMove } from "../controllers";
+import { downloadVideo } from "../controllers";
+import { ValidateAdminToken } from "../common";
+
 const MoveRouter: express.Router = express.Router();
 
-MoveRouter.post("/createMove", createMove);
+MoveRouter.post("/downloadVideo", ValidateAdminToken, downloadVideo);
 
 export default MoveRouter;

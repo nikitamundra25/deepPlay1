@@ -29,7 +29,6 @@ const moveSchema: Mongoose.Schema = new Schema({
   setId: {
     type: Schema.Types.ObjectId,
     ref: "set",
-    required: true
   },
   userId: {
     type: Schema.Types.ObjectId,

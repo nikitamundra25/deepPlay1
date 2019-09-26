@@ -18,6 +18,8 @@ import {
 import Login from "../Auth/Login/index.jsx";
 import Signup from "../Auth/Signup/index.jsx";
 import FolderModal from "../../components/Folders/createFolderModal";
+import profileImage from "../../assets/img/profile-ic.png";
+
 class DefaultHeader extends React.Component {
   constructor(props) {
     super(props);
@@ -117,8 +119,8 @@ class DefaultHeader extends React.Component {
                           color=" "
                           className="nav-dropdown-btn"
                         >
-                          <i className="fas fa-plus-square"></i> &nbsp; Create
-                    </DropdownToggle>
+                        <i className="fas fa-plus-square"></i> &nbsp; Create
+                        </DropdownToggle>
                         <DropdownMenu>
                           <DropdownItem></DropdownItem>
                         </DropdownMenu>
@@ -179,7 +181,7 @@ class DefaultHeader extends React.Component {
                         <div className="user-wrap">
                           <div className="user-img">
                             <img
-                              src="./assets/img/profile-ic.png"
+                              src={profileImage}
                               className="w-100"
                               alt={"img"}
                             />
