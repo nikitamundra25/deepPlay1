@@ -15,7 +15,6 @@ const createSet = async (req: Request, res: Response): Promise<any> => {
       userId: headToken.id,
       folderId: body.folderId ? body.folderId : null,
       sharableLink: "",
-      folderId: body.folderId || null,
       isPublic: true
     };
     const setResult: Document | any = new SetModel(setData);
