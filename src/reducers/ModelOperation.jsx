@@ -8,7 +8,8 @@ const initialAuthState = {
     forgotPasswordModalOpen: false,
     uploadImageModalOpen: false,
     createFolderModalOpen: false,
-    addSetModalOpen: false
+    addSetModalOpen: false,
+    transferToModalOpen: false
   }
 };
 

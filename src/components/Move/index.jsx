@@ -6,16 +6,11 @@ import {
   FormGroup,
   Input,
   Button,
-  Modal,
   Label,
   Card,
   CardBody,
   CardHeader,
-  CardTitle,
-  UncontrolledTooltip,
   InputGroup,
-  InputGroupText,
-  InputGroupAddon
 } from "reactstrap";
 import Dropzone from "react-dropzone";
 import "./index.scss";
@@ -88,7 +83,7 @@ class MoveComponent extends React.Component {
   };
 
   render() {
-    const { errors, url } = this.state;
+    const { errors } = this.state;
     return (
       <>
         <div className="create-set-section step-2 mt-2 ">

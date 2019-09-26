@@ -6,7 +6,11 @@ import {
   getAllSetSuccess,
   redirectTo,
   showLoader,
-  hideLoader
+  hideLoader,
+  getFolderSetSuccess,
+  ManageSetSuccess,
+  getFolderSetRequest,
+  modelOpenRequest
 } from "../actions";
 import { toast } from "react-toastify";
 
@@ -47,6 +51,7 @@ const getAllSetLogic = createLogic({
   type: SetsAction.GET_ALL_SET_REQUEST,
   async process({ action }, dispatch, done) {
     let api = new ApiHelper();
+    dispatch(showLoader());
     let result = await api.FetchFromServer(
       "set",
       "/getAllSet",
@@ -56,10 +61,12 @@ const getAllSetLogic = createLogic({
       undefined
     );
     if (result.isError) {
+      dispatch(hideLoader());
       toast.error(result.messages[0]);
       done();
       return;
     } else {
+      dispatch(hideLoader());
       dispatch(
         getAllSetSuccess({
           showLoader: false,
@@ -70,4 +77,85 @@ const getAllSetLogic = createLogic({
     }
   }
 });
-export const SetLogics = [createSetLogic, getAllSetLogic];
+//  ---------------Get sets list to add or remove in folders---------------
+const getSetLogic = createLogic({
+  type: SetsAction.GET_FOLDER_SET_REQUEST,
+  async process({ action }, dispatch, done) {
+    let api = new ApiHelper();
+    dispatch(showLoader());
+    let result = await api.FetchFromServer(
+      "set",
+      "/getSets",
+      "POST",
+      true,
+      undefined,
+      action.payload
+    );
+    if (result.isError) {
+      dispatch(hideLoader());
+      toast.error(result.messages[0]);
+      done();
+      return;
+    } else {
+      dispatch(hideLoader());
+      dispatch(
+        getFolderSetSuccess({
+          showLoader: false,
+          setListinFolder: result.data.data
+        })
+      );
+
+      done();
+    }
+  }
+});
+
+//  ---------------Add or remove sets in folders---------------
+const ManageSetLogic = createLogic({
+  type: SetsAction.MANAGE_SET_REQUEST,
+  async process({ action }, dispatch, done) {
+    let api = new ApiHelper();
+    dispatch(hideLoader());
+    console.log("act", action.payload);
+    let result = await api.FetchFromServer(
+      "set",
+      "/manageSets",
+      "POST",
+      true,
+      undefined,
+      action.payload
+    );
+    if (result.isError) {
+      toast.error(result.messages[0]);
+      done();
+      return;
+    } else {
+      dispatch(
+        ManageSetSuccess({
+          showLoader: false
+        })
+      );
+
+      dispatch(
+        getFolderSetRequest({
+          folderId: action.payload.previousFolderId
+        })
+      );
+      dispatch(
+        modelOpenRequest({
+          modelDetails: {
+            transferToModalOpen: false,
+            addSetModalOpen: false
+          }
+        })
+      );
+      done();
+    }
+  }
+});
+export const SetLogics = [
+  createSetLogic,
+  getAllSetLogic,
+  getSetLogic,
+  ManageSetLogic
+];

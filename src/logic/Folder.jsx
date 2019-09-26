@@ -4,9 +4,10 @@ import {
   FolderAction,
   redirectTo,
   modelOpenRequest,
-  getFolderSuccess,
+  folderDetailSuccess,
   showLoader,
-  hideLoader
+  hideLoader,
+  getAllFolderSuccess
 } from "../actions";
 import { toast } from "react-toastify";
 
@@ -39,7 +40,41 @@ const createFolderLogic = createLogic({
           }
         })
       );
-      dispatch(redirectTo({ path: `/recentFolder/${result.data.Result._id}` }));
+      dispatch(
+        redirectTo({ path: `/folder-details/${result.data.Result._id}` })
+      );
+      done();
+    }
+  }
+});
+
+//  Get All folder
+const allFolderLogic = createLogic({
+  type: FolderAction.GET_ALL_FOLDER_REQUEST,
+  async process({ action }, dispatch, done) {
+    let api = new ApiHelper();
+    dispatch(showLoader());
+    let result = await api.FetchFromServer(
+      "folder",
+      "/allFolder",
+      "GET",
+      true,
+      undefined,
+      undefined
+    );
+    if (result.isError) {
+      toast.error(result.messages[0]);
+      dispatch(hideLoader());
+      done();
+      return;
+    } else {
+      // toast.success(result.messages[0]);
+      dispatch(hideLoader());
+      dispatch(
+        getAllFolderSuccess({
+          getAllFolders: result.data.data
+        })
+      );
       done();
     }
   }
@@ -47,9 +82,10 @@ const createFolderLogic = createLogic({
 
 //  Recent folder
 const getRecentFolderLogic = createLogic({
-  type: FolderAction.GET_FOLDER_REQUEST,
+  type: FolderAction.FOLDER_DETAIL_REQUEST,
   async process({ action }, dispatch, done) {
     let api = new ApiHelper();
+    dispatch(showLoader());
     let result = await api.FetchFromServer(
       "folder",
       "/getFolderById",
@@ -59,18 +95,23 @@ const getRecentFolderLogic = createLogic({
       action.payload
     );
     if (result.isError) {
+      dispatch(hideLoader());
       toast.error(result.messages[0]);
       done();
       return;
     } else {
-      console.log("resulttt", result.data);
+      dispatch(hideLoader());
       dispatch(
-        getFolderSuccess({
-          getFolder: result.data.data
+        folderDetailSuccess({
+          folderDetails: result.data.data
         })
       );
       done();
     }
   }
 });
-export const FolderLogics = [createFolderLogic, getRecentFolderLogic];
+export const FolderLogics = [
+  createFolderLogic,
+  getRecentFolderLogic,
+  allFolderLogic
+];

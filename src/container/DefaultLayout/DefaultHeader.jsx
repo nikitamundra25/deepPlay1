@@ -13,8 +13,6 @@ import {
   Col,
   FormGroup,
   InputGroup,
-  InputGroupAddon,
-  InputGroupText,
   Input
 } from "reactstrap";
 import Login from "../Auth/Login/index.jsx";
@@ -83,8 +81,7 @@ class DefaultHeader extends React.Component {
       loginReducer,
       forgotPasswordRequest,
       profileInfoReducer,
-      modelOpenRequest,
-      modelOperate
+      modelOpenRequest
     } = this.props;
     const { modelDetails } = modelInfoReducer;
     const {

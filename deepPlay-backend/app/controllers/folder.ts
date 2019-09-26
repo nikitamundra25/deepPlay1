@@ -30,6 +30,28 @@ const createFolder = async (req: Request, res: Response): Promise<any> => {
   }
 };
 
+// --------------Get all folder ---------------------
+const getAllFolder = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const { currentUser } = req;
+    let headToken: Request | any = currentUser;
+    if (!headToken.id) {
+      res.status(400).json({
+        message: "User id not found"
+      });
+    }
+    const result = await FolderModel.find({ userId: headToken.id });
+    res.status(200).json({
+      data: result,
+      message: "Folders has been fetched successfully."
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).send({
+      message: error.message
+    });
+  }
+};
 // --------------Get Created folder info---------------------
 const getCretedFolderById = async (
   req: Request,
@@ -37,8 +59,6 @@ const getCretedFolderById = async (
 ): Promise<void> => {
   try {
     const { body } = req;
-    console.log(">>>>>>", body);
-
     if (!body.id) {
       res.status(400).json({
         message: "User id not found"
@@ -47,7 +67,7 @@ const getCretedFolderById = async (
     const result = await FolderModel.find({ _id: body.id });
     res.status(200).json({
       data: result[0],
-      message: "Folder have been fetched successfully"
+      message: "Folder has been fetched successfully"
     });
   } catch (error) {
     console.log(error);
@@ -57,4 +77,4 @@ const getCretedFolderById = async (
   }
 };
 
-export { createFolder, getCretedFolderById };
+export { createFolder, getCretedFolderById, getAllFolder };

@@ -2,8 +2,10 @@ import { createAction } from "redux-actions";
 export const FolderAction = {
   CREATE_FOLDER_REQUEST: "Create Folder Request",
   CREATE_FOLDER_SUCCESS: "Create Folder Success",
-  GET_FOLDER_REQUEST: "Get All Folder Request",
-  GET_FOLDER_SUCCESS: "Get All Folder Success"
+  FOLDER_DETAIL_REQUEST: "Folder Detail Request",
+  FOLDER_DETAIL_SUCCESS: "Folder Detail Success",
+  GET_ALL_FOLDER_REQUEST: "Get All Folder Request",
+  GET_ALL_FOLDER_SUCCESS: "Get All Folder Success"
 };
 export const createFolderRequest = createAction(
   FolderAction.CREATE_FOLDER_REQUEST
@@ -11,9 +13,15 @@ export const createFolderRequest = createAction(
 export const createFolderSuccess = createAction(
   FolderAction.CREATE_FOLDER_SUCCESS
 );
-export const getFolderRequest = createAction(
-  FolderAction.GET_FOLDER_REQUEST
+export const folderDetailRequest = createAction(
+  FolderAction.FOLDER_DETAIL_REQUEST
 );
-export const getFolderSuccess = createAction(
-  FolderAction.GET_FOLDER_SUCCESS
+export const folderDetailSuccess = createAction(
+  FolderAction.FOLDER_DETAIL_SUCCESS
+);
+export const getAllFolderRequest = createAction(
+  FolderAction.GET_ALL_FOLDER_REQUEST
+);
+export const getAllFolderSuccess = createAction(
+  FolderAction.GET_ALL_FOLDER_SUCCESS
 );
