@@ -81,34 +81,35 @@ class UploadImage extends Component {
               />
             ) : (
               <>
-               
-               <div className="upload-file-wrap">
-                <Dropzone
-                  onDrop={this.onSelectFile}
-                  accept="image/*"
-                  multiple={false}
-                >
-                  {({ getRootProps, getInputProps }) => {
-                    return (
-                      <div {...getRootProps()}>
-                        <input {...getInputProps()} />
-                        <div className="add-more-img-wrap">
-                          <div className="add-more-text">
-                          <img
-                  alt="..."
-                  src={require("assets/img/icons/common/picture.svg")}
-                  width="50px"
-                  height="50px"
-                />
+                <div className="upload-file-wrap">
+                  <Dropzone
+                    onDrop={this.onSelectFile}
+                    accept="image/*"
+                    multiple={false}
+                  >
+                    {({ getRootProps, getInputProps }) => {
+                      return (
+                        <div {...getRootProps()}>
+                          <input {...getInputProps()} />
+                          <div className="add-more-img-wrap">
+                            <div className="add-more-text">
+                              <img
+                                alt="..."
+                                src={require("assets/img/icons/common/picture.svg")}
+                                width="50px"
+                                height="50px"
+                              />
 
-                            <div className="upload-heading">Drag a profile photo here </div>
+                              <div className="upload-heading">
+                                Drag a profile photo here{" "}
+                              </div>
+                            </div>
                           </div>
                         </div>
-                      </div>
-                    );
-                  }}
-                </Dropzone>
-                  </div>
+                      );
+                    }}
+                  </Dropzone>
+                </div>
               </>
             )}
           </ModalBody>
@@ -120,8 +121,10 @@ class UploadImage extends Component {
             >
               Set profile picture
             </Button>{" "}
-            <Button color=" " onClick={this.handleCancel}
-            className="btn btn-line-black"
+            <Button
+              color=" "
+              onClick={this.handleCancel}
+              className="btn btn-line-black"
             >
               Cancel
             </Button>

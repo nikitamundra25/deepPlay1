@@ -6,7 +6,10 @@ const initialAuthState = {
     loginModelOpen: false,
     signupModelOpen: false,
     forgotPasswordModalOpen: false,
-    uploadImageModalOpen: false
+    uploadImageModalOpen: false,
+    createFolderModalOpen: false,
+    addSetModalOpen: false,
+    transferToModalOpen: false
   }
 };
 
@@ -17,7 +20,7 @@ export const modelInfoReducer = handleActions(
       modelDetails: {
         ...state.modelDetails,
         ...action.payload.modelDetails
-      },
+      }
     }),
     [modelActions.MODEL_CLOSE_REQUEST]: (state, action) => ({
       ...state,

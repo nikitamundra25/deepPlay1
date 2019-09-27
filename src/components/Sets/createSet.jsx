@@ -12,9 +12,14 @@ import {
   CardBody,
   CardHeader,
   UncontrolledTooltip,
-  InputGroup, InputGroupText, InputGroupAddon
+  InputGroup,
+  InputGroupText,
+  InputGroupAddon
 } from "reactstrap";
+import { connect } from "react-redux";
+import { createSetRequest } from "../../actions"
 import "./index.scss";
+
 class CreateSetComponent extends React.Component {
   constructor(props) {
     super(props);
@@ -42,7 +47,7 @@ class CreateSetComponent extends React.Component {
         title: this.state.title,
         description: this.state.description
       };
-      this.props.onCreateSet(data);
+      this.props.onSetsCreation(data);
     }
   };
 
@@ -84,23 +89,23 @@ class CreateSetComponent extends React.Component {
                       value={title}
                     />
                     <InputGroupAddon addonType="prepend">
-                      <InputGroupText id="description"
+                      <InputGroupText
+                        id="description"
                         onClick={() =>
                           this.setState({
                             open: !open
                           })
                         }
                       >
-                        <span
-
-                          className="cursor_pointer "
-
-                        >
+                        <span className="cursor_pointer ">
                           <i className="fas fas fa-info "></i>
                         </span>
-                        <UncontrolledTooltip placement="top" target="description">
+                        <UncontrolledTooltip
+                          placement="top"
+                          target="description"
+                        >
                           Add description
-            </UncontrolledTooltip>
+                        </UncontrolledTooltip>
                       </InputGroupText>
                     </InputGroupAddon>
                   </InputGroup>
@@ -130,13 +135,11 @@ class CreateSetComponent extends React.Component {
                 >
                   <i className="fas fa-plus mr-1"></i>
                   Add a Move
-          </Button>
+                </Button>
               </div>
             </CardBody>
           </div>
         </Card>
-
-
 
         <Modal
           className="modal-dialog-centered custom-model-wrap"
@@ -147,20 +150,23 @@ class CreateSetComponent extends React.Component {
           <ModalHeader>
             <h5 className="modal-title" id="exampleModalLabel">
               <span class="custom-title">Upload profile image</span>
+              <span class="custom-title">Description</span>
             </h5>
             <button
               aria-label="Close"
               className="close"
               data-dismiss="modal"
               type="button"
-              onClick={() => this.handleModal}
+              onClick={this.handleModal}
             >
               <span aria-hidden="true"><i class="fa fa-times" aria-hidden="true"></i></span>
             </button>
           </ModalHeader>
           <ModalBody>
             <FormGroup>
-            <Label for="description" className="font-weight-bold text-center">DESCRIPTION</Label>
+              <Label for="description" className="font-weight-bold text-center">
+                DESCRIPTION
+              </Label>
               <Input
                 id="exampleFormControlInput1"
                 className="capitalize"
@@ -169,12 +175,10 @@ class CreateSetComponent extends React.Component {
                 onChange={this.handleChange}
                 value={description}
               />
-              
             </FormGroup>
           </ModalBody>
 
-          <ModalFooter >
-
+          <ModalFooter>
             <Button
               color=" "
               type="button"
@@ -189,4 +193,17 @@ class CreateSetComponent extends React.Component {
     );
   }
 }
-export default CreateSetComponent;
+
+const mapStateToProps = state => {
+  return {
+    modelInfoReducer: state.modelInfoReducer,
+    getAllSetReducer: state.getAllSetReducer
+  };
+};
+const mapDispatchToProps = dispatch => ({
+  onSetsCreation: data => dispatch(createSetRequest(data))
+});
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(CreateSetComponent);

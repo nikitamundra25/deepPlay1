@@ -14,10 +14,10 @@ export const AppRoutes = {
     name: "Signup",
     exact: true
   },
-  RESET_PASSWORD:{
+  RESET_PASSWORD: {
     url: "/resetPassword",
     name: "Reset Password",
-    exact: true,
+    exact: true
   },
   DASHBOARD: {
     url: "/dashboard",
@@ -47,6 +47,16 @@ export const AppRoutes = {
   MOVE: {
     url: "/move",
     name: "Move",
+    exact: true
+  },
+  MOVE_DETAILS: {
+    url: "/moveDetails/:id",
+    name: "Move Details",
+    exact: true
+  },
+  FOLDER_DETAILS: {
+    url: "/folder-details/:id",
+    name: "Folder Details",
     exact: true
   }
 };

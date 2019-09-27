@@ -48,7 +48,13 @@ a {
   margin: auto;
   margin-right: 44px;
 }
-
+.btn-group,
+.btn-group-vertical {
+  position: relative;
+  display: inline-flex;
+  vertical-align: middle;
+  height: fit-content;
+}
 .control {
   margin-left: 45px;
 }
@@ -285,12 +291,17 @@ a {
     border-radius: 5px;
     box-shadow: 0px 0px 3px 0px #cacaca;
     margin-top: 15px;
-    padding: 5px 0px;
+    padding: 15px 0px;
+  }
+  .setting-icon {
+    margin-top: -9px;
+    margin-left: 15px;
   }
   .content-heading-tile {
     font-weight: bold;
     color: $headingText;
     font-size: 16px;
+    justify-content: space-between;
   }
   .content-number-tile {
     color: #868686;
@@ -744,6 +755,11 @@ a {
     }
     .form-group {
       max-width: unset;
+      position: relative;
+    }
+    .invalid-feedback{
+      top: 100%;
+      position: absolute;
     }
   }
 }
