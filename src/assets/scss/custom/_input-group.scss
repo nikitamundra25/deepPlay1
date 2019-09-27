@@ -25,7 +25,7 @@
 }
 
 .input-group-alternative {
-    box-shadow: $input-alternative-box-shadow;
+    box-shadow: none;
     border: 0;
     transition: box-shadow .15s ease;
 
@@ -38,7 +38,7 @@
 
 .focused {
 	.input-group-alternative {
-        box-shadow: $input-focus-alternative-box-shadow !important;
+        box-shadow: none!important;
     }
 }
 

@@ -18,13 +18,10 @@ const setSchema: Mongoose.Schema = new Schema({
   sharableLink: {
     type: String
   },
-  folderId: [
-    {
+  folderId: {
       type: Schema.Types.ObjectId,
       ref: "folder",
-      required: true
-    }
-  ],
+  },
   userId: {
     type: Schema.Types.ObjectId,
     ref: "user",

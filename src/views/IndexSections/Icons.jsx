@@ -48,7 +48,7 @@ class Icons extends React.Component {
                     href="https://nucleoapp.com/?ref=1712"
                     target="_blank"
                   >
-                    View all icons
+                    View All icons
                   </Button>
                 </div>
               </Col>

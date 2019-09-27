@@ -1,117 +1,204 @@
 import React from "react";
-import { Button, Row, Col, FormGroup, Input } from "reactstrap";
-import Dropzone from "react-dropzone";
+import {
+  FormGroup,
+  Input,
+  Button,
+  Card,
+  CardBody,
+  CardHeader,
+  FormFeedback,
+  Form
+} from "reactstrap";
 import "./index.scss";
+import { logger } from "helper/Logger";
+import { connect } from "react-redux";
+import { downloadYoutubeVideoRequest } from "../../actions"
+
 // core components
 class MoveComponent extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       url: "",
-      error: ""
+      errors: "",
+      isPaste: false
     };
   }
 
   handleChange = e => {
     const { name, value } = e.target;
     this.setState({
-      error: "",
+      errors: "",
       [name]: value
     });
-
-    // var regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
-    // var match = value.match(regExp);
-    // console.log(">>", match);
-    // if (match && match[2].length == 11) {
-    //   const finalUrl = "http://www.youtube.com/embed?v=" + match[2];
-    //   this.setState({
-    //     url: finalUrl
-    //   });
-    // } else {
-    //   console.log("not match");
-    // }
     if (value !== undefined || value !== "") {
       // eslint-disable-next-line
       var myregexp = /(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/ ]{11})/i;
       var match = value.match(myregexp);
       if (match) {
-        // myregexp.split("v=")[1].substring(0, 11);
-        // console.log("kkkkkk", myregexp);
-        // const finalUrl = "http://www.youtube.com/embed?v=" + myregexp;
-        // console.log("final", finalUrl);
-
+        this.validateYouTubeUrl(value);
         console.log("matches");
       } else {
         this.setState({
-          error: "You have entered wrong URL."
+          errors: {
+            validUrl: "You have entered wrong URL."
+          }
         });
       }
     }
   };
-  handlePasteEvent = () => {
-    console.log("$$$$$$$$$$$$$$$$$$$$$$");
+
+  validateYouTubeUrl = url => {
+    let result = "";
+    if (url !== undefined || url !== "") {
+      var regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|v=|\?v=)([^#]*).*/;
+      var match = url.match(regExp);
+      if (match && match[2].length === 11) {
+        result =
+          "https://www.youtube.com/embed/" +
+          match[2] +
+          "?autoplay=0&enablejsapi=1";
+        this.setState({
+          url: result
+        });
+        if (this.state.isPaste) {
+          this.handleMoveUpload()
+        }
+      }
+    }
+    return result;
+  };
+
+  handleMoveUpload = () => {
+    this.setState({
+      errors: {}
+    });
+    try {
+      console.log("$$$$$$$$$$$$$$$$", this.state.url);
+
+      if (!this.state.url) {
+        this.setState({
+          errors: {
+            notUrl: "Enter youtube video link"
+          }
+        });
+        if (this.state.errors) {
+          return;
+        }
+        return;
+      }
+      const payload = {
+        url: this.state.url,
+      }
+      this.props.downloadVideo(payload)
+    } catch (error) {
+      logger(error);
+    }
   }
+
+  handlePasteEvent = e => {
+    if (e.target.value) {
+      this.handleChange(e)
+      this.setState({
+        isPaste: true
+      })
+    }
+  };
+
   render() {
-    const { error } = this.state;
+    const { errors, url } = this.state;
+    const { moveReducer } = this.props;
+    const { isVideoDownloading } = moveReducer;
     return (
-      <div>
-        <div className="move-wrap">
-          <h3>Create a Move</h3>
-          <p>Trim any video to create a move</p>
-        </div>
-        <div className="move-wrap-inside">
-          <Row>
-            <Col md="6">
-              <Dropzone
-                onDrop={this.onSelectFile}
-                accept="video/mp4 , video/wmv ,video/avi,./webM"
-                multiple={false}
-              >
-                {({ getRootProps, getInputProps }) => {
-                  return (
-                    <div {...getRootProps()}>
-                      <input {...getInputProps()} />
-                      <div>
-                        <Button
-                          color="default"
-                          type="button"
-                          className="btn-btn-right"
-                        >
-                          Upload
-                        </Button>
-                      </div>
+      <>
+        <div className="create-set-section step-2 mt-2">
+          <Card className="w-100 set-content-wrap">
+            <div className="set-content-block w-100">
+              <CardHeader className="">
+                <div className="content-header set-header flex-column">
+                  <span className="content-title">CREATE A MOVE</span>
+                  <p className="font-weight-bold">Trim any video to create a move</p>
+                </div>
+              </CardHeader>
+              <CardBody className="">
+                <div className="create-set-tile">
+                  <Form inline className="url-update-wrap">
+                    <div className="text-center mr-2">
+                      <Button
+                        color=" "
+                        type="button"
+                        className="btn-black btn mt-3"
+                        disabled={isVideoDownloading ? true : false}
+                        onClick={this.handleMoveUpload}
+                      >
+                        <i className="fa fa-cloud-upload mr-2"></i>
+                        {
+                          isVideoDownloading ?
+                            "Please wait..." :
+                            "Upload"
+                        }
+                      </Button>
                     </div>
-                  );
-                }}
-              </Dropzone>
-            </Col>
-            <Col md="6">
-              <FormGroup>
-                <Input
-                  id="url"
-                  className="capitalize"
-                  placeholder="Paste YouTube URL"
-                  type="text"
-                  onpaste={this.handlePasteEvent}
-                  name="url"
-                  onChange={this.handleChange}
-                  value={this.state.url}
-                />
-                {error ? <p style={{ color: "red" }}> {error} </p> : null}
-              </FormGroup>
-            </Col>
-          </Row>
-          <iframe
-            src={this.state.url}
-            frameBorder="0"
-            allow="autoplay; encrypted-media"
-            allowFullScreen
-            title="video"
-          />
+                    <FormGroup className="flex-fill flex-column ">
+                      <div className="flex-fill w-100">
+                        <Input
+                          id="url"
+                          className={errors ? "capitalize pl-2 boder-1-invalid is-invalid w-100" : "capitalize pl-2 boder-1 w-100"}
+                          placeholder="Paste YouTube URL or Type URL Manually"
+                          type="text"
+                          onPaste={this.handlePasteEvent}
+                          name="url"
+                          onChange={this.handleChange}
+                          value={url}
+                        />
+                        <FormFeedback>
+                          {(errors.notUrl) ? errors.notUrl : (errors.validUrl && url) ? errors.validUrl : null}
+                        </FormFeedback>
+                      </div>
+                    </FormGroup>
+                  </Form>
+                </div>
+              </CardBody>
+            </div>
+          </Card>
         </div>
-      </div>
+        <div className="create-set-section step-2 mt-2 container">
+          <Card className="w-100 set-content-wrap">
+            <div className="set-content-block w-100">
+              <CardHeader className="">
+                <div className="content-header set-header flex-column">
+                  <span className="content-title"> your move has been created!</span>
+                </div>
+              </CardHeader>
+              <CardBody className="">
+                <div className="d-flex vieos-add-section video-add-banner justify-content-center align-items-center">
+                  <span className="play-ic-wrap">
+                    <i className="fa fa-play" aria-hidden="true"></i>
+                  </span>
+                </div>
+                <p className="font-weight-bold mt-3 text-center h5">Would you like to create another Move from the same video?</p>
+                <div className="text-center mt-4">
+                  <Button className="btn-line-black">Yes create another</Button>
+                  <Button className="btn-black">No i'am done</Button>
+                </div>
+              </CardBody>
+            </div>
+          </Card>
+        </div>
+      </>
     );
   }
 }
 
-export default MoveComponent;
+const mapStateToProps = state => {
+  return {
+    moveReducer: state.moveReducer,
+  };
+};
+const mapDispatchToProps = dispatch => ({
+  downloadVideo: data => dispatch(downloadYoutubeVideoRequest(data))
+});
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(MoveComponent);

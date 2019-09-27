@@ -1,15 +1,25 @@
 import React from "react";
 import {
-  Row,
-  Col,
   FormGroup,
   Input,
   Button,
   Modal,
+  ModalFooter,
+  ModalHeader,
+  ModalBody,
   Label,
-  UncontrolledTooltip
+  Card,
+  CardBody,
+  CardHeader,
+  UncontrolledTooltip,
+  InputGroup,
+  InputGroupText,
+  InputGroupAddon
 } from "reactstrap";
+import { connect } from "react-redux";
+import { createSetRequest } from "../../actions"
 import "./index.scss";
+
 class CreateSetComponent extends React.Component {
   constructor(props) {
     super(props);
@@ -37,7 +47,7 @@ class CreateSetComponent extends React.Component {
         title: this.state.title,
         description: this.state.description
       };
-      this.props.onCreateSet(data);
+      this.props.onSetsCreation(data);
     }
   };
 
@@ -57,85 +67,106 @@ class CreateSetComponent extends React.Component {
   render() {
     const { title, open, description } = this.state;
     return (
-      <div>
-        <Row>
-          <h3>Create a New Set of Moves</h3>
-        </Row>
-        <Row>
-          <Col md="6">
-            <FormGroup>
-              <Input
-                id="exampleFormControlInput1"
-                className="capitalize"
-                placeholder="Enter your title here"
-                type="text"
-                name="title"
-                onChange={this.handleChange}
-                value={title}
-              />
-            </FormGroup>
-          </Col>
-          <Col>
-            <span
-              onClick={this.onAddMove}
-              className={this.state.title ? "cursor_pointer" : "disable-span"}
-              id="move"
-            >
-              <i className="fas fa-plus-square fa-2x "></i>
-            </span>
-            <UncontrolledTooltip placement="top" target="move">
-              Add a move
+      <div className="create-set-section mt-2">
+        <Card className="w-100 set-content-wrap">
+          <div className="set-content-block w-100">
+            <CardHeader className="">
+              <div className="content-header set-header">
+                <span className="content-title">CREATE A NEW SET OF MOVES</span>
+              </div>
+            </CardHeader>
+            <CardBody className="">
+              <div className="create-set-tile">
+                <FormGroup className="flex-fill">
+                  <InputGroup>
+                    <Input
+                      id="exampleFormControlInput1"
+                      className="capitalize"
+                      placeholder="Enter your title here"
+                      type="text"
+                      name="title"
+                      onChange={this.handleChange}
+                      value={title}
+                    />
+                    <InputGroupAddon addonType="prepend">
+                      <InputGroupText
+                        id="description"
+                        onClick={() =>
+                          this.setState({
+                            open: !open
+                          })
+                        }
+                      >
+                        <span className="cursor_pointer ">
+                          <i className="fas fas fa-info "></i>
+                        </span>
+                        <UncontrolledTooltip
+                          placement="top"
+                          target="description"
+                        >
+                          Add description
+                        </UncontrolledTooltip>
+                      </InputGroupText>
+                    </InputGroupAddon>
+                  </InputGroup>
+                </FormGroup>
+                {/* <div className="">
+                <span
+                  onClick={this.onAddMove}
+                  className={this.state.title ? "cursor_pointer" : "disable-span"}
+                  id="move"
+                >
+                  <i className="fas fa-plus-square fa-2x "></i>
+                </span>
+                <UncontrolledTooltip placement="top" target="move">
+                  Add a move
             </UncontrolledTooltip>
-            <span
-              onClick={() =>
-                this.setState({
-                  open: !open
-                })
-              }
-              className="cursor_pointer "
-              id="description"
-            >
-              <i className="fas fa-info-circle fa-2x"></i>
-            </span>
-            <UncontrolledTooltip placement="top" target="description">
-              Add description
-            </UncontrolledTooltip>
-          </Col>
-        </Row>
-        <Row>
-          <Button
-            color="default"
-            type="button"
-            className="btn-btn-save"
-            disabled={!title}
-            onClick={this.onAddMove}
-          >
-            Add a Move
-          </Button>
-        </Row>
+              
+
+              </div> */}
+              </div>
+              <div className="text-center">
+                <Button
+                  color=" "
+                  type="button"
+                  className="btn-black btn mt-3"
+                  disabled={!title}
+                  onClick={this.onAddMove}
+                >
+                  <i className="fas fa-plus mr-1"></i>
+                  Add a Move
+                </Button>
+              </div>
+            </CardBody>
+          </div>
+        </Card>
+
         <Modal
-          className="modal-dialog-centered"
+          className="modal-dialog-centered custom-model-wrap"
           isOpen={open}
           toggle={() => this.handleModal}
+
         >
-          <div className="modal-header">
+          <ModalHeader>
             <h5 className="modal-title" id="exampleModalLabel">
-              Description
+              <span class="custom-title">Upload profile image</span>
+              <span class="custom-title">Description</span>
             </h5>
             <button
               aria-label="Close"
               className="close"
               data-dismiss="modal"
               type="button"
-              onClick={() => this.handleModal}
+              onClick={this.handleModal}
             >
-              <span aria-hidden={true} onClick={this.handleModal}>
-                <i className="far fa-times-circle"></i>
-              </span>
+              <span aria-hidden="true">  <img src="./assets/img/close-img.png" alt="close-ic" /></span>
             </button>
-          </div>
-          <div className="modal-body">
+          </ModalHeader>
+          <ModalBody>
             <FormGroup>
+              <Label for="description" className="font-weight-bold text-center">
+                DESCRIPTION
+              </Label>
               <Input
                 id="exampleFormControlInput1"
                 className="capitalize"
@@ -144,21 +175,35 @@ class CreateSetComponent extends React.Component {
                 onChange={this.handleChange}
                 value={description}
               />
-              <Label for="description">DESCRIPTION</Label>
             </FormGroup>
-            <br />
+          </ModalBody>
+
+          <ModalFooter>
             <Button
-              color="info"
+              color=" "
               type="button"
               onClick={this.onSaveDesc}
-              className="fullSize-btn"
+              className="btn btn-black"
             >
               Save changes
             </Button>
-          </div>
+          </ModalFooter>
         </Modal>
       </div>
     );
   }
 }
-export default CreateSetComponent;
+
+const mapStateToProps = state => {
+  return {
+    modelInfoReducer: state.modelInfoReducer,
+    getAllSetReducer: state.getAllSetReducer
+  };
+};
+const mapDispatchToProps = dispatch => ({
+  onSetsCreation: data => dispatch(createSetRequest(data))
+});
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(CreateSetComponent);

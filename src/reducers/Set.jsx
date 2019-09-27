@@ -1,13 +1,34 @@
 import { handleActions } from "redux-actions";
 import { SetsAction } from "../actions";
 const initialState = {
-  allSetList: ""
+  allSetList: "",
+  recentSetAdded: "",
+  setListinFolder: "",
+  setDetails: "",
+  isSetDetailsLoading: false
 };
-export const getAllSetReducer = handleActions(
+export const setReducer = handleActions(
   {
     [SetsAction.GET_ALL_SET_SUCCESS]: (state, { payload }) => ({
       ...state,
       allSetList: payload.allSetList
+    }),
+    [SetsAction.CREATE_SET_SUCCESS]: (state, { payload }) => ({
+      ...state,
+      recentSetAdded: payload.setData
+    }),
+    [SetsAction.GET_FOLDER_SET_SUCCESS]: (state, { payload }) => ({
+      ...state,
+      setListinFolder: payload.setListinFolder
+    }),
+    [SetsAction.GET_SET_DETAILS_REQUEST]: (state, { payload }) => ({
+      ...state,
+      isSetDetailsLoading: true
+    }),
+    [SetsAction.GET_SET_DETAILS_SUCCESS]: (state, { payload }) => ({
+      ...state,
+      setDetails: payload.setDetails,
+      isSetDetailsLoading: false
     })
   },
   initialState

@@ -9,3 +9,6 @@ declare namespace Express {
     };
   }
 }
+
+declare module "cloudinary";
+declare module "ytdl-core"

@@ -72,6 +72,7 @@ class SettingComponent extends Component {
       this.setState({
         roleType: name
       });
+      this.onHandleAccount(name);
     } else {
       this.setState({
         roleType: "unClassified"
@@ -104,6 +105,16 @@ class SettingComponent extends Component {
     });
   };
 
+  onHandleAccount = name => {
+    const { firstName, lastName } = this.state;
+    const data = {
+      roleType: name,
+      firstName: firstName,
+      lastName: lastName
+    };
+    this.props.handleData(data);
+  };
+
   handleDelete = () => {
     Swal.fire({
       title: "Are you sure?",
@@ -127,7 +138,7 @@ class SettingComponent extends Component {
       modelDetails: {
         uploadImageModalOpen: !modelDetails.uploadImageModalOpen
       }
-    })
+    });
   };
 
   handleImage = data => {
@@ -148,7 +159,6 @@ class SettingComponent extends Component {
     const { modelDetails } = modelInfoReducer;
     const { uploadImageModalOpen } = modelDetails;
 
-    console.log("file", this.state.file);
     return (
       <div>
         <div className="setting-section">
@@ -159,11 +169,22 @@ class SettingComponent extends Component {
             <Card className="card-wrap">
               <CardHeader clas>
                 <CardTitle className="card-heading mb-0 h5">Profile</CardTitle>
-                <div className="heading-divider">
-                </div>
-                <Button className="dashboard-right-content btn-line-black"
-                  onClick={this.onHandleEdit}
-                >Edit Profile</Button>
+                <div className="heading-divider"></div>
+                {isDisabled ? (
+                  <Button
+                    className="dashboard-right-content btn-line-black"
+                    onClick={this.onHandleEdit}
+                  >
+                    Edit Profile
+                  </Button>
+                ) : (
+                  <Button
+                    className="dashboard-right-content btn-line-black "
+                    onClick={this.onSaveData}
+                  >
+                    Update Info
+                  </Button>
+                )}
               </CardHeader>
               <CardBody>
                 <div className="profile-wrap">
@@ -176,25 +197,36 @@ class SettingComponent extends Component {
                           className="w-100"
                         />
                       ) : (
-                          <img alt="..." src={require("assets/img/icons/common/boy.svg")} className="w-100" />
-                        )}
+                        <img
+                          alt="..."
+                          src={require("assets/img/icons/common/boy.svg")}
+                          className="w-100"
+                        />
+                      )}
                       {!isDisabled ? (
-                        <span className="changeProfile" onClick={this.handleOpen}>
+                        <span
+                          className="changeProfile"
+                          onClick={this.handleOpen}
+                        >
                           Change Profile
                         </span>
                       ) : (
-                          ""
-                        )}
+                        ""
+                      )}
                     </div>
-                    {imgError ? <div className="text-danger"> {imgError} </div> : null}
+                    {imgError ? (
+                      <div className="text-danger"> {imgError} </div>
+                    ) : null}
                   </div>
                   <div className="profile-text-tile color-black">
-                    <div className="h5 font-weight-bold text-center mt-2">JOHN DIE</div>
+                    <div className="h5 font-weight-bold text-center mt-2">
+                      {firstName + " " + lastName}
+                    </div>
                   </div>
                 </div>
 
                 <Form className="form-wrap settingForm">
-                  <Row >
+                  <Row>
                     <Col md="6">
                       <FormGroup>
                         <Label for="firstName">First Name</Label>
@@ -204,6 +236,7 @@ class SettingComponent extends Component {
                           disabled={isDisabled}
                           onChange={this.handleChange}
                           value={firstName}
+                          name="firstName"
                         />
                         {errors.firstName && !firstName ? (
                           <p style={{ color: "red" }}> {errors.firstName} </p>
@@ -220,6 +253,7 @@ class SettingComponent extends Component {
                           disabled={isDisabled}
                           onChange={this.handleChange}
                           value={lastName}
+                          name="lastName"
                         />
                         {errors.lastName && !lastName ? (
                           <p style={{ color: "red" }}> {errors.lastName} </p>
@@ -228,14 +262,16 @@ class SettingComponent extends Component {
                     </Col>
                   </Row>
                   <Row>
-                    <Col md="12" >
+                    <Col md="12">
                       <FormGroup>
                         <Label for="email">Email</Label>
                         <Input
                           id="exampleFormControlInput1"
                           placeholder="name@example.com"
                           type="email"
-                          value={profileInfoReducer ? profileInfoReducer.email : ""}
+                          value={
+                            profileInfoReducer ? profileInfoReducer.email : ""
+                          }
                         />
                       </FormGroup>
                     </Col>
@@ -251,33 +287,35 @@ class SettingComponent extends Component {
                     </Col> */}
                   </Row>
                 </Form>
-
               </CardBody>
             </Card>
             <Card className="card-wrap mt-4">
-              <CardHeader >
-                <CardTitle className="card-heading mb-0 h5">Account Type</CardTitle>
-                <div className="heading-divider mr-0">
-                </div>
+              <CardHeader>
+                <CardTitle className="card-heading mb-0 h5">
+                  Account Type
+                </CardTitle>
+                <div className="heading-divider mr-0"></div>
               </CardHeader>
               <CardBody>
-
                 <div className="account-type-wrap">
                   <Form className="form-wrap ">
-                    <Row >
+                    <Row>
                       <Col md="6">
                         <FormGroup className="custom-control custom-radio mb-3 ">
                           <Input
                             className="custom-control-input"
                             id="customRadio6"
-                            name="student"
+                            name="teacher"
                             disabled={isDisabled}
                             onChange={this.handleChange}
-                            checked={roleType === "student"}
+                            checked={roleType === "teacher"}
                             type="radio"
                             value=""
                           />
-                          <Label className="custom-control-label" htmlFor="customRadio6">
+                          <Label
+                            className="custom-control-label"
+                            htmlFor="customRadio6"
+                          >
                             Teacher
                           </Label>
                         </FormGroup>
@@ -287,13 +325,16 @@ class SettingComponent extends Component {
                           <Input
                             className="custom-control-input"
                             id="customRadio5"
-                            name="teacher"
+                            name="student"
                             disabled={isDisabled}
                             onChange={this.handleChange}
-                            checked={roleType === "teacher"}
+                            checked={roleType === "student"}
                             type="radio"
                           />
-                          <Label className="custom-control-label" htmlFor="customRadio5">
+                          <Label
+                            className="custom-control-label"
+                            htmlFor="customRadio5"
+                          >
                             Student
                           </Label>
                         </FormGroup>
@@ -309,24 +350,24 @@ class SettingComponent extends Component {
               </CardBody>
             </Card>
             <Card className="card-wrap mt-4">
-              <CardHeader >
-                <CardTitle className="card-heading mb-0 h5 text-danger">DELETE ACCOUNT</CardTitle>
-                <div className="heading-divider mr-0">
-                </div>
+              <CardHeader>
+                <CardTitle className="card-heading mb-0 h5 text-danger">
+                  DELETE ACCOUNT
+                </CardTitle>
+                <div className="heading-divider mr-0"></div>
               </CardHeader>
               <CardBody>
-
                 <div className="text-center">
                   <Form className="form-wrap settingForm ">
-                    <Row >
-
+                    <Row>
                       <Col md="12" className="text">
-                        <h5>
-                          Permanently delete this account
-                        </h5>
-                        <p>Be careful- this will delete your data and cannot be undone.</p>
+                        <h5>Permanently delete this account</h5>
+                        <p>
+                          Be careful- this will delete your data and cannot be
+                          undone.
+                        </p>
                       </Col>
-                      <Col md="12" >
+                      <Col md="12">
                         <FormGroup>
                           <Button
                             color="danger"
@@ -335,7 +376,7 @@ class SettingComponent extends Component {
                             onClick={this.handleDelete}
                           >
                             Delete Account
-                        </Button>
+                          </Button>
                         </FormGroup>
                       </Col>
                     </Row>
