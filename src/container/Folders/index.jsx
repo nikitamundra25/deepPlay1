@@ -1,10 +1,19 @@
 import React from "react";
 import FolderComponent from "../../components/Folders";
 import { connect } from "react-redux";
-import { modelOpenRequest, createFolderRequest } from "../../actions";
+import {
+  modelOpenRequest,
+  createFolderRequest,
+  getAllFolderRequest,
+  deleteFolderRequest
+} from "../../actions";
 
 // core components
 class Folder extends React.Component {
+  componentDidMount = () => {
+    this.props.allFolders();
+  };
+
   handleFolderModel = () => {
     const { modelInfoReducer } = this.props;
     const { modelDetails } = modelInfoReducer;
@@ -18,9 +27,12 @@ class Folder extends React.Component {
   createFolder = data => {
     this.props.onFolderCreation(data);
   };
+  onDelete = id => {
+    this.props.deleteFolder(id);
+  };
 
   render() {
-    const { modelOperate, modelInfoReducer } = this.props;
+    const { modelOperate, modelInfoReducer, getAllFolders } = this.props;
     return (
       <>
         <FolderComponent
@@ -28,6 +40,8 @@ class Folder extends React.Component {
           modelInfoReducer={modelInfoReducer}
           modelOperate={modelOperate}
           createFolder={this.createFolder}
+          getAllFolders={getAllFolders}
+          onDelete={this.onDelete}
         />
       </>
     );
@@ -36,7 +50,8 @@ class Folder extends React.Component {
 
 const mapStateToProps = state => {
   return {
-    modelInfoReducer: state.modelInfoReducer
+    modelInfoReducer: state.modelInfoReducer,
+    getAllFolders: state.getFolderReducer.getAllFolders
   };
 };
 const mapDispatchToProps = dispatch => {
@@ -44,7 +59,13 @@ const mapDispatchToProps = dispatch => {
     onFolderCreation: data => {
       dispatch(createFolderRequest(data));
     },
-    modelOperate: data => dispatch(modelOpenRequest(data))
+    modelOperate: data => dispatch(modelOpenRequest(data)),
+    allFolders: () => {
+      dispatch(getAllFolderRequest());
+    },
+    deleteFolder: id => {
+      dispatch(deleteFolderRequest(id));
+    }
   };
 };
 export default connect(

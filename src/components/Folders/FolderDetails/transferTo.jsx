@@ -1,18 +1,26 @@
 import React from "react";
 import { Modal, ModalBody, ModalHeader, Row, Col } from "reactstrap";
 // core components
-class AddSetModal extends React.Component {
+class TransferToModal extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      setList: []
+      transferToList: []
     };
   }
+
   componentDidUpdate(prevProps) {
-    if (prevProps.getAllSet !== this.props.getAllSet) {
-      const setList = this.props.getAllSet;
+    if (prevProps.AllFolders !== this.props.AllFolders) {
+      const folders = this.props.AllFolders;
+      let arr = [];
+      // eslint-disable-next-line
+      folders.map((list, i) => {
+        if (list._id !== this.props.pathName) {
+          arr = [...arr, list];
+        }
+      });
       this.setState({
-        setList: setList
+        transferToList: arr
       });
     }
   }
@@ -22,31 +30,37 @@ class AddSetModal extends React.Component {
     const { modelDetails } = modelInfoReducer;
     this.props.modelOperate({
       modelDetails: {
-        addSetModalOpen: !modelDetails.addSetModalOpen
+        transferToModalOpen: !modelDetails.transferToModalOpen
       }
     });
   };
 
-  OnhandleSets = (id, name) => {
-    this.props.handleSets(id, name);
+  onTransferTo = id => {
+    const data = {
+      setId: this.props.setToTransfer,
+      folderId: id,
+      isFolderAdd: true,
+      previousFolderId: this.props.pathName
+    };
+    this.props.handleFolder(data);
   };
 
   render() {
     const { modelInfoReducer } = this.props;
     const { modelDetails } = modelInfoReducer;
-    const { addSetModalOpen } = modelDetails;
-    const { setList } = this.state;
+    const { transferToModalOpen } = modelDetails;
+    const { transferToList } = this.state;
     return (
       <div>
         <Modal
           className="modal-dialog-centered custom-model-wrap"
-          isOpen={addSetModalOpen}
+          isOpen={transferToModalOpen}
           size="md"
           backdrop={"static"}
           toggle={() => this.handleOpen}
         >
           <ModalHeader>
-            <span className="custom-title">Add a Set</span>
+            <span className="custom-title">Transfer To...</span>
             <button
               aria-label="Close"
               className="close"
@@ -59,8 +73,8 @@ class AddSetModal extends React.Component {
           </ModalHeader>
           <ModalBody className="modal-text-center">
             <div className="wrap-folder">
-              {setList
-                ? setList.map((set, i) => {
+              {transferToList.length
+                ? transferToList.map((folders, i) => {
                     return (
                       <Row className="set-wrap" key={i}>
                         <Col md="12">
@@ -69,32 +83,16 @@ class AddSetModal extends React.Component {
                               <div className="cotent-text-tile d-flex">
                                 <div className="content-heading-tile">
                                   {" "}
-                                  {set.title}
+                                  {folders.title}
                                 </div>
                                 <div>
-                                  {set.folderId !== null ? (
-                                    <span
-                                      onClick={() =>
-                                        this.OnhandleSets(set._id, "add")
-                                      }
-                                    >
-                                      <i
-                                        className="fa fa-plus-square-o"
-                                        aria-hidden="true"
-                                      ></i>
-                                    </span>
-                                  ) : (
-                                    <span
-                                      onClick={() =>
-                                        this.OnhandleSets(set._id, "remove")
-                                      }
-                                    >
-                                      <i
-                                        className="fa fa-minus"
-                                        aria-hidden="true"
-                                      ></i>
-                                    </span>
-                                  )}
+                                  <span
+                                    onClick={() =>
+                                      this.onTransferTo(folders._id)
+                                    }
+                                  >
+                                    <i className="fas fa-check-square"></i>
+                                  </span>
                                 </div>
                               </div>
                             </div>
@@ -112,4 +110,4 @@ class AddSetModal extends React.Component {
   }
 }
 
-export default AddSetModal;
+export default TransferToModal;

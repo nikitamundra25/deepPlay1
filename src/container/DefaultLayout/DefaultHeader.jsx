@@ -108,47 +108,46 @@ class DefaultHeader extends React.Component {
             <NavbarBrand className="mr-lg-5" to="/" tag={Link}>
               <h3 className="mb-0 header-title">Deep Play</h3>
             </NavbarBrand>
-            {
-              isLoggedIn ?
-                <Nav className="navbar-nav align-items-center nav-main-section flex-fill">
-                  <div className="nav-inputs-wrap d-flex">
-                    <Col>
-                      <UncontrolledDropdown className="header-manu-wrap">
-                        <DropdownToggle
-                          caret
-                          color=" "
-                          className="nav-dropdown-btn"
-                        >
+            {isLoggedIn ? (
+              <Nav className="navbar-nav align-items-center nav-main-section flex-fill">
+                <div className="nav-inputs-wrap d-flex">
+                  <Col>
+                    <UncontrolledDropdown className="header-manu-wrap">
+                      <DropdownToggle
+                        caret
+                        color=" "
+                        className="nav-dropdown-btn"
+                      >
                         <i className="fas fa-plus-square"></i> &nbsp; Create
-                        </DropdownToggle>
-                        <DropdownMenu>
-                          <DropdownItem></DropdownItem>
-                        </DropdownMenu>
+                      </DropdownToggle>
+                      <DropdownMenu>
+                        <DropdownItem></DropdownItem>
+                      </DropdownMenu>
 
-                        <DropdownMenu>
-                          <DropdownItem active>
-                            <Link to={"/move"}> Create Move</Link>
-                          </DropdownItem>
-                          <DropdownItem>
-                            <Link to={"/create-set"}>Create Set</Link>
-                          </DropdownItem>
-                          <DropdownItem onClick={this.handleFolderModel}>
-                            {" "}
-                            Create Folder
-                      </DropdownItem>
-                        </DropdownMenu>
-                      </UncontrolledDropdown>
-                    </Col>
-                    <Col className="flex-fill">
-                      <FormGroup className="mb-0 fe ">
-                        <InputGroup className="">
-                          <Input placeholder="Search" type="text" />
-                        </InputGroup>
-                      </FormGroup>
-                    </Col>
-                  </div>
-                </Nav> : null
-            }
+                      <DropdownMenu>
+                        <DropdownItem active>
+                          <Link to={"/move"}> Create Move</Link>
+                        </DropdownItem>
+                        <DropdownItem >
+                          <Link to={"/create-set"}>Create Set</Link>
+                        </DropdownItem>
+                        <DropdownItem onClick={this.handleFolderModel}>
+                          {" "}
+                          Create Folder
+                        </DropdownItem>
+                      </DropdownMenu>
+                    </UncontrolledDropdown>
+                  </Col>
+                  <Col className="flex-fill">
+                    <FormGroup className="mb-0 fe ">
+                      <InputGroup className="">
+                        <Input placeholder="Search" type="text" />
+                      </InputGroup>
+                    </FormGroup>
+                  </Col>
+                </div>
+              </Nav>
+            ) : null}
             <Nav
               className="navbar-nav align-items-center nav-main-section"
               navbar
@@ -171,45 +170,45 @@ class DefaultHeader extends React.Component {
                   </React.Fragment>
                 </div>
               ) : (
-                  <>
-                    <UncontrolledDropdown className="header-manu-wrap ">
-                      <DropdownToggle
-                        tag="a"
-                        className="nav-link user-section"
-                        caret
-                      >
-                        <div className="user-wrap">
-                          <div className="user-img">
-                            <img
-                              src={profileImage}
-                              className="w-100"
-                              alt={"img"}
-                            />
-                          </div>
-                          <div className="user-text">
-                            {profiledata
-                              ? `${profiledata.firstName}${" "} ${
-                              profiledata.lastName
-                              }`
-                              : ""}
-                          </div>
+                <>
+                  <UncontrolledDropdown className="header-manu-wrap ">
+                    <DropdownToggle
+                      tag="a"
+                      className="nav-link user-section"
+                      caret
+                    >
+                      <div className="user-wrap">
+                        <div className="user-img">
+                          <img
+                            src={profileImage}
+                            className="w-100"
+                            alt={"img"}
+                          />
                         </div>
-                      </DropdownToggle>
-                      <DropdownMenu>
-                        <DropdownItem active>
-                          <Link to={"/setting"}>View Profile</Link>
-                        </DropdownItem>
-                        <DropdownItem>
-                          <Link to={"/dashboard"}>Dashboard</Link>
-                        </DropdownItem>
-                        <DropdownItem onClick={e => logoutRequest(e)}>
-                          logout
+                        <div className="user-text">
+                          {profiledata
+                            ? `${profiledata.firstName}${" "} ${
+                                profiledata.lastName
+                              }`
+                            : ""}
+                        </div>
+                      </div>
+                    </DropdownToggle>
+                    <DropdownMenu>
+                      <DropdownItem active>
+                        <Link to={"/setting"}>View Profile</Link>
                       </DropdownItem>
-                      </DropdownMenu>
-                    </UncontrolledDropdown>
-                    {/* <span onClick={e => logoutRequest(e)} className="nav-link-inner--text pr-4">Logout</span> */}
-                  </>
-                )}
+                      <DropdownItem>
+                        <Link to={"/dashboard"}>Dashboard</Link>
+                      </DropdownItem>
+                      <DropdownItem onClick={e => logoutRequest(e)}>
+                        logout
+                      </DropdownItem>
+                    </DropdownMenu>
+                  </UncontrolledDropdown>
+                  {/* <span onClick={e => logoutRequest(e)} className="nav-link-inner--text pr-4">Logout</span> */}
+                </>
+              )}
             </Nav>
             <UncontrolledCollapse
               navbar

@@ -12,7 +12,9 @@ const ResetPassword = React.lazy(() =>
 );
 const Page404 = React.lazy(() => import("./components/Page404"));
 const Move = React.lazy(() => import("./container/Move"));
-const RecentFolder = React.lazy(() => import("./components/Folders/FolderDetails/recentFolder"));
+const RecentFolder = React.lazy(() =>
+  import("./components/Folders/FolderDetails/FolderDetails")
+);
 const MoveDetails = React.lazy(() => import("./components/Move/MoveDetails"));
 
 const routes = [
