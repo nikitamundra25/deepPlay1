@@ -25,9 +25,10 @@ class MoveDetails extends React.Component {
 
   }
   render() {
+    const { setReducer } = this.props
     return (
       <>
-        <div className="create-set-section step-2 mt-2 ">
+        <div className="create-set-section step-2 mt-2 container">
           <Card className="w-100">
             <CardBody>
               <div>
@@ -36,7 +37,9 @@ class MoveDetails extends React.Component {
               <Col md={"12"}>
                 <Row className={"mt-3"}>
                   <VideoView />
-                  <VideoDetails/>
+                  <VideoDetails
+                    setReducer={setReducer} 
+                  />
                 </Row>
               </Col>
             </CardBody>
@@ -47,7 +50,9 @@ class MoveDetails extends React.Component {
   }
 }
 
-const mapStateToProps = state => ({});
+const mapStateToProps = state => ({
+  setReducer: state.setReducer
+});
 const mapDispatchToProps = dispatch => ({});
 export default connect(
   mapStateToProps,

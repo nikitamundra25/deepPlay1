@@ -70,7 +70,7 @@ class Set extends React.Component {
 const mapStateToProps = state => {
   return {
     modelInfoReducer: state.modelInfoReducer,
-    getAllSetReducer: state.getAllSetReducer
+    getAllSetReducer: state.setReducer
   };
 };
 const mapDispatchToProps = dispatch => {

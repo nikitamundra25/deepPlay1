@@ -111,7 +111,7 @@ class MoveComponent extends React.Component {
     const { isVideoDownloading } = moveReducer;
     return (
       <>
-        <div className="create-set-section step-2 mt-2 ">
+        <div className="create-set-section step-2 mt-2 container">
           <Card className="w-100 set-content-wrap">
             <div className="set-content-block w-100">
               <CardHeader className="">
@@ -162,7 +162,7 @@ class MoveComponent extends React.Component {
             </div>
           </Card>
         </div>
-        <div className="create-set-section step-2 mt-2 ">
+        <div className="create-set-section step-2 mt-2 container">
           <Card className="w-100 set-content-wrap">
             <div className="set-content-block w-100">
               <CardHeader className="">

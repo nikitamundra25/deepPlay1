@@ -21,7 +21,7 @@ const createSet = async (req: Request, res: Response): Promise<any> => {
     const setResult: Document | any = new SetModel(setData);
     await setResult.save();
     res.status(200).json({
-      setResult,
+      setResult: setResult,
       message: "Set created successfully"
     });
   } catch (error) {

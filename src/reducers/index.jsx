@@ -5,7 +5,7 @@ import { routerReducer } from "react-router-redux";
 import { modelInfoReducer } from "./ModelOperation.jsx";
 import { loginReducer } from "./Login.jsx";
 import { profileInfoReducer, profileImage } from "./ProfileInfo.jsx";
-import { getAllSetReducer } from "./Set";
+import { setReducer } from "./Set";
 import { getFolderReducer } from "./Folder";
 import { moveReducer } from "./Moves";
 
@@ -30,7 +30,7 @@ const AppReducer = combineReducers({
   modelInfoReducer,
   loginReducer,
   profileInfoReducer,
-  getAllSetReducer,
+  setReducer,
   getFolderReducer,
   profileImage,
   moveReducer,

@@ -89,13 +89,13 @@ class DefaultLayout extends React.Component {
                   }`}
               >
                 {isLoggedIn &&
-                  (routePath !== "/" && routePath !== "/resetPassword") ? (
+                  (routePath !== "/" && routePath !== "/resetPassword" && (routePath === "/set" || routePath === "/folder" ||routePath === "/dashboard" || routePath === "/setting")) ? (
                     <div className="ct-sidebar app-sidebar">
                       <DefaultSidebar profileInfoReducer={profileInfoReducer} />
                     </div>
                   ) : null}
                 {isLoggedIn &&
-                  (routePath !== "/" && routePath !== "/resetPassword") ? (
+                  (routePath !== "/" && routePath !== "/resetPassword" && (routePath === "/set" || routePath === "/folder" ||routePath === "/dashboard" || routePath === "/setting")) ? (
                     <div className="dashboard-right-wrap">
                       <div className="dashboard-right-section">
                         <Suspense fallback={""}>

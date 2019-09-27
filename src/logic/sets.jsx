@@ -34,7 +34,8 @@ const createSetLogic = createLogic({
       toast.success(result.messages[0]);
       dispatch(
         createSetSuccess({
-          showLoader: false
+          showLoader: false,
+          setData: result.data.setResult
         })
       );
       dispatch(redirectTo({ path: "/move" }));

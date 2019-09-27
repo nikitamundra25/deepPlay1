@@ -55,16 +55,19 @@ const downloadVideo = async (req: Request, res: Response): Promise<any> => {
         videoStream = fs.createWriteStream(originalVideoPath)
       );
 
-    const moveResult: Document | any = new MoveModel({
-      videoUrl: videoURL,
-      userId: headToken.id
+    videoStream.on('close', async function () {
+      const moveResult: Document | any = new MoveModel({
+        videoUrl: videoURL,
+        userId: headToken.id
+      });
+      await moveResult.save();
+
+      res.status(200).json({
+        message: "Video uploaded successfully!",
+        videoUrl: videoURL,
+        moveData: moveResult
+      })
     });
-    await moveResult.save();
-    return res.status(200).json({
-      message: "Video uploaded successfully!",
-      videoUrl: videoURL,
-      moveData: moveResult
-    })
   } catch (error) {
     console.log(error);
     res.status(500).send({
