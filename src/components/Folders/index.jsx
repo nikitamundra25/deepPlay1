@@ -86,7 +86,7 @@ class FolderComponent extends React.Component {
                                   <i className="fas fa-ellipsis-v setting-icon "></i>
                                 </span>
                                 {show ? (
-                                  <ButtonGroup size="sm">
+                                  <ButtonGroup size="sm" >
                                     <Button
                                       onClick={() =>
                                         this.handleCopyFolder(folder)

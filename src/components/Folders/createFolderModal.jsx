@@ -57,9 +57,9 @@ class FolderModal extends React.Component {
           toggle={() => this.handleOpen}
         >
           <ModalHeader>
-            <h5 className="modal-title" id="exampleModalLabel">
-              <span class="custom-title">Create a New Folder</span>
-            </h5>
+            <span className="custom-title" id="exampleModalLabel">
+              Create a New Folder
+            </span>
             <button
               aria-label="Close"
               className="close"
@@ -67,7 +67,9 @@ class FolderModal extends React.Component {
               type="button"
               onClick={this.handleOpen}
             >
-              <span aria-hidden="true">×</span>
+              <span aria-hidden="true">
+                <img src="./assets/img/close-img.png" alt="close-ic" />
+              </span>
             </button>
           </ModalHeader>
           <ModalBody>
@@ -97,18 +99,18 @@ class FolderModal extends React.Component {
                 value={description}
               />
             </FormGroup>
-            <br />
-            <ModalFooter>
-              <Button
-                type="button"
-                onClick={this.onCreateFolder}
-                className="btn btn-black"
-                disabled={!title}
-              >
-                Create Folder
-              </Button>
-            </ModalFooter>
           </ModalBody>
+          <ModalFooter>
+            <Button
+              type="button"
+              onClick={this.onCreateFolder}
+              color=" "
+              className="btn btn-black"
+              disabled={!title}
+            >
+              Create Folder
+              </Button>
+          </ModalFooter>
         </Modal>
       </div>
     );

@@ -159,7 +159,7 @@ class CreateSetComponent extends React.Component {
               type="button"
               onClick={this.handleModal}
             >
-              <span aria-hidden="true">×</span>
+              <span aria-hidden="true">  <img src="./assets/img/close-img.png" alt="close-ic" /></span>
             </button>
           </ModalHeader>
           <ModalBody>
@@ -180,7 +180,7 @@ class CreateSetComponent extends React.Component {
 
           <ModalFooter>
             <Button
-              color="info"
+              color=" "
               type="button"
               onClick={this.onSaveDesc}
               className="btn btn-black"

@@ -16,18 +16,20 @@ class DefaultSidebar extends React.Component {
               SidebarComponent.map((items, index) => {
                 return (
                   <React.Fragment key={index}>
-                    <li className="list-group-item" >
+                    <li>
                       <NavLink
+                        className="list-group-item"
                         activeClassName="active"
                         aria-current="page"
                         to={items.url}
                       >
-                        <i className={items.icon} />
-                        <span>{" "}{items.name}</span>
+                        {/* <i className={items.icon} /> */}
+                        <img src={items.iconUrl} alt={items.iconUrl} width="20"/>
+                        <span> {items.name}</span>
                       </NavLink>
                     </li>
                   </React.Fragment>
-                )
+                );
               })
             }
           </ul>
@@ -35,7 +37,7 @@ class DefaultSidebar extends React.Component {
         <div className="profile-wrap" >
           <div className="profile-img-tile">
             <div className="profile-img">
-              <img alt="..." src="/static/media/boy.9a3a77b0.svg" className="w-100" />
+              <img alt="..." src="./assets/img/user-black-ic.svg" className="w-100" />
             </div>
           </div>
           <div className="profile-text-tile color-black">

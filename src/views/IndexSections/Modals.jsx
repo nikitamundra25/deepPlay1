@@ -76,7 +76,7 @@ class Modals extends React.Component {
                   type="button"
                   onClick={() => this.toggleModal("defaultModal")}
                 >
-                  <span aria-hidden={true}>×</span>
+                  <span aria-hidden={true}>  <img src="./assets/img/close-img.png" alt="close-ic" /></span>
                 </button>
               </div>
               <div className="modal-body">
@@ -135,7 +135,7 @@ class Modals extends React.Component {
                   type="button"
                   onClick={() => this.toggleModal("notificationModal")}
                 >
-                  <span aria-hidden={true}>×</span>
+                  <span aria-hidden={true}>  <img src="./assets/img/close-img.png" alt="close-ic" /></span>
                 </button>
               </div>
               <div className="modal-body">
