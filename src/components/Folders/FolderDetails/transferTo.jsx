@@ -68,7 +68,7 @@ class TransferToModal extends React.Component {
               type="button"
               onClick={this.handleOpen}
             >
-              <span aria-hidden={true}>×</span>
+              <span aria-hidden={true}>  <img src="./assets/img/close-img.png" alt="close-ic" /></span>
             </button>
           </ModalHeader>
           <ModalBody className="modal-text-center">

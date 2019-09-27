@@ -68,17 +68,17 @@ class UploadImage extends Component {
               type="button"
               onClick={this.props.handleOpen}
             >
-              <span aria-hidden={true}><i class="fa fa-times" aria-hidden="true"></i></span>
+              <span aria-hidden={true}>  <img src="./assets/img/close-img.png" alt="close-ic" /></span>
             </button>
           </ModalHeader>
           <ModalBody className="modal-text-center">
             {this.state.imageData ? (
+              <div className="file-upload-wrap">
               <img
                 alt="..."
                 src={this.state.imageData}
-                width="350px"
-                height="250px"
-              />
+               
+              /></div>
             ) : (
               <>
                 <div className="upload-file-wrap">

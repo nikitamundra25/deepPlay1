@@ -1,5 +1,5 @@
 import React from "react";
-import { Modal, ModalBody, ModalHeader, Row, Col } from "reactstrap";
+import { Modal, ModalBody, ModalHeader, Row, Col, Button } from "reactstrap";
 import { AppRoutes } from "../../../config/AppRoutes"
 // import CreateSetComponent from "../../Sets/createSet"
 
@@ -61,12 +61,12 @@ class AddSetModal extends React.Component {
               type="button"
               onClick={this.handleOpen}
             >
-              <span aria-hidden={true}>×</span>
+              <span aria-hidden={true}>  <img src="./assets/img/close-img.png" alt="close-ic" /></span>
             </button>
           </ModalHeader>
           <ModalBody className="modal-text-center">
             <div className="wrap-folder">
-              <span onClick={() => this.handleAddNewSet(folderId)} className={"cursor_pointer"}>+ Create New Set</span>
+              <Button color=" "  onClick={() => this.handleAddNewSet(folderId)} className={"cursor_pointer btn btn-black"}>+ Create New Set</Button>
               {setList
                 ? setList.map((set, i) => {
                   return (

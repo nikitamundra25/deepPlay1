@@ -11,7 +11,7 @@ import {
   Nav,
   Row,
   Col,
-  Container,
+  InputGroupAddon,
   FormGroup,
   InputGroup,
   Input
@@ -101,11 +101,13 @@ class DefaultHeader extends React.Component {
     return (
       <>
         <header className="header-global theme-header ">
+        <div className="theme-container">
           <Navbar
             className="navbar-main "
             // expand="lg"
             id="navbar-main"
           >
+          
             <NavbarBrand className="mr-lg-5" to="/" tag={Link}>
               <h3 className="mb-0 header-title">Deep Play</h3>
             </NavbarBrand>
@@ -140,8 +142,13 @@ class DefaultHeader extends React.Component {
                     </UncontrolledDropdown>
                   </Col>
                   <Col className="flex-fill">
-                    <FormGroup className="mb-0 fe ">
+                    <FormGroup className="mb-0 header-search-wrap">
                       <InputGroup className="">
+                      <InputGroupAddon addonType="prepend">
+                        <span className="input-group-text">
+                        <i class="fa fa-search" aria-hidden="true"></i>
+                        </span>
+                      </InputGroupAddon>
                         <Input placeholder="Search" type="text" />
                       </InputGroup>
                     </FormGroup>
@@ -203,7 +210,7 @@ class DefaultHeader extends React.Component {
                         <Link to={"/dashboard"}>Dashboard</Link>
                       </DropdownItem>
                       <DropdownItem onClick={e => logoutRequest(e)}>
-                        logout
+                        Log Out
                       </DropdownItem>
                     </DropdownMenu>
                   </UncontrolledDropdown>
@@ -236,6 +243,7 @@ class DefaultHeader extends React.Component {
               </div>
             </UncontrolledCollapse>
           </Navbar>
+            </div>
         </header>
         <Login
           openLoginModel={loginModelOpen}

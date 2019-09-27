@@ -16,19 +16,20 @@ class DefaultSidebar extends React.Component {
               SidebarComponent.map((items, index) => {
                 return (
                   <React.Fragment key={index}>
-                    <li >
+                    <li>
                       <NavLink
-                      className="list-group-item" 
+                        className="list-group-item"
                         activeClassName="active"
                         aria-current="page"
                         to={items.url}
                       >
-                        <i className={items.icon} />
-                        <span>{" "}{items.name}</span>
+                        {/* <i className={items.icon} /> */}
+                        <img src={items.iconUrl} alt={items.iconUrl} width="20"/>
+                        <span> {items.name}</span>
                       </NavLink>
                     </li>
                   </React.Fragment>
-                )
+                );
               })
             }
           </ul>
