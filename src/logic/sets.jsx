@@ -11,7 +11,8 @@ import {
   ManageSetSuccess,
   getFolderSetRequest,
   modelOpenRequest,
-  getAllSetRequest
+  getAllSetRequest,
+  getSetDetailsSuccess
 } from "../actions";
 import { toast } from "react-toastify";
 
@@ -85,6 +86,7 @@ const getAllSetLogic = createLogic({
     }
   }
 });
+
 //  ---------------Get sets list to add or remove in folders---------------
 const getSetLogic = createLogic({
   type: SetsAction.GET_FOLDER_SET_REQUEST,
@@ -161,9 +163,48 @@ const ManageSetLogic = createLogic({
     }
   }
 });
+/*  Get Set Details By Id */
+const getSetDetailsLogic = createLogic({
+  type: SetsAction.GET_SET_DETAILS_REQUEST,
+  async process({ action }, dispatch, done) {
+    let api = new ApiHelper();
+    dispatch(showLoader());
+    let result = await api.FetchFromServer(
+      "set",
+      "/getSetById",
+      "GET",
+      true,
+      action.payload,
+      undefined
+    );
+    if (result.isError) {
+      dispatch(hideLoader());
+      toast.error(result.messages[0]);
+      dispatch(
+        getSetDetailsSuccess({
+          showLoader: false,
+          setDetails: {}
+        })
+      );
+      done();
+      return;
+    } else {
+      dispatch(hideLoader());
+      dispatch(
+        getSetDetailsSuccess({
+          showLoader: false,
+          setDetails: result.data.data
+        })
+      );
+      done();
+    }
+  }
+});
+
 export const SetLogics = [
   createSetLogic,
   getAllSetLogic,
   getSetLogic,
-  ManageSetLogic
+  ManageSetLogic,
+  getSetDetailsLogic
 ];
