@@ -11,6 +11,7 @@ import {
   Nav,
   Row,
   Col,
+  Container,
   FormGroup,
   InputGroup,
   InputGroupAddon,
@@ -85,7 +86,7 @@ class DefaultHeader extends React.Component {
             // expand="lg"
             id="navbar-main"
           >
-
+          <Container>
             <NavbarBrand className="mr-lg-5" to="/" tag={Link}>
               <h3 className="mb-0 header-title">Deep Play</h3>
             </NavbarBrand>
@@ -178,7 +179,7 @@ class DefaultHeader extends React.Component {
                 </Row>
               </div>
             </UncontrolledCollapse>
-
+</Container>
           </Navbar>
         </header>
         <Login
