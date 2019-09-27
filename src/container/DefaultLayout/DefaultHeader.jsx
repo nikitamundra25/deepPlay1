@@ -91,39 +91,27 @@ class DefaultHeader extends React.Component {
             </NavbarBrand>
             <Nav className="navbar-nav align-items-center nav-main-section flex-fill" >
               <div className="nav-inputs-wrap d-flex">
-
                 <Col>
                   <UncontrolledDropdown className="header-manu-wrap">
                     <DropdownToggle caret color=" " className="nav-dropdown-btn">
                       <i className="fas fa-plus-square"></i> &nbsp; Create
                   </DropdownToggle>
                     <DropdownMenu>
-
-                    
-
-                     
-                    
-
-                 
-
-                      <DropdownItem >
-                      
-                      </DropdownItem>
-
+                      <DropdownItem active><Link to={"/setting"}> Create Move</Link></DropdownItem>
+                      <DropdownItem onClick={this.props.handleSetComponent}>Create Set</DropdownItem>
+                      <DropdownItem tag={Link} to="/setting" >  Create Folder</DropdownItem>
                     </DropdownMenu>
-
-                    <DropdownMenu>
-                        <DropdownItem active><Link to={"/setting"}> Create Move</Link></DropdownItem>
-                        <DropdownItem onClick={this.props.handleSetComponent}>Create Set</DropdownItem>
-                        <DropdownItem tag={Link} to="/setting" >  Create Folder</DropdownItem>
-                      </DropdownMenu>
-
                   </UncontrolledDropdown>
                 </Col>
                 <Col className="flex-fill">
-                  <FormGroup className="mb-0 fe ">
-                    <InputGroup className="">
-                      <Input placeholder="Search" type="text" />
+                  <FormGroup className="mb-0 header-search-wrap">
+                    <InputGroup>
+                      <InputGroupAddon addonType="prepend">
+                        <InputGroupText >
+                          <i class="fa fa-search" aria-hidden="true"></i>
+                        </InputGroupText>
+                      </InputGroupAddon>
+                      <Input placeholder="" />
                     </InputGroup>
                   </FormGroup>
                 </Col>

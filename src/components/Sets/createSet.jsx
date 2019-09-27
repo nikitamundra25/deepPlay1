@@ -1,7 +1,5 @@
 import React from "react";
 import {
-  Row,
-  Col,
   FormGroup,
   Input,
   Button,
@@ -13,7 +11,6 @@ import {
   Card,
   CardBody,
   CardHeader,
-  CardTitle,
   UncontrolledTooltip,
   InputGroup, InputGroupText, InputGroupAddon
 } from "reactstrap";
@@ -158,7 +155,7 @@ class CreateSetComponent extends React.Component {
               type="button"
               onClick={() => this.handleModal}
             >
-              <span aria-hidden="true">×</span>
+              <span aria-hidden="true"><i class="fa fa-times" aria-hidden="true"></i></span>
             </button>
           </ModalHeader>
           <ModalBody>
@@ -179,7 +176,7 @@ class CreateSetComponent extends React.Component {
           <ModalFooter >
 
             <Button
-              color="info"
+              color=" "
               type="button"
               onClick={this.onSaveDesc}
               className="btn btn-black"

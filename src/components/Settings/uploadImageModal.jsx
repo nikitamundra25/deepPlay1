@@ -68,7 +68,7 @@ class UploadImage extends Component {
               type="button"
               onClick={this.props.handleOpen}
             >
-              <span aria-hidden={true}>×</span>
+              <span aria-hidden={true}><i class="fa fa-times" aria-hidden="true"></i></span>
             </button>
           </ModalHeader>
           <ModalBody className="modal-text-center">

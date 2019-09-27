@@ -77,7 +77,7 @@ class MoveComponent extends React.Component {
                 </div>
               </CardHeader>
               <CardBody className="">
-                <div className="create-set-tile">
+                <div className="create-set-tile url-update-wrap">
                 {/* <Label className="upload-file-wrap"> 
                 <Dropzone
                   onDrop={this.onSelectFile}
@@ -105,7 +105,7 @@ class MoveComponent extends React.Component {
                   }}
                 </Dropzone>
                   </Label> */}
-                  <Form inline className="url-update-wrap">
+                  <Form inline className="">
                   <div className="text-center mr-2">
                   <Button
                     color=" "
@@ -172,8 +172,8 @@ class MoveComponent extends React.Component {
               </div>
               <p className="font-weight-bold mt-3 text-center h5">Would you like to create another Move from the same video?</p>
               <div className="text-center mt-4">
-                <Button className="btn-line-black">Yes create another</Button>
-                <Button className="btn-black">No i'am done</Button>
+                <Button className="btn-line-black" color=" ">Yes create another</Button>
+                <Button className="btn-black" color=" ">No i'am done</Button>
                 </div>
               </CardBody>
             </div>
