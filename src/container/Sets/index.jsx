@@ -49,7 +49,7 @@ class Set extends React.Component {
     return (
       <>
         {this.state.createSet ? (
-          <CreateSetComponent onCreateSet={this.onCreateSet} />
+          <CreateSetComponent  onCreateSet={this.onCreateSet}/>
         ) : (
           <SetComponent
             handleSetComponent={this.handleSetComponent}

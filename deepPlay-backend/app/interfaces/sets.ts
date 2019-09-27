@@ -6,4 +6,5 @@ export interface ISet {
   userId: String;
   sharableLink: String;
   status: Boolean;
+  isDeleted: Boolean;
 }

@@ -10,7 +10,8 @@ import {
   getFolderSetSuccess,
   ManageSetSuccess,
   getFolderSetRequest,
-  modelOpenRequest
+  modelOpenRequest,
+  getAllSetRequest
 } from "../actions";
 import { toast } from "react-toastify";
 
@@ -41,12 +42,18 @@ const createSetLogic = createLogic({
           showLoader: false
         })
       );
-      dispatch(redirectTo({ path: "/move" }));
+      if (!action.payload.isCopy) {
+        dispatch(redirectTo({ path: "/move" }));
+      } else {
+        toast.success("Set Copy has been created successfully");
+        dispatch(getAllSetRequest());
+      }
       done();
     }
   }
 });
 
+//  ---------------Get all sets ---------------
 const getAllSetLogic = createLogic({
   type: SetsAction.GET_ALL_SET_REQUEST,
   async process({ action }, dispatch, done) {

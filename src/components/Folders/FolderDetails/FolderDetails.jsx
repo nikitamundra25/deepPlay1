@@ -6,10 +6,12 @@ import {
   modelOpenRequest,
   getFolderSetRequest,
   ManageSetRequest,
-  getAllFolderRequest
+  getAllFolderRequest,
+  createSetRequest
 } from "../../../actions";
 import AddSetModal from "./addSet";
 import TransferToModal from "./transferTo";
+import { ConfirmBox } from "../../../helper/SweetAleart";
 // core components
 class RecentFolderComponent extends React.Component {
   constructor(props) {
@@ -67,7 +69,22 @@ class RecentFolderComponent extends React.Component {
     });
   };
 
+  //Manage sets to add & remove.
   handleSets = (id, name) => {
+    const loaction = this.props.location;
+    const pathName = loaction.pathname.split("/");
+    let data;
+    data = {
+      isFolderAdd: name !== "add" ? true : false,
+      setId: id,
+      folderId: pathName[2],
+      previousFolderId: pathName[2]
+    };
+    this.props.manageSets(data);
+  };
+
+  //Remove sets from folder [ask sweetalert]
+  onRemoveSets = async (id, name) => {
     const loaction = this.props.location;
     const pathName = loaction.pathname.split("/");
     let data;
@@ -77,7 +94,12 @@ class RecentFolderComponent extends React.Component {
       folderId: pathName[2],
       previousFolderId: pathName[2]
     };
-    this.props.manageSets(data);
+    const { value } = await ConfirmBox({
+      text: "You want to remove Set from this folder!! "
+    });
+    if (value) {
+      this.props.manageSets(data);
+    }
   };
 
   handleFolder = data => {
@@ -88,6 +110,21 @@ class RecentFolderComponent extends React.Component {
     this.setState({
       show: !this.state.show
     });
+  };
+
+  OnCreateSetCopy = list => {
+    const data = {
+      title: list.title,
+      description: list.description,
+      isDeleted: list.isDeleted,
+      isPublic: list.isPublic,
+      folderId: list.folderId,
+      sharableLink: list.sharableLink,
+      status: list.status,
+      userId: list.userId,
+      isCopy: true
+    };
+    this.props.onSetsCreation(data);
   };
 
   render() {
@@ -103,7 +140,7 @@ class RecentFolderComponent extends React.Component {
       <div className="page-body">
         <div className="content-header">
           <span className="content-title">
-            {folderDetails.title ? folderDetails.title : "MyFolder"}
+            {folderDetails ? folderDetails.title : "MyFolder"}
           </span>
           <div>
             <span
@@ -131,9 +168,12 @@ class RecentFolderComponent extends React.Component {
             </UncontrolledTooltip>
           </div>
         </div>{" "}
-        <span className="content-title">{folderDetails.description}</span>
+        <span className="content-title">
+          {folderDetails ? folderDetails.description : ""}
+        </span>
         <Row className="set-wrap">
           {setListItem.length ? (
+            // eslint-disable-next-line
             setListItem.map((list, i) => {
               if (list.folderId) {
                 return (
@@ -170,7 +210,9 @@ class RecentFolderComponent extends React.Component {
                         </span>
                         {show ? (
                           <ButtonGroup size="sm">
-                            <Button>Copy</Button>
+                            <Button onClick={() => this.OnCreateSetCopy(list)}>
+                              Copy
+                            </Button>
                             <Button
                               onClick={() => this.openTransferToModal(list._id)}
                             >
@@ -178,7 +220,7 @@ class RecentFolderComponent extends React.Component {
                             </Button>
                             <Button
                               onClick={() =>
-                                this.handleSets(list._id, "remove")
+                                this.onRemoveSets(list._id, "remove")
                               }
                             >
                               Remove
@@ -244,6 +286,9 @@ const mapDispatchToProps = dispatch => ({
   },
   allFolders: () => {
     dispatch(getAllFolderRequest());
+  },
+  onSetsCreation: data => {
+    dispatch(createSetRequest(data));
   }
 });
 

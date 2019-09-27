@@ -10,12 +10,13 @@ const createSet = async (req: Request, res: Response): Promise<any> => {
     const headToken: Request | any = currentUser;
     const setData: ISet = {
       title: body.title,
-      description: body.description,
-      status: true,
-      userId: headToken.id,
+      description: body.description ? body.description : "",
+      status: body.status ? body.status : true,
+      userId: body.userId ? body.userId : headToken.id,
       folderId: body.folderId ? body.folderId : null,
-      sharableLink: "",
-      isPublic: true
+      sharableLink: body.sharableLink ? body.sharableLink : "",
+      isPublic: body.isPublic ? body.isPublic : true,
+      isDeleted: body.isDeleted ? body.isDeleted : false
     };
     const setResult: Document | any = new SetModel(setData);
     await setResult.save();

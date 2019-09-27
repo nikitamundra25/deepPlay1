@@ -19,8 +19,8 @@ body {
     opacity: 0.5;
   }
 }
-.btn{
-  border-radius:5px;
+.btn {
+  border-radius: 5px;
 }
 a {
   color: inherit;
@@ -125,7 +125,6 @@ a {
   margin-bottom: 80px;
   padding-bottom: 80px;
   border-bottom: 2px dashed $videoAddBannerBack;
- 
 }
 .video-add-banner {
   cursor: pointer;
@@ -293,6 +292,7 @@ a {
     font-weight: bold;
     color: #455358;
     font-size: 16px;
+    justify-content: space-between;
   }
   .content-number-tile {
     color: #868686;
@@ -735,24 +735,25 @@ a {
   }
 }
 .create-set-section {
-.url-update-wrap{
-  max-width: 800px;
-  margin: auto;
-  .btn{
-  padding: 11px 15px;
-  color:#fff;
-  border-radius: 5px;
-  transform: none;
+  .url-update-wrap {
+    max-width: 800px;
+    margin: auto;
+    .btn {
+      padding: 11px 15px;
+      color: #fff;
+      border-radius: 5px;
+      transform: none;
+    }
+    .form-group {
+      max-width: unset;
+    }
+  }
 }
-.form-group{
-  max-width: unset;
-}
-}}
-.vieos-add-section{
+.vieos-add-section {
   max-width: 400px;
   height: 200px;
   margin: auto;
-  .play-ic-wrap{
+  .play-ic-wrap {
     font-size: 35px;
     width: 70px;
     height: 70px;

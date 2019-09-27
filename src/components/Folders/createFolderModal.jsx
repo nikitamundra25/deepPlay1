@@ -38,7 +38,8 @@ class FolderModal extends React.Component {
   onCreateFolder = () => {
     const data = {
       title: this.state.title,
-      description: this.state.description
+      description: this.state.description,
+      isCopy: false
     };
     this.props.createFolder(data);
   };

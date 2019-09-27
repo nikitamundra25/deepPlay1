@@ -5,4 +5,5 @@ export interface IFolder {
   userId: String;
   sharableLink: String;
   status: Boolean;
+  isDeleted: Boolean;
 }

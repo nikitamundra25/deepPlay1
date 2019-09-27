@@ -13,6 +13,7 @@ class TransferToModal extends React.Component {
     if (prevProps.AllFolders !== this.props.AllFolders) {
       const folders = this.props.AllFolders;
       let arr = [];
+      // eslint-disable-next-line
       folders.map((list, i) => {
         if (list._id !== this.props.pathName) {
           arr = [...arr, list];

@@ -128,7 +128,7 @@ class DefaultHeader extends React.Component {
                         <DropdownItem active>
                           <Link to={"/move"}> Create Move</Link>
                         </DropdownItem>
-                        <DropdownItem>
+                        <DropdownItem >
                           <Link to={"/create-set"}>Create Set</Link>
                         </DropdownItem>
                         <DropdownItem onClick={this.handleFolderModel}>

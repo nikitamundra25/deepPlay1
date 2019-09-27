@@ -75,7 +75,7 @@ class AddSetModal extends React.Component {
                                   {set.folderId !== null ? (
                                     <span
                                       onClick={() =>
-                                        this.OnhandleSets(set._id, "remove")
+                                        this.OnhandleSets(set._id, "add")
                                       }
                                     >
                                       <i
@@ -86,7 +86,7 @@ class AddSetModal extends React.Component {
                                   ) : (
                                     <span
                                       onClick={() =>
-                                        this.OnhandleSets(set._id, "add")
+                                        this.OnhandleSets(set._id, "remove")
                                       }
                                     >
                                       <i
