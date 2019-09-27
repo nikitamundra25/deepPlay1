@@ -67,7 +67,7 @@ class CreateSetComponent extends React.Component {
   render() {
     const { title, open, description } = this.state;
     return (
-      <div className="create-set-section mt-2 container">
+      <div className="create-set-section mt-2">
         <Card className="w-100 set-content-wrap">
           <div className="set-content-block w-100">
             <CardHeader className="">

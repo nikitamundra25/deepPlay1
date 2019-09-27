@@ -2,6 +2,7 @@ import React from "react";
 import { Row, Col, UncontrolledTooltip, Button, ButtonGroup } from "reactstrap";
 import FolderModal from "./createFolderModal";
 import { ConfirmBox } from "../../helper/SweetAleart";
+import { AppRoutes } from "../../config/AppRoutes"
 // core components
 class FolderComponent extends React.Component {
   constructor(props) {
@@ -24,7 +25,11 @@ class FolderComponent extends React.Component {
       this.props.onDelete(id);
     }
   };
-  
+
+  handleFolderdetails = (floderId) => {
+    this.props.redirectTo(AppRoutes.FOLDER_DETAILS.url.replace(":id",floderId))
+  }
+
   handleCopyFolder = folder => {
     const data = {
       title: folder.title,
@@ -69,7 +74,9 @@ class FolderComponent extends React.Component {
                             <div className="content-number-tile"> 4 sets</div>
                             <div className="content-heading-tile d-flex">
                               {" "}
-                              {folder.title}
+                              <span onClick={() => this.handleFolderdetails(folder._id)} className={"cursor_pointer"}>
+                                {folder.title}
+                              </span>
                               <div>
                                 <span
                                   onClick={this.showPopOver}
@@ -108,19 +115,19 @@ class FolderComponent extends React.Component {
               }
             })
           ) : (
-            <div className="set-wrap">
-              <h3>YOU HAVEN'T CREATED ANY FOLDER YET</h3>
-              <p>Create a Folder to Organize your Sets.</p>
-              <Button
-                color="default"
-                type="button"
-                className="btn-btn-right"
-                onClick={this.props.handleFolderModel}
-              >
-                Create a Folder
+              <div className="set-wrap">
+                <h3>YOU HAVEN'T CREATED ANY FOLDER YET</h3>
+                <p>Create a Folder to Organize your Sets.</p>
+                <Button
+                  color="default"
+                  type="button"
+                  className="btn-btn-right"
+                  onClick={this.props.handleFolderModel}
+                >
+                  Create a Folder
               </Button>
-            </div>
-          )}
+              </div>
+            )}
 
           <FolderModal
             modelOperate={modelOperate}

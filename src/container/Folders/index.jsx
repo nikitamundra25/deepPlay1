@@ -42,6 +42,7 @@ class Folder extends React.Component {
           createFolder={this.createFolder}
           getAllFolders={getAllFolders}
           onDelete={this.onDelete}
+          {...this.props}
         />
       </>
     );

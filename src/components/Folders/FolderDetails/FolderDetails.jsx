@@ -19,7 +19,7 @@ class RecentFolderComponent extends React.Component {
     this.state = {
       setListItem: [],
       show: false, //show setting popOver,
-      pathName: "", // pathName of folderId
+      folderId: "", // pathName of folderId
       setToTransfer: "" // pass set id to transfer to different folder
     };
   }
@@ -29,14 +29,15 @@ class RecentFolderComponent extends React.Component {
     this.props.folderDetail({ id: pathName[2] });
     this.props.getSetsList({ folderId: pathName[2] });
     this.setState({
-      pathName: pathName[2]
+      folderId: pathName[2]
     });
   }
 
   componentDidUpdate(prevProps) {
     if (
-      prevProps.getAllSetReducer.setListinFolder !==
-      this.props.getAllSetReducer.setListinFolder
+      prevProps.getAllSetReducer &&
+      (prevProps.getAllSetReducer.setListinFolder !==
+      this.props.getAllSetReducer.setListinFolder)
     ) {
       const setList = this.props.getAllSetReducer.setListinFolder;
       this.setState({
@@ -134,10 +135,10 @@ class RecentFolderComponent extends React.Component {
       folderDetails,
       getAllFolders
     } = this.props;
-    const { setListItem, show, pathName, setToTransfer } = this.state;
+    const { setListItem, show, pathName, setToTransfer, folderId } = this.state;
 
     return (
-      <div className="page-body">
+      <div className="page-body container">
         <div className="content-header">
           <span className="content-title">
             {folderDetails ? folderDetails.title : "MyFolder"}
@@ -234,26 +235,28 @@ class RecentFolderComponent extends React.Component {
               }
             })
           ) : (
-            <div className="inner-wrap">
-              <h3>This folder has no Sets yet</h3>
-              <p>Organize your Sets for you or your students</p>
-              <Button
-                color="default"
-                type="button"
-                className="btn-btn-right"
-                onClick={this.openAddSetModel}
-              >
-                Add a Set
+              <div className="inner-wrap">
+                <h3>This folder has no Sets yet</h3>
+                <p>Organize your Sets for you or your students</p>
+                <Button
+                  color="default"
+                  type="button"
+                  className="btn-btn-right"
+                  onClick={this.openAddSetModel}
+                >
+                  Add a Set
               </Button>
-            </div>
-          )}
+              </div>
+            )}
         </Row>
         <AddSetModal
           openAddSetModel={this.openAddSetModel}
           modelInfoReducer={modelInfoReducer}
           modelOperate={modelOperate}
           getAllSet={setListItem}
+          folderId={folderId}
           handleSets={this.handleSets}
+          {...this.props}
         />
         <TransferToModal
           modelInfoReducer={modelInfoReducer}

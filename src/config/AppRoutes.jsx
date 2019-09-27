@@ -54,9 +54,9 @@ export const AppRoutes = {
     name: "Move Details",
     exact: true
   },
-  RECENT_FOLDER: {
+  FOLDER_DETAILS: {
     url: "/folder-details/:id",
-    name: "RecentFolder",
+    name: "Folder Details",
     exact: true
   }
 };

@@ -1,5 +1,8 @@
 import React from "react";
 import { Modal, ModalBody, ModalHeader, Row, Col } from "reactstrap";
+import { AppRoutes } from "../../../config/AppRoutes"
+// import CreateSetComponent from "../../Sets/createSet"
+
 // core components
 class AddSetModal extends React.Component {
   constructor(props) {
@@ -31,8 +34,12 @@ class AddSetModal extends React.Component {
     this.props.handleSets(id, name);
   };
 
+  handleAddNewSet = (folderId) => {
+    this.props.redirectTo(AppRoutes.CREATE_SET.url)
+  }
+
   render() {
-    const { modelInfoReducer } = this.props;
+    const { modelInfoReducer, folderId } = this.props;
     const { modelDetails } = modelInfoReducer;
     const { addSetModalOpen } = modelDetails;
     const { setList } = this.state;
@@ -59,31 +66,32 @@ class AddSetModal extends React.Component {
           </ModalHeader>
           <ModalBody className="modal-text-center">
             <div className="wrap-folder">
+              <span onClick={() => this.handleAddNewSet(folderId)} className={"cursor_pointer"}>+ Create New Set</span>
               {setList
                 ? setList.map((set, i) => {
-                    return (
-                      <Row className="set-wrap" key={i}>
-                        <Col md="12">
-                          <div className="tile-wrap card">
-                            <div className="cotent-tile d-flex">
-                              <div className="cotent-text-tile d-flex">
-                                <div className="content-heading-tile">
-                                  {" "}
-                                  {set.title}
-                                </div>
-                                <div>
-                                  {set.folderId !== null ? (
-                                    <span
-                                      onClick={() =>
-                                        this.OnhandleSets(set._id, "add")
-                                      }
-                                    >
-                                      <i
-                                        className="fa fa-plus-square-o"
-                                        aria-hidden="true"
-                                      ></i>
-                                    </span>
-                                  ) : (
+                  return (
+                    <Row className="set-wrap" key={i}>
+                      <Col md="12">
+                        <div className="tile-wrap card">
+                          <div className="cotent-tile d-flex">
+                            <div className="cotent-text-tile d-flex">
+                              <div className="content-heading-tile">
+                                {" "}
+                                {set.title}
+                              </div>
+                              <div>
+                                {set.folderId !== null ? (
+                                  <span
+                                    onClick={() =>
+                                      this.OnhandleSets(set._id, "add")
+                                    }
+                                  >
+                                    <i
+                                      className="fa fa-plus-square-o"
+                                      aria-hidden="true"
+                                    ></i>
+                                  </span>
+                                ) : (
                                     <span
                                       onClick={() =>
                                         this.OnhandleSets(set._id, "remove")
@@ -95,14 +103,14 @@ class AddSetModal extends React.Component {
                                       ></i>
                                     </span>
                                   )}
-                                </div>
                               </div>
                             </div>
                           </div>
-                        </Col>
-                      </Row>
-                    );
-                  })
+                        </div>
+                      </Col>
+                    </Row>
+                  );
+                })
                 : ""}
             </div>
           </ModalBody>
