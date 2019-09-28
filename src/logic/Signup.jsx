@@ -24,6 +24,9 @@ const signupLogic = createLogic({
     );
     if (result.isError || !result.data.userData) {
       toast.error(result.messages[0]);
+      dispatch(
+        signupSuccess({ isLoginSuccess: false })
+      )
       done();
       return;
     } else {

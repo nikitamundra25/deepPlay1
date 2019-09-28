@@ -11,6 +11,7 @@ class Signup extends React.Component {
           handleSignupModel={handleSignupModel}
           signupRequest={signupRequest}
           loginReducer={loginReducer}
+          handleLoginModal={this.props.handleLoginModal}
         />
       </>
     );

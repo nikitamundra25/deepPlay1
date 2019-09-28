@@ -83,7 +83,7 @@ class LoginComponent extends React.Component {
         profileImage: response.profileObj.imageUrl,
         accessToken: response.accessToken
       }
-    this.props.socialLoginRequest(payload)
+      this.props.socialLoginRequest(payload)
     } catch (error) {
       logger(error)
       if (!toast.isActive(this.toastId)) {
@@ -142,7 +142,7 @@ class LoginComponent extends React.Component {
             <Card className="bg-secondary shadow border-0">
               <CardHeader>
                 <div className=" login-heading text-center mt-2 mb-3">
-              Sign in with
+                  Sign in with
                 </div>
                 <div className="btn-wrapper text-center social-media-wrap">
                   <span className="btn-inner--icon mr-2 facebook-wrap">
@@ -170,7 +170,7 @@ class LoginComponent extends React.Component {
               </CardHeader>
               <CardBody className="px-lg-5">
                 <div className="text-center login-heading mb-4 auth-subheading">
-                Or sign in with credentials
+                  Or sign in with credentials
                 </div>
                 <Form onSubmit={this.handleLoginRequest}>
                   <FormGroup className="mb-3">
@@ -212,7 +212,7 @@ class LoginComponent extends React.Component {
                     </InputGroup>
                   </FormGroup>
                   <div onClick={this.props.handleForgotPasswordModel} className={"text-center cursor_pointer forgot-password-wrap"}>
-                      Forgot password?
+                    Forgot password?
                   </div>
                   <div className="text-center auth-btn-wrap">
                     <Button
@@ -222,14 +222,14 @@ class LoginComponent extends React.Component {
                     >
                       Sign in
                     </Button>
-                  
+
                     <Button
                       className="my-4 btn-black btn-line-black btn-block"
                       color=" "
-                      
-                      type="submit"
+                      onClick={() => this.props.handleSignupModal()}
+                      type="button"
                     >
-                    Don't have an account? Sign Up
+                      Don't have an account? Sign Up
                     </Button>
                   </div>
                 </Form>

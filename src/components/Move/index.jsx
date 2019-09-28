@@ -27,6 +27,7 @@ class MoveComponent extends React.Component {
 
   handleChange = e => {
     const { name, value } = e.target;
+    console.log("############This is Change Event");
     this.setState({
       errors: "",
       [name]: value
@@ -97,6 +98,7 @@ class MoveComponent extends React.Component {
   }
 
   handlePasteEvent = e => {
+    console.log("$$$$$$$$$$$$$This is Paste Event",e.target.value);
     if (e.target.value) {
       this.handleChange(e)
       this.setState({
@@ -144,7 +146,7 @@ class MoveComponent extends React.Component {
                         <Input
                           id="url"
                           className={errors ? "capitalize pl-2 boder-1-invalid is-invalid w-100" : "capitalize pl-2 boder-1 w-100"}
-                          placeholder="Paste YouTube URL or Type URL Manually"
+                          placeholder="Paste YouTube Video URL or Type URL Manually"
                           type="text"
                           onPaste={this.handlePasteEvent}
                           name="url"
