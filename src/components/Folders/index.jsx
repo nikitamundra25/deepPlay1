@@ -50,7 +50,7 @@ class FolderComponent extends React.Component {
     return (
       <div className="page-body">
         <div className="content-header folder-main-wrap">
-       
+
           <span className="content-title">Your Folders
           <p className="mb-0">4 folders total</p>
           </span>
@@ -62,13 +62,13 @@ class FolderComponent extends React.Component {
           <UncontrolledTooltip placement="bottom" target="move">
             Create a New Folder
           </UncontrolledTooltip>
-         
+
         </div>
-        
-     
+
+
         <div className="wrap-folder">
           <Row className="set-wrap" >
-            {getAllFolders.length ? (
+            {getAllFolders && getAllFolders.length ? (
               getAllFolders.map((folder, i) => {
                 if (!folder.isDeleted) {
                   return (
@@ -101,10 +101,10 @@ class FolderComponent extends React.Component {
                                       Copy
                                     </Button>
                                     <Button
-                                   
+
                                       color=" "
                                     >
-                                   Transfer
+                                      Transfer
                                     </Button>
                                     <Button
                                       onClick={() =>

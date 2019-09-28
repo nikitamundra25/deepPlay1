@@ -67,7 +67,7 @@ class AddSetModal extends React.Component {
           <ModalBody className="modal-text-center">
             <div className="wrap-folder">
               <Button color=" "  onClick={() => this.handleAddNewSet(folderId)} className={"cursor_pointer btn btn-black"}>+ Create New Set</Button>
-              {setList
+              {setList && setList.length
                 ? setList.map((set, i) => {
                   return (
                     <Row className="set-wrap" key={i}>

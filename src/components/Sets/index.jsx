@@ -22,7 +22,7 @@ class SetComponent extends React.Component {
           </span>
         </div>
         <Row className="set-wrap">
-          {getAllSet.length ? (
+          {getAllSet && getAllSet.length ? (
             getAllSet.map((setList, i) => {
               return (
                 <Col md="6" key={i}>

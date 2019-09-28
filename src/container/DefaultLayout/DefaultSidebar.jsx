@@ -5,6 +5,12 @@ import { SidebarComponent } from "../../components/Sidebar";
 import defaultProfileImage from "../../assets/img/user-black-ic.svg"
 class DefaultSidebar extends React.Component {
 
+  constructor(props) {
+    super(props);
+    this.state = {
+    }
+  }
+
   render() {
     const { profileInfoReducer } = this.props
     const profiledata = profileInfoReducer && profileInfoReducer.profileInfo ? profileInfoReducer.profileInfo : null
@@ -24,7 +30,7 @@ class DefaultSidebar extends React.Component {
                         to={items.url}
                       >
                         {/* <i className={items.icon} /> */}
-                        <img src={items.iconUrl} alt={items.iconUrl} width="20"/>
+                        <img src={items.iconUrl} alt={items.iconUrl} width="20" />
                         <span> {items.name}</span>
                       </NavLink>
                     </li>

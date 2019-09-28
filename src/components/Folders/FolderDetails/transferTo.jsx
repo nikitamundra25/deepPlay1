@@ -73,34 +73,34 @@ class TransferToModal extends React.Component {
           </ModalHeader>
           <ModalBody className="modal-text-center">
             <div className="wrap-folder">
-              {transferToList.length
+              {transferToList && transferToList.length
                 ? transferToList.map((folders, i) => {
-                    return (
-                      <Row className="set-wrap" key={i}>
-                        <Col md="12">
-                          <div className="tile-wrap card">
-                            <div className="cotent-tile d-flex">
-                              <div className="cotent-text-tile d-flex">
-                                <div className="content-heading-tile">
-                                  {" "}
-                                  {folders.title}
-                                </div>
-                                <div>
-                                  <span
-                                    onClick={() =>
-                                      this.onTransferTo(folders._id)
-                                    }
-                                  >
-                                    <i className="fas fa-check-square"></i>
-                                  </span>
-                                </div>
+                  return (
+                    <Row className="set-wrap" key={i}>
+                      <Col md="12">
+                        <div className="tile-wrap card">
+                          <div className="cotent-tile d-flex">
+                            <div className="cotent-text-tile d-flex">
+                              <div className="content-heading-tile">
+                                {" "}
+                                {folders.title}
+                              </div>
+                              <div>
+                                <span
+                                  onClick={() =>
+                                    this.onTransferTo(folders._id)
+                                  }
+                                >
+                                  <i className="fas fa-check-square"></i>
+                                </span>
                               </div>
                             </div>
                           </div>
-                        </Col>
-                      </Row>
-                    );
-                  })
+                        </div>
+                      </Col>
+                    </Row>
+                  );
+                })
                 : ""}
             </div>
           </ModalBody>

@@ -1,6 +1,15 @@
 import React from "react";
 import { connect } from "react-redux";
+import { AppRoutes } from "../../config/AppRoutes"
 import { Container, Row, Col, Button } from "reactstrap";
+import {
+  modelOpenRequest,
+  loginRequest,
+  socialLoginRequest,
+  forgotPasswordRequest,
+} from "../../actions"
+// import Login from "../Auth/Login"
+// import ForgotPassword from "../Auth/ForgotPassword";
 // import { UncontrolledDropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap';
 const homePageImage = [
   "https://images.pexels.com/photos/67636/rose-blue-flower-rose-blooms-67636.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500",
@@ -11,7 +20,49 @@ const homePageImage = [
 ]
 // core components
 class HomePage extends React.Component {
+
+  handleDashboardOpen = () => {
+    this.props.redirectTo(AppRoutes.DASHBOARD.url)
+  }
+  /* 
+  */
+  handleLoginModalOpen = () => {
+    const { modelInfoReducer } = this.props;
+    const { modelDetails } = modelInfoReducer;
+    this.props.modelOpenRequest({
+      modelDetails: {
+        loginModelOpen: !modelDetails.loginModelOpen,
+        signupModelOpen: false
+      }
+    });
+  }
+  /* 
+  */
+  handleForgotPasswordModel = () => {
+    const { modelInfoReducer } = this.props;
+    const { modelDetails } = modelInfoReducer;
+    this.props.modelOpenRequest({
+      modelDetails: {
+        forgotPasswordModalOpen: !modelDetails.forgotPasswordModalOpen
+      }
+    })
+  }
+  /* 
+  */
   render() {
+    const token = localStorage.getItem("token")
+    let isLoggedIn = false
+    if (token) {
+      isLoggedIn = true
+    } else {
+      isLoggedIn = false
+    }
+    // const { modelInfoReducer, socialLoginRequest, loginRequest, forgotPasswordRequest, loginReducer } = this.props
+    // const { modelDetails } = modelInfoReducer;
+    // const {
+    //   loginModelOpen,
+    //   forgotPasswordModalOpen
+    // } = modelDetails;
     return (
       <Container>
         <section className="home-video-section mt-5">
@@ -22,7 +73,12 @@ class HomePage extends React.Component {
                 <p className="banner-content mt-4 mt-0">Break down complex budles of movements into tiny bits to speed up your or your students' learning Watch the video to learn more</p>
               </div>
               <div className="text-center">
-                <Button className="fill-btn btn w-75 m-auto h3">Get Stated</Button>
+                <Button
+                  className="fill-btn btn w-75 m-auto h3"
+                  onClick={isLoggedIn ? this.handleDashboardOpen : this.handleLoginModalOpen}
+                >
+                  Get Stated
+                </Button>
               </div>
             </Col>
             <Col md="6">
@@ -84,13 +140,34 @@ class HomePage extends React.Component {
             </Col>
           </Row>
         </section>
+        {/* <Login
+          openLoginModel={loginModelOpen}
+          handleLoginModel={this.handleLoginModel}
+          loginRequest={loginRequest}
+          socialLoginRequest={socialLoginRequest}
+          openForgotPasswordModel={forgotPasswordModalOpen}
+          modelOpenRequest={modelOpenRequest}
+          forgotPasswordRequest={forgotPasswordRequest}
+          modelInfoReducer={modelInfoReducer}
+          loginReducer={loginReducer}
+          handleSignupModal={this.handleSignupModel}
+        /> */}
       </Container>
     );
   }
 }
 
-const mapStateToProps = state => ({});
-const mapDispatchToProps = dispatch => ({});
+const mapStateToProps = state => ({
+  modelInfoReducer: state.modelInfoReducer,
+  loginReducer: state.loginReducer
+});
+const mapDispatchToProps = dispatch => ({
+  modelOpenRequest: data => dispatch(modelOpenRequest(data)),
+  loginRequest: data => dispatch(loginRequest(data)),
+  forgotPasswordRequest: data => dispatch(forgotPasswordRequest(data)),
+  socialLoginRequest: data => dispatch(socialLoginRequest(data)),
+
+});
 export default connect(
   mapStateToProps,
   mapDispatchToProps

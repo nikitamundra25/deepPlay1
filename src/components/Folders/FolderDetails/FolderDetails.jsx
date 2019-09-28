@@ -144,7 +144,7 @@ class RecentFolderComponent extends React.Component {
 
 
           <Row className="set-wrap">
-            {setListItem.length ? (
+            {setListItem && setListItem.length ? (
               // eslint-disable-next-line
               setListItem.map((list, i) => {
                 if (list.folderId) {
@@ -211,7 +211,7 @@ class RecentFolderComponent extends React.Component {
                     <Card className="w-100 set-content-wrap">
                       <div className="set-content-block w-100">
                         <CardHeader className="empty-folder-header">
-                          <img src={emptyFolderIc} alt={"Images"}/>
+                          <img src={emptyFolderIc} alt={"Images"} />
                           <div className="content-header set-header">
                             <span className="content-title">      <h3>This folder has no Sets yet</h3>
                               <p>Organize your Sets for you or your students</p></span>
@@ -265,7 +265,7 @@ const mapStateToProps = state => {
   return {
     folderDetails: state.getFolderReducer.folderDetails,
     modelInfoReducer: state.modelInfoReducer,
-    getAllSetReducer: state.getAllSetReducer,
+    getAllSetReducer: state.setReducer,
     getAllFolders: state.getFolderReducer.getAllFolders
   };
 };
