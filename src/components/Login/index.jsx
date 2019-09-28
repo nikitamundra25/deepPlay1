@@ -139,10 +139,10 @@ class LoginComponent extends React.Component {
         >
           <ModalHeader toggle={handleLoginModel}></ModalHeader>
           <ModalBody className="modal-body p-0 ">
-            <Card className="bg-secondary shadow border-0">
+            <Card className="bg-secondary shadow border-0 pb-0">
               <CardHeader>
-                <div className=" login-heading text-center mt-2 mb-3">
-                  Sign in with
+                <div className=" login-heading text-center mb-3">
+              Sign in with
                 </div>
                 <div className="btn-wrapper text-center social-media-wrap">
                   <span className="btn-inner--icon mr-2 facebook-wrap">

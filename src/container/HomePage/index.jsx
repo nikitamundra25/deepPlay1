@@ -1,7 +1,7 @@
 import React from "react";
 import { connect } from "react-redux";
 import { AppRoutes } from "../../config/AppRoutes"
-import { Container, Row, Col, Button } from "reactstrap";
+import { Row, Col, Button } from "reactstrap";
 import {
   modelOpenRequest,
   loginRequest,
@@ -64,7 +64,7 @@ class HomePage extends React.Component {
     //   forgotPasswordModalOpen
     // } = modelDetails;
     return (
-      <Container>
+      <>
         <section className="home-video-section mt-5">
           <Row className="mb-5">
             <Col md="6" className="d-flex flex-column justify-content-between ">
@@ -152,7 +152,7 @@ class HomePage extends React.Component {
           loginReducer={loginReducer}
           handleSignupModal={this.handleSignupModel}
         /> */}
-      </Container>
+      </>
     );
   }
 }
