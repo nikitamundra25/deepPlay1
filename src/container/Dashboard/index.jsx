@@ -1,6 +1,6 @@
 import React from "react";
 import { connect } from "react-redux";
-import { Row, Col, Badge } from "reactstrap";
+import { Row, Col, Badge, Card } from "reactstrap";
 import { profileRequest } from "../../actions"
 // core components
 class Dashboard extends React.Component {
@@ -17,7 +17,7 @@ class Dashboard extends React.Component {
             </div>
             <Row>
               <Col md="6">
-                <div className="tile-wrap card">
+                <Card className="tile-wrap">
                   <div className="badge-wrap">
                     <Badge variant="secondary" className="draft-wrap">
                       DRAFT
@@ -39,10 +39,10 @@ class Dashboard extends React.Component {
                     <span className="bottom-text-tile"> Mastershipclass</span>
                     <span className="bottom-light-tile"> Mastershipclass</span>
                   </div>
-                </div>
+                </Card>
               </Col>
               <Col md="6">
-                <div className="tile-wrap card">
+                <Card className="tile-wrap">
                   <div className="badge-wrap">
                     <Badge variant="secondary" className="draft-wrap">
                       DRAFT
@@ -64,10 +64,10 @@ class Dashboard extends React.Component {
                     <span className="bottom-text-tile"> Mastershipclass</span>
                     <span className="bottom-light-tile"> Mastershipclass</span>
                   </div>
-                </div>
+                </Card>
               </Col>
               <Col md="6">
-                <div className="tile-wrap card">
+                <Card className="tile-wrap">
                   <div className="badge-wrap">
                     <Badge variant="secondary" className="draft-wrap">
                       DRAFT
@@ -89,10 +89,10 @@ class Dashboard extends React.Component {
                     <span className="bottom-text-tile"> Mastershipclass</span>
                     <span className="bottom-light-tile"> Mastershipclass</span>
                   </div>
-                </div>
+                </Card>
               </Col>
               <Col md="6">
-                <div className="tile-wrap card">
+                <Card className="tile-wrap">
                   <div className="badge-wrap">
                     <Badge variant="secondary" className="draft-wrap">
                       DRAFT
@@ -114,7 +114,7 @@ class Dashboard extends React.Component {
                     <span className="bottom-text-tile"> Mastershipclass</span>
                     <span className="bottom-light-tile"> Mastershipclass</span>
                   </div>
-                </div>
+                </Card>
               </Col>
 
             </Row>
@@ -127,7 +127,7 @@ class Dashboard extends React.Component {
             <Row>
 
               <Col md="6">
-                <div className="tile-wrap card">
+                <Card className="tile-wrap">
                   <div className="badge-wrap">
                     <Badge variant="secondary" className="draft-wrap">
                       DRAFT
@@ -149,10 +149,10 @@ class Dashboard extends React.Component {
                     <span className="bottom-text-tile"> Mastershipclass</span>
                     <span className="bottom-light-tile"> Mastershipclass</span>
                   </div>
-                </div>
+                </Card>
               </Col>
               <Col md="6">
-                <div className="tile-wrap card">
+                <Card className="tile-wrap">
                   <div className="badge-wrap">
                     <Badge variant="secondary" className="draft-wrap">
                       DRAFT
@@ -174,10 +174,10 @@ class Dashboard extends React.Component {
                     <span className="bottom-text-tile"> Mastershipclass</span>
                     <span className="bottom-light-tile"> Mastershipclass</span>
                   </div>
-                </div>
+                </Card>
               </Col>
               <Col md="6">
-                <div className="tile-wrap card">
+                <Card className="tile-wrap">
                   <div className="badge-wrap">
                     <Badge variant="secondary" className="draft-wrap">
                       DRAFT
@@ -199,10 +199,10 @@ class Dashboard extends React.Component {
                     <span className="bottom-text-tile"> Mastershipclass</span>
                     <span className="bottom-light-tile"> Mastershipclass</span>
                   </div>
-                </div>
+                </Card>
               </Col>
               <Col md="6">
-                <div className="tile-wrap card">
+                <Card className="tile-wrap">
                   <div className="badge-wrap">
                     <Badge variant="secondary" className="draft-wrap">
                       DRAFT
@@ -224,7 +224,7 @@ class Dashboard extends React.Component {
                     <span className="bottom-text-tile"> Mastershipclass</span>
                     <span className="bottom-light-tile"> Mastershipclass</span>
                   </div>
-                </div>
+                </Card>
               </Col>
             </Row>
           </div>

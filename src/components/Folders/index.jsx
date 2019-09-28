@@ -27,7 +27,7 @@ class FolderComponent extends React.Component {
   };
 
   handleFolderdetails = (floderId) => {
-    this.props.redirectTo(AppRoutes.FOLDER_DETAILS.url.replace(":id",floderId))
+    this.props.redirectTo(AppRoutes.FOLDER_DETAILS.url.replace(":id", floderId))
   }
 
   handleCopyFolder = folder => {
@@ -49,27 +49,33 @@ class FolderComponent extends React.Component {
     const { show } = this.state;
     return (
       <div className="page-body">
-        <div className="content-header">
-          <span className="content-title">Your Folders</span>
+        <div className="content-header folder-main-wrap">
+       
+          <span className="content-title">Your Folders
+          <p className="mb-0">4 folders total</p>
+          </span>
           <span onClick={this.props.handleFolderModel} id="move">
-            <i className="fas fa-plus-circle fa-2x  "></i>
+            <i className="fas fa-plus-circle fa-2x"></i>
+            <i className="fa fa-share fa-2x"></i>
+            <i className="fa fa-share fa-2x"></i>
           </span>
           <UncontrolledTooltip placement="bottom" target="move">
             Create a New Folder
           </UncontrolledTooltip>
+         
         </div>
-        <Col></Col>
-        <p>4 folders total</p>{" "}
+        
+     
         <div className="wrap-folder">
-          {getAllFolders.length ? (
-            // eslint-disable-next-line
-            getAllFolders.map((folder, i) => {
-              if (!folder.isDeleted) {
-                return (
-                  <Row className="set-wrap" key={i}>
-                    <Col md="12">
-                      <div className="tile-wrap card">
-                        <div className="cotent-tile d-flex">
+          <Row className="set-wrap" >
+            {getAllFolders.length ? (
+
+              getAllFolders.map((folder, i) => {
+                if (!folder.isDeleted) {
+                  return (
+                    <Col md="6" key={i}>
+                      <div className="tile-wrap card ">
+                        <div className="cotent-tile d-flex content-with-tip">
                           <div className="cotent-text-tile">
                             <div className="content-number-tile"> 4 sets</div>
                             <div className="content-heading-tile d-flex">
@@ -77,7 +83,7 @@ class FolderComponent extends React.Component {
                               <span onClick={() => this.handleFolderdetails(folder._id)} className={"cursor_pointer"}>
                                 {folder.title}
                               </span>
-                              <div>
+                              <div className="tooltip-btn-wrap right-btn-tip">
                                 <span
                                   onClick={this.showPopOver}
                                   className="cursor_pointer"
@@ -91,8 +97,15 @@ class FolderComponent extends React.Component {
                                       onClick={() =>
                                         this.handleCopyFolder(folder)
                                       }
+                                      color=" "
                                     >
                                       Copy
+                                    </Button>
+                                    <Button
+                                   
+                                      color=" "
+                                    >
+                                   Transfer
                                     </Button>
                                     <Button
                                       onClick={() =>
@@ -110,30 +123,34 @@ class FolderComponent extends React.Component {
                         </div>
                       </div>
                     </Col>
-                  </Row>
-                );
-              }
-            })
-          ) : (
-              <div className="set-wrap">
-                <h3>YOU HAVEN'T CREATED ANY FOLDER YET</h3>
-                <p>Create a Folder to Organize your Sets.</p>
-                <Button
-                  color="default"
-                  type="button"
-                  className="btn-btn-right"
-                  onClick={this.props.handleFolderModel}
-                >
-                  Create a Folder
-              </Button>
-              </div>
-            )}
 
-          <FolderModal
-            modelOperate={modelOperate}
-            modelInfoReducer={modelInfoReducer}
-            createFolder={this.props.createFolder}
-          />
+                  );
+                }
+              })
+
+            ) : (
+                <Col sm="6">
+                  <div className="set-wrap">
+                    <h3>YOU HAVEN'T CREATED ANY FOLDER YET</h3>
+                    <p>Create a Folder to Organize your Sets.</p>
+                    <Button
+                      color="default"
+                      type="button"
+                      className="btn-btn-right"
+                      onClick={this.props.handleFolderModel}
+                    >
+                      Create a Folder
+              </Button>
+                  </div>
+                </Col>
+              )}
+
+            <FolderModal
+              modelOperate={modelOperate}
+              modelInfoReducer={modelInfoReducer}
+              createFolder={this.props.createFolder}
+            />
+          </Row>
         </div>
       </div>
     );
