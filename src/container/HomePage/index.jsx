@@ -13,7 +13,7 @@ const homePageImage = [
 class HomePage extends React.Component {
   render() {
     return (
-      <Container>
+      <>
         <section className="home-video-section mt-5">
           <Row className="mb-5">
             <Col md="6" className="d-flex flex-column justify-content-between ">
@@ -21,8 +21,8 @@ class HomePage extends React.Component {
                 <h3 className="banner-heading">Deconstruct Movements to Accelerate Learning</h3>
                 <p className="banner-content mt-4 mt-0">Break down complex budles of movements into tiny bits to speed up your or your students' learning Watch the video to learn more</p>
               </div>
-              <div className="text-center">
-                <Button className="fill-btn btn w-75 m-auto h3">Get Stated</Button>
+              <div className="mt-2">
+                <Button className="fill-btn btn w-50 m-auto h3">Get Stated</Button>
               </div>
             </Col>
             <Col md="6">
@@ -84,7 +84,7 @@ class HomePage extends React.Component {
             </Col>
           </Row>
         </section>
-      </Container>
+      </>
     );
   }
 }

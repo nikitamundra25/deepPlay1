@@ -121,7 +121,7 @@ class DefaultHeader extends React.Component {
                         color=" "
                         className="nav-dropdown-btn"
                       >
-                        <i className="fas fa-plus-square"></i> &nbsp; Create
+                        <i className="fas fa-plus-square"></i> &nbsp; Create<i className="fa fa-angle-down"></i>
                       </DropdownToggle>
                       <DropdownMenu>
                         <DropdownItem></DropdownItem>

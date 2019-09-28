@@ -1,5 +1,5 @@
 import React from "react";
-import { UncontrolledTooltip, Button, Row, Col, ButtonGroup, Card, CardBody, Title, CardHeader } from "reactstrap";
+import {  Button, Row, Col, ButtonGroup, Card, CardBody, CardHeader } from "reactstrap";
 import { connect } from "react-redux";
 import {
   folderDetailRequest,
@@ -13,7 +13,7 @@ import AddSetModal from "./addSet";
 import TransferToModal from "./transferTo";
 import { ConfirmBox } from "../../../helper/SweetAleart";
 
-import emptyFolderIc from "../../../assets/img/empty-folder.png";
+import emptySetIc from "../../../assets/img/empty-sets.png";
 // core components
 class RecentFolderComponent extends React.Component {
   constructor(props) {
@@ -210,9 +210,9 @@ class RecentFolderComponent extends React.Component {
                 <>
                   <div className="create-set-section mt-2 w-100">
                     <Card className="w-100 set-content-wrap">
-                      <div className="set-content-block w-100">
+                      <div className="set-content-block w-100 empty-folder-wrap">
                         <CardHeader className="empty-folder-header">
-                          <img src={emptyFolderIc} />
+                          <img src={emptySetIc} />
                           <div className="content-header set-header">
                             <span className="content-title">      <h3>This folder has no Sets yet</h3>
                               <p>Organize your Sets for you or your students</p></span>

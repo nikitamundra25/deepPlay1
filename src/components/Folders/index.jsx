@@ -1,8 +1,9 @@
 import React from "react";
-import { Row, Col, UncontrolledTooltip, Button, ButtonGroup } from "reactstrap";
+import { Row, Col, UncontrolledTooltip, Button, ButtonGroup, Card, CardBody, CardHeader } from "reactstrap";
 import FolderModal from "./createFolderModal";
 import { ConfirmBox } from "../../helper/SweetAleart";
-import { AppRoutes } from "../../config/AppRoutes"
+import { AppRoutes } from "../../config/AppRoutes";
+import emptyFolderIc from "../../assets/img/empty-folder.png";
 // core components
 class FolderComponent extends React.Component {
   constructor(props) {
@@ -54,13 +55,27 @@ class FolderComponent extends React.Component {
           <span className="content-title">Your Folders
           <p className="mb-0">4 folders total</p>
           </span>
+          <div>
           <span onClick={this.props.handleFolderModel} id="move">
             <i className="fas fa-plus-circle fa-2x"></i>
-            <i className="fa fa-share fa-2x"></i>
-            <i className="fa fa-share fa-2x"></i>
+           
           </span>
+          <span onClick={this.props.handleFolderModel} id="share">
+          <i className="fa fa-share fa-2x"></i>
+          
+          </span>
+          <span onClick={this.props.handleFolderModel} id="sliders">
+          <i class="fa fa-sliders fa-2x"></i>
+          </span>
+          </div>
           <UncontrolledTooltip placement="bottom" target="move">
             Create a New Folder
+          </UncontrolledTooltip>
+          <UncontrolledTooltip placement="bottom" target="share">
+            Share Your Video
+          </UncontrolledTooltip>
+          <UncontrolledTooltip placement="bottom" target="sliders">
+            edit your your Video
           </UncontrolledTooltip>
          
         </div>
@@ -129,20 +144,40 @@ class FolderComponent extends React.Component {
               })
 
             ) : (
-                <Col sm="6">
-                  <div className="set-wrap">
-                    <h3>YOU HAVEN'T CREATED ANY FOLDER YET</h3>
-                    <p>Create a Folder to Organize your Sets.</p>
-                    <Button
-                      color="default"
-                      type="button"
-                      className="btn-btn-right"
-                      onClick={this.props.handleFolderModel}
-                    >
-                      Create a Folder
-              </Button>
+              <>
+                 <div className="create-set-section mt-2 w-100">
+                    <Card className="w-100 set-content-wrap">
+                      <div className="set-content-block w-100 empty-folder-wrap">
+                        <CardHeader className="empty-folder-header">
+                          <img src={emptyFolderIc} />
+                          <div className="content-header set-header">
+                            <span className="content-title">      <h3>You haven't created any folder yet</h3>
+                              <p>Create a Folder to Organize your Sets.</p></span>
+                          </div>
+                        </CardHeader>
+                        <CardBody className="">
+                          <div className="create-set-tile">
+
+                          </div>
+                          <div className="text-center">
+                            <Button
+                              color=" "
+                              type="button"
+                              className="btn-black btn mt-3 folder-create-btn"
+                              onClick={this.props.handleFolderModel}
+
+                            >
+                              <i className="fas fa-plus mr-1"></i>
+                             Folder
+                </Button>
+                          </div>
+                        </CardBody>
+                      </div>
+                    </Card>
+
                   </div>
-                </Col>
+             
+                </>
               )}
 
             <FolderModal

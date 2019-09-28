@@ -193,7 +193,7 @@ class SignupComponent extends React.Component {
           <ModalBody className="modal-body p-0">
             <Card className="bg-secondaryborder-0">
               <CardHeader   >
-                <div className=" login-heading text-center mt-2 mb-3">
+                <div className=" login-heading text-center  mb-3">
                   Sign up with
                 </div>
                 <div className="btn-wrapper text-center social-media-wrap">
