@@ -32,7 +32,7 @@ module.exports = {
     new CopyWebpackPlugin([{ from: "app/public", to: "public" }]),
     new CopyWebpackPlugin([{ from: "app/uploads", to: "uploads" }]),
     new CopyWebpackPlugin([
-      { from: "app/common/emailtemplates", to: "common/emailtemplates" }
+      { from: "app/common/emailtemplates", to: "emailtemplates" }
     ]),
     new CopyWebpackPlugin([{ from: "package.json", to: "./" }])
   ]
