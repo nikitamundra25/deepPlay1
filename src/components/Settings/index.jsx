@@ -178,19 +178,29 @@ class SettingComponent extends Component {
                     Edit Profile
                   </Button>
                 ) : (
-                  <Button
-                    className="dashboard-right-content btn-line-black "
-                    onClick={this.onSaveData}
-                  >
-                    Update Info
+                    <Button
+                      className="dashboard-right-content btn-line-black "
+                      onClick={this.onSaveData}
+                    >
+                      Update Info
                   </Button>
-                )}
+                  )}
               </CardHeader>
               <CardBody>
                 <div className="profile-wrap">
-                  <div className="profile-img-tile">
-                    <div className="profile-img">
-                      {file ? (
+                  <div className="profile-img-tile ">
+                    <div className="profile-img" style={file ? ({
+                      backgroundImage: `url( 
+                      ${AppConfig.API_ENDPOINT}${this.state.file}
+                      )`
+                    }) : (
+                        {
+                          backgroundImage: `url( 
+                          ${AppConfig.API_ENDPOINT}${this.state.file}
+                          )`
+                        }
+                      )}>
+                      {/* {file ? (
                         <img
                           alt="..."
                           src={` ${AppConfig.API_ENDPOINT}${this.state.file}`}
@@ -202,7 +212,7 @@ class SettingComponent extends Component {
                           src={require("assets/img/icons/common/boy.svg")}
                           className="w-100"
                         />
-                      )}
+                      )} */}
                       {!isDisabled ? (
                         <span
                           className="changeProfile"
@@ -211,8 +221,8 @@ class SettingComponent extends Component {
                           Change Profile
                         </span>
                       ) : (
-                        ""
-                      )}
+                          ""
+                        )}
                     </div>
                     {imgError ? (
                       <div className="text-danger"> {imgError} </div>

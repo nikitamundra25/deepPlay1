@@ -1,6 +1,6 @@
 import React from "react";
 import { NavLink } from "react-router-dom";
-import "../../App.scss";
+// import "../../App.scss";
 import { SidebarComponent } from "../../components/Sidebar";
 
 class DefaultSidebar extends React.Component {
