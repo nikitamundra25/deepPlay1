@@ -32,7 +32,7 @@ class MoveDetails extends React.Component {
           <Card className="w-100">
             <CardBody>
               <div>
-                <span className={"cursor_pointer"}> <i className="fas fa-long-arrow-alt-left" />{" "}Back</span>
+                <span onClick={()=> {this.props.redirectTo("/move")}} className={"cursor_pointer"}> <i className="fas fa-long-arrow-alt-left" />{" "}Back</span>
               </div>
               <Col md={"12"}>
                 <Row className={"mt-3"}>

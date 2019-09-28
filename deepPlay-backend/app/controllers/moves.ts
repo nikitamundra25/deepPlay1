@@ -45,9 +45,9 @@ const downloadVideo = async (req: Request, res: Response): Promise<any> => {
     ].join("");
 
     const originalVideoPath = path.join(__basedir,
-      "youtube-videos", fileName);
+      "uploads/youtube-videos", fileName);
 
-    const videoURL: string = path.join("youtube-videos", fileName);
+    const videoURL: string = path.join("uploads/youtube-videos", fileName);
     let videoStream: any
     /* Download youtube videos on localserver */
     ytdl(body.url)
