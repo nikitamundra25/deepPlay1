@@ -164,7 +164,7 @@ class MoveComponent extends React.Component {
             </div>
           </Card>
         </div>
-        <div className="create-set-section step-2 mt-2 container">
+        {/* <div className="create-set-section step-2 mt-2">
           <Card className="w-100 set-content-wrap">
             <div className="set-content-block w-100">
               <CardHeader className="">
@@ -186,7 +186,7 @@ class MoveComponent extends React.Component {
               </CardBody>
             </div>
           </Card>
-        </div>
+        </div> */}
       </>
     );
   }
