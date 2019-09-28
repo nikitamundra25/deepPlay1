@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import { SetModel } from "../models";
 import { ISet } from "../interfaces";
-const ObjectId = require("mongodb").ObjectId;
+
 // --------------Create set---------------------
 const createSet = async (req: Request, res: Response): Promise<any> => {
   try {
@@ -82,7 +82,7 @@ const getRecentSetById = async (req: Request, res: Response): Promise<void> => {
 };
 
 // --------------Get all sets which have folderId or null folderId---------------------
-const getSets = async (req: Request, res: Response): Promise<void> => {
+const getSetsForFolder = async (req: Request, res: Response): Promise<void> => {
   try {
     const { currentUser } = req;
     const { body } = req;
@@ -140,4 +140,42 @@ const addSetInFolder = async (req: Request, res: Response): Promise<void> => {
   }
 };
 
-export { createSet, getAllSetById, getRecentSetById, addSetInFolder, getSets };
+/* Title:- Get sets with its id
+Query Prams:- folderId
+Created By:- Rishabh Bula*/
+
+const getSetDetailsById = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const { currentUser } = req;
+    const { query } = req;
+    const { setId } = query;
+
+    let headToken: Request | any = currentUser;
+    if (!headToken.id) {
+      res.status(400).json({
+        message: "User id not found"
+      });
+    }
+    const result = await SetModel.findById({
+      userId: headToken.id,
+      _id: setId
+    });
+    res.status(200).json({
+      data: result,
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).send({
+      message: error.message
+    });
+  }
+};
+
+export {
+  createSet,
+  getAllSetById,
+  getRecentSetById,
+  addSetInFolder,
+  getSetsForFolder,
+  getSetDetailsById
+};

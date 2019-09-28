@@ -7,15 +7,12 @@ const Settings = React.lazy(() => import("./container/Settings"));
 const Folders = React.lazy(() => import("./container/Folders"));
 const Sets = React.lazy(() => import("./container/Sets"));
 const CreateSets = React.lazy(() => import("./components/Sets/createSet"));
-const ResetPassword = React.lazy(() =>
-  import("./container/Auth/ResetPassword")
-);
+const ResetPassword = React.lazy(() =>import("./container/Auth/ResetPassword"));
 const Page404 = React.lazy(() => import("./components/Page404"));
 const Move = React.lazy(() => import("./container/Move"));
-const FolderDetails = React.lazy(() =>
-  import("./components/Folders/FolderDetails/FolderDetails")
-);
+const FolderDetails = React.lazy(() => import("./components/Folders/FolderDetails/FolderDetails"));
 const MoveDetails = React.lazy(() => import("./components/Move/MoveDetails"));
+const SetDetails = React.lazy(() => import("./components/Sets/SetDetails"));
 
 const routes = [
   {
@@ -83,6 +80,12 @@ const routes = [
     name: AppRoutes.FOLDER_DETAILS.name,
     exact: AppRoutes.FOLDER_DETAILS.exact,
     component: FolderDetails
+  },
+  {
+    path: AppRoutes.SET_DETAILS.url,
+    name: AppRoutes.SET_DETAILS.name,
+    exact: AppRoutes.SET_DETAILS.exact,
+    component: SetDetails
   }
 ];
 

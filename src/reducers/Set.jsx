@@ -3,7 +3,9 @@ import { SetsAction } from "../actions";
 const initialState = {
   allSetList: "",
   recentSetAdded: "",
-  setListinFolder: ""
+  setListinFolder: "",
+  setDetails: "",
+  isSetDetailsLoading: false
 };
 export const setReducer = handleActions(
   {
@@ -18,6 +20,15 @@ export const setReducer = handleActions(
     [SetsAction.GET_FOLDER_SET_SUCCESS]: (state, { payload }) => ({
       ...state,
       setListinFolder: payload.setListinFolder
+    }),
+    [SetsAction.GET_SET_DETAILS_REQUEST]: (state, { payload }) => ({
+      ...state,
+      isSetDetailsLoading: true
+    }),
+    [SetsAction.GET_SET_DETAILS_SUCCESS]: (state, { payload }) => ({
+      ...state,
+      setDetails: payload.setDetails,
+      isSetDetailsLoading: false
     })
   },
   initialState

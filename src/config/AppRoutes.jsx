@@ -39,6 +39,11 @@ export const AppRoutes = {
     name: "Set",
     exact: true
   },
+  SET_DETAILS: {
+    url: "/set-details/:id",
+    name: "Set Details",
+    exact: true
+  },
   CREATE_SET: {
     url: "/create-set",
     name: "CreateSet",
@@ -50,7 +55,7 @@ export const AppRoutes = {
     exact: true
   },
   MOVE_DETAILS: {
-    url: "/moveDetails/:id",
+    url: "/move-details/:id",
     name: "Move Details",
     exact: true
   },

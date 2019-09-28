@@ -13,6 +13,7 @@ app.use(bodyParser.urlencoded({ extended: false }));
 
 // parse application/json
 app.use(bodyParser.json({ limit: "50mb" }));
+console.log(`Directory name ${__dirname}`);
 
 app.use("/", express.static(path.join(__dirname, "public")));
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));

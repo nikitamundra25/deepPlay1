@@ -92,11 +92,11 @@ const deleteFolder = async (req: Request, res: Response): Promise<void> => {
         message: "Folder id not found"
       });
     }
-    const result = await FolderModel.findByIdAndUpdate(query.id, {
+    const result: any = await FolderModel.findByIdAndUpdate(query.id, {
       $set: { isDeleted: true }
     });
     res.status(200).json({
-      data: result[0],
+      data: result,
       message: "Folder has been deleted successfully"
     });
   } catch (error) {

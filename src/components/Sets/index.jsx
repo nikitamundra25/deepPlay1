@@ -1,8 +1,16 @@
 import React from "react";
 import { Row, Col, Button } from "reactstrap";
+import { AppRoutes } from "../../config/AppRoutes"
 import "./index.scss";
 // core components
 class SetComponent extends React.Component {
+
+  handleSetDetails = (setId) => {
+    this.props.redirectTo(AppRoutes.SET_DETAILS.url.replace(":id", setId))
+  }
+  /*
+  /*
+  */
   render() {
     const { getAllSet } = this.props;
     return (
@@ -25,7 +33,9 @@ class SetComponent extends React.Component {
                           <div className="cotent-text-tile">
                             <div className="content-heading-tile">
                               {" "}
-                              {setList.title}
+                              <span onClick={() => this.handleSetDetails(setList._id)} className={"cursor_pointer"}>
+                                {setList.title}
+                              </span>
                             </div>
                             {setList.description}
                             <div className="content-number-tile"> 46 moves</div>

@@ -55,6 +55,7 @@ class Set extends React.Component {
             handleSetComponent={this.handleSetComponent}
             handleFolderModel={this.handleFolderModel}
             getAllSet={getAllSetReducer.allSetList}
+            {...this.props}
           />
         )}
         <FolderModal

@@ -4,6 +4,8 @@ export const SetsAction = {
   CREATE_SET_SUCCESS: "Create Set Success",
   GET_ALL_SET_REQUEST: "Get All Set Request",
   GET_ALL_SET_SUCCESS: "Get All Set Success",
+  GET_SET_DETAILS_REQUEST:"Get set details request",
+  GET_SET_DETAILS_SUCCESS:"Get set details success",
   GET_FOLDER_SET_REQUEST: "Get Folder Set Request",
   GET_FOLDER_SET_SUCCESS: "Get Folder Set Success",
   MANAGE_SET_REQUEST: "Manage Sets in Folder Request",
@@ -25,3 +27,7 @@ export const ManageSetRequest = createAction(
 export const ManageSetSuccess = createAction(
   SetsAction.MANAGE_SET_SUCCESS
 );
+
+export const getSetDetailsRequest = createAction(SetsAction.GET_SET_DETAILS_REQUEST);
+export const getSetDetailsSuccess = createAction(SetsAction.GET_SET_DETAILS_SUCCESS);
+
