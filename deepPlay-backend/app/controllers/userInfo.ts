@@ -86,7 +86,7 @@ const imageUpload = async (req: Request, res: Response) => {
         type || "png"
       ].join("");
 
-      var originalImagePath = path.join(__basedir, "images", fileName);
+      var originalImagePath = path.join(__basedir, "uploads/images", fileName);
       fs.writeFile(originalImagePath, buf, async err => {
         if (err) {
           throw err;
@@ -94,10 +94,10 @@ const imageUpload = async (req: Request, res: Response) => {
 
         var thumbnailImagePath = path.join(
           __basedir,
-          "images-thumbnail",
+          "uploads/images-thumbnail",
           fileName
         );
-        const thumbnailImg: string = path.join("images-thumbnail", fileName);
+        const thumbnailImg: string = path.join("uploads/images-thumbnail", fileName);
         await resizeImage(originalImagePath, thumbnailImagePath, 200);
         const uploadimg = await UserModel.findByIdAndUpdate(currentUser.id, {
           profileImage: thumbnailImg

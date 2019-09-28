@@ -12,7 +12,8 @@ import {
   getFolderSetRequest,
   modelOpenRequest,
   getAllSetRequest,
-  getSetDetailsSuccess
+  getSetDetailsSuccess,
+  getMovesOfSetRequest
 } from "../actions";
 import { toast } from "react-toastify";
 
@@ -190,6 +191,7 @@ const getSetDetailsLogic = createLogic({
       return;
     } else {
       dispatch(hideLoader());
+      dispatch(getMovesOfSetRequest(action.payload))
       dispatch(
         getSetDetailsSuccess({
           showLoader: false,

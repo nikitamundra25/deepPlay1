@@ -9,6 +9,8 @@ import {
   ModalBody,
   ModalFooter
 } from "reactstrap";
+import closeBtn from "../../assets/img/close-img.png";
+
 // core components
 class FolderModal extends React.Component {
   constructor(props) {
@@ -68,7 +70,7 @@ class FolderModal extends React.Component {
               onClick={this.handleOpen}
             >
               <span aria-hidden="true">
-                <img src="./assets/img/close-img.png" alt="close-ic" />
+                <img src={closeBtn} alt="close-ic" />
               </span>
             </button>
           </ModalHeader>

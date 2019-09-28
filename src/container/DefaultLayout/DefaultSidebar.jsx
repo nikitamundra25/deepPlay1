@@ -1,9 +1,15 @@
 import React from "react";
 import { NavLink } from "react-router-dom";
-import "../../App.scss";
+// import "../../App.scss";
 import { SidebarComponent } from "../../components/Sidebar";
-
+import defaultProfileImage from "../../assets/img/user-black-ic.svg"
 class DefaultSidebar extends React.Component {
+
+  constructor(props) {
+    super(props);
+    this.state = {
+    }
+  }
 
   render() {
     const { profileInfoReducer } = this.props
@@ -24,7 +30,7 @@ class DefaultSidebar extends React.Component {
                         to={items.url}
                       >
                         {/* <i className={items.icon} /> */}
-                        <img src={items.iconUrl} alt={items.iconUrl} width="20"/>
+                        <img src={items.iconUrl} alt={items.iconUrl} width="20" />
                         <span> {items.name}</span>
                       </NavLink>
                     </li>
@@ -37,7 +43,7 @@ class DefaultSidebar extends React.Component {
         <div className="profile-wrap" >
           <div className="profile-img-tile">
             <div className="profile-img">
-              <img alt="..." src="./assets/img/user-black-ic.svg" className="w-100" />
+              <img alt="..." src={defaultProfileImage} className="w-100" />
             </div>
           </div>
           <div className="profile-text-tile color-black">

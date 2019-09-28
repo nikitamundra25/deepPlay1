@@ -160,6 +160,10 @@ class SignupComponent extends React.Component {
         isLoading: false
       });
       return;
+    } else {
+      this.setState({
+        errors: {},
+      });
     }
     this.props.signupRequest(data)
   }
@@ -193,7 +197,7 @@ class SignupComponent extends React.Component {
           <ModalBody className="modal-body p-0">
             <Card className="bg-secondaryborder-0">
               <CardHeader   >
-                <div className=" login-heading text-center mt-2 mb-3">
+                <div className=" login-heading text-center  mb-3">
                   Sign up with
                 </div>
                 <div className="btn-wrapper text-center social-media-wrap">
@@ -379,7 +383,7 @@ class SignupComponent extends React.Component {
                     <Button
                       className="my-4 btn-black btn-line-black btn-block"
                       color=" "
-
+                      onClick={this.props.handleLoginModal}
                       type="button"
                     >
                       Already have an account? Sign in

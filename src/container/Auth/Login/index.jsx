@@ -15,6 +15,8 @@ class Login extends React.Component {
       }
     })
   }
+  /* 
+  */
   render() {
     const {
       openLoginModel,
@@ -33,8 +35,10 @@ class Login extends React.Component {
           loginRequest={loginRequest}
           socialLoginRequest={socialLoginRequest}
           handleForgotPasswordModel={this.handleForgotPasswordModel}
+          handleSignupModal={this.props.handleSignupModal}
           {...this.props}
         />
+
         <ForgotPassword
           openForgotPasswordModel={modelDetails.forgotPasswordModalOpen}
           handleForgotPasswordModel={this.handleForgotPasswordModel}

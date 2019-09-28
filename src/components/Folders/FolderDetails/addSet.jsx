@@ -1,7 +1,7 @@
 import React from "react";
 import { Modal, ModalBody, ModalHeader, Row, Col, Button } from "reactstrap";
 import { AppRoutes } from "../../../config/AppRoutes"
-// import CreateSetComponent from "../../Sets/createSet"
+import closeIcon from "../../../assets/img/close-img.png"
 
 // core components
 class AddSetModal extends React.Component {
@@ -61,13 +61,13 @@ class AddSetModal extends React.Component {
               type="button"
               onClick={this.handleOpen}
             >
-              <span aria-hidden={true}>  <img src="./assets/img/close-img.png" alt="close-ic" /></span>
+              <span aria-hidden={true}>  <img src={closeIcon} alt="close-ic" /></span>
             </button>
           </ModalHeader>
           <ModalBody className="modal-text-center">
             <div className="wrap-folder">
               <Button color=" "  onClick={() => this.handleAddNewSet(folderId)} className={"cursor_pointer btn btn-black"}>+ Create New Set</Button>
-              {setList
+              {setList && setList.length
                 ? setList.map((set, i) => {
                   return (
                     <Row className="set-wrap" key={i}>

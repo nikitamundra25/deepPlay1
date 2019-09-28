@@ -3,7 +3,7 @@ import { connect } from "react-redux";
 import { Route, Switch, withRouter } from "react-router-dom";
 import { redirectTo } from "../actions/index.jsx";
 import {AppRoutes as routesData}  from "../config/AppRoutes";
-import "../App.scss";
+// import "../App.scss";
 // Pages
 const DefaultLayout = React.lazy(() =>
 import("../container/DefaultLayout/DefaultLayout")

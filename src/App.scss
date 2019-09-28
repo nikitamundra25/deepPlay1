@@ -117,13 +117,13 @@ a {
   color: $textColor;
 }
 .fill-btn {
-  border: 2px solid $theme;
+  border: 2px solid $blackcolor;
   color: #fff;
-  background: $theme;
+  background:$blackcolor;
   &:hover {
     color: #fff;
-    background: $theme;
-    border: 2px solid $theme;
+    background: $textColor;
+    border: 2px solid $textColor;
   }
 }
 
@@ -143,7 +143,7 @@ a {
     display: flex;
     align-items: center;
     justify-content: center;
-    background: $videoAddBannerBorder;
+    background: $blackcolor;
     border-radius: 50%;
     font-size: 55px;
     padding-left: 8px;
@@ -203,13 +203,13 @@ a {
     text-transform: capitalize;
   }
 }
-.dashboard-full-section {
+.dashboard-full-section{
   display: flex;
   max-width: 100%;
   margin-top: 0px;
   padding-top: 58px;
   justify-content: center;
-
+   
   .app-sidebar {
     position: fixed;
     height: 100%;
@@ -307,10 +307,7 @@ a {
     border: 1px solid #d4d4d4;
   }
   
-  .setting-icon {
-    margin-top: -9px;
-    margin-left: 15px;
-  }
+
   .content-heading-tile {
     font-size: 16px;
     justify-content: space-between;
@@ -367,23 +364,7 @@ a {
     background: #fff;
   }
 }
-.auth-user-model {
-  .login-heading {
-    color: $blackcolor;
-    font-weight: 600;
-    font-size: 18px;
-  }
-  .card-header {
-    padding-bottom: 25px;
-    background: #fff;
-  }
-  .card-body {
-    background: #dfe7ed;
-  }
-  .auth-subheading {
-    font-size: 16px;
-  }
-}
+
 .modal-header {
   padding: 0px;
   border: none;
@@ -494,8 +475,8 @@ a {
     cursor: pointer;
   }
   .dropdown-menu {
-    top: auto !important;
-    right: 0px !important;
+    top: 110%!important;
+    right: -15px !important;
     left: auto !important;
     padding: 0px;
     border: 2px solid #fff;
@@ -533,8 +514,9 @@ a {
   cursor: pointer;
   display: flex;
   align-items: center;
+ 
   justify-content: center;
-  padding: 0px 15px 0px 0px !important;
+  padding: 0px 0px 0px 0px !important;
   &::after {
     border-top: 0.4em solid;
     border-right: 0.4em solid transparent;
@@ -579,7 +561,6 @@ a {
 .profile-wrap {
   .profile-img {
     width: 140px;
-    /* max-width: 100%; */
     height: 140px;
     background-size: cover;
     background-position: center center;
@@ -587,6 +568,8 @@ a {
     margin: auto;
     overflow: hidden;
     position: relative;
+    background-size: cover;
+    background-position:center center; 
   }
   .changeProfile {
     position: absolute;
@@ -748,12 +731,28 @@ a {
       padding: 5px 25px;
     }
   }
+  .empty-folder-wrap{
+  .empty-folder-header {
+    border-bottom: none;
+    img{width: 80px;
+    margin-bottom: 30px;}
+    h3{
+      font-size: 18px;
+      // text-transform: capitalize;
+      color: #000;
+      font-weight: 600;  
+    }
+  }
+  .card-body{
+    padding-top: 0px;
+  }
+}
 }
 .set-content-wrap {
   display: flex;
   align-items: center;
   justify-content: center;
-  min-height: 600px;
+  min-height: 450px;
 }
 .disabled {
   cursor: not-allowed;
@@ -848,4 +847,90 @@ a {
   margin-top: 15px;
   padding: 15px 0px;
   border: 1px solid #d4d4d4;
+}
+.auth-user-model {
+  max-width: 420px;
+  .login-heading {
+    color: $blackcolor;
+    font-weight: 600;
+    font-size: 18px;
+  }
+  .card-header {
+    padding-bottom: 25px;
+    background: #fff;
+  }
+  .card-body {
+    background: #dfe7ed;
+  }
+  .auth-subheading {
+    font-size: 16px;
+  }
+  .close{
+    background: #58646f;
+    border: 2px solid #9ca3ad;
+    right: 25px;
+    top: 25px;
+  }
+  .card{
+    margin-top: 0px;
+    padding-top: 0px;
+  }
+}
+.tooltip-btn-wrap{
+  position: relative;
+
+  .btn-group{
+    position: absolute;
+
+    &::before{
+      position: absolute;
+      bottom: -5px;
+      right: 16px;
+      display: inline-block;
+      width: 0;
+      height: 0;
+      margin-left: 0.255em;
+      vertical-align: 0.255em;
+      content: "";
+      border-top: 0.4em solid;
+      border-right: 0.4em solid transparent;
+      border-bottom: 0;
+      border-left: 0.4em solid transparent;
+    }}
+  &.right-btn-tip .btn-group{
+    right: -18px;
+    top: -110%;
+    &::before{
+      position: absolute;
+    bottom: -5px;
+    right: 16px;
+  }
+  }
+  .btn{
+    background: #000;
+    border: none;
+    color: #fff;
+    line-height: 120%;
+    font-weight: normal;
+  }
+ 
+}
+.content-with-tip{
+  .cotent-text-tile{padding-right: 9px;}
+  .right-btn-tip{
+    position: absolute;
+    right: 15px;
+  }
+}
+.dashboard-full-section .folder-main-wrap{
+  align-items: flex-start;
+  i{
+    margin-left: 15px;
+  }
+}
+.home-container{
+  padding-top: 59px;
+}
+.folder-create-btn{
+  min-width: 150px;
 }

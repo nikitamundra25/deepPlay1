@@ -45,9 +45,9 @@ const downloadVideo = async (req: Request, res: Response): Promise<any> => {
     ].join("");
 
     const originalVideoPath = path.join(__basedir,
-      "youtube-videos", fileName);
+      "uploads/youtube-videos", fileName);
 
-    const videoURL: string = path.join("youtube-videos", fileName);
+    const videoURL: string = path.join("uploads/youtube-videos", fileName);
     let videoStream: any
     /* Download youtube videos on localserver */
     ytdl(body.url)
@@ -77,10 +77,23 @@ const downloadVideo = async (req: Request, res: Response): Promise<any> => {
 };
 
 // --------------Get all set info---------------------
-const getAllMoveById = async (req: Request, res: Response): Promise<void> => {
+const getMoveBySetId = async (req: Request, res: Response): Promise<any> => {
   try {
-    const { currentUser } = req;
+    const { currentUser, query } = req;
     let headToken: Request | any = currentUser;
+    if (!headToken.id) {
+      res.status(400).json({
+        message: "User id not found"
+      });
+    }
+    const movesData: Document | any = await MoveModel.find({
+      userId: headToken.id,
+      setId: query.setId
+    })
+
+    return res.status(200).json({
+      movesData: movesData
+    })
   } catch (error) {
     console.log(error);
     res.status(500).send({
@@ -90,5 +103,6 @@ const getAllMoveById = async (req: Request, res: Response): Promise<void> => {
 };
 
 export {
-  downloadVideo
+  downloadVideo,
+  getMoveBySetId
 };
