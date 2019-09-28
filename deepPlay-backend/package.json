@@ -40,6 +40,7 @@
   },
   "devDependencies": {
     "@types/algoliasearch": "^3.34.2",
+    "@types/nodemailer": "^6.2.1",
     "copy-webpack-plugin": "^5.0.4",
     "ts-loader": "^6.1.1",
     "webpack": "^4.40.2",
