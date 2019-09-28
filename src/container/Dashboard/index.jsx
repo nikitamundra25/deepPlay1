@@ -12,7 +12,7 @@ class Dashboard extends React.Component {
         <>
           <div className="page-body">
             <div className="content-header">
-              <span className="content-title">RECENT</span>
+              <span className="content-title">RECENT SETS</span>
               <span className="dashboard-right-content">View All</span>
             </div>
             <Row>
@@ -121,7 +121,7 @@ class Dashboard extends React.Component {
           </div>
           <div className="page-body mt-4">
             <div className="content-header">
-              <span className="content-title">FOLDER</span>
+              <span className="content-title">RECENT FOLDERS</span>
               <span className="dashboard-right-content">View All</span>
             </div>
             <Row>
