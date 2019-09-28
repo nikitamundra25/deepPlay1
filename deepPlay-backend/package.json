@@ -6,6 +6,7 @@
   "scripts": {
     "tsc": "tsc",
     "dev": "ts-node-dev --respawn --transpileOnly ./app/app.ts",
+    "build": "webpack --progress",
     "prod": "webpack --progress && node ./build/app.js"
   },
   "author": "",
