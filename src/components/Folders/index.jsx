@@ -69,7 +69,6 @@ class FolderComponent extends React.Component {
         <div className="wrap-folder">
           <Row className="set-wrap" >
             {getAllFolders.length ? (
-
               getAllFolders.map((folder, i) => {
                 if (!folder.isDeleted) {
                   return (
