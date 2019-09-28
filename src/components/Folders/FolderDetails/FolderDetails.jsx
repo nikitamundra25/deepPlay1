@@ -1,5 +1,5 @@
 import React from "react";
-import {  Button, Row, Col, ButtonGroup, Card, CardBody, CardHeader } from "reactstrap";
+import { Button, Row, Col, ButtonGroup, Card, CardBody, CardHeader } from "reactstrap";
 import { connect } from "react-redux";
 import {
   folderDetailRequest,
@@ -134,7 +134,6 @@ class RecentFolderComponent extends React.Component {
     const {
       modelOperate,
       modelInfoReducer,
-      folderDetails,
       getAllFolders
     } = this.props;
     const { setListItem, show, pathName, setToTransfer, folderId } = this.state;
@@ -212,7 +211,7 @@ class RecentFolderComponent extends React.Component {
                     <Card className="w-100 set-content-wrap">
                       <div className="set-content-block w-100 empty-folder-wrap">
                         <CardHeader className="empty-folder-header">
-                          <img src={emptySetIc} />
+                          <img src={emptySetIc} alt={"Images"} />
                           <div className="content-header set-header">
                             <span className="content-title">      <h3>This folder has no Sets yet</h3>
                               <p>Organize your Sets for you or your students</p></span>
@@ -220,7 +219,6 @@ class RecentFolderComponent extends React.Component {
                         </CardHeader>
                         <CardBody className="">
                           <div className="create-set-tile">
-
                           </div>
                           <div className="text-center">
                             <Button
@@ -232,14 +230,12 @@ class RecentFolderComponent extends React.Component {
                             >
                               <i className="fas fa-plus mr-1"></i>
                               Add a Set
-                </Button>
+                          </Button>
                           </div>
                         </CardBody>
                       </div>
                     </Card>
-
                   </div>
-
                 </>
               )}
           </Row>
