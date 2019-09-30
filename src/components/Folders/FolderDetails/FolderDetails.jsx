@@ -23,7 +23,6 @@ import AddSetModal from "./addSet";
 import TransferToModal from "./transferTo";
 import { ConfirmBox } from "../../../helper/SweetAleart";
 import SharableLinkModal from "../../Common/SharableLink";
-
 import emptySetIc from "../../../assets/img/empty-sets.png";
 // core components
 class RecentFolderComponent extends React.Component {
@@ -184,18 +183,21 @@ class RecentFolderComponent extends React.Component {
       addSetModalOpen,
       sharableLinkModalOpen
     } = modelDetails;
+
     return (
-      <div className="page-body container">
+      // <div className="content-header">
+      //   <span className="content-title">YOUR SETS</span>
+      //   <span className="dashboard-right-content">
+      //     {getAllSet && getAllSet.length ? getAllSet.length : 0} Sets total
+      //   </span>
+      // </div>
+      <div className="set-main-section">
         <div className="content-header">
           <span className="content-title">
             {folderDetails ? folderDetails.title : "MyFolder"}
           </span>
-          <div>
-            <span
-              className="dashboard-right-content"
-              onClick={this.openAddSetModel}
-              id="move"
-            >
+          <div className="dashboard-right-content d-flex">
+            <span onClick={this.openAddSetModel} id="move">
               <i className="fas fa-plus-circle fa-2x  "></i>
             </span>
             <UncontrolledTooltip placement="bottom" target="move">
@@ -282,18 +284,38 @@ class RecentFolderComponent extends React.Component {
               }
             })
           ) : (
-            <div className="inner-wrap">
-              <h3>This folder has no Sets yet</h3>
-              <p>Organize your Sets for you or your students</p>
-              <Button
-                color="default"
-                type="button"
-                className="btn-btn-right"
-                onClick={this.openAddSetModel}
-              >
-                Add a Set
-              </Button>
-            </div>
+            <>
+              <div className="create-set-section mt-2 w-100">
+                <Card className="w-100 set-content-wrap">
+                  <div className="set-content-block w-100 empty-folder-wrap">
+                    <CardHeader className="empty-folder-header">
+                      <img src={emptySetIc} alt={"folder"} />
+                      <div className="content-header set-header">
+                        <span className="content-title">
+                          {" "}
+                          <h3>You haven't created any folder yet</h3>
+                          <p>Create a Folder to Organize your Sets.</p>
+                        </span>
+                      </div>
+                    </CardHeader>
+                    <CardBody className="">
+                      <div className="create-set-tile"></div>
+                      <div className="text-center">
+                        <Button
+                          color=" "
+                          type="button"
+                          className="btn-black btn mt-3 folder-create-btn"
+                          onClick={this.openAddSetModel}
+                        >
+                          <i className="fas fa-plus mr-1"></i>
+                          Add a Set
+                        </Button>
+                      </div>
+                    </CardBody>
+                  </div>
+                </Card>
+              </div>
+            </>
           )}
         </Row>
         <AddSetModal
