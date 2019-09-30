@@ -80,37 +80,32 @@ class AddSetModal extends React.Component {
                       <Row className="set-wrap" key={i}>
                         <Col md="12">
                           <div className="tile-wrap card">
-                            <div className="cotent-tile d-flex">
-                              <div className="cotent-text-tile d-flex">
-                                <div className="content-heading-tile">
-                                  {" "}
-                                  {set.title}
-                                </div>
-                                <div>
-                                  {set.folderId !== null ? (
-                                    <span
-                                      onClick={() =>
-                                        this.OnhandleSets(set._id, "add")
-                                      }
-                                    >
-                                      <i
-                                        className="fa fa-plus-square-o"
-                                        aria-hidden="true"
-                                      ></i>
-                                    </span>
-                                  ) : (
-                                    <span
-                                      onClick={() =>
-                                        this.OnhandleSets(set._id, "remove")
-                                      }
-                                    >
-                                      <i
-                                        className="fa fa-minus"
-                                        aria-hidden="true"
-                                      ></i>
-                                    </span>
-                                  )}
-                                </div>
+                            <div className="d-flex flaex-warp">
+                              <div className="sets-heading"> {set.title}</div>
+                              <div className="sets-icon ">
+                                {set.folderId !== null ? (
+                                  <span
+                                    onClick={() =>
+                                      this.OnhandleSets(set._id, "add")
+                                    }
+                                  >
+                                    <i
+                                      className="fa fa-plus-square-o"
+                                      aria-hidden="true"
+                                    ></i>
+                                  </span>
+                                ) : (
+                                  <span
+                                    onClick={() =>
+                                      this.OnhandleSets(set._id, "remove")
+                                    }
+                                  >
+                                    <i
+                                      className="fa fa-minus"
+                                      aria-hidden="true"
+                                    ></i>
+                                  </span>
+                                )}
                               </div>
                             </div>
                           </div>

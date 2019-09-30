@@ -204,7 +204,7 @@ class RecentFolderComponent extends React.Component {
               onClick={this.openAddSetModel}
               id="move"
             >
-              <i className="fas fa-plus-circle fa-2x  "></i>
+              <i className="fas fa-plus-circle icon-font"></i>
             </span>
             <UncontrolledTooltip placement="bottom" target="move">
               Add Sets
@@ -215,13 +215,13 @@ class RecentFolderComponent extends React.Component {
               onClick={this.handleSharableLink}
               className="cursor_pointer ml-4"
             >
-              <i className="fas fa-share fa-2x"></i>
+              <i className="fas fa-share icon-font"></i>
             </span>
             <UncontrolledTooltip placement="bottom" target="share">
               Get Shareable Link
             </UncontrolledTooltip>
             <span id="edit" className="cursor_pointer ml-4">
-              <i className="fas fa-sliders-h fa-2x"></i>
+              <i className="fas fa-sliders-h icon-font"></i>
             </span>
             <UncontrolledTooltip placement="bottom" target="edit">
               Edit & Delete

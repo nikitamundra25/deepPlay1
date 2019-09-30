@@ -42,23 +42,16 @@ class DefaultSidebar extends React.Component {
         </div>
         <div className="profile-wrap">
           <div className="profile-img-tile">
-            <div className={profiledata
-                ?"": "profile-img"}>
-              {profiledata
-                ?
+            <div className={profiledata ? "user-profile-img" : "profile-img"}>
+              {profiledata ? (
                 <img
                   src={`${AppConfig.API_ENDPOINT}${profiledata.profileImage}`}
-                  className="w-100"
-                  alt={"img"}
-                  
-                />
-                :
-                <img
-                  src={defaultProfileImage}
-                  className="w-100"
+                  className="w-100 h-100"
                   alt={"img"}
                 />
-              }
+              ) : (
+                <img src={defaultProfileImage} className="w-100" alt={"img"} />
+              )}
             </div>
           </div>
           <div className="profile-text-tile color-black">
