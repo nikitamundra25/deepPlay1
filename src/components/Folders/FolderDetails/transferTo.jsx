@@ -1,5 +1,5 @@
 import React from "react";
-import { Modal, ModalBody, ModalHeader, CardBody, Card } from "reactstrap";
+import { Modal, ModalBody, ModalHeader, Card } from "reactstrap";
 import closeIcon from "../../../assets/img/close-img.png";
 // core components
 class TransferToModal extends React.Component {
