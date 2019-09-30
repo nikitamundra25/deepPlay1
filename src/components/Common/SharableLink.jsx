@@ -65,7 +65,8 @@ class SharableLinkModal extends React.Component {
       >
         <ModalHeader>
           <span className="custom-title" id="exampleModalLabel">
-            {isPublic ? "Anyone with link can view." : "Only you can view"}
+            {/* {isPublic ? "Anyone with link can view." : "Only you can view"} */}
+            SHAREABLE LINK
           </span>
           <button
             aria-label="Close"
@@ -110,6 +111,12 @@ class SharableLinkModal extends React.Component {
                 </Button>
               </div>
             </Form>
+            <div>
+              {" "}
+              {isPublic
+                ? "Anyone can view with this link."
+                : "Only you can view"}
+            </div>
           </div>
         </ModalBody>
         <ModalFooter>

@@ -13,6 +13,7 @@ import FolderModal from "./createFolderModal";
 import { ConfirmBox } from "../../helper/SweetAleart";
 import { AppRoutes } from "../../config/AppRoutes";
 import emptyFolderIc from "../../assets/img/empty-folder.png";
+import { logger } from "helper/Logger";
 // core components
 class FolderComponent extends React.Component {
   constructor(props) {
@@ -53,13 +54,17 @@ class FolderComponent extends React.Component {
   };
 
   handleFolderModel = () => {
-    const { modelInfoReducer } = this.props;
-    const { modelDetails } = modelInfoReducer;
-    this.props.modelOperate({
-      modelDetails: {
-        createFolderOpen: !modelDetails.createFolderOpen
-      }
-    });
+    try {
+      const { modelInfoReducer } = this.props;
+      const { modelDetails } = modelInfoReducer;
+      this.props.modelOperate({
+        modelDetails: {
+          createFolderOpen: !modelDetails.createFolderOpen
+        }
+      });
+    } catch (error) {
+      logger(error);
+    }
   };
 
   handleCopyFolder = async folder => {
@@ -100,7 +105,7 @@ class FolderComponent extends React.Component {
         <Col></Col>
         <p>4 folders total</p>{" "}
         <div className="wrap-folder">
-          {getAllFolders.length ? (
+          {getAllFolders && getAllFolders.length ? (
             // eslint-disable-next-line
             getAllFolders.map((folder, i) => {
               if (!folder.isDeleted) {

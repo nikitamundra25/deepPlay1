@@ -79,6 +79,13 @@ const allFolderLogic = createLogic({
       // toast.success(result.messages[0]);
       dispatch(hideLoader());
       dispatch(
+        modelOpenRequest({
+          modelDetails: {
+            createFolderModalOpen: false
+          }
+        })
+      );
+      dispatch(
         getAllFolderSuccess({
           getAllFolders: result.data.data
         })
