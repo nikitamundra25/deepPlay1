@@ -39,6 +39,21 @@ class SetComponent extends React.Component {
     this.props.redirectTo(AppRoutes.SET_DETAILS.url.replace(":id", setId));
   };
 
+  openTransferToModal = (id, folderId) => {
+    this.props.allFolders();
+    const { modelInfoReducer } = this.props;
+    const { modelDetails } = modelInfoReducer;
+    this.setState({
+      setToTransfer: id,
+      folderId: folderId
+    });
+    this.props.modelOperate({
+      modelDetails: {
+        transferToModalOpen: !modelDetails.transferToModalOpen
+      }
+    });
+  };
+
   render() {
     const { getAllSet } = this.props;
     const { show, setIndex } = this.state;

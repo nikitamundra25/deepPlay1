@@ -51,7 +51,7 @@ class RecentFolderComponent extends React.Component {
     if (
       prevProps.getAllSetReducer &&
       prevProps.getAllSetReducer.setListinFolder !==
-      this.props.getAllSetReducer.setListinFolder
+        this.props.getAllSetReducer.setListinFolder
     ) {
       const setList = this.props.getAllSetReducer.setListinFolder;
       this.setState({
@@ -95,6 +95,7 @@ class RecentFolderComponent extends React.Component {
       folderId: pathName[2],
       previousFolderId: pathName[2]
     };
+    console.log(">>>>>>", data);
     this.props.manageSets(data);
   };
 
@@ -183,7 +184,7 @@ class RecentFolderComponent extends React.Component {
 
   render() {
     const { modelInfoReducer, getFolderReducer } = this.props;
-    const { setListItem, show, pathName, setToTransfer, folderId, setIndex } = this.state;
+    const { setListItem, show, setToTransfer, folderId, setIndex } = this.state;
     const { modelDetails } = modelInfoReducer;
     const { folderDetails, getAllFolders } = getFolderReducer;
     const {
@@ -191,7 +192,7 @@ class RecentFolderComponent extends React.Component {
       addSetModalOpen,
       sharableLinkModalOpen
     } = modelDetails;
-    const setOfFolder = setListItem.filter((item) => item.folderId === folderId)
+    const setOfFolder = setListItem.filter(item => item.folderId === folderId);
     return (
       <div className="page-body">
         <div className="content-header">
@@ -280,7 +281,7 @@ class RecentFolderComponent extends React.Component {
                               }
                             >
                               Remove
-                          </Button>
+                            </Button>
                           </ButtonGroup>
                         ) : null}
                       </div>
@@ -290,38 +291,39 @@ class RecentFolderComponent extends React.Component {
               );
             })
           ) : (
-              <>
-                <div className="create-set-section mt-2 w-100">
-                  <Card className="w-100 set-content-wrap">
-                    <div className="set-content-block w-100 empty-folder-wrap">
-                      <CardHeader className="empty-folder-header">
-                        <img src={emptySetIc} alt={"Images"} />
-                        <div className="content-header set-header">
-                          <span className="content-title">      <h3>This folder has no Sets yet</h3>
-                            <p>Organize your Sets for you or your students</p></span>
-                        </div>
-                      </CardHeader>
-                      <CardBody className="">
-                        <div className="create-set-tile">
-                        </div>
-                        <div className="text-center">
-                          <Button
-                            color=" "
-                            type="button"
-                            className="btn-black btn mt-3"
-                            onClick={this.openAddSetModel}
-
-                          >
-                            <i className="fas fa-plus mr-1"></i>
-                            Add a Set
-                          </Button>
-                        </div>
-                      </CardBody>
-                    </div>
-                  </Card>
-                </div>
-              </>
-            )}
+            <>
+              <div className="create-set-section mt-2 w-100">
+                <Card className="w-100 set-content-wrap">
+                  <div className="set-content-block w-100 empty-folder-wrap">
+                    <CardHeader className="empty-folder-header">
+                      <img src={emptySetIc} alt={"Images"} />
+                      <div className="content-header set-header">
+                        <span className="content-title">
+                          {" "}
+                          <h3>This folder has no Sets yet</h3>
+                          <p>Organize your Sets for you or your students</p>
+                        </span>
+                      </div>
+                    </CardHeader>
+                    <CardBody className="">
+                      <div className="create-set-tile"></div>
+                      <div className="text-center">
+                        <Button
+                          color=" "
+                          type="button"
+                          className="btn-black btn mt-3"
+                          onClick={this.openAddSetModel}
+                        >
+                          <i className="fas fa-plus mr-1"></i>
+                          Add a Set
+                        </Button>
+                      </div>
+                    </CardBody>
+                  </div>
+                </Card>
+              </div>
+            </>
+          )}
         </Row>
         <AddSetModal
           handleOpen={this.openAddSetModel}
@@ -334,7 +336,7 @@ class RecentFolderComponent extends React.Component {
         <TransferToModal
           modal={transferToModalOpen}
           AllFolders={getAllFolders}
-          pathName={pathName}
+          folderId={folderId}
           handleOpen={this.openTransferToModal}
           setToTransfer={setToTransfer}
           handleFolder={this.handleFolder}

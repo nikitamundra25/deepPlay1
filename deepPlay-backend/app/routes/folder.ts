@@ -15,7 +15,7 @@ FolderRouter.post("/create-folder", ValidateAdminToken, createFolder);
 FolderRouter.get("/get-folder-by-id", ValidateAdminToken, getCretedFolderById);
 FolderRouter.get("/all-folder", ValidateAdminToken, getAllFolder);
 FolderRouter.get("/recent-folder", ValidateAdminToken, getRecentFolder);
-FolderRouter.delete("/delete-folder", ValidateAdminToken, deleteFolder);
+FolderRouter.patch("/delete-folder", ValidateAdminToken, deleteFolder);
 FolderRouter.patch(
   "/update-recent-time",
   ValidateAdminToken,

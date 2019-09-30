@@ -136,7 +136,7 @@ const deleteFolderLogic = createLogic({
     let result = await api.FetchFromServer(
       "folder",
       "/delete-folder",
-      "DELETE",
+      "PATCH",
       true,
       { id: action.payload },
       undefined
