@@ -6,7 +6,7 @@ import {
   downloadYoutubeVideoSuccess,
   getMovesOfSetSuccess
 } from "../actions";
-import { AppRoutes } from "../config/AppRoutes"
+import { AppRoutes } from "../config/AppRoutes";
 import { toast } from "react-toastify";
 
 //  Download video
@@ -24,18 +24,23 @@ const downloadVideoLogic = createLogic({
     );
     if (result.isError) {
       toast.error(result.messages[0]);
-      dispatch(downloadYoutubeVideoSuccess())
+      dispatch(downloadYoutubeVideoSuccess());
       done();
       return;
     } else {
       toast.success(result.messages[0]);
-      dispatch(downloadYoutubeVideoSuccess({
-        videoUrl: result.data.videoUrl
-      }))
-      dispatch(redirectTo({
-        path:
-          `${AppRoutes.MOVE_DETAILS.url.replace(":id", result.data.moveData._id)}`
-      })
+      dispatch(
+        downloadYoutubeVideoSuccess({
+          videoUrl: result.data.videoUrl
+        })
+      );
+      dispatch(
+        redirectTo({
+          path: `${AppRoutes.MOVE_DETAILS.url.replace(
+            ":id",
+            result.data.moveData._id
+          )}`
+        })
       );
       done();
     }
@@ -71,7 +76,4 @@ const getMovesOfSetLogic = createLogic({
   }
 });
 
-export const MoveLogics = [
-  downloadVideoLogic,
-  getMovesOfSetLogic
-];
+export const MoveLogics = [downloadVideoLogic, getMovesOfSetLogic];

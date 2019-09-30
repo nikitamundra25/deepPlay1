@@ -113,7 +113,6 @@ class DefaultHeader extends React.Component {
               // expand="lg"
               id="navbar-main"
             >
-
               <NavbarBrand className="mr-lg-5" to="/" tag={Link}>
                 <h3 className="mb-0 header-title">Deep Play</h3>
               </NavbarBrand>
@@ -128,7 +127,7 @@ class DefaultHeader extends React.Component {
                           className="nav-dropdown-btn"
                         >
                           <i className="fas fa-plus-square"></i> &nbsp; Create
-                      </DropdownToggle>
+                        </DropdownToggle>
                         <DropdownMenu>
                           <DropdownItem></DropdownItem>
                         </DropdownMenu>
@@ -137,13 +136,13 @@ class DefaultHeader extends React.Component {
                           <DropdownItem active={routePath === "/move" ? true : false} onClick={() => this.props.redirectTo(AppRoutes.MOVE.url)}>
                             Create Move
                           </DropdownItem>
-                          <DropdownItem active={routePath === "/create-set" ? true : false} onClick={() => this.props.redirectTo(AppRoutes.CREATE_SET.url)}>
-                            Create Set
+                        <DropdownItem active={routePath === "/create-set" ? true : false} onClick={() => this.props.redirectTo(AppRoutes.CREATE_SET.url)}>
+                          Create Set
                           </DropdownItem>
                           <DropdownItem onClick={this.handleFolderModel}>
                             {" "}
                             Create Folder
-                        </DropdownItem>
+                          </DropdownItem>
                         </DropdownMenu>
                       </UncontrolledDropdown>
                     </Col>
@@ -174,13 +173,13 @@ class DefaultHeader extends React.Component {
                         className="nav-link-inner--text pr-4 cusror_pointer"
                       >
                         Login
-                    </span>
+                      </span>
                       <span
                         onClick={this.handleSignupModel}
                         className="nav-link-inner--text pr-2 cusror_pointer"
                       >
                         Signup
-                    </span>
+                      </span>
                     </React.Fragment>
                   </div>
                 ) : (

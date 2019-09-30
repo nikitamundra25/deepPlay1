@@ -2,7 +2,8 @@ import { handleActions } from "redux-actions";
 import { FolderAction } from "../actions";
 const initialState = {
   folderDetails: "",
-  getAllFolders: ""
+  getAllFolders: "",
+  recentFolders: ""
 };
 export const getFolderReducer = handleActions(
   {
@@ -13,6 +14,10 @@ export const getFolderReducer = handleActions(
     [FolderAction.GET_ALL_FOLDER_SUCCESS]: (state, { payload }) => ({
       ...state,
       getAllFolders: payload.getAllFolders
+    }),
+    [FolderAction.RECENT_FOLDER_SUCCESS]: (state, { payload }) => ({
+      ...state,
+      recentFolders: payload.recentFolders
     })
   },
   initialState

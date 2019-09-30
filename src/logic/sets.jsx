@@ -12,8 +12,8 @@ import {
   getFolderSetRequest,
   modelOpenRequest,
   getAllSetRequest,
-  getSetDetailsSuccess,
-  getMovesOfSetRequest
+  recentSetSuccess,
+  getSetDetailsSuccess
 } from "../actions";
 import { toast } from "react-toastify";
 
@@ -25,7 +25,7 @@ const createSetLogic = createLogic({
     dispatch(showLoader());
     let result = await api.FetchFromServer(
       "set",
-      "/createSet",
+      "/create-set",
       "POST",
       true,
       undefined,
@@ -56,6 +56,65 @@ const createSetLogic = createLogic({
   }
 });
 
+// Recent Folder (dashboard)
+const recentSetLogic = createLogic({
+  type: SetsAction.RECENT_SET_REQUEST,
+  async process({ action }, dispatch, done) {
+    let api = new ApiHelper();
+    dispatch(showLoader());
+    let result = await api.FetchFromServer(
+      "set",
+      "/get-recent-set",
+      "GET",
+      true,
+      undefined,
+      undefined
+    );
+    if (result.isError) {
+      toast.error(result.messages[0]);
+      dispatch(hideLoader());
+      done();
+      return;
+    } else {
+      // toast.success(result.messages[0]);
+      dispatch(hideLoader());
+      dispatch(
+        recentSetSuccess({
+          recentSets: result.data.data
+        })
+      );
+      done();
+    }
+  }
+});
+
+//Delete folder
+const deleteSetLogic = createLogic({
+  type: SetsAction.DELETE_SET_REQUEST,
+  async process({ action }, dispatch, done) {
+    let api = new ApiHelper();
+    dispatch(showLoader());
+    let result = await api.FetchFromServer(
+      "set",
+      "/delete-set",
+      "DELETE",
+      true,
+      { id: action.payload },
+      undefined
+    );
+    if (result.isError) {
+      dispatch(hideLoader());
+      toast.error(result.messages[0]);
+      done();
+      return;
+    } else {
+      dispatch(hideLoader());
+      toast.success(result.messages[0]);
+      dispatch(getAllSetRequest());
+      done();
+    }
+  }
+});
 //  ---------------Get all sets ---------------
 const getAllSetLogic = createLogic({
   type: SetsAction.GET_ALL_SET_REQUEST,
@@ -64,7 +123,7 @@ const getAllSetLogic = createLogic({
     dispatch(showLoader());
     let result = await api.FetchFromServer(
       "set",
-      "/getAllSet",
+      "/get-all-set",
       "GET",
       true,
       undefined,
@@ -96,8 +155,8 @@ const getSetLogic = createLogic({
     dispatch(showLoader());
     let result = await api.FetchFromServer(
       "set",
-      "/getSets",
-      "POST",
+      "/get-sets",
+      "PATCH",
       true,
       undefined,
       action.payload
@@ -130,8 +189,8 @@ const ManageSetLogic = createLogic({
     console.log("act", action.payload);
     let result = await api.FetchFromServer(
       "set",
-      "/manageSets",
-      "POST",
+      "/manage-sets",
+      "PATCH",
       true,
       undefined,
       action.payload
@@ -146,12 +205,16 @@ const ManageSetLogic = createLogic({
           showLoader: false
         })
       );
-
-      dispatch(
-        getFolderSetRequest({
-          folderId: action.payload.previousFolderId
-        })
-      );
+      if (action.payload.previousFolderId) {
+        dispatch(
+          getFolderSetRequest({
+            folderId: action.payload.previousFolderId
+          })
+        );
+      } else {
+        toast.success("Your set has been transfered successfully");
+        dispatch(getAllSetRequest());
+      }
       dispatch(
         modelOpenRequest({
           modelDetails: {
@@ -191,7 +254,6 @@ const getSetDetailsLogic = createLogic({
       return;
     } else {
       dispatch(hideLoader());
-      dispatch(getMovesOfSetRequest(action.payload))
       dispatch(
         getSetDetailsSuccess({
           showLoader: false,
@@ -208,5 +270,7 @@ export const SetLogics = [
   getAllSetLogic,
   getSetLogic,
   ManageSetLogic,
+  recentSetLogic,
+  deleteSetLogic,
   getSetDetailsLogic
 ];

@@ -19,8 +19,8 @@ const setSchema: Mongoose.Schema = new Schema({
     type: String
   },
   folderId: {
-      type: Schema.Types.ObjectId,
-      ref: "folder",
+    type: Schema.Types.ObjectId,
+    ref: "folder"
   },
   userId: {
     type: Schema.Types.ObjectId,
@@ -30,6 +30,10 @@ const setSchema: Mongoose.Schema = new Schema({
   status: {
     type: Boolean,
     default: true
+  },
+  isRecentTime: {
+    type: Date,
+    default: Date.now
   },
   createdAt: {
     type: Date,

@@ -1,7 +1,7 @@
 import React from "react";
 import { Modal, ModalBody, ModalHeader, Row, Col, Button } from "reactstrap";
-import { AppRoutes } from "../../../config/AppRoutes"
-import closeIcon from "../../../assets/img/close-img.png"
+import { AppRoutes } from "../../../config/AppRoutes";
+import closeIcon from "../../../assets/img/close-img.png";
 
 // core components
 class AddSetModal extends React.Component {
@@ -34,23 +34,21 @@ class AddSetModal extends React.Component {
     this.props.handleSets(id, name);
   };
 
-  handleAddNewSet = (folderId) => {
-    this.props.redirectTo(AppRoutes.CREATE_SET.url)
-  }
+  handleAddNewSet = folderId => {
+    this.props.redirectTo(AppRoutes.CREATE_SET.url + `?folderId=${folderId}`);
+  };
 
   render() {
-    const { modelInfoReducer, folderId } = this.props;
-    const { modelDetails } = modelInfoReducer;
-    const { addSetModalOpen } = modelDetails;
+    const { modal, folderId, handleOpen } = this.props;
     const { setList } = this.state;
     return (
       <div>
         <Modal
           className="modal-dialog-centered custom-model-wrap"
-          isOpen={addSetModalOpen}
+          isOpen={modal}
           size="md"
           backdrop={"static"}
-          toggle={() => this.handleOpen}
+          toggle={() => handleOpen}
         >
           <ModalHeader>
             <span className="custom-title">Add a Set</span>
@@ -59,39 +57,48 @@ class AddSetModal extends React.Component {
               className="close"
               data-dismiss="modal"
               type="button"
-              onClick={this.handleOpen}
+              onClick={handleOpen}
             >
-              <span aria-hidden={true}>  <img src={closeIcon} alt="close-ic" /></span>
+              <span aria-hidden={true}>
+                {" "}
+                <img src={closeIcon} alt="close-ic" />
+              </span>
             </button>
           </ModalHeader>
           <ModalBody className="modal-text-center">
             <div className="wrap-folder">
-              <Button color=" "  onClick={() => this.handleAddNewSet(folderId)} className={"cursor_pointer btn btn-black"}>+ Create New Set</Button>
+              <Button
+                color=" "
+                onClick={() => this.handleAddNewSet(folderId)}
+                className={"cursor_pointer btn btn-black"}
+              >
+                + Create New Set
+              </Button>
               {setList && setList.length
                 ? setList.map((set, i) => {
-                  return (
-                    <Row className="set-wrap" key={i}>
-                      <Col md="12">
-                        <div className="tile-wrap card">
-                          <div className="cotent-tile d-flex">
-                            <div className="cotent-text-tile d-flex">
-                              <div className="content-heading-tile">
-                                {" "}
-                                {set.title}
-                              </div>
-                              <div>
-                                {set.folderId !== null ? (
-                                  <span
-                                    onClick={() =>
-                                      this.OnhandleSets(set._id, "add")
-                                    }
-                                  >
-                                    <i
-                                      className="fa fa-plus-square-o"
-                                      aria-hidden="true"
-                                    ></i>
-                                  </span>
-                                ) : (
+                    return (
+                      <Row className="set-wrap" key={i}>
+                        <Col md="12">
+                          <div className="tile-wrap card">
+                            <div className="cotent-tile d-flex">
+                              <div className="cotent-text-tile d-flex">
+                                <div className="content-heading-tile">
+                                  {" "}
+                                  {set.title}
+                                </div>
+                                <div>
+                                  {set.folderId !== null ? (
+                                    <span
+                                      onClick={() =>
+                                        this.OnhandleSets(set._id, "add")
+                                      }
+                                    >
+                                      <i
+                                        className="fa fa-plus-square-o"
+                                        aria-hidden="true"
+                                      ></i>
+                                    </span>
+                                  ) : (
                                     <span
                                       onClick={() =>
                                         this.OnhandleSets(set._id, "remove")
@@ -103,14 +110,14 @@ class AddSetModal extends React.Component {
                                       ></i>
                                     </span>
                                   )}
+                                </div>
                               </div>
                             </div>
                           </div>
-                        </div>
-                      </Col>
-                    </Row>
-                  );
-                })
+                        </Col>
+                      </Row>
+                    );
+                  })
                 : ""}
             </div>
           </ModalBody>

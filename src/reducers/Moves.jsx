@@ -23,7 +23,7 @@ export const moveReducer = handleActions(
     [MovesAction.GET_MOVES_OF_SET_SUCCESS]: (state, { payload }) => ({
       ...state,
       movesOfSet: payload.movesOfSet
-    }),
+    })
   },
   initialState
 );

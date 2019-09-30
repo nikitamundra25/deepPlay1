@@ -4,6 +4,7 @@ const initialState = {
   allSetList: "",
   recentSetAdded: "",
   setListinFolder: "",
+  recentSets: "",
   setDetails: "",
   isSetDetailsLoading: false
 };
@@ -20,6 +21,10 @@ export const setReducer = handleActions(
     [SetsAction.GET_FOLDER_SET_SUCCESS]: (state, { payload }) => ({
       ...state,
       setListinFolder: payload.setListinFolder
+    }),
+    [SetsAction.RECENT_SET_SUCCESS]: (state, { payload }) => ({
+      ...state,
+      recentSets: payload.recentSets
     }),
     [SetsAction.GET_SET_DETAILS_REQUEST]: (state, { payload }) => ({
       ...state,

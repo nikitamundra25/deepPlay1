@@ -8,10 +8,10 @@ $videoAddBannerBack: #dfe7ed;
 $dashboardTextColor: #000;
 $dashboardTextLight: #868686;
 $headingText: #494949;
-$source:'Roboto', sans-serif;
+$source: "Roboto", sans-serif;
 // @import "./assets/scss/custom/variables.scss";
 @import url("https://fonts.googleapis.com/css?family=Poppins&display=swap");
-@import url('https://fonts.googleapis.com/css?family=Roboto:400,500,700&display=swap');
+@import url("https://fonts.googleapis.com/css?family=Roboto:400,500,700&display=swap");
 body {
   font-family: $source;
   .cursor_pointer {
@@ -119,7 +119,7 @@ a {
 .fill-btn {
   border: 2px solid $blackcolor;
   color: #fff;
-  background:$blackcolor;
+  background: $blackcolor;
   &:hover {
     color: #fff;
     background: $textColor;
@@ -203,13 +203,13 @@ a {
     text-transform: capitalize;
   }
 }
-.dashboard-full-section{
+.dashboard-full-section {
   display: flex;
   max-width: 100%;
   margin-top: 0px;
   padding-top: 58px;
   justify-content: center;
-   
+
   .app-sidebar {
     position: fixed;
     height: 100%;
@@ -256,7 +256,7 @@ a {
     padding: 20px 30px 30px 30px;
     margin-left: 200px;
     width: calc(100% - 200px);
-    min-height:calc(100vh - 58px);
+    min-height: calc(100vh - 58px);
     position: relative;
   }
   a {
@@ -265,7 +265,7 @@ a {
   .dashboard-left-wrap {
     background: $whiteColor;
     position: relative;
-    box-shadow:0 0.5rem 4px 0 rgba(0, 0, 0, 0.23);
+    box-shadow: 0 0.5rem 4px 0 rgba(0, 0, 0, 0.23);
   }
   .content-header {
     color: $dashboardTextColor;
@@ -294,19 +294,15 @@ a {
   .badge-wrap {
     padding: 0px 5px;
   }
-  .cotent-tile {
-    padding: 0px 15px;
-  }
   .card {
     padding: 15px;
   }
   .tile-wrap {
     border-radius: 4px;
     margin-top: 15px;
-    padding: 15px 0px;
+    padding: 15px;
     border: 1px solid #d4d4d4;
   }
-  
 
   .content-heading-tile {
     font-size: 16px;
@@ -364,7 +360,6 @@ a {
     background: #fff;
   }
 }
-
 .modal-header {
   padding: 0px;
   border: none;
@@ -379,12 +374,12 @@ a {
     outline: none;
     background: transparent;
     opacity: 1 !important;
-    padding:0px;
-    border: 2px solid #6D7277;
+    padding: 0px;
+    border: 2px solid #6d7277;
     display: flex;
     align-items: center;
     justify-content: center;
-  
+
     &:hover {
       opacity: 1 !important;
     }
@@ -396,7 +391,7 @@ a {
       align-items: center;
       justify-content: center;
     }
-    img{
+    img {
       width: 70%;
     }
   }
@@ -475,7 +470,7 @@ a {
     cursor: pointer;
   }
   .dropdown-menu {
-    top: 110%!important;
+    top: 110% !important;
     right: -15px !important;
     left: auto !important;
     padding: 0px;
@@ -515,7 +510,7 @@ a {
   cursor: pointer;
   display: flex;
   align-items: center;
- 
+
   justify-content: center;
   padding: 0px 0px 0px 0px !important;
   &::after {
@@ -570,7 +565,7 @@ a {
     overflow: hidden;
     position: relative;
     background-size: cover;
-    background-position:center center; 
+    background-position: center center;
   }
   .changeProfile {
     position: absolute;
@@ -653,7 +648,7 @@ a {
       color: #fff;
     }
   }
-  .modal-body{
+  .modal-body {
     background: #f3f3f3;
   }
   .modal-footer {
@@ -732,22 +727,24 @@ a {
       padding: 5px 25px;
     }
   }
-  .empty-folder-wrap{
-  .empty-folder-header {
-    border-bottom: none;
-    img{width: 80px;
-    margin-bottom: 30px;}
-    h3{
-      font-size: 18px;
-      // text-transform: capitalize;
-      color: #000;
-      font-weight: 600;  
+  .empty-folder-wrap {
+    .empty-folder-header {
+      border-bottom: none;
+      img {
+        width: 80px;
+        margin-bottom: 30px;
+      }
+      h3 {
+        font-size: 18px;
+        // text-transform: capitalize;
+        color: #000;
+        font-weight: 600;
+      }
+    }
+    .card-body {
+      padding-top: 0px;
     }
   }
-  .card-body{
-    padding-top: 0px;
-  }
-}
 }
 .set-content-wrap {
   display: flex;
@@ -811,7 +808,7 @@ a {
     color: $blackcolor;
   }
 }
-.list-group-item img{
+.list-group-item img {
   vertical-align: top;
   margin-right: 5px;
   opacity: 0.7;
@@ -823,11 +820,11 @@ a {
   color: $blackcolor;
   background-color: #d8d8d8;
 }
-.file-upload-wrap{
+.file-upload-wrap {
   width: 100%;
   height: 200px;
   position: relative;
-  img{
+  img {
     max-width: 100%;
     max-height: 100%;
     height: auto;
@@ -838,12 +835,13 @@ a {
     transform: translate(-50%, -50%);
   }
 }
-.header-search-wrap{
-  .input-group-text, input{
-    border-color: #fff;  
+.header-search-wrap {
+  .input-group-text,
+  input {
+    border-color: #fff;
   }
 }
-.card{
+.card {
   border-radius: 4px;
   margin-top: 15px;
   padding: 15px 0px;
@@ -866,24 +864,24 @@ a {
   .auth-subheading {
     font-size: 16px;
   }
-  .close{
+  .close {
     background: #58646f;
     border: 2px solid #9ca3ad;
     right: 25px;
     top: 25px;
   }
-  .card{
+  .card {
     margin-top: 0px;
     padding-top: 0px;
   }
 }
-.tooltip-btn-wrap{
+.tooltip-btn-wrap {
   position: relative;
 
-  .btn-group{
+  .btn-group {
     position: absolute;
 
-    &::before{
+    &::before {
       position: absolute;
       bottom: -5px;
       right: 16px;
@@ -897,41 +895,43 @@ a {
       border-right: 0.4em solid transparent;
       border-bottom: 0;
       border-left: 0.4em solid transparent;
-    }}
-  &.right-btn-tip .btn-group{
-    right: -18px;
-    top: -110%;
-    &::before{
+    }
+  }
+  &.right-btn-tip .btn-group {
+    right: -3px;
+    top: -15px;
+    &::before {
       position: absolute;
-    bottom: -5px;
-    right: 16px;
+      bottom: -5px;
+      right: 16px;
+    }
   }
-  }
-  .btn{
+  .btn {
     background: #000;
     border: none;
     color: #fff;
     line-height: 120%;
     font-weight: normal;
   }
- 
 }
-.content-with-tip{
-  .cotent-text-tile{padding-right: 9px;}
-  .right-btn-tip{
-    position: absolute;
-    right: 15px;
+.content-with-tip {
+  .cotent-text-tile {
+    padding-right: 9px;
   }
+  // .right-btn-tip {
+  //   position: absolute;
+  //   right: 15px;
+  // }
 }
-.dashboard-full-section .folder-main-wrap{
+.dashboard-full-section .folder-main-wrap {
   align-items: flex-start;
-  i{
+  i {
     margin-left: 15px;
   }
 }
-.home-container{
+.home-container {
   padding-top: 59px;
 }
-.folder-create-btn{
+.folder-create-btn {
   min-width: 150px;
 }

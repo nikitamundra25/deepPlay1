@@ -12,7 +12,7 @@ import {
 import "./index.scss";
 import { logger } from "helper/Logger";
 import { connect } from "react-redux";
-import { downloadYoutubeVideoRequest } from "../../actions"
+import { downloadYoutubeVideoRequest } from "../../actions";
 
 // core components
 class MoveComponent extends React.Component {
@@ -27,7 +27,7 @@ class MoveComponent extends React.Component {
 
   handleChange = e => {
     const { name, value } = e.target;
-    console.log("############This is Change Event");
+
     this.setState({
       errors: "",
       [name]: value
@@ -63,7 +63,7 @@ class MoveComponent extends React.Component {
           url: result
         });
         if (this.state.isPaste) {
-          this.handleMoveUpload()
+          this.handleMoveUpload();
         }
       }
     }
@@ -89,21 +89,20 @@ class MoveComponent extends React.Component {
         return;
       }
       const payload = {
-        url: this.state.url,
-      }
-      this.props.downloadVideo(payload)
+        url: this.state.url
+      };
+      this.props.downloadVideo(payload);
     } catch (error) {
       logger(error);
     }
-  }
+  };
 
   handlePasteEvent = e => {
-    console.log("$$$$$$$$$$$$$This is Paste Event",e.target.value);
     if (e.target.value) {
-      this.handleChange(e)
+      this.handleChange(e);
       this.setState({
         isPaste: true
-      })
+      });
     }
   };
 
@@ -119,7 +118,9 @@ class MoveComponent extends React.Component {
               <CardHeader className="">
                 <div className="content-header set-header flex-column">
                   <span className="content-title">CREATE A MOVE</span>
-                  <p className="font-weight-bold">Trim any video to create a move</p>
+                  <p className="font-weight-bold">
+                    Trim any video to create a move
+                  </p>
                 </div>
               </CardHeader>
               <CardBody className="">
@@ -134,18 +135,18 @@ class MoveComponent extends React.Component {
                         onClick={this.handleMoveUpload}
                       >
                         <i className="fa fa-cloud-upload mr-2"></i>
-                        {
-                          isVideoDownloading ?
-                            "Please wait..." :
-                            "Upload"
-                        }
+                        {isVideoDownloading ? "Please wait..." : "Upload"}
                       </Button>
                     </div>
                     <FormGroup className="flex-fill flex-column ">
                       <div className="flex-fill w-100">
                         <Input
                           id="url"
-                          className={errors ? "capitalize pl-2 boder-1-invalid is-invalid w-100" : "capitalize pl-2 boder-1 w-100"}
+                          className={
+                            errors
+                              ? "capitalize pl-2 boder-1-invalid is-invalid w-100"
+                              : "capitalize pl-2 boder-1 w-100"
+                          }
                           placeholder="Paste YouTube Video URL or Type URL Manually"
                           type="text"
                           onPaste={this.handlePasteEvent}
@@ -154,7 +155,11 @@ class MoveComponent extends React.Component {
                           value={url}
                         />
                         <FormFeedback>
-                          {(errors.notUrl) ? errors.notUrl : (errors.validUrl && url) ? errors.validUrl : null}
+                          {errors.notUrl
+                            ? errors.notUrl
+                            : errors.validUrl && url
+                            ? errors.validUrl
+                            : null}
                         </FormFeedback>
                       </div>
                     </FormGroup>
@@ -194,7 +199,7 @@ class MoveComponent extends React.Component {
 
 const mapStateToProps = state => {
   return {
-    moveReducer: state.moveReducer,
+    moveReducer: state.moveReducer
   };
 };
 const mapDispatchToProps = dispatch => ({

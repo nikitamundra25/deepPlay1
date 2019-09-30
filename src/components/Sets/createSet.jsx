@@ -17,7 +17,8 @@ import {
   InputGroupAddon
 } from "reactstrap";
 import { connect } from "react-redux";
-import { createSetRequest } from "../../actions"
+import { createSetRequest } from "../../actions";
+import * as qs from "query-string";
 import "./index.scss";
 
 class CreateSetComponent extends React.Component {
@@ -43,9 +44,11 @@ class CreateSetComponent extends React.Component {
         errors: "Title is required"
       });
     } else {
+      let parsed = qs.parse(this.props.location.search);
       const data = {
         title: this.state.title,
-        description: this.state.description
+        description: this.state.description,
+        folderId: parsed.folderId ? parsed.folderId : ""
       };
       this.props.onSetsCreation(data);
     }
@@ -145,7 +148,6 @@ class CreateSetComponent extends React.Component {
           className="modal-dialog-centered custom-model-wrap"
           isOpen={open}
           toggle={() => this.handleModal}
-
         >
           <ModalHeader>
             <h5 className="modal-title" id="exampleModalLabel">
@@ -159,7 +161,10 @@ class CreateSetComponent extends React.Component {
               type="button"
               onClick={this.handleModal}
             >
-              <span aria-hidden="true">  <img src="./assets/img/close-img.png" alt="close-ic" /></span>
+              <span aria-hidden="true">
+                {" "}
+                <img src="./assets/img/close-img.png" alt="close-ic" />
+              </span>
             </button>
           </ModalHeader>
           <ModalBody>

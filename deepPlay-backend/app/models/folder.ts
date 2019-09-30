@@ -27,6 +27,10 @@ const folderSchema: Mongoose.Schema = new Schema({
     type: Boolean,
     default: true
   },
+  isRecentTime: {
+    type: Date,
+    default: Date.now
+  },
   createdAt: {
     type: Date,
     default: Date.now

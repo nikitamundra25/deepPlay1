@@ -3,13 +3,24 @@ import {
   createFolder,
   getCretedFolderById,
   getAllFolder,
-  deleteFolder
+  deleteFolder,
+  getRecentFolder,
+  updateRecentTimeRequest,
+  sharableLink
 } from "../controllers";
 import { ValidateAdminToken } from "../common";
 const FolderRouter: express.Router = express.Router();
 
-FolderRouter.post("/createFolder", ValidateAdminToken, createFolder);
-FolderRouter.post("/getFolderById", ValidateAdminToken, getCretedFolderById);
-FolderRouter.get("/allFolder", ValidateAdminToken, getAllFolder);
-FolderRouter.delete("/deleteFolder" , ValidateAdminToken, deleteFolder);
+FolderRouter.post("/create-folder", ValidateAdminToken, createFolder);
+FolderRouter.get("/get-folder-by-id", ValidateAdminToken, getCretedFolderById);
+FolderRouter.get("/all-folder", ValidateAdminToken, getAllFolder);
+FolderRouter.get("/recent-folder", ValidateAdminToken, getRecentFolder);
+FolderRouter.delete("/delete-folder", ValidateAdminToken, deleteFolder);
+FolderRouter.patch(
+  "/update-recent-time",
+  ValidateAdminToken,
+  updateRecentTimeRequest
+);
+FolderRouter.patch("/share-link", ValidateAdminToken, sharableLink);
+
 export default FolderRouter;
