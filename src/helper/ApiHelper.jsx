@@ -1,10 +1,8 @@
 import Axios from "axios";
-
 import { AppConfig } from "../config/Appconfig";
 import { ErrorHandlerHelper } from "./ErrorHandlerHelper";
 import { logger } from "./Logger";
 import { SuccessHandlerHelper } from "./SuccessHandlerHelper";
-
 /**
  * ApiHelper Class - For making Api Requests
  */

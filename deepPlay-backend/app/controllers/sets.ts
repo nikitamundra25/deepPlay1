@@ -91,7 +91,7 @@ const getRecentSetById = async (req: Request, res: Response): Promise<void> => {
 const getSetsForFolder = async (req: Request, res: Response): Promise<void> => {
   try {
     const { currentUser } = req;
-    const { body } = req;
+    const { query } = req;
     let headToken: Request | any = currentUser;
     if (!headToken.id) {
       res.status(400).json({
@@ -100,11 +100,10 @@ const getSetsForFolder = async (req: Request, res: Response): Promise<void> => {
     }
     const result = await SetModel.find({
       userId: headToken.id,
-      $or: [{ folderId: body.folderId }, { folderId: null }]
+      $or: [{ folderId: query.folderId }, { folderId: null }]
     });
     res.status(200).json({
       data: result,
-      message: "Sets have been fetched successfully"
     });
   } catch (error) {
     console.log(error);
@@ -149,13 +148,13 @@ const addSetInFolder = async (req: Request, res: Response): Promise<void> => {
 // --------------Delete folder---------------------
 const deleteSet = async (req: Request, res: Response): Promise<void> => {
   try {
-    const { query } = req;
-    if (!query.id) {
+    const { body } = req;
+    if (!body.id) {
       res.status(400).json({
         message: "Set id not found"
       });
     }
-    const result: any = await SetModel.findByIdAndUpdate(query.id, {
+    const result: any = await SetModel.findByIdAndUpdate(body.id, {
       $set: { isDeleted: true }
     });
 

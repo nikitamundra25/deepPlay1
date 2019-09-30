@@ -15,8 +15,8 @@ SetRouter.post("/create-set", ValidateAdminToken, createSet);
 SetRouter.get("/get-all-set", ValidateAdminToken, getAllSetById);
 SetRouter.get("/get-recent-set", ValidateAdminToken, getRecentSetById);
 SetRouter.patch("/manage-sets", ValidateAdminToken, addSetInFolder);
-SetRouter.patch("/get-sets", ValidateAdminToken, getSetsForFolder);
-SetRouter.delete("/delete-set", ValidateAdminToken, deleteSet);
+SetRouter.get("/get-sets-of-folder", ValidateAdminToken, getSetsForFolder);
+SetRouter.patch("/delete-set", ValidateAdminToken, deleteSet);
 SetRouter.get("/getSetById", ValidateAdminToken, getSetDetailsById);
 
 export default SetRouter;

@@ -95,10 +95,8 @@ class ForgotPasswordComponent extends React.Component {
           <ModalHeader toggle={handleForgotPasswordModel}></ModalHeader>
           <ModalBody className="modal-body p-0">
             <Card className="bg-secondary shadow border-0 pb-0">
-              <CardHeader>
-                <div className=" login-heading text-center mb-3">
-                  Sign in with
-                </div>
+              <CardHeader className={"text-center p-2"}>
+                Forgot Password
               </CardHeader>
               <CardBody className="px-lg-5">
                 <Form onSubmit={this.handleForgotPasswardRequest}>
@@ -110,7 +108,7 @@ class ForgotPasswordComponent extends React.Component {
                         </InputGroupText>
                       </InputGroupAddon>
                       <Input
-                        placeholder="Email"
+                        placeholder="Email Ex: abc@gmail.com"
                         className={errors.email ? "is-invalid" : ""}
                         onChange={this.handleChange}
                         name={"email"}

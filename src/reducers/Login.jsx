@@ -4,11 +4,20 @@ import { loginAction, signupActions } from "./../actions";
 const initialState = {
   isLoginSuccess: false,
   isSendingLink: false,
-  isSignupLoading: false
+  isSignupLoading: false,
+  isLoginRequest: false
 };
 
 export const loginReducer = handleActions(
   {
+    [loginAction.LOGIN_REQUEST]: (state, { payload }) => ({
+      ...state,
+      isLoginRequest: true
+    }),
+    [loginAction.LOGIN_SUCCESS]: (state, { payload }) => ({
+      ...state,
+      isLoginRequest: false
+    }),
     [signupActions.SIGNUP_REQUEST]: (state, { payload }) => ({
       ...state,
       isSignupLoading: true

@@ -1,5 +1,5 @@
 import React from "react";
-import { Modal, ModalBody, ModalHeader, Row, Col } from "reactstrap";
+import { Modal, ModalBody, ModalHeader, CardBody, Card } from "reactstrap";
 import closeIcon from "../../../assets/img/close-img.png";
 // core components
 class TransferToModal extends React.Component {
@@ -75,35 +75,43 @@ class TransferToModal extends React.Component {
           </ModalHeader>
           <ModalBody className="modal-text-center">
             <div className="wrap-folder">
-              {transferToList.length
-                ? transferToList.map((folders, i) => {
+              <Card>
+                {transferToList.length
+                  ? transferToList.map((folders, i) => {
                     return (
-                      <Row className="set-wrap" key={i}>
-                        <Col md="12">
-                          <div className="tile-wrap card">
-                            <div className="cotent-tile d-flex">
-                              <div className="cotent-text-tile d-flex">
-                                <div className="content-heading-tile">
-                                  {" "}
-                                  {folders.title}
-                                </div>
-                                <div>
-                                  <span
-                                    onClick={() =>
-                                      this.onTransferTo(folders._id)
-                                    }
-                                  >
-                                    <i className="fas fa-check-square"></i>
-                                  </span>
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-                        </Col>
-                      </Row>
+                      <div className={"d-flex p-2 justify-content-between"}>
+                        <div>
+                          {folders.title}
+                        </div>
+                        <div>
+                          <span
+                            onClick={() =>
+                              this.onTransferTo(folders._id)
+                            }
+                          >
+                            <input type="checkbox"/>
+                          </span>
+                        </div>
+                      </div>
+                      // <Row className="set-wrap" key={i}>
+                      //   <Col md="12">
+                      //     <div className="tile-wrap card">
+                      //       <div className="cotent-tile d-flex">
+                      //         <div className="cotent-text-tile d-flex">
+                      //           <div className="content-heading-tile">
+                      //             {" "}
+                      //           </div>
+                      //           <div>
+                      //           </div>
+                      //         </div>
+                      //       </div>
+                      //     </div>
+                      //   </Col>
+                      // </Row>
                     );
                   })
-                : ""}
+                  : ""}
+              </Card>
             </div>
           </ModalBody>
         </Modal>
