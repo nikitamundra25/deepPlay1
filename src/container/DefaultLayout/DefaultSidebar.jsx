@@ -1,8 +1,9 @@
 import React from "react";
 import { NavLink } from "react-router-dom";
-// import "../../App.scss";
 import { SidebarComponent } from "../../components/Sidebar";
 import defaultProfileImage from "../../assets/img/user-black-ic.svg";
+import { AppConfig } from "../../config/Appconfig";
+
 class DefaultSidebar extends React.Component {
   constructor(props) {
     super(props);
@@ -41,8 +42,16 @@ class DefaultSidebar extends React.Component {
         </div>
         <div className="profile-wrap">
           <div className="profile-img-tile">
-            <div className="profile-img">
-              <img alt="..." src={defaultProfileImage} className="w-100" />
+            <div className={profiledata ? "user-profile-img" : "profile-img"}>
+              {profiledata ? (
+                <img
+                  src={`${AppConfig.API_ENDPOINT}${profiledata.profileImage}`}
+                  className="w-100 h-100"
+                  alt={"img"}
+                />
+              ) : (
+                <img src={defaultProfileImage} className="w-100" alt={"img"} />
+              )}
             </div>
           </div>
           <div className="profile-text-tile color-black">

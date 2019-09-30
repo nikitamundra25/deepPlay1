@@ -244,6 +244,16 @@ a {
           overflow: hidden;
           opacity: 0.4;
         }
+        .user-profile-img
+        {
+          width: 80px;
+          height: 80px;
+          padding: 8px;
+          border: 2px solid #b5b5b5;
+          border-radius: 50%;
+          overflow: hidden;
+          margin: auto;
+        }
         .profile-text-tile {
           font-size: 16px;
           text-transform: capitalize;
@@ -524,6 +534,11 @@ a {
   align-items: center;
   .user-img {
     width: 26px;
+    height:26px;
+    &.round-img{
+      border: 2px solid #fff;
+      border-radius: 50%;
+    }
   }
   .user-text {
     padding: 0px 15px 0px 8px;
@@ -934,4 +949,29 @@ a {
 }
 .folder-create-btn {
   min-width: 150px;
+}
+.icon-font {
+    font-size:25px;
+}
+.copylink-form {
+  input, .btn-black {
+    height:44px;
+  }
+  
+}
+.font-14 {
+  font-size:14px;
+}
+.sharable-modal-text
+{
+  font-weight: 500;
+  color: #5d5d5d;
+}
+.sharable-toggle {
+  .custom-toggle-slider {
+    border: 1px solid #c5c5c5;
+    &:before{
+      background-color: #d0d0d0;
+    }
+  }
 }

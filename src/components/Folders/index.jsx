@@ -96,7 +96,7 @@ class FolderComponent extends React.Component {
         <div className="content-header">
           <span className="content-title">Your Folders</span>
           <span onClick={this.handleFolderModel} id="move">
-            <i className="fas fa-plus-circle fa-2x  "></i>
+            <i className="fas fa-plus-circle icon-font"></i>
           </span>
           <UncontrolledTooltip placement="bottom" target="move">
             Create a New Folder
@@ -105,13 +105,13 @@ class FolderComponent extends React.Component {
         <Col></Col>
         <p>4 folders total</p>{" "}
         <div className="wrap-folder">
-          {getAllFolders && getAllFolders.length ? (
-            // eslint-disable-next-line
-            getAllFolders.map((folder, i) => {
-              if (!folder.isDeleted) {
-                return (
-                  <Row className="set-wrap" key={i}>
-                    <Col md="12">
+          <Row className="set-wrap">
+            {getAllFolders.length ? (
+              // eslint-disable-next-line
+              getAllFolders.map((folder, i) => {
+                if (!folder.isDeleted) {
+                  return (
+                    <Col md={"6"}>
                       <div className="tile-wrap card">
                         <div className="cotent-tile d-flex content-with-tip">
                           <div className="cotent-text-tile">
@@ -160,45 +160,44 @@ class FolderComponent extends React.Component {
                         </div>
                       </div>
                     </Col>
-                  </Row>
-                );
-              }
-            })
-          ) : (
-            <>
-              <div className="create-set-section mt-2 w-100">
-                <Card className="w-100 set-content-wrap">
-                  <div className="set-content-block w-100 empty-folder-wrap">
-                    <CardHeader className="empty-folder-header">
-                      <img src={emptyFolderIc} alt={"folder"} />
-                      <div className="content-header set-header">
-                        <span className="content-title">
-                          {" "}
-                          <h3>You haven't created any folder yet</h3>
-                          <p>Create a Folder to Organize your Sets.</p>
-                        </span>
-                      </div>
-                    </CardHeader>
-                    <CardBody className="">
-                      <div className="create-set-tile"></div>
-                      <div className="text-center">
-                        <Button
-                          color=" "
-                          type="button"
-                          className="btn-black btn mt-3 folder-create-btn"
-                          onClick={this.handleFolderModel}
-                        >
-                          <i className="fas fa-plus mr-1"></i>
-                          Folder
-                        </Button>
-                      </div>
-                    </CardBody>
-                  </div>
-                </Card>
-              </div>
-            </>
-          )}
-
+                  );
+                }
+              })
+            ) : (
+              <>
+                <div className="create-set-section mt-2 w-100">
+                  <Card className="w-100 set-content-wrap">
+                    <div className="set-content-block w-100 empty-folder-wrap">
+                      <CardHeader className="empty-folder-header">
+                        <img src={emptyFolderIc} alt={"folder"} />
+                        <div className="content-header set-header">
+                          <span className="content-title">
+                            {" "}
+                            <h3>You haven't created any folder yet</h3>
+                            <p>Create a Folder to Organize your Sets.</p>
+                          </span>
+                        </div>
+                      </CardHeader>
+                      <CardBody className="">
+                        <div className="create-set-tile"></div>
+                        <div className="text-center">
+                          <Button
+                            color=" "
+                            type="button"
+                            className="btn-black btn mt-3 folder-create-btn"
+                            onClick={this.handleFolderModel}
+                          >
+                            <i className="fas fa-plus mr-1"></i>
+                            Folder
+                          </Button>
+                        </div>
+                      </CardBody>
+                    </div>
+                  </Card>
+                </div>
+              </>
+            )}
+          </Row>
           <FolderModal
             modal={createFolderOpen}
             modelInfoReducer={modelInfoReducer}

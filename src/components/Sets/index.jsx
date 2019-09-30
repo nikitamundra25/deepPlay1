@@ -61,9 +61,12 @@ class SetComponent extends React.Component {
       <div className="set-main-section">
         <div className="content-header">
           <span className="content-title">YOUR SETS</span>
-          <span className="dashboard-right-content">
-            {getAllSet && getAllSet.length ? getAllSet.length : 0} Sets total
+          <span >
+            <i className="fas fa-plus-circle icon-font"></i>
           </span>
+          {/* <span className="dashboard-right-content">
+            {getAllSet && getAllSet.length ? getAllSet.length : 0} Sets total
+          </span> */}
         </div>
         <Row className="set-wrap">
           {getAllSet && getAllSet.length ? (

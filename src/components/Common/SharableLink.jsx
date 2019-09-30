@@ -65,8 +65,7 @@ class SharableLinkModal extends React.Component {
       >
         <ModalHeader>
           <span className="custom-title" id="exampleModalLabel">
-            {/* {isPublic ? "Anyone with link can view." : "Only you can view"} */}
-            SHAREABLE LINK
+            Sharable Link
           </span>
           <button
             aria-label="Close"
@@ -82,7 +81,10 @@ class SharableLinkModal extends React.Component {
         </ModalHeader>
         <ModalBody>
           <div className="create-set-tile">
-            <Form inline className="url-update-wrap">
+            <p className="text-center sharable-modal-text">
+              {isPublic ? "Anyone with link can view." : "Only you can view"}
+            </p>
+            <Form inline className="url-update-wrap copylink-form">
               <FormGroup className="flex-fill flex-column ">
                 <div className="flex-fill w-100">
                   <Input
@@ -97,32 +99,29 @@ class SharableLinkModal extends React.Component {
                     //   folderId
                     // )}
                     value={sharableLinkPath}
+                    className="w-100"
                   />
                 </div>
               </FormGroup>
-              <div className="text-center mr-2">
+              <div className="text-center ml-1">
                 <Button
                   color=" "
                   type="button"
-                  className="btn-black btn mt-3"
+                  className="btn-black"
                   // onClick={this.copyLink}
                 >
                   Copy Link
                 </Button>
               </div>
             </Form>
-            <div>
-              {" "}
-              {isPublic
-                ? "Anyone can view with this link."
-                : "Only you can view"}
-            </div>
           </div>
         </ModalBody>
-        <ModalFooter>
-          <div className="form-inline">
-            <span>Enable Public Access Link</span>
-            <label className="custom-toggle">
+        <ModalFooter className="justify-content-start">
+          <div className="form-inline w-100">
+            <span className="font-14">
+              <b>Enable Public Access Link </b>
+            </span>
+            <label className="custom-toggle sharable-toggle ml-auto">
               <input
                 type="checkbox"
                 name="toggle"
