@@ -198,7 +198,7 @@ class SettingComponent extends Component {
                           className="w-100"
                         />
                       ) : (
-                        <img alt="..." src={profileIcon} className="w-100" />
+                        <img alt="" src={profileIcon} className="w-100" />
                       )}
                       {!isDisabled ? (
                         <span

@@ -122,7 +122,8 @@ class LoginComponent extends React.Component {
   /* 
   */
   render() {
-    const { openLoginModel, handleLoginModel } = this.props;
+    const { openLoginModel, handleLoginModel, loginReducer } = this.props;
+    const { isLoginRequest } = loginReducer
     const { email, password, errors } = this.state;
     return (
       <>
@@ -220,10 +221,14 @@ class LoginComponent extends React.Component {
                   <div className="text-center auth-btn-wrap">
                     <Button
                       className="my-4 btn-black btn-block"
-                      color=" "
                       type="submit"
+                      disabled={isLoginRequest ? true : false}
                     >
-                      Sign in
+                      {
+                        isLoginRequest ?
+                          "Please Wait..." :
+                          "Sign in"
+                      }
                     </Button>
 
                     <Button

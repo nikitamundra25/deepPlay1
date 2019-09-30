@@ -33,6 +33,7 @@ class Login extends React.Component {
           openLoginModel={openLoginModel}
           handleLoginModel={handleLoginModel}
           loginRequest={loginRequest}
+          loginReducer={loginReducer}
           socialLoginRequest={socialLoginRequest}
           handleForgotPasswordModel={this.handleForgotPasswordModel}
           handleSignupModal={this.props.handleSignupModal}

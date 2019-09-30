@@ -33,7 +33,8 @@ class RecentFolderComponent extends React.Component {
       modal: false,
       show: false, //show setting popOver,
       folderId: "", // pathName of folderId
-      setToTransfer: "" // pass set id to transfer to different folder
+      setToTransfer: "", // pass set id to transfer to different folder,
+      setIndex: -1
     };
   }
   componentDidMount() {
@@ -50,7 +51,7 @@ class RecentFolderComponent extends React.Component {
     if (
       prevProps.getAllSetReducer &&
       prevProps.getAllSetReducer.setListinFolder !==
-        this.props.getAllSetReducer.setListinFolder
+      this.props.getAllSetReducer.setListinFolder
     ) {
       const setList = this.props.getAllSetReducer.setListinFolder;
       this.setState({
@@ -125,12 +126,6 @@ class RecentFolderComponent extends React.Component {
     }
   };
 
-  showPopOver = i => {
-    this.setState({
-      show: !this.state.show
-    });
-  };
-
   OnCreateSetCopy = async list => {
     const data = {
       title: list.title,
@@ -162,6 +157,19 @@ class RecentFolderComponent extends React.Component {
     });
   };
 
+  showPopOver = index => {
+    this.setState({
+      show: true,
+      setIndex: index
+    });
+  };
+  closePopOver = () => {
+    this.setState({
+      show: false,
+      setIndex: -1
+    });
+  };
+
   onTogglePublicAccess = isPublic => {
     const { folderId } = this.state;
     const data = {
@@ -175,7 +183,7 @@ class RecentFolderComponent extends React.Component {
 
   render() {
     const { modelInfoReducer, getFolderReducer } = this.props;
-    const { setListItem, show, pathName, setToTransfer, folderId } = this.state;
+    const { setListItem, show, pathName, setToTransfer, folderId, setIndex } = this.state;
     const { modelDetails } = modelInfoReducer;
     const { folderDetails, getAllFolders } = getFolderReducer;
     const {
@@ -183,15 +191,9 @@ class RecentFolderComponent extends React.Component {
       addSetModalOpen,
       sharableLinkModalOpen
     } = modelDetails;
-
+    const setOfFolder = setListItem.filter((item) => item.folderId === folderId)
     return (
-      // <div className="content-header">
-      //   <span className="content-title">YOUR SETS</span>
-      //   <span className="dashboard-right-content">
-      //     {getAllSet && getAllSet.length ? getAllSet.length : 0} Sets total
-      //   </span>
-      // </div>
-      <div className="set-main-section">
+      <div className="page-body">
         <div className="content-header">
           <span className="content-title">
             {folderDetails ? folderDetails.title : "MyFolder"}
@@ -222,35 +224,39 @@ class RecentFolderComponent extends React.Component {
           {folderDetails ? folderDetails.description : ""}
         </span>
         <Row className="set-wrap">
-          {setListItem && setListItem.length ? (
+          {setOfFolder && setOfFolder.length ? (
             // eslint-disable-next-line
-            setListItem.map((list, i) => {
-              if (list.folderId) {
-                return (
-                  <Col md="6" key={i}>
-                    <div className="tile-wrap card">
-                      <div className="cotent-tile d-flex">
-                        <div className="cotent-text-tile">
-                          <div className="content-heading-tile">
-                            {" "}
-                            {list.title}
-                          </div>
-                          <div className="content-heading-tile">
-                            {" "}
-                            {list.description}
-                          </div>
-
-                          <div className="content-number-tile"> 4 items</div>
+            setOfFolder.map((list, i) => {
+              return (
+                <Col md="6" key={i}>
+                  <div className="tile-wrap card">
+                    <div className="cotent-tile d-flex">
+                      <div className="cotent-text-tile">
+                        <div className="content-heading-tile">
+                          {" "}
+                          {list.title}
                         </div>
-                        <div
-                          className="cotent-img-tile"
-                          style={{
-                            backgroundImage:
-                              'url("' +
-                              "https://res.cloudinary.com/fleetnation/image/private/c_fit,w_1120/g_south,l_text:style_gothic2:%C2%A9%20Nikita%20Buida,o_20,y_10/g_center,l_watermark4,o_25,y_50/v1469756538/dd3acf4nzzavkv4rf2ji.jpg" +
-                              '")'
-                          }}
-                        ></div>
+                        <div className="content-heading-tile">
+                          {" "}
+                          {list.description}
+                        </div>
+
+                        <div className="content-number-tile"> 4 items</div>
+                      </div>
+                      <div
+                        className="cotent-img-tile"
+                        style={{
+                          backgroundImage:
+                            'url("' +
+                            "https://res.cloudinary.com/fleetnation/image/private/c_fit,w_1120/g_south,l_text:style_gothic2:%C2%A9%20Nikita%20Buida,o_20,y_10/g_center,l_watermark4,o_25,y_50/v1469756538/dd3acf4nzzavkv4rf2ji.jpg" +
+                            '")'
+                        }}
+                      ></div>
+                      <div
+                        onMouseOver={() => this.showPopOver(i, show)}
+                        onMouseLeave={() => this.closePopOver()}
+                        className={"p-3 tooltip-btn-wrap right-btn-tip"}
+                      >
                         <span
                           onClick={() => this.showPopOver(i)}
                           className="cursor_pointer"
@@ -258,7 +264,7 @@ class RecentFolderComponent extends React.Component {
                           {" "}
                           <i className="fas fa-ellipsis-v setting-icon "></i>
                         </span>
-                        {show ? (
+                        {show && setIndex === i ? (
                           <ButtonGroup size="sm">
                             <Button onClick={() => this.OnCreateSetCopy(list)}>
                               Copy
@@ -274,49 +280,48 @@ class RecentFolderComponent extends React.Component {
                               }
                             >
                               Remove
-                            </Button>
+                          </Button>
                           </ButtonGroup>
                         ) : null}
                       </div>
                     </div>
-                  </Col>
-                );
-              }
+                  </div>
+                </Col>
+              );
             })
           ) : (
-            <>
-              <div className="create-set-section mt-2 w-100">
-                <Card className="w-100 set-content-wrap">
-                  <div className="set-content-block w-100 empty-folder-wrap">
-                    <CardHeader className="empty-folder-header">
-                      <img src={emptySetIc} alt={"folder"} />
-                      <div className="content-header set-header">
-                        <span className="content-title">
-                          {" "}
-                          <h3>You haven't created any folder yet</h3>
-                          <p>Create a Folder to Organize your Sets.</p>
-                        </span>
-                      </div>
-                    </CardHeader>
-                    <CardBody className="">
-                      <div className="create-set-tile"></div>
-                      <div className="text-center">
-                        <Button
-                          color=" "
-                          type="button"
-                          className="btn-black btn mt-3 folder-create-btn"
-                          onClick={this.openAddSetModel}
-                        >
-                          <i className="fas fa-plus mr-1"></i>
-                          Add a Set
-                        </Button>
-                      </div>
-                    </CardBody>
-                  </div>
-                </Card>
-              </div>
-            </>
-          )}
+              <>
+                <div className="create-set-section mt-2 w-100">
+                  <Card className="w-100 set-content-wrap">
+                    <div className="set-content-block w-100 empty-folder-wrap">
+                      <CardHeader className="empty-folder-header">
+                        <img src={emptySetIc} alt={"Images"} />
+                        <div className="content-header set-header">
+                          <span className="content-title">      <h3>This folder has no Sets yet</h3>
+                            <p>Organize your Sets for you or your students</p></span>
+                        </div>
+                      </CardHeader>
+                      <CardBody className="">
+                        <div className="create-set-tile">
+                        </div>
+                        <div className="text-center">
+                          <Button
+                            color=" "
+                            type="button"
+                            className="btn-black btn mt-3"
+                            onClick={this.openAddSetModel}
+
+                          >
+                            <i className="fas fa-plus mr-1"></i>
+                            Add a Set
+                          </Button>
+                        </div>
+                      </CardBody>
+                    </div>
+                  </Card>
+                </div>
+              </>
+            )}
         </Row>
         <AddSetModal
           handleOpen={this.openAddSetModel}

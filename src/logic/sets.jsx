@@ -155,11 +155,10 @@ const getSetLogic = createLogic({
     dispatch(showLoader());
     let result = await api.FetchFromServer(
       "set",
-      "/get-sets",
-      "PATCH",
+      "/get-sets-of-folder",
+      "GET",
       true,
-      undefined,
-      action.payload
+      action.payload,
     );
     if (result.isError) {
       dispatch(hideLoader());
