@@ -16,13 +16,21 @@ class SetComponent extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      show: false
+      show: false,
+      setIndex: -1
     };
   }
 
-  showPopOver = () => {
+  showPopOver = index => {
     this.setState({
-      show: true
+      show: true,
+      setIndex: index
+    });
+  };
+  closePopOver = () => {
+    this.setState({
+      show: false,
+      setIndex: -1
     });
   };
 
@@ -33,25 +41,25 @@ class SetComponent extends React.Component {
 
   render() {
     const { getAllSet } = this.props;
-    const { show } = this.state;
+    const { show, setIndex } = this.state;
     return (
       <div className="set-main-section">
         <div className="content-header">
           <span className="content-title">YOUR SETS</span>
           <span className="dashboard-right-content">
-            {getAllSet.length ? getAllSet.length : 0} Sets total
+            {getAllSet && getAllSet.length ? getAllSet.length : 0} Sets total
           </span>
         </div>
         <Row className="set-wrap">
-          {getAllSet.length ? (
+          {getAllSet && getAllSet.length ? (
             // eslint-disable-next-line
             getAllSet.map((setList, i) => {
               return (
                 <Col md="6" key={i}>
                   <div className="tile-wrap card">
-                    <div className="cotent-tile d-flex">
+                    <div className="cotent-tile d-flex content-with-tip">
                       <div className="cotent-text-tile">
-                        <div className="content-heading-tile">
+                        <div className="content-heading-tile d-flex">
                           {" "}
                           <span
                             onClick={() => this.handleSetDetails(setList._id)}
@@ -63,48 +71,61 @@ class SetComponent extends React.Component {
                         {setList.description ? setList.description : ""}
                         <div className="content-number-tile"> 46 moves</div>
                       </div>
-                      <div
-                        className="cotent-img-tile"
-                        style={{
-                          backgroundImage:
-                            'url("' +
-                            "https://res.cloudinary.com/fleetnation/image/private/c_fit,w_1120/g_south,l_text:style_gothic2:%C2%A9%20Nikita%20Buida,o_20,y_10/g_center,l_watermark4,o_25,y_50/v1469756538/dd3acf4nzzavkv4rf2ji.jpg" +
-                            '")'
-                        }}
-                      ></div>
-                      <span
-                        onClick={this.showPopOver}
-                        className="cursor_pointer"
-                      >
-                        {" "}
-                        <i className="fas fa-ellipsis-v setting-icon "></i>
-                      </span>
-                      {show ? (
-                        <ButtonGroup size="sm">
-                          <Button
-                            onClick={() => this.props.OnCreateSetCopy(setList)}
-                          >
-                            Copy
-                          </Button>
-                          <Button
-                            onClick={() =>
-                              this.props.openTransferToModal(
-                                setList._id,
-                                setList.folderId
-                              )
-                            }
-                          >
-                            Transfer
-                          </Button>
-                          <Button
-                            onClick={() =>
-                              this.props.onRemoveSets(setList._id, "remove")
-                            }
-                          >
-                            Delete
-                          </Button>
-                        </ButtonGroup>
-                      ) : null}
+                      <div className="d-flex">
+                        <div
+                          className="cotent-img-tile pr-3"
+                          style={{
+                            backgroundImage:
+                              'url("' +
+                              "https://res.cloudinary.com/fleetnation/image/private/c_fit,w_1120/g_south,l_text:style_gothic2:%C2%A9%20Nikita%20Buida,o_20,y_10/g_center,l_watermark4,o_25,y_50/v1469756538/dd3acf4nzzavkv4rf2ji.jpg" +
+                              '")'
+                          }}
+                        />
+                        <div
+                          onMouseOver={() => this.showPopOver(i, show)}
+                          onMouseLeave={() => this.closePopOver()}
+                          className="p-3 tooltip-btn-wrap right-btn-tip"
+                        >
+                          <span className="cursor_pointer">
+                            {" "}
+                            <i className="fas fa-ellipsis-v setting-icon "></i>
+                            {show && setIndex === i ? (
+                              <ButtonGroup
+                                onMouseOver={() => this.showPopOver(i, show)}
+                                size="sm"
+                              >
+                                <Button
+                                  onClick={() =>
+                                    this.props.OnCreateSetCopy(setList)
+                                  }
+                                >
+                                  Copy
+                                </Button>
+                                <Button
+                                  onClick={() =>
+                                    this.props.openTransferToModal(
+                                      setList._id,
+                                      setList.folderId
+                                    )
+                                  }
+                                >
+                                  Transfer
+                                </Button>
+                                <Button
+                                  onClick={() =>
+                                    this.props.onRemoveSets(
+                                      setList._id,
+                                      "remove"
+                                    )
+                                  }
+                                >
+                                  Delete
+                                </Button>
+                              </ButtonGroup>
+                            ) : null}
+                          </span>
+                        </div>
+                      </div>
                     </div>
                   </div>
                 </Col>

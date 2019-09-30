@@ -220,7 +220,7 @@ class RecentFolderComponent extends React.Component {
           {folderDetails ? folderDetails.description : ""}
         </span>
         <Row className="set-wrap">
-          {setListItem.length ? (
+          {setListItem && setListItem.length ? (
             // eslint-disable-next-line
             setListItem.map((list, i) => {
               if (list.folderId) {

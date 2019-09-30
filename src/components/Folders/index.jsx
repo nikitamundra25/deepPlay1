@@ -19,12 +19,20 @@ class FolderComponent extends React.Component {
     super(props);
     this.state = {
       show: false, // To show popOver Over setting icon
-      modal: false
+      modal: false,
+      folderIndex: -1
     };
   }
-  showPopOver = () => {
+  showPopOver = index => {
     this.setState({
-      show: true
+      show: true,
+      folderIndex: index
+    });
+  };
+  closePopOver = () => {
+    this.setState({
+      show: false,
+      folderIndex: -1
     });
   };
 
@@ -75,7 +83,7 @@ class FolderComponent extends React.Component {
 
   render() {
     const { modelInfoReducer, getAllFolders } = this.props;
-    const { show } = this.state;
+    const { show, folderIndex } = this.state;
     const { modelDetails } = modelInfoReducer;
     const { createFolderOpen } = modelDetails;
     return (
@@ -100,7 +108,7 @@ class FolderComponent extends React.Component {
                   <Row className="set-wrap" key={i}>
                     <Col md="12">
                       <div className="tile-wrap card">
-                        <div className="cotent-tile d-flex">
+                        <div className="cotent-tile d-flex content-with-tip">
                           <div className="cotent-text-tile">
                             <div className="content-number-tile"> 4 sets</div>
                             <div className="content-heading-tile d-flex">
@@ -113,15 +121,16 @@ class FolderComponent extends React.Component {
                               >
                                 {folder.title}
                               </span>
-                              <div>
-                                <span
-                                  onClick={this.showPopOver}
-                                  className="cursor_pointer"
-                                >
+                              <div
+                                onMouseOver={() => this.showPopOver(i, show)}
+                                onMouseLeave={() => this.closePopOver()}
+                                className={"p-3 tooltip-btn-wrap right-btn-tip"}
+                              >
+                                <span className="cursor_pointer">
                                   {" "}
                                   <i className="fas fa-ellipsis-v setting-icon "></i>
                                 </span>
-                                {show ? (
+                                {show && folderIndex === i ? (
                                   <ButtonGroup size="sm">
                                     <Button
                                       onClick={() =>
@@ -151,22 +160,43 @@ class FolderComponent extends React.Component {
               }
             })
           ) : (
-            <div className="set-wrap">
-              <h3>YOU HAVEN'T CREATED ANY FOLDER YET</h3>
-              <p>Create a Folder to Organize your Sets.</p>
-              <Button
-                color="default"
-                type="button"
-                className="btn-btn-right"
-                onClick={this.handleFolderModel}
-              >
-                Create a Folder
-              </Button>
-            </div>
+            <>
+              <div className="create-set-section mt-2 w-100">
+                <Card className="w-100 set-content-wrap">
+                  <div className="set-content-block w-100 empty-folder-wrap">
+                    <CardHeader className="empty-folder-header">
+                      <img src={emptyFolderIc} alt={"folder"} />
+                      <div className="content-header set-header">
+                        <span className="content-title">
+                          {" "}
+                          <h3>You haven't created any folder yet</h3>
+                          <p>Create a Folder to Organize your Sets.</p>
+                        </span>
+                      </div>
+                    </CardHeader>
+                    <CardBody className="">
+                      <div className="create-set-tile"></div>
+                      <div className="text-center">
+                        <Button
+                          color=" "
+                          type="button"
+                          className="btn-black btn mt-3 folder-create-btn"
+                          onClick={this.handleFolderModel}
+                        >
+                          <i className="fas fa-plus mr-1"></i>
+                          Folder
+                        </Button>
+                      </div>
+                    </CardBody>
+                  </div>
+                </Card>
+              </div>
+            </>
           )}
 
           <FolderModal
             modal={createFolderOpen}
+            modelInfoReducer={modelInfoReducer}
             createFolder={this.props.createFolder}
             handleOpen={this.handleFolderModel}
           />

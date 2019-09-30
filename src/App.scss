@@ -294,16 +294,13 @@ a {
   .badge-wrap {
     padding: 0px 5px;
   }
-  .cotent-tile {
-    padding: 0px 15px;
-  }
   .card {
     padding: 15px;
   }
   .tile-wrap {
     border-radius: 4px;
     margin-top: 15px;
-    padding: 15px 0px;
+    padding: 15px;
     border: 1px solid #d4d4d4;
   }
 
@@ -900,8 +897,8 @@ a {
     }
   }
   &.right-btn-tip .btn-group {
-    right: -18px;
-    top: -110%;
+    right: -3px;
+    top: -15px;
     &::before {
       position: absolute;
       bottom: -5px;
@@ -920,10 +917,10 @@ a {
   .cotent-text-tile {
     padding-right: 9px;
   }
-  .right-btn-tip {
-    position: absolute;
-    right: 15px;
-  }
+  // .right-btn-tip {
+  //   position: absolute;
+  //   right: 15px;
+  // }
 }
 .dashboard-full-section .folder-main-wrap {
   align-items: flex-start;

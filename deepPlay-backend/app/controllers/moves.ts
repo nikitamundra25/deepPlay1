@@ -38,7 +38,7 @@ const downloadVideo = async (req: Request, res: Response): Promise<any> => {
 
     const originalVideoPath = path.join(
       __basedir,
-      "uploads",
+      "../uploads",
       "youtube-videos",
       fileName
     );

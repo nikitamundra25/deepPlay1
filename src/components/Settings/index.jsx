@@ -193,8 +193,8 @@ class SettingComponent extends Component {
                     <div className="profile-img">
                       {file ? (
                         <img
-                          alt="..."
-                          src={` ${AppConfig.API_ENDPOINT}${this.state.file}`}
+                          alt={"No Image Found"}
+                          src={`${AppConfig.API_ENDPOINT}${this.state.file}`}
                           className="w-100"
                         />
                       ) : (

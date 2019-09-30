@@ -74,7 +74,7 @@ class AddSetModal extends React.Component {
               >
                 + Create New Set
               </Button>
-              {setList
+              {setList && setList.length
                 ? setList.map((set, i) => {
                     return (
                       <Row className="set-wrap" key={i}>
