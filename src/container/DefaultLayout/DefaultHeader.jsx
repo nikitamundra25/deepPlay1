@@ -20,6 +20,9 @@ import Login from "../Auth/Login/index.jsx";
 import Signup from "../Auth/Signup/index.jsx";
 import FolderModal from "../../components/Folders/createFolderModal";
 import profileImage from "../../assets/img/user-white-ic.svg";
+import { AppRoutes } from "../../config/AppRoutes"
+import { SidebarComponent } from "../../components/Sidebar";
+import logoutIcon from "../../assets/img/icons/logout.svg"
 
 class DefaultHeader extends React.Component {
   constructor(props) {
@@ -87,7 +90,8 @@ class DefaultHeader extends React.Component {
       forgotPasswordRequest,
       profileInfoReducer,
       modelOpenRequest,
-      isLoggedIn
+      isLoggedIn,
+      routePath
     } = this.props;
     const { modelDetails } = modelInfoReducer;
     const {
@@ -130,11 +134,11 @@ class DefaultHeader extends React.Component {
                         </DropdownMenu>
 
                         <DropdownMenu>
-                          <DropdownItem active>
-                            <Link to={"/move"}> Create Move</Link>
+                          <DropdownItem active={routePath === "/move" ? true : false} onClick={() => this.props.redirectTo(AppRoutes.MOVE.url)}>
+                            Create Move
                           </DropdownItem>
-                          <DropdownItem >
-                            <Link to={"/create-set"}>Create Set</Link>
+                          <DropdownItem active={routePath === "/create-set" ? true : false} onClick={() => this.props.redirectTo(AppRoutes.CREATE_SET.url)}>
+                            Create Set
                           </DropdownItem>
                           <DropdownItem onClick={this.handleFolderModel}>
                             {" "}
@@ -205,15 +209,27 @@ class DefaultHeader extends React.Component {
                           </div>
                         </DropdownToggle>
                         <DropdownMenu>
-                          <DropdownItem active>
-                            <Link to={"/setting"}>View Profile</Link>
-                          </DropdownItem>
-                          <DropdownItem>
-                            <Link to={"/dashboard"}>Dashboard</Link>
-                          </DropdownItem>
+                          {
+                            SidebarComponent.map((item, index) => {
+                              return (
+                                <DropdownItem
+                                  onClick={() => this.props.redirectTo(item.url)}
+                                  key={index}
+                                  active={routePath === item.url ? true : false}
+                                >
+                                  <img src={item.iconUrl} alt={item.iconUrl} width="20" />
+                                  {" "}
+                                  {item.name}
+                                </DropdownItem>
+                              )
+
+                            })
+                          }
                           <DropdownItem onClick={e => logoutRequest(e)}>
+                            <img src={logoutIcon} alt={"Logout"} width="20" />
+                            {" "}
                             Log Out
-                      </DropdownItem>
+                          </DropdownItem>
                         </DropdownMenu>
                       </UncontrolledDropdown>
                       {/* <span onClick={e => logoutRequest(e)} className="nav-link-inner--text pr-4">Logout</span> */}

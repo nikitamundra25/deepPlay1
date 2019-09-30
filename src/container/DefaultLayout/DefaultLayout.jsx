@@ -70,6 +70,7 @@ class DefaultLayout extends React.Component {
             onFolderCreation={this.onFolderCreation}
             routePath={routePath}
             isLoggedIn={isLoggedIn}
+            {...this.props}
           />
         ) : null}
         <>
