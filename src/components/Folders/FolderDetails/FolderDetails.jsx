@@ -200,7 +200,7 @@ class RecentFolderComponent extends React.Component {
           </span>
           <div>
             <span
-              className="dashboard-right-content"
+              className="dashboard-right-content cursor_pointer ml-4"
               onClick={this.openAddSetModel}
               id="move"
             >
@@ -210,13 +210,17 @@ class RecentFolderComponent extends React.Component {
               Add Sets
             </UncontrolledTooltip>
 
-            <span id="share" onClick={this.handleSharableLink}>
+            <span
+              id="share"
+              onClick={this.handleSharableLink}
+              className="cursor_pointer ml-4"
+            >
               <i className="fas fa-share fa-2x"></i>
             </span>
             <UncontrolledTooltip placement="bottom" target="share">
               Get Shareable Link
             </UncontrolledTooltip>
-            <span id="edit">
+            <span id="edit" className="cursor_pointer ml-4">
               <i className="fas fa-sliders-h fa-2x"></i>
             </span>
             <UncontrolledTooltip placement="bottom" target="edit">
@@ -284,7 +288,7 @@ class RecentFolderComponent extends React.Component {
                               }
                             >
                               Remove
-                          </Button>
+                            </Button>
                           </ButtonGroup>
                         ) : null}
                       </div>
@@ -294,38 +298,39 @@ class RecentFolderComponent extends React.Component {
               );
             })
           ) : (
-              <>
-                <div className="create-set-section mt-2 w-100">
-                  <Card className="w-100 set-content-wrap">
-                    <div className="set-content-block w-100 empty-folder-wrap">
-                      <CardHeader className="empty-folder-header">
-                        <img src={emptySetIc} alt={"Images"} />
-                        <div className="content-header set-header">
-                          <span className="content-title">      <h3>This folder has no Sets yet</h3>
-                            <p>Organize your Sets for you or your students</p></span>
-                        </div>
-                      </CardHeader>
-                      <CardBody className="">
-                        <div className="create-set-tile">
-                        </div>
-                        <div className="text-center">
-                          <Button
-                            color=" "
-                            type="button"
-                            className="btn-black btn mt-3"
-                            onClick={this.openAddSetModel}
-
-                          >
-                            <i className="fas fa-plus mr-1"></i>
-                            Add a Set
-                          </Button>
-                        </div>
-                      </CardBody>
-                    </div>
-                  </Card>
-                </div>
-              </>
-            )}
+            <>
+              <div className="create-set-section mt-2 w-100">
+                <Card className="w-100 set-content-wrap">
+                  <div className="set-content-block w-100 empty-folder-wrap">
+                    <CardHeader className="empty-folder-header">
+                      <img src={emptySetIc} alt={"Images"} />
+                      <div className="content-header set-header">
+                        <span className="content-title">
+                          {" "}
+                          <h3>This folder has no Sets yet</h3>
+                          <p>Organize your Sets for you or your students</p>
+                        </span>
+                      </div>
+                    </CardHeader>
+                    <CardBody className="">
+                      <div className="create-set-tile"></div>
+                      <div className="text-center">
+                        <Button
+                          color=" "
+                          type="button"
+                          className="btn-black btn mt-3"
+                          onClick={this.openAddSetModel}
+                        >
+                          <i className="fas fa-plus mr-1"></i>
+                          Add a Set
+                        </Button>
+                      </div>
+                    </CardBody>
+                  </div>
+                </Card>
+              </div>
+            </>
+          )}
         </Row>
         <AddSetModal
           handleOpen={this.openAddSetModel}
