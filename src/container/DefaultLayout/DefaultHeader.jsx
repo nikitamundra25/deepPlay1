@@ -23,6 +23,7 @@ import profileImage from "../../assets/img/user-white-ic.svg";
 import { AppRoutes } from "../../config/AppRoutes"
 import { SidebarComponent } from "../../components/Sidebar";
 import logoutIcon from "../../assets/img/icons/logout.svg"
+import { AppConfig } from "../../config/Appconfig";
 
 class DefaultHeader extends React.Component {
   constructor(props) {
@@ -136,8 +137,8 @@ class DefaultHeader extends React.Component {
                           <DropdownItem active={routePath === "/move" ? true : false} onClick={() => this.props.redirectTo(AppRoutes.MOVE.url)}>
                             Create Move
                           </DropdownItem>
-                        <DropdownItem active={routePath === "/create-set" ? true : false} onClick={() => this.props.redirectTo(AppRoutes.CREATE_SET.url)}>
-                          Create Set
+                          <DropdownItem active={routePath === "/create-set" ? true : false} onClick={() => this.props.redirectTo(AppRoutes.CREATE_SET.url)}>
+                            Create Set
                           </DropdownItem>
                           <DropdownItem onClick={this.handleFolderModel}>
                             {" "}
@@ -192,11 +193,20 @@ class DefaultHeader extends React.Component {
                         >
                           <div className="user-wrap">
                             <div className="user-img">
-                              <img
-                                src={profileImage}
-                                className="w-100"
-                                alt={"img"}
-                              />
+                              {profiledata
+                                ?
+                                <img
+                                  src={`${AppConfig.API_ENDPOINT}${profiledata.profileImage}`}
+                                  className="w-100"
+                                  alt={"img"}
+                                />
+                                :
+                                <img
+                                  src={profileImage}
+                                  className="w-100"
+                                  alt={"img"}
+                                />
+                              }
                             </div>
                             <div className="user-text">
                               {profiledata
