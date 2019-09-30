@@ -2,7 +2,7 @@ import React from "react";
 import { Modal, ModalBody, ModalHeader, Row, Col, Button } from "reactstrap";
 import { AppRoutes } from "../../../config/AppRoutes";
 import closeIcon from "../../../assets/img/close-img.png";
-// import CreateSetComponent from "../../Sets/createSet"
+
 // core components
 class AddSetModal extends React.Component {
   constructor(props) {

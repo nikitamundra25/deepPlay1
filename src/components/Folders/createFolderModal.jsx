@@ -9,7 +9,8 @@ import {
   ModalBody,
   ModalFooter
 } from "reactstrap";
-import closeIcon from "../../assets/img/close-img.png";
+import closeBtn from "../../assets/img/close-img.png";
+
 // core components
 class FolderModal extends React.Component {
   constructor(props) {
@@ -46,14 +47,16 @@ class FolderModal extends React.Component {
   };
 
   render() {
-    const { handleOpen, modal } = this.props;
+    const { modelInfoReducer } = this.props;
+    const { modelDetails } = modelInfoReducer;
+    const { createFolderModalOpen } = modelDetails;
     const { title, description } = this.state;
     return (
       <div>
         <Modal
           className="modal-dialog-centered custom-model-wrap"
-          isOpen={modal}
-          toggle={() => handleOpen}
+          isOpen={createFolderModalOpen}
+          toggle={() => this.handleOpen}
         >
           <ModalHeader>
             <span className="custom-title" id="exampleModalLabel">
@@ -64,10 +67,10 @@ class FolderModal extends React.Component {
               className="close"
               data-dismiss="modal"
               type="button"
-              onClick={handleOpen}
+              onClick={this.handleOpen}
             >
               <span aria-hidden="true">
-                <img src={closeIcon} alt="close-ic" />
+                <img src={closeBtn} alt="close-ic" />
               </span>
             </button>
           </ModalHeader>

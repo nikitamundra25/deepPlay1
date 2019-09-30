@@ -57,7 +57,6 @@ class Set extends React.Component {
       }
     });
   };
-
   createFolder = data => {
     this.props.onFolderCreation(data);
   };

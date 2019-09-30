@@ -1,5 +1,14 @@
 import React from "react";
-import { UncontrolledTooltip, Button, Row, Col, ButtonGroup } from "reactstrap";
+import {
+  UncontrolledTooltip,
+  Button,
+  Row,
+  Col,
+  ButtonGroup,
+  Card,
+  CardBody,
+  CardHeader
+} from "reactstrap";
 import { connect } from "react-redux";
 import {
   folderDetailRequest,
@@ -14,6 +23,8 @@ import AddSetModal from "./addSet";
 import TransferToModal from "./transferTo";
 import { ConfirmBox } from "../../../helper/SweetAleart";
 import SharableLinkModal from "../../Common/SharableLink";
+
+import emptySetIc from "../../../assets/img/empty-sets.png";
 // core components
 class RecentFolderComponent extends React.Component {
   constructor(props) {
@@ -317,7 +328,6 @@ const mapStateToProps = state => {
     getFolderReducer: state.getFolderReducer,
     modelInfoReducer: state.modelInfoReducer,
     getAllSetReducer: state.setReducer
-    // getAllFolders: state.getFolderReducer.getAllFolders
   };
 };
 const mapDispatchToProps = dispatch => ({

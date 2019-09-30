@@ -12,7 +12,7 @@ import {
 import "./index.scss";
 import { logger } from "helper/Logger";
 import { connect } from "react-redux";
-import { downloadYoutubeVideoRequest } from "../../actions"
+import { downloadYoutubeVideoRequest } from "../../actions";
 
 // core components
 class MoveComponent extends React.Component {
@@ -27,6 +27,7 @@ class MoveComponent extends React.Component {
 
   handleChange = e => {
     const { name, value } = e.target;
+
     this.setState({
       errors: "",
       [name]: value
@@ -62,7 +63,7 @@ class MoveComponent extends React.Component {
           url: result
         });
         if (this.state.isPaste) {
-          this.handleMoveUpload()
+          this.handleMoveUpload();
         }
       }
     }
@@ -88,20 +89,20 @@ class MoveComponent extends React.Component {
         return;
       }
       const payload = {
-        url: this.state.url,
-      }
-      this.props.downloadVideo(payload)
+        url: this.state.url
+      };
+      this.props.downloadVideo(payload);
     } catch (error) {
       logger(error);
     }
-  }
+  };
 
   handlePasteEvent = e => {
     if (e.target.value) {
-      this.handleChange(e)
+      this.handleChange(e);
       this.setState({
         isPaste: true
-      })
+      });
     }
   };
 
@@ -117,7 +118,9 @@ class MoveComponent extends React.Component {
               <CardHeader className="">
                 <div className="content-header set-header flex-column">
                   <span className="content-title">CREATE A MOVE</span>
-                  <p className="font-weight-bold">Trim any video to create a move</p>
+                  <p className="font-weight-bold">
+                    Trim any video to create a move
+                  </p>
                 </div>
               </CardHeader>
               <CardBody className="">
@@ -132,19 +135,19 @@ class MoveComponent extends React.Component {
                         onClick={this.handleMoveUpload}
                       >
                         <i className="fa fa-cloud-upload mr-2"></i>
-                        {
-                          isVideoDownloading ?
-                            "Please wait..." :
-                            "Upload"
-                        }
+                        {isVideoDownloading ? "Please wait..." : "Upload"}
                       </Button>
                     </div>
                     <FormGroup className="flex-fill flex-column ">
                       <div className="flex-fill w-100">
                         <Input
                           id="url"
-                          className={errors ? "capitalize pl-2 boder-1-invalid is-invalid w-100" : "capitalize pl-2 boder-1 w-100"}
-                          placeholder="Paste YouTube URL or Type URL Manually"
+                          className={
+                            errors
+                              ? "capitalize pl-2 boder-1-invalid is-invalid w-100"
+                              : "capitalize pl-2 boder-1 w-100"
+                          }
+                          placeholder="Paste YouTube Video URL or Type URL Manually"
                           type="text"
                           onPaste={this.handlePasteEvent}
                           name="url"
@@ -152,7 +155,11 @@ class MoveComponent extends React.Component {
                           value={url}
                         />
                         <FormFeedback>
-                          {(errors.notUrl) ? errors.notUrl : (errors.validUrl && url) ? errors.validUrl : null}
+                          {errors.notUrl
+                            ? errors.notUrl
+                            : errors.validUrl && url
+                            ? errors.validUrl
+                            : null}
                         </FormFeedback>
                       </div>
                     </FormGroup>
@@ -162,7 +169,7 @@ class MoveComponent extends React.Component {
             </div>
           </Card>
         </div>
-        <div className="create-set-section step-2 mt-2 container">
+        {/* <div className="create-set-section step-2 mt-2">
           <Card className="w-100 set-content-wrap">
             <div className="set-content-block w-100">
               <CardHeader className="">
@@ -184,7 +191,7 @@ class MoveComponent extends React.Component {
               </CardBody>
             </div>
           </Card>
-        </div>
+        </div> */}
       </>
     );
   }
@@ -192,7 +199,7 @@ class MoveComponent extends React.Component {
 
 const mapStateToProps = state => {
   return {
-    moveReducer: state.moveReducer,
+    moveReducer: state.moveReducer
   };
 };
 const mapDispatchToProps = dispatch => ({

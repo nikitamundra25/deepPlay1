@@ -1,8 +1,16 @@
 import React from "react";
-import { Row, Col, Button, ButtonGroup } from "reactstrap";
+import {
+  Row,
+  Col,
+  Button,
+  ButtonGroup,
+  Card,
+  CardHeader,
+  CardBody
+} from "reactstrap";
 import { AppRoutes } from "../../config/AppRoutes";
 import "./index.scss";
-
+import emptySetIc from "../../assets/img/empty-sets.png";
 // core components
 class SetComponent extends React.Component {
   constructor(props) {
@@ -103,18 +111,40 @@ class SetComponent extends React.Component {
               );
             })
           ) : (
-            <div className="set-wrap">
-              <h3>YOU HAVEN'T CREATED ANY SET YET</h3>
-              <p>Create a Set to Organize your Moves.</p>
-              <Button
-                color="default"
-                type="button"
-                className="btn-btn-right"
-                onClick={() => this.props.handleSetComponent(true)}
-              >
-                Create a Set
-              </Button>
-            </div>
+            <>
+              <div className="create-set-section mt-2 w-100">
+                <Card className="w-100 set-content-wrap">
+                  <div className="set-content-block w-100 empty-folder-wrap">
+                    <CardHeader className="empty-folder-header">
+                      <img src={emptySetIc} alt={"Folder"} />
+                      <div className="content-header set-header">
+                        <span className="content-title">
+                          {" "}
+                          <h3>You haven't created any set yet</h3>
+                          <p>Create a Set to Organize your Moves.</p>
+                        </span>
+                      </div>
+                    </CardHeader>
+                    <CardBody className="">
+                      <div className="create-set-tile"></div>
+                      <div className="text-center">
+                        <Button
+                          color=" "
+                          type="button"
+                          className="btn-black btn mt-3 folder-create-btn"
+                          onClick={() =>
+                            this.props.redirectTo(AppRoutes.CREATE_SET.url)
+                          }
+                        >
+                          <i className="fas fa-plus mr-1"></i>
+                          Create a Set
+                        </Button>
+                      </div>
+                    </CardBody>
+                  </div>
+                </Card>
+              </div>
+            </>
           )}
         </Row>
       </div>

@@ -46,7 +46,8 @@ class DefaultHeader extends React.Component {
     const { modelDetails } = modelInfoReducer;
     this.props.modelOpenRequest({
       modelDetails: {
-        loginModelOpen: !modelDetails.loginModelOpen
+        loginModelOpen: !modelDetails.loginModelOpen,
+        signupModelOpen: false
       }
     });
   };
@@ -55,7 +56,8 @@ class DefaultHeader extends React.Component {
     const { modelDetails } = modelInfoReducer;
     this.props.modelOpenRequest({
       modelDetails: {
-        signupModelOpen: !modelDetails.signupModelOpen
+        signupModelOpen: !modelDetails.signupModelOpen,
+        loginModelOpen: false
       }
     });
   };
@@ -91,8 +93,7 @@ class DefaultHeader extends React.Component {
     const {
       loginModelOpen,
       signupModelOpen,
-      forgotPasswordModalOpen,
-      createFolderModalOpen
+      forgotPasswordModalOpen
     } = modelDetails;
     const { isUserLoggedIn } = this.state;
     const profiledata =
@@ -255,16 +256,19 @@ class DefaultHeader extends React.Component {
           forgotPasswordRequest={forgotPasswordRequest}
           modelInfoReducer={modelInfoReducer}
           loginReducer={loginReducer}
+          handleSignupModal={this.handleSignupModel}
         />
         <Signup
           openSignupModel={signupModelOpen}
           handleSignupModel={this.handleSignupModel}
           signupRequest={signupRequest}
           loginReducer={loginReducer}
+          handleLoginModal={this.handleLoginModel}
         />
         <FolderModal
-          handleOpen={this.handleFolderModel}
-          modal={createFolderModalOpen}
+          handleFolderModel={this.handleFolderModel}
+          modelInfoReducer={modelInfoReducer}
+          modelOperate={modelOpenRequest}
           createFolder={this.createFolder}
         />
       </>

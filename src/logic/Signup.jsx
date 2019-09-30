@@ -1,11 +1,7 @@
 import { createLogic } from "redux-logic";
-import { ApiHelper } from "../helper"
-import {
-  signupActions,
-  modelOpenRequest,
-  signupSuccess,
-} from "../actions";
-import { AppRoutes } from "../config/AppRoutes"
+import { ApiHelper } from "../helper";
+import { signupActions, modelOpenRequest, signupSuccess } from "../actions";
+import { AppRoutes } from "../config/AppRoutes";
 import { toast } from "react-toastify";
 /**
  *
@@ -24,10 +20,11 @@ const signupLogic = createLogic({
     );
     if (result.isError || !result.data.userData) {
       toast.error(result.messages[0]);
+      dispatch(signupSuccess({ isLoginSuccess: false }));
       done();
       return;
     } else {
-      localStorage.setItem("token", result.data.token)
+      localStorage.setItem("token", result.data.token);
       window.location.href = AppRoutes.DASHBOARD.url;
       toast.success(result.messages[0]);
       dispatch(
@@ -36,10 +33,8 @@ const signupLogic = createLogic({
             signupModelOpen: false
           }
         })
-      )
-      dispatch(
-        signupSuccess({ isLoginSuccess: true })
-      )
+      );
+      dispatch(signupSuccess({ isLoginSuccess: true }));
       done();
     }
   }
@@ -47,6 +42,4 @@ const signupLogic = createLogic({
 /**
  *
  */
-export const SignupLogics = [
-  signupLogic
-];
+export const SignupLogics = [signupLogic];

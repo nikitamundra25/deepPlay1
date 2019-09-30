@@ -1,8 +1,18 @@
 import React from "react";
-import { Row, Col, UncontrolledTooltip, Button, ButtonGroup } from "reactstrap";
+import {
+  Row,
+  Col,
+  UncontrolledTooltip,
+  Button,
+  ButtonGroup,
+  Card,
+  CardBody,
+  CardHeader
+} from "reactstrap";
 import FolderModal from "./createFolderModal";
 import { ConfirmBox } from "../../helper/SweetAleart";
 import { AppRoutes } from "../../config/AppRoutes";
+import emptyFolderIc from "../../assets/img/empty-folder.png";
 // core components
 class FolderComponent extends React.Component {
   constructor(props) {

@@ -1,7 +1,6 @@
 import { Request, Response } from "express";
 import { SetModel } from "../models";
 import { ISet } from "../interfaces";
-const ObjectId = require("mongodb").ObjectId;
 
 // --------------Create set---------------------
 const createSet = async (req: Request, res: Response): Promise<any> => {
@@ -191,7 +190,7 @@ const getSetDetailsById = async (
         message: "User id not found"
       });
     }
-    const result: Document | any = await SetModel.findById({
+    const result: Document | any = await SetModel.findOne({
       userId: headToken.id,
       _id: setId
     });

@@ -3,7 +3,7 @@ import { FolderAction } from "../actions";
 const initialState = {
   folderDetails: "",
   getAllFolders: "",
-  recentFolders:""
+  recentFolders: ""
 };
 export const getFolderReducer = handleActions(
   {
@@ -15,7 +15,7 @@ export const getFolderReducer = handleActions(
       ...state,
       getAllFolders: payload.getAllFolders
     }),
-    [FolderAction.RECENT_FOLDER_SUCCESS]: (state,{payload}) => ({
+    [FolderAction.RECENT_FOLDER_SUCCESS]: (state, { payload }) => ({
       ...state,
       recentFolders: payload.recentFolders
     })

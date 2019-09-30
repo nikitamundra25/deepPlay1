@@ -11,7 +11,7 @@ export const FolderAction = {
   RECENT_FOLDER_REQUEST: "Recent Folder Request",
   RECENT_FOLDER_SUCCESS: "Recent Folder Success",
   UPDATE_RECENT_TIME_REQUEST: "Update Recent Time Request",
-  UPDATE_RECENT_TIME_SUCCESS: "Update Recent Time Success",
+  UPDATE_RECENT_TIME_SUCCESS: "Update Recent Time Success"
 };
 export const createFolderRequest = createAction(
   FolderAction.CREATE_FOLDER_REQUEST
@@ -49,4 +49,3 @@ export const updateRecentTimeRequest = createAction(
 export const updateRecentTimeSuccess = createAction(
   FolderAction.UPDATE_RECENT_TIME_SUCCESS
 );
-

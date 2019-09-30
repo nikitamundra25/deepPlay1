@@ -17,7 +17,7 @@ class Folder extends React.Component {
 
   handleForRecentFolder = folderId => {
     const data = {
-      isSetId:  null,
+      isSetId: null,
       isFolderId: folderId ? folderId : null
     };
     this.props.updateRecentTime(data);
