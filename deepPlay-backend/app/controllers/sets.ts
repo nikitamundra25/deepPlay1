@@ -1,6 +1,10 @@
 import { Request, Response } from "express";
 import { SetModel } from "../models";
 import { ISet } from "../interfaces";
+import { algoliaAppId, algoliaAPIKey } from "../config/app"
+//import * as algoliasearch from 'algoliasearch'; // When using TypeScript
+const algoliasearch = require('algoliasearch');
+const client = algoliasearch("81ZJX0Y0SX", "2574ac05e0b2c3b192c0fb91e57e7935");
 
 // --------------Create set---------------------
 const createSet = async (req: Request, res: Response): Promise<any> => {
@@ -8,6 +12,8 @@ const createSet = async (req: Request, res: Response): Promise<any> => {
     const { currentUser } = req;
     const { body } = req;
     const headToken: Request | any = currentUser;
+    const index = client.initIndex('rishabh_name');
+    //console.log("#################", index);
     const setData: ISet = {
       title: body.title,
       description: body.description ? body.description : "",
@@ -20,6 +26,15 @@ const createSet = async (req: Request, res: Response): Promise<any> => {
     };
     const setResult: Document | any = new SetModel(setData);
     await setResult.save();
+    index.addObjects([setData], (err: string, content: string) => {
+      if (err) {
+        console.error(err);
+      }
+      else{
+        console.log("##################",content);
+        
+      }
+    });
     res.status(200).json({
       setResult: setResult,
       message: "Set created successfully"
