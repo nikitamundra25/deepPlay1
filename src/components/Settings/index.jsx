@@ -19,6 +19,7 @@ import {
   SingupValidationsMessaages
 } from "../../validations";
 import UploadImage from "./uploadImageModal";
+import profileIcon from "../../assets/img/profile-ic.png";
 import { AppConfig } from "../../config/Appconfig";
 class SettingComponent extends Component {
   constructor(props) {
@@ -178,41 +179,27 @@ class SettingComponent extends Component {
                     Edit Profile
                   </Button>
                 ) : (
-                    <Button
-                      className="dashboard-right-content btn-line-black "
-                      onClick={this.onSaveData}
-                    >
-                      Update Info
+                  <Button
+                    className="dashboard-right-content btn-line-black "
+                    onClick={this.onSaveData}
+                  >
+                    Update Info
                   </Button>
-                  )}
+                )}
               </CardHeader>
               <CardBody>
                 <div className="profile-wrap">
-                  <div className="profile-img-tile ">
-                    <div className="profile-img" style={file ? ({
-                      backgroundImage: `url( 
-                      ${AppConfig.API_ENDPOINT}${this.state.file}
-                      )`
-                    }) : (
-                        {
-                          backgroundImage: `url( 
-                          ${AppConfig.API_ENDPOINT}${this.state.file}
-                          )`
-                        }
-                      )}>
-                      {/* {file ? (
+                  <div className="profile-img-tile">
+                    <div className="profile-img">
+                      {file ? (
                         <img
-                          alt="..."
-                          src={` ${AppConfig.API_ENDPOINT}${this.state.file}`}
+                          alt={"No Img Found"}
+                          src={`${AppConfig.API_ENDPOINT}${this.state.file}`}
                           className="w-100"
                         />
                       ) : (
-                        <img
-                          alt="..."
-                          src={require("assets/img/icons/common/boy.svg")}
-                          className="w-100"
-                        />
-                      )} */}
+                        <img alt="" src={profileIcon} className="w-100" />
+                      )}
                       {!isDisabled ? (
                         <span
                           className="changeProfile"
@@ -221,8 +208,8 @@ class SettingComponent extends Component {
                           Change Profile
                         </span>
                       ) : (
-                          ""
-                        )}
+                        ""
+                      )}
                     </div>
                     {imgError ? (
                       <div className="text-danger"> {imgError} </div>
@@ -279,6 +266,7 @@ class SettingComponent extends Component {
                           id="exampleFormControlInput1"
                           placeholder="name@example.com"
                           type="email"
+                          readOnly
                           value={
                             profileInfoReducer ? profileInfoReducer.email : ""
                           }
@@ -316,7 +304,7 @@ class SettingComponent extends Component {
                             className="custom-control-input"
                             id="customRadio6"
                             name="teacher"
-                            disabled={isDisabled}
+                            // disabled={isDisabled}
                             onChange={this.handleChange}
                             checked={roleType === "teacher"}
                             type="radio"
@@ -336,7 +324,7 @@ class SettingComponent extends Component {
                             className="custom-control-input"
                             id="customRadio5"
                             name="student"
-                            disabled={isDisabled}
+                            // disabled={isDisabled}
                             onChange={this.handleChange}
                             checked={roleType === "student"}
                             type="radio"

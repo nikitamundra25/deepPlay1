@@ -1,13 +1,20 @@
 import { Request, Response } from "express";
 import { SetModel } from "../models";
 import { ISet } from "../interfaces";
+import { algoliaAppId, algoliaAPIKey } from "../config/app"
+//import * as algoliasearch from 'algoliasearch'; // When using TypeScript
+const algoliasearch = require('algoliasearch');
+const client = algoliasearch("81ZJX0Y0SX", "2574ac05e0b2c3b192c0fb91e57e7935");
 
+import { decrypt } from "../common";
 // --------------Create set---------------------
 const createSet = async (req: Request, res: Response): Promise<any> => {
   try {
     const { currentUser } = req;
     const { body } = req;
     const headToken: Request | any = currentUser;
+    const index = client.initIndex('rishabh_name');
+    //console.log("#################", index);
     const setData: ISet = {
       title: body.title,
       description: body.description ? body.description : "",
@@ -20,6 +27,15 @@ const createSet = async (req: Request, res: Response): Promise<any> => {
     };
     const setResult: Document | any = new SetModel(setData);
     await setResult.save();
+    index.addObjects([setData], (err: string, content: string) => {
+      if (err) {
+        console.error(err);
+      }
+      else{
+        console.log("##################",content);
+        
+      }
+    });
     res.status(200).json({
       setResult: setResult,
       message: "Set created successfully"
@@ -42,7 +58,10 @@ const getAllSetById = async (req: Request, res: Response): Promise<void> => {
         message: "User id not found"
       });
     }
-    const result = await SetModel.find({ userId: headToken.id });
+    const result: Document | any = await SetModel.find({
+      userId: headToken.id,
+      isDeleted: false
+    });
     res.status(200).json({
       result,
       message: "Sets have been fetched successfully"
@@ -66,11 +85,14 @@ const getRecentSetById = async (req: Request, res: Response): Promise<void> => {
         message: "User id not found"
       });
     }
-    const result = await SetModel.find({ userId: headToken.id })
-      .sort({ createdAt: -1 })
+    const result: Document | any = await SetModel.find({
+      userId: headToken.id,
+      isDeleted: false
+    })
+      .sort({ isRecentTime: -1 })
       .limit(limit);
     res.status(200).json({
-      result,
+      data: result,
       message: "Sets have been fetched successfully"
     });
   } catch (error) {
@@ -85,20 +107,19 @@ const getRecentSetById = async (req: Request, res: Response): Promise<void> => {
 const getSetsForFolder = async (req: Request, res: Response): Promise<void> => {
   try {
     const { currentUser } = req;
-    const { body } = req;
+    const { query } = req;
     let headToken: Request | any = currentUser;
     if (!headToken.id) {
       res.status(400).json({
         message: "User id not found"
       });
     }
-    const result = await SetModel.find({
+    const result: Document | any = await SetModel.find({
       userId: headToken.id,
-      $or: [{ folderId: body.folderId }, { folderId: null }]
+      $or: [{ folderId: query.folderId }, { folderId: null }]
     });
     res.status(200).json({
-      data: result,
-      message: "Sets have been fetched successfully"
+      data: result
     });
   } catch (error) {
     console.log(error);
@@ -140,11 +161,39 @@ const addSetInFolder = async (req: Request, res: Response): Promise<void> => {
   }
 };
 
+// --------------Delete folder---------------------
+const deleteSet = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const { body } = req;
+    if (!body.id) {
+      res.status(400).json({
+        message: "Set id not found"
+      });
+    }
+    const result: Document | any = await SetModel.findByIdAndUpdate(body.id, {
+      $set: { isDeleted: true }
+    });
+
+    res.status(200).json({
+      data: result[0],
+      message: "Sets has been deleted successfully"
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).send({
+      message: error.message
+    });
+  }
+};
+
 /* Title:- Get sets with its id
 Query Prams:- folderId
 Created By:- Rishabh Bula*/
 
-const getSetDetailsById = async (req: Request, res: Response): Promise<void> => {
+const getSetDetailsById = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
   try {
     const { currentUser } = req;
     const { query } = req;
@@ -156,12 +205,12 @@ const getSetDetailsById = async (req: Request, res: Response): Promise<void> => 
         message: "User id not found"
       });
     }
-    const result = await SetModel.findById({
+    const result: Document | any = await SetModel.findOne({
       userId: headToken.id,
       _id: setId
     });
     res.status(200).json({
-      data: result,
+      data: result
     });
   } catch (error) {
     console.log(error);
@@ -171,11 +220,44 @@ const getSetDetailsById = async (req: Request, res: Response): Promise<void> => 
   }
 };
 
+//-----Decrypt  folderId to get setDetails for shared link-----------------
+const publicUrlsetDetails = async (
+  req: Request,
+  res: Response
+): Promise<any> => {
+  try {
+    const { query } = req;
+    const { folderId, isPublic } = query;
+    const decryptedFolderId = decrypt(folderId);
+    let result: Document | any | null;
+    if (isPublic === "true") {
+      result = await SetModel.find({
+        folderId: decryptedFolderId
+      });
+    } else {
+      return res.status(400).json({
+        message: "Public access link is not enabled."
+      });
+    }
+    return res.status(200).json({
+      responsecode: 200,
+      data: result,
+      success: true
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).send({
+      message: error.message
+    });
+  }
+};
 export {
   createSet,
   getAllSetById,
   getRecentSetById,
   addSetInFolder,
   getSetsForFolder,
-  getSetDetailsById
+  deleteSet,
+  getSetDetailsById,
+  publicUrlsetDetails
 };

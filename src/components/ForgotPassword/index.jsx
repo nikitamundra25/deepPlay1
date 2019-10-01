@@ -16,7 +16,10 @@ import {
   ModalHeader
 } from "reactstrap";
 import Validator from "js-object-validation";
-import { ForgetPasswordValidations, ForgetPasswordValidationsMessaages } from "../../validations";
+import {
+  ForgetPasswordValidations,
+  ForgetPasswordValidationsMessaages
+} from "../../validations";
 import { logger } from "helper/Logger";
 
 // core components
@@ -26,7 +29,7 @@ class ForgotPasswordComponent extends React.Component {
     this.state = {
       email: "",
       errors: {}
-    }
+    };
   }
 
   componentDidUpdate = ({ openForgotPasswordModel }) => {
@@ -34,16 +37,16 @@ class ForgotPasswordComponent extends React.Component {
       this.setState({
         email: "",
         errors: {}
-      })
+      });
     }
-  }
+  };
 
   handleChange = e => {
     const { name, value } = e.target;
     this.setState({
       [name]: value
-    })
-  }
+    });
+  };
   handleForgotPasswardRequest = e => {
     e.preventDefault();
     this.setState({
@@ -68,13 +71,17 @@ class ForgotPasswordComponent extends React.Component {
     } catch (error) {
       logger(error);
     }
-  }
+  };
   /*
   /* 
   */
   render() {
-    const { openForgotPasswordModel, handleForgotPasswordModel, loginReducer } = this.props
-    const { isSendingLink } = loginReducer
+    const {
+      openForgotPasswordModel,
+      handleForgotPasswordModel,
+      loginReducer
+    } = this.props;
+    const { isSendingLink } = loginReducer;
     const { email, errors } = this.state;
     return (
       <>
@@ -84,15 +91,12 @@ class ForgotPasswordComponent extends React.Component {
           isOpen={openForgotPasswordModel}
           toggle={handleForgotPasswordModel}
           backdrop={"static"}
-        > 
+        >
           <ModalHeader toggle={handleForgotPasswordModel}></ModalHeader>
           <ModalBody className="modal-body p-0">
             <Card className="bg-secondary shadow border-0 pb-0">
-            <CardHeader>
-                <div className=" login-heading text-center mb-3">
-              Sign in with
-                </div>
-             
+              <CardHeader className={"text-center p-2"}>
+                Forgot Password
               </CardHeader>
               <CardBody className="px-lg-5">
                 <Form onSubmit={this.handleForgotPasswardRequest}>
@@ -104,12 +108,13 @@ class ForgotPasswordComponent extends React.Component {
                         </InputGroupText>
                       </InputGroupAddon>
                       <Input
-                        placeholder="Email"
+                        placeholder="Email Ex: abc@gmail.com"
                         className={errors.email ? "is-invalid" : ""}
                         onChange={this.handleChange}
                         name={"email"}
                         value={email}
-                        type="text" />
+                        type="text"
+                      />
                       <FormFeedback>
                         {errors.email ? errors.email : null}
                       </FormFeedback>
@@ -122,11 +127,7 @@ class ForgotPasswordComponent extends React.Component {
                       type="submit"
                       disabled={isSendingLink ? true : false}
                     >
-                 {
-                        isSendingLink ?
-                          "Plaese Wait..." :
-                          "Send Link"
-                      }
+                      {isSendingLink ? "Plaese Wait..." : "Send Link"}
                     </Button>
                   </div>
                 </Form>

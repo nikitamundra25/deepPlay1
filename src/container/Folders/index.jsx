@@ -5,7 +5,8 @@ import {
   modelOpenRequest,
   createFolderRequest,
   getAllFolderRequest,
-  deleteFolderRequest
+  deleteFolderRequest,
+  updateRecentTimeRequest
 } from "../../actions";
 
 // core components
@@ -14,14 +15,12 @@ class Folder extends React.Component {
     this.props.allFolders();
   };
 
-  handleFolderModel = () => {
-    const { modelInfoReducer } = this.props;
-    const { modelDetails } = modelInfoReducer;
-    this.props.modelOperate({
-      modelDetails: {
-        createFolderModalOpen: !modelDetails.createFolderModalOpen
-      }
-    });
+  handleForRecentFolder = folderId => {
+    const data = {
+      isSetId: null,
+      isFolderId: folderId ? folderId : null
+    };
+    this.props.updateRecentTime(data);
   };
 
   createFolder = data => {
@@ -39,6 +38,7 @@ class Folder extends React.Component {
           handleFolderModel={this.handleFolderModel}
           modelInfoReducer={modelInfoReducer}
           modelOperate={modelOperate}
+          handleForRecentFolder={this.handleForRecentFolder}
           createFolder={this.createFolder}
           getAllFolders={getAllFolders}
           onDelete={this.onDelete}
@@ -66,6 +66,9 @@ const mapDispatchToProps = dispatch => {
     },
     deleteFolder: id => {
       dispatch(deleteFolderRequest(id));
+    },
+    updateRecentTime: data => {
+      dispatch(updateRecentTimeRequest(data));
     }
   };
 };

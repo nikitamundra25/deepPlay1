@@ -45,21 +45,21 @@ const verifyPassword = (
   return pwd == hashedPassword;
 };
 //Encrypt Email and Id
-var algorithm: string = 'aes-256-cbc';
-var password: string = 'password';
+var algorithm: string = "aes-256-cbc";
+var password: string = "password";
 const encrypt = (text: string) => {
-  const cipher:Cipher = crypto.createCipher(algorithm, password );
-  var crypted:string = cipher.update(text.toString(), 'utf8', 'hex');
-  crypted += cipher.final('hex');
+  const cipher: Cipher = crypto.createCipher(algorithm, password);
+  var crypted: string = cipher.update(text.toString(), "utf8", "hex");
+  crypted += cipher.final("hex");
   return crypted;
-}
+};
 // Dycript Email and Id
 const decrypt = (text: string) => {
-  const decipher:Decipher = crypto.createDecipher(algorithm, password );
-  var dec:string = decipher.update(text, 'hex', 'utf8');
-  dec += decipher.final('utf8');
+  const decipher: Decipher = crypto.createDecipher(algorithm, password);
+  var dec: string = decipher.update(text, "hex", "utf8");
+  dec += decipher.final("utf8");
   return dec;
-}
+};
 /**
  *
  */

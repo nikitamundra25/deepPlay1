@@ -18,8 +18,8 @@ import {
 import Validator from "js-object-validation";
 import { LoginValidations, LoginValidationsMessaages } from "../../validations";
 import { logger } from "helper/Logger";
-import FacebookLogin from 'react-facebook-login';
-import GoogleLogin from 'react-google-login';
+import FacebookLogin from "react-facebook-login";
+import GoogleLogin from "react-google-login";
 import { toast } from "react-toastify";
 // core components
 class LoginComponent extends React.Component {
@@ -29,7 +29,7 @@ class LoginComponent extends React.Component {
       email: "",
       password: "",
       errors: {}
-    }
+    };
   }
 
   componentDidUpdate = ({ openLoginModel }) => {
@@ -38,43 +38,41 @@ class LoginComponent extends React.Component {
         email: "",
         password: "",
         errors: {}
-      })
+      });
     }
-  }
+  };
 
   handleChange = e => {
     const { name, value } = e.target;
     this.setState({
       [name]: value
-    })
-  }
+    });
+  };
   /*
   /* 
   */
-  handleFacebookLogin = (response) => {
+  handleFacebookLogin = response => {
     try {
-      const name = response.name.split(" ")
+      const name = response.name.split(" ");
       const payload = {
         email: response.email,
         firstName: name[0],
         lastName: name[1],
         profileImage: response.picture.data.url,
         accessToken: response.accessToken
-      }
-      this.props.socialLoginRequest(payload)
+      };
+      this.props.socialLoginRequest(payload);
     } catch (error) {
-      logger(error)
+      logger(error);
       if (!toast.isActive(this.toastId)) {
-        this.toastId = toast.error(
-          error
-        );
+        this.toastId = toast.error(error);
       }
     }
-  }
+  };
   /*
   /* 
   */
-  handleGoogleLogin = (response) => {
+  handleGoogleLogin = response => {
     try {
       const payload = {
         email: response.profileObj.email,
@@ -82,17 +80,15 @@ class LoginComponent extends React.Component {
         lastName: response.profileObj.familyName,
         profileImage: response.profileObj.imageUrl,
         accessToken: response.accessToken
-      }
-      this.props.socialLoginRequest(payload)
+      };
+      this.props.socialLoginRequest(payload);
     } catch (error) {
-      logger(error)
+      logger(error);
       if (!toast.isActive(this.toastId)) {
-        this.toastId = toast.error(
-          error
-        );
+        this.toastId = toast.error(error);
       }
     }
-  }
+  };
   /*
   /* 
   */
@@ -115,18 +111,19 @@ class LoginComponent extends React.Component {
       }
       const payload = {
         email: this.state.email,
-        password: this.state.password,
-      }
-      this.props.loginRequest(payload)
+        password: this.state.password
+      };
+      this.props.loginRequest(payload);
     } catch (error) {
       logger(error);
     }
-  }
+  };
   /*
   /* 
   */
   render() {
-    const { openLoginModel, handleLoginModel } = this.props
+    const { openLoginModel, handleLoginModel, loginReducer } = this.props;
+    const { isLoginRequest } = loginReducer
     const { email, password, errors } = this.state;
     return (
       <>
@@ -142,7 +139,7 @@ class LoginComponent extends React.Component {
             <Card className="bg-secondary shadow border-0 pb-0">
               <CardHeader>
                 <div className=" login-heading text-center mb-3">
-              Sign in with
+                  Sign in with
                 </div>
                 <div className="btn-wrapper text-center social-media-wrap">
                   <span className="btn-inner--icon mr-2 facebook-wrap">
@@ -163,7 +160,7 @@ class LoginComponent extends React.Component {
                       className={"btn-neutral btn-icon btn btn-default"}
                       onSuccess={this.handleGoogleLogin}
                       onFailure={this.handleGoogleLogin}
-                      cookiePolicy={'single_host_origin'}
+                      cookiePolicy={"single_host_origin"}
                     />
                   </span>
                 </div>
@@ -186,7 +183,8 @@ class LoginComponent extends React.Component {
                         onChange={this.handleChange}
                         name={"email"}
                         value={email}
-                        type="email" />
+                        type="email"
+                      />
                       <FormFeedback>
                         {errors.email ? errors.email : null}
                       </FormFeedback>
@@ -205,22 +203,32 @@ class LoginComponent extends React.Component {
                         className={errors.password ? "is-invalid" : ""}
                         value={password}
                         name={"password"}
-                        type="password" />
+                        type="password"
+                      />
                       <FormFeedback>
                         {errors.password ? errors.password : null}
                       </FormFeedback>
                     </InputGroup>
                   </FormGroup>
-                  <div onClick={this.props.handleForgotPasswordModel} className={"text-center cursor_pointer forgot-password-wrap"}>
+                  <div
+                    onClick={this.props.handleForgotPasswordModel}
+                    className={
+                      "text-center cursor_pointer forgot-password-wrap"
+                    }
+                  >
                     Forgot password?
                   </div>
                   <div className="text-center auth-btn-wrap">
                     <Button
                       className="my-4 btn-black btn-block"
-                      color=" "
                       type="submit"
+                      disabled={isLoginRequest ? true : false}
                     >
-                      Sign in
+                      {
+                        isLoginRequest ?
+                          "Please Wait..." :
+                          "Sign in"
+                      }
                     </Button>
 
                     <Button

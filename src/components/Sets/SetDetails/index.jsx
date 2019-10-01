@@ -5,13 +5,20 @@ import {
   CardBody,
   ButtonGroup,
   Button,
-  Col
+  Col,
+  UncontrolledTooltip
 } from "reactstrap";
-import { getSetDetailsRequest } from "../../../actions";
+import {
+  getSetDetailsRequest,
+  modelOpenRequest,
+  publicAccessRequest,
+  shareableLinkRequest
+} from "../../../actions";
+import SharableLinkModal from "../../comman/shareableLink/SharableLink";
 import Slider from "react-slick";
-import { AppConfig } from "../../../config/Appconfig"
-import { AppRoutes } from "../../../config/AppRoutes"
-import "./index.scss"
+import { AppConfig } from "../../../config/Appconfig";
+import { AppRoutes } from "../../../config/AppRoutes";
+import "./index.scss";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 
@@ -33,69 +40,146 @@ class SetDetails extends React.Component {
     };
   }
   componentDidMount = () => {
-    const location = this.props.location
-    const pathName = location.pathname.split("/")
-    this.props.getSetDetailsRequest({ setId: pathName[2] })
-  }
+    const location = this.props.location;
+    const pathName = location.pathname.split("/");
+    this.props.getSetDetailsRequest({ setId: pathName[2] });
+  };
   /*
   /*  
-  */ 
-  handleMoveAdd = () =>{
-    this.props.redirectTo(AppRoutes.MOVE.url)
-  }
+  */
+
+  handleMoveAdd = () => {
+    this.props.redirectTo(AppRoutes.MOVE.url);
+  };
+
+  onTogglePublicAccess = isPublic => {
+    const location = this.props.location;
+    const pathName = location.pathname.split("/");
+    const data = {
+      isFolderId: null,
+      isSetId: pathName[2],
+      isMoveId: null,
+      isPublic: isPublic
+    };
+    this.props.publicAccess(data);
+  };
+
+  handleSharableLink = () => {
+    const location = this.props.location;
+    const pathName = location.pathname.split("/");
+    this.props.shareableLink(pathName[2]);
+    const { modelInfoReducer } = this.props;
+    const { modelDetails } = modelInfoReducer;
+    this.props.modelOperate({
+      modelDetails: {
+        sharableLinkModalOpen: !modelDetails.sharableLinkModalOpen
+      }
+    });
+  };
 
   render() {
-    const { setReducer, moveReducer } = this.props
-    const { setDetails } = setReducer
-    const { movesOfSet } = moveReducer
+    const {
+      setReducer,
+      moveReducer,
+      shareLinkReducer,
+      modelInfoReducer
+    } = this.props;
+    const { setDetails } = setReducer;
+    const { modelDetails } = modelInfoReducer;
+    const { movesOfSet } = moveReducer;
+    const { userEncryptedInfo } = shareLinkReducer;
+    const { sharableLinkModalOpen } = modelDetails;
     return (
       <>
         <div className="create-set-section step-2 mt-2">
           <Card className="w-100">
             <CardBody>
               <div className={"d-flex justify-content-between"}>
-                <div>
-                  <h2 className={"capitalise"}>{setDetails.title}</h2>
+                <div className="content-header">
+                  <span className="content-title">
+                    {setDetails ? setDetails.title : "MyFolder"}
+                  </span>
+                  <div>
+                    {/* <span
+                      className="dashboard-right-content cursor_pointer ml-4"
+                      onClick={this.openAddSetModel}
+                      id="move"
+                    >
+                      <i className="fas fa-plus-circle icon-font"></i>
+                    </span>
+                    <UncontrolledTooltip placement="bottom" target="move">
+                      Add Sets
+                    </UncontrolledTooltip> */}
+
+                    <span
+                      id="share"
+                      onClick={this.handleSharableLink}
+                      className="cursor_pointer ml-4"
+                    >
+                      <i className="fas fa-share icon-font"></i>
+                    </span>
+                    <UncontrolledTooltip placement="bottom" target="share">
+                      Get Shareable Link
+                    </UncontrolledTooltip>
+                    {/* <span id="edit" className="cursor_pointer ml-4">
+                      <i className="fas fa-sliders-h icon-font"></i>
+                    </span>
+                    <UncontrolledTooltip placement="bottom" target="edit">
+                      Edit & Delete
+                    </UncontrolledTooltip> */}
+                  </div>
                   <span className={"pt-2"}> 3 Moves</span>
-                </div>
+                </div>{" "}
+                {/* <div>
+                  <h2 className={"capitalise"}>{setDetails.title}</h2>
+
+                  <span className={"pt-2"}> 3 Moves</span>
+                </div> */}
                 <div>
                   <ButtonGroup size="sm">
-                    <Button>
-                      Copy
-                    </Button>
-                    <Button className={"ml-2"}>
-                      Transfer
-                    </Button>
-                    <Button className={"ml-2"}>
-                      Remove
-                    </Button>
+                    <Button>Copy</Button>
+                    <Button className={"ml-2"}>Transfer</Button>
+                    <Button className={"ml-2"}>Remove</Button>
                   </ButtonGroup>
                 </div>
               </div>
               <div className={"pt-3 d-flex justify-content-center"}>
                 <Col md={"10"}>
                   <Slider {...settings}>
-                    {
-                      movesOfSet && movesOfSet.length ? movesOfSet.map((video, index) => {
+                    {movesOfSet && movesOfSet.length ? (
+                      movesOfSet.map((video, index) => {
                         return (
                           <div>
                             <video width={"100%"} controls>
-                              <source src={`${AppConfig.API_ENDPOINT}${video.videoUrl}`} type="video/mp4" />
+                              <source
+                                src={`${AppConfig.API_ENDPOINT}${video.videoUrl}`}
+                                type="video/mp4"
+                              />
                             </video>
                           </div>
-                        )
-                      }) :
-                        <div className={"text-center"}>
-                          <div>No move availabe for this set</div>
-                          <div onClick={this.handleMoveAdd}><Button>Click To Add +</Button></div>
+                        );
+                      })
+                    ) : (
+                      <div className={"text-center"}>
+                        <div>No move availabe for this set</div>
+                        <div onClick={this.handleMoveAdd}>
+                          <Button>Click To Add +</Button>
                         </div>
-                    }
+                      </div>
+                    )}
                   </Slider>
                 </Col>
               </div>
             </CardBody>
           </Card>
         </div>
+        <SharableLinkModal
+          modal={sharableLinkModalOpen}
+          handleOpen={this.handleSharableLink}
+          onTogglePublicAccess={this.onTogglePublicAccess}
+          isPublic={setDetails ? setDetails.isPublic : ""}
+          userEncryptedInfo={userEncryptedInfo ? userEncryptedInfo : ""}
+        />
       </>
     );
   }
@@ -104,9 +188,18 @@ class SetDetails extends React.Component {
 const mapStateToProps = state => ({
   setReducer: state.setReducer,
   moveReducer: state.moveReducer,
+  modelInfoReducer: state.modelInfoReducer,
+  shareLinkReducer: state.shareLinkReducer
 });
 const mapDispatchToProps = dispatch => ({
+  modelOperate: data => dispatch(modelOpenRequest(data)),
   getSetDetailsRequest: data => dispatch(getSetDetailsRequest(data)),
+  publicAccess: data => {
+    dispatch(publicAccessRequest(data));
+  },
+  shareableLink: data => {
+    dispatch(shareableLinkRequest(data));
+  }
 });
 export default connect(
   mapStateToProps,

@@ -58,7 +58,6 @@ const editUserInfo = async (req: Request, res: Response): Promise<any> => {
   }
 };
 
-
 const types: any = {
   "/": "jpg",
   i: "png",
@@ -86,7 +85,12 @@ const imageUpload = async (req: Request, res: Response) => {
         type || "png"
       ].join("");
 
-      var originalImagePath = path.join(__basedir, "uploads/images", fileName);
+      var originalImagePath = path.join(
+        __basedir,
+        "../uploads",
+        "images",
+        fileName
+      );
       fs.writeFile(originalImagePath, buf, async err => {
         if (err) {
           throw err;
@@ -94,10 +98,15 @@ const imageUpload = async (req: Request, res: Response) => {
 
         var thumbnailImagePath = path.join(
           __basedir,
-          "uploads/images-thumbnail",
+          "../uploads",
+          "images-thumbnail",
           fileName
         );
-        const thumbnailImg: string = path.join("uploads/images-thumbnail", fileName);
+        const thumbnailImg: string = path.join(
+          "uploads",
+          "images-thumbnail",
+          fileName
+        );
         await resizeImage(originalImagePath, thumbnailImagePath, 200);
         const uploadimg = await UserModel.findByIdAndUpdate(currentUser.id, {
           profileImage: thumbnailImg
@@ -147,9 +156,4 @@ const deleteUserAccount = async (req: Request, res: Response): Promise<any> => {
     });
   }
 };
-export {
-  getUserInfo,
-  editUserInfo,
-  deleteUserAccount,
-  imageUpload
-};
+export { getUserInfo, editUserInfo, deleteUserAccount, imageUpload };

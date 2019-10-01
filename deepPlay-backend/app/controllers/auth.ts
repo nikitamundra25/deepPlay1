@@ -64,6 +64,56 @@ const login = async (req: Request, res: Response): Promise<any> => {
   }
 };
 
+/* Title:- Login For Admin
+Prams:- email and password 
+Created By:- Rishabh Bula*/
+
+const adminLogin = async (req: Request, res: Response): Promise<any> => {
+  try {
+    const { body } = req;
+    const { email, password } = body;
+    const result: Document | null | any = await UserModel.findOne({
+      email,
+      isDeleted: false,
+      roleType: "admin"
+    }).select("firstName lastName email password");
+    if (result === null) {
+      return res.status(400).json({
+        message: "User not found."
+      });
+    }
+    if (result.password) {
+      if (!comparePassword(password, result.password)) {
+        return res.status(400).json({
+          message: "Password didn't match."
+        });
+      }
+    } else {
+      return res.status(400).json({
+        message: "Password didn't match."
+      });
+    }
+
+    const token = await GenerateToken({
+      id: result._id,
+      firstName: result.firstName,
+      lastName: result.lastName,
+      email: result.lastName,
+      role: result.roleType
+    });
+    delete result.password;
+    return res.status(200).send({
+      token: token,
+      userData: result
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).send({
+      message: error.message
+    });
+  }
+};
+
 /* Title:- Signup For User
 Prams:- email,password,firstName,lastName,profileImage,roleType 
 Created By:- Rishabh Bula*/
@@ -372,6 +422,7 @@ const userResetpassword = async (req: Request, res: Response): Promise<any> => {
  */
 export {
   login,
+  adminLogin,
   signup,
   socialSignup,
   userForgotPassword,

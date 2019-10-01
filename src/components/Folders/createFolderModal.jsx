@@ -47,16 +47,14 @@ class FolderModal extends React.Component {
   };
 
   render() {
-    const { modelInfoReducer } = this.props;
-    const { modelDetails } = modelInfoReducer;
-    const { createFolderModalOpen } = modelDetails;
+    const { modal, handleOpen } = this.props;
     const { title, description } = this.state;
     return (
       <div>
         <Modal
           className="modal-dialog-centered custom-model-wrap"
-          isOpen={createFolderModalOpen}
-          toggle={() => this.handleOpen}
+          isOpen={modal}
+          toggle={handleOpen}
         >
           <ModalHeader>
             <span className="custom-title" id="exampleModalLabel">
@@ -67,7 +65,7 @@ class FolderModal extends React.Component {
               className="close"
               data-dismiss="modal"
               type="button"
-              onClick={this.handleOpen}
+              onClick={handleOpen}
             >
               <span aria-hidden="true">
                 <img src={closeBtn} alt="close-ic" />
@@ -111,7 +109,7 @@ class FolderModal extends React.Component {
               disabled={!title}
             >
               Create Folder
-              </Button>
+            </Button>
           </ModalFooter>
         </Modal>
       </div>

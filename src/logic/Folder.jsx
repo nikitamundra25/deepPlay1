@@ -8,7 +8,9 @@ import {
   showLoader,
   hideLoader,
   getAllFolderSuccess,
-  getAllFolderRequest
+  getAllFolderRequest,
+  recentFolderSuccess,
+  updateRecentTimeSuccess
 } from "../actions";
 import { toast } from "react-toastify";
 
@@ -20,7 +22,7 @@ const createFolderLogic = createLogic({
     dispatch(showLoader());
     let result = await api.FetchFromServer(
       "folder",
-      "/createFolder",
+      "/create-folder",
       "POST",
       true,
       undefined,
@@ -62,7 +64,7 @@ const allFolderLogic = createLogic({
     dispatch(showLoader());
     let result = await api.FetchFromServer(
       "folder",
-      "/allFolder",
+      "/all-folder",
       "GET",
       true,
       undefined,
@@ -77,8 +79,47 @@ const allFolderLogic = createLogic({
       // toast.success(result.messages[0]);
       dispatch(hideLoader());
       dispatch(
+        modelOpenRequest({
+          modelDetails: {
+            createFolderModalOpen: false
+          }
+        })
+      );
+      dispatch(
         getAllFolderSuccess({
           getAllFolders: result.data.data
+        })
+      );
+      done();
+    }
+  }
+});
+
+// Recent Folder (dashboard)
+const recentFolderLogic = createLogic({
+  type: FolderAction.RECENT_FOLDER_REQUEST,
+  async process({ action }, dispatch, done) {
+    let api = new ApiHelper();
+    dispatch(showLoader());
+    let result = await api.FetchFromServer(
+      "folder",
+      "/recent-folder",
+      "GET",
+      true,
+      undefined,
+      undefined
+    );
+    if (result.isError) {
+      toast.error(result.messages[0]);
+      dispatch(hideLoader());
+      done();
+      return;
+    } else {
+      // toast.success(result.messages[0]);
+      dispatch(hideLoader());
+      dispatch(
+        recentFolderSuccess({
+          recentFolders: result.data.data
         })
       );
       done();
@@ -94,8 +135,8 @@ const deleteFolderLogic = createLogic({
     dispatch(showLoader());
     let result = await api.FetchFromServer(
       "folder",
-      "/deleteFolder",
-      "DELETE",
+      "/delete-folder",
+      "PATCH",
       true,
       { id: action.payload },
       undefined
@@ -115,18 +156,18 @@ const deleteFolderLogic = createLogic({
 });
 
 //  Recent folder
-const getRecentFolderLogic = createLogic({
+const getFolderDetailsLogic = createLogic({
   type: FolderAction.FOLDER_DETAIL_REQUEST,
   async process({ action }, dispatch, done) {
     let api = new ApiHelper();
     dispatch(showLoader());
     let result = await api.FetchFromServer(
       "folder",
-      "/getFolderById",
-      "POST",
+      "/get-folder-by-id",
+      "GET",
       true,
-      undefined,
-      action.payload
+      action.payload,
+      undefined
     );
     if (result.isError) {
       dispatch(hideLoader());
@@ -144,9 +185,39 @@ const getRecentFolderLogic = createLogic({
     }
   }
 });
+
+//updateRecentTime api
+const updateRecentTimeLogic = createLogic({
+  type: FolderAction.UPDATE_RECENT_TIME_REQUEST,
+  async process({ action }, dispatch, done) {
+    let api = new ApiHelper();
+    dispatch(showLoader());
+    let result = await api.FetchFromServer(
+      "folder",
+      "/update-recent-time",
+      "PATCH",
+      true,
+      undefined,
+      action.payload
+    );
+    if (result.isError) {
+      dispatch(hideLoader());
+      toast.error(result.messages[0]);
+      done();
+      return;
+    } else {
+      dispatch(hideLoader());
+      dispatch(updateRecentTimeSuccess());
+      done();
+    }
+  }
+});
+
 export const FolderLogics = [
   createFolderLogic,
-  getRecentFolderLogic,
+  getFolderDetailsLogic,
   allFolderLogic,
-  deleteFolderLogic
+  deleteFolderLogic,
+  recentFolderLogic,
+  updateRecentTimeLogic
 ];

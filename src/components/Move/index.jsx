@@ -2,7 +2,8 @@ import React from "react";
 import {
   FormGroup,
   Input,
-  Button,
+  Label,
+  CustomInput,
   Card,
   CardBody,
   CardHeader,
@@ -12,7 +13,7 @@ import {
 import "./index.scss";
 import { logger } from "helper/Logger";
 import { connect } from "react-redux";
-import { downloadYoutubeVideoRequest } from "../../actions"
+import { downloadYoutubeVideoRequest } from "../../actions";
 
 // core components
 class MoveComponent extends React.Component {
@@ -21,13 +22,13 @@ class MoveComponent extends React.Component {
     this.state = {
       url: "",
       errors: "",
+      isYouTubeUrl: false,
       isPaste: false
     };
   }
 
   handleChange = e => {
     const { name, value } = e.target;
-    console.log("############This is Change Event");
     this.setState({
       errors: "",
       [name]: value
@@ -37,8 +38,13 @@ class MoveComponent extends React.Component {
       var myregexp = /(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/ ]{11})/i;
       var match = value.match(myregexp);
       if (match) {
-        this.validateYouTubeUrl(value);
-        console.log("matches");
+        const ValidYouTubeUrl = this.validateYouTubeUrl(value);
+        this.setState({
+          url: ValidYouTubeUrl,
+          isYouTubeUrl: true
+        }, () => {
+          this.handleMoveUpload()
+        })
       } else {
         this.setState({
           errors: {
@@ -59,12 +65,6 @@ class MoveComponent extends React.Component {
           "https://www.youtube.com/embed/" +
           match[2] +
           "?autoplay=0&enablejsapi=1";
-        this.setState({
-          url: result
-        });
-        if (this.state.isPaste) {
-          this.handleMoveUpload()
-        }
       }
     }
     return result;
@@ -75,8 +75,6 @@ class MoveComponent extends React.Component {
       errors: {}
     });
     try {
-      console.log("$$$$$$$$$$$$$$$$", this.state.url);
-
       if (!this.state.url) {
         this.setState({
           errors: {
@@ -90,22 +88,30 @@ class MoveComponent extends React.Component {
       }
       const payload = {
         url: this.state.url,
-      }
-      this.props.downloadVideo(payload)
+        isYoutubeUrl: this.state.isYouTubeUrl
+      };
+      this.props.downloadVideo(payload);
     } catch (error) {
       logger(error);
     }
-  }
+  };
 
   handlePasteEvent = e => {
-    console.log("$$$$$$$$$$$$$This is Paste Event",e.target.value);
-    if (e.target.value) {
-      this.handleChange(e)
+    if (e.target.name) {
       this.setState({
         isPaste: true
-      })
+      });
     }
   };
+
+  handleVideoFileSelect = (e) => {
+    let files = e.target.files
+    this.setState({
+      url: files[0].name
+    }, () => {
+      this.props.downloadVideo({ url: files[0], isYoutubeUrl: false })
+    })
+  }
 
   render() {
     const { errors, url } = this.state;
@@ -119,33 +125,51 @@ class MoveComponent extends React.Component {
               <CardHeader className="">
                 <div className="content-header set-header flex-column">
                   <span className="content-title">CREATE A MOVE</span>
-                  <p className="font-weight-bold">Trim any video to create a move</p>
+                  <p className="font-weight-bold">
+                    Trim any video to create a move
+                  </p>
                 </div>
               </CardHeader>
               <CardBody className="">
                 <div className="create-set-tile">
                   <Form inline className="url-update-wrap">
                     <div className="text-center mr-2">
-                      <Button
+                      <FormGroup>
+                        <Label
+                          for="videoUpload"
+                          className="btn-black btn"
+                        >
+                          <i className="fa fa-cloud-upload mr-2"></i>
+                          {isVideoDownloading ? "Please wait..." : "Upload"}
+                        </Label>
+                        <CustomInput
+                          onChange={this.handleVideoFileSelect}
+                          type="file"
+                          disabled={isVideoDownloading ? true : false}
+                          className={"d-none"}
+                          id="videoUpload"
+                          name="customFile" />
+                      </FormGroup>
+                      {/* <Input
                         color=" "
-                        type="button"
+                        type="file"
+
                         className="btn-black btn mt-3"
                         disabled={isVideoDownloading ? true : false}
-                        onClick={this.handleMoveUpload}
+                      // onClick={this.handleMoveUpload}
                       >
-                        <i className="fa fa-cloud-upload mr-2"></i>
-                        {
-                          isVideoDownloading ?
-                            "Please wait..." :
-                            "Upload"
-                        }
-                      </Button>
+
+                      </Input> */}
                     </div>
                     <FormGroup className="flex-fill flex-column ">
                       <div className="flex-fill w-100">
                         <Input
                           id="url"
-                          className={errors ? "capitalize pl-2 boder-1-invalid is-invalid w-100" : "capitalize pl-2 boder-1 w-100"}
+                          className={
+                            errors
+                              ? "capitalize pl-2 boder-1-invalid is-invalid w-100"
+                              : "capitalize pl-2 boder-1 w-100"
+                          }
                           placeholder="Paste YouTube Video URL or Type URL Manually"
                           type="text"
                           onPaste={this.handlePasteEvent}
@@ -154,7 +178,11 @@ class MoveComponent extends React.Component {
                           value={url}
                         />
                         <FormFeedback>
-                          {(errors.notUrl) ? errors.notUrl : (errors.validUrl && url) ? errors.validUrl : null}
+                          {errors.notUrl
+                            ? errors.notUrl
+                            : errors.validUrl && url
+                              ? errors.validUrl
+                              : null}
                         </FormFeedback>
                       </div>
                     </FormGroup>
@@ -164,29 +192,6 @@ class MoveComponent extends React.Component {
             </div>
           </Card>
         </div>
-        {/* <div className="create-set-section step-2 mt-2">
-          <Card className="w-100 set-content-wrap">
-            <div className="set-content-block w-100">
-              <CardHeader className="">
-                <div className="content-header set-header flex-column">
-                  <span className="content-title"> your move has been created!</span>
-                </div>
-              </CardHeader>
-              <CardBody className="">
-                <div className="d-flex vieos-add-section video-add-banner justify-content-center align-items-center">
-                  <span className="play-ic-wrap">
-                    <i className="fa fa-play" aria-hidden="true"></i>
-                  </span>
-                </div>
-                <p className="font-weight-bold mt-3 text-center h5">Would you like to create another Move from the same video?</p>
-                <div className="text-center mt-4">
-                  <Button className="btn-line-black">Yes create another</Button>
-                  <Button className="btn-black">No i'am done</Button>
-                </div>
-              </CardBody>
-            </div>
-          </Card>
-        </div> */}
       </>
     );
   }
@@ -194,7 +199,7 @@ class MoveComponent extends React.Component {
 
 const mapStateToProps = state => {
   return {
-    moveReducer: state.moveReducer,
+    moveReducer: state.moveReducer
   };
 };
 const mapDispatchToProps = dispatch => ({

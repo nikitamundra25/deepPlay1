@@ -1,99 +1,190 @@
 import React from "react";
-import { Row, Col, Button, Card, CardBody, CardHeader } from "reactstrap";
-import { AppRoutes } from "../../config/AppRoutes"
+import {
+  Row,
+  Col,
+  Button,
+  ButtonGroup,
+  Card,
+  CardHeader,
+  CardBody
+} from "reactstrap";
+import { AppRoutes } from "../../config/AppRoutes";
 import "./index.scss";
 import emptySetIc from "../../assets/img/empty-sets.png";
-// import emptySetIc from "../../../assets/img/empty-sets.png";
 // core components
 class SetComponent extends React.Component {
-
-  handleSetDetails = (setId) => {
-    this.props.redirectTo(AppRoutes.SET_DETAILS.url.replace(":id", setId))
+  constructor(props) {
+    super(props);
+    this.state = {
+      show: false,
+      setIndex: -1
+    };
   }
-  /*
-  /*
-  */
+
+  showPopOver = index => {
+    this.setState({
+      show: true,
+      setIndex: index
+    });
+  };
+  closePopOver = () => {
+    this.setState({
+      show: false,
+      setIndex: -1
+    });
+  };
+
+  handleSetDetails = setId => {
+    this.props.handleRecentTime(setId);
+    this.props.redirectTo(AppRoutes.SET_DETAILS.url.replace(":id", setId));
+  };
+
+  openTransferToModal = (id, folderId) => {
+    this.props.allFolders();
+    const { modelInfoReducer } = this.props;
+    const { modelDetails } = modelInfoReducer;
+    this.setState({
+      setToTransfer: id,
+      folderId: folderId
+    });
+    this.props.modelOperate({
+      modelDetails: {
+        transferToModalOpen: !modelDetails.transferToModalOpen
+      }
+    });
+  };
+
   render() {
     const { getAllSet } = this.props;
+    const { show, setIndex } = this.state;
     return (
       <div className="set-main-section">
         <div className="content-header">
           <span className="content-title">YOUR SETS</span>
-          <span className="dashboard-right-content">
-            {getAllSet.length ? getAllSet.length : 0} Sets total
+          <span >
+            <i className="fas fa-plus-circle icon-font"></i>
           </span>
+          {/* <span className="dashboard-right-content">
+            {getAllSet && getAllSet.length ? getAllSet.length : 0} Sets total
+          </span> */}
         </div>
         <Row className="set-wrap">
           {getAllSet && getAllSet.length ? (
+            // eslint-disable-next-line
             getAllSet.map((setList, i) => {
               return (
                 <Col md="6" key={i}>
-                  {
-                    !setList.isDeleted ?
-                      <div className="tile-wrap card">
-                        <div className="cotent-tile d-flex">
-                          <div className="cotent-text-tile">
-                            <div className="content-heading-tile">
-                              {" "}
-                              <span onClick={() => this.handleSetDetails(setList._id)} className={"cursor_pointer"}>
-                                {setList.title}
-                              </span>
-                            </div>
-                            {setList.description}
-                            <div className="content-number-tile"> 46 moves</div>
-                          </div>
-                          <div
-                            className="cotent-img-tile"
-                            style={{
-                              backgroundImage:
-                                'url("' +
-                                "https://res.cloudinary.com/fleetnation/image/private/c_fit,w_1120/g_south,l_text:style_gothic2:%C2%A9%20Nikita%20Buida,o_20,y_10/g_center,l_watermark4,o_25,y_50/v1469756538/dd3acf4nzzavkv4rf2ji.jpg" +
-                                '")'
-                            }}
-                          ></div>
+                  <div className="tile-wrap card">
+                    <div className="cotent-tile d-flex content-with-tip">
+                      <div className="cotent-text-tile">
+                        <div className="content-heading-tile d-flex">
+                          {" "}
+                          <span
+                            onClick={() => this.handleSetDetails(setList._id)}
+                            className={"cursor_pointer"}
+                          >
+                            {setList.title}
+                          </span>
                         </div>
-                      </div> : null
-                  }
+                        {setList.description ? setList.description : ""}
+                        <div className="content-number-tile"> 46 moves</div>
+                      </div>
+                      <div className="d-flex">
+                        <div
+                          className="cotent-img-tile pr-3"
+                          style={{
+                            backgroundImage:
+                              'url("' +
+                              "https://res.cloudinary.com/fleetnation/image/private/c_fit,w_1120/g_south,l_text:style_gothic2:%C2%A9%20Nikita%20Buida,o_20,y_10/g_center,l_watermark4,o_25,y_50/v1469756538/dd3acf4nzzavkv4rf2ji.jpg" +
+                              '")'
+                          }}
+                        />
+                        <div
+                          onMouseOver={() => this.showPopOver(i, show)}
+                          onMouseLeave={() => this.closePopOver()}
+                          className="p-3 tooltip-btn-wrap right-btn-tip"
+                        >
+                          <span className="cursor_pointer">
+                            {" "}
+                            <i className="fas fa-ellipsis-v setting-icon "></i>
+                            {show && setIndex === i ? (
+                              <ButtonGroup
+                                onMouseOver={() => this.showPopOver(i, show)}
+                                size="sm"
+                              >
+                                <Button
+                                  onClick={() =>
+                                    this.props.OnCreateSetCopy(setList)
+                                  }
+                                >
+                                  Copy
+                                </Button>
+                                <Button
+                                  onClick={() =>
+                                    this.props.openTransferToModal(
+                                      setList._id,
+                                      setList.folderId
+                                    )
+                                  }
+                                >
+                                  Transfer
+                                </Button>
+                                <Button
+                                  onClick={() =>
+                                    this.props.onRemoveSets(
+                                      setList._id,
+                                      "remove"
+                                    )
+                                  }
+                                >
+                                  Delete
+                                </Button>
+                              </ButtonGroup>
+                            ) : null}
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
                 </Col>
               );
             })
           ) : (
             <>
-            <div className="create-set-section mt-2 w-100">
-               <Card className="w-100 set-content-wrap">
-                 <div className="set-content-block w-100 empty-folder-wrap">
-                   <CardHeader className="empty-folder-header">
-                     <img src={emptySetIc} alt={"Folder"}/>
-                     <div className="content-header set-header">
-                       <span className="content-title">      <h3>You haven't created any set yet</h3>
-                         <p>Create a Set to Organize your Moves.</p></span>
-                     </div>
-                   </CardHeader>
-                   <CardBody className="">
-                     <div className="create-set-tile">
-
-                     </div>
-                     <div className="text-center">
-                       <Button
-                         color=" "
-                         type="button"
-                         className="btn-black btn mt-3 folder-create-btn"
-                         onClick={() => this.props.handleSetComponent(true)}
-
-                       >
-                         <i className="fas fa-plus mr-1"></i>
-                         Create a Set
-           </Button>
-                     </div>
-                   </CardBody>
-                 </div>
-               </Card>
-
-             </div>
-        
-           </>
-           
-            )}
+              <div className="create-set-section mt-2 w-100">
+                <Card className="w-100 set-content-wrap">
+                  <div className="set-content-block w-100 empty-folder-wrap">
+                    <CardHeader className="empty-folder-header">
+                      <img src={emptySetIc} alt={"Folder"} />
+                      <div className="content-header set-header">
+                        <span className="content-title">
+                          {" "}
+                          <h3>You haven't created any set yet</h3>
+                          <p>Create a Set to Organize your Moves.</p>
+                        </span>
+                      </div>
+                    </CardHeader>
+                    <CardBody className="">
+                      <div className="create-set-tile"></div>
+                      <div className="text-center">
+                        <Button
+                          color=" "
+                          type="button"
+                          className="btn-black btn mt-3 folder-create-btn"
+                          onClick={() =>
+                            this.props.redirectTo(AppRoutes.CREATE_SET.url)
+                          }
+                        >
+                          <i className="fas fa-plus mr-1"></i>
+                          Create a Set
+                        </Button>
+                      </div>
+                    </CardBody>
+                  </div>
+                </Card>
+              </div>
+            </>
+          )}
         </Row>
       </div>
     );
