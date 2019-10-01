@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import { FolderModel, SetModel, MoveModel } from "../models";
 import { IFolder } from "../interfaces";
+import { encrypt, decrypt } from "../common";
 
 // --------------Create folder---------------------
 const createFolder = async (req: Request, res: Response): Promise<any> => {
@@ -46,7 +47,7 @@ const getAllFolder = async (req: Request, res: Response): Promise<void> => {
         message: "User id not found"
       });
     }
-    const result = await FolderModel.find({
+    const result: Document | any = await FolderModel.find({
       userId: headToken.id,
       isDeleted: false
     });
@@ -103,9 +104,9 @@ const getCretedFolderById = async (
         message: "User id not found"
       });
     }
-    const result = await FolderModel.find({ _id: query.id });
+    const result: Document | any = await FolderModel.findOne({ _id: query.id });
     res.status(200).json({
-      data: result[0],
+      data: result,
       message: "Folder has been fetched successfully"
     });
   } catch (error) {
@@ -125,9 +126,12 @@ const deleteFolder = async (req: Request, res: Response): Promise<void> => {
         message: "Folder id not found"
       });
     }
-    const result: any = await FolderModel.findByIdAndUpdate(query.id, {
-      $set: { isDeleted: true }
-    });
+    const result: Document | any = await FolderModel.findByIdAndUpdate(
+      query.id,
+      {
+        $set: { isDeleted: true }
+      }
+    );
     res.status(200).json({
       data: result,
       message: "Folder has been deleted successfully"
@@ -184,8 +188,11 @@ const updateRecentTimeRequest = async (
   }
 };
 
-//-----------------SharableLink------------------------------
-const sharableLink = async (req: Request, res: Response): Promise<any> => {
+//-----------------SharableLink Public access------------------------------
+const sharableLinkPublicAccess = async (
+  req: Request,
+  res: Response
+): Promise<any> => {
   try {
     const { body } = req;
     const { isSetId, isFolderId, isMoveId, isPublic } = body;
@@ -234,6 +241,70 @@ const sharableLink = async (req: Request, res: Response): Promise<any> => {
   }
 };
 
+//-----------------SharableLink user details------------------------------
+const sharableLink = async (req: Request, res: Response): Promise<any> => {
+  try {
+    const { query, currentUser } = req;
+    const { folderId } = query;
+    const headToken: Request | any = currentUser;
+    if (!headToken.id) {
+      res.status(400).json({
+        message: "User id not found"
+      });
+    }
+    const encryptedUserId = encrypt(headToken.id);
+    const encryptedFolderId = encrypt(folderId);
+    const data = {
+      encryptedUserId: encryptedUserId,
+      encryptedFolderId: encryptedFolderId
+    };
+    return res.status(200).json({
+      responsecode: 200,
+      data: data,
+      success: true
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).send({
+      message: error.message
+    });
+  }
+};
+
+//-----Decrypt userId & folderId to get folderDetails for shared link-----------------
+const publicUrlFolderInfo = async (
+  req: Request,
+  res: Response
+): Promise<any> => {
+  try {
+    const { query } = req;
+    const { userId, folderId, isPublic } = query;
+    const decryptedUserId = decrypt(userId);
+    const decryptedFolderId = decrypt(folderId);
+    let result: Document | any | null;
+    if (isPublic === "true") {
+      result = await FolderModel.findOne({
+        userId: decryptedUserId,
+        _id: decryptedFolderId
+      });
+    } else {
+      return res.status(400).json({
+        message: "Public access link is not enabled."
+      });
+    }
+    return res.status(200).json({
+      responsecode: 200,
+      data: result,
+      success: true
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).send({
+      message: error.message
+    });
+  }
+};
+
 export {
   createFolder,
   getCretedFolderById,
@@ -241,5 +312,7 @@ export {
   deleteFolder,
   getRecentFolder,
   updateRecentTimeRequest,
-  sharableLink
+  sharableLinkPublicAccess,
+  sharableLink,
+  publicUrlFolderInfo
 };

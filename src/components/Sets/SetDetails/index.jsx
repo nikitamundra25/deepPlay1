@@ -1,7 +1,20 @@
 import React from "react";
 import { connect } from "react-redux";
-import { Card, CardBody, ButtonGroup, Button, Col } from "reactstrap";
-import { getSetDetailsRequest } from "../../../actions";
+import {
+  Card,
+  CardBody,
+  ButtonGroup,
+  Button,
+  Col,
+  UncontrolledTooltip
+} from "reactstrap";
+import {
+  getSetDetailsRequest,
+  modelOpenRequest,
+  publicAccessRequest,
+  shareableLinkRequest
+} from "../../../actions";
+import SharableLinkModal from "../../comman/shareableLink/SharableLink";
 import Slider from "react-slick";
 import { AppConfig } from "../../../config/Appconfig";
 import { AppRoutes } from "../../../config/AppRoutes";
@@ -39,20 +52,89 @@ class SetDetails extends React.Component {
     this.props.redirectTo(AppRoutes.MOVE.url);
   };
 
+  onTogglePublicAccess = isPublic => {
+    const location = this.props.location;
+    const pathName = location.pathname.split("/");
+    const data = {
+      isFolderId: null,
+      isSetId: pathName[2],
+      isMoveId: null,
+      isPublic: isPublic
+    };
+    this.props.publicAccess(data);
+  };
+
+  handleSharableLink = () => {
+    const location = this.props.location;
+    const pathName = location.pathname.split("/");
+    this.props.shareableLink(pathName[2]);
+    const { modelInfoReducer } = this.props;
+    const { modelDetails } = modelInfoReducer;
+    this.props.modelOperate({
+      modelDetails: {
+        sharableLinkModalOpen: !modelDetails.sharableLinkModalOpen
+      }
+    });
+  };
+
   render() {
-    const { setReducer, moveReducer } = this.props;
+    const {
+      setReducer,
+      moveReducer,
+      shareLinkReducer,
+      modelInfoReducer
+    } = this.props;
     const { setDetails } = setReducer;
+    const { modelDetails } = modelInfoReducer;
     const { movesOfSet } = moveReducer;
+    const { userEncryptedInfo } = shareLinkReducer;
+    const { sharableLinkModalOpen } = modelDetails;
     return (
       <>
         <div className="create-set-section step-2 mt-2">
           <Card className="w-100">
             <CardBody>
               <div className={"d-flex justify-content-between"}>
-                <div>
-                  <h2 className={"capitalise"}>{setDetails.title}</h2>
+                <div className="content-header">
+                  <span className="content-title">
+                    {setDetails ? setDetails.title : "MyFolder"}
+                  </span>
+                  <div>
+                    {/* <span
+                      className="dashboard-right-content cursor_pointer ml-4"
+                      onClick={this.openAddSetModel}
+                      id="move"
+                    >
+                      <i className="fas fa-plus-circle icon-font"></i>
+                    </span>
+                    <UncontrolledTooltip placement="bottom" target="move">
+                      Add Sets
+                    </UncontrolledTooltip> */}
+
+                    <span
+                      id="share"
+                      onClick={this.handleSharableLink}
+                      className="cursor_pointer ml-4"
+                    >
+                      <i className="fas fa-share icon-font"></i>
+                    </span>
+                    <UncontrolledTooltip placement="bottom" target="share">
+                      Get Shareable Link
+                    </UncontrolledTooltip>
+                    {/* <span id="edit" className="cursor_pointer ml-4">
+                      <i className="fas fa-sliders-h icon-font"></i>
+                    </span>
+                    <UncontrolledTooltip placement="bottom" target="edit">
+                      Edit & Delete
+                    </UncontrolledTooltip> */}
+                  </div>
                   <span className={"pt-2"}> 3 Moves</span>
-                </div>
+                </div>{" "}
+                {/* <div>
+                  <h2 className={"capitalise"}>{setDetails.title}</h2>
+
+                  <span className={"pt-2"}> 3 Moves</span>
+                </div> */}
                 <div>
                   <ButtonGroup size="sm">
                     <Button>Copy</Button>
@@ -91,6 +173,13 @@ class SetDetails extends React.Component {
             </CardBody>
           </Card>
         </div>
+        <SharableLinkModal
+          modal={sharableLinkModalOpen}
+          handleOpen={this.handleSharableLink}
+          onTogglePublicAccess={this.onTogglePublicAccess}
+          isPublic={setDetails ? setDetails.isPublic : ""}
+          userEncryptedInfo={userEncryptedInfo ? userEncryptedInfo : ""}
+        />
       </>
     );
   }
@@ -98,10 +187,19 @@ class SetDetails extends React.Component {
 
 const mapStateToProps = state => ({
   setReducer: state.setReducer,
-  moveReducer: state.moveReducer
+  moveReducer: state.moveReducer,
+  modelInfoReducer: state.modelInfoReducer,
+  shareLinkReducer: state.shareLinkReducer
 });
 const mapDispatchToProps = dispatch => ({
-  getSetDetailsRequest: data => dispatch(getSetDetailsRequest(data))
+  modelOperate: data => dispatch(modelOpenRequest(data)),
+  getSetDetailsRequest: data => dispatch(getSetDetailsRequest(data)),
+  publicAccess: data => {
+    dispatch(publicAccessRequest(data));
+  },
+  shareableLink: data => {
+    dispatch(shareableLinkRequest(data));
+  }
 });
 export default connect(
   mapStateToProps,

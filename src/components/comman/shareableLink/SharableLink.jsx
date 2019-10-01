@@ -9,14 +9,17 @@ import {
   Form,
   ModalFooter
 } from "reactstrap";
-import closeIcon from "../../assets/img/close-img.png";
+import closeIcon from "../../../assets/img/close-img.png";
+import { AppRoutes } from "../../../config/AppRoutes";
+import { CopyToClipboard } from "react-copy-to-clipboard";
 
 // core components
 class SharableLinkModal extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      isPublic: false
+      isPublic: false,
+      copied: false
     };
   }
   handleChange = e => {
@@ -55,8 +58,14 @@ class SharableLinkModal extends React.Component {
   };
 
   render() {
-    const { handleOpen, modal, sharableLinkPath } = this.props;
+    const { handleOpen, modal, userEncryptedInfo } = this.props;
+    const { encryptedUserId, encryptedFolderId } = userEncryptedInfo;
     const { isPublic } = this.state;
+    const path =
+      AppRoutes.FOLDER_SHARED_LINK.url +
+      `?userId=${encryptedUserId}&folderId=${encryptedFolderId}&isPublic=${this.state.isPublic}`;
+    const pathUrl = window.location.origin + path;
+
     return (
       <Modal
         className="modal-dialog-centered custom-model-wrap"
@@ -92,26 +101,26 @@ class SharableLinkModal extends React.Component {
                     placeholder="Link"
                     type="text"
                     name="url"
-                    // onCopy={this.onCopy}
                     readOnly
-                    // value={AppRoutes.FOLDER_DETAILS.url.replace(
-                    //   ":id",
-                    //   folderId
-                    // )}
-                    value={sharableLinkPath}
+                    value={pathUrl}
                     className="w-100"
                   />
                 </div>
               </FormGroup>
               <div className="text-center ml-1">
-                <Button
-                  color=" "
-                  type="button"
-                  className="btn-black"
-                  // onClick={this.copyLink}
+                <CopyToClipboard
+                  text={pathUrl}
+                  onCopy={() => this.setState({ copied: true })}
                 >
-                  Copy Link
-                </Button>
+                  <Button
+                    color=" "
+                    type="button"
+                    disabled-={this.state.copied}
+                    className="btn-black"
+                  >
+                    {this.state.copied ? "Copied" : " Copy Link"}
+                  </Button>
+                </CopyToClipboard>
               </div>
             </Form>
           </div>
