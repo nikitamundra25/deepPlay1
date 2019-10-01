@@ -179,6 +179,7 @@ class SetDetails extends React.Component {
           onTogglePublicAccess={this.onTogglePublicAccess}
           isPublic={setDetails ? setDetails.isPublic : ""}
           userEncryptedInfo={userEncryptedInfo ? userEncryptedInfo : ""}
+          shareComponent="Sets"
         />
       </>
     );

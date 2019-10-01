@@ -373,6 +373,7 @@ class RecentFolderComponent extends React.Component {
           onTogglePublicAccess={this.onTogglePublicAccess}
           isPublic={folderDetails ? folderDetails.isPublic : ""}
           userEncryptedInfo={userEncryptedInfo ? userEncryptedInfo : ""}
+          shareComponent="Folder"
         />
       </div>
     );

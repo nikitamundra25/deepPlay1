@@ -58,12 +58,19 @@ class SharableLinkModal extends React.Component {
   };
 
   render() {
-    const { handleOpen, modal, userEncryptedInfo } = this.props;
+    const { handleOpen, modal, userEncryptedInfo, shareComponent } = this.props;
     const { encryptedUserId, encryptedFolderId } = userEncryptedInfo;
     const { isPublic } = this.state;
-    const path =
-      AppRoutes.FOLDER_SHARED_LINK.url +
-      `?userId=${encryptedUserId}&folderId=${encryptedFolderId}&isPublic=${this.state.isPublic}`;
+    let path = "";
+    {
+      shareComponent === "Folder"
+        ? (path =
+            AppRoutes.FOLDER_SHARED_LINK.url +
+            `?userId=${encryptedUserId}&folderId=${encryptedFolderId}&isPublic=${this.state.isPublic}`)
+        : (path =
+            AppRoutes.FOLDER_SHARED_LINK.url +
+            `?userId=${encryptedUserId}&setId=${encryptedFolderId}&isPublic=${this.state.isPublic}`);
+    }
     const pathUrl = window.location.origin + path;
 
     return (
