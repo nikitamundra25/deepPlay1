@@ -79,6 +79,13 @@ const allFolderLogic = createLogic({
       // toast.success(result.messages[0]);
       dispatch(hideLoader());
       dispatch(
+        modelOpenRequest({
+          modelDetails: {
+            createFolderModalOpen: false
+          }
+        })
+      );
+      dispatch(
         getAllFolderSuccess({
           getAllFolders: result.data.data
         })
@@ -129,7 +136,7 @@ const deleteFolderLogic = createLogic({
     let result = await api.FetchFromServer(
       "folder",
       "/delete-folder",
-      "DELETE",
+      "PATCH",
       true,
       { id: action.payload },
       undefined

@@ -8,7 +8,7 @@ import { profileInfoReducer, profileImage } from "./ProfileInfo.jsx";
 import { setReducer } from "./Set";
 import { getFolderReducer } from "./Folder";
 import { moveReducer } from "./Moves";
-
+import { shareLinkReducer } from "./ShareableLink";
 export const mainReducer = handleActions(
   {
     SHOW_LOADER: (state, action) => ({
@@ -34,6 +34,7 @@ const AppReducer = combineReducers({
   getFolderReducer,
   profileImage,
   moveReducer,
+  shareLinkReducer,
   routing: routerReducer
 });
 

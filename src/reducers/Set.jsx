@@ -12,7 +12,7 @@ export const setReducer = handleActions(
   {
     [SetsAction.GET_ALL_SET_SUCCESS]: (state, { payload }) => ({
       ...state,
-      allSetList: payload.allSetList
+      ...payload
     }),
     [SetsAction.CREATE_SET_SUCCESS]: (state, { payload }) => ({
       ...state,
@@ -20,11 +20,11 @@ export const setReducer = handleActions(
     }),
     [SetsAction.GET_FOLDER_SET_SUCCESS]: (state, { payload }) => ({
       ...state,
-      setListinFolder: payload.setListinFolder
+      ...payload
     }),
     [SetsAction.RECENT_SET_SUCCESS]: (state, { payload }) => ({
       ...state,
-      recentSets: payload.recentSets
+      ...payload
     }),
     [SetsAction.GET_SET_DETAILS_REQUEST]: (state, { payload }) => ({
       ...state,

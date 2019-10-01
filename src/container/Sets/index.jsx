@@ -104,6 +104,7 @@ class Set extends React.Component {
       }
     });
   };
+
   // Transfer sets to particular folder
   folderToTransfer = async data => {
     const payload = {
@@ -127,6 +128,8 @@ class Set extends React.Component {
       getAllSetReducer,
       getAllFolders
     } = this.props;
+    const { modelDetails } = modelInfoReducer;
+    const { transferToModalOpen } = modelDetails;
     const { folderId, setToTransfer } = this.state;
 
     return (
@@ -142,6 +145,7 @@ class Set extends React.Component {
             onRemoveSets={this.onHandleDelete}
             handleRecentTime={this.handleRecentTime}
             openTransferToModal={this.openTransferToModal}
+            allFolders={this.props.allFolders}
             {...this.props}
           />
         )}
@@ -151,11 +155,12 @@ class Set extends React.Component {
           createFolder={this.createFolder}
         />
         <TransferToModal
-          modelInfoReducer={modelInfoReducer}
+          modal={transferToModalOpen}
           modelOperate={modelOperate}
           AllFolders={getAllFolders}
           setToTransfer={setToTransfer}
-          pathName={folderId}
+          folderId={folderId}
+          handleOpen={this.openTransferToModal}
           handleFolder={this.folderToTransfer}
         />
       </>

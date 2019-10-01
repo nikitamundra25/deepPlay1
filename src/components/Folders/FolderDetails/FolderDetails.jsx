@@ -17,13 +17,16 @@ import {
   ManageSetRequest,
   getAllFolderRequest,
   createSetRequest,
-  publicAccessRequest
+  publicAccessRequest,
+  shareableLinkRequest
 } from "../../../actions";
 import AddSetModal from "./addSet";
 import TransferToModal from "./transferTo";
 import { ConfirmBox } from "../../../helper/SweetAleart";
-import SharableLinkModal from "../../Common/SharableLink";
+import SharableLinkModal from "../../comman/shareableLink/SharableLink";
 import emptySetIc from "../../../assets/img/empty-sets.png";
+import { AppRoutes } from "../../../config/AppRoutes";
+
 // core components
 class RecentFolderComponent extends React.Component {
   constructor(props) {
@@ -51,7 +54,7 @@ class RecentFolderComponent extends React.Component {
     if (
       prevProps.getAllSetReducer &&
       prevProps.getAllSetReducer.setListinFolder !==
-      this.props.getAllSetReducer.setListinFolder
+        this.props.getAllSetReducer.setListinFolder
     ) {
       const setList = this.props.getAllSetReducer.setListinFolder;
       this.setState({
@@ -95,6 +98,7 @@ class RecentFolderComponent extends React.Component {
       folderId: pathName[2],
       previousFolderId: pathName[2]
     };
+    console.log(">>>>>>", data);
     this.props.manageSets(data);
   };
 
@@ -147,7 +151,8 @@ class RecentFolderComponent extends React.Component {
   };
 
   handleSharableLink = () => {
-    // this.props.getPublicAccessInfo(this.state.folderId);
+    const { folderId } = this.state;
+    this.props.shareableLink(folderId);
     const { modelInfoReducer } = this.props;
     const { modelDetails } = modelInfoReducer;
     this.props.modelOperate({
@@ -181,17 +186,26 @@ class RecentFolderComponent extends React.Component {
     this.props.publicAccess(data);
   };
 
+  handleSetDetails = setId => {
+    this.props.redirectTo(AppRoutes.SET_DETAILS.url.replace(":id", setId));
+  };
+
   render() {
-    const { modelInfoReducer, getFolderReducer } = this.props;
-    const { setListItem, show, pathName, setToTransfer, folderId, setIndex } = this.state;
+    const { modelInfoReducer, getFolderReducer, shareLinkReducer } = this.props;
+    const { setListItem, show, setToTransfer, folderId, setIndex } = this.state;
     const { modelDetails } = modelInfoReducer;
     const { folderDetails, getAllFolders } = getFolderReducer;
+    const { userEncryptedInfo } = shareLinkReducer;
     const {
       transferToModalOpen,
       addSetModalOpen,
       sharableLinkModalOpen
     } = modelDetails;
-    const setOfFolder = setListItem.filter((item) => item.folderId === folderId)
+    const setOfFolder = setListItem.filter(item => item.folderId === folderId);
+    // const path =
+    //   AppRoutes.FOLDER_SHARED_LINK.url +
+    //   `?userId=${encryptedUserId}&folderId=${encryptedFolderId}&isPublic=${this.state.isPublic}`;
+    // const pathUrl = window.location.origin + path;
     return (
       <div className="page-body">
         <div className="content-header">
@@ -242,7 +256,12 @@ class RecentFolderComponent extends React.Component {
                       <div className="cotent-text-tile">
                         <div className="content-heading-tile">
                           {" "}
-                          {list.title}
+                          <span
+                            onClick={() => this.handleSetDetails(list._id)}
+                            className={"cursor_pointer"}
+                          >
+                            {list.title}
+                          </span>
                         </div>
                         <div className="content-heading-tile">
                           {" "}
@@ -343,7 +362,7 @@ class RecentFolderComponent extends React.Component {
         <TransferToModal
           modal={transferToModalOpen}
           AllFolders={getAllFolders}
-          pathName={pathName}
+          folderId={folderId}
           handleOpen={this.openTransferToModal}
           setToTransfer={setToTransfer}
           handleFolder={this.handleFolder}
@@ -351,9 +370,9 @@ class RecentFolderComponent extends React.Component {
         <SharableLinkModal
           modal={sharableLinkModalOpen}
           handleOpen={this.handleSharableLink}
-          sharableLinkPath={window.location.href}
           onTogglePublicAccess={this.onTogglePublicAccess}
           isPublic={folderDetails ? folderDetails.isPublic : ""}
+          userEncryptedInfo={userEncryptedInfo ? userEncryptedInfo : ""}
         />
       </div>
     );
@@ -363,7 +382,8 @@ const mapStateToProps = state => {
   return {
     getFolderReducer: state.getFolderReducer,
     modelInfoReducer: state.modelInfoReducer,
-    getAllSetReducer: state.setReducer
+    getAllSetReducer: state.setReducer,
+    shareLinkReducer: state.shareLinkReducer
   };
 };
 const mapDispatchToProps = dispatch => ({
@@ -383,6 +403,9 @@ const mapDispatchToProps = dispatch => ({
   },
   publicAccess: data => {
     dispatch(publicAccessRequest(data));
+  },
+  shareableLink: data => {
+    dispatch(shareableLinkRequest(data));
   }
 });
 
