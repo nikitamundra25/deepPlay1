@@ -152,7 +152,6 @@ const getSetLogic = createLogic({
   type: SetsAction.GET_FOLDER_SET_REQUEST,
   async process({ action }, dispatch, done) {
     let api = new ApiHelper();
-    dispatch(showLoader());
     let result = await api.FetchFromServer(
       "set",
       "/get-sets-of-folder",
@@ -161,12 +160,16 @@ const getSetLogic = createLogic({
       action.payload
     );
     if (result.isError) {
-      dispatch(hideLoader());
       toast.error(result.messages[0]);
+      dispatch(
+        getFolderSetSuccess({
+          showLoader: false,
+          setListinFolder: []
+        })
+      );
       done();
       return;
     } else {
-      dispatch(hideLoader());
       dispatch(
         getFolderSetSuccess({
           showLoader: false,

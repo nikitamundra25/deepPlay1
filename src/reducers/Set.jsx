@@ -6,13 +6,19 @@ const initialState = {
   setListinFolder: "",
   recentSets: "",
   setDetails: "",
+  isSetListLoading: false,
   isSetDetailsLoading: false
 };
 export const setReducer = handleActions(
   {
+    [SetsAction.GET_ALL_SET_REQUEST]: (state, { payload }) => ({
+      ...state,
+      isSetListLoading: true
+    }),
     [SetsAction.GET_ALL_SET_SUCCESS]: (state, { payload }) => ({
       ...state,
-      ...payload
+      ...payload,
+      isSetListLoading: false
     }),
     [SetsAction.CREATE_SET_SUCCESS]: (state, { payload }) => ({
       ...state,

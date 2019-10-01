@@ -141,6 +141,7 @@ class Set extends React.Component {
             handleSetComponent={this.handleSetComponent}
             handleFolderModel={this.handleFolderModel}
             getAllSet={getAllSetReducer.allSetList}
+            isSetListLoading={getAllSetReducer.isSetListLoading}
             OnCreateSetCopy={this.OnCreateSetCopy}
             onRemoveSets={this.onHandleDelete}
             handleRecentTime={this.handleRecentTime}

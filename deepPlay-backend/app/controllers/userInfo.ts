@@ -4,6 +4,7 @@ import { resizeImage } from "../common/resizeImage";
 import { IDataToUpdate } from "../interfaces/users";
 import fs from "fs";
 import path from "path";
+import { IsProductionMode } from "../config"
 
 const __basedir = path.join(__dirname, "../public");
 // --------------Get user info---------------------
@@ -84,13 +85,22 @@ const imageUpload = async (req: Request, res: Response) => {
         "profile_img.",
         type || "png"
       ].join("");
-
-      var originalImagePath = path.join(
-        __dirname,
-        "/uploads",
-        "images",
-        fileName
-      );
+      let originalImagePath: string = ""
+      if (IsProductionMode) {
+        originalImagePath = path.join(
+          __dirname,
+          "/uploads",
+          "images",
+          fileName
+        );
+      } else {
+        originalImagePath = path.join(
+          __basedir,
+          "../uploads",
+          "images",
+          fileName
+        );
+      }
       fs.writeFile(originalImagePath, buf, async err => {
         if (err) {
           throw err;
@@ -159,7 +169,11 @@ const deleteUserAccount = async (req: Request, res: Response): Promise<any> => {
 // --------------- Get All user list
 const getAllUser = async (req: Request, res: Response): Promise<any> => {
   try {
-    const result = await UserModel.find();
+    const result = await UserModel.find({
+      roleType: {
+        $ne: "admin"
+      }
+    });
     res.status(200).json({
       result,
     });
