@@ -22,7 +22,7 @@ import {
 import AddSetModal from "./addSet";
 import TransferToModal from "./transferTo";
 import { ConfirmBox } from "../../../helper/SweetAleart";
-import SharableLinkModal from "../../Common/SharableLink";
+import SharableLinkModal from "../../comman/SharableLink";
 import emptySetIc from "../../../assets/img/empty-sets.png";
 // core components
 class RecentFolderComponent extends React.Component {

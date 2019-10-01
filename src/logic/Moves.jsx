@@ -4,7 +4,8 @@ import {
   redirectTo,
   MovesAction,
   downloadYoutubeVideoSuccess,
-  getMovesOfSetSuccess
+  getMovesOfSetSuccess,
+  getMoveDetailsSuccess
 } from "../actions";
 import { AppRoutes } from "../config/AppRoutes";
 import { toast } from "react-toastify";
@@ -14,24 +15,35 @@ const downloadVideoLogic = createLogic({
   type: MovesAction.DOWNLOAD_YOUTUBE_VIDEO_REQUEST,
   async process({ action }, dispatch, done) {
     let api = new ApiHelper();
-    let result = await api.FetchFromServer(
-      "move",
-      "/downloadVideo",
-      "POST",
-      true,
-      undefined,
-      action.payload
-    );
+    let result
+    if (action.payload.isYoutubeUrl) {
+      result = await api.FetchFromServer(
+        "move",
+        "/download-youtube-video",
+        "POST",
+        true,
+        undefined,
+        action.payload
+      );
+    } else {
+      result = await api.UploadVideo(
+        "move",
+        "/download-video",
+        action.payload
+      )
+    }
     if (result.isError) {
       toast.error(result.messages[0]);
-      dispatch(downloadYoutubeVideoSuccess());
+      dispatch(downloadYoutubeVideoSuccess({
+        videoUrl: ""
+      }));
       done();
       return;
     } else {
       toast.success(result.messages[0]);
       dispatch(
         downloadYoutubeVideoSuccess({
-          videoUrl: result.data.videoUrl
+          videoUrl: result.data && result.data.videoUrl ? result.data.videoUrl : ""
         })
       );
       dispatch(
@@ -76,4 +88,34 @@ const getMovesOfSetLogic = createLogic({
   }
 });
 
-export const MoveLogics = [downloadVideoLogic, getMovesOfSetLogic];
+// Get Moves Details by Id
+const getMovesDetailsByIdLogic = createLogic({
+  type: MovesAction.GET_MOVE_DETAILS_REQUEST,
+  async process({ action }, dispatch, done) {
+    let api = new ApiHelper();
+    let result = await api.FetchFromServer(
+      "move",
+      "/get-move-details-by-id",
+      "GET",
+      true,
+      action.payload,
+      undefined
+    );
+    if (result.isError) {
+      toast.error(result.messages[0]);
+      dispatch(getMoveDetailsSuccess({moveDetails: ""}))
+      done();
+      return;
+    } else {
+      dispatch(getMoveDetailsSuccess({
+        moveDetails: result.data.movesData
+      }))
+      done();
+    }
+  }
+});
+export const MoveLogics = [
+  downloadVideoLogic, 
+  getMovesOfSetLogic,
+  getMovesDetailsByIdLogic
+];

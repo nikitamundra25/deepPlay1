@@ -162,7 +162,7 @@ class DefaultHeader extends React.Component {
                         <InputGroup className="">
                           <InputGroupAddon addonType="prepend">
                             <span className="input-group-text">
-                              <i class="fa fa-search" aria-hidden="true"></i>
+                              <i className="fa fa-search" aria-hidden="true"></i>
                             </span>
                           </InputGroupAddon>
                           <Input placeholder="Search" type="text" />
