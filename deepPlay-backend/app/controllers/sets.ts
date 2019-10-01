@@ -6,6 +6,7 @@ import { algoliaAppId, algoliaAPIKey } from "../config/app"
 const algoliasearch = require('algoliasearch');
 const client = algoliasearch("81ZJX0Y0SX", "2574ac05e0b2c3b192c0fb91e57e7935");
 
+import { decrypt } from "../common";
 // --------------Create set---------------------
 const createSet = async (req: Request, res: Response): Promise<any> => {
   try {
@@ -57,7 +58,7 @@ const getAllSetById = async (req: Request, res: Response): Promise<void> => {
         message: "User id not found"
       });
     }
-    const result = await SetModel.find({
+    const result: Document | any = await SetModel.find({
       userId: headToken.id,
       isDeleted: false
     });
@@ -84,7 +85,7 @@ const getRecentSetById = async (req: Request, res: Response): Promise<void> => {
         message: "User id not found"
       });
     }
-    const result = await SetModel.find({
+    const result: Document | any = await SetModel.find({
       userId: headToken.id,
       isDeleted: false
     })
@@ -113,12 +114,12 @@ const getSetsForFolder = async (req: Request, res: Response): Promise<void> => {
         message: "User id not found"
       });
     }
-    const result = await SetModel.find({
+    const result: Document | any = await SetModel.find({
       userId: headToken.id,
       $or: [{ folderId: query.folderId }, { folderId: null }]
     });
     res.status(200).json({
-      data: result,
+      data: result
     });
   } catch (error) {
     console.log(error);
@@ -169,7 +170,7 @@ const deleteSet = async (req: Request, res: Response): Promise<void> => {
         message: "Set id not found"
       });
     }
-    const result: any = await SetModel.findByIdAndUpdate(body.id, {
+    const result: Document | any = await SetModel.findByIdAndUpdate(body.id, {
       $set: { isDeleted: true }
     });
 
@@ -218,6 +219,38 @@ const getSetDetailsById = async (
     });
   }
 };
+
+//-----Decrypt  folderId to get setDetails for shared link-----------------
+const publicUrlsetDetails = async (
+  req: Request,
+  res: Response
+): Promise<any> => {
+  try {
+    const { query } = req;
+    const { folderId, isPublic } = query;
+    const decryptedFolderId = decrypt(folderId);
+    let result: Document | any | null;
+    if (isPublic === "true") {
+      result = await SetModel.find({
+        folderId: decryptedFolderId
+      });
+    } else {
+      return res.status(400).json({
+        message: "Public access link is not enabled."
+      });
+    }
+    return res.status(200).json({
+      responsecode: 200,
+      data: result,
+      success: true
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).send({
+      message: error.message
+    });
+  }
+};
 export {
   createSet,
   getAllSetById,
@@ -225,5 +258,6 @@ export {
   addSetInFolder,
   getSetsForFolder,
   deleteSet,
-  getSetDetailsById
+  getSetDetailsById,
+  publicUrlsetDetails
 };

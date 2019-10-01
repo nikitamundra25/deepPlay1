@@ -38,7 +38,7 @@ const createSetLogic = createLogic({
       return;
     } else {
       dispatch(hideLoader());
-      toast.success(result.messages[0]);
+      // toast.success(result.messages[0]);
       dispatch(
         createSetSuccess({
           showLoader: false,
@@ -97,7 +97,7 @@ const deleteSetLogic = createLogic({
     let result = await api.FetchFromServer(
       "set",
       "/delete-set",
-      "DELETE",
+      "PATCH",
       true,
       { id: action.payload },
       undefined
@@ -158,7 +158,7 @@ const getSetLogic = createLogic({
       "/get-sets-of-folder",
       "GET",
       true,
-      action.payload,
+      action.payload
     );
     if (result.isError) {
       dispatch(hideLoader());
@@ -173,7 +173,6 @@ const getSetLogic = createLogic({
           setListinFolder: result.data.data
         })
       );
-
       done();
     }
   }
@@ -204,16 +203,6 @@ const ManageSetLogic = createLogic({
           showLoader: false
         })
       );
-      if (action.payload.previousFolderId) {
-        dispatch(
-          getFolderSetRequest({
-            folderId: action.payload.previousFolderId
-          })
-        );
-      } else {
-        toast.success("Your set has been transfered successfully");
-        dispatch(getAllSetRequest());
-      }
       dispatch(
         modelOpenRequest({
           modelDetails: {
@@ -222,6 +211,17 @@ const ManageSetLogic = createLogic({
           }
         })
       );
+      if (action.payload.previousFolderId) {
+        dispatch(
+          getFolderSetRequest({
+            folderId: action.payload.previousFolderId
+          })
+        );
+      } else {
+        toast.success("Your set has been transfered successfully");
+        dispatch(getFolderSetRequest());
+      }
+
       done();
     }
   }

@@ -63,5 +63,10 @@ export const AppRoutes = {
     url: "/folder-details/:id",
     name: "Folder Details",
     exact: true
+  },
+  FOLDER_SHARED_LINK: {
+    url: "/folder-shared-link",
+    name: "Folder Sharedlink",
+    exact: true
   }
 };

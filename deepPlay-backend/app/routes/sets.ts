@@ -6,7 +6,8 @@ import {
   addSetInFolder,
   deleteSet,
   getSetsForFolder,
-  getSetDetailsById
+  getSetDetailsById,
+  publicUrlsetDetails
 } from "../controllers";
 import { ValidateAdminToken } from "../common";
 const SetRouter: express.Router = express.Router();
@@ -18,5 +19,6 @@ SetRouter.patch("/manage-sets", ValidateAdminToken, addSetInFolder);
 SetRouter.get("/get-sets-of-folder", ValidateAdminToken, getSetsForFolder);
 SetRouter.patch("/delete-set", ValidateAdminToken, deleteSet);
 SetRouter.get("/getSetById", ValidateAdminToken, getSetDetailsById);
+SetRouter.get("/public-url-set-details", publicUrlsetDetails);
 
 export default SetRouter;

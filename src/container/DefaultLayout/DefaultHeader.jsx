@@ -20,9 +20,9 @@ import Login from "../Auth/Login/index.jsx";
 import Signup from "../Auth/Signup/index.jsx";
 import FolderModal from "../../components/Folders/createFolderModal";
 import profileImage from "../../assets/img/user-white-ic.svg";
-import { AppRoutes } from "../../config/AppRoutes"
+import { AppRoutes } from "../../config/AppRoutes";
 import { SidebarComponent } from "../../components/Sidebar";
-import logoutIcon from "../../assets/img/icons/logout.svg"
+import logoutIcon from "../../assets/img/icons/logout.svg";
 import { AppConfig } from "../../config/Appconfig";
 
 class DefaultHeader extends React.Component {
