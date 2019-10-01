@@ -11,6 +11,7 @@ import {
 import { AppRoutes } from "../../config/AppRoutes";
 import "./index.scss";
 import emptySetIc from "../../assets/img/empty-sets.png";
+import  Loader  from "../comman/Loader/Loader";
 // core components
 class SetComponent extends React.Component {
   constructor(props) {
@@ -53,7 +54,10 @@ class SetComponent extends React.Component {
             {getAllSet && getAllSet.length ? getAllSet.length : 0} Sets total
           </span> */}
         </div>
-        <Row className="set-wrap">
+        <Row className="set-wrap loader-section">
+         <Col sm={12} className="loader-col">
+          <Loader/>
+          </Col>
           {getAllSet && getAllSet.length ? (
             // eslint-disable-next-line
             getAllSet.map((setList, i) => {
@@ -87,7 +91,7 @@ class SetComponent extends React.Component {
                         <div
                           onMouseOver={() => this.showPopOver(i, show)}
                           onMouseLeave={() => this.closePopOver()}
-                          className="p-3 tooltip-btn-wrap right-btn-tip"
+                          className="tooltip-btn-wrap right-btn-tip"
                         >
                           <span className="cursor_pointer">
                             {" "}

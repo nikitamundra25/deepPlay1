@@ -4,8 +4,8 @@ import "./index.scss";
 
 const Loader = () => {
   return (
-    <div className={"text-center"}>
-      <div className={"text-center"}>
+    <div className={"loader-wrap"}>
+      <div className={"loader-block"}>
         <img src={loader} alt={"loader"}/>
       </div>
     </div>

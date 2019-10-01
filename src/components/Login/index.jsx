@@ -211,17 +211,22 @@ class LoginComponent extends React.Component {
                     </InputGroup>
                   </FormGroup>
                   <div
-                    onClick={this.props.handleForgotPasswordModel}
+                   
                     className={
                       "text-center cursor_pointer forgot-password-wrap"
                     }
                   >
+                    <span
+                     onClick={this.props.handleForgotPasswordModel}
+                    >
                     Forgot password?
+                    </span>
                   </div>
                   <div className="text-center auth-btn-wrap">
                     <Button
                       className="my-4 btn-black btn-block"
                       type="submit"
+                      color={" "}
                       disabled={isLoginRequest ? true : false}
                     >
                       {

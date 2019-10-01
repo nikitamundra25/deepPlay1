@@ -124,7 +124,7 @@ class FolderComponent extends React.Component {
                               <div
                                 onMouseOver={() => this.showPopOver(i, show)}
                                 onMouseLeave={() => this.closePopOver()}
-                                className={"p-3 tooltip-btn-wrap right-btn-tip"}
+                                className={"tooltip-btn-wrap right-btn-tip"}
                               >
                                 <span className="cursor_pointer">
                                   {" "}
