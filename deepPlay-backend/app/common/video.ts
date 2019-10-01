@@ -6,7 +6,7 @@ const __basedir = path.join(__dirname, "../public");
 var storageFile: StorageEngine = multer.diskStorage({
   destination: function (req, file, callback) {
     callback(null, path.join(
-      __basedir,
+      __dirname,
       "/uploads",
       "youtube-videos"
     ));
