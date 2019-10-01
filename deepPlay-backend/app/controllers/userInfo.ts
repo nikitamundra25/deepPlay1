@@ -86,8 +86,8 @@ const imageUpload = async (req: Request, res: Response) => {
       ].join("");
 
       var originalImagePath = path.join(
-        __basedir,
-        "../uploads",
+        __dirname,
+        "/uploads",
         "images",
         fileName
       );
@@ -97,8 +97,8 @@ const imageUpload = async (req: Request, res: Response) => {
         }
 
         var thumbnailImagePath = path.join(
-          __basedir,
-          "../uploads",
+          __dirname,
+          "/uploads",
           "images-thumbnail",
           fileName
         );
