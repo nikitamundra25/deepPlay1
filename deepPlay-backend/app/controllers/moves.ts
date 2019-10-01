@@ -69,8 +69,8 @@ const downloadYoutubeVideo = async (req: Request, res: Response): Promise<any> =
     let videoURL: string
     const fileName = [headToken.id + Date.now() + "deep_play_video" + ".webm"].join("");
     const originalVideoPath = path.join(
-      __basedir,
-      "../uploads",
+      __dirname,
+      "/uploads",
       "youtube-videos",
       fileName
     );
