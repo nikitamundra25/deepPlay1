@@ -21,31 +21,50 @@ class VideoDetails extends React.Component {
     };
   }
 
-  componentDidUpdate = ({ setReducer }) => {
-    if (setReducer !== this.props.setReducer) {
-      const recetSet = this.props.setReducer
-      if (recetSet) {
-        this.setState({
-          selectSetOptions: {
-            label: recetSet && recetSet.title ? recetSet.title : "Untitled",
-            value: recetSet && recetSet._id ? recetSet._id : ""
-          }
-        })
-      }
-    }
-  }
-
   handleChange = (tags) => {
     this.setState({
       tags
     })
   }
   handleInputChange = (e) => {
-    console.log("@@@@@@@@@@@@", e)
+    if (e && e.value) {
+      this.setState({
+        selectSetOptions: {
+          label: e.label,
+          value: e.value
+        }
+      })
+    } else {
+      this.setState({
+        selectSetOptions: {
+          label: "Type to select sets",
+          value: ""
+        }
+      })
+    }
   }
 
   render() {
     const { selectSetOptions } = this.state
+    const { setReducer } = this.props
+    const { recentSetAdded, allSetList } = setReducer
+    let recentAddedSet, defaultSetoptions = []
+    if (allSetList && allSetList.length) {
+      allSetList.map((data) => {
+        const defaultSetoptionsValue = {
+          label: data.title,
+          value: data._id
+        }
+        defaultSetoptions.push(defaultSetoptionsValue)
+        return true
+      })
+    }
+    if (recentSetAdded && recentSetAdded.value) {
+      recentAddedSet = {
+        label: recentSetAdded.title,
+        value: recentSetAdded._id
+      }
+    }
     return (
       <>
         <Col md={"6"}>
@@ -67,9 +86,10 @@ class VideoDetails extends React.Component {
             <div className="w-100">
               <AsyncSelect
                 loadOptions={this.loadSets}
-                defaultOptions
-                onInputChange={() => this.handleInputChange()}
-                value={selectSetOptions}
+                isClearable={selectSetOptions.value ? true : false}
+                defaultOptions={defaultSetoptions}
+                onChange={(e) => this.handleInputChange(e)}
+                value={recentAddedSet ? recentAddedSet : selectSetOptions}
               />
             </div>
           </FormGroup>

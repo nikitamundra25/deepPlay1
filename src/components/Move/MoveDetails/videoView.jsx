@@ -8,6 +8,7 @@ import {
   InputGroupText,
   UncontrolledTooltip
 } from "reactstrap";
+import { AppConfig } from "../../../config/Appconfig";
 import "./index.scss"
 
 // core components
@@ -22,6 +23,8 @@ class VideoView extends React.Component {
   }
 
   render() {
+    const { moveReducer } = this.props
+    const { moveDetails } = moveReducer
     return (
       <>
         <Col md={"6"}>
@@ -52,11 +55,11 @@ class VideoView extends React.Component {
               </InputGroup>
             </div>
           </FormGroup>
-          <div className="d-flex vieos-add-section video-add-banner ml-0 justify-content-center align-items-center">
-            <span className="play-ic-wrap">
-              <i className="fa fa-play" aria-hidden="true"></i>
-            </span>
-          </div>
+          <video width={"100%"} controls>
+            <source
+              src={`${AppConfig.API_ENDPOINT}${moveDetails.videoUrl}`}
+            />
+          </video>
         </Col>
       </>
     );

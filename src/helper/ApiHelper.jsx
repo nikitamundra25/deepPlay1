@@ -83,6 +83,62 @@ export class ApiHelper {
     }
   }
   /**
+   * Upload data in multipart.
+  */
+  async UploadVideo(
+    service,
+    endpoint,
+    body) {
+    let fd = new FormData();
+
+    for (const k in body) {
+      if (body.hasOwnProperty(k)) {
+        const element = body[k];
+        if (k === "characteristic") {
+          fd.append(k, JSON.stringify(element))
+        } else {
+          fd.append(k, element)
+        }
+      }
+    }
+    let url = this._apiVersion + service + endpoint;
+    let options = { method: "POST" }
+    options.headers = {}
+    const storageSession = localStorage.getItem('token');
+    options.headers.Authorization = storageSession;
+
+    try {
+      let response = await Axios.post(
+        `${this._portalGateway}${url}`,
+        fd,
+        {
+          headers: options.headers,
+        }
+      );
+
+      if (response.status < 200 || response.status >= 300) {
+        let errorObject = {
+          code: response.status,
+          response: response.data,
+        };
+
+        throw errorObject;
+      }
+      const data = new SuccessHandlerHelper(
+        response.data,
+      );
+      return data.data;
+    } catch (err) {
+      if (Axios.isCancel(err)) {
+        console.log('%s Req Cancelled', err);
+      }
+      const errorHelper = new ErrorHandlerHelper(
+        err.response,
+      );
+      return errorHelper.error;
+    }
+  };
+  /**
    * Cancels the last request.
    */
   cancelRequest = () => {

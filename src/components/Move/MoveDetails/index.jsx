@@ -3,7 +3,7 @@ import { connect } from "react-redux";
 import { Card, CardBody, Col, Row } from "reactstrap";
 import VideoView from "./videoView";
 import VideoDetails from "./videoDetails";
-
+import { getMoveDetailsRequest, getAllSetRequest } from "../../../actions";
 import "./index.scss";
 // core components
 class MoveDetails extends React.Component {
@@ -16,9 +16,15 @@ class MoveDetails extends React.Component {
     };
   }
 
-  componentDidMount = () => {};
+  componentDidMount = () => {
+    const location = this.props.location.pathname
+    const moveId = location.split("/")
+    this.props.getMoveDetailsRequest({ moveId: moveId[2] })
+    this.props.getAllSetRequest()
+  };
+
   render() {
-    const { setReducer } = this.props;
+    const { setReducer, moveReducer } = this.props;
     return (
       <>
         <div className="create-set-section step-2 mt-2">
@@ -37,7 +43,9 @@ class MoveDetails extends React.Component {
               </div>
               <Col md={"12"}>
                 <Row className={"mt-3"}>
-                  <VideoView />
+                  <VideoView
+                    moveReducer={moveReducer}
+                  />
                   <VideoDetails setReducer={setReducer} />
                 </Row>
               </Col>
@@ -50,9 +58,13 @@ class MoveDetails extends React.Component {
 }
 
 const mapStateToProps = state => ({
-  setReducer: state.setReducer
+  setReducer: state.setReducer,
+  moveReducer: state.moveReducer
 });
-const mapDispatchToProps = dispatch => ({});
+const mapDispatchToProps = dispatch => ({
+  getMoveDetailsRequest: data => dispatch(getMoveDetailsRequest(data)),
+  getAllSetRequest: data => dispatch(getAllSetRequest(data))
+});
 export default connect(
   mapStateToProps,
   mapDispatchToProps
