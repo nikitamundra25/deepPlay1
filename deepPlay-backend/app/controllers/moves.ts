@@ -3,7 +3,6 @@ import { CloudinaryAPIKey, CloudinaryAPISecretKey, CloudName } from "../config";
 import cloudinary from "cloudinary";
 import ytdl from "ytdl-core";
 import { MoveModel } from "../models";
-import { IMove } from "../interfaces";
 import fs from "fs";
 import path from "path";
 
@@ -145,7 +144,6 @@ const getMoveDetailsById = async (req: Request, res: Response): Promise<any> => 
       });
     }
     const movesData: Document | any = await MoveModel.findById(query.moveId);
-
     return res.status(200).json({
       movesData: movesData
     });

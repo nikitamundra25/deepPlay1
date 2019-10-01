@@ -156,4 +156,19 @@ const deleteUserAccount = async (req: Request, res: Response): Promise<any> => {
     });
   }
 };
-export { getUserInfo, editUserInfo, deleteUserAccount, imageUpload };
+// --------------- Get All user list
+const getAllUser = async (req: Request, res: Response): Promise<any> => {
+  try {
+    const result = await UserModel.find();
+    res.status(200).json({
+      result,
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).send({
+      message: error.message
+    });
+  }
+};
+
+export { getUserInfo, editUserInfo, deleteUserAccount, imageUpload, getAllUser };

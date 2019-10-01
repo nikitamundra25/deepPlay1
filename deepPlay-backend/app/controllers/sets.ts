@@ -4,7 +4,7 @@ import { ISet } from "../interfaces";
 import { algoliaAppId, algoliaAPIKey } from "../config/app"
 //import * as algoliasearch from 'algoliasearch'; // When using TypeScript
 const algoliasearch = require('algoliasearch');
-const client = algoliasearch("81ZJX0Y0SX", "2574ac05e0b2c3b192c0fb91e57e7935");
+const client = algoliasearch("81ZJX0Y0SX", "cbc15a12426d1027b8e49ca62a68407e");
 
 import { decrypt } from "../common";
 // --------------Create set---------------------

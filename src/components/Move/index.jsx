@@ -48,10 +48,14 @@ class MoveComponent extends React.Component {
       } else {
         this.setState({
           errors: {
-            validUrl: "You have entered wrong URL."
+            validUrl: "Enter a valid youtube url."
           }
         });
       }
+    }else{
+      this.setState({
+        errors: ""
+      });
     }
   };
 
@@ -107,7 +111,8 @@ class MoveComponent extends React.Component {
   handleVideoFileSelect = (e) => {
     let files = e.target.files
     this.setState({
-      url: files[0].name
+      url: files[0].name,
+      errors:""
     }, () => {
       this.props.downloadVideo({ url: files[0], isYoutubeUrl: false })
     })

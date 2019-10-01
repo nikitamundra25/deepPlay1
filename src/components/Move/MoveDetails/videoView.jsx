@@ -55,11 +55,15 @@ class VideoView extends React.Component {
               </InputGroup>
             </div>
           </FormGroup>
+          {
+            moveDetails && moveDetails.videoUrl?
           <video width={"100%"} controls>
             <source
               src={`${AppConfig.API_ENDPOINT}${moveDetails.videoUrl}`}
             />
-          </video>
+          </video>:
+          <span>No video available for trimming</span>
+          }
         </Col>
       </>
     );
