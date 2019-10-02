@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import { FolderModel, SetModel, MoveModel } from "../models";
-import { IFolder } from "../interfaces";
+import { IFolder, ISet, IMove } from "../interfaces";
 import { encrypt, decrypt } from "../common";
 
 // --------------Create folder---------------------
@@ -21,10 +21,58 @@ const createFolder = async (req: Request, res: Response): Promise<any> => {
       userId: body.userId ? body.userId : headToken.id,
       sharableLink: body.sharableLink ? body.sharableLink : "",
       isPublic: body.isPublic ? body.isPublic : true,
-      isDeleted: body.isDeleted ? body.isDeleted : false
+      isDeleted: body.isDeleted ? body.isDeleted : false,
+      isCopy: body.isCopy ? true : false
     };
     const Result: Document | any = new FolderModel(folderData);
     await Result.save();
+    const folderId = Result._id
+    if (body.isCopy) {
+      const setResult: Document | any | null = await SetModel.find({
+        folderId: body.copyOfFolderId,
+        isDeleted: false
+      })
+      if (setResult && setResult.length) {
+        for (let index = 0; index < setResult.length; index++) {
+          const element = setResult[index];
+          const newSetData: ISet = {
+            title: element.title,
+            description: element.description,
+            isPublic: element.isPublic,
+            folderId: folderId,
+            sharableLink: element.sharableLink,
+            status: true,
+            userId: headToken.id,
+            isDeleted: element.isDeleted
+          }
+          const setData: Document | any = new SetModel(newSetData);
+          await setData.save();
+          const setId = setData._id
+          const moveResult: Document | any | null = await MoveModel.find({
+            setId: element._id,
+            isDeleted: false
+          })
+          if (moveResult && moveResult.length) {
+            for (let index = 0; index < moveResult.length; index++) {
+              const moveElement = moveResult[index];
+              const newMoveData: IMove = {
+                title: moveElement.title,
+                description: moveElement.description,
+                videoUrl: moveElement.videoUrl,
+                tags: moveElement.tags,
+                isPublic: moveElement.isPublic ? moveElement.isPublic : false,
+                userId: headToken.id,
+                sharableLink: moveElement.sharableLink,
+                status: true,
+                setId: setId
+              }
+              const moveData: Document | any = new MoveModel(newMoveData);
+              await moveData.save();
+            }
+          }
+        }
+      }
+    }
     res.status(200).json({
       Result,
       message: "Folder created successfully"

@@ -6,7 +6,8 @@ import {
   ButtonGroup,
   Card,
   CardHeader,
-  CardBody
+  CardBody,
+  UncontrolledTooltip
 } from "reactstrap";
 import { AppRoutes } from "../../config/AppRoutes";
 import "./index.scss";
@@ -62,14 +63,14 @@ class SetComponent extends React.Component {
       <div className="set-main-section">
         <div className="content-header">
           <span className="content-title">YOUR SETS</span>
-          <span >
+          <span id="UncontrolledTooltipExample" className={"cursor_pointer"} onClick={() => this.props.redirectTo(AppRoutes.CREATE_SET.url)}>
             <i className="fas fa-plus-circle icon-font"></i>
           </span>
-          {/* <span className="dashboard-right-content">
-            {getAllSet && getAllSet.length ? getAllSet.length : 0} Sets total
-          </span> */}
+          <UncontrolledTooltip placement="bottom" target="UncontrolledTooltipExample">
+            Create New Set
+          </UncontrolledTooltip>
         </div>
-        <Row className="set-wrap loader-section">
+        <Row className="set-wrap">
           {
             !isSetListLoading ?
               getAllSet && getAllSet.length ? (
@@ -84,15 +85,26 @@ class SetComponent extends React.Component {
                               {" "}
                               <span
                                 onClick={() => this.handleSetDetails(setList._id)}
-                                className={"cursor_pointer"}
+                                className={"cursor_pointer text-capitalize"}
                               >
-                                {setList.title}
+                                {
+                                  setList.folderId ?
+                                    <span>
+                                      {
+                                        setList.folderId && setList.folderId.isCopy ?
+                                          `Copy of ${setList.folderId.title}` :
+                                          setList.folderId.title
+                                      }/
+                                    <span className={"text-light"}>{setList.title}</span>
+                                    </span> :
+                                    <span>{setList.title}</span>
+                                }
                               </span>
                             </div>
                             {setList.description ? setList.description : ""}
                             <div className="content-number-tile"> 46 moves</div>
                           </div>
-                          <div className="d-flex">
+                          <div className="d-flex img-tile-wrap">
                             <div
                               className="cotent-img-tile pr-3"
                               style={{
@@ -188,9 +200,11 @@ class SetComponent extends React.Component {
                     </div>
                   </>
                 ) :
-              <Col sm={12} className="loader-col">
-                <Loader />
-              </Col>
+              <div>
+                <Col sm={12} className="loader-col">
+                  <Loader />
+                </Col>
+              </div>
           }
         </Row>
       </div>

@@ -14,7 +14,6 @@ const createSet = async (req: Request, res: Response): Promise<any> => {
     const { body } = req;
     const headToken: Request | any = currentUser;
     const index = client.initIndex('rishabh_name');
-    //console.log("#################", index);
     const setData: ISet = {
       title: body.title,
       description: body.description ? body.description : "",
@@ -32,8 +31,7 @@ const createSet = async (req: Request, res: Response): Promise<any> => {
         console.error(err);
       }
       else{
-        console.log("##################",content);
-        
+        console.log("##################",content);  
       }
     });
     res.status(200).json({
@@ -61,7 +59,7 @@ const getAllSetById = async (req: Request, res: Response): Promise<void> => {
     const result: Document | any = await SetModel.find({
       userId: headToken.id,
       isDeleted: false
-    });
+    }).populate("folderId");
     res.status(200).json({
       result,
       message: "Sets have been fetched successfully"
@@ -208,7 +206,7 @@ const getSetDetailsById = async (
     const result: Document | any = await SetModel.findOne({
       userId: headToken.id,
       _id: setId
-    });
+    }).populate("folderId");
     res.status(200).json({
       data: result
     });

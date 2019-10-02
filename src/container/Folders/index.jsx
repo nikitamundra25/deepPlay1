@@ -31,7 +31,7 @@ class Folder extends React.Component {
   };
 
   render() {
-    const { modelOperate, modelInfoReducer, getAllFolders } = this.props;
+    const { modelOperate, modelInfoReducer, folderReducer } = this.props;
     return (
       <>
         <FolderComponent
@@ -40,7 +40,8 @@ class Folder extends React.Component {
           modelOperate={modelOperate}
           handleForRecentFolder={this.handleForRecentFolder}
           createFolder={this.createFolder}
-          getAllFolders={getAllFolders}
+          getAllFolders={folderReducer.getAllFolders}
+          isFolderLoading={folderReducer.isFolderLoading}
           onDelete={this.onDelete}
           {...this.props}
         />
@@ -52,7 +53,7 @@ class Folder extends React.Component {
 const mapStateToProps = state => {
   return {
     modelInfoReducer: state.modelInfoReducer,
-    getAllFolders: state.getFolderReducer.getAllFolders
+    folderReducer: state.getFolderReducer
   };
 };
 const mapDispatchToProps = dispatch => {

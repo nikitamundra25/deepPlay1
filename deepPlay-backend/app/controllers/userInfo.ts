@@ -101,43 +101,49 @@ const imageUpload = async (req: Request, res: Response) => {
           fileName
         );
       }
-      fs.writeFile(originalImagePath, buf, async err => {
-        if (err) {
-          throw err;
-        }
-
-        var thumbnailImagePath = path.join(
+      fs.writeFileSync(originalImagePath, buf)
+      var thumbnailImagePath: string = ""
+      if (IsProductionMode) {
+        thumbnailImagePath = path.join(
           __dirname,
           "/uploads",
           "images-thumbnail",
           fileName
         );
-        const thumbnailImg: string = path.join(
-          "uploads",
+      } else {
+        thumbnailImagePath = path.join(
+          __basedir,
+          "../uploads",
           "images-thumbnail",
           fileName
         );
-        await resizeImage(originalImagePath, thumbnailImagePath, 200);
-        const uploadimg = await UserModel.findByIdAndUpdate(currentUser.id, {
-          profileImage: thumbnailImg
-        });
-
-        if (uploadimg) {
-          return res.status(200).json({
-            responseCode: 200,
-            message: "Profile image uploaded successfully!",
-            success: true,
-            profileImage: originalImagePath,
-            profileThumbnail: thumbnailImg
-          });
-        } else {
-          return res.status(400).json({
-            responseCode: 400,
-            message: "Error uploading profile image.",
-            success: false
-          });
-        }
+      }
+      fs.writeFileSync(thumbnailImagePath, buf)
+      const thumbnailImg: string = path.join(
+        "uploads",
+        "images-thumbnail",
+        fileName
+      );
+      await resizeImage(originalImagePath, thumbnailImagePath, 200);
+      const uploadimg = await UserModel.findByIdAndUpdate(currentUser.id, {
+        profileImage: thumbnailImg
       });
+
+      if (uploadimg) {
+        return res.status(200).json({
+          responseCode: 200,
+          message: "Profile image uploaded successfully!",
+          success: true,
+          profileImage: originalImagePath,
+          profileThumbnail: thumbnailImg
+        });
+      } else {
+        return res.status(400).json({
+          responseCode: 400,
+          message: "Error uploading profile image.",
+          success: false
+        });
+      }
     }
   } catch (error) {
     console.log("**************This is image upload error", error);

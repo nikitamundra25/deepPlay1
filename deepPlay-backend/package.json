@@ -12,6 +12,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@ffmpeg-installer/ffmpeg": "^1.0.20",
     "@types/algoliasearch": "^3.34.2",
     "@types/bcrypt": "^3.0.0",
     "@types/body-parser": "^1.17.0",

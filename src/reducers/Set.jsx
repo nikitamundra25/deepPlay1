@@ -7,6 +7,8 @@ const initialState = {
   recentSets: "",
   setDetails: "",
   isSetListLoading: false,
+  isFolderSetLoading: false,
+  isRecentSetLoading: false,
   isSetDetailsLoading: false
 };
 export const setReducer = handleActions(
@@ -24,13 +26,23 @@ export const setReducer = handleActions(
       ...state,
       recentSetAdded: payload.setData
     }),
+    [SetsAction.GET_FOLDER_SET_REQUEST]: (state, { payload }) => ({
+      ...state,
+      isFolderSetLoading: true
+    }),
     [SetsAction.GET_FOLDER_SET_SUCCESS]: (state, { payload }) => ({
       ...state,
-      ...payload
+      ...payload,
+      isFolderSetLoading: false
+    }),
+    [SetsAction.RECENT_SET_REQUEST]: (state, { payload }) => ({
+      ...state,
+      isRecentSetLoading: true
     }),
     [SetsAction.RECENT_SET_SUCCESS]: (state, { payload }) => ({
       ...state,
-      ...payload
+      ...payload,
+      isRecentSetLoading: false
     }),
     [SetsAction.GET_SET_DETAILS_REQUEST]: (state, { payload }) => ({
       ...state,

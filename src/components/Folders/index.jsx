@@ -13,6 +13,7 @@ import FolderModal from "./createFolderModal";
 import { ConfirmBox } from "../../helper/SweetAleart";
 import { AppRoutes } from "../../config/AppRoutes";
 import emptyFolderIc from "../../assets/img/empty-folder.png";
+import Loader from "../comman/Loader/Loader"
 import { logger } from "helper/Logger";
 // core components
 class FolderComponent extends React.Component {
@@ -76,6 +77,7 @@ class FolderComponent extends React.Component {
       sharableLink: folder.sharableLink,
       status: folder.status,
       userId: folder.userId,
+      copyOfFolderId: folder._id,
       isCopy: true
     };
     const { value } = await ConfirmBox({
@@ -87,7 +89,7 @@ class FolderComponent extends React.Component {
   };
 
   render() {
-    const { modelInfoReducer, getAllFolders } = this.props;
+    const { modelInfoReducer, getAllFolders, isFolderLoading } = this.props;
     const { show, folderIndex } = this.state;
     const { modelDetails } = modelInfoReducer;
     const { createFolderOpen } = modelDetails;
@@ -106,97 +108,107 @@ class FolderComponent extends React.Component {
         <p>4 folders total</p>{" "}
         <div className="wrap-folder">
           <Row className="set-wrap">
-            {getAllFolders.length ? (
-              // eslint-disable-next-line
-              getAllFolders.map((folder, i) => {
-                if (!folder.isDeleted) {
-                  return (
-                    <Col md={"6"}>
-                      <div className="tile-wrap card">
-                        <div className="cotent-tile d-flex content-with-tip">
-                          <div className="cotent-text-tile">
-                            <div className="content-number-tile"> 4 sets</div>
-                            <div className="content-heading-tile d-flex">
-                              {" "}
-                              <span
-                                onClick={() =>
-                                  this.handleFolderdetails(folder._id)
-                                }
-                                className={"cursor_pointer"}
-                              >
-                                {folder.title}
-                              </span>
-                              <div
-                                onMouseOver={() => this.showPopOver(i, show)}
-                                onMouseLeave={() => this.closePopOver()}
-                                className={"tooltip-btn-wrap right-btn-tip"}
-                              >
-                                <span className="cursor_pointer">
+            {
+              !isFolderLoading ?
+                getAllFolders.length ? (
+                  // eslint-disable-next-line
+                  getAllFolders.map((folder, i) => {
+                    if (!folder.isDeleted) {
+                      return (
+                        <Col key={i} md={"6"}>
+                          <div className="tile-wrap card">
+                            <div className="cotent-tile d-flex content-with-tip">
+                              <div className="cotent-text-tile">
+                                <div className="content-number-tile"> 4 sets</div>
+                                <div className="content-heading-tile d-flex">
                                   {" "}
-                                  <i className="fas fa-ellipsis-v setting-icon "></i>
-                                </span>
-                                {show && folderIndex === i ? (
-                                  <ButtonGroup size="sm">
-                                    <Button
-                                      onClick={() =>
-                                        this.handleCopyFolder(folder)
-                                      }
-                                    >
-                                      Copy
-                                    </Button>
-                                    <Button
-                                      onClick={() =>
-                                        this.onHandleDelete(folder._id)
-                                      }
-                                    >
-                                      Delete
-                                    </Button>
-                                  </ButtonGroup>
-                                ) : null}
+                                  <span
+                                    onClick={() =>
+                                      this.handleFolderdetails(folder._id)
+                                    }
+                                    className={"cursor_pointer"}
+                                  >
+                                    {
+                                      folder.isCopy ?
+                                        `Copy of ${folder.title}` :
+                                        folder.title
+                                    }
+                                  </span>
+                                  <div
+                                    onMouseOver={() => this.showPopOver(i, show)}
+                                    onMouseLeave={() => this.closePopOver()}
+                                    className={"tooltip-btn-wrap right-btn-tip"}
+                                  >
+                                    <span className="cursor_pointer">
+                                      {" "}
+                                      <i className="fas fa-ellipsis-v setting-icon "></i>
+                                    </span>
+                                    {show && folderIndex === i ? (
+                                      <ButtonGroup size="sm">
+                                        <Button
+                                          onClick={() =>
+                                            this.handleCopyFolder(folder)
+                                          }
+                                        >
+                                          Copy
+                                      </Button>
+                                        <Button
+                                          onClick={() =>
+                                            this.onHandleDelete(folder._id)
+                                          }
+                                        >
+                                          Delete
+                                      </Button>
+                                      </ButtonGroup>
+                                    ) : null}
+                                  </div>
+                                </div>
+                                {folder.description ? folder.description : ""}
                               </div>
                             </div>
-                            {folder.description ? folder.description : ""}
                           </div>
-                        </div>
+                        </Col>
+                      );
+                    }
+                  })
+                ) : (
+                    <>
+                      <div className="create-set-section mt-2 w-100">
+                        <Card className="w-100 set-content-wrap">
+                          <div className="set-content-block w-100 empty-folder-wrap">
+                            <CardHeader className="empty-folder-header">
+                              <img src={emptyFolderIc} alt={"folder"} />
+                              <div className="content-header set-header">
+                                <span className="content-title">
+                                  {" "}
+                                  <h3>You haven't created any folder yet</h3>
+                                  <p>Create a Folder to Organize your Sets.</p>
+                                </span>
+                              </div>
+                            </CardHeader>
+                            <CardBody className="">
+                              <div className="create-set-tile"></div>
+                              <div className="text-center">
+                                <Button
+                                  color=" "
+                                  type="button"
+                                  className="btn-black btn mt-3 folder-create-btn"
+                                  onClick={this.handleFolderModel}
+                                >
+                                  <i className="fas fa-plus mr-1"></i>
+                                  Folder
+                            </Button>
+                              </div>
+                            </CardBody>
+                          </div>
+                        </Card>
                       </div>
-                    </Col>
-                  );
-                }
-              })
-            ) : (
-              <>
-                <div className="create-set-section mt-2 w-100">
-                  <Card className="w-100 set-content-wrap">
-                    <div className="set-content-block w-100 empty-folder-wrap">
-                      <CardHeader className="empty-folder-header">
-                        <img src={emptyFolderIc} alt={"folder"} />
-                        <div className="content-header set-header">
-                          <span className="content-title">
-                            {" "}
-                            <h3>You haven't created any folder yet</h3>
-                            <p>Create a Folder to Organize your Sets.</p>
-                          </span>
-                        </div>
-                      </CardHeader>
-                      <CardBody className="">
-                        <div className="create-set-tile"></div>
-                        <div className="text-center">
-                          <Button
-                            color=" "
-                            type="button"
-                            className="btn-black btn mt-3 folder-create-btn"
-                            onClick={this.handleFolderModel}
-                          >
-                            <i className="fas fa-plus mr-1"></i>
-                            Folder
-                          </Button>
-                        </div>
-                      </CardBody>
-                    </div>
-                  </Card>
-                </div>
-              </>
-            )}
+                    </>
+                  ) :
+                <Col sm={12} className="loader-col">
+                  <Loader />
+                </Col>
+            }
           </Row>
           <FolderModal
             modal={createFolderOpen}
