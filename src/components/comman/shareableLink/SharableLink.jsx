@@ -142,7 +142,7 @@ class SharableLinkModal extends React.Component {
             <span className="font-14">
               <b>Enable Public Access Link </b>
             </span>
-            <label className="custom-toggle sharable-toggle ml-auto">
+            <label className="custom-toggle sharable-toggle ml-auto custom-toggle-wrap">
               <input
                 type="checkbox"
                 name="toggle"

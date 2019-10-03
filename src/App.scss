@@ -528,40 +528,55 @@ height: 100%;
   .nav-link-inner--text {
     cursor: pointer;
   }
-  .dropdown-menu {
-    top: 110% !important;
-    right: -15px !important;
+ 
+}
+.dropdown-menu {
+  top: 110% !important;
+  right: -15px !important;
+  left: auto !important;
+  transform: none !important;
+  padding: 0px;
+  border: 2px solid #fff;
+  &::before {
+    background: #fff;
+    box-shadow: none;
+    content: '';
+    display: block;
+    height: 16px;
+    width: 16px;
+    left: 20px;
+    position: absolute;
+    bottom: 100%;
+    -webkit-transform: rotate(-45deg) translateY(1rem);
+    transform: rotate(-45deg) translateY(1rem);
+    z-index: -5;
+    border-radius: 0.2rem;
+    right: 20px;
     left: auto !important;
-    padding: 0px;
-    border: 2px solid #fff;
-    &::before {
-      right: 20px;
-      left: auto !important;
-      height: 22px;
+    height: 22px;
+  }
+  .dropdown-item {
+    cursor: pointer;
+    font-size: 16px;
+    &:hover {
+      background-color: #d8d8d8;
+      color: #000;
     }
-    .dropdown-item {
-      cursor: pointer;
-      font-size: 16px;
-      &:hover {
-        background-color: #d8d8d8;
-        color: #000;
-      }
-      &:active,
-      &:focus {
-        background-color: #d8d8d8 !important;
-        color: #000;
-        outline: none;
-      }
-      &:first-child {
-        border-radius: 5px 5px 0px 0px;
-      }
-      &:last-child {
-        border-radius: 0px 0px 5px 5px;
-      }
-      &.active {
-        background: #d8d8d8 !important;
-        color: #000
-      }
+    &:active,
+    &:focus {
+      background-color: #d8d8d8 !important;
+      color: #000;
+      outline: none;
+    }
+    &:first-child {
+      border-radius: 5px 5px 0px 0px;
+    }
+    &:last-child {
+      border-radius: 0px 0px 5px 5px;
+    }
+    &.active {
+      background: #d8d8d8 !important;
+      color: #000
     }
   }
 }
@@ -1019,7 +1034,10 @@ height: 100%;
   min-width: 150px;
 }
 .icon-font {
-    font-size:25px;
+    font-size:20px;
+}
+.custom-toggle-wrap{
+
 }
 .copylink-form {
   input, .btn-black {
@@ -1140,4 +1158,20 @@ height: 100%;
     }
   }
   
+}
+.custom-dropdown{
+  .btn{
+    padding: 10px;
+    transform: none;
+    margin: 0px;  
+  }
+  .dropdown-menu{
+    right: -50% !important;
+  }
+}
+.header-dropdown{
+  .btn{
+    padding: 0px;
+    background: transparent;
+  }
 }

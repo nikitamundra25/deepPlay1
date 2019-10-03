@@ -267,9 +267,9 @@ class RecentFolderComponent extends React.Component {
             >
               <i className="fas fa-share icon-font"></i>
             </span>
-            <UncontrolledDropdown className="header-manu-wrap ">
-              <DropdownToggle>
-                <span id="edit" className="cursor_pointer ml-4">
+            <UncontrolledDropdown className="header-dropdown ml-4 custom-dropdown">
+              <DropdownToggle color={" "}>
+                <span id="edit" className="cursor_pointer ">
                   <i className="fas fa-sliders-h icon-font"></i>
                 </span>
               </DropdownToggle>
