@@ -1,13 +1,12 @@
 import React from "react";
 import { connect } from "react-redux";
-import { Card, CardBody, Container, Button, Col } from "reactstrap";
+import { Card, CardBody, Container, Col } from "reactstrap";
 import {
   sharedSetInfoRequest,
   publicUrlMoveDetailsRequest
 } from "../../../actions";
 import Slider from "react-slick";
 import { AppConfig } from "../../../config/Appconfig";
-import { AppRoutes } from "../../../config/AppRoutes";
 import "./index.scss";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
@@ -56,12 +55,15 @@ class SetSharedLink extends React.Component {
       <>
         <div className={"mt-5 "}>
           <Container className={"mt-5"}>
+            <div className="text-center h3">
+              <b> Set Details</b>
+            </div>{" "}
             <Card className="w-100">
               <CardBody>
                 <div className={"d-flex justify-content-between"}>
                   <div>
                     <h2 className={"capitalise"}>
-                      {decryptedSetDetails.title}
+                      {decryptedSetDetails ? decryptedSetDetails.title : ""}
                     </h2>
                     <span className={"pt-2"}> 3 Moves</span>
                   </div>

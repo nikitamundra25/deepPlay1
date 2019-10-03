@@ -9,7 +9,6 @@ class UploadImage extends Component {
     super(props);
     this.state = {
       imageData: "",
-      isLoading: false
     };
   }
 

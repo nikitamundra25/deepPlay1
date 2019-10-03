@@ -62,6 +62,15 @@ const shareLinkLogic = createLogic({
     } else {
       dispatch(hideLoader());
       dispatch(shareableLinkSuccess({ userEncryptedInfo: result.data.data }));
+      if (action.payload.publicAccess === "set") {
+        dispatch(
+          redirectTo({
+            path:
+              "/set-shared-link" +
+              `?userId=${result.data.data.encryptedUserId}&setId=${result.data.data.encryptedSetId}&isPublic=${action.payload.isPublic}`
+          })
+        );
+      }
       done();
     }
   }

@@ -10,7 +10,8 @@ import {
   getAllFolderSuccess,
   getAllFolderRequest,
   recentFolderSuccess,
-  updateRecentTimeSuccess
+  updateRecentTimeSuccess,
+  folderDetailRequest
 } from "../actions";
 import { toast } from "react-toastify";
 
@@ -73,7 +74,7 @@ const allFolderLogic = createLogic({
       toast.error(result.messages[0]);
       getAllFolderSuccess({
         getAllFolders: []
-      })
+      });
       done();
       return;
     } else {
@@ -149,6 +150,7 @@ const deleteFolderLogic = createLogic({
     } else {
       dispatch(hideLoader());
       toast.success(result.messages[0]);
+      dispatch(redirectTo({ path: "/folder" }));
       dispatch(getAllFolderRequest());
       done();
     }
@@ -213,11 +215,47 @@ const updateRecentTimeLogic = createLogic({
   }
 });
 
+//update folder
+const UpdateFolderLogic = createLogic({
+  type: FolderAction.UPDATE_FOLDER_REQUEST,
+  async process({ action }, dispatch, done) {
+    let api = new ApiHelper();
+    dispatch(showLoader());
+    let result = await api.FetchFromServer(
+      "folder",
+      "/update-folder",
+      "PUT",
+      true,
+      undefined,
+      action.payload
+    );
+    if (result.isError) {
+      dispatch(hideLoader());
+      toast.error(result.messages[0]);
+      done();
+      return;
+    } else {
+      dispatch(hideLoader());
+      dispatch(
+        modelOpenRequest({
+          modelDetails: {
+            createFolderOpen: false
+          }
+        })
+      );
+      dispatch(folderDetailRequest({ id: action.payload.id }));
+      toast.success(result.messages[0]);
+      done();
+    }
+  }
+});
+
 export const FolderLogics = [
   createFolderLogic,
   getFolderDetailsLogic,
   allFolderLogic,
   deleteFolderLogic,
   recentFolderLogic,
-  updateRecentTimeLogic
+  updateRecentTimeLogic,
+  UpdateFolderLogic
 ];

@@ -3,7 +3,8 @@ import { Row, Col, Card, CardHeader, Container } from "reactstrap";
 import { connect } from "react-redux";
 import {
   sharedFolderInfoRequest,
-  publicUrlSetDetailsRequest
+  publicUrlSetDetailsRequest,
+  shareableLinkRequest
 } from "../../../actions";
 import emptySetIc from "../../../assets/img/empty-sets.png";
 import qs from "query-string";
@@ -37,19 +38,33 @@ class FolderSharedLink extends React.Component {
     }
   }
 
+  handleSetDetails = id => {
+    let parsed = qs.parse(this.props.location.search);
+    this.props.shareableLink({
+      setId: id,
+      linkOf: "set",
+      publicAccess: "set",
+      isPublic: parsed.isPublic
+    });
+  };
+
   render() {
     const { shareLinkReducer } = this.props;
     const { setListItem } = this.state;
     const { decryptedDetails } = shareLinkReducer;
+
     return (
       <div className={"mt-5 "}>
         <Container className={"mt-5"}>
-          <div className="text-center h-100">
-            <span className="content-title">
-              {decryptedDetails ? decryptedDetails.title : "MyFolder"}
-            </span>
+          <div className="text-center h3">
+            <b> Folder Details</b>
           </div>{" "}
-          <span className="content-title">
+          <div className="content-header">
+            <span className="content-title">
+              {decryptedDetails  ? decryptedDetails.title : "MyFolder"}
+            </span>
+          </div>
+          <span className="capitalize content-title">
             {decryptedDetails ? decryptedDetails.description : ""}
           </span>
           <Row className="set-wrap">
@@ -62,8 +77,12 @@ class FolderSharedLink extends React.Component {
                       <div className="cotent-tile d-flex">
                         <div className="cotent-text-tile">
                           <div className="content-heading-tile">
-                            {" "}
-                            {list.title}
+                            <span
+                              onClick={() => this.handleSetDetails(list._id)}
+                              className={"cursor_pointer"}
+                            >
+                              {list.title}
+                            </span>
                           </div>
                           <div className="content-heading-tile">
                             {" "}
@@ -120,7 +139,10 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => ({
   encryptedQuery: data => dispatch(sharedFolderInfoRequest(data)),
-  publicUrlSetDetails: data => dispatch(publicUrlSetDetailsRequest(data))
+  publicUrlSetDetails: data => dispatch(publicUrlSetDetailsRequest(data)),
+  shareableLink: data => {
+    dispatch(shareableLinkRequest(data));
+  }
 });
 
 export default connect(

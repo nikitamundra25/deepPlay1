@@ -6,7 +6,7 @@ import { ISet } from "../interfaces";
 const algoliasearch = require("algoliasearch");
 const client = algoliasearch("81ZJX0Y0SX", "cbc15a12426d1027b8e49ca62a68407e");
 
-import { decrypt } from "../common";
+import { decrypt, encrypt } from "../common";
 // --------------Create set---------------------
 const createSet = async (req: Request, res: Response): Promise<any> => {
   try {
@@ -113,7 +113,8 @@ const getSetsForFolder = async (req: Request, res: Response): Promise<void> => {
     }
     const result: Document | any = await SetModel.find({
       userId: headToken.id,
-      $or: [{ folderId: query.folderId }, { folderId: null }]
+      $or: [{ folderId: query.folderId }, { folderId: null }],
+      isDeleted: false
     });
     res.status(200).json({
       data: result
@@ -204,7 +205,8 @@ const getSetDetailsById = async (
     }
     const result: Document | any = await SetModel.findOne({
       userId: headToken.id,
-      _id: setId
+      _id: setId,
+      isDeleted: false
     }).populate("folderId");
     res.status(200).json({
       data: result
@@ -229,7 +231,8 @@ const publicUrlsetDetails = async (
     let result: Document | any | null;
     if (isPublic === "true") {
       result = await SetModel.find({
-        folderId: decryptedFolderId
+        folderId: decryptedFolderId,
+        isDeleted: false
       });
     } else {
       return res.status(400).json({
@@ -263,7 +266,8 @@ const publicAccessSetInfoById = async (
     if (isPublic === "true") {
       result = await SetModel.findOne({
         userId: decryptedUserId,
-        _id: decryptedSetId
+        _id: decryptedSetId,
+        isDeleted: false
       });
     } else {
       return res.status(400).json({

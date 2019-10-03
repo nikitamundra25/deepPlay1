@@ -66,6 +66,7 @@ class SharableLinkModal extends React.Component {
     } = userEncryptedInfo;
     const { isPublic } = this.state;
     let path = "";
+    // eslint-disable-next-line
     {
       shareComponent === "Folder"
         ? (path =

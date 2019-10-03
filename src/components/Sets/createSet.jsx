@@ -175,7 +175,7 @@ class CreateSetComponent extends React.Component {
               <Input
                 id="exampleFormControlInput1"
                 className="capitalize"
-                type="text"
+                type="textarea"
                 name="description"
                 onChange={this.handleChange}
                 value={description}

@@ -8,3 +8,8 @@ export interface IFolder {
   isDeleted: Boolean;
   isCopy: Boolean;
 }
+
+export interface IUpdateFolder {
+  title: String;
+  description: String;
+}
