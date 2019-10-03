@@ -12,7 +12,6 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@ffmpeg-installer/ffmpeg": "^1.0.20",
     "@types/algoliasearch": "^3.34.2",
     "@types/bcrypt": "^3.0.0",
     "@types/body-parser": "^1.17.0",
@@ -31,6 +30,7 @@
     "cors": "^2.8.5",
     "express": "^4.16.4",
     "express-validator": "^6.0.1",
+    "ffmpeg": "0.0.4",
     "ffmpeg-extract-frames": "^2.0.2",
     "jimp": "^0.8.3",
     "jsonwebtoken": "^8.5.1",

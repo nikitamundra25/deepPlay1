@@ -1,12 +1,17 @@
 import { Request, Response } from "express";
-import { CloudinaryAPIKey, CloudinaryAPISecretKey, CloudName, IsProductionMode } from "../config";
+import {
+  CloudinaryAPIKey,
+  CloudinaryAPISecretKey,
+  CloudName,
+  IsProductionMode
+} from "../config";
 import cloudinary from "cloudinary";
 import ytdl from "ytdl-core";
 import { MoveModel } from "../models";
 import fs from "fs";
 import path from "path";
-/* const ffmpeg = require('@ffmpeg-installer/ffmpeg');
-import extractFrames from 'ffmpeg-extract-frames' */
+import * as ffmpeg from "ffmpeg";
+
 const __basedir = path.join(__dirname, "../public");
 
 cloudinary.config({
@@ -34,7 +39,7 @@ const downloadVideo = async (req: Request, res: Response): Promise<any> => {
         message: "User id not found"
       });
     }
-    let videoURL: string
+    let videoURL: string;
     videoURL = path.join("uploads", "youtube-videos", file.filename);
     const moveResult: Document | any = new MoveModel({
       videoUrl: videoURL,
@@ -58,7 +63,10 @@ const downloadVideo = async (req: Request, res: Response): Promise<any> => {
 Prams:- valid youtube video url 
 Created By:- Rishabh Bula*/
 
-const downloadYoutubeVideo = async (req: Request, res: Response): Promise<any> => {
+const downloadYoutubeVideo = async (
+  req: Request,
+  res: Response
+): Promise<any> => {
   const { body, currentUser } = req;
   try {
     let headToken: Request | any = currentUser;
@@ -67,9 +75,11 @@ const downloadYoutubeVideo = async (req: Request, res: Response): Promise<any> =
         message: "User id not found"
       });
     }
-    let videoURL: string
-    const fileName = [headToken.id + Date.now() + "deep_play_video" + ".webm"].join("");
-    let originalVideoPath: string = ""
+    let videoURL: string;
+    const fileName = [
+      headToken.id + Date.now() + "deep_play_video" + ".webm"
+    ].join("");
+    let originalVideoPath: string = "";
     if (IsProductionMode) {
       originalVideoPath = path.join(
         __dirname,
@@ -89,18 +99,35 @@ const downloadYoutubeVideo = async (req: Request, res: Response): Promise<any> =
     let videoStream: any;
 
     /* Download youtube videos on localserver */
-    const trueYoutubeUrl = ytdl.validateURL(body.url)
+    const trueYoutubeUrl = ytdl.validateURL(body.url);
     if (trueYoutubeUrl) {
       ytdl(body.url).pipe(
         (videoStream = fs.createWriteStream(originalVideoPath))
       );
-      videoStream.on("close", async function () {
+      videoStream.on("close", async function() {
         const moveResult: Document | any = new MoveModel({
           videoUrl: videoURL,
           userId: headToken.id
         });
         await moveResult.save();
-
+        try {
+          var process = new ffmpeg(videoURL);
+          process.then(
+            function(video) {
+              video.addCommand("-ss", "00:01:30");
+              video.addCommand("-vframes", "1");
+              video.save("./test.jpg", function(error, file) {
+                if (!error) console.log("Video file: " + file);
+              });
+            },
+            function(err) {
+              console.log("Error: " + err);
+            }
+          );
+        } catch (e) {
+          console.log(e.code);
+          console.log(e.msg);
+        }
         res.status(200).json({
           message: "Video uploaded successfully!",
           videoUrl: videoURL,
@@ -109,7 +136,7 @@ const downloadYoutubeVideo = async (req: Request, res: Response): Promise<any> =
       });
     } else {
       res.status(400).json({
-        message: "Enter a valid youtube url",
+        message: "Enter a valid youtube url"
       });
     }
   } catch (error) {
@@ -146,7 +173,10 @@ const getMoveBySetId = async (req: Request, res: Response): Promise<any> => {
   }
 };
 
-const getMoveDetailsById = async (req: Request, res: Response): Promise<any> => {
+const getMoveDetailsById = async (
+  req: Request,
+  res: Response
+): Promise<any> => {
   try {
     const { currentUser, query } = req;
     let headToken: Request | any = currentUser;
