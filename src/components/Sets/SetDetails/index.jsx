@@ -67,7 +67,10 @@ class SetDetails extends React.Component {
   handleSharableLink = () => {
     const location = this.props.location;
     const pathName = location.pathname.split("/");
-    this.props.shareableLink(pathName[2]);
+    this.props.shareableLink({
+      setId: pathName[2],
+      linkOf: "set"
+    });
     const { modelInfoReducer } = this.props;
     const { modelDetails } = modelInfoReducer;
     this.props.modelOperate({

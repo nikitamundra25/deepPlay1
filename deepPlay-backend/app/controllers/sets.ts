@@ -1,9 +1,9 @@
 import { Request, Response } from "express";
 import { SetModel } from "../models";
 import { ISet } from "../interfaces";
-import { algoliaAppId, algoliaAPIKey } from "../config/app"
+// import { algoliaAppId, algoliaAPIKey } from "../config/app";
 //import * as algoliasearch from 'algoliasearch'; // When using TypeScript
-const algoliasearch = require('algoliasearch');
+const algoliasearch = require("algoliasearch");
 const client = algoliasearch("81ZJX0Y0SX", "2574ac05e0b2c3b192c0fb91e57e7935");
 
 import { decrypt } from "../common";
@@ -13,7 +13,7 @@ const createSet = async (req: Request, res: Response): Promise<any> => {
     const { currentUser } = req;
     const { body } = req;
     const headToken: Request | any = currentUser;
-    const index = client.initIndex('rishabh_name');
+    const index = client.initIndex("rishabh_name");
     //console.log("#################", index);
     const setData: ISet = {
       title: body.title,
@@ -30,10 +30,8 @@ const createSet = async (req: Request, res: Response): Promise<any> => {
     index.addObjects([setData], (err: string, content: string) => {
       if (err) {
         console.error(err);
-      }
-      else{
-        console.log("##################",content);
-        
+      } else {
+        console.log("##################", content);
       }
     });
     res.status(200).json({
@@ -220,7 +218,7 @@ const getSetDetailsById = async (
   }
 };
 
-//-----Decrypt  folderId to get setDetails for shared link-----------------
+//-----Decrypt  folderId to get setDetails for shared link[public access folder component]-----------------
 const publicUrlsetDetails = async (
   req: Request,
   res: Response
@@ -251,6 +249,38 @@ const publicUrlsetDetails = async (
     });
   }
 };
+
+//-----Decrypt userId & SetId to get SetDetails for shared link[ public access set component]-----------------
+const publicAccessSetInfoById = async (req: Request, res: Response): Promise<any> => {
+  try {
+    const { query } = req;
+    const { userId, setId, isPublic } = query;
+    const decryptedUserId = decrypt(userId);
+    const decryptedSetId = decrypt(setId);
+    let result: Document | any | null;
+    if (isPublic === "true") {
+      result = await SetModel.findOne({
+        userId: decryptedUserId,
+        _id: decryptedSetId
+      });
+    } else {
+      return res.status(400).json({
+        message: "Public access link is not enabled."
+      });
+    }
+    return res.status(200).json({
+      responsecode: 200,
+      data: result,
+      success: true
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).send({
+      message: error.message
+    });
+  }
+};
+
 export {
   createSet,
   getAllSetById,
@@ -259,5 +289,6 @@ export {
   getSetsForFolder,
   deleteSet,
   getSetDetailsById,
-  publicUrlsetDetails
+  publicUrlsetDetails,
+  publicAccessSetInfoById
 };

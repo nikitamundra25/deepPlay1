@@ -23,8 +23,12 @@ FolderRouter.patch(
   ValidateAdminToken,
   updateRecentTimeRequest
 );
-FolderRouter.patch("/public-access", ValidateAdminToken, sharableLinkPublicAccess);
+FolderRouter.patch(
+  "/public-access",
+  ValidateAdminToken,
+  sharableLinkPublicAccess
+);
 FolderRouter.get("/share-link", ValidateAdminToken, sharableLink);
-FolderRouter.get("/get-public-url-for-folder", publicUrlFolderInfo);
+FolderRouter.get("/public-access-folder-info-by-id", publicUrlFolderInfo);
 
 export default FolderRouter;

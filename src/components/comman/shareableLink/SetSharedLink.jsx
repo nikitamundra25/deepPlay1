@@ -1,10 +1,13 @@
 import React from "react";
 import { connect } from "react-redux";
-import { Card, CardBody, ButtonGroup, Button, Col } from "reactstrap";
-import { getSetDetailsRequest } from "../../../../actions";
+import { Card, CardBody, Container, Button, Col } from "reactstrap";
+import {
+  sharedSetInfoRequest,
+  publicUrlMoveDetailsRequest
+} from "../../../actions";
 import Slider from "react-slick";
-import { AppConfig } from "../../../../config/Appconfig";
-import { AppRoutes } from "../../../../config/AppRoutes";
+import { AppConfig } from "../../../config/Appconfig";
+import { AppRoutes } from "../../../config/AppRoutes";
 import "./index.scss";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
@@ -18,79 +21,78 @@ var settings = {
   slidesToScroll: 1
 };
 // core components
-class SetDetails extends React.Component {
+class SetSharedLink extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      url: "",
-      errors: "",
-      isPaste: false
+      moveListItem: []
     };
   }
-  componentDidMount = () => {
-    const location = this.props.location;
-    const pathName = location.pathname.split("/");
-    this.props.getSetDetailsRequest({ setId: pathName[2] });
-  };
-  /*
-  /*  
-  */
+  componentDidMount() {
+    let parsed = qs.parse(this.props.location.search);
+    this.props.encryptedQuery(parsed);
+    this.props.publicUrlSetDetails(parsed);
+  }
 
-  handleMoveAdd = () => {
-    this.props.redirectTo(AppRoutes.MOVE.url);
-  };
+  componentDidUpdate(prevProps) {
+    if (
+      prevProps.shareLinkReducer &&
+      prevProps.shareLinkReducer.publicUrlMoveDetails !==
+        this.props.shareLinkReducer.publicUrlMoveDetails
+    ) {
+      const setList = this.props.shareLinkReducer.publicUrlMoveDetails;
+      this.setState({
+        moveListItem: setList
+      });
+    }
+  }
 
   render() {
-    const { setReducer, moveReducer } = this.props;
-    const { setDetails } = setReducer;
-    const { movesOfSet } = moveReducer;
+    const { shareLinkReducer } = this.props;
+    const { moveListItem } = this.state;
+    const { decryptedSetDetails } = shareLinkReducer;
+
     return (
       <>
-        <div className="create-set-section step-2 mt-2">
-          <Card className="w-100">
-            <CardBody>
-              <div className={"d-flex justify-content-between"}>
-                <div>
-                  <h2 className={"capitalise"}>{setDetails.title}</h2>
-                  <span className={"pt-2"}> 3 Moves</span>
+        <div className={"mt-5 "}>
+          <Container className={"mt-5"}>
+            <Card className="w-100">
+              <CardBody>
+                <div className={"d-flex justify-content-between"}>
+                  <div>
+                    <h2 className={"capitalise"}>
+                      {decryptedSetDetails.title}
+                    </h2>
+                    <span className={"pt-2"}> 3 Moves</span>
+                  </div>
                 </div>
-                <div>
-                  <ButtonGroup size="sm">
-                    <Button>Copy</Button>
-                    <Button className={"ml-2"}>Transfer</Button>
-                    <Button className={"ml-2"}>Remove</Button>
-                  </ButtonGroup>
-                </div>
-              </div>
-              <div className={"pt-3 d-flex justify-content-center"}>
-                <Col md={"10"}>
-                  <Slider {...settings}>
-                    {movesOfSet && movesOfSet.length ? (
-                      movesOfSet.map((video, index) => {
-                        return (
-                          <div>
-                            <video width={"100%"} controls>
-                              <source
-                                src={`${AppConfig.API_ENDPOINT}${video.videoUrl}`}
-                                type="video/mp4"
-                              />
-                            </video>
-                          </div>
-                        );
-                      })
-                    ) : (
-                      <div className={"text-center"}>
-                        <div>No move availabe for this set</div>
-                        <div onClick={this.handleMoveAdd}>
-                          <Button>Click To Add +</Button>
+                <div className={"pt-3 d-flex justify-content-center"}>
+                  <Col md={"10"}>
+                    <Slider {...settings}>
+                      {moveListItem && moveListItem.length ? (
+                        moveListItem.map((video, index) => {
+                          return (
+                            <div>
+                              <video width={"100%"} controls>
+                                <source
+                                  src={`${AppConfig.API_ENDPOINT}${video.videoUrl}`}
+                                  type="video/mp4"
+                                />
+                              </video>
+                            </div>
+                          );
+                        })
+                      ) : (
+                        <div className={"text-center"}>
+                          <div>No move availabe for this set</div>
                         </div>
-                      </div>
-                    )}
-                  </Slider>
-                </Col>
-              </div>
-            </CardBody>
-          </Card>
+                      )}
+                    </Slider>
+                  </Col>
+                </div>
+              </CardBody>
+            </Card>
+          </Container>
         </div>
       </>
     );
@@ -98,13 +100,13 @@ class SetDetails extends React.Component {
 }
 
 const mapStateToProps = state => ({
-  setReducer: state.setReducer,
-  moveReducer: state.moveReducer
+  shareLinkReducer: state.shareLinkReducer
 });
 const mapDispatchToProps = dispatch => ({
-  getSetDetailsRequest: data => dispatch(getSetDetailsRequest(data))
+  encryptedQuery: data => dispatch(sharedSetInfoRequest(data)),
+  publicUrlSetDetails: data => dispatch(publicUrlMoveDetailsRequest(data))
 });
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(SetDetails);
+)(SetSharedLink);

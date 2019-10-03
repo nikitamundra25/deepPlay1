@@ -8,7 +8,8 @@ class UploadImage extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      imageData: ""
+      imageData: "",
+      isLoading: false
     };
   }
   onSelectFile = async (file, index) => {
@@ -50,6 +51,7 @@ class UploadImage extends Component {
     this.props.handleOpen();
   };
   render() {
+    const { isLoading } = this.state;
     return (
       <div className="modal-text-center">
         <Modal

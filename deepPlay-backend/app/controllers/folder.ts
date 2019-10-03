@@ -245,19 +245,31 @@ const sharableLinkPublicAccess = async (
 const sharableLink = async (req: Request, res: Response): Promise<any> => {
   try {
     const { query, currentUser } = req;
-    const { folderId } = query;
+    const { linkOf } = query;
     const headToken: Request | any = currentUser;
     if (!headToken.id) {
       res.status(400).json({
         message: "User id not found"
       });
     }
+    let encryptedFolderId: String;
+    let encryptedSetId: String;
+    let data: Document | any;
     const encryptedUserId = encrypt(headToken.id);
-    const encryptedFolderId = encrypt(folderId);
-    const data = {
-      encryptedUserId: encryptedUserId,
-      encryptedFolderId: encryptedFolderId
-    };
+    if (linkOf === "folder") {
+      encryptedFolderId = encrypt(query.folderId);
+      data = {
+        encryptedUserId: encryptedUserId,
+        encryptedFolderId: encryptedFolderId
+      };
+    }
+    if (linkOf === "set") {
+      encryptedSetId = encrypt(query.setId);
+      data = {
+        encryptedUserId: encryptedUserId,
+        encryptedSetId: encryptedSetId
+      };
+    }
     return res.status(200).json({
       responsecode: 200,
       data: data,

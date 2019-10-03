@@ -152,7 +152,10 @@ class RecentFolderComponent extends React.Component {
 
   handleSharableLink = () => {
     const { folderId } = this.state;
-    this.props.shareableLink(folderId);
+    this.props.shareableLink({
+      folderId: folderId,
+      linkOf: "folder"
+    });
     const { modelInfoReducer } = this.props;
     const { modelDetails } = modelInfoReducer;
     this.props.modelOperate({

@@ -4,8 +4,8 @@ import { connect } from "react-redux";
 import {
   sharedFolderInfoRequest,
   publicUrlSetDetailsRequest
-} from "../../../actions";
-import emptySetIc from "../../../assets/img/empty-sets.png";
+} from "../../actions";
+import emptySetIc from "../../assets/img/empty-sets.png";
 import qs from "query-string";
 import "./index.scss";
 // core components
@@ -42,11 +42,13 @@ class FolderSharedLink extends React.Component {
     const { setListItem } = this.state;
     const { decryptedDetails } = shareLinkReducer;
     return (
-      <div className={"mt-5 "}>
-        <Container className={"mt-5"}>
-          <div className="text-center h-100">
+      <div className="create-set-section mt-2 w-100">
+        <Container className={" xl: 1140px"}>
+          <div className="content-header">
             <span className="content-title">
-              {decryptedDetails ? decryptedDetails.title : "MyFolder"}
+              {decryptedDetails
+                ? decryptedDetails.title
+                : "MyFolder"}
             </span>
           </div>{" "}
           <span className="content-title">
