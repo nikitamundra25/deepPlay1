@@ -13,7 +13,7 @@ import {
   modelOpenRequest,
   getAllSetRequest,
   recentSetSuccess,
-  getSetDetailsSuccess,
+  getSetDetailsSuccess
 } from "../actions";
 import { toast } from "react-toastify";
 
@@ -46,7 +46,7 @@ const createSetLogic = createLogic({
         })
       );
       if (!action.payload.isCopy) {
-        dispatch(redirectTo({ path: "/move" }));
+        // dispatch(redirectTo({ path: "/move" }));
       } else {
         toast.success("Set Copy has been created successfully");
         dispatch(getAllSetRequest());
@@ -97,7 +97,7 @@ const deleteSetLogic = createLogic({
       "PATCH",
       true,
       undefined,
-      { id: action.payload },
+      { id: action.payload }
     );
     if (result.isError) {
       dispatch(hideLoader());
@@ -107,6 +107,7 @@ const deleteSetLogic = createLogic({
     } else {
       dispatch(hideLoader());
       toast.success(result.messages[0]);
+      dispatch(redirectTo({ path: "/set" }));
       dispatch(getAllSetRequest());
       done();
     }
@@ -219,7 +220,7 @@ const ManageSetLogic = createLogic({
         );
       } else {
         toast.success("Your set has been transfered successfully");
-        dispatch(getAllSetRequest())
+        dispatch(getAllSetRequest());
         dispatch(getFolderSetRequest());
       }
 
@@ -262,6 +263,35 @@ const getSetDetailsLogic = createLogic({
   }
 });
 
+//update set
+const UpdateSetLogic = createLogic({
+  type: SetsAction.UPDATE_SET_REQUEST,
+  async process({ action }, dispatch, done) {
+    let api = new ApiHelper();
+    dispatch(showLoader());
+    let result = await api.FetchFromServer(
+      "set",
+      "/update-set",
+      "PUT",
+      true,
+      undefined,
+      action.payload
+    );
+    if (result.isError) {
+      dispatch(hideLoader());
+      toast.error(result.messages[0]);
+      done();
+      return;
+    } else {
+      dispatch(hideLoader());
+      dispatch(redirectTo({ path: `/set-details/${action.payload.setId}` }));
+      if (!toast.isActive(this.toastId)) {
+        this.toastId = toast.success(result.messages[0]);
+      }
+      done();
+    }
+  }
+});
 export const SetLogics = [
   createSetLogic,
   getAllSetLogic,
@@ -269,5 +299,6 @@ export const SetLogics = [
   ManageSetLogic,
   recentSetLogic,
   deleteSetLogic,
-  getSetDetailsLogic
+  getSetDetailsLogic,
+  UpdateSetLogic
 ];

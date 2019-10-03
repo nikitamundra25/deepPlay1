@@ -17,14 +17,19 @@ class AddSetModal extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      setList: []
+      setList: [],
+      selectedSet: "yourSet"
     };
   }
   componentDidUpdate(prevProps) {
     if (prevProps.getAllSet !== this.props.getAllSet) {
       const setList = this.props.getAllSet;
+      const setItem = setList.filter(
+        item => item.folderId === this.props.folderId
+      );
+
       this.setState({
-        setList: setList
+        setList: setItem
       });
     }
   }
@@ -46,10 +51,25 @@ class AddSetModal extends React.Component {
   handleAddNewSet = folderId => {
     this.props.redirectTo(AppRoutes.CREATE_SET.url + `?folderId=${folderId}`);
   };
+  handleSelect = e => {
+    e.preventDefault();
+    const setList = this.props.getAllSet;
+    let setItem = [];
+    if (e.target.value === "yourSet") {
+      setItem = setList.filter(item => item.folderId === this.props.folderId);
+    } else {
+      setItem = this.props.getAllSet;
+    }
+    this.setState({
+      selectedSet: e.target.value,
+      setList: setItem
+    });
+  };
 
   render() {
     const { modal, folderId, handleOpen } = this.props;
-    const { setList } = this.state;
+    const { setList, selectedSet } = this.state;
+
     return (
       <div>
         <Modal
@@ -90,12 +110,11 @@ class AddSetModal extends React.Component {
                   name="select"
                   id="exampleSelect"
                   className="rounded-0"
+                  onChange={this.handleSelect}
+                  value={selectedSet}
                 >
-                  <option>Your Sets</option>
-                  <option>2</option>
-                  <option>3</option>
-                  <option>4</option>
-                  <option>5</option>
+                  <option value="yourSet">Your Sets</option>
+                  <option value="allSet">All Sets</option>
                 </Input>
               </FormGroup>
               {setList && setList.length
