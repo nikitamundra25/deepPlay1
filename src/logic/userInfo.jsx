@@ -69,8 +69,10 @@ const UpdateUserDataLogic = createLogic({
       done();
       return;
     } else {
-      if (!toast.isActive(toastId)) {
-        toastId = toast.success(result.messages[0]);
+      if (!action.payload.accountType) {
+        if (!toast.isActive(toastId)) {
+          toastId = toast.success(result.messages[0]);
+        }
       }
       done();
     }

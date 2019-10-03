@@ -213,7 +213,7 @@ class LoginComponent extends React.Component {
                   <div
                    
                     className={
-                      "text-center cursor_pointer forgot-password-wrap"
+                      "text-center cursor_pointer forgot-password-bottom-wrap"
                     }
                   >
                     <span

@@ -69,11 +69,12 @@ class VideoDetails extends React.Component {
       <>
         <Col md={"6"}>
           <div>
-            <h3 className={"pb-3"}><strong>Trim your video</strong></h3>
+            <div className={"font-weight-bold h4"}>Trim your video</div>
             <span>Use sliders below to trim your video (15 secs max).Or use your arrow keys on timestamps to get really precise.</span>
           </div>
           <FormGroup className="flex-fill flex-column mt-3">
-            <div className="w-100">
+            {/* add tag-input-wrap class for tagInput design  */}
+            <div className="w-100 tag-input-wrap">
               <TagsInput
                 value={this.state.tags}
                 className={"form-control"}
@@ -83,7 +84,8 @@ class VideoDetails extends React.Component {
             </div>
           </FormGroup>
           <FormGroup className="flex-fill flex-column mt-3">
-            <div className="w-100">
+             {/* add search-select class for search select design  */}
+            <div className="w-100 search-select-wrap">
               <AsyncSelect
                 loadOptions={this.loadSets}
                 isClearable={selectSetOptions.value ? true : false}
@@ -91,6 +93,7 @@ class VideoDetails extends React.Component {
                 onChange={(e) => this.handleInputChange(e)}
                 value={recentAddedSet ? recentAddedSet : selectSetOptions}
               />
+        
             </div>
           </FormGroup>
         </Col>

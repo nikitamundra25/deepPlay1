@@ -1,19 +1,19 @@
 import { Request, Response } from "express";
 import { SetModel } from "../models";
 import { ISet } from "../interfaces";
-import { algoliaAppId, algoliaAPIKey } from "../config/app"
+// import { algoliaAppId, algoliaAPIKey } from "../config/app";
 //import * as algoliasearch from 'algoliasearch'; // When using TypeScript
-const algoliasearch = require('algoliasearch');
+const algoliasearch = require("algoliasearch");
 const client = algoliasearch("81ZJX0Y0SX", "cbc15a12426d1027b8e49ca62a68407e");
 
-import { decrypt } from "../common";
+import { decrypt, encrypt } from "../common";
 // --------------Create set---------------------
 const createSet = async (req: Request, res: Response): Promise<any> => {
   try {
     const { currentUser } = req;
     const { body } = req;
     const headToken: Request | any = currentUser;
-    const index = client.initIndex('rishabh_name');
+    const index = client.initIndex("rishabh_name");
     const setData: ISet = {
       title: body.title,
       description: body.description ? body.description : "",
@@ -29,8 +29,7 @@ const createSet = async (req: Request, res: Response): Promise<any> => {
     index.addObjects([setData], (err: string, content: string) => {
       if (err) {
         console.error(err);
-      }
-      else {
+      } else {
         console.log("##################", content);
       }
     });
@@ -131,7 +130,8 @@ const getSetsForFolder = async (req: Request, res: Response): Promise<void> => {
     }
     const result: Document | any = await SetModel.find({
       userId: headToken.id,
-      $or: [{ folderId: query.folderId }, { folderId: null }]
+      $or: [{ folderId: query.folderId }, { folderId: null }],
+      isDeleted: false
     });
     res.status(200).json({
       data: result
@@ -222,7 +222,8 @@ const getSetDetailsById = async (
     }
     const result: Document | any = await SetModel.findOne({
       userId: headToken.id,
-      _id: setId
+      _id: setId,
+      isDeleted: false
     }).populate("folderId");
     res.status(200).json({
       data: result
@@ -235,7 +236,7 @@ const getSetDetailsById = async (
   }
 };
 
-//-----Decrypt  folderId to get setDetails for shared link-----------------
+//-----Decrypt  folderId to get setDetails for shared link[public access folder component]-----------------
 const publicUrlsetDetails = async (
   req: Request,
   res: Response
@@ -247,7 +248,8 @@ const publicUrlsetDetails = async (
     let result: Document | any | null;
     if (isPublic === "true") {
       result = await SetModel.find({
-        folderId: decryptedFolderId
+        folderId: decryptedFolderId,
+        isDeleted: false
       });
     } else {
       return res.status(400).json({
@@ -266,6 +268,42 @@ const publicUrlsetDetails = async (
     });
   }
 };
+
+//-----Decrypt userId & SetId to get SetDetails for shared link[ public access set component]-----------------
+const publicAccessSetInfoById = async (
+  req: Request,
+  res: Response
+): Promise<any> => {
+  try {
+    const { query } = req;
+    const { userId, setId, isPublic } = query;
+    const decryptedUserId = decrypt(userId);
+    const decryptedSetId = decrypt(setId);
+    let result: Document | any | null;
+    if (isPublic === "true") {
+      result = await SetModel.findOne({
+        userId: decryptedUserId,
+        _id: decryptedSetId,
+        isDeleted: false
+      });
+    } else {
+      return res.status(400).json({
+        message: "Public access link is not enabled."
+      });
+    }
+    return res.status(200).json({
+      responsecode: 200,
+      data: result,
+      success: true
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).send({
+      message: error.message
+    });
+  }
+};
+
 export {
   createSet,
   getAllSetById,
@@ -274,5 +312,6 @@ export {
   getSetsForFolder,
   deleteSet,
   getSetDetailsById,
-  publicUrlsetDetails
+  publicUrlsetDetails,
+  publicAccessSetInfoById
 };

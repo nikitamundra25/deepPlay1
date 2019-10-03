@@ -77,6 +77,7 @@ class DefaultHeader extends React.Component {
   };
 
   createFolder = data => {
+    console.log("fjfdh");
     this.props.onFolderCreation(data);
   };
 
@@ -98,7 +99,8 @@ class DefaultHeader extends React.Component {
     const {
       loginModelOpen,
       signupModelOpen,
-      forgotPasswordModalOpen
+      forgotPasswordModalOpen,
+      createFolderModalOpen
     } = modelDetails;
     const { isUserLoggedIn } = this.state;
     const profiledata =
@@ -163,7 +165,10 @@ class DefaultHeader extends React.Component {
                         <InputGroup className="">
                           <InputGroupAddon addonType="prepend">
                             <span className="input-group-text">
-                              <i className="fa fa-search" aria-hidden="true"></i>
+                              <i
+                                className="fa fa-search"
+                                aria-hidden="true"
+                              ></i>
                             </span>
                           </InputGroupAddon>
                           <Input placeholder="Search" type="text" />
@@ -305,9 +310,8 @@ class DefaultHeader extends React.Component {
           handleLoginModal={this.handleLoginModel}
         />
         <FolderModal
-          handleFolderModel={this.handleFolderModel}
-          modelInfoReducer={modelInfoReducer}
-          modelOperate={modelOpenRequest}
+          modal={createFolderModalOpen}
+          handleOpen={this.handleFolderModel}
           createFolder={this.createFolder}
         />
       </>

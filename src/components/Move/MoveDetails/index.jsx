@@ -30,25 +30,21 @@ class MoveDetails extends React.Component {
         <div className="create-set-section step-2 mt-2">
           <Card className="w-100">
             <CardBody>
-              <div>
-                <span
-                  onClick={() => {
-                    this.props.redirectTo("/move");
-                  }}
-                  className={"cursor_pointer"}
-                >
-                  {" "}
-                  <i className="fas fa-long-arrow-alt-left" /> Back
+              <span
+                onClick={() => {
+                  this.props.redirectTo("/move");
+                }}
+                className={"cursor_pointer back-arrow"}
+              >
+                {" "}
+                <i className="fas fa-long-arrow-alt-left" /> Back
                 </span>
-              </div>
-              <Col md={"12"}>
-                <Row className={"mt-3"}>
-                  <VideoView
-                    moveReducer={moveReducer}
-                  />
-                  <VideoDetails setReducer={setReducer} />
-                </Row>
-              </Col>
+              <Row className={"mt-3"}>
+                <VideoView
+                  moveReducer={moveReducer}
+                />
+                <VideoDetails setReducer={setReducer} />
+              </Row>
             </CardBody>
           </Card>
         </div>

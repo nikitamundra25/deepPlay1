@@ -5,8 +5,8 @@ import { IDataToUpdate } from "../interfaces/users";
 import fs from "fs";
 import path from "path";
 import { IsProductionMode } from "../config"
-
 const __basedir = path.join(__dirname, "../public");
+
 // --------------Get user info---------------------
 const getUserInfo = async (req: Request, res: Response): Promise<any> => {
   try {

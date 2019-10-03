@@ -107,7 +107,7 @@ class SetComponent extends React.Component {
                           </div>
                           <div className="d-flex img-tile-wrap">
                             <div
-                              className="cotent-img-tile pr-3"
+                              className="cotent-img-tile "
                               style={{
                                 backgroundImage:
                                   'url("' +
