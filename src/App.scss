@@ -163,24 +163,33 @@ a {
   color: $textColor;
 }
 .play-list-collection {
+
   .play-list-img {
     height: 180px;
     overflow: hidden;
     position: relative;
     background-size: cover;
     background-position: center center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+ 
     img {
-      height: 100%;
-      position: absolute;
-      left: 50%;
-      top: 50%;
-      transform: translate(-50%, -50%);
+      max-width:  100%;
+      max-height:  100%;
+      height:  auto;
+      width:  auto;
+      z-index: 1;
     }
+  }
+  .play-sub-block{
+    border: solid $videoAddBannerBorder;
+    border-width: 2px 2px 2px 2px;
   }
   .play-list-text {
     padding: 10px 15px;
-    border: solid $videoAddBannerBorder;
-    border-width: 0px 2px 2px 2px;
+    // border: solid $videoAddBannerBorder;
+    // border-width: 0px 2px 2px 2px;
     .play-list-heading {
       font-weight: bold;
     }
@@ -192,6 +201,18 @@ a {
   }
   .play-list-block {
     padding-bottom: 30px;
+    // border: 1px solid #ccc;
+  }
+}
+.blur-img-wrap {
+  position: relative;
+  .blur-img{
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    width: 100%;
+    filter: blur(2px);
+height: 100%;
   }
 }
 .home-message-section {
@@ -302,11 +323,10 @@ a {
     background: $dashboardTextColor;
     color: #fff;
     position: relative;
-    top: -5px;
-    left: 7px;
+
   }
   .badge-wrap {
-    padding: 0px 5px;
+    padding: 0px;
   }
   .card {
     padding: 15px;
@@ -458,9 +478,27 @@ a {
     }
   }
 }
-.forgot-password-wrap {
+.forgot-password-bottom-wrap {
   color: $blackcolor;
   font-weight: bold;
+  position: relative;
+  &::before{
+    position: absolute;
+    content: "";
+    width: 100%;
+    height: 2px;
+    background: #000;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    top: 50%;
+    z-index: 1;
+  }
+  span{
+    z-index: 99;
+    background: #dfe7ed;
+    position: relative;
+    padding: 0px 15px;
+  }	
 }
 .facebook-wrap {
   i.fa.fa-facebook {
@@ -1006,4 +1044,16 @@ a {
 }
 .loader-col{
   position: static;
+}
+// Toaster design
+.Toastify__toast{
+  background: #fff;
+  color: #37b73b;
+  font-weight: bold;
+  &.Toastify__toast--success{
+    color: #37b73b;
+  }
+  .Toastify__close-button{
+    @extend .close;
+  }
 }
