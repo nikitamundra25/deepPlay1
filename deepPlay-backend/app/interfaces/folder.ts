@@ -6,4 +6,5 @@ export interface IFolder {
   sharableLink: String;
   status: Boolean;
   isDeleted: Boolean;
+  isCopy: Boolean;
 }

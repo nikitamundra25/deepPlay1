@@ -3,7 +3,8 @@ import { ProfileAction } from "../actions";
 
 const initialState = {
   profileInfo: "",
-  profileImage: ""
+  profileImage: "",
+  isImageUploading: false
 };
 
 export const profileInfoReducer = handleActions(
@@ -14,7 +15,10 @@ export const profileInfoReducer = handleActions(
     }),
     [ProfileAction.UPLOAD_IMAGE_SUCCESS]: (state, { payload }) => ({
       ...state,
-      profileImage: payload.imageDetails
+      profileInfo: {
+        ...state.profileInfo,
+        profileImage: payload.imageDetails.profileThumbnail
+      }
     })
   },
   initialState
@@ -22,9 +26,18 @@ export const profileInfoReducer = handleActions(
 
 export const profileImage = handleActions(
   {
+    [ProfileAction.UPLOAD_IMAGE_REQUEST]: (state, { payload }) => ({
+      ...state,
+      isImageUploading: true
+    }),
+    [ProfileAction.UPLOAD_IMAGE_FAILED]: (state, { payload }) => ({
+      ...state,
+      isImageUploading: false
+    }),
     [ProfileAction.UPLOAD_IMAGE_SUCCESS]: (state, { payload }) => ({
       ...state,
-      profileImage: payload.imageDetails
+      profileImage: payload.imageDetails,
+      isImageUploading: false
     })
   },
   initialState

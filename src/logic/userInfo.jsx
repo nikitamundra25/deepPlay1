@@ -6,7 +6,8 @@ import {
   uploadImageSuccess,
   showLoader,
   hideLoader,
-  modelOpenRequest
+  modelOpenRequest,
+  uploadImageFailed
 } from "../actions";
 import { AppRoutes } from "../config/AppRoutes";
 import { toast } from "react-toastify";
@@ -108,7 +109,6 @@ const uploadImageLogic = createLogic({
   async process({ action }, dispatch, done) {
     console.log(" action.payload", action.payload);
     let api = new ApiHelper();
-    dispatch(showLoader());
     let result = await api.FetchFromServer(
       "user",
       "/uploadFiles",
@@ -120,10 +120,12 @@ const uploadImageLogic = createLogic({
     if (result.isError) {
       dispatch(hideLoader());
       toast.error(result.messages[0]);
+      dispatch(
+        uploadImageFailed()
+      );
       done();
       return;
     } else {
-      dispatch(hideLoader());
       toast.success(result.messages[0]);
       dispatch(
         uploadImageSuccess({

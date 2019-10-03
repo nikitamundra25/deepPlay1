@@ -8,7 +8,8 @@ export const ProfileAction = {
   DELETE_USER_ACCOUNT_REQUEST: "Delete User Account Request",
   DELETE_USER_ACCOUNT_SUCCESS: "Delete User Account Success",
   UPLOAD_IMAGE_REQUEST: "Upload User Profile Image Request",
-  UPLOAD_IMAGE_SUCCESS: "Upload User Profile Image Success"
+  UPLOAD_IMAGE_SUCCESS: "Upload User Profile Image Success",
+  UPLOAD_IMAGE_FAILED: "Upload User Profile Image failed!",
 };
 export const profileRequest = createAction(ProfileAction.PROFILEINFO_REQUEST);
 export const profileSuccess = createAction(ProfileAction.PROFILEINFO_SUCCESS);
@@ -29,4 +30,7 @@ export const uploadImageRequest = createAction(
 );
 export const uploadImageSuccess = createAction(
   ProfileAction.UPLOAD_IMAGE_SUCCESS
+);
+export const uploadImageFailed = createAction(
+  ProfileAction.UPLOAD_IMAGE_FAILED
 );

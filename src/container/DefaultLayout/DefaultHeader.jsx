@@ -210,13 +210,13 @@ class DefaultHeader extends React.Component {
                             {profiledata ? (
                               <img
                                 src={`${AppConfig.API_ENDPOINT}${profiledata.profileImage}`}
-                                className="w-100 h-100"
+                                className="w-100 "
                                 alt={"img"}
                               />
                             ) : (
                               <img
                                 src={profileImage}
-                                className="w-100 h-100"
+                                className="w-100 "
                                 alt={"img"}
                               />
                             )}

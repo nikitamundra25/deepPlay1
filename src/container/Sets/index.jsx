@@ -53,7 +53,8 @@ class Set extends React.Component {
     const { modelDetails } = modelInfoReducer;
     this.props.modelOperate({
       modelDetails: {
-        createFolderModalOpen: !modelDetails.createFolderModalOpen
+        createFolderModalOpen: !modelDetails.createFolderModalOpen,
+        transferToModalOpen: false
       }
     });
   };
@@ -137,21 +138,22 @@ class Set extends React.Component {
         {this.state.createSet ? (
           <CreateSetComponent onCreateSet={this.onCreateSet} />
         ) : (
-          <SetComponent
-            handleSetComponent={this.handleSetComponent}
-            handleFolderModel={this.handleFolderModel}
-            getAllSet={getAllSetReducer.allSetList}
-            OnCreateSetCopy={this.OnCreateSetCopy}
-            onRemoveSets={this.onHandleDelete}
-            handleRecentTime={this.handleRecentTime}
-            openTransferToModal={this.openTransferToModal}
-            allFolders={this.props.allFolders}
-            {...this.props}
-          />
-        )}
+            <SetComponent
+              handleSetComponent={this.handleSetComponent}
+              handleFolderModel={this.handleFolderModel}
+              getAllSet={getAllSetReducer.allSetList}
+              isSetListLoading={getAllSetReducer.isSetListLoading}
+              OnCreateSetCopy={this.OnCreateSetCopy}
+              onRemoveSets={this.onHandleDelete}
+              handleRecentTime={this.handleRecentTime}
+              openTransferToModal={this.openTransferToModal}
+              allFolders={this.props.allFolders}
+              {...this.props}
+            />
+          )}
         <FolderModal
-          modelOperate={modelOperate}
-          modelInfoReducer={modelInfoReducer}
+          modal={modelDetails.createFolderModalOpen}
+          handleOpen={this.handleFolderModel}
           createFolder={this.createFolder}
         />
         <TransferToModal
@@ -159,6 +161,7 @@ class Set extends React.Component {
           modelOperate={modelOperate}
           AllFolders={getAllFolders}
           setToTransfer={setToTransfer}
+          handleFolderModel={this.handleFolderModel}
           folderId={folderId}
           handleOpen={this.openTransferToModal}
           handleFolder={this.folderToTransfer}

@@ -1,9 +1,13 @@
 import { Request, Response } from "express";
-import { CloudinaryAPIKey, CloudinaryAPISecretKey, CloudName } from "../config";
+import {
+  CloudinaryAPIKey,
+  CloudinaryAPISecretKey,
+  CloudName,
+  IsProductionMode
+} from "../config";
 import cloudinary from "cloudinary";
 import ytdl from "ytdl-core";
 import { MoveModel } from "../models";
-import { IMove } from "../interfaces";
 import fs from "fs";
 import path from "path";
 import { decrypt } from "../common";
@@ -40,6 +44,7 @@ const downloadVideo = async (req: Request, res: Response): Promise<any> => {
       videoUrl: videoURL,
       userId: headToken.id
     });
+    await moveResult.save();
     res.status(200).json({
       message: "Video uploaded successfully!",
       videoUrl: videoURL,
@@ -73,12 +78,22 @@ const downloadYoutubeVideo = async (
     const fileName = [
       headToken.id + Date.now() + "deep_play_video" + ".webm"
     ].join("");
-    const originalVideoPath = path.join(
-      __basedir,
-      "../uploads",
-      "youtube-videos",
-      fileName
-    );
+    let originalVideoPath: string = "";
+    if (IsProductionMode) {
+      originalVideoPath = path.join(
+        __dirname,
+        "/uploads",
+        "youtube-videos",
+        fileName
+      );
+    } else {
+      originalVideoPath = path.join(
+        __basedir,
+        "../uploads",
+        "youtube-videos",
+        fileName
+      );
+    }
     videoURL = path.join("uploads", "youtube-videos", fileName);
     let videoStream: any;
 
@@ -153,7 +168,6 @@ const getMoveDetailsById = async (
       });
     }
     const movesData: Document | any = await MoveModel.findById(query.moveId);
-
     return res.status(200).json({
       movesData: movesData
     });
@@ -165,7 +179,7 @@ const getMoveDetailsById = async (
   }
 };
 
-//-----Decrypt  setId to get moveDetails for shared link[public access folder component]-----------------
+//-----Decrypt  setId to get moveDetails for shared link[public access set component]-----------------
 const publicUrlMoveDetails = async (
   req: Request,
   res: Response
