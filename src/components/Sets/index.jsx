@@ -96,7 +96,7 @@ class SetComponent extends React.Component {
                                           `Copy of ${setList.folderId.title}` :
                                           setList.folderId.title
                                       }/
-                                    <span className={"text-light"}>{setList.title}</span>
+                                    <span className={"font-weight-bold"}>{setList.title}</span>
                                     </span> :
                                     <span>{setList.title}</span>
                                 }

@@ -1036,9 +1036,7 @@ height: 100%;
 .icon-font {
     font-size:20px;
 }
-.custom-toggle-wrap{
 
-}
 .copylink-form {
   input, .btn-black {
     height:44px;
@@ -1128,16 +1126,67 @@ height: 100%;
     padding: 0px;
   }
 }
+// sweet alert design
+.swal2-title{
+  color: #000;
+  font-size: 20px;
+}
+.swal2-styled.swal2-confirm{
+  border: 2px solid #000!important;
+  color: #fff;
+  background: #000!important;
+  padding: 5px 20px;
+  height: auto;
+  min-height: auto;
+  box-shadow: none!important;
+}
+.swal2-styled.swal2-cancel{
+  border: 2px solid #000!important;
+  color: #000;
+  background: transparent!important;
+  padding: 5px 20px;
+  
+  height: auto;
+  min-height: auto;
+}
+.swal2-popup{
+  width: 400px;
+}
+.swal2-icon{
+  width: 40px;
+  height: 40px;
+  margin: 20px auto 20px;
+  &::before{
+    font-size: 40px;
+  }
+}
 // Toaster design
 .Toastify__toast{
   background: #fff;
-  color: #8d352b;
+  color: #525252;
+    font-size: 14px;
+    border-left:5px solid;
   font-weight:normal; 
   font-weight: bold;
+  border-radius: 7px;
+  padding: 15px;
   @extend %flexFullAlign;
   &.Toastify__toast--success{
-    color: #328834;
+     border-color: #48bb4a;
   }
+  &.Toastify__toast--info{
+     border-color: #4a8ebb;
+  }
+  &.Toastify__toast--warning{
+     border-color: #bda74e;
+  }
+  &.Toastify__toast--error{
+     border-color: #af5349;
+  }
+  &.Toastify__toast--default{
+     border-color: #000;
+  }
+
   .Toastify__close-button{
     @extend %flexFullAlign;
     width: 18px;
@@ -1153,10 +1202,28 @@ height: 100%;
     font-size: 12px;
     line-height: 2px;
     padding-right: 1px;
+    color: #404040;
     &.Toastify__close-button--success{
-      color: #328834;
+      background: rgba(73, 188, 74, 0.22);
+      border-color: #48bb4a;
+    }
+    &.Toastify__close-button--info{
+      background: rgba(74, 142, 187, 0.22);
+      border-color: #4a8ebb;
+    }
+    &.Toastify__close-button--warning{
+      background:rgba(189, 167, 78, 0.22);
+      border-color: #bda74e;
+    }
+    &.Toastify__close-button--error{
+      background:rgba(175, 83, 73, 0.22);
+      border-color: #af5349;
     }
   }
+    &.Toastify__close-button--default{
+      background:rgba(0, 0, 0, 0.22);
+      border-color: #000;
+    }
   
 }
 .custom-dropdown{
@@ -1174,4 +1241,7 @@ height: 100%;
     padding: 0px;
     background: transparent;
   }
+}
+.setlist-title{
+
 }
