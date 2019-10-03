@@ -334,7 +334,7 @@ height: 100%;
   .tile-wrap {
     border-radius: 4px;
     margin-top: 15px;
-    padding: 15px;
+    padding: 15px 25px 15px;
     border: 1px solid #d4d4d4;
   }
 
@@ -997,7 +997,9 @@ height: 100%;
   }
   .right-btn-tip {
     position: absolute;
-    right: 15px;
+    right: 8px;
+    top: 12px;
+    z-index: 1;
   }
 }
 .dashboard-full-section .folder-main-wrap {

@@ -4,6 +4,7 @@ import {
   editUserInfo,
   deleteUserAccount,
   imageUpload,
+  getAllUser
 } from "./../controllers";
 import { ValidateAdminToken } from "../common";
 
@@ -13,4 +14,6 @@ UserRouter.get("/getProfileInfo", ValidateAdminToken, getUserInfo);
 UserRouter.put("/updateUserData", ValidateAdminToken, editUserInfo);
 UserRouter.post("/uploadFiles", ValidateAdminToken, imageUpload);
 UserRouter.delete("/userAccountDelete", ValidateAdminToken, deleteUserAccount);
+UserRouter.get("/all-user", getAllUser);
+
 export default UserRouter;

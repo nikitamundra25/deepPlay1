@@ -13,7 +13,7 @@ import {
   modelOpenRequest,
   getAllSetRequest,
   recentSetSuccess,
-  getSetDetailsSuccess
+  getSetDetailsSuccess,
 } from "../actions";
 import { toast } from "react-toastify";
 
@@ -61,7 +61,6 @@ const recentSetLogic = createLogic({
   type: SetsAction.RECENT_SET_REQUEST,
   async process({ action }, dispatch, done) {
     let api = new ApiHelper();
-    dispatch(showLoader());
     let result = await api.FetchFromServer(
       "set",
       "/get-recent-set",
@@ -72,12 +71,10 @@ const recentSetLogic = createLogic({
     );
     if (result.isError) {
       toast.error(result.messages[0]);
-      dispatch(hideLoader());
       done();
       return;
     } else {
       // toast.success(result.messages[0]);
-      dispatch(hideLoader());
       dispatch(
         recentSetSuccess({
           recentSets: result.data.data
@@ -99,8 +96,8 @@ const deleteSetLogic = createLogic({
       "/delete-set",
       "PATCH",
       true,
+      undefined,
       { id: action.payload },
-      undefined
     );
     if (result.isError) {
       dispatch(hideLoader());
@@ -148,11 +145,10 @@ const getAllSetLogic = createLogic({
 });
 
 //  ---------------Get sets list to add or remove in folders---------------
-const getSetLogic = createLogic({
+const getSetOfFolderLogic = createLogic({
   type: SetsAction.GET_FOLDER_SET_REQUEST,
   async process({ action }, dispatch, done) {
     let api = new ApiHelper();
-    dispatch(showLoader());
     let result = await api.FetchFromServer(
       "set",
       "/get-sets-of-folder",
@@ -161,12 +157,16 @@ const getSetLogic = createLogic({
       action.payload
     );
     if (result.isError) {
-      dispatch(hideLoader());
       toast.error(result.messages[0]);
+      dispatch(
+        getFolderSetSuccess({
+          showLoader: false,
+          setListinFolder: []
+        })
+      );
       done();
       return;
     } else {
-      dispatch(hideLoader());
       dispatch(
         getFolderSetSuccess({
           showLoader: false,
@@ -219,6 +219,7 @@ const ManageSetLogic = createLogic({
         );
       } else {
         toast.success("Your set has been transfered successfully");
+        dispatch(getAllSetRequest())
         dispatch(getFolderSetRequest());
       }
 
@@ -231,7 +232,6 @@ const getSetDetailsLogic = createLogic({
   type: SetsAction.GET_SET_DETAILS_REQUEST,
   async process({ action }, dispatch, done) {
     let api = new ApiHelper();
-    dispatch(showLoader());
     let result = await api.FetchFromServer(
       "set",
       "/getSetById",
@@ -241,7 +241,6 @@ const getSetDetailsLogic = createLogic({
       undefined
     );
     if (result.isError) {
-      dispatch(hideLoader());
       toast.error(result.messages[0]);
       dispatch(
         getSetDetailsSuccess({
@@ -252,7 +251,6 @@ const getSetDetailsLogic = createLogic({
       done();
       return;
     } else {
-      dispatch(hideLoader());
       dispatch(
         getSetDetailsSuccess({
           showLoader: false,
@@ -267,7 +265,7 @@ const getSetDetailsLogic = createLogic({
 export const SetLogics = [
   createSetLogic,
   getAllSetLogic,
-  getSetLogic,
+  getSetOfFolderLogic,
   ManageSetLogic,
   recentSetLogic,
   deleteSetLogic,

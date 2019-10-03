@@ -26,7 +26,7 @@ class Setting extends React.Component {
   //   this.props.uploadProfileImage(file);
   // };
   render() {
-    const { modelOperate, modelInfoReducer } = this.props
+    const { modelOperate, modelInfoReducer, isImageUploading } = this.props
     return (
       <>
         <SettingComponent
@@ -38,6 +38,7 @@ class Setting extends React.Component {
             this.props.uploadProfileImage({ imageData: file })
           }
           modelOperate={modelOperate}
+          isImageUploading={isImageUploading}
           modelInfoReducer={modelInfoReducer}
         />
       </>
@@ -48,6 +49,7 @@ const mapStateToProps = state => {
   return {
     userData: state.profileInfoReducer.profileInfo,
     profileImage: state.profileImage.profileImage.profileThumbnail,
+    isImageUploading: state.profileImage.isImageUploading,
     modelInfoReducer: state.modelInfoReducer,
   };
 };

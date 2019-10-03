@@ -61,7 +61,6 @@ const allFolderLogic = createLogic({
   type: FolderAction.GET_ALL_FOLDER_REQUEST,
   async process({ action }, dispatch, done) {
     let api = new ApiHelper();
-    dispatch(showLoader());
     let result = await api.FetchFromServer(
       "folder",
       "/all-folder",
@@ -72,12 +71,13 @@ const allFolderLogic = createLogic({
     );
     if (result.isError) {
       toast.error(result.messages[0]);
-      dispatch(hideLoader());
+      getAllFolderSuccess({
+        getAllFolders: []
+      })
       done();
       return;
     } else {
       // toast.success(result.messages[0]);
-      dispatch(hideLoader());
       dispatch(
         modelOpenRequest({
           modelDetails: {

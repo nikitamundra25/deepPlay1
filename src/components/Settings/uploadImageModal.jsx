@@ -11,6 +11,15 @@ class UploadImage extends Component {
       imageData: ""
     };
   }
+
+  componentDidUpdate = ({ modal }) => {
+    if (modal !== this.props.modal) {
+      this.setState({
+        imageData: ""
+      })
+    }
+  }
+
   onSelectFile = async (file, index) => {
     for (let x = 0; x < file.length; x++) {
       if (file[x].size > 10000000) {
@@ -31,7 +40,7 @@ class UploadImage extends Component {
       await picReader.addEventListener("load", async event => {
         var image = new Image();
         image.src = event.target.result;
-        image.onload = async function() {
+        image.onload = async function () {
           let dataURL = picReader.result;
           let imageData = "";
           imageData = dataURL;
@@ -50,6 +59,7 @@ class UploadImage extends Component {
     this.props.handleOpen();
   };
   render() {
+    const { isImageUploading } = this.props
     return (
       <div className="modal-text-center">
         <Modal
@@ -81,46 +91,51 @@ class UploadImage extends Component {
                 <img alt="..." src={this.state.imageData} />
               </div>
             ) : (
-              <>
-                <div className="upload-file-wrap">
-                  <Dropzone
-                    onDrop={this.onSelectFile}
-                    accept="image/*"
-                    multiple={false}
-                  >
-                    {({ getRootProps, getInputProps }) => {
-                      return (
-                        <div {...getRootProps()}>
-                          <input {...getInputProps()} />
-                          <div className="add-more-img-wrap">
-                            <div className="add-more-text">
-                              <img
-                                alt="..."
-                                src={require("assets/img/icons/common/picture.svg")}
-                                width="50px"
-                                height="50px"
-                              />
+                <>
+                  <div className="upload-file-wrap">
+                    <Dropzone
+                      onDrop={this.onSelectFile}
+                      accept="image/*"
+                      multiple={false}
+                    >
+                      {({ getRootProps, getInputProps }) => {
+                        return (
+                          <div {...getRootProps()}>
+                            <input {...getInputProps()} />
+                            <div className="add-more-img-wrap">
+                              <div className="add-more-text">
+                                <img
+                                  alt="..."
+                                  src={require("assets/img/icons/common/picture.svg")}
+                                  width="50px"
+                                  height="50px"
+                                />
 
-                              <div className="upload-heading">
-                                Drag a profile photo here{" "}
+                                <div className="upload-heading">
+                                  Drag a profile photo here{" "}
+                                </div>
                               </div>
                             </div>
                           </div>
-                        </div>
-                      );
-                    }}
-                  </Dropzone>
-                </div>
-              </>
-            )}
+                        );
+                      }}
+                    </Dropzone>
+                  </div>
+                </>
+              )}
           </ModalBody>
           <ModalFooter>
             <Button
               color=" "
               onClick={() => this.props.handleImage(this.state.imageData)}
               className="btn btn-black"
+              disabled={!isImageUploading ? false : true}
             >
-              Set profile picture
+              {
+                !isImageUploading ?
+                  "Set profile picture" :
+                  "Please Wait..."
+              }
             </Button>{" "}
             <Button
               color=" "

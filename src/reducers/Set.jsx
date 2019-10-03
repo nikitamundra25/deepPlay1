@@ -6,25 +6,43 @@ const initialState = {
   setListinFolder: "",
   recentSets: "",
   setDetails: "",
+  isSetListLoading: false,
+  isFolderSetLoading: false,
+  isRecentSetLoading: false,
   isSetDetailsLoading: false
 };
 export const setReducer = handleActions(
   {
+    [SetsAction.GET_ALL_SET_REQUEST]: (state, { payload }) => ({
+      ...state,
+      isSetListLoading: true
+    }),
     [SetsAction.GET_ALL_SET_SUCCESS]: (state, { payload }) => ({
       ...state,
-      ...payload
+      ...payload,
+      isSetListLoading: false
     }),
     [SetsAction.CREATE_SET_SUCCESS]: (state, { payload }) => ({
       ...state,
       recentSetAdded: payload.setData
     }),
+    [SetsAction.GET_FOLDER_SET_REQUEST]: (state, { payload }) => ({
+      ...state,
+      isFolderSetLoading: true
+    }),
     [SetsAction.GET_FOLDER_SET_SUCCESS]: (state, { payload }) => ({
       ...state,
-      ...payload
+      ...payload,
+      isFolderSetLoading: false
+    }),
+    [SetsAction.RECENT_SET_REQUEST]: (state, { payload }) => ({
+      ...state,
+      isRecentSetLoading: true
     }),
     [SetsAction.RECENT_SET_SUCCESS]: (state, { payload }) => ({
       ...state,
-      ...payload
+      ...payload,
+      isRecentSetLoading: false
     }),
     [SetsAction.GET_SET_DETAILS_REQUEST]: (state, { payload }) => ({
       ...state,

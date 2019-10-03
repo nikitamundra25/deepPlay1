@@ -10,7 +10,8 @@ import {
   Card,
   CardBody,
   CardTitle,
-  CardHeader
+  CardHeader,
+  ButtonGroup
 } from "reactstrap";
 import Validator from "js-object-validation";
 import Swal from "sweetalert2";
@@ -147,7 +148,7 @@ class SettingComponent extends Component {
   };
 
   render() {
-    const { profileInfoReducer, modelInfoReducer } = this.props;
+    const { profileInfoReducer, modelInfoReducer, isImageUploading } = this.props;
     const {
       isDisabled,
       firstName,
@@ -179,13 +180,25 @@ class SettingComponent extends Component {
                     Edit Profile
                   </Button>
                 ) : (
-                  <Button
-                    className="dashboard-right-content btn-line-black "
-                    onClick={this.onSaveData}
-                  >
-                    Update Info
-                  </Button>
-                )}
+                    <ButtonGroup>
+                      <Button
+                        className="dashboard-right-content btn-line-black "
+                        onClick={this.onSaveData}
+                      >
+                        Update Info
+                      </Button>
+                      <Button
+                        className="dashboard-right-content btn-line-black ml-2"
+                        onClick={() => {
+                          this.setState({
+                            isDisabled: !this.state.isDisabled
+                          });
+                        }}
+                      >
+                        Cancle
+                      </Button>
+                    </ButtonGroup>
+                  )}
               </CardHeader>
               <CardBody>
                 <div className="profile-wrap">
@@ -198,8 +211,8 @@ class SettingComponent extends Component {
                           className="w-100"
                         />
                       ) : (
-                        <img alt="" src={profileIcon} className="w-100" />
-                      )}
+                          <img alt="" src={profileIcon} className="w-100" />
+                        )}
                       {!isDisabled ? (
                         <span
                           className="changeProfile"
@@ -208,8 +221,8 @@ class SettingComponent extends Component {
                           Change Profile
                         </span>
                       ) : (
-                        ""
-                      )}
+                          ""
+                        )}
                     </div>
                     {imgError ? (
                       <div className="text-danger"> {imgError} </div>
@@ -388,6 +401,7 @@ class SettingComponent extends Component {
           handleImage={this.handleImage}
           handleOpen={this.handleOpen}
           modal={uploadImageModalOpen}
+          isImageUploading={isImageUploading}
         />
       </div>
     );

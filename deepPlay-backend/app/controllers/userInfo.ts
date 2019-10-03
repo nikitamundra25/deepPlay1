@@ -4,6 +4,7 @@ import { resizeImage } from "../common/resizeImage";
 import { IDataToUpdate } from "../interfaces/users";
 import fs from "fs";
 import path from "path";
+import { IsProductionMode } from "../config"
 
 const __basedir = path.join(__dirname, "../public");
 // --------------Get user info---------------------
@@ -84,50 +85,65 @@ const imageUpload = async (req: Request, res: Response) => {
         "profile_img.",
         type || "png"
       ].join("");
-
-      var originalImagePath = path.join(
-        __dirname,
-        "/uploads",
-        "images",
-        fileName
-      );
-      fs.writeFile(originalImagePath, buf, async err => {
-        if (err) {
-          throw err;
-        }
-
-        var thumbnailImagePath = path.join(
+      let originalImagePath: string = ""
+      if (IsProductionMode) {
+        originalImagePath = path.join(
+          __dirname,
+          "/uploads",
+          "images",
+          fileName
+        );
+      } else {
+        originalImagePath = path.join(
+          __basedir,
+          "../uploads",
+          "images",
+          fileName
+        );
+      }
+      fs.writeFileSync(originalImagePath, buf)
+      var thumbnailImagePath: string = ""
+      if (IsProductionMode) {
+        thumbnailImagePath = path.join(
           __dirname,
           "/uploads",
           "images-thumbnail",
           fileName
         );
-        const thumbnailImg: string = path.join(
-          "uploads",
+      } else {
+        thumbnailImagePath = path.join(
+          __basedir,
+          "../uploads",
           "images-thumbnail",
           fileName
         );
-        await resizeImage(originalImagePath, thumbnailImagePath, 200);
-        const uploadimg = await UserModel.findByIdAndUpdate(currentUser.id, {
-          profileImage: thumbnailImg
-        });
-
-        if (uploadimg) {
-          return res.status(200).json({
-            responseCode: 200,
-            message: "Profile image uploaded successfully!",
-            success: true,
-            profileImage: originalImagePath,
-            profileThumbnail: thumbnailImg
-          });
-        } else {
-          return res.status(400).json({
-            responseCode: 400,
-            message: "Error uploading profile image.",
-            success: false
-          });
-        }
+      }
+      fs.writeFileSync(thumbnailImagePath, buf)
+      const thumbnailImg: string = path.join(
+        "uploads",
+        "images-thumbnail",
+        fileName
+      );
+      await resizeImage(originalImagePath, thumbnailImagePath, 200);
+      const uploadimg = await UserModel.findByIdAndUpdate(currentUser.id, {
+        profileImage: thumbnailImg
       });
+
+      if (uploadimg) {
+        return res.status(200).json({
+          responseCode: 200,
+          message: "Profile image uploaded successfully!",
+          success: true,
+          profileImage: originalImagePath,
+          profileThumbnail: thumbnailImg
+        });
+      } else {
+        return res.status(400).json({
+          responseCode: 400,
+          message: "Error uploading profile image.",
+          success: false
+        });
+      }
     }
   } catch (error) {
     console.log("**************This is image upload error", error);
@@ -156,4 +172,23 @@ const deleteUserAccount = async (req: Request, res: Response): Promise<any> => {
     });
   }
 };
-export { getUserInfo, editUserInfo, deleteUserAccount, imageUpload };
+// --------------- Get All user list
+const getAllUser = async (req: Request, res: Response): Promise<any> => {
+  try {
+    const result = await UserModel.find({
+      roleType: {
+        $ne: "admin"
+      }
+    });
+    res.status(200).json({
+      result,
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).send({
+      message: error.message
+    });
+  }
+};
+
+export { getUserInfo, editUserInfo, deleteUserAccount, imageUpload, getAllUser };
