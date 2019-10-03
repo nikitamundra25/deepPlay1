@@ -5,8 +5,8 @@ import ytdl from "ytdl-core";
 import { MoveModel } from "../models";
 import fs from "fs";
 import path from "path";
-/* const ffmpeg = require('@ffmpeg-installer/ffmpeg');
-import extractFrames from 'ffmpeg-extract-frames' */
+import ThumbnailGenerator from 'video-thumbnail-generator';
+
 const __basedir = path.join(__dirname, "../public");
 
 cloudinary.config({
@@ -85,6 +85,24 @@ const downloadYoutubeVideo = async (req: Request, res: Response): Promise<any> =
         fileName
       );
     }
+    /*  */
+    const videoThumbnailPath = path.join(
+      __basedir,
+      "../uploads",
+      "video-image-thumbnail"
+    )
+    const tg: any = new ThumbnailGenerator({
+      sourcePath: originalVideoPath,
+      thumbnailPath: videoThumbnailPath,
+    });
+    tg.generateCb((err: string, result: string) => {
+      if (err) {
+        console.log("err", err);
+      } else {
+        console.log("####################", result);
+      }
+    });
+    /*  */
     videoURL = path.join("uploads", "youtube-videos", fileName);
     let videoStream: any;
 

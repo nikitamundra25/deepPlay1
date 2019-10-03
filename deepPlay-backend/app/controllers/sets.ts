@@ -30,8 +30,8 @@ const createSet = async (req: Request, res: Response): Promise<any> => {
       if (err) {
         console.error(err);
       }
-      else{
-        console.log("##################",content);  
+      else {
+        console.log("##################", content);
       }
     });
     res.status(200).json({
@@ -49,17 +49,24 @@ const createSet = async (req: Request, res: Response): Promise<any> => {
 // --------------Get all set info---------------------
 const getAllSetById = async (req: Request, res: Response): Promise<void> => {
   try {
-    const { currentUser } = req;
+    const { currentUser, query } = req;
     let headToken: Request | any = currentUser;
     if (!headToken.id) {
       res.status(400).json({
         message: "User id not found"
       });
     }
-    const result: Document | any = await SetModel.find({
-      userId: headToken.id,
-      isDeleted: false
-    }).populate("folderId");
+    let result: Document | any
+    if (query.roleType === "admin") {
+      result = await SetModel.find({
+        isDeleted: false
+      }).populate("folderId");
+    } else {
+      result = await SetModel.find({
+        userId: headToken.id,
+        isDeleted: false
+      }).populate("folderId");
+    }
     res.status(200).json({
       result,
       message: "Sets have been fetched successfully"
