@@ -124,7 +124,9 @@ const imageUpload = async (req: Request, res: Response) => {
         "images-thumbnail",
         fileName
       );
-      await resizeImage(originalImagePath, thumbnailImagePath, 200);
+      if (body.imageData) {
+        await resizeImage(originalImagePath, thumbnailImagePath, 200);
+      }
       const uploadimg = await UserModel.findByIdAndUpdate(currentUser.id, {
         profileImage: thumbnailImg
       });

@@ -160,7 +160,7 @@ class SettingComponent extends Component {
     } = this.state;
     const { modelDetails } = modelInfoReducer;
     const { uploadImageModalOpen } = modelDetails;
-
+    const splitedImage = this.state.file.split("/")
     return (
       <div>
         <div className="setting-section">
@@ -207,7 +207,7 @@ class SettingComponent extends Component {
                       {file ? (
                         <img
                           alt={"No Img Found"}
-                          src={`${AppConfig.API_ENDPOINT}${this.state.file}`}
+                          src={splitedImage[0] === "uploads" ? `${AppConfig.API_ENDPOINT}${this.state.file}` : this.state.file}
                           className="w-100"
                         />
                       ) : (

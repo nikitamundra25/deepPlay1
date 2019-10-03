@@ -12,6 +12,7 @@ import {
 //import { logger } from "helper/Logger";
 import { toast } from "react-toastify";
 import { AppRoutes } from "../config/AppRoutes"
+let toastId = null;
 /**
  *
  */
@@ -28,7 +29,12 @@ const loginLogic = createLogic({
       action.payload
     );
     if (result.isError || !result.data.userData) {
-      toast.error(result.messages[0]);
+      if (!toast.isActive(toastId)) {
+        toastId = toast.error(result.messages[0]);
+      }
+      dispatch(
+        loginSuccess({ isLoginSuccess: false })
+      )
       done();
       return;
     } else {
@@ -125,7 +131,9 @@ const forgetPasswordLogic = createLogic({
       return;
     } else {
       dispatch(forgotPasswordSuccess())
-      toast.success(result.messages[0]);
+      if (!toast.isActive(toastId)) {
+        toastId = toast.success(result.messages[0]);
+      }
       dispatch(
         modelOpenRequest({
           modelDetails: {

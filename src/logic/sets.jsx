@@ -16,6 +16,7 @@ import {
   getSetDetailsSuccess,
 } from "../actions";
 import { toast } from "react-toastify";
+let toastId = null;
 
 //  Create sets
 const createSetLogic = createLogic({
@@ -33,12 +34,12 @@ const createSetLogic = createLogic({
     );
     if (result.isError) {
       dispatch(hideLoader());
-      toast.error(result.messages[0]);
+      if (!toast.isActive(toastId)) {
+        toastId = toast.error(result.messages[0]);
+      }
       done();
       return;
     } else {
-      dispatch(hideLoader());
-      // toast.success(result.messages[0]);
       dispatch(
         createSetSuccess({
           showLoader: false,
@@ -48,7 +49,9 @@ const createSetLogic = createLogic({
       if (!action.payload.isCopy) {
         dispatch(redirectTo({ path: "/move" }));
       } else {
-        toast.success("Set Copy has been created successfully");
+        if (!toast.isActive(toastId)) {
+          toastId = toast.success("Set Copy has been created successfully");
+        }
         dispatch(getAllSetRequest());
       }
       done();
@@ -74,7 +77,6 @@ const recentSetLogic = createLogic({
       done();
       return;
     } else {
-      // toast.success(result.messages[0]);
       dispatch(
         recentSetSuccess({
           recentSets: result.data.data
@@ -90,7 +92,6 @@ const deleteSetLogic = createLogic({
   type: SetsAction.DELETE_SET_REQUEST,
   async process({ action }, dispatch, done) {
     let api = new ApiHelper();
-    dispatch(showLoader());
     let result = await api.FetchFromServer(
       "set",
       "/delete-set",
@@ -100,13 +101,15 @@ const deleteSetLogic = createLogic({
       { id: action.payload },
     );
     if (result.isError) {
-      dispatch(hideLoader());
-      toast.error(result.messages[0]);
+      if (!toast.isActive(toastId)) {
+        toastId = toast.error(result.messages[0]);
+      }
       done();
       return;
     } else {
-      dispatch(hideLoader());
-      toast.success(result.messages[0]);
+      if (!toast.isActive(toastId)) {
+        toastId = toast.success(result.messages[0]);
+      }
       dispatch(getAllSetRequest());
       done();
     }
@@ -194,7 +197,9 @@ const ManageSetLogic = createLogic({
       action.payload
     );
     if (result.isError) {
-      toast.error(result.messages[0]);
+      if (!toast.isActive(toastId)) {
+        toastId = toast.error(result.messages[0]);
+      }
       done();
       return;
     } else {
@@ -218,11 +223,12 @@ const ManageSetLogic = createLogic({
           })
         );
       } else {
-        toast.success("Your set has been transfered successfully");
+        if (!toast.isActive(toastId)) {
+          toastId = toast.success("Your set has been transfered successfully");
+        }
         dispatch(getAllSetRequest())
         dispatch(getFolderSetRequest());
       }
-
       done();
     }
   }

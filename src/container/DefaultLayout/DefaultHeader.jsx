@@ -19,7 +19,7 @@ import {
 import Login from "../Auth/Login/index.jsx";
 import Signup from "../Auth/Signup/index.jsx";
 import FolderModal from "../../components/Folders/createFolderModal";
-import profileImage from "../../assets/img/user-white-ic.svg";
+import profileImage from "../../assets/img/profile-ic.png";
 import { AppRoutes } from "../../config/AppRoutes";
 import { SidebarComponent } from "../../components/Sidebar";
 import logoutIcon from "../../assets/img/icons/logout.svg";
@@ -105,6 +105,7 @@ class DefaultHeader extends React.Component {
       profileInfoReducer && profileInfoReducer.profileInfo
         ? profileInfoReducer.profileInfo
         : null;
+    const splitedImage = profiledata && profiledata.profileImage ? profiledata.profileImage.split("/") : []
     return (
       <>
         <header className="header-global theme-header ">
@@ -194,68 +195,68 @@ class DefaultHeader extends React.Component {
                     </React.Fragment>
                   </div>
                 ) : (
-                  <>
-                    <UncontrolledDropdown className="header-manu-wrap ">
-                      <DropdownToggle
-                        tag="a"
-                        className="nav-link user-section"
-                        caret
-                      >
-                        <div className="user-wrap">
-                          <div
-                            className={
-                              profiledata ? "user-img round-img" : "user-img"
-                            }
-                          >
-                            {profiledata ? (
-                              <img
-                                src={`${AppConfig.API_ENDPOINT}${profiledata.profileImage}`}
-                                className="w-100 "
-                                alt={"img"}
-                              />
-                            ) : (
-                              <img
-                                src={profileImage}
-                                className="w-100 "
-                                alt={"img"}
-                              />
-                            )}
-                          </div>
-                          <div className="user-text">
-                            {profiledata
-                              ? `${profiledata.firstName}${" "} ${
-                                  profiledata.lastName
-                                }`
-                              : ""}
-                          </div>
-                        </div>
-                      </DropdownToggle>
-                      <DropdownMenu>
-                        {SidebarComponent.map((item, index) => {
-                          return (
-                            <DropdownItem
-                              onClick={() => this.props.redirectTo(item.url)}
-                              key={index}
-                              active={routePath === item.url ? true : false}
+                    <>
+                      <UncontrolledDropdown className="header-manu-wrap ">
+                        <DropdownToggle
+                          tag="a"
+                          className="nav-link user-section"
+                          caret
+                        >
+                          <div className="user-wrap">
+                            <div
+                              className={
+                                profiledata ? "user-img round-img" : "user-img"
+                              }
                             >
-                              <img
-                                src={item.iconUrl}
-                                alt={item.iconUrl}
-                                width="20"
-                              />{" "}
-                              {item.name}
-                            </DropdownItem>
-                          );
-                        })}
-                        <DropdownItem onClick={e => logoutRequest(e)}>
-                          <img src={logoutIcon} alt={"Logout"} width="20" /> Log
-                          Out
+                              {profiledata && profiledata.profileImage ? (
+                                <img
+                                  src={splitedImage[0] === "uploads" ? `${AppConfig.API_ENDPOINT}${profiledata.profileImage}` : profiledata.profileImage}
+                                  className="w-100 "
+                                  alt={"img"}
+                                />
+                              ) : (
+                                  <img
+                                    src={profileImage}
+                                    className="w-100 "
+                                    alt={"img"}
+                                  />
+                                )}
+                            </div>
+                            <div className="user-text">
+                              {profiledata
+                                ? `${profiledata.firstName}${" "} ${
+                                profiledata.lastName
+                                }`
+                                : ""}
+                            </div>
+                          </div>
+                        </DropdownToggle>
+                        <DropdownMenu>
+                          {SidebarComponent.map((item, index) => {
+                            return (
+                              <DropdownItem
+                                onClick={() => this.props.redirectTo(item.url)}
+                                key={index}
+                                active={routePath === item.url ? true : false}
+                              >
+                                <img
+                                  src={item.iconUrl}
+                                  alt={item.iconUrl}
+                                  width="20"
+                                />{" "}
+                                {item.name}
+                              </DropdownItem>
+                            );
+                          })}
+                          <DropdownItem onClick={e => logoutRequest(e)}>
+                            <img src={logoutIcon} alt={"Logout"} width="20" /> Log
+                            Out
                         </DropdownItem>
-                      </DropdownMenu>
-                    </UncontrolledDropdown>
-                    {/* <span onClick={e => logoutRequest(e)} className="nav-link-inner--text pr-4">Logout</span> */}
-                  </>
-                )}
+                        </DropdownMenu>
+                      </UncontrolledDropdown>
+                      {/* <span onClick={e => logoutRequest(e)} className="nav-link-inner--text pr-4">Logout</span> */}
+                    </>
+                  )}
               </Nav>
               <UncontrolledCollapse
                 navbar

@@ -115,7 +115,7 @@ class SharableLinkModal extends React.Component {
                   <Button
                     color=" "
                     type="button"
-                    disabled-={this.state.copied}
+                    disabled={this.state.copied}
                     className="btn-black"
                   >
                     {this.state.copied ? "Copied" : " Copy Link"}

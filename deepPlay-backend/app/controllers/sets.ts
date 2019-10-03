@@ -60,12 +60,22 @@ const getAllSetById = async (req: Request, res: Response): Promise<void> => {
     if (query.roleType === "admin") {
       result = await SetModel.find({
         isDeleted: false
-      }).populate("folderId");
+      }).populate({
+        path:"folderId",
+        match: {
+          isDeleted: false
+        }
+      });
     } else {
       result = await SetModel.find({
         userId: headToken.id,
         isDeleted: false
-      }).populate("folderId");
+      }).populate({
+        path:"folderId",
+        match: {
+          isDeleted: false
+        }
+      });
     }
     res.status(200).json({
       result,

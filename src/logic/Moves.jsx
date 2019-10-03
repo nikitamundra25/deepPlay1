@@ -9,6 +9,7 @@ import {
 } from "../actions";
 import { AppRoutes } from "../config/AppRoutes";
 import { toast } from "react-toastify";
+let toastId = null;
 
 //  Download video
 const downloadVideoLogic = createLogic({
@@ -33,14 +34,18 @@ const downloadVideoLogic = createLogic({
       )
     }
     if (result.isError) {
-      toast.error(result.messages[0]);
+      if (!toast.isActive(toastId)) {
+        toastId = toast.error(result.messages[0]);
+      }
       dispatch(downloadYoutubeVideoSuccess({
         videoUrl: ""
       }));
       done();
       return;
     } else {
-      toast.success(result.messages[0]);
+      if (!toast.isActive(toastId)) {
+        toastId = toast.success(result.messages[0]);
+      }
       dispatch(
         downloadYoutubeVideoSuccess({
           videoUrl: result.data && result.data.videoUrl ? result.data.videoUrl : ""
