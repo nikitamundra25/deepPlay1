@@ -124,8 +124,10 @@ class HomePage extends React.Component {
                   <div className="play-list-block">
                     <div
                       className="play-list-img"
-                      style={{ backgroundImage: 'url("' + images + '")' }}
-                    ></div>
+                     
+                    >
+                      <img src={images} />
+                    </div>
                     <div className="play-list-text">
                       <div className="play-list-number">25 Moves</div>
                       <div className="play-list-heading h6 ">
