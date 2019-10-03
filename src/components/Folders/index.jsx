@@ -104,74 +104,74 @@ class FolderComponent extends React.Component {
             Create a New Folder
           </UncontrolledTooltip>
         </div>
-        <Col></Col>
-        <p>4 folders total</p>{" "}
+        <p>Total folders {getAllFolders && getAllFolders.length ? getAllFolders.length : "0"}</p>{" "}
         <div className="wrap-folder">
           <Row className="set-wrap">
             {
               !isFolderLoading ?
-                getAllFolders.length ? (
-                  // eslint-disable-next-line
-                  getAllFolders.map((folder, i) => {
-                    if (!folder.isDeleted) {
-                      return (
-                        <Col key={i} md={"6"}>
-                          <div className="tile-wrap card">
-                            <div className="cotent-tile d-flex content-with-tip">
-                              <div className="cotent-text-tile">
-                                <div className="content-number-tile"> 4 sets</div>
-                                <div className="content-heading-tile d-flex">
-                                  {" "}
-                                  <span
-                                    onClick={() =>
-                                      this.handleFolderdetails(folder._id)
-                                    }
-                                    className={"cursor_pointer"}
-                                  >
-                                    {
-                                      folder.isCopy ?
-                                        `Copy of ${folder.title}` :
-                                        folder.title
-                                    }
-                                  </span>
-                                  <div
-                                    onMouseOver={() => this.showPopOver(i, show)}
-                                    onMouseLeave={() => this.closePopOver()}
-                                    className={"tooltip-btn-wrap right-btn-tip"}
-                                  >
-                                    <span className="cursor_pointer">
-                                      {" "}
-                                      <i className="fas fa-ellipsis-v setting-icon "></i>
+                getAllFolders &&
+                  getAllFolders.length ? (
+                    // eslint-disable-next-line
+                    getAllFolders.map((folder, i) => {
+                      if (!folder.isDeleted) {
+                        return (
+                          <Col key={i} md={"6"}>
+                            <div className="tile-wrap card">
+                              <div className="cotent-tile d-flex content-with-tip">
+                                <div className="cotent-text-tile">
+                                  <div className="content-number-tile"> 4 sets</div>
+                                  <div className="content-heading-tile d-flex">
+                                    {" "}
+                                    <span
+                                      onClick={() =>
+                                        this.handleFolderdetails(folder._id)
+                                      }
+                                      className={"cursor_pointer"}
+                                    >
+                                      {
+                                        folder.isCopy ?
+                                          `Copy of ${folder.title}` :
+                                          folder.title
+                                      }
                                     </span>
-                                    {show && folderIndex === i ? (
-                                      <ButtonGroup size="sm">
-                                        <Button
-                                          onClick={() =>
-                                            this.handleCopyFolder(folder)
-                                          }
-                                        >
-                                          Copy
+                                    <div
+                                      onMouseOver={() => this.showPopOver(i, show)}
+                                      onMouseLeave={() => this.closePopOver()}
+                                      className={"tooltip-btn-wrap right-btn-tip"}
+                                    >
+                                      <span className="cursor_pointer">
+                                        {" "}
+                                        <i className="fas fa-ellipsis-v setting-icon "></i>
+                                      </span>
+                                      {show && folderIndex === i ? (
+                                        <ButtonGroup size="sm">
+                                          <Button
+                                            onClick={() =>
+                                              this.handleCopyFolder(folder)
+                                            }
+                                          >
+                                            Copy
                                       </Button>
-                                        <Button
-                                          onClick={() =>
-                                            this.onHandleDelete(folder._id)
-                                          }
-                                        >
-                                          Delete
+                                          <Button
+                                            onClick={() =>
+                                              this.onHandleDelete(folder._id)
+                                            }
+                                          >
+                                            Delete
                                       </Button>
-                                      </ButtonGroup>
-                                    ) : null}
+                                        </ButtonGroup>
+                                      ) : null}
+                                    </div>
                                   </div>
+                                  {folder.description ? folder.description : ""}
                                 </div>
-                                {folder.description ? folder.description : ""}
                               </div>
                             </div>
-                          </div>
-                        </Col>
-                      );
-                    }
-                  })
-                ) : (
+                          </Col>
+                        );
+                      }
+                    })
+                  ) : (
                     <>
                       <div className="create-set-section mt-2 w-100">
                         <Card className="w-100 set-content-wrap">

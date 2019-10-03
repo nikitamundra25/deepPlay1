@@ -70,6 +70,7 @@ class SetComponent extends React.Component {
             Create New Set
           </UncontrolledTooltip>
         </div>
+        <p>Total sets {getAllSet && getAllSet.length ? getAllSet.length : "0"}</p>{" "}
         <Row className="set-wrap">
           {
             !isSetListLoading ?
