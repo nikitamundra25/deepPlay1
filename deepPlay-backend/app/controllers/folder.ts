@@ -88,17 +88,24 @@ const createFolder = async (req: Request, res: Response): Promise<any> => {
 // --------------Get all folder ---------------------
 const getAllFolder = async (req: Request, res: Response): Promise<void> => {
   try {
-    const { currentUser } = req;
+    const { currentUser, query } = req;
     let headToken: Request | any = currentUser;
     if (!headToken.id) {
       res.status(400).json({
         message: "User id not found"
       });
     }
-    const result: Document | any = await FolderModel.find({
-      userId: headToken.id,
-      isDeleted: false
-    });
+    let result: Document | any
+    if (query.roleType === "admin") {
+      result = await FolderModel.find({
+        isDeleted: false
+      });
+    } else {
+      result = await FolderModel.find({
+        userId: headToken.id,
+        isDeleted: false
+      });
+    }
     res.status(200).json({
       data: result,
       message: "Folders has been fetched successfully."
