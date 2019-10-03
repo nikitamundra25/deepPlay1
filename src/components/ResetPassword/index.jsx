@@ -28,7 +28,7 @@ class ResetPasswordComponent extends React.Component {
       password: "",
       confirmPassword: "",
       errors: {}
-    }
+    };
   }
   /*
   /* 
@@ -80,13 +80,18 @@ class ResetPasswordComponent extends React.Component {
   /* 
   */
   render() {
-    const { password, confirmPassword, errors } = this.state
+    const { password, confirmPassword, errors } = this.state;
     return (
       <>
         <div className={"mt-5 "}>
           <Container className={"mt-5"}>
             <div className={"text-center"}>
-              <h2 className={"cursor_pointer"} onClick={() => this.props.redirectTo("/")}>Deep Play</h2>
+              <h2
+                className={"cursor_pointer"}
+                onClick={() => this.props.redirectTo("/")}
+              >
+                Deep Play
+              </h2>
             </div>
             <div className={"row"}>
               <Col md={6} className={"mx-auto"}>
@@ -109,7 +114,8 @@ class ResetPasswordComponent extends React.Component {
                             className={errors.password ? "is-invalid" : ""}
                             value={password}
                             name={"password"}
-                            type="password" />
+                            type="password"
+                          />
                           <FormFeedback>
                             {errors.password ? errors.password : null}
                           </FormFeedback>
@@ -125,10 +131,13 @@ class ResetPasswordComponent extends React.Component {
                           <Input
                             placeholder="Confirm Password"
                             onChange={this.handleInputChange}
-                            className={errors.confirmPassword ? "is-invalid" : ""}
+                            className={
+                              errors.confirmPassword ? "is-invalid" : ""
+                            }
                             name={"confirmPassword"}
                             value={confirmPassword}
-                            type="password" />
+                            type="password"
+                          />
                           <FormFeedback>
                             {errors.confirmPassword
                               ? errors.confirmPassword
@@ -137,11 +146,7 @@ class ResetPasswordComponent extends React.Component {
                         </InputGroup>
                       </FormGroup>
                       <div className="text-center">
-                        <Button
-                          className="my-4"
-                          color="primary"
-                          type="submit"
-                        >
+                        <Button className="my-4" color="primary" type="submit">
                           Reset Password
                         </Button>
                       </div>

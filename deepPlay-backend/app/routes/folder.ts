@@ -3,6 +3,7 @@ import {
   createFolder,
   getCretedFolderById,
   getAllFolder,
+  updateFolder,
   deleteFolder,
   getRecentFolder,
   updateRecentTimeRequest,
@@ -14,6 +15,7 @@ import { ValidateAdminToken } from "../common";
 const FolderRouter: express.Router = express.Router();
 
 FolderRouter.post("/create-folder", ValidateAdminToken, createFolder);
+FolderRouter.put("/update-folder", ValidateAdminToken, updateFolder);
 FolderRouter.get("/get-folder-by-id", ValidateAdminToken, getCretedFolderById);
 FolderRouter.get("/all-folder", ValidateAdminToken, getAllFolder);
 FolderRouter.get("/recent-folder", ValidateAdminToken, getRecentFolder);
@@ -23,8 +25,12 @@ FolderRouter.patch(
   ValidateAdminToken,
   updateRecentTimeRequest
 );
-FolderRouter.patch("/public-access", ValidateAdminToken, sharableLinkPublicAccess);
+FolderRouter.patch(
+  "/public-access",
+  ValidateAdminToken,
+  sharableLinkPublicAccess
+);
 FolderRouter.get("/share-link", ValidateAdminToken, sharableLink);
-FolderRouter.get("/get-public-url-for-folder", publicUrlFolderInfo);
+FolderRouter.get("/public-access-folder-info-by-id", publicUrlFolderInfo);
 
 export default FolderRouter;

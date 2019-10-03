@@ -28,7 +28,6 @@ const profileInfoLogic = createLogic({
       undefined,
       undefined
     );
-    console.log("result", result);
     if (result.isError) {
       dispatch(hideLoader());
       toast.error(result.messages[0]);
@@ -70,7 +69,9 @@ const UpdateUserDataLogic = createLogic({
       return;
     } else {
       dispatch(hideLoader());
-      toast.success(result.messages[0]);
+      if (!action.payload.accountType) {
+        toast.success(result.messages[0]);
+      }
       done();
     }
   }
@@ -120,9 +121,7 @@ const uploadImageLogic = createLogic({
     if (result.isError) {
       dispatch(hideLoader());
       toast.error(result.messages[0]);
-      dispatch(
-        uploadImageFailed()
-      );
+      dispatch(uploadImageFailed());
       done();
       return;
     } else {

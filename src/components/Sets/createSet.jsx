@@ -174,8 +174,7 @@ class CreateSetComponent extends React.Component {
               </Label>
               <Input
                 id="exampleFormControlInput1"
-            
-                type="text"
+                type="textarea"
                 name="description"
                 onChange={this.handleChange}
                 value={description}

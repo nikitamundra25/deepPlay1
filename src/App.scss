@@ -1113,7 +1113,8 @@ height: 100%;
 // Toaster design
 .Toastify__toast{
   background: #fff;
-  color: #328834;
+  color: #8d352b;
+  font-weight:normal; 
   font-weight: bold;
   @extend %flexFullAlign;
   &.Toastify__toast--success{

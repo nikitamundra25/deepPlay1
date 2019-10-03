@@ -20,6 +20,17 @@ class FolderModal extends React.Component {
       description: ""
     };
   }
+
+  componentDidUpdate(prevProps) {
+    if (prevProps.folderDetails !== this.props.folderDetails) {
+      const { title, description } = this.props.folderDetails;
+      this.setState({
+        title,
+        description
+      });
+    }
+  }
+
   handleChange = e => {
     const { name, value } = e.target;
     this.setState({
@@ -38,7 +49,9 @@ class FolderModal extends React.Component {
   };
 
   onCreateFolder = () => {
+    const { folderDetails } = this.props;
     const data = {
+      id: folderDetails ? folderDetails._id : "",
       title: this.state.title,
       description: this.state.description,
       isCopy: false
@@ -47,8 +60,10 @@ class FolderModal extends React.Component {
   };
 
   render() {
-    const { modal, handleOpen } = this.props;
+    const { modal, handleOpen, folderDetails } = this.props;
     const { title, description } = this.state;
+    console.log(">>>>>", folderDetails);
+
     return (
       <div>
         <Modal
@@ -58,7 +73,7 @@ class FolderModal extends React.Component {
         >
           <ModalHeader>
             <span className="custom-title" id="exampleModalLabel">
-              Create a New Folder
+              {folderDetails ? "Update Folder" : "Create a New Folder"}
             </span>
             <button
               aria-label="Close"
@@ -92,7 +107,7 @@ class FolderModal extends React.Component {
               </Label>
               <Input
                 id="exampleFormControlInput1"
-                type="text"
+                type="textarea"
                 placeholder="Enter a description (optional)"
                 name="description"
                 onChange={this.handleChange}
@@ -108,7 +123,7 @@ class FolderModal extends React.Component {
               className="btn btn-black"
               disabled={!title}
             >
-              Create Folder
+              {folderDetails ? "Update Folder" : "Create Folder"}
             </Button>
           </ModalFooter>
         </Modal>

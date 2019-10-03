@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import { FolderModel, SetModel, MoveModel } from "../models";
-import { IFolder, ISet, IMove } from "../interfaces";
+import { IFolder, ISet, IMove, IUpdateFolder } from "../interfaces";
 import { encrypt, decrypt } from "../common";
 
 // --------------Create folder---------------------
@@ -26,12 +26,12 @@ const createFolder = async (req: Request, res: Response): Promise<any> => {
     };
     const Result: Document | any = new FolderModel(folderData);
     await Result.save();
-    const folderId = Result._id
+    const folderId = Result._id;
     if (body.isCopy) {
       const setResult: Document | any | null = await SetModel.find({
         folderId: body.copyOfFolderId,
         isDeleted: false
-      })
+      });
       if (setResult && setResult.length) {
         for (let index = 0; index < setResult.length; index++) {
           const element = setResult[index];
@@ -44,14 +44,14 @@ const createFolder = async (req: Request, res: Response): Promise<any> => {
             status: true,
             userId: headToken.id,
             isDeleted: element.isDeleted
-          }
+          };
           const setData: Document | any = new SetModel(newSetData);
           await setData.save();
-          const setId = setData._id
+          const setId = setData._id;
           const moveResult: Document | any | null = await MoveModel.find({
             setId: element._id,
             isDeleted: false
-          })
+          });
           if (moveResult && moveResult.length) {
             for (let index = 0; index < moveResult.length; index++) {
               const moveElement = moveResult[index];
@@ -65,7 +65,7 @@ const createFolder = async (req: Request, res: Response): Promise<any> => {
                 sharableLink: moveElement.sharableLink,
                 status: true,
                 setId: setId
-              }
+              };
               const moveData: Document | any = new MoveModel(newMoveData);
               await moveData.save();
             }
@@ -293,19 +293,31 @@ const sharableLinkPublicAccess = async (
 const sharableLink = async (req: Request, res: Response): Promise<any> => {
   try {
     const { query, currentUser } = req;
-    const { folderId } = query;
+    const { linkOf } = query;
     const headToken: Request | any = currentUser;
-    if (!headToken.id) {
-      res.status(400).json({
-        message: "User id not found"
-      });
-    }
+    // if (!headToken.id) {
+    //   res.status(400).json({
+    //     message: "User id not found"
+    //   });
+    // }
+    let encryptedFolderId: String;
+    let encryptedSetId: String;
+    let data: Document | any;
     const encryptedUserId = encrypt(headToken.id);
-    const encryptedFolderId = encrypt(folderId);
-    const data = {
-      encryptedUserId: encryptedUserId,
-      encryptedFolderId: encryptedFolderId
-    };
+    if (linkOf === "folder") {
+      encryptedFolderId = encrypt(query.folderId);
+      data = {
+        encryptedUserId: encryptedUserId,
+        encryptedFolderId: encryptedFolderId
+      };
+    }
+    if (linkOf === "set") {
+      encryptedSetId = encrypt(query.setId);
+      data = {
+        encryptedUserId: encryptedUserId,
+        encryptedSetId: encryptedSetId
+      };
+    }
     return res.status(200).json({
       responsecode: 200,
       data: data,
@@ -333,7 +345,8 @@ const publicUrlFolderInfo = async (
     if (isPublic === "true") {
       result = await FolderModel.findOne({
         userId: decryptedUserId,
-        _id: decryptedFolderId
+        _id: decryptedFolderId,
+        isDeleted: false
       });
     } else {
       return res.status(400).json({
@@ -353,6 +366,30 @@ const publicUrlFolderInfo = async (
   }
 };
 
+//------------------Update Folder Details-------------------------------
+const updateFolder = async (req: Request, res: Response): Promise<any> => {
+  try {
+    const { body } = req;
+    const { title, description, id } = body;
+    let updateFolder: IUpdateFolder = {
+      title,
+      description
+    };
+    await FolderModel.findByIdAndUpdate(id, {
+      $set: updateFolder
+    });
+
+    return res.status(200).json({
+      message: "Folder details udpated successfully."
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).send({
+      message: error.message
+    });
+  }
+};
+
 export {
   createFolder,
   getCretedFolderById,
@@ -362,5 +399,6 @@ export {
   updateRecentTimeRequest,
   sharableLinkPublicAccess,
   sharableLink,
-  publicUrlFolderInfo
+  publicUrlFolderInfo,
+  updateFolder
 };
