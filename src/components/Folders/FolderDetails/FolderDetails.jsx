@@ -90,10 +90,10 @@ class RecentFolderComponent extends React.Component {
         addSetModalOpen: !modelDetails.addSetModalOpen
       }
     });
-    this.props.getSetsList({
-      folderId: this.state.folderId,
-      showAll: true
-    });
+    // this.props.getSetsList({
+    //   folderId: this.state.folderId,
+    //   showAll: true
+    // });
     this.setState({
       showAll: true
     });
@@ -269,7 +269,7 @@ class RecentFolderComponent extends React.Component {
     const { modelDetails } = modelInfoReducer;
     const { folderDetails, getAllFolders } = getFolderReducer;
     const { userEncryptedInfo } = shareLinkReducer;
-    const { isFolderSetLoading, totalSetsInFolder } = setReducer;
+    const { isFolderSetLoading, totalSetsInFolder, allSetList } = setReducer;
 
     const {
       transferToModalOpen,
@@ -451,7 +451,7 @@ class RecentFolderComponent extends React.Component {
         <AddSetModal
           handleOpen={this.openAddSetModel}
           modal={addSetModalOpen}
-          getAllSet={setListItem}
+          getAllSet={allSetList}
           folderId={folderId}
           handleSets={this.handleSets}
           {...this.props}

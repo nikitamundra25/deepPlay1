@@ -123,11 +123,22 @@ const getAllSetLogic = createLogic({
   type: SetsAction.GET_ALL_SET_REQUEST,
   async process({ action }, dispatch, done) {
     let api = new ApiHelper();
-    dispatch(showLoader());
-    let result = await api.FetchFromServer("set", "/get-all-set", "GET", true, {
-      ...action.payload,
-      limit: AppConfig.ITEMS_PER_PAGE
-    });
+    let setPayload;
+    if (action.payload.isSetNoLimit) {
+      setPayload = action.payload;
+    } else {
+      setPayload = {
+        ...action.payload,
+        limit: AppConfig.ITEMS_PER_PAGE
+      };
+    }
+    let result = await api.FetchFromServer(
+      "set",
+      "/get-all-set",
+      "GET",
+      true,
+      setPayload
+    );
     if (result.isError) {
       dispatch(hideLoader());
       toast.error(result.messages[0]);

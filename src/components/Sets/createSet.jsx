@@ -39,7 +39,9 @@ class CreateSetComponent extends React.Component {
 
   componentDidMount = () => {
     let parsed = qs.parse(this.props.location.search);
-    this.props.getSetDetailsRequest({ setId: parsed.setId });
+    if (parsed && parsed.setId) {
+      this.props.getSetDetailsRequest({ setId: parsed.setId });
+    }
   };
 
   componentDidUpdate(prevProps) {
@@ -82,7 +84,6 @@ class CreateSetComponent extends React.Component {
       description: this.state.description,
       setId: parsed.setId ? parsed.setId : ""
     };
-    console.log("data", data);
     this.props.UpdateSetRequest(data);
   };
 
@@ -124,7 +125,6 @@ class CreateSetComponent extends React.Component {
                   <InputGroup>
                     <Input
                       id="exampleFormControlInput1"
-                  
                       placeholder="Enter your title here"
                       type="text"
                       name="title"

@@ -32,7 +32,7 @@ class Set extends React.Component {
   }
 
   componentDidMount = () => {
-    this.props.getSetList();
+    this.props.getSetList({ isSetNoLimit: false });
   };
 
   componentDidUpdate({ location }) {
