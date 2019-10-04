@@ -80,7 +80,7 @@ const adminLogin = async (req: Request, res: Response): Promise<any> => {
     }).select("firstName lastName email password");
     if (result === null) {
       return res.status(400).json({
-        message: "User not found."
+        message: "Email Address is not Registred with us. Please try to login with registered email address."
       });
     }
     if (result.password) {
@@ -124,11 +124,12 @@ const signup = async (req: Request, res: Response): Promise<any> => {
     const { body } = req;
     body.password = encryptPassword(body.password);
     const result: Document | null | any = await UserModel.findOne({
-      email: body.email
+      email: body.email,
+      isDeleted: false
     });
     if (result) {
       return res.status(400).json({
-        message: "Email already exist",
+        message: "This Email Address is already regisred with us. Please try to register with another Email Address.",
         success: false
       });
     } else {
@@ -189,7 +190,8 @@ const socialSignup = async (req: Request, res: Response) => {
   try {
     if (body.accessToken) {
       const userData: Document | null = await UserModel.findOne({
-        email: body.email
+        email: body.email,
+        isDeleted: false
       });
       if (!userData) {
         const userSignup: IUser = {
@@ -277,7 +279,7 @@ const userForgotPassword = async (
     });
     if (result === null) {
       return res.status(400).json({
-        message: "Email not found."
+        message: "Email Address is not Registred with us. Please try with registered email address."
       });
     }
     const encryptedUserId = encrypt(result.id);

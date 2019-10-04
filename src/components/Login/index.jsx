@@ -216,7 +216,7 @@ class LoginComponent extends React.Component {
                   </FormGroup>
                   <div
                     className={
-                      "text-center cursor_pointer forgot-password-wrap"
+                      "text-center cursor_pointer forgot-password-bottom-wrap"
                     }
                   >
                     <span onClick={this.props.handleForgotPasswordModel}>

@@ -124,7 +124,7 @@ class CreateSetComponent extends React.Component {
                   <InputGroup>
                     <Input
                       id="exampleFormControlInput1"
-                      className="capitalize"
+                  
                       placeholder="Enter your title here"
                       type="text"
                       name="title"
@@ -226,7 +226,6 @@ class CreateSetComponent extends React.Component {
               </Label>
               <Input
                 id="exampleFormControlInput1"
-                className="capitalize"
                 type="textarea"
                 name="description"
                 onChange={this.handleChange}

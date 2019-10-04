@@ -9,6 +9,12 @@ $dashboardTextColor: #000;
 $dashboardTextLight: #868686;
 $headingText: #494949;
 $source: "Roboto", sans-serif;
+
+%flexFullAlign {
+display: flex;
+align-items: center;
+justify-content: center;
+}
 // @import "./assets/scss/custom/variables.scss";
 @import url("https://fonts.googleapis.com/css?family=Poppins&display=swap");
 @import url("https://fonts.googleapis.com/css?family=Roboto:400,500,700&display=swap");
@@ -163,24 +169,33 @@ a {
   color: $textColor;
 }
 .play-list-collection {
+
   .play-list-img {
     height: 180px;
     overflow: hidden;
     position: relative;
     background-size: cover;
     background-position: center center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+ 
     img {
-      height: 100%;
-      position: absolute;
-      left: 50%;
-      top: 50%;
-      transform: translate(-50%, -50%);
+      max-width:  100%;
+      max-height:  100%;
+      height:  auto;
+      width:  auto;
+      z-index: 1;
     }
+  }
+  .play-sub-block{
+    border: solid $videoAddBannerBorder;
+    border-width: 2px 2px 2px 2px;
   }
   .play-list-text {
     padding: 10px 15px;
-    border: solid $videoAddBannerBorder;
-    border-width: 0px 2px 2px 2px;
+    // border: solid $videoAddBannerBorder;
+    // border-width: 0px 2px 2px 2px;
     .play-list-heading {
       font-weight: bold;
     }
@@ -192,6 +207,19 @@ a {
   }
   .play-list-block {
     padding-bottom: 30px;
+    // border: 1px solid #ccc;
+  }
+}
+.blur-img-wrap {
+  position: relative;
+  .blur-img{
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    width: 100%;
+    filter: blur(2px);
+    background-size:2500px; 
+height: 100%;
   }
 }
 .home-message-section {
@@ -302,11 +330,10 @@ a {
     background: $dashboardTextColor;
     color: #fff;
     position: relative;
-    top: -5px;
-    left: 7px;
+
   }
   .badge-wrap {
-    padding: 0px 5px;
+    padding: 0px;
   }
   .card {
     padding: 15px;
@@ -458,9 +485,27 @@ a {
     }
   }
 }
-.forgot-password-wrap {
+.forgot-password-bottom-wrap {
   color: $blackcolor;
   font-weight: bold;
+  position: relative;
+  &::before{
+    position: absolute;
+    content: "";
+    width: 100%;
+    height: 2px;
+    background: #000;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    top: 50%;
+    z-index: 1;
+  }
+  span{
+    z-index: 99;
+    background: #dfe7ed;
+    position: relative;
+    padding: 0px 15px;
+  }	
 }
 .facebook-wrap {
   i.fa.fa-facebook {
@@ -483,40 +528,55 @@ a {
   .nav-link-inner--text {
     cursor: pointer;
   }
-  .dropdown-menu {
-    top: 110% !important;
-    right: -15px !important;
+ 
+}
+.dropdown-menu {
+  top: 110% !important;
+  right: -15px !important;
+  left: auto !important;
+  transform: none !important;
+  padding: 0px;
+  border: 2px solid #fff;
+  &::before {
+    background: #fff;
+    box-shadow: none;
+    content: '';
+    display: block;
+    height: 16px;
+    width: 16px;
+    left: 20px;
+    position: absolute;
+    bottom: 100%;
+    -webkit-transform: rotate(-45deg) translateY(1rem);
+    transform: rotate(-45deg) translateY(1rem);
+    z-index: -5;
+    border-radius: 0.2rem;
+    right: 20px;
     left: auto !important;
-    padding: 0px;
-    border: 2px solid #fff;
-    &::before {
-      right: 20px;
-      left: auto !important;
-      height: 22px;
+    height: 22px;
+  }
+  .dropdown-item {
+    cursor: pointer;
+    font-size: 16px;
+    &:hover {
+      background-color: #d8d8d8;
+      color: #000;
     }
-    .dropdown-item {
-      cursor: pointer;
-      font-size: 16px;
-      &:hover {
-        background-color: #d8d8d8;
-        color: #000;
-      }
-      &:active,
-      &:focus {
-        background-color: #d8d8d8 !important;
-        color: #000;
-        outline: none;
-      }
-      &:first-child {
-        border-radius: 5px 5px 0px 0px;
-      }
-      &:last-child {
-        border-radius: 0px 0px 5px 5px;
-      }
-      &.active {
-        background: #d8d8d8 !important;
-        color: #000
-      }
+    &:active,
+    &:focus {
+      background-color: #d8d8d8 !important;
+      color: #000;
+      outline: none;
+    }
+    &:first-child {
+      border-radius: 5px 5px 0px 0px;
+    }
+    &:last-child {
+      border-radius: 0px 0px 5px 5px;
+    }
+    &.active {
+      background: #d8d8d8 !important;
+      color: #000
     }
   }
 }
@@ -919,7 +979,7 @@ a {
     &::before {
       position: absolute;
       bottom: -5px;
-      right: 16px;
+ 
       display: inline-block;
       width: 0;
       height: 0;
@@ -933,16 +993,13 @@ a {
     }
   }
   &.right-btn-tip .btn-group {
-    left: 0%;
-    -webkit-transform: translate(-50%);
-    transform: translate(-50%);
+   right: -15px;
     top: -25px;
-    right: auto;
+    
     &::before {
       position: absolute;
       bottom: -5px;
-      left: 50%;
-      transform: translate(-50%);
+      right: 11px;
     }
   }
   .btn {
@@ -977,7 +1034,10 @@ a {
   min-width: 150px;
 }
 .icon-font {
-    font-size:25px;
+    font-size:20px;
+}
+.custom-toggle-wrap{
+
 }
 .copylink-form {
   input, .btn-black {
@@ -1008,4 +1068,110 @@ a {
 }
 .loader-col{
   position: static;
+}
+.back-arrow{
+  border: 2px solid #bdbdbd;
+  padding: 5px 15px;
+  border-radius: 18px;
+  font-size: 12px;
+}
+
+.video-title-wrap{
+  margin-bottom: 0px;
+}
+.move-title-wrap{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  .discription-btn{
+    font-size: 14px;
+  }
+}
+.discription-btn-wrap{
+  margin: 0px;
+}
+.tag-input-wrap{
+ .form-control{ height: auto;
+    display: block;
+    width: 100%;
+    padding: 0px;
+    &>span{
+      padding: 5px 5px 0px 5px;
+    display: inline-block;
+    }
+    input, .react-tagsinput-tag{    padding: 2px;}
+  } 
+  .react-tagsinput--focused{
+    border-color: #cad1d7;
+  }
+  .react-tagsinput-tag{
+    background-color: #828282;
+    border-radius: 4px;
+    border: 1px solid #3e3e3e;
+    color: #ffffff;
+  }
+}
+.search-select-wrap{
+  .css-1pahdxg-control:hover, .css-1pahdxg-control{
+    border-color:#cad1d7;
+    box-shadow: none;
+  }
+  .css-1n7v3ny-option {
+    background: #d8d8d8;
+    color: #000;
+  }
+  .css-9gakcf-option, .css-yt9ioa-option:active, .css-1n7v3ny-option:active{
+    background: #ababab;
+    color: #000;
+  }
+  .css-169ely9-MenuList,  .css-dv30gr-MenuList, .css-1phbgfc-MenuList{
+    padding: 0px;
+  }
+}
+// Toaster design
+.Toastify__toast{
+  background: #fff;
+  color: #8d352b;
+  font-weight:normal; 
+  font-weight: bold;
+  @extend %flexFullAlign;
+  &.Toastify__toast--success{
+    color: #328834;
+  }
+  .Toastify__close-button{
+    @extend %flexFullAlign;
+    width: 18px;
+    height: 18px;
+    z-index: 1;
+    border-radius: 50%;
+    outline: none;
+    background: transparent;
+    opacity: 1 !important;
+    padding: 0px;
+    border: 1px solid;
+    align-self: center;
+    font-size: 12px;
+    line-height: 2px;
+    padding-right: 1px;
+    &.Toastify__close-button--success{
+      color: #328834;
+    }
+  }
+  
+}
+.custom-dropdown{
+  .btn{
+    padding: 10px;
+    transform: none;
+    margin: 0px;  
+  }
+  .dropdown-menu{
+    right: -50% !important;
+  }
+}
+.header-dropdown{
+  .btn{
+    padding: 0px;
+    background: transparent;
+  }
 }

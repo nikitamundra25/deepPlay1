@@ -133,10 +133,16 @@ class FolderComponent extends React.Component {
                   if (!folder.isDeleted) {
                     return (
                       <Col key={i} md={"6"}>
-                        <div className="tile-wrap card">
+                        <div
+                          className="tile-wrap card"
+                          onMouseLeave={() => this.closePopOver()}
+                        >
                           <div className="cotent-tile d-flex content-with-tip">
                             <div className="cotent-text-tile">
-                              <div className="content-number-tile"> 4 sets</div>
+                              <div className="content-number-tile">
+                                {" "}
+                                {folder.setCount} sets
+                              </div>
                               <div className="content-heading-tile d-flex">
                                 {" "}
                                 <span
@@ -151,7 +157,6 @@ class FolderComponent extends React.Component {
                                 </span>
                                 <div
                                   onMouseOver={() => this.showPopOver(i, show)}
-                                  onMouseLeave={() => this.closePopOver()}
                                   className={"tooltip-btn-wrap right-btn-tip"}
                                 >
                                   <span className="cursor_pointer">

@@ -90,26 +90,50 @@ const getAllFolder = async (req: Request, res: Response): Promise<void> => {
   try {
     const { currentUser, query } = req;
     const { limit, page } = query;
+    const pageValue: number = ((parseInt(page) || 1) - 1) * (limit || 10);
+    const limitValue: number = parseInt(limit) || 10;
+
     let headToken: Request | any = currentUser;
     if (!headToken.id) {
       res.status(400).json({
         message: "User id not found"
       });
     }
-    const result: Document | any = await FolderModel.find({
-      userId: headToken.id,
-      isDeleted: false
-    })
-      .skip(((parseInt(page) || 1) - 1) * (limit || 10))
-      .limit(parseInt(limit) || 10);
-
-    let count: Document | any = await FolderModel.find({
-      userId: headToken.id,
-      isDeleted: false
-    }).count();
-    
+    let result: Document | any,
+      setCount: Document | any,
+      count: Document | any,
+      folderResult: any = [];
+    if (query.roleType === "admin") {
+      result = await FolderModel.find({
+        isDeleted: false
+      });
+    } else {
+      result = await FolderModel.find({
+        userId: headToken.id,
+        isDeleted: false
+      })
+        .skip(pageValue)
+        .limit(limitValue);
+      count = await FolderModel.find({
+        userId: headToken.id,
+        isDeleted: false
+      }).count();
+    }
+    if (result && result.length) {
+      for (let index = 0; index < result.length; index++) {
+        const folderData = result[index];
+        setCount = await SetModel.count({
+          folderId: folderData._id,
+          isDeleted: false
+        });
+        folderResult.push({
+          ...folderData._doc,
+          setCount: setCount
+        });
+      }
+    }
     res.status(200).json({
-      data: result,
+      data: folderResult,
       totalFolders: count,
       message: "Folders has been fetched successfully."
     });
@@ -211,11 +235,6 @@ const updateRecentTimeRequest = async (
     const { body, currentUser } = req;
     const headToken: Request | any = currentUser;
     const { isSetId, isFolderId } = body;
-    // if (!isSetId || !isFolderId) {
-    //   res.status(400).json({
-    //     message: "Id not found"
-    //   });
-    // }
     if (isSetId !== null) {
       await SetModel.findByIdAndUpdate(
         { _id: isSetId },

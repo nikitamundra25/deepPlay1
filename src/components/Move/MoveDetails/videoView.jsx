@@ -28,9 +28,9 @@ class VideoView extends React.Component {
     return (
       <>
         <Col md={"6"}>
-          <FormGroup className="flex-fill flex-column ">
+          <FormGroup className="flex-fill flex-column video-title-wrap">
             <div className=" w-100">
-              <InputGroup>
+              <InputGroup className={"move-title-wrap"}>
                 <Input
                   id="title"
                   className={"move-title"}
@@ -38,7 +38,7 @@ class VideoView extends React.Component {
                   type="text"
                   name="title"
                 />
-                <InputGroupAddon addonType="prepend">
+                <InputGroupAddon addonType="prepend" className="discription-btn-wrap">
                   <InputGroupText
                     id="description"
                     className={"discription-btn cursor_pointer"}

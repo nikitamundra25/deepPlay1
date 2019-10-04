@@ -90,7 +90,7 @@ class AddSetModal extends React.Component {
               onClick={handleOpen}
             >
               <span aria-hidden={true}>
-                {" "}
+              
                 <img src={closeIcon} alt="close-ic" />
               </span>
             </button>

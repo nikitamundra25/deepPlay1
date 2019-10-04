@@ -124,7 +124,9 @@ const imageUpload = async (req: Request, res: Response) => {
         "images-thumbnail",
         fileName
       );
-      await resizeImage(originalImagePath, thumbnailImagePath, 200);
+      if (body.imageData) {
+        await resizeImage(originalImagePath, thumbnailImagePath, 200);
+      }
       const uploadimg = await UserModel.findByIdAndUpdate(currentUser.id, {
         profileImage: thumbnailImg
       });
@@ -172,16 +174,105 @@ const deleteUserAccount = async (req: Request, res: Response): Promise<any> => {
     });
   }
 };
-// --------------- Get All user list
+// --------------- Get All user list -------------- //
 const getAllUser = async (req: Request, res: Response): Promise<any> => {
   try {
-    const result = await UserModel.find({
-      roleType: {
-        $ne: "admin"
+    const { query } = req;
+      const { limit, page, search, sort, status } = query;
+      // define condition
+      let condition: any = {
+         $and: []
+      };
+      // set default value for condition
+      condition.$and.push({
+         isDeleted: false,
+         roleType: {
+          $ne: "admin"
+        }
+      });
+      // check for search condition
+      if (search) {
+         condition.$and.push({
+            $or: [
+               {
+                  name: {
+                     $regex: new RegExp(search.trim(), "i")
+                  }
+               },
+               {
+                  email: {
+                     $regex: new RegExp(search.trim(), "i")
+                  }
+               }
+            ]
+         });
       }
-    });
-    res.status(200).json({
-      result,
+      if (typeof status !== "undefined") {
+         condition.$and.push({
+            status: status == "1" ? true : false
+         });
+      }
+      // check for sort option
+      let sortOption = {};
+      switch (sort) {
+         case "createddesc":
+            sortOption = {
+               createdAt: -1
+            };
+            break;
+         case "createdasc":
+            sortOption = {
+               createdAt: 1
+            };
+            break;
+         case "nasc":
+            sortOption = {
+               firstName: 1,
+               lastName: 1
+            };
+            break;
+         case "ndesc":
+            sortOption = {
+               firstName: -1,
+               lastName: 1
+            };
+            break;
+         default:
+            sortOption = {
+               createdAt: -1
+            };
+            break;
+      }
+      // get user docs
+      const userDoc: Document[] = await UserModel.aggregate([
+        { $addFields: { name: { $concat: ["$firstName", " ", "$lastName"] } } },
+        {
+           $match: { ...condition }
+        },
+        {
+           $sort: sortOption
+        },
+        {
+           $skip: (((parseInt(page) || 1) - 1) * (limit || 10))
+        },
+        {
+           $limit: (parseInt(limit) || 10)
+        },
+     ])
+     // get count for the conditions
+     const userCount: any[] = await UserModel.aggregate([
+        { $addFields: { name: { $concat: ["$firstName", " ", "$lastName"] } } },
+        {
+           $match: { ...condition }
+        },
+        {
+           $count: "count"
+        }
+     ]);
+     // sends the response
+    return res.status(200).json({
+      result:userDoc,
+      totalUsers: userCount[0] ? userCount[0].count : 0
     });
   } catch (error) {
     console.log(error);

@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { SetModel } from "../models";
+import { SetModel, MoveModel } from "../models";
 import { ISet, IUpdateSet } from "../interfaces";
 import Mongoose, { Document } from "mongoose";
 // import { algoliaAppId, algoliaAPIKey } from "../config/app";
@@ -51,28 +51,61 @@ const getAllSetById = async (req: Request, res: Response): Promise<void> => {
   try {
     const { currentUser, query } = req;
     const { limit, page } = query;
-
+    const pageValue = ((parseInt(page) || 1) - 1) * (limit || 10);
+    const limitValue = parseInt(limit) || 10;
     let headToken: Request | any = currentUser;
     if (!headToken.id) {
       res.status(400).json({
         message: "User id not found"
       });
     }
-    const result: Document | any = await SetModel.find({
-      userId: headToken.id,
-      isDeleted: false
-    })
-      .populate("folderId")
-      .skip(((parseInt(page) || 1) - 1) * (limit || 10))
-      .limit(parseInt(limit) || 10);
+    let result: Document | any,
+      moveCount: Document | any,
+      count: Document | any,
+      setResult: any = [];
+    if (query.roleType === "admin") {
+      result = await SetModel.find({
+        isDeleted: false
+      }).populate({
+        path: "folderId",
+        match: {
+          isDeleted: false
+        }
+      });
+    } else {
+      result = await SetModel.find({
+        userId: headToken.id,
+        isDeleted: false
+      })
+        .populate({
+          path: "folderId",
+          match: {
+            isDeleted: false
+          }
+        })
+        .skip(pageValue)
+        .limit(limitValue);
 
-    const count: Document | any = await SetModel.find({
-      userId: headToken.id,
-      isDeleted: false
-    }).count();
-
+      count = await SetModel.find({
+        userId: headToken.id,
+        isDeleted: false
+      }).count();
+    }
+    if (result && result.length) {
+      for (let index = 0; index < result.length; index++) {
+        const setData = result[index];
+        moveCount = await MoveModel.count({
+          setId: setData._id,
+          isDeleted: false
+        });
+        setResult.push({
+          ...setData._doc,
+          moveCount: moveCount
+        });
+      }
+    }
     res.status(200).json({
-      result,
+      result: setResult,
       totalSets: count,
       message: "Sets have been fetched successfully"
     });
@@ -249,8 +282,19 @@ const getSetDetailsById = async (
       _id: setId,
       isDeleted: false
     }).populate("folderId");
+
+    const moveCount: Document | any = await MoveModel.count({
+      setId: result._id,
+      isDeleted: false
+    });
+
+    const SetResult: any = {
+      ...result._doc,
+      moveCount: moveCount
+    };
+
     res.status(200).json({
-      data: result
+      data: SetResult
     });
   } catch (error) {
     console.log(error);
