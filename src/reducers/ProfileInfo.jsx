@@ -4,21 +4,20 @@ import { ProfileAction } from "../actions";
 const initialState = {
   profileInfo: "",
   profileImage: "",
-  isImageUploading: false
+  isImageUploading: false,
+  isprofileInfoLoading: false
 };
 
 export const profileInfoReducer = handleActions(
   {
+    [ProfileAction.PROFILEINFO_REQUEST]: (state, { payload }) => ({
+      ...state,
+      isprofileInfoLoading: true
+    }),
     [ProfileAction.PROFILEINFO_SUCCESS]: (state, { payload }) => ({
       ...state,
-      profileInfo: payload.profileInfo
-    }),
-    [ProfileAction.UPLOAD_IMAGE_SUCCESS]: (state, { payload }) => ({
-      ...state,
-      profileInfo: {
-        ...state.profileInfo,
-        profileImage: payload.imageDetails.profileThumbnail
-      }
+      profileInfo: payload.profileInfo,
+      isprofileInfoLoading: false
     })
   },
   initialState

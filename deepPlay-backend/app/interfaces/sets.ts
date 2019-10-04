@@ -8,3 +8,7 @@ export interface ISet {
   status: Boolean;
   isDeleted: Boolean;
 }
+export interface IUpdateSet {
+  title: String;
+  description: String;
+}

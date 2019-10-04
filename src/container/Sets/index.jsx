@@ -138,19 +138,19 @@ class Set extends React.Component {
         {this.state.createSet ? (
           <CreateSetComponent onCreateSet={this.onCreateSet} />
         ) : (
-            <SetComponent
-              handleSetComponent={this.handleSetComponent}
-              handleFolderModel={this.handleFolderModel}
-              getAllSet={getAllSetReducer.allSetList}
-              isSetListLoading={getAllSetReducer.isSetListLoading}
-              OnCreateSetCopy={this.OnCreateSetCopy}
-              onRemoveSets={this.onHandleDelete}
-              handleRecentTime={this.handleRecentTime}
-              openTransferToModal={this.openTransferToModal}
-              allFolders={this.props.allFolders}
-              {...this.props}
-            />
-          )}
+          <SetComponent
+            handleSetComponent={this.handleSetComponent}
+            handleFolderModel={this.handleFolderModel}
+            getAllSet={getAllSetReducer.allSetList}
+            isSetListLoading={getAllSetReducer.isSetListLoading}
+            OnCreateSetCopy={this.OnCreateSetCopy}
+            onRemoveSets={this.onHandleDelete}
+            handleRecentTime={this.handleRecentTime}
+            openTransferToModal={this.openTransferToModal}
+            allFolders={this.props.allFolders}
+            {...this.props}
+          />
+        )}
         <FolderModal
           modal={modelDetails.createFolderModalOpen}
           handleOpen={this.handleFolderModel}

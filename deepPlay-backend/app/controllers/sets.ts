@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import { SetModel, MoveModel } from "../models";
-import { ISet } from "../interfaces";
+import { ISet, IUpdateSet } from "../interfaces";
 // import { algoliaAppId, algoliaAPIKey } from "../config/app";
 //import * as algoliasearch from 'algoliasearch'; // When using TypeScript
 const algoliasearch = require("algoliasearch");
@@ -327,6 +327,28 @@ const publicAccessSetInfoById = async (
     });
   }
 };
+//------------------Update Folder Details-------------------------------
+const updateSet = async (req: Request, res: Response): Promise<any> => {
+  try {
+    const { body } = req;
+    const { title, description, setId } = body;
+    let updateSet: IUpdateSet = {
+      title,
+      description
+    };
+    await SetModel.findByIdAndUpdate(setId, {
+      $set: updateSet
+    });
+    return res.status(200).json({
+      message: "Set details udpated successfully."
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).send({
+      message: error.message
+    });
+  }
+};
 
 export {
   createSet,
@@ -337,5 +359,6 @@ export {
   deleteSet,
   getSetDetailsById,
   publicUrlsetDetails,
-  publicAccessSetInfoById
+  publicAccessSetInfoById,
+  updateSet
 };

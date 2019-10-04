@@ -267,9 +267,12 @@ class RecentFolderComponent extends React.Component {
             >
               <i className="fas fa-share icon-font"></i>
             </span>
-            <UncontrolledDropdown className="header-dropdown ml-4 custom-dropdown">
+            <UncontrolledTooltip placement="bottom" target="share">
+              Get Shareable Link
+            </UncontrolledTooltip>
+            <UncontrolledDropdown className="header-manu-wrap ">
               <DropdownToggle color={" "}>
-                <span id="edit" className="cursor_pointer ">
+                <span id="edit" className="cursor_pointer">
                   <i className="fas fa-sliders-h icon-font"></i>
                 </span>
               </DropdownToggle>
@@ -284,9 +287,7 @@ class RecentFolderComponent extends React.Component {
                 </DropdownItem>
               </DropdownMenu>
             </UncontrolledDropdown>
-            <UncontrolledTooltip placement="bottom" target="share">
-              Get Shareable Link
-            </UncontrolledTooltip>
+
             <UncontrolledTooltip placement="bottom" target="edit">
               Edit & Delete
             </UncontrolledTooltip>

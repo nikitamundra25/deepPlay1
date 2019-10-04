@@ -5,13 +5,18 @@ import {
   CardBody,
   Button,
   Col,
-  UncontrolledTooltip
+  UncontrolledTooltip,
+  UncontrolledDropdown,
+  DropdownItem,
+  DropdownToggle,
+  DropdownMenu
 } from "reactstrap";
 import {
   getSetDetailsRequest,
   modelOpenRequest,
   publicAccessRequest,
-  shareableLinkRequest
+  shareableLinkRequest,
+  deleteSetRequest
 } from "../../../actions";
 import SharableLinkModal from "../../comman/shareableLink/SharableLink";
 import Slider from "react-slick";
@@ -21,6 +26,7 @@ import "./index.scss";
 import Loader from "../../comman/Loader/Loader";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
+import { ConfirmBox } from "../../../helper/SweetAleart";
 
 var settings = {
   dots: true,
@@ -80,6 +86,21 @@ class SetDetails extends React.Component {
     });
   };
 
+  handleDeleteSet = async id => {
+    const { value } = await ConfirmBox({
+      text: "You want to delete this set.!! "
+    });
+    if (value) {
+      this.props.onDeleteSets(id);
+    }
+  };
+
+  editSet = id => {
+    this.props.redirectTo(
+      AppRoutes.CREATE_SET.url + `?setId=${id}&isEdit=${true}`
+    );
+  };
+
   render() {
     const {
       setReducer,
@@ -97,53 +118,71 @@ class SetDetails extends React.Component {
         <div className="create-set-section step-2 mt-2">
           <Card className="w-100">
             <CardBody>
-              {
-                !isSetDetailsLoading ?
-                  <>
-                    <div className={"d-flex justify-content-between"}>
-                      <div className="content-header">
-                        <span className="content-title">
-                          {setDetails ? setDetails.title : "MyFolder"}
-                        </span>
-                      </div>{" "}
-                      <div>
-                        <span
-                          className="dashboard-right-content cursor_pointer ml-4"
-                          onClick={() => this.props.redirectTo(AppRoutes.MOVE.url)}
-                          id="move"
-                        >
-                          <i className="fas fa-plus-circle icon-font"></i>
-                        </span>
-                        <UncontrolledTooltip placement="top" target="move">
-                          Add new move
-                        </UncontrolledTooltip>
-                        <span
-                          id="share"
-                          onClick={this.handleSharableLink}
-                          className="cursor_pointer ml-4"
-                        >
-                          <i className="fas fa-share icon-font"></i>
-                        </span>
-                        <UncontrolledTooltip placement="top" target="share">
-                          Get Shareable Link
+              {!isSetDetailsLoading ? (
+                <>
+                  <div className={"d-flex justify-content-between"}>
+                    <div className="content-header">
+                      <span className="content-title">
+                        {setDetails ? setDetails.title : "MyFolder"}
+                      </span>
+                    </div>{" "}
+                    <div>
+                      <span
+                        className="dashboard-right-content cursor_pointer ml-4"
+                        onClick={() =>
+                          this.props.redirectTo(AppRoutes.MOVE.url)
+                        }
+                        id="move"
+                      >
+                        <i className="fas fa-plus-circle icon-font"></i>
+                      </span>
+                      <UncontrolledTooltip placement="top" target="move">
+                        Add new move
                       </UncontrolledTooltip>
-                        <span id="edit" className="cursor_pointer ml-4">
-                          <i className="fas fa-sliders-h icon-font"></i>
-                        </span>
-                        <UncontrolledTooltip placement="top" target="edit">
-                          Edit & Delete
+                      <span
+                        id="share"
+                        onClick={this.handleSharableLink}
+                        className="cursor_pointer ml-4"
+                      >
+                        <i className="fas fa-share icon-font"></i>
+                      </span>
+                      <UncontrolledTooltip placement="top" target="share">
+                        Get Shareable Link
                       </UncontrolledTooltip>
-                      </div>
+                      <UncontrolledDropdown className="header-manu-wrap ">
+                        <DropdownToggle>
+                          <span id="edit" className="cursor_pointer ml-4">
+                            <i className="fas fa-sliders-h icon-font"></i>
+                          </span>
+                        </DropdownToggle>
+                        <DropdownMenu>
+                          <DropdownItem
+                            onClick={() => this.editSet(setDetails._id)}
+                          >
+                            Edit
+                          </DropdownItem>
+                          <DropdownItem
+                            onClick={() => this.handleDeleteSet(setDetails._id)}
+                          >
+                            Delete
+                          </DropdownItem>
+                        </DropdownMenu>
+                      </UncontrolledDropdown>
+
+                      <UncontrolledTooltip placement="top" target="edit">
+                        Edit & Delete
+                      </UncontrolledTooltip>
                     </div>
-                    <div className={"pt-2"}> {setDetails ? setDetails.moveCount : 0} Moves</div>
-                  </>
-                  :
+                  </div>
+                  <div className={"pt-2"}> {setDetails ? setDetails.moveCount : 0} Moves</div>
+                </>
+              ) : (
                   <div>
                     <Col sm={12} className="loader-col">
                       <Loader />
                     </Col>
                   </div>
-              }
+                )}
               <div className={"pt-3 d-flex justify-content-center"}>
                 <Col md={"10"}>
                   <Slider {...settings}>
@@ -201,6 +240,9 @@ const mapDispatchToProps = dispatch => ({
   },
   shareableLink: data => {
     dispatch(shareableLinkRequest(data));
+  },
+  onDeleteSets: data => {
+    dispatch(deleteSetRequest(data));
   }
 });
 export default connect(
