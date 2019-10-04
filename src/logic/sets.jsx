@@ -17,7 +17,6 @@ import {
 } from "../actions";
 import { toast } from "react-toastify";
 import { AppConfig } from "../config/Appconfig";
-import qs from "query-string";
 let toastId = null;
 
 //  Create sets
@@ -54,7 +53,7 @@ const createSetLogic = createLogic({
         if (!toast.isActive(toastId)) {
           toastId = toast.success("Set Copy has been created successfully");
         }
-        dispatch(getAllSetRequest());
+        dispatch(getAllSetRequest({ isSetNoLimit: false }));
       }
       done();
     }
@@ -202,7 +201,7 @@ const ManageSetLogic = createLogic({
   async process({ action }, dispatch, done) {
     let api = new ApiHelper();
     dispatch(hideLoader());
-    console.log("act", action.payload);
+
     let result = await api.FetchFromServer(
       "set",
       "/manage-sets",
@@ -231,17 +230,11 @@ const ManageSetLogic = createLogic({
           }
         })
       );
-      const location = window.location;
 
-      const lSearch = location.search;
-      const { page } = qs.parse(lSearch);
-      console.log("....", page);
       if (action.payload.previousFolderId) {
         dispatch(
           getFolderSetRequest({
             folderId: action.payload.previousFolderId
-            //  page: parseInt(page) || 1,
-            //  limit: AppConfig.ITEMS_PER_PAGE
           })
         );
       } else {

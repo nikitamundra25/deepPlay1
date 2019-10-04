@@ -153,44 +153,53 @@ const getSetsForFolder = async (req: Request, res: Response): Promise<void> => {
     const { currentUser } = req;
     const { query } = req;
     const { limit, page } = query;
-    console.log(">>>>>>.query", query);
-
     let headToken: Request | any = currentUser;
     if (!headToken.id) {
       res.status(400).json({
         message: "User id not found"
       });
     }
-    let result: Document | any;
-    if (!query.showAll) {
-      result = await SetModel.find({
-        userId: headToken.id,
-        $or: [{ folderId: Mongoose.Types.ObjectId(query.folderId) }],
-        isDeleted: false
+    let result: Document | any,
+      moveCount: Document | any,
+      setResult: any = [];
+
+    result = await SetModel.find({
+      userId: headToken.id,
+      $or: [{ folderId: Mongoose.Types.ObjectId(query.folderId) }],
+      isDeleted: false
+    })
+      .populate({
+        path: "folderId",
+        match: {
+          isDeleted: false
+        }
       })
-        .skip(((parseInt(page) || 1) - 1) * (limit || 10))
-        .limit(parseInt(limit) || 10);
-    } else {
-      result = await SetModel.find({
-        userId: headToken.id,
-        $or: [
-          { folderId: Mongoose.Types.ObjectId(query.folderId) },
-          { folderId: null }
-        ],
-        isDeleted: false
-      });
+      .skip(((parseInt(page) || 1) - 1) * (limit || 10))
+      .limit(parseInt(limit) || 10);
+
+    if (result && result.length) {
+      for (let index = 0; index < result.length; index++) {
+        const setData = result[index];
+        moveCount = await MoveModel.count({
+          setId: setData._id,
+          isDeleted: false
+        });
+        setResult.push({
+          ...setData._doc,
+          moveCount: moveCount
+        });
+      }
     }
-    console.log("fjglf", result);
 
     let count: Document | any = await SetModel.find({
       userId: headToken.id,
       folderId: query.folderId,
-      $or: [{ folderId: query.folderId }, { folderId: null }],
+      $or: [{ folderId: query.folderId }],
       isDeleted: false
     }).count();
 
     res.status(200).json({
-      data: result,
+      data: setResult,
       totalSets: count
     });
   } catch (error) {

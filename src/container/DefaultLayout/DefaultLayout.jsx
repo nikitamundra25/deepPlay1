@@ -54,8 +54,7 @@ class DefaultLayout extends React.Component {
       profileInfoReducer,
     } = this.props;
     let isLoggedIn;
-    console.log("log", profileInfoReducer);
-
+  
     if (localStorage.getItem("token")) {
       isLoggedIn = true;
     } else {

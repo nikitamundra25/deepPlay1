@@ -111,7 +111,6 @@ const DeleteUserAccountLogic = createLogic({
 const uploadImageLogic = createLogic({
   type: ProfileAction.UPLOAD_IMAGE_REQUEST,
   async process({ action }, dispatch, done) {
-    console.log(" action.payload", action.payload);
     let api = new ApiHelper();
     let result = await api.FetchFromServer(
       "user",
@@ -125,9 +124,7 @@ const uploadImageLogic = createLogic({
       if (!toast.isActive(toastId)) {
         toastId = toast.error(result.messages[0]);
       }
-      dispatch(
-        uploadImageFailed()
-      );
+      dispatch(uploadImageFailed());
       done();
       return;
     } else {
@@ -138,7 +135,7 @@ const uploadImageLogic = createLogic({
         uploadImageSuccess({
           imageDetails: {
             profileThumbnail: result.data.profileThumbnail,
-            profileImage: result.data.profileImage,
+            profileImage: result.data.profileImage
             // profileInfo: result.data.profileThumbnail
           }
         })

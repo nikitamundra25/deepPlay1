@@ -277,7 +277,9 @@ class RecentFolderComponent extends React.Component {
       sharableLinkModalOpen,
       createFolderOpen
     } = modelDetails;
-    const setOfFolder = setListItem.filter(item => item.folderId === folderId);
+    const setOfFolder = setListItem.filter(
+      item => item.folderId._id === folderId
+    );
 
     return (
       <div className="page-body">
@@ -329,7 +331,7 @@ class RecentFolderComponent extends React.Component {
             </UncontrolledTooltip>
           </div>
         </div>{" "}
-        <span className="content-title">
+        <span className="content-title text-capitalize">
           {folderDetails ? folderDetails.description : ""}
         </span>
         <Row className="set-wrap">
@@ -339,43 +341,45 @@ class RecentFolderComponent extends React.Component {
               setOfFolder.map((list, i) => {
                 return (
                   <Col md="6" key={i}>
-                    <div className="tile-wrap card">
-                      <div className="cotent-tile d-flex">
+                    <div
+                      className="tile-wrap card"
+                      onMouseLeave={() => this.closePopOver()}
+                    >
+                      <div className="cotent-tile d-flex content-with-tip">
                         <div className="cotent-text-tile">
-                          <div className="content-heading-tile">
+                          <div className="content-heading-tile d-flex">
                             {" "}
                             <span
                               onClick={() => this.handleSetDetails(list._id)}
-                              className={"cursor_pointer"}
+                              className={"cursor_pointer text-capitalize"}
                             >
-                              {list.title}
+                              <span>{list.title} </span>
                             </span>
                           </div>
-                          <div className="content-heading-tile">
+                          <span className="text-capitalize">
+                            {list.description ? list.description : ""}
+                          </span>
+                          <div className="content-number-tile">
                             {" "}
-                            {list.description}
+                            {list.moveCount ? list.moveCount : 0} items
                           </div>
-
-                          <div className="content-number-tile"> 4 items</div>
+                        </div>
+                        <div className="d-flex img-tile-wrap">
+                          <div
+                            className="cotent-img-tile"
+                            style={{
+                              backgroundImage:
+                                'url("' +
+                                "https://res.cloudinary.com/fleetnation/image/private/c_fit,w_1120/g_south,l_text:style_gothic2:%C2%A9%20Nikita%20Buida,o_20,y_10/g_center,l_watermark4,o_25,y_50/v1469756538/dd3acf4nzzavkv4rf2ji.jpg" +
+                                '")'
+                            }}
+                          />
                         </div>
                         <div
-                          className="cotent-img-tile"
-                          style={{
-                            backgroundImage:
-                              'url("' +
-                              "https://res.cloudinary.com/fleetnation/image/private/c_fit,w_1120/g_south,l_text:style_gothic2:%C2%A9%20Nikita%20Buida,o_20,y_10/g_center,l_watermark4,o_25,y_50/v1469756538/dd3acf4nzzavkv4rf2ji.jpg" +
-                              '")'
-                          }}
-                        ></div>
-                        <div
                           onMouseOver={() => this.showPopOver(i, show)}
-                          onMouseLeave={() => this.closePopOver()}
-                          className={"p-3 tooltip-btn-wrap right-btn-tip"}
+                          className={"tooltip-btn-wrap right-btn-tip"}
                         >
-                          <span
-                            onClick={() => this.showPopOver(i)}
-                            className="cursor_pointer"
-                          >
+                          <span className="cursor_pointer">
                             {" "}
                             <i className="fas fa-ellipsis-v setting-icon "></i>
                           </span>
