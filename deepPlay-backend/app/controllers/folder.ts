@@ -88,7 +88,8 @@ const createFolder = async (req: Request, res: Response): Promise<any> => {
 // --------------Get all folder ---------------------
 const getAllFolder = async (req: Request, res: Response): Promise<void> => {
   try {
-    const { currentUser } = req;
+    const { currentUser, query } = req;
+    const { limit, page } = query;
     let headToken: Request | any = currentUser;
     if (!headToken.id) {
       res.status(400).json({
@@ -98,9 +99,18 @@ const getAllFolder = async (req: Request, res: Response): Promise<void> => {
     const result: Document | any = await FolderModel.find({
       userId: headToken.id,
       isDeleted: false
-    });
+    })
+      .skip(((parseInt(page) || 1) - 1) * (limit || 10))
+      .limit(parseInt(limit) || 10);
+
+    let count: Document | any = await FolderModel.find({
+      userId: headToken.id,
+      isDeleted: false
+    }).count();
+    
     res.status(200).json({
       data: result,
+      totalFolders: count,
       message: "Folders has been fetched successfully."
     });
   } catch (error) {

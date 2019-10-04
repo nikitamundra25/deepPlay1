@@ -51,9 +51,11 @@ class DefaultLayout extends React.Component {
       signupRequest,
       socialLoginRequest,
       forgotPasswordRequest,
-      profileInfoReducer
+      profileInfoReducer,
     } = this.props;
     let isLoggedIn;
+    console.log("log", profileInfoReducer);
+
     if (localStorage.getItem("token")) {
       isLoggedIn = true;
     } else {
@@ -183,7 +185,7 @@ class DefaultLayout extends React.Component {
 const mapStateToProps = state => ({
   modelInfoReducer: state.modelInfoReducer,
   loginReducer: state.loginReducer,
-  profileInfoReducer: state.profileInfoReducer
+  profileInfoReducer: state.profileInfoReducer,
 });
 const mapDispatchToProps = dispatch => ({
   modelOperate: data => dispatch(modelOpenRequest(data)),

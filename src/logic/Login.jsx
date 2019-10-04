@@ -1,5 +1,5 @@
 import { createLogic } from "redux-logic";
-import { ApiHelper } from "../helper"
+import { ApiHelper } from "../helper";
 import {
   loginAction,
   modelOpenRequest,
@@ -11,7 +11,7 @@ import {
 } from "../actions";
 //import { logger } from "helper/Logger";
 import { toast } from "react-toastify";
-import { AppRoutes } from "../config/AppRoutes"
+import { AppRoutes } from "../config/AppRoutes";
 /**
  *
  */
@@ -28,26 +28,25 @@ const loginLogic = createLogic({
       action.payload
     );
     if (result.isError || !result.data.userData) {
+      dispatch(loginSuccess({ isLoginSuccess: false }));
       toast.error(result.messages[0]);
       done();
       return;
     } else {
-      localStorage.setItem("token", result.data.token)
+      localStorage.setItem("token", result.data.token);
       dispatch(
         modelOpenRequest({
           modelDetails: {
             loginModelOpen: false
           }
         })
-      )
+      );
       dispatch(
         profileSuccess({
           profileInfo: result.data.userData
         })
       );
-      dispatch(
-        loginSuccess({ isLoginSuccess: true })
-      )
+      dispatch(loginSuccess({ isLoginSuccess: true }));
       window.location.href = AppRoutes.DASHBOARD.url;
       done();
     }
@@ -59,9 +58,9 @@ const loginLogic = createLogic({
 const logOutLogic = createLogic({
   type: loginAction.LOGOUT_REQUEST,
   async process({ action }, dispatch, done) {
-    dispatch(logoutSuccess({ isLoginSuccess: false }))
+    dispatch(logoutSuccess({ isLoginSuccess: false }));
     localStorage.removeItem("token");
-    window.location.href = AppRoutes.HOME_PAGE.url
+    window.location.href = AppRoutes.HOME_PAGE.url;
     done();
   }
 });
@@ -85,9 +84,9 @@ const socialLoginLogic = createLogic({
       done();
       return;
     } else {
-      localStorage.setItem("token", result.data.token)
+      localStorage.setItem("token", result.data.token);
       if (result.data.message) {
-        toast.success(result.data.message)
+        toast.success(result.data.message);
       }
       dispatch(
         modelOpenRequest({
@@ -95,10 +94,8 @@ const socialLoginLogic = createLogic({
             loginModelOpen: false
           }
         })
-      )
-      dispatch(
-        loginSuccess({ isLoginSuccess: true })
-      )
+      );
+      dispatch(loginSuccess({ isLoginSuccess: true }));
       window.location.href = AppRoutes.DASHBOARD.url;
       done();
     }
@@ -124,7 +121,7 @@ const forgetPasswordLogic = createLogic({
       done();
       return;
     } else {
-      dispatch(forgotPasswordSuccess())
+      dispatch(forgotPasswordSuccess());
       toast.success(result.messages[0]);
       dispatch(
         modelOpenRequest({
@@ -132,7 +129,7 @@ const forgetPasswordLogic = createLogic({
             forgotPasswordModalOpen: false
           }
         })
-      )
+      );
       done();
     }
   }

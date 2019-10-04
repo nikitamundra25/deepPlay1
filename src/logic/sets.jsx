@@ -16,6 +16,8 @@ import {
   getSetDetailsSuccess
 } from "../actions";
 import { toast } from "react-toastify";
+import { AppConfig } from "../config/Appconfig";
+import qs from "query-string";
 
 //  Create sets
 const createSetLogic = createLogic({
@@ -119,14 +121,10 @@ const getAllSetLogic = createLogic({
   async process({ action }, dispatch, done) {
     let api = new ApiHelper();
     dispatch(showLoader());
-    let result = await api.FetchFromServer(
-      "set",
-      "/get-all-set",
-      "GET",
-      true,
-      undefined,
-      undefined
-    );
+    let result = await api.FetchFromServer("set", "/get-all-set", "GET", true, {
+      ...action.payload,
+      limit: AppConfig.ITEMS_PER_PAGE
+    });
     if (result.isError) {
       dispatch(hideLoader());
       toast.error(result.messages[0]);
@@ -137,7 +135,8 @@ const getAllSetLogic = createLogic({
       dispatch(
         getAllSetSuccess({
           showLoader: false,
-          allSetList: result.data.result
+          allSetList: result.data.result,
+          totalSets: result.data.totalSets ? result.data.totalSets : 0
         })
       );
       done();
@@ -155,7 +154,10 @@ const getSetOfFolderLogic = createLogic({
       "/get-sets-of-folder",
       "GET",
       true,
-      action.payload
+      {
+        ...action.payload,
+        limit: AppConfig.ITEMS_PER_PAGE
+      }
     );
     if (result.isError) {
       toast.error(result.messages[0]);
@@ -171,7 +173,8 @@ const getSetOfFolderLogic = createLogic({
       dispatch(
         getFolderSetSuccess({
           showLoader: false,
-          setListinFolder: result.data.data
+          setListinFolder: result.data.data,
+          totalSetsInFolder: result.data.totalSets ? result.data.totalSets : 0
         })
       );
       done();
@@ -212,10 +215,17 @@ const ManageSetLogic = createLogic({
           }
         })
       );
+      const location = window.location;
+
+      const lSearch = location.search;
+      const { page } = qs.parse(lSearch);
+      console.log("....", page);
       if (action.payload.previousFolderId) {
         dispatch(
           getFolderSetRequest({
             folderId: action.payload.previousFolderId
+            //  page: parseInt(page) || 1,
+            //  limit: AppConfig.ITEMS_PER_PAGE
           })
         );
       } else {

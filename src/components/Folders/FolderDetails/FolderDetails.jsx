@@ -24,7 +24,9 @@ import {
   publicAccessRequest,
   shareableLinkRequest,
   deleteFolderRequest,
-  updateFolderRequest
+  updateFolderRequest,
+  redirectTo,
+  getAllSetRequest
 } from "../../../actions";
 import AddSetModal from "./addSet";
 import TransferToModal from "./transferTo";
@@ -34,6 +36,9 @@ import emptySetIc from "../../../assets/img/empty-sets.png";
 import { AppRoutes } from "../../../config/AppRoutes";
 import Loader from "../../comman/Loader/Loader";
 import FolderModal from "../createFolderModal";
+import PaginationHelper from "helper/Pagination";
+import qs from "query-string";
+import { AppConfig } from "../../../config/Appconfig";
 
 // core components
 class RecentFolderComponent extends React.Component {
@@ -45,26 +50,32 @@ class RecentFolderComponent extends React.Component {
       show: false, //show setting popOver,
       folderId: "", // pathName of folderId
       setToTransfer: "", // pass set id to transfer to different folder,
-      setIndex: -1
+      setIndex: -1,
+      page: 1,
+      showAll: false
     };
   }
   componentDidMount() {
-    const loaction = this.props.location;
-    const pathName = loaction.pathname.split("/");
+    const location = this.props.location;
+    const lSearch = location.search;
+    const { page } = qs.parse(lSearch);
+    const pathName = location.pathname.split("/");
     this.props.folderDetail({ id: pathName[2] });
     this.props.getSetsList({ folderId: pathName[2] });
+    this.props.getAllSetRequest({ isSetNoLimit: true });
     this.setState({
-      folderId: pathName[2]
+      folderId: pathName[2],
+      page: parseInt(page) || 1
     });
   }
 
   componentDidUpdate(prevProps) {
     if (
-      prevProps.getAllSetReducer &&
-      prevProps.getAllSetReducer.setListinFolder !==
-        this.props.getAllSetReducer.setListinFolder
+      prevProps.setReducer &&
+      prevProps.setReducer.setListinFolder !==
+        this.props.setReducer.setListinFolder
     ) {
-      const setList = this.props.getAllSetReducer.setListinFolder;
+      const setList = this.props.setReducer.setListinFolder;
       this.setState({
         setListItem: setList
       });
@@ -78,6 +89,13 @@ class RecentFolderComponent extends React.Component {
       modelDetails: {
         addSetModalOpen: !modelDetails.addSetModalOpen
       }
+    });
+    this.props.getSetsList({
+      folderId: this.state.folderId,
+      showAll: true
+    });
+    this.setState({
+      showAll: true
     });
   };
 
@@ -223,18 +241,36 @@ class RecentFolderComponent extends React.Component {
     this.props.updateFolderRequest(data);
   };
 
+  onPageChange = page => {
+    this.props.onGoPage(
+      `${AppRoutes.FOLDER_DETAILS.url.replace(
+        ":id",
+        this.state.folderId
+      )}?${qs.stringify({ page: page })}`
+    );
+    this.props.getSetsList({ folderId: this.state.folderId, page: page });
+  };
+
   render() {
     const {
       modelInfoReducer,
       getFolderReducer,
       shareLinkReducer,
-      getAllSetReducer
+      setReducer
     } = this.props;
-    const { setListItem, show, setToTransfer, folderId, setIndex } = this.state;
+    const {
+      setListItem,
+      show,
+      setToTransfer,
+      folderId,
+      setIndex,
+      page
+    } = this.state;
     const { modelDetails } = modelInfoReducer;
     const { folderDetails, getAllFolders } = getFolderReducer;
     const { userEncryptedInfo } = shareLinkReducer;
-    const { isFolderSetLoading } = getAllSetReducer;
+    const { isFolderSetLoading, totalSetsInFolder } = setReducer;
+
     const {
       transferToModalOpen,
       addSetModalOpen,
@@ -444,6 +480,17 @@ class RecentFolderComponent extends React.Component {
           editFolder="true"
           folderDetails={folderDetails ? folderDetails : null}
         />
+        {totalSetsInFolder && !isFolderSetLoading ? (
+          <PaginationHelper
+            totalRecords={totalSetsInFolder}
+            currentPage={page}
+            onPageChanged={page => {
+              this.setState({ page });
+              this.onPageChange(page);
+            }}
+            pageLimit={AppConfig.ITEMS_PER_PAGE}
+          />
+        ) : null}
       </div>
     );
   }
@@ -452,7 +499,7 @@ const mapStateToProps = state => {
   return {
     getFolderReducer: state.getFolderReducer,
     modelInfoReducer: state.modelInfoReducer,
-    getAllSetReducer: state.setReducer,
+    setReducer: state.setReducer,
     shareLinkReducer: state.shareLinkReducer
   };
 };
@@ -482,7 +529,11 @@ const mapDispatchToProps = dispatch => ({
   },
   updateFolderRequest: data => {
     dispatch(updateFolderRequest(data));
-  }
+  },
+  onGoPage: data => {
+    dispatch(redirectTo({ path: data }));
+  },
+  getAllSetRequest: data => dispatch(getAllSetRequest(data))
 });
 
 export default connect(

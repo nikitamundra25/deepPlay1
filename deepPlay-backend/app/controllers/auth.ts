@@ -10,9 +10,9 @@ import {
   encrypt,
   decrypt
 } from "../common";
-import { IUser } from "../interfaces"
-import { comparePassword } from "../common/password"
-import { webURL } from "../config/app"
+import { IUser } from "../interfaces";
+import { comparePassword } from "../common/password";
+import { webURL } from "../config/app";
 import { ValidationError, Result, validationResult } from "express-validator";
 
 /* Title:- Login For User
@@ -29,7 +29,8 @@ const login = async (req: Request, res: Response): Promise<any> => {
     }).select("firstName lastName email password");
     if (result === null) {
       return res.status(400).json({
-        message: "User not found."
+        message:
+          "Email address is not registered with us. Please try to login with valid email address."
       });
     }
     if (result.password) {
@@ -161,7 +162,7 @@ const signup = async (req: Request, res: Response): Promise<any> => {
       const emailVar = new Email(req);
       await emailVar.setTemplate(AvailiableTemplates.SIGNUP_CONFIRM, {
         firstName: userResult.firstName,
-        lastName: userResult.lastName,
+        lastName: userResult.lastName
       });
       await emailVar.sendEmail(body.email);
       return res.status(200).json({
@@ -252,13 +253,16 @@ const socialSignup = async (req: Request, res: Response) => {
       message: error.message
     });
   }
-}
+};
 
 /*  Title:- User forgot Password
 Prams:- email
 Created By:- Rishabh Bula */
 
-const userForgotPassword = async (req: Request, res: Response): Promise<any> => {
+const userForgotPassword = async (
+  req: Request,
+  res: Response
+): Promise<any> => {
   try {
     const errors: Result<ValidationError> = validationResult(req);
     if (!errors.isEmpty()) {
@@ -278,9 +282,7 @@ const userForgotPassword = async (req: Request, res: Response): Promise<any> => 
     }
     const encryptedUserId = encrypt(result.id);
     const encrypteUserEmail = encrypt(result.email);
-    const encrypteVerifyToken = encrypt(
-      result.email + result.id
-    );
+    const encrypteVerifyToken = encrypt(result.email + result.id);
     const emailVar = new Email(req);
     await emailVar.setTemplate(AvailiableTemplates.FORGET_PASSWORD, {
       fullName: result.firstName + " " + result.lastName,
@@ -368,7 +370,9 @@ const userResetpassword = async (req: Request, res: Response): Promise<any> => {
     }
     const { body } = req;
     const decryptedUserEmail = decrypt(body.user);
-    const userData: Document | any | null = await UserModel.findOne({ email: decryptedUserEmail });
+    const userData: Document | any | null = await UserModel.findOne({
+      email: decryptedUserEmail
+    });
     if (!userData) {
       return res.status(400).json({
         responsecode: 400,
@@ -376,9 +380,7 @@ const userResetpassword = async (req: Request, res: Response): Promise<any> => {
         success: false
       });
     }
-    const encryptedUserpassword = encryptPassword(
-      body.password
-    );
+    const encryptedUserpassword = encryptPassword(body.password);
     if (!userData.verifyToken) {
       return res.status(400).json({
         responsecode: 400,

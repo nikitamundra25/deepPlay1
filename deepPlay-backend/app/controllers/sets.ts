@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import { SetModel } from "../models";
 import { ISet, IUpdateSet } from "../interfaces";
+import Mongoose, { Document } from "mongoose";
 // import { algoliaAppId, algoliaAPIKey } from "../config/app";
 //import * as algoliasearch from 'algoliasearch'; // When using TypeScript
 const algoliasearch = require("algoliasearch");
@@ -48,7 +49,9 @@ const createSet = async (req: Request, res: Response): Promise<any> => {
 // --------------Get all set info---------------------
 const getAllSetById = async (req: Request, res: Response): Promise<void> => {
   try {
-    const { currentUser } = req;
+    const { currentUser, query } = req;
+    const { limit, page } = query;
+
     let headToken: Request | any = currentUser;
     if (!headToken.id) {
       res.status(400).json({
@@ -58,9 +61,19 @@ const getAllSetById = async (req: Request, res: Response): Promise<void> => {
     const result: Document | any = await SetModel.find({
       userId: headToken.id,
       isDeleted: false
-    }).populate("folderId");
+    })
+      .populate("folderId")
+      .skip(((parseInt(page) || 1) - 1) * (limit || 10))
+      .limit(parseInt(limit) || 10);
+
+    const count: Document | any = await SetModel.find({
+      userId: headToken.id,
+      isDeleted: false
+    }).count();
+
     res.status(200).json({
       result,
+      totalSets: count,
       message: "Sets have been fetched successfully"
     });
   } catch (error) {
@@ -88,6 +101,7 @@ const getRecentSetById = async (req: Request, res: Response): Promise<void> => {
     })
       .sort({ isRecentTime: -1 })
       .limit(limit);
+
     res.status(200).json({
       data: result,
       message: "Sets have been fetched successfully"
@@ -105,19 +119,46 @@ const getSetsForFolder = async (req: Request, res: Response): Promise<void> => {
   try {
     const { currentUser } = req;
     const { query } = req;
+    const { limit, page } = query;
+    console.log(">>>>>>.query", query);
+
     let headToken: Request | any = currentUser;
     if (!headToken.id) {
       res.status(400).json({
         message: "User id not found"
       });
     }
-    const result: Document | any = await SetModel.find({
+    let result: Document | any;
+    if (!query.showAll) {
+      result = await SetModel.find({
+        userId: headToken.id,
+        $or: [{ folderId: Mongoose.Types.ObjectId(query.folderId) }],
+        isDeleted: false
+      })
+        .skip(((parseInt(page) || 1) - 1) * (limit || 10))
+        .limit(parseInt(limit) || 10);
+    } else {
+      result = await SetModel.find({
+        userId: headToken.id,
+        $or: [
+          { folderId: Mongoose.Types.ObjectId(query.folderId) },
+          { folderId: null }
+        ],
+        isDeleted: false
+      });
+    }
+    console.log("fjglf", result);
+
+    let count: Document | any = await SetModel.find({
       userId: headToken.id,
+      folderId: query.folderId,
       $or: [{ folderId: query.folderId }, { folderId: null }],
       isDeleted: false
-    });
+    }).count();
+
     res.status(200).json({
-      data: result
+      data: result,
+      totalSets: count
     });
   } catch (error) {
     console.log(error);

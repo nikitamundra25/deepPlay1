@@ -6,8 +6,12 @@ import {
   createFolderRequest,
   getAllFolderRequest,
   deleteFolderRequest,
-  updateRecentTimeRequest
+  updateRecentTimeRequest,
+  redirectTo
 } from "../../actions";
+import qs from "query-string";
+import { AppRoutes } from "../../config/AppRoutes";
+import { isEqual } from "../../helper/Object";
 
 // core components
 class Folder extends React.Component {
@@ -30,6 +34,20 @@ class Folder extends React.Component {
     this.props.deleteFolder(id);
   };
 
+  componentDidUpdate({ location }) {
+    const prevQuery = qs.parse(location.search);
+    const currQuery = qs.parse(this.props.location.search);
+    if (!isEqual(prevQuery, currQuery)) {
+      this.props.allFolders({ ...currQuery, page: currQuery.page || 1 });
+    }
+  }
+
+  onPageChange = page => {
+    this.props.onGoPage(
+      `${AppRoutes.FOLDERS.url}?${qs.stringify({ page: page })}`
+    );
+  };
+
   render() {
     const { modelOperate, modelInfoReducer, folderReducer } = this.props;
     return (
@@ -40,9 +58,10 @@ class Folder extends React.Component {
           modelOperate={modelOperate}
           handleForRecentFolder={this.handleForRecentFolder}
           createFolder={this.createFolder}
-          getAllFolders={folderReducer.getAllFolders}
+          folderReducer={folderReducer}
           isFolderLoading={folderReducer.isFolderLoading}
           onDelete={this.onDelete}
+          onPageChange={this.onPageChange}
           {...this.props}
         />
       </>
@@ -62,14 +81,17 @@ const mapDispatchToProps = dispatch => {
       dispatch(createFolderRequest(data));
     },
     modelOperate: data => dispatch(modelOpenRequest(data)),
-    allFolders: () => {
-      dispatch(getAllFolderRequest());
+    allFolders: data => {
+      dispatch(getAllFolderRequest(data));
     },
     deleteFolder: id => {
       dispatch(deleteFolderRequest(id));
     },
     updateRecentTime: data => {
       dispatch(updateRecentTimeRequest(data));
+    },
+    onGoPage: data => {
+      dispatch(redirectTo({ path: data }));
     }
   };
 };

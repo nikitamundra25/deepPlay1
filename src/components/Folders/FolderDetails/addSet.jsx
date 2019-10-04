@@ -21,13 +21,13 @@ class AddSetModal extends React.Component {
       selectedSet: "yourSet"
     };
   }
+
   componentDidUpdate(prevProps) {
     if (prevProps.getAllSet !== this.props.getAllSet) {
       const setList = this.props.getAllSet;
       const setItem = setList.filter(
         item => item.folderId === this.props.folderId
       );
-
       this.setState({
         setList: setItem
       });
@@ -51,6 +51,7 @@ class AddSetModal extends React.Component {
   handleAddNewSet = folderId => {
     this.props.redirectTo(AppRoutes.CREATE_SET.url + `?folderId=${folderId}`);
   };
+
   handleSelect = e => {
     e.preventDefault();
     const setList = this.props.getAllSet;

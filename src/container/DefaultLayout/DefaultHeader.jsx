@@ -77,7 +77,6 @@ class DefaultHeader extends React.Component {
   };
 
   createFolder = data => {
-    console.log("fjfdh");
     this.props.onFolderCreation(data);
   };
 
@@ -107,6 +106,7 @@ class DefaultHeader extends React.Component {
       profileInfoReducer && profileInfoReducer.profileInfo
         ? profileInfoReducer.profileInfo
         : null;
+
     return (
       <>
         <header className="header-global theme-header ">

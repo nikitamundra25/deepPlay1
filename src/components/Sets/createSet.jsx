@@ -39,7 +39,6 @@ class CreateSetComponent extends React.Component {
 
   componentDidMount = () => {
     let parsed = qs.parse(this.props.location.search);
-    console.log("parsed", parsed);
     this.props.getSetDetailsRequest({ setId: parsed.setId });
   };
 

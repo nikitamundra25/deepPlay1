@@ -14,6 +14,7 @@ import {
   folderDetailRequest
 } from "../actions";
 import { toast } from "react-toastify";
+import { AppConfig } from "../config/Appconfig";
 
 //  Create folder
 const createFolderLogic = createLogic({
@@ -39,7 +40,8 @@ const createFolderLogic = createLogic({
       dispatch(
         modelOpenRequest({
           modelDetails: {
-            createFolderModalOpen: false
+            createFolderModalOpen: false,
+            createFolderOpen: false
           }
         })
       );
@@ -67,7 +69,10 @@ const allFolderLogic = createLogic({
       "/all-folder",
       "GET",
       true,
-      undefined,
+      {
+        ...action.payload,
+        limit: AppConfig.ITEMS_PER_PAGE
+      },
       undefined
     );
     if (result.isError) {
@@ -88,7 +93,8 @@ const allFolderLogic = createLogic({
       );
       dispatch(
         getAllFolderSuccess({
-          getAllFolders: result.data.data
+          getAllFolders: result.data.data,
+          totalFolders: result.data.totalFolders ? result.data.totalFolders : 0
         })
       );
       done();

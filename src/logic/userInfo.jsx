@@ -130,7 +130,8 @@ const uploadImageLogic = createLogic({
         uploadImageSuccess({
           imageDetails: {
             profileThumbnail: result.data.profileThumbnail,
-            profileImage: result.data.profileImage
+            profileImage: result.data.profileImage,
+            // profileInfo: result.data.profileThumbnail
           }
         })
       );
