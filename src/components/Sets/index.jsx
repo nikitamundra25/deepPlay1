@@ -135,7 +135,7 @@ class SetComponent extends React.Component {
                             }}
                           />
                         </div>
-                      
+
                         <div
                           onMouseOver={() => this.showPopOver(i, show)}
                           className="tooltip-btn-wrap right-btn-tip"
@@ -179,7 +179,6 @@ class SetComponent extends React.Component {
                             ) : null}
                           </span>
                         </div>
-                     
                       </div>
                     </div>
                   </Col>
