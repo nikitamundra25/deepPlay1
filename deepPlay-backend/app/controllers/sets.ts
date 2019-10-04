@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { SetModel } from "../models";
+import { SetModel, MoveModel } from "../models";
 import { ISet } from "../interfaces";
 // import { algoliaAppId, algoliaAPIKey } from "../config/app";
 //import * as algoliasearch from 'algoliasearch'; // When using TypeScript
@@ -55,12 +55,12 @@ const getAllSetById = async (req: Request, res: Response): Promise<void> => {
         message: "User id not found"
       });
     }
-    let result: Document | any
+    let result: Document | any, moveCount: Document | any, setResult: any = []
     if (query.roleType === "admin") {
       result = await SetModel.find({
         isDeleted: false
       }).populate({
-        path:"folderId",
+        path: "folderId",
         match: {
           isDeleted: false
         }
@@ -70,14 +70,27 @@ const getAllSetById = async (req: Request, res: Response): Promise<void> => {
         userId: headToken.id,
         isDeleted: false
       }).populate({
-        path:"folderId",
+        path: "folderId",
         match: {
           isDeleted: false
         }
       });
     }
+    if (result && result.length) {
+      for (let index = 0; index < result.length; index++) {
+        const setData = result[index];
+        moveCount = await MoveModel.count({
+          setId: setData._id,
+          isDeleted: false
+        })
+        setResult.push({
+          ...setData._doc,
+          moveCount: moveCount
+        })
+      }
+    }
     res.status(200).json({
-      result,
+      result: setResult,
       message: "Sets have been fetched successfully"
     });
   } catch (error) {
@@ -225,8 +238,19 @@ const getSetDetailsById = async (
       _id: setId,
       isDeleted: false
     }).populate("folderId");
+
+    const moveCount: Document | any = await MoveModel.count({
+      setId: result._id,
+      isDeleted: false
+    })
+
+    const SetResult: any = {
+      ...result._doc,
+      moveCount: moveCount
+    }
+
     res.status(200).json({
-      data: result
+      data: SetResult
     });
   } catch (error) {
     console.log(error);

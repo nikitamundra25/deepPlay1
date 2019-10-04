@@ -79,7 +79,7 @@ class SetComponent extends React.Component {
                 getAllSet.map((setList, i) => {
                   return (
                     <Col md="6" key={i}>
-                      <div className="tile-wrap card">
+                      <div className="tile-wrap card" onMouseLeave={() => this.closePopOver()}>
                         <div className="cotent-tile d-flex content-with-tip">
                           <div className="cotent-text-tile">
                             <div className="content-heading-tile d-flex">
@@ -88,22 +88,12 @@ class SetComponent extends React.Component {
                                 onClick={() => this.handleSetDetails(setList._id)}
                                 className={"cursor_pointer text-capitalize"}
                               >
-                                {
-                                  setList.folderId ?
-                                    <span>
-                                      {
-                                        setList.folderId && setList.folderId.isCopy ?
-                                          `Copy of ${setList.folderId.title}` :
-                                          setList.folderId.title
-                                      }/
-                                    <span className={"text-light"}>{setList.title}</span>
-                                    </span> :
-                                    <span>{setList.title}</span>
-                                }
+                                <span>{setList.title}</span>
+
                               </span>
                             </div>
                             {setList.description ? setList.description : ""}
-                            <div className="content-number-tile"> 46 moves</div>
+                            <div className="content-number-tile"> {setList.moveCount} moves</div>
                           </div>
                           <div className="d-flex img-tile-wrap">
                             <div
@@ -117,7 +107,6 @@ class SetComponent extends React.Component {
                             />
                             <div
                               onMouseOver={() => this.showPopOver(i, show)}
-                              onMouseLeave={() => this.closePopOver()}
                               className="tooltip-btn-wrap right-btn-tip"
                             >
                               <span className="cursor_pointer">

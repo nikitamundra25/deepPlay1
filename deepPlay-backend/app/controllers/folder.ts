@@ -95,7 +95,7 @@ const getAllFolder = async (req: Request, res: Response): Promise<void> => {
         message: "User id not found"
       });
     }
-    let result: Document | any
+    let result: Document | any, setCount: Document | any, folderResult: any = []
     if (query.roleType === "admin") {
       result = await FolderModel.find({
         isDeleted: false
@@ -106,8 +106,21 @@ const getAllFolder = async (req: Request, res: Response): Promise<void> => {
         isDeleted: false
       });
     }
+    if (result && result.length) {
+      for (let index = 0; index < result.length; index++) {
+        const folderData = result[index];
+        setCount = await SetModel.count({
+          folderId: folderData._id,
+          isDeleted: false
+        })
+        folderResult.push({
+          ...folderData._doc,
+          setCount: setCount
+        })
+      }
+    }
     res.status(200).json({
-      data: result,
+      data: folderResult,
       message: "Folders has been fetched successfully."
     });
   } catch (error) {
@@ -208,11 +221,6 @@ const updateRecentTimeRequest = async (
     const { body, currentUser } = req;
     const headToken: Request | any = currentUser;
     const { isSetId, isFolderId } = body;
-    // if (!isSetId || !isFolderId) {
-    //   res.status(400).json({
-    //     message: "Id not found"
-    //   });
-    // }
     if (isSetId !== null) {
       await SetModel.findByIdAndUpdate(
         { _id: isSetId },

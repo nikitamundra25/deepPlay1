@@ -102,20 +102,9 @@ class SetDetails extends React.Component {
                   <>
                     <div className={"d-flex justify-content-between"}>
                       <div className="content-header">
-                        {
-                          setDetails && setDetails.folderId ?
-                            <span className="content-title">
-                              {
-                                setDetails && setDetails.folderId ? setDetails.folderId.isCopy ?
-                                  `Copy of ${setDetails.folderId.title}` :
-                                  setDetails.folderId.title : null
-                              }/
-                              <span className={"text-light"}>{setDetails.title}</span>
-                            </span> :
-                            <span className="content-title">
-                              {setDetails ? setDetails.title : "MyFolder"}
-                            </span>
-                        }
+                        <span className="content-title">
+                          {setDetails ? setDetails.title : "MyFolder"}
+                        </span>
                       </div>{" "}
                       <div>
                         <span
@@ -146,7 +135,7 @@ class SetDetails extends React.Component {
                       </UncontrolledTooltip>
                       </div>
                     </div>
-                    <div className={"pt-2"}> 3 Moves</div>
+                    <div className={"pt-2"}> {setDetails ? setDetails.moveCount : 0} Moves</div>
                   </>
                   :
                   <div>

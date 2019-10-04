@@ -126,7 +126,7 @@ class HomePage extends React.Component {
                     <div
                       className="play-list-img blur-img-wrap"
                     >
-                     <img src={images} />
+                     <img src={images} alt={""}/>
                      <div
                       className="blur-img"
                       style={{ backgroundImage: 'url("' + images + '")' }}
