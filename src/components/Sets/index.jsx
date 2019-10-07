@@ -93,7 +93,7 @@ class SetComponent extends React.Component {
             Create New Set
           </UncontrolledTooltip>
         </div>
-        <p>
+        <p className="m-0">
           Total sets {allSetList && allSetList.length ? allSetList.length : "0"}
         </p>{" "}
         <Row className="set-wrap">
@@ -193,7 +193,7 @@ class SetComponent extends React.Component {
             ) : (
               <>
                 <div className="create-set-section mt-2 w-100">
-                  <Card className="w-100 set-content-wrap">
+                  <Card className="set-content-wrap">
                     <div className="set-content-block w-100 empty-folder-wrap">
                       <CardHeader className="empty-folder-header">
                         <img src={emptySetIc} alt={"Folder"} />

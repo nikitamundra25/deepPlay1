@@ -120,7 +120,7 @@ class FolderComponent extends React.Component {
             Create a New Folder
           </UncontrolledTooltip>
         </div>
-        <p>
+        <p className="m-0">
           Total folders{" "}
           {getAllFolders && getAllFolders.length ? getAllFolders.length : "0"}
         </p>{" "}
@@ -196,7 +196,7 @@ class FolderComponent extends React.Component {
               ) : (
                 <>
                   <div className="create-set-section mt-2 w-100">
-                    <Card className="w-100 set-content-wrap">
+                    <Card className="set-content-wrap">
                       <div className="set-content-block w-100 empty-folder-wrap">
                         <CardHeader className="empty-folder-header">
                           <img src={emptyFolderIc} alt={"folder"} />

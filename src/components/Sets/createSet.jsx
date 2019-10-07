@@ -111,8 +111,8 @@ class CreateSetComponent extends React.Component {
     let parsed = qs.parse(this.props.location.search);
 
     return (
-      <div className="create-set-section mt-2">
-        <Card className="w-100 set-content-wrap">
+      <div className="create-set-section">
+        <Card className="set-content-wrap">
           <div className="set-content-block w-100">
             <CardHeader className="">
               <div className="content-header set-header">

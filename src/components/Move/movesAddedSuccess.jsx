@@ -21,8 +21,8 @@ class MoveAddedSuccess extends React.Component {
   render() {
     return (
       <>
-        <div className="create-set-section step-2 mt-2">
-          <Card className="w-100 set-content-wrap">
+        <div className="create-set-section step-2 ">
+          <Card className="set-content-wrap">
             <div className="set-content-block w-100">
               <CardHeader className="">
                 <div className="content-header set-header flex-column">

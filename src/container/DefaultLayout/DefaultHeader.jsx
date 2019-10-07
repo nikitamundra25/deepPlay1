@@ -36,6 +36,8 @@ class DefaultHeader extends React.Component {
 
   componentDidMount = () => {
     const temp = this.props.history.location.pathname;
+    console.log("temp", temp);
+
     if (localStorage.getItem("token")) {
       this.setState({
         isUserLoggedIn: true,
