@@ -10,7 +10,7 @@ import ytdl from "ytdl-core";
 import { MoveModel } from "../models";
 import fs from "fs";
 import path from "path";
-import ThumbnailGenerator from 'video-thumbnail-generator';
+import ThumbnailGenerator from "video-thumbnail-generator";
 import { decrypt } from "../common";
 
 const __basedir = path.join(__dirname, "../public");
@@ -101,10 +101,10 @@ const downloadYoutubeVideo = async (
       __basedir,
       "../uploads",
       "video-image-thumbnail"
-    )
+    );
     const tg: any = new ThumbnailGenerator({
       sourcePath: originalVideoPath,
-      thumbnailPath: videoThumbnailPath,
+      thumbnailPath: videoThumbnailPath
     });
     tg.generateCb((err: string, result: string) => {
       if (err) {
