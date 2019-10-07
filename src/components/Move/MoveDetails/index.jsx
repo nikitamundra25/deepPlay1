@@ -27,7 +27,7 @@ class MoveDetails extends React.Component {
     const { setReducer, moveReducer } = this.props;
     return (
       <>
-        <div className="create-set-section step-2 mt-2">
+        <div className="create-set-section step-2 ">
           <Card className="w-100">
             <CardBody>
               <span

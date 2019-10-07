@@ -167,8 +167,8 @@ class SetComponent extends React.Component {
                 })
               ) : (
                   <>
-                    <div className="create-set-section mt-2 w-100">
-                      <Card className="w-100 set-content-wrap">
+                    <div className="create-set-section w-100 empty-folder-section">
+                      <Card className="w-100 set-content-wrap empty-folder-card">
                         <div className="set-content-block w-100 empty-folder-wrap">
                           <CardHeader className="empty-folder-header">
                             <img src={emptySetIc} alt={"Folder"} />
@@ -186,7 +186,7 @@ class SetComponent extends React.Component {
                               <Button
                                 color=" "
                                 type="button"
-                                className="btn-black btn mt-3 folder-create-btn"
+                                className="btn-black btn folder-create-btn"
                                 onClick={() =>
                                   this.props.redirectTo(AppRoutes.CREATE_SET.url)
                                 }

@@ -116,16 +116,16 @@ class FolderComponent extends React.Component {
                       if (!folder.isDeleted) {
                         return (
                           <Col key={i} md={"6"}>
-                            <div className="tile-wrap card">
+                            <Card className="tile-wrap folder-main-wrap"  onClick={() =>
+                                        this.handleFolderdetails(folder._id)
+                                      }>
                               <div className="cotent-tile d-flex content-with-tip">
                                 <div className="cotent-text-tile">
                                   <div className="content-number-tile"> 4 sets</div>
                                   <div className="content-heading-tile d-flex">
                                     {" "}
                                     <span
-                                      onClick={() =>
-                                        this.handleFolderdetails(folder._id)
-                                      }
+                                     
                                       className={"cursor_pointer"}
                                     >
                                       {
@@ -166,15 +166,15 @@ class FolderComponent extends React.Component {
                                   {folder.description ? folder.description : ""}
                                 </div>
                               </div>
-                            </div>
+                            </Card>
                           </Col>
                         );
                       }
                     })
                   ) : (
                     <>
-                      <div className="create-set-section mt-2 w-100">
-                        <Card className="w-100 set-content-wrap">
+                      <div className="create-set-section w-100 empty-folder-section">
+                        <Card className="w-100 set-content-wrap empty-folder-card">
                           <div className="set-content-block w-100 empty-folder-wrap">
                             <CardHeader className="empty-folder-header">
                               <img src={emptyFolderIc} alt={"folder"} />
@@ -192,7 +192,7 @@ class FolderComponent extends React.Component {
                                 <Button
                                   color=" "
                                   type="button"
-                                  className="btn-black btn mt-3 folder-create-btn"
+                                  className="btn-black btn folder-create-btn"
                                   onClick={this.handleFolderModel}
                                 >
                                   <i className="fas fa-plus mr-1"></i>

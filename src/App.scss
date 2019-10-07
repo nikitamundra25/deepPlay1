@@ -320,6 +320,11 @@ height: 100%;
       font-weight: 500;
       text-transform: capitalize;
       font-family: $source;
+      .sub-title{
+        color: #868686;
+        font-size: 14px;
+        font-family: "Roboto", sans-serif;
+      }
     }
     .dashboard-right-content {
       font-family: $source;
@@ -657,6 +662,10 @@ height: 100%;
       display: flex;
       align-items: center;
       justify-content: center;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
     }
   }
   .changeProfile {
@@ -820,11 +829,13 @@ height: 100%;
     }
   }
   .empty-folder-wrap {
+    
     .empty-folder-header {
       border-bottom: none;
       img {
         width: 80px;
-        margin-bottom: 30px;
+        margin:0px auto 30px auto;
+        
       }
       h3 {
         font-size: 18px;
@@ -1242,6 +1253,6 @@ height: 100%;
     background: transparent;
   }
 }
-.setlist-title{
-
+.folder-main-wrap{
+  cursor: pointer;
 }

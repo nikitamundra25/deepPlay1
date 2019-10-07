@@ -248,7 +248,10 @@ class RecentFolderComponent extends React.Component {
       <div className="page-body">
         <div className="content-header">
           <span className="content-title">
-            {folderDetails ? folderDetails.title : "MyFolder"}
+           <div className="main-title"> {folderDetails ? folderDetails.title : "MyFolder"}</div>
+            <div className="sub-title">
+          {folderDetails ? folderDetails.description : ""}
+        </div>
           </span>
           <div>
             <span
@@ -270,7 +273,7 @@ class RecentFolderComponent extends React.Component {
             </span>
             <UncontrolledDropdown className="header-dropdown  custom-dropdown">
               <DropdownToggle color={" "}>
-                <span id="edit" className="cursor_pointer ">
+                <span id="edit" className="cursor_pointer ml-4">
                   <i className="fas fa-sliders-h icon-font"></i>
                 </span>
               </DropdownToggle>
@@ -293,9 +296,7 @@ class RecentFolderComponent extends React.Component {
             </UncontrolledTooltip>
           </div>
         </div>{" "}
-        <span className="content-title">
-          {folderDetails ? folderDetails.description : ""}
-        </span>
+        
         <Row className="set-wrap">
           {!isFolderSetLoading ? (
             setOfFolder && setOfFolder.length ? (
@@ -374,8 +375,8 @@ class RecentFolderComponent extends React.Component {
               })
             ) : (
               <>
-                <div className="create-set-section mt-2 w-100">
-                  <Card className="w-100 set-content-wrap">
+                <div className="create-set-section mt-2 w-100 empty-folder-section">
+                  <Card className="w-100 set-content-wrap empty-folder-card">
                     <div className="set-content-block w-100 empty-folder-wrap">
                       <CardHeader className="empty-folder-header">
                         <img src={emptySetIc} alt={"Images"} />
@@ -393,7 +394,7 @@ class RecentFolderComponent extends React.Component {
                           <Button
                             color=" "
                             type="button"
-                            className="btn-black btn mt-3"
+                            className="btn-black btn "
                             onClick={this.openAddSetModel}
                           >
                             <i className="fas fa-plus mr-1"></i>
