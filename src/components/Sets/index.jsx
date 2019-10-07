@@ -100,6 +100,7 @@ class SetComponent extends React.Component {
           </UncontrolledTooltip>
         </div>
         <Row className="set-wrap">
+       
           {!isSetListLoading ? (
             allSetList && allSetList.length ? (
               // eslint-disable-next-line
@@ -236,6 +237,7 @@ class SetComponent extends React.Component {
               </Col>
             </div>
           )}
+        
         </Row>
         {totalSets && !isSetListLoading ? (
           <PaginationHelper

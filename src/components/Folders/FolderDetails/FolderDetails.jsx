@@ -336,6 +336,7 @@ class RecentFolderComponent extends React.Component {
           </div>
         </div>{" "}
         <Row className="set-wrap">
+          <Col>
           {!isFolderSetLoading ? (
             setOfFolder && setOfFolder.length ? (
               // eslint-disable-next-line
@@ -458,6 +459,7 @@ class RecentFolderComponent extends React.Component {
               <Loader />
             </Col>
           )}
+          </Col>
         </Row>
         <AddSetModal
           handleOpen={this.openAddSetModel}

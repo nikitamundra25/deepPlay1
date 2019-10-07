@@ -111,7 +111,9 @@ class CreateSetComponent extends React.Component {
     let parsed = qs.parse(this.props.location.search);
 
     return (
-      <div className="create-set-section">
+      <>
+      
+      <div className="create-set-section mt-5">
         <Card className="set-content-wrap">
           <div className="set-content-block w-100">
             <CardHeader className="">
@@ -236,6 +238,7 @@ class CreateSetComponent extends React.Component {
           </ModalFooter>
         </Modal>
       </div>
+      </>
     );
   }
 }
