@@ -40,7 +40,7 @@ class CreateSetComponent extends React.Component {
 
   componentDidMount = () => {
     let parsed = qs.parse(this.props.location.search);
-    if (parsed && parsed.setid) {
+    if (parsed && parsed.setId) {
       this.props.getSetDetailsRequest({ setId: parsed.setId });
     }
   };

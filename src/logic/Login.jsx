@@ -8,7 +8,9 @@ import {
   loginSuccess,
   logoutSuccess,
   profileSuccess,
-  forgotPasswordSuccess
+  forgotPasswordSuccess,
+  changePasswordSuccess,
+  changePasswordAction
 } from "../actions";
 //import { logger } from "helper/Logger";
 import { toast } from "react-toastify";
@@ -213,7 +215,7 @@ const verifyAccountAccessLogic = createLogic({
       dispatch(logoutRequest());
     }
     localStorage.setItem("token", user);
-    
+
     dispatch(
       redirectTo({
         path: AppRoutes.DASHBOARD.url
@@ -222,6 +224,40 @@ const verifyAccountAccessLogic = createLogic({
     done();
   }
 });
+
+//---------Change password----------
+const changePasswordLogic = createLogic({
+  type: changePasswordAction.CHANGE_PASSWORD_REQUEST,
+  async process({ action }, dispatch, done) {
+    let api = new ApiHelper();
+    let result = await api.FetchFromServer(
+      "/auth",
+      "/change-password",
+      "PUT",
+      true,
+      undefined,
+      action.payload
+    );
+    if (result.isError) {
+      if (!toast.isActive(toastId)) {
+        toastId = toast.error(
+          result.messages[0].oldPassword ||
+            result.messages[0] ||
+            result.messages
+        );
+      }
+      done();
+      return;
+    } else {
+      dispatch(changePasswordSuccess({ isChangePasswordSuccess: true }));
+      if (!toast.isActive(toastId)) {
+        toastId = toast.success(result.messages[0]);
+      }
+      done();
+    }
+  }
+});
+
 export const LoginLogics = [
   loginLogic,
   logOutLogic,
@@ -229,5 +265,6 @@ export const LoginLogics = [
   forgetPasswordLogic,
   verifyResetTokenLogic,
   resetPasswordLogic,
-  verifyAccountAccessLogic
+  verifyAccountAccessLogic,
+  changePasswordLogic
 ];

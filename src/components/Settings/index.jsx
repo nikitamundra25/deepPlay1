@@ -23,6 +23,7 @@ import UploadImage from "./uploadImageModal";
 import profileIcon from "../../assets/img/profile-ic.png";
 import { AppConfig } from "../../config/Appconfig";
 import Loader from "../comman/Loader/Loader";
+
 class SettingComponent extends Component {
   constructor(props) {
     super(props);

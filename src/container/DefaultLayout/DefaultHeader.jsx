@@ -259,6 +259,18 @@ class DefaultHeader extends React.Component {
                             </DropdownItem>
                           );
                         })}
+                        <DropdownItem
+                          onClick={() =>
+                            this.props.redirectTo(AppRoutes.CHANGE_PASSWORD.url)
+                          }
+                        >
+                          <img
+                            src={logoutIcon}
+                            alt={"changePassword"}
+                            width="20"
+                          />{" "}
+                          Change Password
+                        </DropdownItem>
                         <DropdownItem onClick={e => logoutRequest(e)}>
                           <img src={logoutIcon} alt={"Logout"} width="20" /> Log
                           Out
