@@ -51,10 +51,10 @@ class DefaultLayout extends React.Component {
       signupRequest,
       socialLoginRequest,
       forgotPasswordRequest,
-      profileInfoReducer,
+      profileInfoReducer
     } = this.props;
     let isLoggedIn;
-  
+
     if (localStorage.getItem("token")) {
       isLoggedIn = true;
     } else {
@@ -63,10 +63,7 @@ class DefaultLayout extends React.Component {
     const routePath = this.props.location.pathname;
     return (
       <>
-        {routePath !== "/resetPassword" &&
-        routePath !== "/folder-shared-link" &&
-        routePath !== "/set-shared-link" &&
-        routePath !== "/404" ? (
+        {routePath !== "/resetPassword" ? (
           <DefaultHeader
             modelInfoReducer={modelInfoReducer}
             modelOpenRequest={modelOperate}
@@ -184,7 +181,7 @@ class DefaultLayout extends React.Component {
 const mapStateToProps = state => ({
   modelInfoReducer: state.modelInfoReducer,
   loginReducer: state.loginReducer,
-  profileInfoReducer: state.profileInfoReducer,
+  profileInfoReducer: state.profileInfoReducer
 });
 const mapDispatchToProps = dispatch => ({
   modelOperate: data => dispatch(modelOpenRequest(data)),
