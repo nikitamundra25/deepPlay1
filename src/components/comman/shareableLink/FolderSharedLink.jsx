@@ -110,7 +110,7 @@ class FolderSharedLink extends React.Component {
                 <div className="create-set-section w-100 empty-folder-section">
                   <Card className="set-content-wrap empty-folder-card">
                     <div className="set-content-block w-100 empty-folder-wrap">
-                      <CardHeader className="empty-folder-header">
+                      <CardHeader className="empty-folder-header ">
                         <img src={emptySetIc} alt={"Images"} />
                         <div className="content-header set-header">
                           <span className="content-title">

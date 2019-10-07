@@ -49,7 +49,7 @@ class Dashboard extends React.Component {
             <span className="content-title">RECENT</span>
           </div> */}
           <div className="content-header">
-            <span className="content-title">RECENT SETS</span>
+            <span className="content-title ">RECENT SETS</span>
             {recentSets && recentSets.length > 4 ? (
               <span
                 className="dashboard-right-content cursor_pointer"
@@ -69,7 +69,7 @@ class Dashboard extends React.Component {
                     return (
                       <Col md="6" key={i}>
                         <div className="tile-wrap card">
-                          <div className="badge-wrap">
+                          <div className="badge-wrap mb-2">
                             <Badge variant="secondary" className="draft-wrap">
                               DRAFT
                           </Badge>
@@ -180,7 +180,7 @@ class Dashboard extends React.Component {
                                 {" "}
                                 {folder.title}
                               </div>
-                              <div className="content-heading-tile">
+                              <div className="content-sub-heading-tile">
                                 {" "}
                                 {folder.description ? folder.description : ""}
                               </div>

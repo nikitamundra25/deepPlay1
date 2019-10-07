@@ -121,7 +121,7 @@ class FolderComponent extends React.Component {
                 : "0"}
             </div>
           </span>
-          <span onClick={this.handleFolderModel} id="move">
+          <span onClick={this.handleFolderModel} id="move" className="dashboard-right-content cursor_pointer ml-4">
             <i className="fas fa-plus-circle icon-font"></i>
           </span>
           <UncontrolledTooltip placement="bottom" target="move">
@@ -131,6 +131,7 @@ class FolderComponent extends React.Component {
 
         <div className="wrap-folder">
           <Row className="set-wrap">
+            <Col>
             {!isFolderLoading ? (
               getAllFolders && getAllFolders.length ? (
                 // eslint-disable-next-line
@@ -188,7 +189,7 @@ class FolderComponent extends React.Component {
                                   ) : null}
                                 </div>
                               </div>
-                              <span className={"text-capitalize"}>
+                              <span className={"content-sub-heading-tile"}>
                                 {folder.description ? folder.description : ""}
                               </span>
                             </div>
@@ -237,6 +238,7 @@ class FolderComponent extends React.Component {
                 <Loader />
               </Col>
             )}
+            </Col>
           </Row>
           <FolderModal
             modal={createFolderOpen}
