@@ -1,6 +1,6 @@
 import React from "react";
 import { connect } from "react-redux";
-import { Card, CardBody, Col, Row } from "reactstrap";
+import { Card, CardBody, Row } from "reactstrap";
 import VideoView from "./videoView";
 import VideoDetails from "./videoDetails";
 import { getMoveDetailsRequest, getAllSetRequest } from "../../../actions";

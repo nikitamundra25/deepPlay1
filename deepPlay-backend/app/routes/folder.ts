@@ -9,7 +9,8 @@ import {
   updateRecentTimeRequest,
   sharableLinkPublicAccess,
   sharableLink,
-  publicUrlFolderInfo
+  publicUrlFolderInfo,
+  updateFolderStatus
 } from "../controllers";
 import { ValidateAdminToken } from "../common";
 const FolderRouter: express.Router = express.Router();
@@ -32,5 +33,6 @@ FolderRouter.patch(
 );
 FolderRouter.get("/share-link", ValidateAdminToken, sharableLink);
 FolderRouter.get("/public-access-folder-info-by-id", publicUrlFolderInfo);
+FolderRouter.patch("/update-folder-status", ValidateAdminToken, updateFolderStatus);
 
 export default FolderRouter;

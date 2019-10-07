@@ -13,7 +13,9 @@ export const SetsAction = {
   RECENT_SET_REQUEST: "Recent Set Request",
   RECENT_SET_SUCCESS: "Recent Set Success",
   DELETE_SET_REQUEST: "Delete Set Request",
-  DELETE_SET_SUCCESS: " Delete Set Success"
+  DELETE_SET_SUCCESS: " Delete Set Success",
+  UPDATE_SET_REQUEST: "Update Set Request",
+  UPDATE_SET_SUCCESS: " Update Set Success"
 };
 export const createSetRequest = createAction(SetsAction.CREATE_SET_REQUEST);
 export const createSetSuccess = createAction(SetsAction.CREATE_SET_SUCCESS);
@@ -37,3 +39,5 @@ export const getSetDetailsRequest = createAction(
 export const getSetDetailsSuccess = createAction(
   SetsAction.GET_SET_DETAILS_SUCCESS
 );
+export const UpdateSetRequest = createAction(SetsAction.UPDATE_SET_REQUEST);
+export const UpdateSetSuccess = createAction(SetsAction.UPDATE_SET_SUCCESS);

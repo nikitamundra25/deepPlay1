@@ -10,7 +10,9 @@ import ytdl from "ytdl-core";
 import { MoveModel } from "../models";
 import fs from "fs";
 import path from "path";
+import ThumbnailGenerator from 'video-thumbnail-generator';
 import { decrypt } from "../common";
+
 const __basedir = path.join(__dirname, "../public");
 
 cloudinary.config({
@@ -94,6 +96,24 @@ const downloadYoutubeVideo = async (
         fileName
       );
     }
+    /*  */
+    const videoThumbnailPath = path.join(
+      __basedir,
+      "../uploads",
+      "video-image-thumbnail"
+    )
+    const tg: any = new ThumbnailGenerator({
+      sourcePath: originalVideoPath,
+      thumbnailPath: videoThumbnailPath,
+    });
+    tg.generateCb((err: string, result: string) => {
+      if (err) {
+        console.log("err", err);
+      } else {
+        console.log("####################", result);
+      }
+    });
+    /*  */
     videoURL = path.join("uploads", "youtube-videos", fileName);
     let videoStream: any;
 
@@ -140,7 +160,6 @@ const getMoveBySetId = async (req: Request, res: Response): Promise<any> => {
       });
     }
     const movesData: Document | any = await MoveModel.find({
-      userId: headToken.id,
       setId: query.setId
     });
 

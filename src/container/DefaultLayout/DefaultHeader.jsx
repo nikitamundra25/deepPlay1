@@ -19,7 +19,7 @@ import {
 import Login from "../Auth/Login/index.jsx";
 import Signup from "../Auth/Signup/index.jsx";
 import FolderModal from "../../components/Folders/createFolderModal";
-import profileImage from "../../assets/img/user-white-ic.svg";
+import profileImage from "../../assets/img/profile-ic.png";
 import { AppRoutes } from "../../config/AppRoutes";
 import { SidebarComponent } from "../../components/Sidebar";
 import logoutIcon from "../../assets/img/icons/logout.svg";
@@ -77,7 +77,6 @@ class DefaultHeader extends React.Component {
   };
 
   createFolder = data => {
-    console.log("fjfdh");
     this.props.onFolderCreation(data);
   };
 
@@ -107,6 +106,10 @@ class DefaultHeader extends React.Component {
       profileInfoReducer && profileInfoReducer.profileInfo
         ? profileInfoReducer.profileInfo
         : null;
+    const splitedImage =
+      profiledata && profiledata.profileImage
+        ? profiledata.profileImage.split("/")
+        : [];
     return (
       <>
         <header className="header-global theme-header ">
@@ -212,9 +215,13 @@ class DefaultHeader extends React.Component {
                               profiledata ? "user-img round-img" : "user-img"
                             }
                           >
-                            {profiledata ? (
+                            {profiledata && profiledata.profileImage ? (
                               <img
-                                src={`${AppConfig.API_ENDPOINT}${profiledata.profileImage}`}
+                                src={
+                                  splitedImage[0] === "uploads"
+                                    ? `${AppConfig.API_ENDPOINT}${profiledata.profileImage}`
+                                    : profiledata.profileImage
+                                }
                                 className="w-100 "
                                 alt={"img"}
                               />

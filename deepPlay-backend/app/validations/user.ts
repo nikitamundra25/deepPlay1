@@ -15,11 +15,7 @@ export const UpdateUserValidation = [
     .trim()
     .isEmail()
     .withMessage("Please enter valid email."),
-  body("roleType")
-    .not()
-    .isEmpty()
-    .withMessage("Role type is required.")
-    .trim()
+    
 ];
 export const UpdateUserPasswordValidations = [
   body("newPassword")

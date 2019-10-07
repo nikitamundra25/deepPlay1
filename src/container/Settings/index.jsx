@@ -15,7 +15,6 @@ class Setting extends React.Component {
   };
 
   handleData = data => {
-    console.log("data", data);
     this.props.updateProfile(data);
   };
   onDelete = () => {
@@ -26,7 +25,12 @@ class Setting extends React.Component {
   //   this.props.uploadProfileImage(file);
   // };
   render() {
-    const { modelOperate, modelInfoReducer, isImageUploading } = this.props
+    const {
+      modelOperate,
+      modelInfoReducer,
+      isImageUploading,
+      isprofileInfoLoading
+    } = this.props;
     return (
       <>
         <SettingComponent
@@ -40,6 +44,7 @@ class Setting extends React.Component {
           modelOperate={modelOperate}
           isImageUploading={isImageUploading}
           modelInfoReducer={modelInfoReducer}
+          isprofileInfoLoading={isprofileInfoLoading}
         />
       </>
     );
@@ -48,9 +53,10 @@ class Setting extends React.Component {
 const mapStateToProps = state => {
   return {
     userData: state.profileInfoReducer.profileInfo,
+    isprofileInfoLoading: state.profileInfoReducer.isprofileInfoLoading,
     profileImage: state.profileImage.profileImage.profileThumbnail,
     isImageUploading: state.profileImage.isImageUploading,
-    modelInfoReducer: state.modelInfoReducer,
+    modelInfoReducer: state.modelInfoReducer
   };
 };
 
@@ -68,7 +74,7 @@ const mapDispatchToProps = dispatch => {
     uploadProfileImage: payload => {
       dispatch(uploadImageRequest(payload));
     },
-    modelOperate: data => dispatch(modelOpenRequest(data)),
+    modelOperate: data => dispatch(modelOpenRequest(data))
   };
 };
 

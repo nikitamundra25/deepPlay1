@@ -4,7 +4,16 @@ import { resizeImage } from "../common/resizeImage";
 import { IDataToUpdate } from "../interfaces/users";
 import fs from "fs";
 import path from "path";
-import { IsProductionMode } from "../config"
+import { IsProductionMode } from "../config";
+import { validationResult, ValidationError, Result } from "express-validator";
+import {
+  GenerateToken,
+  ValidationFormatter,
+  encryptPassword,
+  Email,
+  AvailiableTemplates
+} from "../common";
+import moment from "moment";
 const __basedir = path.join(__dirname, "../public");
 
 // --------------Get user info---------------------
@@ -124,7 +133,9 @@ const imageUpload = async (req: Request, res: Response) => {
         "images-thumbnail",
         fileName
       );
-      await resizeImage(originalImagePath, thumbnailImagePath, 200);
+      if (body.imageData) {
+        await resizeImage(originalImagePath, thumbnailImagePath, 200);
+      }
       const uploadimg = await UserModel.findByIdAndUpdate(currentUser.id, {
         profileImage: thumbnailImg
       });
@@ -172,16 +183,107 @@ const deleteUserAccount = async (req: Request, res: Response): Promise<any> => {
     });
   }
 };
-// --------------- Get All user list
+// --------------- Get All user list -------------- //
 const getAllUser = async (req: Request, res: Response): Promise<any> => {
   try {
-    const result = await UserModel.find({
+    const { query } = req;
+    const { limit, page, search, sort, status } = query;
+    const pageNumber: number = ((parseInt(page) || 1) - 1) * (limit || 10);
+    const limitNumber: number = parseInt(limit) || 10;
+    // define condition
+    let condition: any = {
+      $and: []
+    };
+    // set default value for condition
+    condition.$and.push({
+      isDeleted: false,
       roleType: {
         $ne: "admin"
       }
     });
-    res.status(200).json({
-      result,
+    // check for search condition
+    if (search) {
+      condition.$and.push({
+        $or: [
+          {
+            name: {
+              $regex: new RegExp(search.trim(), "i")
+            }
+          },
+          {
+            email: {
+              $regex: new RegExp(search.trim(), "i")
+            }
+          }
+        ]
+      });
+    }
+    if (typeof status !== "undefined") {
+      condition.$and.push({
+        status: status == "1" ? true : false
+      });
+    }
+    // check for sort option
+    let sortOption = {};
+    switch (sort) {
+      case "createddesc":
+        sortOption = {
+          createdAt: -1
+        };
+        break;
+      case "createdasc":
+        sortOption = {
+          createdAt: 1
+        };
+        break;
+      case "nasc":
+        sortOption = {
+          firstName: 1,
+          lastName: 1
+        };
+        break;
+      case "ndesc":
+        sortOption = {
+          firstName: -1,
+          lastName: 1
+        };
+        break;
+      default:
+        sortOption = {
+          createdAt: -1
+        };
+        break;
+    }
+    // get user docs
+    const userDoc: Document[] = await UserModel.aggregate([
+      { $addFields: { name: { $concat: ["$firstName", " ", "$lastName"] } } },
+      {
+        $match: { ...condition }
+      },
+      {
+        $sort: sortOption
+      },
+      {
+        $skip: (pageNumber)
+      },
+      {
+        $limit: (limitNumber)
+      },
+    ])
+    // get count for the conditions
+    const userCount: any[] = await UserModel.aggregate([
+      { $addFields: { name: { $concat: ["$firstName", " ", "$lastName"] } } },
+      {
+        $match: { ...condition }
+      },
+      {
+        $count: "count"
+      }
+    ]);
+    // sends the response
+    return res.status(200).json({
+      result: userDoc,
+      totalUsers: userCount[0] ? userCount[0].count : 0
     });
   } catch (error) {
     console.log(error);
@@ -190,5 +292,210 @@ const getAllUser = async (req: Request, res: Response): Promise<any> => {
     });
   }
 };
-
-export { getUserInfo, editUserInfo, deleteUserAccount, imageUpload, getAllUser };
+// -------------- Update User status ---------------- //
+const updateUserStatus = async (req: Request, res: Response): Promise<any> => {
+  try {
+    const { body } = req;
+    const { users, status } = body;
+    const data: Document = await UserModel.updateMany(
+      {
+        _id: { $in: users }
+      },
+      {
+        $set: {
+          status: status
+        }
+      }
+    );
+    for (let x = 0; x < users.length; x++) {
+      let result: Document | null | any = await UserModel.findOne({ _id: users[x] }).select("firstName lastName email status");
+      if (result === null) {
+        return res.status(400).json({
+          message: "Email not found."
+        });
+      }
+      const emailVar = new Email(req);
+      await emailVar.setTemplate(AvailiableTemplates.STATUS_CHANGE, {
+        resetPageUrl: req.headers.host,
+        status: result.status === true ? 'activated' : 'inactivated',
+        fullName: result.firstName + " " + result.lastName
+      });
+      await emailVar.sendEmail(result.email);
+    }
+    return res.status(200).json({
+      message: status
+        ? "User activated successfully!"
+        : "User inactivated successfully!",
+      data
+    });
+  } catch (error) {
+    console.log("this is get all user error", error);
+    return res.status(500).json({
+      message: error.message ? error.message : "Unexpected error occure.",
+      success: false
+    });
+  }
+};
+/**
+ * Update User Details
+ */
+const updateUserDetails = async (req: Request, res: Response): Promise<any> => {
+  try {
+    const errors: Result<ValidationError> = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(422).json({
+        message: ValidationFormatter(errors.mapped())
+      });
+    }
+    const { body: $data, params } = req;
+    const { userId } = params;
+    let sendMail: boolean = false;
+    let old_email: string = "";
+    let new_email: string = $data.email;
+    let inserList: Document = {
+      ...$data,
+      updatedAt: Date.now()
+    };
+    let result: Document | any | null = await UserModel.findOne({ _id: userId });
+    if (result.email !== $data.email) {
+      sendMail = true;
+      old_email = result.email;
+      new_email = $data.email;
+    }
+    await UserModel.findByIdAndUpdate(userId, inserList);
+    if (sendMail) {
+      const emailVar = new Email(req);
+      await emailVar.setTemplate(AvailiableTemplates.EMAIL_CHANGE, {
+        resetPageUrl: req.headers.host,
+        fullName: $data.firstName + " " + $data.lastName,
+        old_email: old_email,
+        new_email: new_email
+      });
+      await emailVar.sendEmail($data.email);
+    }
+    return res.status(200).json({
+      message: "User details updated successfully."
+    });
+  } catch (error) {
+    res.status(500).json({
+      message: error.message ? error.message : "Unexpected error occure.",
+      success: false
+    });
+  }
+};
+/**
+ * Delete User
+ */
+const deleteUser = async (req: Request, res: Response): Promise<any> => {
+  try {
+    const errors: Result<ValidationError> = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(422).json({
+        message: ValidationFormatter(errors.mapped())
+      });
+    }
+    const { params } = req;
+    const { userId } = params;
+    let inserList: Object = {
+      isDeleted: true
+    };
+    await UserModel.findByIdAndUpdate(userId, inserList);
+    let result: Document | null | any = await UserModel.findOne({ _id: userId }).select("firstName lastName email status");
+    if (result === null) {
+      return res.status(400).json({
+        message: "Email not found."
+      });
+    }
+    const emailVar = new Email(req);
+    await emailVar.setTemplate(AvailiableTemplates.STATUS_CHANGE, {
+      resetPageUrl: req.headers.host,
+      status: 'deleted',
+      fullName: result.firstName + " " + result.lastName
+    });
+    await emailVar.sendEmail(result.email);
+    return res.status(200).json({
+      message: "User deleted successfully."
+    });
+  } catch (error) {
+    res.status(500).json({
+      message: error.message ? error.message : "Unexpected error occure.",
+      success: false
+    });
+  }
+};
+/**
+* Update user password
+*/
+const updateUserPassword = async (
+  req: Request,
+  res: Response
+): Promise<any> => {
+  try {
+    const errors: Result<ValidationError> = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(422).json({
+        message: ValidationFormatter(errors.mapped())
+      });
+    }
+    const { body } = req;
+    const { newPassword: password, userId } = body;
+    let dataToUpdate: Object = {
+      password: encryptPassword(password),
+      salt: "123456"
+    };
+    await UserModel.findByIdAndUpdate(userId, {
+      $set: dataToUpdate
+    });
+    return res.status(200).json({
+      message: "Password updated successfully."
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({
+      message: error.message ? error.message : "Unexpected error occure.",
+      success: false
+    });
+  }
+};
+/**
+ *
+ */
+const proxyLoginToUser = async (req: Request, res: Response): Promise<any> => {
+  try {
+    const { query } = req;
+    const { id } = query;
+    const result: any = await UserModel.findOne({ _id: id, isDeleted: false });
+    const token = await GenerateToken({
+      id: result._id,
+      firstName: result.firstName,
+      lastName: result.lastName,
+      email: result.lastName,
+      role: result.roleType
+    });
+    delete result.password;
+    return res.status(200).json({
+      responseCode: 200,
+      tokenExpire: parseInt(moment().toString()) + 86400,
+      token: token,
+      message: "Successfully Login",
+      success: true
+    });
+  } catch (error) {
+    res.status(500).json({
+      message: error.message ? error.message : "Unexpected error occure.",
+      success: false
+    });
+  }
+};
+export {
+  getUserInfo,
+  editUserInfo,
+  deleteUserAccount,
+  imageUpload,
+  getAllUser,
+  updateUserStatus,
+  updateUserDetails,
+  deleteUser,
+  updateUserPassword,
+  proxyLoginToUser
+};

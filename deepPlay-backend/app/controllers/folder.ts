@@ -2,6 +2,10 @@ import { Request, Response } from "express";
 import { FolderModel, SetModel, MoveModel } from "../models";
 import { IFolder, ISet, IMove, IUpdateFolder } from "../interfaces";
 import { encrypt, decrypt } from "../common";
+import { algoliaAppId, algoliaAPIKey } from "../config/app";
+const algoliasearch = require("algoliasearch");
+const client = algoliasearch(algoliaAppId, algoliaAPIKey);
+const index = client.initIndex("deep_play_data");
 
 // --------------Create folder---------------------
 const createFolder = async (req: Request, res: Response): Promise<any> => {
@@ -26,6 +30,7 @@ const createFolder = async (req: Request, res: Response): Promise<any> => {
     };
     const Result: Document | any = new FolderModel(folderData);
     await Result.save();
+
     const folderId = Result._id;
     if (body.isCopy) {
       const setResult: Document | any | null = await SetModel.find({
@@ -73,6 +78,21 @@ const createFolder = async (req: Request, res: Response): Promise<any> => {
         }
       }
     }
+
+    let folderDataForAlgolia: Document | any;
+    /* Add items to algolia */
+    folderDataForAlgolia = {
+      ...Result._doc,
+      title: "folder"
+    };
+    index.addObjects([folderDataForAlgolia], (err: string, content: string) => {
+      if (err) {
+        console.error(err);
+      } else {
+        console.log("##################", content);
+      }
+    });
+    /*  */
     res.status(200).json({
       Result,
       message: "Folder created successfully"
@@ -88,19 +108,107 @@ const createFolder = async (req: Request, res: Response): Promise<any> => {
 // --------------Get all folder ---------------------
 const getAllFolder = async (req: Request, res: Response): Promise<void> => {
   try {
-    const { currentUser } = req;
+    const { currentUser, query } = req;
     let headToken: Request | any = currentUser;
+    const { limit, page, search, sort, status, roleType } = query;
+    const pageNumber: number = ((parseInt(page) || 1) - 1) * (limit || 10);
+    const limitNumber: number = parseInt(limit) || 10;
+    // define condition
+    let condition: any = {
+      $and: []
+    };
+    // set default value for condition
+    condition.$and.push({
+      isDeleted: false
+    });
+    // check for search condition
+    if (search) {
+      condition.$and.push({
+        $or: [
+          {
+            title: {
+              $regex: new RegExp(search.trim(), "i")
+            }
+          }
+        ]
+      });
+    }
+    if (typeof status !== "undefined") {
+      condition.$and.push({
+        status: status == "1" ? true : false
+      });
+    }
+    if (!roleType || roleType !== "admin") {
+      condition.$and.push({
+        userId: headToken.id
+      });
+    }
+    // check for sort option
+    let sortOption = {};
+    switch (sort) {
+      case "createddesc":
+        sortOption = {
+          createdAt: -1
+        };
+        break;
+      case "createdasc":
+        sortOption = {
+          createdAt: 1
+        };
+        break;
+      case "nasc":
+        sortOption = {
+          title: 1
+        };
+        break;
+      case "ndesc":
+        sortOption = {
+          title: -1
+        };
+        break;
+      default:
+        sortOption = {
+          createdAt: -1
+        };
+        break;
+    }
     if (!headToken.id) {
       res.status(400).json({
         message: "User id not found"
       });
     }
-    const result: Document | any = await FolderModel.find({
-      userId: headToken.id,
-      isDeleted: false
-    });
+    let result: Document | any,
+      setCount: Document | any,
+      folderResult: any = [];
+    result = await FolderModel.find(condition)
+      .sort(sortOption)
+      .skip(pageNumber)
+      .limit(limitNumber);
+    // get count for the conditions
+    const folderCount: any[] = await FolderModel.aggregate([
+      {
+        $match: { ...condition }
+      },
+      {
+        $count: "count"
+      }
+    ]);
+    if (result && result.length) {
+      for (let index = 0; index < result.length; index++) {
+        const folderData = result[index];
+        setCount = await SetModel.count({
+          folderId: folderData._id,
+          isDeleted: false
+        });
+        folderResult.push({
+          ...folderData._doc,
+          setCount: setCount
+        });
+      }
+    }
     res.status(200).json({
-      data: result,
+      data: folderResult,
+      totalFolders: folderCount[0] ? folderCount[0].count : 0,
       message: "Folders has been fetched successfully."
     });
   } catch (error) {
@@ -201,11 +309,6 @@ const updateRecentTimeRequest = async (
     const { body, currentUser } = req;
     const headToken: Request | any = currentUser;
     const { isSetId, isFolderId } = body;
-    // if (!isSetId || !isFolderId) {
-    //   res.status(400).json({
-    //     message: "Id not found"
-    //   });
-    // }
     if (isSetId !== null) {
       await SetModel.findByIdAndUpdate(
         { _id: isSetId },
@@ -380,12 +483,44 @@ const updateFolder = async (req: Request, res: Response): Promise<any> => {
     });
 
     return res.status(200).json({
-      message: "Folder details udpated successfully."
+      message: "Folder details updated successfully."
     });
   } catch (error) {
     console.log(error);
     res.status(500).send({
       message: error.message
+    });
+  }
+};
+//------------------ Update Folder Status --------------------//
+const updateFolderStatus = async (
+  req: Request,
+  res: Response
+): Promise<any> => {
+  try {
+    const { body } = req;
+    const { folders, status } = body;
+    const data: Document = await FolderModel.updateMany(
+      {
+        _id: { $in: folders }
+      },
+      {
+        $set: {
+          status: status
+        }
+      }
+    );
+    return res.status(200).json({
+      message: status
+        ? "Folder activated successfully!"
+        : "Folder inactivated successfully!",
+      data
+    });
+  } catch (error) {
+    console.log("this is get all user error", error);
+    return res.status(500).json({
+      message: error.message ? error.message : "Unexpected error occure.",
+      success: false
     });
   }
 };
@@ -400,5 +535,6 @@ export {
   sharableLinkPublicAccess,
   sharableLink,
   publicUrlFolderInfo,
-  updateFolder
+  updateFolder,
+  updateFolderStatus
 };

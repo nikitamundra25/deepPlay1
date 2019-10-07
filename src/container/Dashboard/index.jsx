@@ -150,7 +150,7 @@ class Dashboard extends React.Component {
         <div className="page-body mt-4">
           <div className="content-header">
             <span className="content-title">RECENT FOLDERS</span>
-            {recentFolders.length > 4 ? (
+            {recentFolders && recentFolders.length > 4 ? (
               <span
                 className="dashboard-right-content cursor_pointer"
                 onClick={() => this.handleViewAll("folders")}

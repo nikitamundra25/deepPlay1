@@ -18,6 +18,7 @@ import {
   modelOpenRequest,
   publicAccessRequest,
   shareableLinkRequest,
+  deleteSetRequest,
   getMovesOfSetRequest
 } from "../../../actions";
 import SharableLinkModal from "../../comman/shareableLink/SharableLink";
@@ -29,6 +30,7 @@ import Loader from "../../comman/Loader/Loader";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import emptySetIc from "../../../assets/img/empty-sets.png";
+import { ConfirmBox } from "../../../helper/SweetAleart";
 const homePageImage = [
   "https://images.pexels.com/photos/67636/rose-blue-flower-rose-blooms-67636.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500",
   "https://p.bigstockphoto.com/GeFvQkBbSLaMdpKXF1Zv_bigstock-Aerial-View-Of-Blue-Lakes-And--227291596.jpg",
@@ -93,6 +95,21 @@ class SetDetails extends React.Component {
         sharableLinkModalOpen: !modelDetails.sharableLinkModalOpen
       }
     });
+  };
+
+  handleDeleteSet = async id => {
+    const { value } = await ConfirmBox({
+      text: "You want to delete this set.!! "
+    });
+    if (value) {
+      this.props.onDeleteSets(id);
+    }
+  };
+
+  editSet = id => {
+    this.props.redirectTo(
+      AppRoutes.CREATE_SET.url + `?setId=${id}&isEdit=${true}`
+    );
   };
 
   render() {
@@ -288,7 +305,10 @@ const mapDispatchToProps = dispatch => ({
   shareableLink: data => {
     dispatch(shareableLinkRequest(data));
   },
-  getMovesOfSetRequest: data => dispatch(getMovesOfSetRequest(data))
+  onDeleteSets: data => {
+    dispatch(deleteSetRequest(data));
+  },
+  getMovesOfSetRequest: data =>dispatch(getMovesOfSetRequest(data))
 });
 export default connect(
   mapStateToProps,

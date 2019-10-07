@@ -5,7 +5,8 @@ const initialState = {
   getAllFolders: "",
   recentFolders: "",
   isFolderLoading: false,
-  isRecentFolderLoading: false
+  isRecentFolderLoading: false,
+  totalFolders: 0
 };
 export const getFolderReducer = handleActions(
   {
