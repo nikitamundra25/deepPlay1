@@ -166,7 +166,6 @@ const deleteFolderLogic = createLogic({
       if (!toast.isActive(toastId)) {
         toastId = toast.success(result.messages[0]);
       }
-      toast.success(result.messages[0]);
       dispatch(redirectTo({ path: "/folder" }));
       dispatch(getAllFolderRequest());
       done();
