@@ -16,7 +16,8 @@ import {
   modelOpenRequest,
   publicAccessRequest,
   shareableLinkRequest,
-  deleteSetRequest
+  deleteSetRequest,
+  getMovesOfSetRequest
 } from "../../../actions";
 import SharableLinkModal from "../../comman/shareableLink/SharableLink";
 import Slider from "react-slick";
@@ -49,6 +50,7 @@ class SetDetails extends React.Component {
     const location = this.props.location;
     const pathName = location.pathname.split("/");
     this.props.getSetDetailsRequest({ setId: pathName[2] });
+    this.props.getMovesOfSetRequest({ setId: pathName[2] })
   };
   /*
   /*  
@@ -243,7 +245,8 @@ const mapDispatchToProps = dispatch => ({
   },
   onDeleteSets: data => {
     dispatch(deleteSetRequest(data));
-  }
+  },
+  getMovesOfSetRequest: data =>dispatch(getMovesOfSetRequest(data))
 });
 export default connect(
   mapStateToProps,

@@ -1,19 +1,20 @@
 import { Request, Response } from "express";
 import { SetModel, MoveModel } from "../models";
+import Mongoose, { Document } from "mongoose";
 import { ISet, IUpdateSet } from "../interfaces";
-// import { algoliaAppId, algoliaAPIKey } from "../config/app";
+import { algoliaAppId, algoliaAPIKey } from "../config/app";
 //import * as algoliasearch from 'algoliasearch'; // When using TypeScript
 const algoliasearch = require("algoliasearch");
-const client = algoliasearch("81ZJX0Y0SX", "cbc15a12426d1027b8e49ca62a68407e");
-
+const client = algoliasearch(algoliaAppId, algoliaAPIKey);
+const index = client.initIndex("deep_play_data");
 import { decrypt, encrypt } from "../common";
+
 // --------------Create set---------------------
 const createSet = async (req: Request, res: Response): Promise<any> => {
   try {
     const { currentUser } = req;
     const { body } = req;
     const headToken: Request | any = currentUser;
-    const index = client.initIndex("rishabh_name");
     const setData: ISet = {
       title: body.title,
       description: body.description ? body.description : "",
@@ -26,13 +27,22 @@ const createSet = async (req: Request, res: Response): Promise<any> => {
     };
     const setResult: Document | any = new SetModel(setData);
     await setResult.save();
-    index.addObjects([setData], (err: string, content: string) => {
+
+    let setDataForAlgolia: Document | any
+    /* Add items to algolia */
+    setDataForAlgolia = {
+      ...setResult._doc,
+      title: "sets"
+    }
+    index.addObjects([setDataForAlgolia], (err: string, content: string) => {
       if (err) {
         console.error(err);
       } else {
         console.log("##################", content);
       }
     });
+    /*  */
+
     res.status(200).json({
       setResult: setResult,
       message: "Set created successfully"
@@ -50,32 +60,103 @@ const getAllSetById = async (req: Request, res: Response): Promise<void> => {
   try {
     const { currentUser, query } = req;
     let headToken: Request | any = currentUser;
+    const { limit, page, search, sort, status, roleType } = query;
+    const pageNumber: number = ((parseInt(page) || 1) - 1) * (limit || 10);
+    const limitNumber: number = parseInt(limit) || 10;
+    // define condition
+    let condition: any = {
+      $and: []
+    };
+    // set default value for condition
+    condition.$and.push({
+      isDeleted: false,
+    });
+    // check for search condition
+    if (search) {
+      condition.$and.push({
+        $or: [
+          {
+            title: {
+              $regex: new RegExp(search.trim(), "i")
+            }
+          }
+        ]
+      });
+    }
+    if (typeof status !== "undefined") {
+      condition.$and.push({
+        status: status == "1" ? true : false
+      });
+    }
+    if (!roleType || roleType !== "admin") {
+      condition.$and.push({
+        userId: headToken.id,
+      });
+    }
+    // check for sort option
+    let sortOption = {};
+    switch (sort) {
+      case "createddesc":
+        sortOption = {
+          createdAt: -1
+        };
+        break;
+      case "createdasc":
+        sortOption = {
+          createdAt: 1
+        };
+        break;
+      case "nasc":
+        sortOption = {
+          title: 1
+        };
+        break;
+      case "ndesc":
+        sortOption = {
+          title: -1
+        };
+        break;
+      default:
+        sortOption = {
+          createdAt: -1
+        };
+        break;
+    }
     if (!headToken.id) {
       res.status(400).json({
         message: "User id not found"
       });
     }
+    index.search({ query: 'Sal' }, (err, hits: any = {}) => {
+      if (err) {
+        console.log(err);
+        console.log(err.debugData);
+        return;
+      }
+
+      console.log("@@@@@@@@@@@@@@@@@", hits);
+    });
+
     let result: Document | any, moveCount: Document | any, setResult: any = []
-    if (query.roleType === "admin") {
-      result = await SetModel.find({
-        isDeleted: false
-      }).populate({
+    result = await SetModel.find(condition)
+      .sort(sortOption)
+      .skip(pageNumber)
+      .limit(limitNumber)
+      .populate({
         path: "folderId",
         match: {
           isDeleted: false
         }
       });
-    } else {
-      result = await SetModel.find({
-        userId: headToken.id,
-        isDeleted: false
-      }).populate({
-        path: "folderId",
-        match: {
-          isDeleted: false
-        }
-      });
-    }
+    // get count for the conditions
+    const setCount: any[] = await SetModel.aggregate([
+      {
+        $match: { ...condition }
+      },
+      {
+        $count: "count"
+      }
+    ]);
     if (result && result.length) {
       for (let index = 0; index < result.length; index++) {
         const setData = result[index];
@@ -91,6 +172,7 @@ const getAllSetById = async (req: Request, res: Response): Promise<void> => {
     }
     res.status(200).json({
       result: setResult,
+      totalSets: setCount[0] ? setCount[0].count : 0,
       message: "Sets have been fetched successfully"
     });
   } catch (error) {
@@ -235,7 +317,7 @@ const getSetDetailsById = async (
     }
     const result: Document | any = await SetModel.findOne({
       userId: headToken.id,
-      _id: setId,
+      _id: Mongoose.Types.ObjectId(setId),
       isDeleted: false
     }).populate("folderId");
 
@@ -340,12 +422,41 @@ const updateSet = async (req: Request, res: Response): Promise<any> => {
       $set: updateSet
     });
     return res.status(200).json({
-      message: "Set details udpated successfully."
+      message: "Set details updated successfully."
     });
   } catch (error) {
     console.log(error);
     res.status(500).send({
       message: error.message
+    });
+  }
+};
+//------------------ Update Sets Status --------------------//
+const updateSetStatus = async (req: Request, res: Response): Promise<any> => {
+  try {
+    const { body } = req;
+    const { sets, status } = body;
+    const data: Document = await SetModel.updateMany(
+      {
+        _id: { $in: sets }
+      },
+      {
+        $set: {
+          status: status
+        }
+      }
+    );
+    return res.status(200).json({
+      message: status
+        ? "Set activated successfully!"
+        : "Set inactivated successfully!",
+      data
+    });
+  } catch (error) {
+    console.log("this is get all user error", error);
+    return res.status(500).json({
+      message: error.message ? error.message : "Unexpected error occure.",
+      success: false
     });
   }
 };
@@ -360,5 +471,6 @@ export {
   getSetDetailsById,
   publicUrlsetDetails,
   publicAccessSetInfoById,
-  updateSet
+  updateSet,
+  updateSetStatus
 };

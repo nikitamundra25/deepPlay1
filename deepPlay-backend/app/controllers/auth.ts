@@ -419,9 +419,40 @@ const userResetpassword = async (req: Request, res: Response): Promise<any> => {
     });
   }
 };
-/**
- *
- */
+/*Title:- Admin Password Change
+Body:- newPassword, oldPassword 
+Created By:- Hariom */
+const updateAdminPassword = async (
+  req: Request,
+  res: Response
+): Promise<any> => {
+  try {
+    const errors: Result<ValidationError> = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(422).json({
+        message: ValidationFormatter(errors.mapped())
+      });
+    }
+    const { body, currentUser } = req;
+    const { id } = currentUser || { id: null };
+    const { newPassword: password } = body;
+    let dataToUpdate: Object = {
+      password: encryptPassword(password)
+    };
+    await UserModel.findByIdAndUpdate(id, {
+      $set: dataToUpdate
+    });
+    return res.status(200).json({
+      message: "Password updated successfully."
+    });
+  } catch (error) {
+    console.log(error)
+    res.status(500).json({
+      message: error.message ? error.message : "Unexpected error occure.",
+      success: false
+    });
+  }
+};
 export {
   login,
   adminLogin,
@@ -429,5 +460,6 @@ export {
   socialSignup,
   userForgotPassword,
   userVerifyLink,
-  userResetpassword
+  userResetpassword,
+  updateAdminPassword
 };

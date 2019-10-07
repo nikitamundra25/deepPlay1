@@ -160,7 +160,6 @@ const getMoveBySetId = async (req: Request, res: Response): Promise<any> => {
       });
     }
     const movesData: Document | any = await MoveModel.find({
-      userId: headToken.id,
       setId: query.setId
     });
 
