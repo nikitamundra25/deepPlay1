@@ -9,7 +9,7 @@ export const SidebarComponent = [
            name: AppRoutes.DASHBOARD.name,
            url: AppRoutes.DASHBOARD.url,
            icon: "ni ni-album-2",
-           iconUrl: home
+           iconUrl: home,
          },
          // {
          //   name: AppRoutes.ADD_MOVE.name,

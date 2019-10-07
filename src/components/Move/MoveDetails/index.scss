@@ -15,15 +15,16 @@
 
 .move-title{
   border: none;
-  font-size: 25px;
+  font-size: 20px;
   color: #9eadba;
-  @include placeholder-color;
+  // @include placeholder-color;
+  padding: 0px;
 }
 .discription-btn{
   border-radius: 50% !important;
   padding: 0px;
-  width: 40px;
-  height: 40px;
+  width: 28px;
+  height: 28px;
   line-height: 40px;
   justify-content: center;
   background: #000;

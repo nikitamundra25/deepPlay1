@@ -9,12 +9,17 @@ import {
   ManageSetRequest,
   deleteSetRequest,
   getAllFolderRequest,
-  updateRecentTimeRequest
+  updateRecentTimeRequest,
+  redirectTo
 } from "../../actions";
 import FolderModal from "../../components/Folders/createFolderModal";
 import { createFolderRequest } from "actions/Folder";
 import { ConfirmBox } from "../../helper/SweetAleart";
 import TransferToModal from "../../components/Folders/FolderDetails/transferTo";
+import qs from "query-string";
+import { isEqual } from "../..//helper/Object";
+import { AppRoutes } from "../../config/AppRoutes";
+
 // core components
 class Set extends React.Component {
   constructor(props) {
@@ -27,7 +32,21 @@ class Set extends React.Component {
   }
 
   componentDidMount = () => {
-    this.props.getSetList();
+    this.props.getSetList({ isSetNoLimit: false });
+  };
+
+  componentDidUpdate({ location }) {
+    const prevQuery = qs.parse(location.search);
+    const currQuery = qs.parse(this.props.location.search);
+    if (!isEqual(prevQuery, currQuery)) {
+      this.props.getSetList({ ...currQuery, page: currQuery.page || 1 });
+    }
+  }
+
+  onPageChange = page => {
+    this.props.onGoPage(
+      `${AppRoutes.SETS.url}?${qs.stringify({ page: page })}`
+    );
   };
 
   onCreateSet = data => {
@@ -53,7 +72,8 @@ class Set extends React.Component {
     const { modelDetails } = modelInfoReducer;
     this.props.modelOperate({
       modelDetails: {
-        createFolderModalOpen: !modelDetails.createFolderModalOpen
+        createFolderModalOpen: !modelDetails.createFolderModalOpen,
+        transferToModalOpen: false
       }
     });
   };
@@ -125,7 +145,7 @@ class Set extends React.Component {
     const {
       modelOperate,
       modelInfoReducer,
-      getAllSetReducer,
+      setReducer,
       getAllFolders
     } = this.props;
     const { modelDetails } = modelInfoReducer;
@@ -140,18 +160,19 @@ class Set extends React.Component {
           <SetComponent
             handleSetComponent={this.handleSetComponent}
             handleFolderModel={this.handleFolderModel}
-            getAllSet={getAllSetReducer.allSetList}
+            setReducer={setReducer}
             OnCreateSetCopy={this.OnCreateSetCopy}
             onRemoveSets={this.onHandleDelete}
             handleRecentTime={this.handleRecentTime}
             openTransferToModal={this.openTransferToModal}
             allFolders={this.props.allFolders}
+            onPageChange={this.onPageChange}
             {...this.props}
           />
         )}
         <FolderModal
-          modelOperate={modelOperate}
-          modelInfoReducer={modelInfoReducer}
+          modal={modelDetails.createFolderModalOpen}
+          handleOpen={this.handleFolderModel}
           createFolder={this.createFolder}
         />
         <TransferToModal
@@ -159,6 +180,7 @@ class Set extends React.Component {
           modelOperate={modelOperate}
           AllFolders={getAllFolders}
           setToTransfer={setToTransfer}
+          handleFolderModel={this.handleFolderModel}
           folderId={folderId}
           handleOpen={this.openTransferToModal}
           handleFolder={this.folderToTransfer}
@@ -171,7 +193,7 @@ class Set extends React.Component {
 const mapStateToProps = state => {
   return {
     modelInfoReducer: state.modelInfoReducer,
-    getAllSetReducer: state.setReducer,
+    setReducer: state.setReducer,
     getAllFolders: state.getFolderReducer.getAllFolders
   };
 };
@@ -183,8 +205,8 @@ const mapDispatchToProps = dispatch => {
     onFolderCreation: data => {
       dispatch(createFolderRequest(data));
     },
-    getSetList: () => {
-      dispatch(getAllSetRequest());
+    getSetList: data => {
+      dispatch(getAllSetRequest(data));
     },
     manageSets: data => {
       dispatch(ManageSetRequest(data));
@@ -197,6 +219,9 @@ const mapDispatchToProps = dispatch => {
     },
     updateRecentTime: data => {
       dispatch(updateRecentTimeRequest(data));
+    },
+    onGoPage: data => {
+      dispatch(redirectTo({ path: data }));
     },
     modelOperate: data => dispatch(modelOpenRequest(data))
   };

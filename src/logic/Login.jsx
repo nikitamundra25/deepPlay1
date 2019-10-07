@@ -1,17 +1,21 @@
 import { createLogic } from "redux-logic";
-import { ApiHelper } from "../helper"
+import { ApiHelper } from "../helper";
 import {
   loginAction,
   modelOpenRequest,
   redirectTo,
+  logoutRequest,
   loginSuccess,
   logoutSuccess,
   profileSuccess,
-  forgotPasswordSuccess
+  forgotPasswordSuccess,
+  changePasswordSuccess,
+  changePasswordAction
 } from "../actions";
 //import { logger } from "helper/Logger";
 import { toast } from "react-toastify";
-import { AppRoutes } from "../config/AppRoutes"
+import { AppRoutes } from "../config/AppRoutes";
+let toastId = null;
 /**
  *
  */
@@ -28,26 +32,27 @@ const loginLogic = createLogic({
       action.payload
     );
     if (result.isError || !result.data.userData) {
-      toast.error(result.messages[0]);
+      if (!toast.isActive(toastId)) {
+        toastId = toast.error(result.messages[0]);
+      }
+      dispatch(loginSuccess({ isLoginSuccess: false }));
       done();
       return;
     } else {
-      localStorage.setItem("token", result.data.token)
+      localStorage.setItem("token", result.data.token);
       dispatch(
         modelOpenRequest({
           modelDetails: {
             loginModelOpen: false
           }
         })
-      )
+      );
       dispatch(
         profileSuccess({
           profileInfo: result.data.userData
         })
       );
-      dispatch(
-        loginSuccess({ isLoginSuccess: true })
-      )
+      dispatch(loginSuccess({ isLoginSuccess: true }));
       window.location.href = AppRoutes.DASHBOARD.url;
       done();
     }
@@ -59,9 +64,9 @@ const loginLogic = createLogic({
 const logOutLogic = createLogic({
   type: loginAction.LOGOUT_REQUEST,
   async process({ action }, dispatch, done) {
-    dispatch(logoutSuccess({ isLoginSuccess: false }))
+    dispatch(logoutSuccess({ isLoginSuccess: false }));
     localStorage.removeItem("token");
-    window.location.href = AppRoutes.HOME_PAGE.url
+    window.location.href = AppRoutes.HOME_PAGE.url;
     done();
   }
 });
@@ -85,9 +90,9 @@ const socialLoginLogic = createLogic({
       done();
       return;
     } else {
-      localStorage.setItem("token", result.data.token)
+      localStorage.setItem("token", result.data.token);
       if (result.data.message) {
-        toast.success(result.data.message)
+        toast.success(result.data.message);
       }
       dispatch(
         modelOpenRequest({
@@ -95,10 +100,8 @@ const socialLoginLogic = createLogic({
             loginModelOpen: false
           }
         })
-      )
-      dispatch(
-        loginSuccess({ isLoginSuccess: true })
-      )
+      );
+      dispatch(loginSuccess({ isLoginSuccess: true }));
       window.location.href = AppRoutes.DASHBOARD.url;
       done();
     }
@@ -124,15 +127,17 @@ const forgetPasswordLogic = createLogic({
       done();
       return;
     } else {
-      dispatch(forgotPasswordSuccess())
-      toast.success(result.messages[0]);
+      dispatch(forgotPasswordSuccess());
+      if (!toast.isActive(toastId)) {
+        toastId = toast.success(result.messages[0]);
+      }
       dispatch(
         modelOpenRequest({
           modelDetails: {
             forgotPasswordModalOpen: false
           }
         })
-      )
+      );
       done();
     }
   }
@@ -191,11 +196,75 @@ const resetPasswordLogic = createLogic({
 /**
  *
  */
+const verifyAccountAccessLogic = createLogic({
+  type: loginAction.VERIFY_WORKSPACE_LOGIN,
+  async process({ action }, dispatch, done) {
+    const { payload } = action;
+    const { user, key, verification } = payload;
+    if (!user || !key || !verification) {
+      dispatch(logoutRequest());
+    }
+    localStorage.setItem("token", user);
+    const result = await new ApiHelper().FetchFromServer(
+      "user",
+      "/getProfileInfo",
+      "GET",
+      true
+    );
+    if (result.isError) {
+      dispatch(logoutRequest());
+    }
+    localStorage.setItem("token", user);
+
+    dispatch(
+      redirectTo({
+        path: AppRoutes.DASHBOARD.url
+      })
+    );
+    done();
+  }
+});
+
+//---------Change password----------
+const changePasswordLogic = createLogic({
+  type: changePasswordAction.CHANGE_PASSWORD_REQUEST,
+  async process({ action }, dispatch, done) {
+    let api = new ApiHelper();
+    let result = await api.FetchFromServer(
+      "/auth",
+      "/change-password",
+      "PUT",
+      true,
+      undefined,
+      action.payload
+    );
+    if (result.isError) {
+      if (!toast.isActive(toastId)) {
+        toastId = toast.error(
+          result.messages[0].oldPassword ||
+            result.messages[0] ||
+            result.messages
+        );
+      }
+      done();
+      return;
+    } else {
+      dispatch(changePasswordSuccess({ isChangePasswordSuccess: true }));
+      if (!toast.isActive(toastId)) {
+        toastId = toast.success(result.messages[0]);
+      }
+      done();
+    }
+  }
+});
+
 export const LoginLogics = [
   loginLogic,
   logOutLogic,
   socialLoginLogic,
   forgetPasswordLogic,
   verifyResetTokenLogic,
-  resetPasswordLogic
+  resetPasswordLogic,
+  verifyAccountAccessLogic,
+  changePasswordLogic
 ];

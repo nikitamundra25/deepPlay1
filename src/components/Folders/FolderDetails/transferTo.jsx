@@ -1,13 +1,19 @@
 import React from "react";
-import { Modal, ModalBody, ModalHeader, Card } from "reactstrap";
+import { Modal, ModalBody, ModalHeader, Button, ModalFooter } from "reactstrap";
 import closeIcon from "../../../assets/img/close-img.png";
 import { logger } from "helper/Logger";
+import AsyncSelect from 'react-select/async';
+
 // core components
 class TransferToModal extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      transferToList: []
+      transferToList: [],
+      selectFolderOptions: {
+        label: "Select folder from list",
+        value: ""
+      }
     };
   }
 
@@ -26,7 +32,7 @@ class TransferToModal extends React.Component {
       });
     }
   }
-  
+
   onTransferTo = id => {
     const data = {
       setId: this.props.setToTransfer,
@@ -37,10 +43,51 @@ class TransferToModal extends React.Component {
     this.props.handleFolder(data);
     logger(data);
   };
+  /* 
+  */
+
+  handleInputChange = (e) => {
+    if (e && e.value) {
+      this.setState({
+        selectFolderOptions: {
+          label: e.label,
+          value: e.value
+        }
+      })
+    } else {
+      this.setState({
+        selectFolderOptions: {
+          label: "Select folder from list",
+          value: ""
+        }
+      })
+    }
+  }
 
   render() {
-    const { handleOpen, modal } = this.props;
-    const { transferToList } = this.state;
+    const { handleOpen, modal, folderId } = this.props;
+    const { transferToList, selectFolderOptions } = this.state;
+    const defaultFolderList = [
+      {
+        label: "+ Add New folder",
+        value: ""
+      }
+    ]
+    if (transferToList && transferToList.length) {
+      transferToList.map((item) => {
+        let isNotAccesible
+        if (folderId && folderId._id) {
+          isNotAccesible = item._id === folderId._id
+        }
+        if (!isNotAccesible) {
+          defaultFolderList.push({
+            label: item && item.isCopy ? `Copy of ${item.title}` : item.title,
+            value: item._id
+          })
+        }
+        return true
+      })
+    }
     return (
       <div>
         <Modal
@@ -65,43 +112,32 @@ class TransferToModal extends React.Component {
               </span>
             </button>
           </ModalHeader>
-          <ModalBody className="modal-text-center">
+          <ModalBody className="">
             <div className="wrap-folder">
-              <Card>
-                {transferToList.length
-                  ? transferToList.map((folders, i) => {
-                      return (
-                        <div className={"d-flex p-2 justify-content-between"}>
-                          <div>{folders.title}</div>
-                          <div key={i}>
-                            <span
-                              onClick={() => this.onTransferTo(folders._id)}
-                            >
-                              <input type="checkbox" />
-                            </span>
-                          </div>
-                        </div>
-                        // <Row className="set-wrap" key={i}>
-                        //   <Col md="12">
-                        //     <div className="tile-wrap card">
-                        //       <div className="cotent-tile d-flex">
-                        //         <div className="cotent-text-tile d-flex">
-                        //           <div className="content-heading-tile">
-                        //             {" "}
-                        //           </div>
-                        //           <div>
-                        //           </div>
-                        //         </div>
-                        //       </div>
-                        //     </div>
-                        //   </Col>
-                        // </Row>
-                      );
-                    })
-                  : ""}
-              </Card>
+              <AsyncSelect
+                isClearable={selectFolderOptions.value ? true : false}
+                defaultOptions={defaultFolderList}
+                placeholder={"Select folder from list"}
+                onChange={(e) => {
+                  e && e.label === "+ Add New folder" ?
+                    this.props.handleFolderModel() :
+                    this.handleInputChange(e)
+                }}
+                value={selectFolderOptions.value ? selectFolderOptions : ""}
+              />
             </div>
           </ModalBody>
+          <ModalFooter>
+            <Button
+              type="button"
+              onClick={() => this.onTransferTo(selectFolderOptions.value)}
+              color=" "
+              className="btn btn-black"
+              disabled={selectFolderOptions.value === ""}
+            >
+              Transfer To
+            </Button>
+          </ModalFooter>
         </Modal>
       </div>
     );

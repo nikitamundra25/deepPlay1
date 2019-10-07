@@ -12,4 +12,5 @@ declare namespace Express {
 
 declare module "cloudinary";
 declare module "ytdl-core";
-declare module "algoliasearch"
+declare module "algoliasearch";
+declare module "ffmpeg-extract-frames"

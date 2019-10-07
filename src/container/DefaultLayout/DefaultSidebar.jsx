@@ -1,7 +1,7 @@
 import React from "react";
 import { NavLink } from "react-router-dom";
 import { SidebarComponent } from "../../components/Sidebar";
-import defaultProfileImage from "../../assets/img/user-black-ic.svg";
+import defaultProfileImage from "../../assets/img/profile-ic.png";
 import { AppConfig } from "../../config/Appconfig";
 
 class DefaultSidebar extends React.Component {
@@ -16,6 +16,7 @@ class DefaultSidebar extends React.Component {
       profileInfoReducer && profileInfoReducer.profileInfo
         ? profileInfoReducer.profileInfo
         : null;
+    const splitedImage = profiledata && profiledata.profileImage ? profiledata.profileImage.split("/") : []
     return (
       <div className="dashboard-left-wrap">
         <div className="dashboard-left">
@@ -43,15 +44,15 @@ class DefaultSidebar extends React.Component {
         <div className="profile-wrap">
           <div className="profile-img-tile">
             <div className={profiledata ? "user-profile-img" : "profile-img"}>
-              {profiledata ? (
+              {profiledata && profiledata.profileImage? (
                 <img
-                  src={`${AppConfig.API_ENDPOINT}${profiledata.profileImage}`}
-                  className="w-100 h-100"
+                  src={splitedImage[0] === "uploads" ? `${AppConfig.API_ENDPOINT}${profiledata.profileImage}` : profiledata.profileImage}
+                  className="w-100"
                   alt={"img"}
                 />
               ) : (
-                <img src={defaultProfileImage} className="w-100" alt={"img"} />
-              )}
+                  <img src={defaultProfileImage} className="w-100" alt={"img"} />
+                )}
             </div>
           </div>
           <div className="profile-text-tile color-black">

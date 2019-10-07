@@ -8,9 +8,18 @@ class UploadImage extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      imageData: ""
+      imageData: "",
     };
   }
+
+  componentDidUpdate = ({ modal }) => {
+    if (modal !== this.props.modal) {
+      this.setState({
+        imageData: ""
+      });
+    }
+  };
+
   onSelectFile = async (file, index) => {
     for (let x = 0; x < file.length; x++) {
       if (file[x].size > 10000000) {
@@ -50,6 +59,7 @@ class UploadImage extends Component {
     this.props.handleOpen();
   };
   render() {
+    const { isImageUploading } = this.props;
     return (
       <div className="modal-text-center">
         <Modal
@@ -119,8 +129,9 @@ class UploadImage extends Component {
               color=" "
               onClick={() => this.props.handleImage(this.state.imageData)}
               className="btn btn-black"
+              disabled={!isImageUploading ? false : true}
             >
-              Set profile picture
+              {!isImageUploading ? "Set profile picture" : "Please Wait..."}
             </Button>{" "}
             <Button
               color=" "

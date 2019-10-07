@@ -11,6 +11,10 @@ const folderSchema: Mongoose.Schema = new Schema({
     type: String,
     default: null
   },
+  isCopy: {
+    type: Boolean,
+    default: false
+  },
   isPublic: {
     type: Boolean,
     default: false

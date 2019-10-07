@@ -1,6 +1,6 @@
 import React from "react";
 import { connect } from "react-redux";
-import { Card, CardBody, Col, Row } from "reactstrap";
+import { Card, CardBody, Row } from "reactstrap";
 import VideoView from "./videoView";
 import VideoDetails from "./videoDetails";
 import { getMoveDetailsRequest, getAllSetRequest } from "../../../actions";
@@ -17,38 +17,32 @@ class MoveDetails extends React.Component {
   }
 
   componentDidMount = () => {
-    const location = this.props.location.pathname
-    const moveId = location.split("/")
-    this.props.getMoveDetailsRequest({ moveId: moveId[2] })
-    this.props.getAllSetRequest()
+    const location = this.props.location.pathname;
+    const moveId = location.split("/");
+    this.props.getMoveDetailsRequest({ moveId: moveId[2] });
+    this.props.getAllSetRequest({ isSetNoLimit: false });
   };
 
   render() {
     const { setReducer, moveReducer } = this.props;
     return (
       <>
-        <div className="create-set-section step-2 mt-2">
+        <div className="create-set-section step-2 ">
           <Card className="w-100">
             <CardBody>
-              <div>
-                <span
-                  onClick={() => {
-                    this.props.redirectTo("/move");
-                  }}
-                  className={"cursor_pointer"}
-                >
-                  {" "}
-                  <i className="fas fa-long-arrow-alt-left" /> Back
-                </span>
-              </div>
-              <Col md={"12"}>
-                <Row className={"mt-3"}>
-                  <VideoView
-                    moveReducer={moveReducer}
-                  />
-                  <VideoDetails setReducer={setReducer} />
-                </Row>
-              </Col>
+              <span
+                onClick={() => {
+                  this.props.redirectTo("/move");
+                }}
+                className={"cursor_pointer back-arrow"}
+              >
+                {" "}
+                <i className="fas fa-long-arrow-alt-left" /> Back
+              </span>
+              <Row className={"mt-3"}>
+                <VideoView moveReducer={moveReducer} />
+                <VideoDetails setReducer={setReducer} />
+              </Row>
             </CardBody>
           </Card>
         </div>

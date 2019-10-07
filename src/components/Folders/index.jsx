@@ -13,7 +13,12 @@ import FolderModal from "./createFolderModal";
 import { ConfirmBox } from "../../helper/SweetAleart";
 import { AppRoutes } from "../../config/AppRoutes";
 import emptyFolderIc from "../../assets/img/empty-folder.png";
+import Loader from "../comman/Loader/Loader";
 import { logger } from "helper/Logger";
+import PaginationHelper from "helper/Pagination";
+import qs from "query-string";
+import { AppConfig } from "../../config/Appconfig";
+
 // core components
 class FolderComponent extends React.Component {
   constructor(props) {
@@ -21,9 +26,20 @@ class FolderComponent extends React.Component {
     this.state = {
       show: false, // To show popOver Over setting icon
       modal: false,
-      folderIndex: -1
+      folderIndex: -1,
+      page: 1
     };
   }
+
+  componentDidMount() {
+    const { location } = this.props;
+    const lSearch = location.search;
+    const { page } = qs.parse(lSearch);
+    this.setState({
+      page: parseInt(page) || 1
+    });
+  }
+
   showPopOver = index => {
     this.setState({
       show: true,
@@ -76,6 +92,7 @@ class FolderComponent extends React.Component {
       sharableLink: folder.sharableLink,
       status: folder.status,
       userId: folder.userId,
+      copyOfFolderId: folder._id,
       isCopy: true
     };
     const { value } = await ConfirmBox({
@@ -87,14 +104,23 @@ class FolderComponent extends React.Component {
   };
 
   render() {
-    const { modelInfoReducer, getAllFolders } = this.props;
-    const { show, folderIndex } = this.state;
+    const { modelInfoReducer, folderReducer, isFolderLoading } = this.props;
+    const { getAllFolders, totalFolders } = folderReducer;
+    const { show, folderIndex, page } = this.state;
     const { modelDetails } = modelInfoReducer;
     const { createFolderOpen } = modelDetails;
     return (
       <div className="page-body">
         <div className="content-header">
-          <span className="content-title">Your Folders</span>
+          <span className="content-title">
+            <div className="main-title"> {" Your Folders"}</div>
+            <div className="sub-title">
+              Total folders{" "}
+              {getAllFolders && getAllFolders.length
+                ? getAllFolders.length
+                : "0"}
+            </div>
+          </span>
           <span onClick={this.handleFolderModel} id="move">
             <i className="fas fa-plus-circle icon-font"></i>
           </span>
@@ -102,100 +128,114 @@ class FolderComponent extends React.Component {
             Create a New Folder
           </UncontrolledTooltip>
         </div>
-        <Col></Col>
-        <p>4 folders total</p>{" "}
+
         <div className="wrap-folder">
           <Row className="set-wrap">
-            {getAllFolders.length ? (
-              // eslint-disable-next-line
-              getAllFolders.map((folder, i) => {
-                if (!folder.isDeleted) {
-                  return (
-                    <Col md={"6"}>
-                      <div className="tile-wrap card">
-                        <div className="cotent-tile d-flex content-with-tip">
-                          <div className="cotent-text-tile">
-                            <div className="content-number-tile"> 4 sets</div>
-                            <div className="content-heading-tile d-flex">
-                              {" "}
-                              <span
-                                onClick={() =>
-                                  this.handleFolderdetails(folder._id)
-                                }
-                                className={"cursor_pointer"}
-                              >
-                                {folder.title}
-                              </span>
-                              <div
-                                onMouseOver={() => this.showPopOver(i, show)}
-                                onMouseLeave={() => this.closePopOver()}
-                                className={"p-3 tooltip-btn-wrap right-btn-tip"}
-                              >
-                                <span className="cursor_pointer">
-                                  {" "}
-                                  <i className="fas fa-ellipsis-v setting-icon "></i>
-                                </span>
-                                {show && folderIndex === i ? (
-                                  <ButtonGroup size="sm">
-                                    <Button
-                                      onClick={() =>
-                                        this.handleCopyFolder(folder)
-                                      }
-                                    >
-                                      Copy
-                                    </Button>
-                                    <Button
-                                      onClick={() =>
-                                        this.onHandleDelete(folder._id)
-                                      }
-                                    >
-                                      Delete
-                                    </Button>
-                                  </ButtonGroup>
-                                ) : null}
+            {!isFolderLoading ? (
+              getAllFolders && getAllFolders.length ? (
+                // eslint-disable-next-line
+                getAllFolders.map((folder, i) => {
+                  if (!folder.isDeleted) {
+                    return (
+                      <Col key={i} md={"6"}>
+                        <div
+                          className="tile-wrap card"
+                          onMouseLeave={() => this.closePopOver()}
+                        >
+                          <div className="cotent-tile d-flex content-with-tip">
+                            <div className="cotent-text-tile">
+                              <div className="content-number-tile">
+                                {" "}
+                                {folder.setCount} sets
                               </div>
+                              <div className="content-heading-tile d-flex">
+                                {" "}
+                                <span
+                                  onClick={() =>
+                                    this.handleFolderdetails(folder._id)
+                                  }
+                                  className={"cursor_pointer"}
+                                >
+                                  {folder.isCopy
+                                    ? `Copy of ${folder.title}`
+                                    : folder.title}
+                                </span>
+                                <div
+                                  onMouseOver={() => this.showPopOver(i, show)}
+                                  className={"tooltip-btn-wrap right-btn-tip"}
+                                >
+                                  <span className="cursor_pointer">
+                                    {" "}
+                                    <i className="fas fa-ellipsis-v setting-icon "></i>
+                                  </span>
+                                  {show && folderIndex === i ? (
+                                    <ButtonGroup size="sm">
+                                      <Button
+                                        onClick={() =>
+                                          this.handleCopyFolder(folder)
+                                        }
+                                      >
+                                        Copy
+                                      </Button>
+                                      <Button
+                                        onClick={() =>
+                                          this.onHandleDelete(folder._id)
+                                        }
+                                      >
+                                        Delete
+                                      </Button>
+                                    </ButtonGroup>
+                                  ) : null}
+                                </div>
+                              </div>
+                              <span className={"text-capitalize"}>
+                                {folder.description ? folder.description : ""}
+                              </span>
                             </div>
-                            {folder.description ? folder.description : ""}
                           </div>
                         </div>
+                      </Col>
+                    );
+                  }
+                })
+              ) : (
+                <>
+                  <div className="create-set-section mt-2 w-100">
+                    <Card className="set-content-wrap">
+                      <div className="set-content-block w-100 empty-folder-wrap">
+                        <CardHeader className="empty-folder-header">
+                          <img src={emptyFolderIc} alt={"folder"} />
+                          <div className="content-header set-header">
+                            <span className="content-title">
+                              {" "}
+                              <h3>You haven't created any folder yet</h3>
+                              <p>Create a Folder to Organize your Sets.</p>
+                            </span>
+                          </div>
+                        </CardHeader>
+                        <CardBody className="">
+                          <div className="create-set-tile"></div>
+                          <div className="text-center">
+                            <Button
+                              color=" "
+                              type="button"
+                              className="btn-black btn mt-3 folder-create-btn"
+                              onClick={this.handleFolderModel}
+                            >
+                              <i className="fas fa-plus mr-1"></i>
+                              Folder
+                            </Button>
+                          </div>
+                        </CardBody>
                       </div>
-                    </Col>
-                  );
-                }
-              })
+                    </Card>
+                  </div>
+                </>
+              )
             ) : (
-              <>
-                <div className="create-set-section mt-2 w-100">
-                  <Card className="w-100 set-content-wrap">
-                    <div className="set-content-block w-100 empty-folder-wrap">
-                      <CardHeader className="empty-folder-header">
-                        <img src={emptyFolderIc} alt={"folder"} />
-                        <div className="content-header set-header">
-                          <span className="content-title">
-                            {" "}
-                            <h3>You haven't created any folder yet</h3>
-                            <p>Create a Folder to Organize your Sets.</p>
-                          </span>
-                        </div>
-                      </CardHeader>
-                      <CardBody className="">
-                        <div className="create-set-tile"></div>
-                        <div className="text-center">
-                          <Button
-                            color=" "
-                            type="button"
-                            className="btn-black btn mt-3 folder-create-btn"
-                            onClick={this.handleFolderModel}
-                          >
-                            <i className="fas fa-plus mr-1"></i>
-                            Folder
-                          </Button>
-                        </div>
-                      </CardBody>
-                    </div>
-                  </Card>
-                </div>
-              </>
+              <Col sm={12} className="loader-col">
+                <Loader />
+              </Col>
             )}
           </Row>
           <FolderModal
@@ -205,6 +245,17 @@ class FolderComponent extends React.Component {
             handleOpen={this.handleFolderModel}
           />
         </div>
+        {totalFolders && !isFolderLoading ? (
+          <PaginationHelper
+            totalRecords={totalFolders}
+            currentPage={page}
+            onPageChanged={page => {
+              this.setState({ page });
+              this.props.onPageChange(page);
+            }}
+            pageLimit={AppConfig.ITEMS_PER_PAGE}
+          />
+        ) : null}
       </div>
     );
   }

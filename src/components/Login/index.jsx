@@ -123,7 +123,7 @@ class LoginComponent extends React.Component {
   */
   render() {
     const { openLoginModel, handleLoginModel, loginReducer } = this.props;
-    const { isLoginRequest } = loginReducer
+    const { isLoginRequest } = loginReducer;
     const { email, password, errors } = this.state;
     return (
       <>
@@ -184,6 +184,10 @@ class LoginComponent extends React.Component {
                         name={"email"}
                         value={email}
                         type="email"
+                        // title="Please Provide A Valid Email Address !"
+                        // oninvalid={() =>
+                        //   this.setCustomValidity("Enter User Name Here")
+                        // }
                       />
                       <FormFeedback>
                         {errors.email ? errors.email : null}
@@ -211,24 +215,22 @@ class LoginComponent extends React.Component {
                     </InputGroup>
                   </FormGroup>
                   <div
-                    onClick={this.props.handleForgotPasswordModel}
                     className={
-                      "text-center cursor_pointer forgot-password-wrap"
+                      "text-center cursor_pointer forgot-password-bottom-wrap"
                     }
                   >
-                    Forgot password?
+                    <span onClick={this.props.handleForgotPasswordModel}>
+                      Forgot password?
+                    </span>
                   </div>
                   <div className="text-center auth-btn-wrap">
                     <Button
                       className="my-4 btn-black btn-block"
                       type="submit"
+                      color={" "}
                       disabled={isLoginRequest ? true : false}
                     >
-                      {
-                        isLoginRequest ?
-                          "Please Wait..." :
-                          "Sign in"
-                      }
+                      {isLoginRequest ? "Please Wait..." : "Sign in"}
                     </Button>
 
                     <Button

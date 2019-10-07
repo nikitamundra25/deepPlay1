@@ -39,19 +39,26 @@ class MoveComponent extends React.Component {
       var match = value.match(myregexp);
       if (match) {
         const ValidYouTubeUrl = this.validateYouTubeUrl(value);
-        this.setState({
-          url: ValidYouTubeUrl,
-          isYouTubeUrl: true
-        }, () => {
-          this.handleMoveUpload()
-        })
+        this.setState(
+          {
+            url: ValidYouTubeUrl,
+            isYouTubeUrl: true
+          },
+          () => {
+            this.handleMoveUpload();
+          }
+        );
       } else {
         this.setState({
           errors: {
-            validUrl: "You have entered wrong URL."
+            validUrl: "Enter a valid youtube url."
           }
         });
       }
+    } else {
+      this.setState({
+        errors: ""
+      });
     }
   };
 
@@ -104,14 +111,18 @@ class MoveComponent extends React.Component {
     }
   };
 
-  handleVideoFileSelect = (e) => {
-    let files = e.target.files
-    this.setState({
-      url: files[0].name
-    }, () => {
-      this.props.downloadVideo({ url: files[0], isYoutubeUrl: false })
-    })
-  }
+  handleVideoFileSelect = e => {
+    let files = e.target.files;
+    this.setState(
+      {
+        url: files[0].name,
+        errors: ""
+      },
+      () => {
+        this.props.downloadVideo({ url: files[0], isYoutubeUrl: false });
+      }
+    );
+  };
 
   render() {
     const { errors, url } = this.state;
@@ -119,8 +130,8 @@ class MoveComponent extends React.Component {
     const { isVideoDownloading } = moveReducer;
     return (
       <>
-        <div className="create-set-section step-2 mt-2">
-          <Card className="w-100 set-content-wrap">
+        <div className="create-set-section step-2 ">
+          <Card className="set-content-wrap">
             <div className="set-content-block w-100">
               <CardHeader className="">
                 <div className="content-header set-header flex-column">
@@ -132,35 +143,7 @@ class MoveComponent extends React.Component {
               </CardHeader>
               <CardBody className="">
                 <div className="create-set-tile">
-                  <Form inline className="url-update-wrap">
-                    <div className="text-center mr-2">
-                      <FormGroup>
-                        <Label
-                          for="videoUpload"
-                          className="btn-black btn"
-                        >
-                          <i className="fa fa-cloud-upload mr-2"></i>
-                          {isVideoDownloading ? "Please wait..." : "Upload"}
-                        </Label>
-                        <CustomInput
-                          onChange={this.handleVideoFileSelect}
-                          type="file"
-                          disabled={isVideoDownloading ? true : false}
-                          className={"d-none"}
-                          id="videoUpload"
-                          name="customFile" />
-                      </FormGroup>
-                      {/* <Input
-                        color=" "
-                        type="file"
-
-                        className="btn-black btn mt-3"
-                        disabled={isVideoDownloading ? true : false}
-                      // onClick={this.handleMoveUpload}
-                      >
-
-                      </Input> */}
-                    </div>
+                  <Form className="url-update-wrap">
                     <FormGroup className="flex-fill flex-column ">
                       <div className="flex-fill w-100">
                         <Input
@@ -181,11 +164,33 @@ class MoveComponent extends React.Component {
                           {errors.notUrl
                             ? errors.notUrl
                             : errors.validUrl && url
-                              ? errors.validUrl
-                              : null}
+                            ? errors.validUrl
+                            : null}
                         </FormFeedback>
                       </div>
                     </FormGroup>
+                    <div className="divider-or mt-4 mb-4">
+                      <span> OR </span>
+                    </div>
+                    <div className="text-center mr-2">
+                      <FormGroup>
+                        <Label
+                          for="videoUpload"
+                          className="btn-black btn url-upload-btn"
+                        >
+                          <i className="fa fa-cloud-upload mr-2"></i>
+                          {isVideoDownloading ? "Please wait..." : "Upload"}
+                        </Label>
+                        <CustomInput
+                          onChange={this.handleVideoFileSelect}
+                          type="file"
+                          disabled={isVideoDownloading ? true : false}
+                          className={"d-none"}
+                          id="videoUpload"
+                          name="customFile"
+                        />
+                      </FormGroup>
+                    </div>
                   </Form>
                 </div>
               </CardBody>
