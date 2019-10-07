@@ -33,13 +33,14 @@ class CreateSetComponent extends React.Component {
       title: "",
       errors: "",
       description: "",
+      isEdit: false,
       open: false
     };
   }
 
   componentDidMount = () => {
     let parsed = qs.parse(this.props.location.search);
-    if (parsed && parsed.setId) {
+    if (parsed && parsed.setid) {
       this.props.getSetDetailsRequest({ setId: parsed.setId });
     }
   };
@@ -54,7 +55,8 @@ class CreateSetComponent extends React.Component {
       if (parsed.isEdit) {
         this.setState({
           title: setList.title ? setList.title : " ",
-          description: setList.description ? setList.description : " "
+          description: setList.description ? setList.description : " ",
+          isEdit: true
         });
       }
     }
@@ -105,7 +107,7 @@ class CreateSetComponent extends React.Component {
   };
 
   render() {
-    const { title, open, description } = this.state;
+    const { title, open, description, isEdit } = this.state;
     let parsed = qs.parse(this.props.location.search);
 
     return (
@@ -115,7 +117,7 @@ class CreateSetComponent extends React.Component {
             <CardHeader className="">
               <div className="content-header set-header">
                 <span className="content-title">
-                  {parsed.isEdit ? "Update Set" : "CREATE A NEW SET OF MOVES"}
+                  {isEdit ? "Update Set" : "CREATE A NEW SET OF MOVES"}
                 </span>
               </div>
             </CardHeader>
@@ -130,7 +132,7 @@ class CreateSetComponent extends React.Component {
                       name="title"
                       onChange={this.handleChange}
                       value={title}
-                      onBlur={!parsed.isEdit ? this.handleBlur : ""}
+                      onBlur={!isEdit && title ? this.handleBlur : null}
                     />
                     <InputGroupAddon addonType="prepend">
                       <InputGroupText
@@ -154,20 +156,6 @@ class CreateSetComponent extends React.Component {
                     </InputGroupAddon>
                   </InputGroup>
                 </FormGroup>
-                {/* <div className="">
-                <span
-                  onClick={this.onAddMove}
-                  className={this.state.title ? "cursor_pointer" : "disable-span"}
-                  id="move"
-                >
-                  <i className="fas fa-plus-square fa-2x "></i>
-                </span>
-                <UncontrolledTooltip placement="top" target="move">
-                  Add a move
-            </UncontrolledTooltip>
-              
-
-              </div> */}
               </div>
               <div className="text-center">
                 {!parsed.isEdit ? (

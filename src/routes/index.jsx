@@ -11,8 +11,17 @@ const ResetPassword = React.lazy(() =>
   import("../container/Auth/ResetPassword")
 );
 const Page404 = React.lazy(() => import("../components/Page404"));
+const VerifyLoginForWildcard = React.lazy(() =>
+  import("../container/Auth/VerifyLoginForWildcard")
+);
 
 const Routes = [
+  {
+    exact: false,
+    path: "/verify-user-details",
+    name: "Verify User Details",
+    component: VerifyLoginForWildcard
+  },
   {
     exact: false,
     path: "/",

@@ -4,6 +4,7 @@ import {
   loginAction,
   modelOpenRequest,
   redirectTo,
+  logoutRequest,
   loginSuccess,
   logoutSuccess,
   profileSuccess,
@@ -193,11 +194,40 @@ const resetPasswordLogic = createLogic({
 /**
  *
  */
+const verifyAccountAccessLogic = createLogic({
+  type: loginAction.VERIFY_WORKSPACE_LOGIN,
+  async process({ action }, dispatch, done) {
+    const { payload } = action;
+    const { user, key, verification } = payload;
+    if (!user || !key || !verification) {
+      dispatch(logoutRequest());
+    }
+    localStorage.setItem("token", user);
+    const result = await new ApiHelper().FetchFromServer(
+      "user",
+      "/getProfileInfo",
+      "GET",
+      true
+    );
+    if (result.isError) {
+      dispatch(logoutRequest());
+    }
+    localStorage.setItem("token", user);
+    
+    dispatch(
+      redirectTo({
+        path: AppRoutes.DASHBOARD.url
+      })
+    );
+    done();
+  }
+});
 export const LoginLogics = [
   loginLogic,
   logOutLogic,
   socialLoginLogic,
   forgetPasswordLogic,
   verifyResetTokenLogic,
-  resetPasswordLogic
+  resetPasswordLogic,
+  verifyAccountAccessLogic
 ];

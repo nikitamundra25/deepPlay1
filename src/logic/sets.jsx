@@ -48,7 +48,10 @@ const createSetLogic = createLogic({
         })
       );
       if (!action.payload.isCopy) {
-        // dispatch(redirectTo({ path: "/move" }));
+        if (!toast.isActive(toastId)) {
+          toastId = toast.success(result.messages[0]);
+        }
+        dispatch(redirectTo({ path: "/move" }));
       } else {
         if (!toast.isActive(toastId)) {
           toastId = toast.success("Set Copy has been created successfully");
