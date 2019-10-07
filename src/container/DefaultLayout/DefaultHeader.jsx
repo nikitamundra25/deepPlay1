@@ -123,7 +123,7 @@ class DefaultHeader extends React.Component {
                 <h3 className="mb-0 header-title">Deep Play</h3>
               </NavbarBrand>
               {isLoggedIn ? (
-                <Nav className="navbar-nav align-items-center nav-main-section flex-fill">
+                <Nav className="navbar-nav align-items-center nav-main-section flex-fill creat-option">
                   <div className="nav-inputs-wrap d-flex">
                     <Col>
                       <UncontrolledDropdown className="header-manu-wrap">
@@ -181,7 +181,7 @@ class DefaultHeader extends React.Component {
                 </Nav>
               ) : null}
               <Nav
-                className="navbar-nav align-items-center nav-main-section"
+                className="navbar-nav align-items-center nav-main-section user-section"
                 navbar
               >
                 {!isUserLoggedIn ? (
@@ -203,10 +203,10 @@ class DefaultHeader extends React.Component {
                   </div>
                 ) : (
                   <>
-                    <UncontrolledDropdown className="header-manu-wrap ">
+                    <UncontrolledDropdown className="header-manu-wrap " direction="bottom">
                       <DropdownToggle
                         tag="a"
-                        className="nav-link user-section"
+                        className="nav-link user-section "
                         caret
                       >
                         <div className="user-wrap">

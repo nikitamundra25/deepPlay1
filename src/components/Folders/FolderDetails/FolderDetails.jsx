@@ -422,7 +422,7 @@ class RecentFolderComponent extends React.Component {
             ) : (
               <>
                 <div className="create-set-section mt-2 w-100 empty-folder-section">
-                  <Card className="w-100 set-content-wrap empty-folder-card">
+                  <Card className="set-content-wrap empty-folder-card">
                     <div className="set-content-block w-100 empty-folder-wrap">
                       <CardHeader className="empty-folder-header">
                         <img src={emptySetIc} alt={"Images"} />

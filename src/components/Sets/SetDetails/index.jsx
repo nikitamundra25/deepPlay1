@@ -11,7 +11,8 @@ import {
   DropdownToggle,
   UncontrolledDropdown,
   DropdownMenu,
-  DropdownItem
+  DropdownItem,
+  ButtonGroup,
 } from "reactstrap";
 import {
   getSetDetailsRequest,
@@ -30,6 +31,7 @@ import Loader from "../../comman/Loader/Loader";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import emptySetIc from "../../../assets/img/empty-sets.png";
+import addPlusIc from "../../../assets/img/add_plus.png";
 import { ConfirmBox } from "../../../helper/SweetAleart";
 const homePageImage = [
   "https://images.pexels.com/photos/67636/rose-blue-flower-rose-blooms-67636.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500",
@@ -155,7 +157,7 @@ class SetDetails extends React.Component {
               >
                 <i className="fas fa-share icon-font"></i>
               </span>
-              <UncontrolledDropdown className="header-dropdown  custom-dropdown">
+              <UncontrolledDropdown className="header-dropdown  custom-dropdown" direction="bottom">
                 <DropdownToggle color={" "}>
                   <span id="edit" className="cursor_pointer ml-4">
                     <i className="fas fa-sliders-h icon-font"></i>
@@ -174,12 +176,48 @@ class SetDetails extends React.Component {
               </UncontrolledDropdown>
             </div>
           </div>
-          <div className="create-set-section step-2 w-100">
+          <Card className="video-slider-section">
+          <div className="create-set-section step-2 w-100 video-slider-wrap">
             <Slider {...settings} className="w-100">
               {movesOfSet && movesOfSet.length ? (
                 movesOfSet.map((video, index) => {
                   return (
                     <div className="w-100">
+                      <div className="video-slider-text">
+                       <div className="video-slider-title"> title of webM </div>
+                       <div className="video-slider-dropDown">
+                        
+                         <div>
+          
+              
+              <UncontrolledDropdown className="header-dropdown  custom-dropdown" direction="left">
+                <DropdownToggle color={" "}>
+                  <span id="edit" className="cursor_pointer ml-4">
+                  <i class="fa fa-ellipsis-v" aria-hidden="true"></i>
+                  </span>
+                </DropdownToggle>
+                <DropdownMenu>
+                  <DropdownItem >
+                    Edit
+                </DropdownItem>
+                  <DropdownItem
+                  >
+                    View Info
+                </DropdownItem>
+                  <DropdownItem
+                  >
+              Tranfer
+                </DropdownItem>
+                  <DropdownItem
+                  >
+            Delete
+                </DropdownItem>
+                </DropdownMenu>
+              </UncontrolledDropdown>
+            </div>
+                         </div>
+                      </div>
+                      <div className="video-slider-img">
                       <video width={"100%"} controls>
                         <source
                           src={`${AppConfig.API_ENDPOINT}${video.videoUrl}`}
@@ -187,11 +225,12 @@ class SetDetails extends React.Component {
                         />
                       </video>
                     </div>
+                    </div>
                   );
                 })
               ) : (
                   <div className="create-set-section w-100 empty-folder-section">
-                    <Card className="w-100 set-content-wrap empty-folder-card">
+                    <div className="set-content-wrap empty-folder-card">
                       <div className="set-content-block w-100 empty-folder-wrap">
                         <CardHeader className="empty-folder-header text-center">
                           <img src={emptySetIc} alt={"Images"} />
@@ -218,14 +257,15 @@ class SetDetails extends React.Component {
                           </div>
                         </CardBody>
                       </div>
-                    </Card>
+                    </div>
                   </div>
 
                 )}
             </Slider>
 
           </div>
-          <section className="play-list-collection ">
+          </Card>
+          <section className="play-list-collection set-detail-section">
             <Row>
               <Col md="12">
                 <div class="content-header mt-3 mb-2">
@@ -235,10 +275,10 @@ class SetDetails extends React.Component {
                 </div>
               </Col>
               <Col md="4">
-                <div className="play-list-block  d-flex h-100">
-                  <div className="add-play-list-block d-flex  justify-content-center align-items-center text-center flex-column">
-                    <div className="h5 font-dark-bold">
-                      Create your own set to learn or teach
+                <div className="play-list-block  d-flex h-100 ">
+                  <div className="add-play-list-block d-flex w-100 justify-content-center align-items-center text-center flex-column">
+                    <div className="h5 font-dark-bold add-img">
+                  <img src={addPlusIc} />
                   </div>
                     <Button color={" "} className="fill-btn btn mt-4"> Create Now</Button>
                   </div>
@@ -268,6 +308,34 @@ class SetDetails extends React.Component {
                           <div className="play-list-heading h6 ">
                             Salsa Footwork
                       </div>
+                      <div
+                          // onMouseOver={() => this.showPopOver(i, show)}
+                          className={"tooltip-btn-wrap right-btn-tip"}
+                        >
+                          <span className="cursor_pointer">
+                            {" "}
+                            <i className="fas fa-ellipsis-v setting-icon "></i>
+                          </span>
+                       
+                            <ButtonGroup size="sm">
+                              <Button
+                                // onClick={() => this.OnCreateSetCopy(list)}
+                              >
+                                Copy
+                              </Button>
+                              <Button
+                              
+                              >
+                                Transfer
+                              </Button>
+                              <Button
+                             
+                              >
+                                Remove
+                              </Button>
+                            </ButtonGroup>
+                         
+                        </div>
                         </div>
                       </div>
                     </div>

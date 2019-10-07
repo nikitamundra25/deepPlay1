@@ -112,7 +112,7 @@ class CreateSetComponent extends React.Component {
 
     return (
       <div className="create-set-section">
-        <Card className="w-100 set-content-wrap">
+        <Card className="set-content-wrap">
           <div className="set-content-block w-100">
             <CardHeader className="">
               <div className="content-header set-header">
