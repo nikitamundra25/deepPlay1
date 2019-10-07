@@ -10,7 +10,8 @@ import {
   profileSuccess,
   forgotPasswordSuccess,
   changePasswordSuccess,
-  changePasswordAction
+  changePasswordAction,
+  changePasswordFailed
 } from "../actions";
 //import { logger } from "helper/Logger";
 import { toast } from "react-toastify";
@@ -246,10 +247,11 @@ const changePasswordLogic = createLogic({
             result.messages
         );
       }
+      dispatch(changePasswordFailed())
       done();
       return;
     } else {
-      dispatch(changePasswordSuccess({ isChangePasswordSuccess: true }));
+      dispatch(changePasswordSuccess());
       if (!toast.isActive(toastId)) {
         toastId = toast.success(result.messages[0]);
       }
