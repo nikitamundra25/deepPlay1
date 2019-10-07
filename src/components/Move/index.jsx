@@ -39,12 +39,15 @@ class MoveComponent extends React.Component {
       var match = value.match(myregexp);
       if (match) {
         const ValidYouTubeUrl = this.validateYouTubeUrl(value);
-        this.setState({
-          url: ValidYouTubeUrl,
-          isYouTubeUrl: true
-        }, () => {
-          this.handleMoveUpload()
-        })
+        this.setState(
+          {
+            url: ValidYouTubeUrl,
+            isYouTubeUrl: true
+          },
+          () => {
+            this.handleMoveUpload();
+          }
+        );
       } else {
         this.setState({
           errors: {
@@ -52,7 +55,7 @@ class MoveComponent extends React.Component {
           }
         });
       }
-    }else{
+    } else {
       this.setState({
         errors: ""
       });
@@ -108,15 +111,18 @@ class MoveComponent extends React.Component {
     }
   };
 
-  handleVideoFileSelect = (e) => {
-    let files = e.target.files
-    this.setState({
-      url: files[0].name,
-      errors:""
-    }, () => {
-      this.props.downloadVideo({ url: files[0], isYoutubeUrl: false })
-    })
-  }
+  handleVideoFileSelect = e => {
+    let files = e.target.files;
+    this.setState(
+      {
+        url: files[0].name,
+        errors: ""
+      },
+      () => {
+        this.props.downloadVideo({ url: files[0], isYoutubeUrl: false });
+      }
+    );
+  };
 
   render() {
     const { errors, url } = this.state;
@@ -138,7 +144,6 @@ class MoveComponent extends React.Component {
               <CardBody className="">
                 <div className="create-set-tile">
                   <Form className="url-update-wrap">
-                   
                     <FormGroup className="flex-fill flex-column ">
                       <div className="flex-fill w-100">
                         <Input
@@ -159,13 +164,13 @@ class MoveComponent extends React.Component {
                           {errors.notUrl
                             ? errors.notUrl
                             : errors.validUrl && url
-                              ? errors.validUrl
-                              : null}
+                            ? errors.validUrl
+                            : null}
                         </FormFeedback>
                       </div>
                     </FormGroup>
                     <div className="divider-or mt-4 mb-4">
-                     <span> OR </span>
+                      <span> OR </span>
                     </div>
                     <div className="text-center mr-2">
                       <FormGroup>
@@ -182,9 +187,9 @@ class MoveComponent extends React.Component {
                           disabled={isVideoDownloading ? true : false}
                           className={"d-none"}
                           id="videoUpload"
-                          name="customFile" />
+                          name="customFile"
+                        />
                       </FormGroup>
-                     
                     </div>
                   </Form>
                 </div>

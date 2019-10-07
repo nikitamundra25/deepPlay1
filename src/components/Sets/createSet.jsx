@@ -191,9 +191,11 @@ class CreateSetComponent extends React.Component {
           toggle={() => this.handleModal}
         >
           <ModalHeader>
-            <h5 className="modal-title" id="exampleModalLabel">
-              <span class="custom-title">Description</span>
-            </h5>
+            <div>
+              <h5 className="modal-title" id="exampleModalLabel">
+                <span className="custom-title">Description</span>
+              </h5>
+            </div>
             <button
               aria-label="Close"
               className="close"

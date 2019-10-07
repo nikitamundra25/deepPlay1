@@ -78,7 +78,13 @@ class SetComponent extends React.Component {
     return (
       <div className="set-main-section">
         <div className="content-header">
-          <span className="content-title">YOUR SETS</span>
+          <span className="content-title">
+            <div className="main-title"> {" Your Sets"}</div>
+            <div className="sub-title">
+              Total sets{" "}
+              {allSetList && allSetList.length ? allSetList.length : "0"}
+            </div>
+          </span>
           <span
             id="UncontrolledTooltipExample"
             className={"cursor_pointer"}
@@ -93,9 +99,6 @@ class SetComponent extends React.Component {
             Create New Set
           </UncontrolledTooltip>
         </div>
-        <p className="m-0">
-          Total sets {allSetList && allSetList.length ? allSetList.length : "0"}
-        </p>{" "}
         <Row className="set-wrap">
           {!isSetListLoading ? (
             allSetList && allSetList.length ? (
@@ -115,8 +118,8 @@ class SetComponent extends React.Component {
                           <div className="content-heading-tile d-flex">
                             {" "}
                             <span
-                            // onClick={() => this.handleSetDetails(setList._id)}
-                             className={" text-capitalize"}
+                              // onClick={() => this.handleSetDetails(setList._id)}
+                              className={" text-capitalize"}
                             >
                               <span>{setList.title}</span>
                             </span>

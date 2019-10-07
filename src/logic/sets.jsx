@@ -233,7 +233,7 @@ const ManageSetLogic = createLogic({
           }
         })
       );
-
+      dispatch(getAllSetRequest({ isSetNoLimit: false }));
       if (action.payload.previousFolderId) {
         dispatch(
           getFolderSetRequest({

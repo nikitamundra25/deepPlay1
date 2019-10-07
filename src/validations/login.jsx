@@ -82,10 +82,10 @@ export const ChangePasswordValidations = {
 };
 export const ChangePasswordValidationsMessaages = {
   oldPassword: {
-    [ValidationTypes.REQUIRED]: "Please enter password."
+    [ValidationTypes.REQUIRED]: "Please enter old password."
   },
   newPassword: {
-    [ValidationTypes.REQUIRED]: "Please enter password.",
+    [ValidationTypes.REQUIRED]: "Please enter new password.",
     [ValidationTypes.MINLENGTH]: "Please enter atleast 6 characters.",
     [ValidationTypes.MAXLENGTH]: "Password cannot have more that 20 characters"
   },
