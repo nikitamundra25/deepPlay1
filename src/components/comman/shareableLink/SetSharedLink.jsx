@@ -1,6 +1,6 @@
 import React from "react";
 import { connect } from "react-redux";
-import { Card, CardBody, Container, Col } from "reactstrap";
+import { Card, CardBody, Container, Col, CardHeader, Button } from "reactstrap";
 import {
   sharedSetInfoRequest,
   publicUrlMoveDetailsRequest
@@ -10,6 +10,9 @@ import { AppConfig } from "../../../config/Appconfig";
 import "./index.scss";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
+import emptySetIc from "../../../assets/img/empty-sets.png";
+import { AppRoutes } from "../../../config/AppRoutes";
+
 import qs from "query-string";
 
 var settings = {
@@ -52,22 +55,52 @@ class SetSharedLink extends React.Component {
     const { decryptedSetDetails } = shareLinkReducer;
 
     return (
-      <>
-        <div className={"mt-5 "}>
-          <Container className={"mt-5"}>
-            <div className="text-center h3">
-              <b> Set Details</b>
-            </div>{" "}
+      <div className="dashboard-full-section">
+      
+          <Container >
+          <div className="content-header">
+          <span className="content-title">
+           <div className="main-title">        {decryptedSetDetails ? decryptedSetDetails.title : "No Title"}</div>
+            <div className="sub-title">
+            3 Moves
+        </div>
+          </span>
+         
+        </div>
+        <div className="create-set-section mt-2 w-100">
+                  <Card className="set-content-wrap">
+                    <div className="set-content-block w-100 empty-folder-wrap">
+                      <CardHeader className="empty-folder-header">
+                        <img src={emptySetIc} alt={"Folder"} />
+                        <div className="content-header set-header">
+                          <span className="content-title">
+                            {" "}
+                            <h3>You haven't created any set yet</h3>
+                            <p>Create a Set to Organize your Moves.</p>
+                          </span>
+                        </div>
+                      </CardHeader>
+                      <CardBody className="">
+                        <div className="create-set-tile"></div>
+                        <div className="text-center">
+                          <Button
+                            color=" "
+                            type="button"
+                            className="btn-black btn mt-3 folder-create-btn"
+                            onClick={() =>
+                              this.props.redirectTo(AppRoutes.CREATE_SET.url)
+                            }
+                          >
+                            <i className="fas fa-plus mr-1"></i>
+                            Create a Set
+                          </Button>
+                        </div>
+                      </CardBody>
+                    </div>
+                  </Card>
+                </div>
             <Card className="w-100">
               <CardBody>
-                <div className={"d-flex justify-content-between"}>
-                  <div>
-                    <h2 className={"capitalise"}>
-                      {decryptedSetDetails ? decryptedSetDetails.title : ""}
-                    </h2>
-                    <span className={"pt-2"}> 3 Moves</span>
-                  </div>
-                </div>
                 <div className={"pt-3 d-flex justify-content-center"}>
                   <Col md={"10"}>
                     <Slider {...settings}>
@@ -95,8 +128,8 @@ class SetSharedLink extends React.Component {
               </CardBody>
             </Card>
           </Container>
-        </div>
-      </>
+        
+      </div>
     );
   }
 }
