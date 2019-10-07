@@ -97,6 +97,7 @@ class SetComponent extends React.Component {
           Total sets {allSetList && allSetList.length ? allSetList.length : "0"}
         </p>{" "}
         <Row className="set-wrap">
+          <Col>
           {!isSetListLoading ? (
             allSetList && allSetList.length ? (
               // eslint-disable-next-line
@@ -233,6 +234,7 @@ class SetComponent extends React.Component {
               </Col>
             </div>
           )}
+          </Col>
         </Row>
         {totalSets && !isSetListLoading ? (
           <PaginationHelper

@@ -133,7 +133,7 @@ class DefaultHeader extends React.Component {
               path !== "/404" ? (
                 <>
                   {isLoggedIn ? (
-                    <Nav className="navbar-nav align-items-center nav-main-section flex-fill">
+                    <Nav className="navbar-nav align-items-center nav-main-section flex-fill creat-option">
                       <div className="nav-inputs-wrap d-flex">
                         <Col>
                           <UncontrolledDropdown className="header-manu-wrap">
@@ -196,7 +196,7 @@ class DefaultHeader extends React.Component {
                     </Nav>
                   ) : null}
                   <Nav
-                    className="navbar-nav align-items-center nav-main-section"
+                    className="navbar-nav align-items-center nav-main-section user-section"
                     navbar
                   >
                     {!isUserLoggedIn ? (
@@ -218,7 +218,7 @@ class DefaultHeader extends React.Component {
                       </div>
                     ) : (
                       <>
-                        <UncontrolledDropdown className="header-manu-wrap ">
+                        <UncontrolledDropdown className="header-manu-wrap  dropdown-with-ic">
                           <DropdownToggle
                             tag="a"
                             className="nav-link user-section"
@@ -266,15 +266,22 @@ class DefaultHeader extends React.Component {
                                   onClick={() =>
                                     this.props.redirectTo(item.url)
                                   }
+                                 
                                   key={index}
                                   active={routePath === item.url ? true : false}
                                 >
+                                  <div 
+                                  className="dropdown-img"
+                                  >
                                   <img
                                     src={item.iconUrl}
                                     alt={item.iconUrl}
                                     width="20"
                                   />{" "}
+                                  </div>
+                                  <div    className="dropdown-txt">
                                   {item.name}
+                                  </div>
                                 </DropdownItem>
                               );
                             })}
@@ -285,16 +292,24 @@ class DefaultHeader extends React.Component {
                                 )
                               }
                             >
+                                 <div 
+                                  className="dropdown-img"
+                                  >
                               <img
                                 src={logoutIcon}
                                 alt={"changePassword"}
                                 width="20"
-                              />{" "}
+                              /></div>{" "}
+                               <div    className="dropdown-txt">
                               Change Password
+                              </div>
                             </DropdownItem>
                             <DropdownItem onClick={e => logoutRequest(e)}>
-                              <img src={logoutIcon} alt={"Logout"} width="20" />{" "}
-                              Log Out
+                            <div 
+                                  className="dropdown-img"
+                                  >
+                              <img src={logoutIcon} alt={"Logout"} width="20" /></div>{" "}
+                              <div    className="dropdown-txt"> Log Out</div>  
                             </DropdownItem>
                           </DropdownMenu>
                         </UncontrolledDropdown>
