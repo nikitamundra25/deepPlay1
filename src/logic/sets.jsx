@@ -112,7 +112,7 @@ const deleteSetLogic = createLogic({
         toastId = toast.success(result.messages[0]);
       }
       dispatch(redirectTo({ path: "/set" }));
-      dispatch(getAllSetRequest());
+      dispatch(getAllSetRequest({ isSetNoLimit: false }));
       done();
     }
   }
@@ -241,7 +241,7 @@ const ManageSetLogic = createLogic({
         if (!toast.isActive(toastId)) {
           toastId = toast.success("Your set has been transfered successfully");
         }
-        dispatch(getAllSetRequest());
+        dispatch(getAllSetRequest({ isSetNoLimit: false }));
         dispatch(getFolderSetRequest());
       }
       done();

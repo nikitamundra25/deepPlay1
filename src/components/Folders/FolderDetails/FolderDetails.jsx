@@ -205,6 +205,7 @@ class RecentFolderComponent extends React.Component {
       setIndex: index
     });
   };
+
   closePopOver = () => {
     this.setState({
       show: false,
@@ -346,17 +347,20 @@ class RecentFolderComponent extends React.Component {
                       onMouseLeave={() => this.closePopOver()}
                     >
                       <div className="cotent-tile d-flex content-with-tip">
-                        <div className="cotent-text-tile">
+                        <div
+                          className="cotent-text-tile cursor_pointer text-capitalize"
+                          onClick={() => this.handleSetDetails(list._id)}
+                        >
                           <div className="content-heading-tile d-flex">
                             {" "}
                             <span
-                              onClick={() => this.handleSetDetails(list._id)}
-                              className={"cursor_pointer text-capitalize"}
+                              // onClick={() => this.handleSetDetails(list._id)}
+                              className={"text-capitalize"}
                             >
                               <span>{list.title} </span>
                             </span>
                           </div>
-                          <span className="text-capitalize">
+                          <span className={"text-capitalize"}>
                             {list.description ? list.description : ""}
                           </span>
                           <div className="content-number-tile">
@@ -364,7 +368,10 @@ class RecentFolderComponent extends React.Component {
                             {list.moveCount ? list.moveCount : 0} items
                           </div>
                         </div>
-                        <div className="d-flex img-tile-wrap">
+                        <div
+                          className="d-flex img-tile-wrap cursor_pointer"
+                          onClick={() => this.handleSetDetails(list._id)}
+                        >
                           <div
                             className="cotent-img-tile"
                             style={{

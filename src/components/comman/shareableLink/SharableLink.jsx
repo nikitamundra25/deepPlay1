@@ -38,14 +38,11 @@ class SharableLinkModal extends React.Component {
     }
   };
 
-  handleOpen = () => {
-    const { modelInfoReducer } = this.props;
-    const { modelDetails } = modelInfoReducer;
-    this.props.modelOperate({
-      modelDetails: {
-        sharableLinkModalOpen: !modelDetails.sharableLinkModalOpen
-      }
+  handleClose = () => {
+    this.setState({
+      copied: false
     });
+    this.props.handleOpen();
   };
 
   handlePublicAccess = e => {
@@ -93,7 +90,7 @@ class SharableLinkModal extends React.Component {
             className="close"
             data-dismiss="modal"
             type="button"
-            onClick={handleOpen}
+            onClick={this.handleClose}
           >
             <span aria-hidden="true">
               <img src={closeIcon} alt="close-ic" />

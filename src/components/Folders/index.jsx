@@ -183,7 +183,9 @@ class FolderComponent extends React.Component {
                                   ) : null}
                                 </div>
                               </div>
+                              <span className={"text-capitalize"}> 
                               {folder.description ? folder.description : ""}
+                              </span>
                             </div>
                           </div>
                         </div>

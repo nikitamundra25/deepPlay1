@@ -108,12 +108,15 @@ class SetComponent extends React.Component {
                       onMouseLeave={() => this.closePopOver()}
                     >
                       <div className="cotent-tile d-flex content-with-tip">
-                        <div className="cotent-text-tile">
+                        <div
+                          className="cotent-text-tile cursor_pointer "
+                          onClick={() => this.handleSetDetails(setList._id)}
+                        >
                           <div className="content-heading-tile d-flex">
                             {" "}
                             <span
-                              onClick={() => this.handleSetDetails(setList._id)}
-                              className={"cursor_pointer text-capitalize"}
+                            // onClick={() => this.handleSetDetails(setList._id)}
+                             className={" text-capitalize"}
                             >
                               <span>{setList.title}</span>
                             </span>
@@ -124,7 +127,10 @@ class SetComponent extends React.Component {
                             {setList.moveCount} moves
                           </div>
                         </div>
-                        <div className="d-flex img-tile-wrap">
+                        <div
+                          className="d-flex img-tile-wrap cursor_pointer"
+                          onClick={() => this.handleSetDetails(setList._id)}
+                        >
                           <div
                             className="cotent-img-tile "
                             style={{
