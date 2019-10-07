@@ -7,12 +7,11 @@ import {
   Col,
   Row,
   CardHeader,
-  UncontrolledTooltip,
   DropdownToggle,
   UncontrolledDropdown,
   DropdownMenu,
   DropdownItem,
-  ButtonGroup,
+  ButtonGroup
 } from "reactstrap";
 import {
   getSetDetailsRequest,
@@ -27,7 +26,6 @@ import Slider from "react-slick";
 import { AppConfig } from "../../../config/Appconfig";
 import { AppRoutes } from "../../../config/AppRoutes";
 import "./index.scss";
-import Loader from "../../comman/Loader/Loader";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import emptySetIc from "../../../assets/img/empty-sets.png";
@@ -61,7 +59,7 @@ class SetDetails extends React.Component {
     const location = this.props.location;
     const pathName = location.pathname.split("/");
     this.props.getSetDetailsRequest({ setId: pathName[2] });
-    this.props.getMovesOfSetRequest({ setId: pathName[2] })
+    this.props.getMovesOfSetRequest({ setId: pathName[2] });
   };
   /*
   /*  
@@ -121,7 +119,7 @@ class SetDetails extends React.Component {
       shareLinkReducer,
       modelInfoReducer
     } = this.props;
-    const { setDetails, isSetDetailsLoading } = setReducer;
+    const { setDetails } = setReducer;
     const { modelDetails } = modelInfoReducer;
     const { movesOfSet } = moveReducer;
     const { userEncryptedInfo } = shareLinkReducer;
@@ -130,24 +128,31 @@ class SetDetails extends React.Component {
       <>
         <div className="set-main-section">
           <div className="content-header">
-        
-              {
-                setDetails && setDetails.folderId ?
-                  <span className="content-title">
-                    {
-                      setDetails && setDetails.folderId ? setDetails.folderId.isCopy ?
-                        `Copy of ${setDetails.folderId.title}` :
-                        setDetails.folderId.title : null
-                    }/
-                              <span className={"text-light"}>{setDetails.title}</span>
-                  </span> :
-                  <span className="content-title">
-                    {setDetails ? setDetails.title : "MyFolder"}
-                  </span>
-              }
-        
+            {setDetails && setDetails.folderId ? (
+              <span className="content-title">
+                <div className="main-title">
+                  {setDetails && setDetails.folderId
+                    ? setDetails.folderId.isCopy
+                      ? `Copy of ${setDetails.folderId.title}`
+                      : setDetails.folderId.title
+                    : null}
+                  /<span className={"text-light"}>{setDetails.title}</span>
+                </div>
+              </span>
+            ) : (
+              <span className="content-title">
+                <div className="main-title">
+                  {setDetails ? setDetails.title : "MyFolder"}
+                </div>
+              </span>
+            )}
+
             <div>
-              <span id="UncontrolledTooltipExample" className={"cursor_pointer"} onClick={() => this.props.redirectTo(AppRoutes.CREATE_SET.url)}>
+              <span
+                id="UncontrolledTooltipExample"
+                className={"cursor_pointer"}
+                onClick={() => this.props.redirectTo(AppRoutes.CREATE_SET.url)}
+              >
                 <i className="fas fa-plus-circle icon-font"></i>
               </span>
               <span
@@ -157,78 +162,79 @@ class SetDetails extends React.Component {
               >
                 <i className="fas fa-share icon-font"></i>
               </span>
-              <UncontrolledDropdown className="header-dropdown  custom-dropdown" direction="bottom">
+              <UncontrolledDropdown
+                className="header-dropdown  custom-dropdown"
+                direction="bottom"
+              >
                 <DropdownToggle color={" "}>
                   <span id="edit" className="cursor_pointer ml-4">
                     <i className="fas fa-sliders-h icon-font"></i>
                   </span>
                 </DropdownToggle>
                 <DropdownMenu>
-                  <DropdownItem onClick={this.handleFolderModel}>
+                  <DropdownItem onClick={() => this.editSet(setDetails._id)}>
                     Edit
-                </DropdownItem>
+                  </DropdownItem>
                   <DropdownItem
-                  // onClick={() => this.handleDeleteFolder(folderDetails._id)}
+                    onClick={() => this.handleDeleteSet(setDetails._id)}
                   >
                     Delete
-                </DropdownItem>
+                  </DropdownItem>
                 </DropdownMenu>
               </UncontrolledDropdown>
             </div>
           </div>
           <Card className="video-slider-section">
-          <div className="create-set-section step-2 w-100 video-slider-wrap">
-            <Slider {...settings} className="w-100">
-              {movesOfSet && movesOfSet.length ? (
-                movesOfSet.map((video, index) => {
-                  return (
-                    <div className="w-100">
-                      <div className="video-slider-text">
-                       <div className="video-slider-title"> title of webM </div>
-                       <div className="video-slider-dropDown">
-                        
-                         <div>
-          
-              
-              <UncontrolledDropdown className="header-dropdown  custom-dropdown" direction="left">
-                <DropdownToggle color={" "}>
-                  <span id="edit" className="cursor_pointer ml-4">
-                  <i class="fa fa-ellipsis-v" aria-hidden="true"></i>
-                  </span>
-                </DropdownToggle>
-                <DropdownMenu>
-                  <DropdownItem >
-                    Edit
-                </DropdownItem>
-                  <DropdownItem
-                  >
-                    View Info
-                </DropdownItem>
-                  <DropdownItem
-                  >
-              Tranfer
-                </DropdownItem>
-                  <DropdownItem
-                  >
-            Delete
-                </DropdownItem>
-                </DropdownMenu>
-              </UncontrolledDropdown>
-            </div>
-                         </div>
+            <div className="create-set-section step-2 w-100 video-slider-wrap">
+              <Slider {...settings} className="w-100">
+                {movesOfSet && movesOfSet.length ? (
+                  movesOfSet.map((video, index) => {
+                    return (
+                      <div className="w-100">
+                        <div className="video-slider-text">
+                          <div className="video-slider-title">
+                            {" "}
+                            title of webM{" "}
+                          </div>
+                          <div className="video-slider-dropDown">
+                            <div>
+                              <UncontrolledDropdown
+                                className="header-dropdown  custom-dropdown"
+                                direction="left"
+                              >
+                                <DropdownToggle color={" "}>
+                                  <span
+                                    id="edit"
+                                    className="cursor_pointer ml-4"
+                                  >
+                                    <i
+                                      class="fa fa-ellipsis-v"
+                                      aria-hidden="true"
+                                    ></i>
+                                  </span>
+                                </DropdownToggle>
+                                <DropdownMenu>
+                                  <DropdownItem>Edit</DropdownItem>
+                                  <DropdownItem>View Info</DropdownItem>
+                                  <DropdownItem>Tranfer</DropdownItem>
+                                  <DropdownItem>Delete</DropdownItem>
+                                </DropdownMenu>
+                              </UncontrolledDropdown>
+                            </div>
+                          </div>
+                        </div>
+                        <div className="video-slider-img">
+                          <video width={"100%"} controls>
+                            <source
+                              src={`${AppConfig.API_ENDPOINT}${video.videoUrl}`}
+                              type="video/mp4"
+                            />
+                          </video>
+                        </div>
                       </div>
-                      <div className="video-slider-img">
-                      <video width={"100%"} controls>
-                        <source
-                          src={`${AppConfig.API_ENDPOINT}${video.videoUrl}`}
-                          type="video/mp4"
-                        />
-                      </video>
-                    </div>
-                    </div>
-                  );
-                })
-              ) : (
+                    );
+                  })
+                ) : (
                   <div className="create-set-section w-100 empty-folder-section">
                     <div className="set-content-wrap empty-folder-card">
                       <div className="set-content-block w-100 empty-folder-wrap">
@@ -253,34 +259,33 @@ class SetDetails extends React.Component {
                             >
                               <i className="fas fa-plus mr-1"></i>
                               Add a Set
-                          </Button>
+                            </Button>
                           </div>
                         </CardBody>
                       </div>
                     </div>
                   </div>
-
                 )}
-            </Slider>
-
-          </div>
+              </Slider>
+            </div>
           </Card>
           <section className="play-list-collection set-detail-section">
             <Row>
               <Col md="12">
                 <div class="content-header mt-3 mb-2">
-                    <span class="content-title">
-                      Chapter business 247
-                  </span>
+                  <span class="content-title">Chapter business 247</span>
                 </div>
               </Col>
               <Col md="4">
                 <div className="play-list-block  d-flex h-100 ">
                   <div className="add-play-list-block d-flex w-100 justify-content-center align-items-center text-center flex-column">
                     <div className="h5 font-dark-bold add-img">
-                  <img src={addPlusIc} />
-                  </div>
-                    <Button color={" "} className="fill-btn btn mt-4"> Create Now</Button>
+                      <img src={addPlusIc} alt="" />
+                    </div>
+                    <Button color={" "} className="fill-btn btn mt-4">
+                      {" "}
+                      Create Now
+                    </Button>
                   </div>
                 </div>
               </Col>
@@ -289,53 +294,38 @@ class SetDetails extends React.Component {
                   <Col md="4" key={index}>
                     <div className="play-list-block ">
                       <div className="play-sub-block ">
-                        
-                        <div
-                          className="play-list-img blur-img-wrap"
-                        >
-                          <img src={images} />
+                        <div className="play-list-img blur-img-wrap">
+                          <img src={images} alt="" />
                           <div
                             className="blur-img"
                             style={{ backgroundImage: 'url("' + images + '")' }}
-                          >
-
-                          </div>
+                          ></div>
                         </div>
 
                         <div className="play-list-text">
-
                           <div className="play-list-number">25 Moves</div>
                           <div className="play-list-heading h6 ">
                             Salsa Footwork
-                      </div>
-                      <div
-                          // onMouseOver={() => this.showPopOver(i, show)}
-                          className={"tooltip-btn-wrap right-btn-tip"}
-                        >
-                          <span className="cursor_pointer">
-                            {" "}
-                            <i className="fas fa-ellipsis-v setting-icon "></i>
-                          </span>
-                       
+                          </div>
+                          <div
+                            // onMouseOver={() => this.showPopOver(i, show)}
+                            className={"tooltip-btn-wrap right-btn-tip"}
+                          >
+                            <span className="cursor_pointer">
+                              {" "}
+                              <i className="fas fa-ellipsis-v setting-icon "></i>
+                            </span>
+
                             <ButtonGroup size="sm">
                               <Button
-                                // onClick={() => this.OnCreateSetCopy(list)}
+                              // onClick={() => this.OnCreateSetCopy(list)}
                               >
                                 Copy
                               </Button>
-                              <Button
-                              
-                              >
-                                Transfer
-                              </Button>
-                              <Button
-                             
-                              >
-                                Remove
-                              </Button>
+                              <Button>Transfer</Button>
+                              <Button>Remove</Button>
                             </ButtonGroup>
-                         
-                        </div>
+                          </div>
                         </div>
                       </div>
                     </div>
@@ -376,7 +366,7 @@ const mapDispatchToProps = dispatch => ({
   onDeleteSets: data => {
     dispatch(deleteSetRequest(data));
   },
-  getMovesOfSetRequest: data =>dispatch(getMovesOfSetRequest(data))
+  getMovesOfSetRequest: data => dispatch(getMovesOfSetRequest(data))
 });
 export default connect(
   mapStateToProps,

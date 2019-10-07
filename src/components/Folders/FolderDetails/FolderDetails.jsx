@@ -286,10 +286,13 @@ class RecentFolderComponent extends React.Component {
       <div className="page-body">
         <div className="content-header">
           <span className="content-title">
-           <div className="main-title"> {folderDetails ? folderDetails.title : "MyFolder"}</div>
+            <div className="main-title">
+              {" "}
+              {folderDetails ? folderDetails.title : "MyFolder"}
+            </div>
             <div className="sub-title">
-          {folderDetails ? folderDetails.description : ""}
-        </div>
+              {folderDetails ? folderDetails.description : ""}
+            </div>
           </span>
           <div>
             <span
@@ -332,9 +335,6 @@ class RecentFolderComponent extends React.Component {
             </UncontrolledTooltip>
           </div>
         </div>{" "}
-        <span className="content-title ">
-          {folderDetails ? folderDetails.description : ""}
-        </span>
         <Row className="set-wrap">
           <Col>
           {!isFolderSetLoading ? (

@@ -1,6 +1,17 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import { FormGroup, Form, Input, Label, Row, Col, Button } from "reactstrap";
+import {
+  FormGroup,
+  Form,
+  Input,
+  Label,
+  Row,
+  Col,
+  Button,
+  CardHeader,
+  Card,
+  CardBody
+} from "reactstrap";
 import {
   ChangePasswordValidations,
   ChangePasswordValidationsMessaages
@@ -33,8 +44,6 @@ class ChangePassword extends Component {
   };
 
   changePassword = e => {
-    console.log("fgkfjgkf");
-
     e.preventDefault();
     this.setState({
       errors: {}
@@ -56,6 +65,11 @@ class ChangePassword extends Component {
         oldPassword: oldPassword,
         newPassword: newPassword
       });
+      // this.setState({
+      //   oldPassword: "",
+      //   newPassword: "",
+      //   confirmPassword: ""
+      // });
     } catch (error) {
       logger(error);
     }
@@ -67,86 +81,100 @@ class ChangePassword extends Component {
     const { isChangePasswordSuccess } = loginReducer;
 
     return (
-      <div className="setting-section">
-        <div className="page-body">
-          <div className="content-header mb-3">
-            <span className="content-title">CHANGE PASSWORD</span>
+      <div className="create-set-section step-2 ">
+        <Card className="set-content-wrap">
+          <div className="set-content-block w-100">
+            <CardHeader className="">
+              <div className="content-header set-header flex-column">
+                <span className="content-title">CHANGE PASSWORD</span>
+              </div>
+            </CardHeader>
+            <CardBody className="">
+              <div className="create-set-tile">
+                <Form
+                  className="url-update-wrap"
+                  onSubmit={this.changePassword}
+                >
+                  <Row>
+                    <Col md="12">
+                      <FormGroup>
+                        <Label for="oldPassword">
+                          Old Password <span className="text-danger">*</span>
+                        </Label>
+                        <Input
+                          value={oldPassword}
+                          name="oldPassword"
+                          onChange={this.handleChange}
+                          placeholder="Old Password"
+                          type="password"
+                        />
+                        {errors.oldPassword ? (
+                          <p className="text-danger"> {errors.oldPassword}</p>
+                        ) : null}
+                      </FormGroup>
+                    </Col>
+                  </Row>
+                  <Row>
+                    <Col md="12">
+                      <FormGroup>
+                        <Label for="newPassword">
+                          New Password <span className="text-danger">*</span>
+                        </Label>
+                        <Input
+                          id="newPassword"
+                          placeholder="New Password"
+                          type="password"
+                          onChange={this.handleChange}
+                          value={newPassword}
+                          name="newPassword"
+                        />
+                        {errors.newPassword ? (
+                          <p className="text-danger"> {errors.newPassword}</p>
+                        ) : null}
+                      </FormGroup>
+                    </Col>
+                  </Row>
+                  <Row>
+                    <Col md="12">
+                      <FormGroup>
+                        <Label for="confirmPassword">
+                          Confirm Password{" "}
+                          <span className="text-danger">*</span>
+                        </Label>
+                        <Input
+                          id="confirmPassword"
+                          placeholder="Confirm Password"
+                          type="password"
+                          onChange={this.handleChange}
+                          value={confirmPassword}
+                          name="confirmPassword"
+                        />
+                        {errors.confirmPassword ? (
+                          <p className="text-danger">
+                            {" "}
+                            {errors.confirmPassword}
+                          </p>
+                        ) : null}
+                      </FormGroup>
+                    </Col>
+                  </Row>
+                  <div className="text-center">
+                    <Button
+                      className="btn-black btn mt-3"
+                      color=""
+                      type="submit"
+                      disabled={isChangePasswordSuccess ? true : false}
+                    >
+                      {isChangePasswordSuccess
+                        ? "Please Wait..."
+                        : "Change Password"}
+                    </Button>
+                  </div>
+                </Form>
+              </div>
+            </CardBody>
           </div>
-          <Form
-            className="form-wrap settingForm"
-            onSubmit={this.changePassword}
-          >
-            <Row>
-              <Col md="12">
-                <FormGroup>
-                  <Label for="oldPassword">
-                    Old Password <span className="text-danger">*</span>
-                  </Label>
-                  <Input
-                    value={oldPassword}
-                    name="oldPassword"
-                    onChange={this.handleChange}
-                    placeholder="Old Password"
-                    type="password"
-                  />
-                  {errors.oldPassword ? (
-                    <p className="text-danger"> {errors.oldPassword}</p>
-                  ) : null}
-                </FormGroup>
-              </Col>
-            </Row>
-            <Row>
-              <Col md="12">
-                <FormGroup>
-                  <Label for="newPassword">
-                    New Password <span className="text-danger">*</span>
-                  </Label>
-                  <Input
-                    id="newPassword"
-                    placeholder="New Password"
-                    type="password"
-                    onChange={this.handleChange}
-                    value={newPassword}
-                    name="newPassword"
-                  />
-                  {errors.newPassword ? (
-                    <p className="text-danger"> {errors.newPassword}</p>
-                  ) : null}
-                </FormGroup>
-              </Col>
-            </Row>
-            <Row>
-              <Col md="12">
-                <FormGroup>
-                  <Label for="confirmPassword">
-                    Confirm Password <span className="text-danger">*</span>
-                  </Label>
-                  <Input
-                    id="confirmPassword"
-                    placeholder="Confirm Password"
-                    type="password"
-                    onChange={this.handleChange}
-                    value={confirmPassword}
-                    name="confirmPassword"
-                  />
-                  {errors.confirmPassword ? (
-                    <p className="text-danger"> {errors.confirmPassword}</p>
-                  ) : null}
-                </FormGroup>
-              </Col>
-            </Row>
-            <div className="text-center">
-              <Button
-                className="btn-black btn mt-3"
-                color=""
-                type="submit"
-                disabled={isChangePasswordSuccess ? true : false}
-              >
-                {isChangePasswordSuccess ? "Please Wait..." : "Change Password"}
-              </Button>
-            </div>
-          </Form>
-        </div>
+        </Card>
       </div>
     );
   }

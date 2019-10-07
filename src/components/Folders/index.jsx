@@ -112,7 +112,15 @@ class FolderComponent extends React.Component {
     return (
       <div className="page-body">
         <div className="content-header">
-          <span className="content-title">Your Folders</span>
+          <span className="content-title">
+            <div className="main-title"> {" Your Folders"}</div>
+            <div className="sub-title">
+              Total folders{" "}
+              {getAllFolders && getAllFolders.length
+                ? getAllFolders.length
+                : "0"}
+            </div>
+          </span>
           <span onClick={this.handleFolderModel} id="move" className="dashboard-right-content cursor_pointer ml-4">
             <i className="fas fa-plus-circle icon-font"></i>
           </span>
@@ -120,10 +128,7 @@ class FolderComponent extends React.Component {
             Create a New Folder
           </UncontrolledTooltip>
         </div>
-        <p className="m-0">
-          Total folders{" "}
-          {getAllFolders && getAllFolders.length ? getAllFolders.length : "0"}
-        </p>{" "}
+
         <div className="wrap-folder">
           <Row className="set-wrap">
             <Col>
@@ -184,8 +189,8 @@ class FolderComponent extends React.Component {
                                   ) : null}
                                 </div>
                               </div>
-                              <span className={"content-sub-heading-tile"}> 
-                              {folder.description ? folder.description : ""}
+                              <span className={"content-sub-heading-tile"}>
+                                {folder.description ? folder.description : ""}
                               </span>
                             </div>
                           </div>

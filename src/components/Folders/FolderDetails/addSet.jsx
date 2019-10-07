@@ -24,7 +24,7 @@ class AddSetModal extends React.Component {
 
   componentDidUpdate(prevProps) {
     if (prevProps.getAllSet !== this.props.getAllSet) {
-      const setList = this.props.getAllSet;
+      let setList = this.props.getAllSet;
       const setItem = setList.filter(item =>
         item && item.folderId ? item.folderId._id === this.props.folderId : null
       );

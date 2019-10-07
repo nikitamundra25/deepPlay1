@@ -24,6 +24,7 @@ import { AppRoutes } from "../../config/AppRoutes";
 import { SidebarComponent } from "../../components/Sidebar";
 import logoutIcon from "../../assets/img/icons/logout.svg";
 import { AppConfig } from "../../config/Appconfig";
+import passwordLock from "../../assets/img/icons/lock.svg";
 
 class DefaultHeader extends React.Component {
   constructor(props) {
@@ -120,18 +121,26 @@ class DefaultHeader extends React.Component {
       <>
         <header className="header-global theme-header ">
           <div className="theme-container">
-            <Navbar
-              className="navbar-main "
+            {/* <Navbar
+              className="navbar-main d-flex justify-content-center"
               // expand="lg"
               id="navbar-main"
-            >
-              <NavbarBrand className="mr-lg-5" to="/" tag={Link}>
+            > */}
+            {/* <NavbarBrand className="mr-lg-5" to="/" tag={Link}>
                 <h3 className="mb-0 header-title">Deep Play</h3>
-              </NavbarBrand>
-              {path !== AppRoutes.FOLDER_SHARED_LINK.url &&
-              path !== AppRoutes.SET_SHARED_LINK.url &&
-              path !== "/404" ? (
-                <>
+              </NavbarBrand> */}
+            {path !== AppRoutes.FOLDER_SHARED_LINK.url &&
+            path !== AppRoutes.SET_SHARED_LINK.url &&
+            path !== "/404" ? (
+              <>
+                <Navbar
+                  className="navbar-main"
+                  // expand="lg"
+                  id="navbar-main"
+                >
+                  <NavbarBrand className="mr-lg-5" to="/" tag={Link}>
+                    <h3 className="mb-0 header-title">Deep Play</h3>
+                  </NavbarBrand>
                   {isLoggedIn ? (
                     <Nav className="navbar-nav align-items-center nav-main-section flex-fill creat-option">
                       <div className="nav-inputs-wrap d-flex">
@@ -291,12 +300,15 @@ class DefaultHeader extends React.Component {
                                   AppRoutes.CHANGE_PASSWORD.url
                                 )
                               }
+                              active={
+                                routePath === "/change-password" ? true : false
+                              }
                             >
                                  <div 
                                   className="dropdown-img"
                                   >
                               <img
-                                src={logoutIcon}
+                                src={passwordLock}
                                 alt={"changePassword"}
                                 width="20"
                               /></div>{" "}
@@ -341,9 +353,19 @@ class DefaultHeader extends React.Component {
                       </Row>
                     </div>
                   </UncontrolledCollapse>
-                </>
-              ) : null}
-            </Navbar>
+                </Navbar>
+              </>
+            ) : (
+              <Navbar
+                className="navbar-main d-flex justify-content-center"
+                // expand="lg"
+                id="navbar-main"
+              >
+                <NavbarBrand className="m-0" to="/" tag={Link}>
+                  <h3 className="mb-0 header-title ">Deep Play</h3>
+                </NavbarBrand>
+              </Navbar>
+            )}
           </div>
         </header>
         <Login
