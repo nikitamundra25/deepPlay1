@@ -3,16 +3,17 @@ import {
   CloudinaryAPIKey,
   CloudinaryAPISecretKey,
   CloudName,
-  IsProductionMode
+  IsProductionMode,
+  ServerURL
 } from "../config";
 import cloudinary from "cloudinary";
 import ytdl from "ytdl-core";
 import { MoveModel } from "../models";
 import fs from "fs";
 import path from "path";
-import * as ffmpeg from "ffmpeg";
+import ffmpeg from "ffmpeg";
 import { decrypt } from "../common";
-
+import { orderBy } from "natural-orderby";
 const __basedir = path.join(__dirname, "../public");
 
 cloudinary.config({
@@ -41,10 +42,20 @@ const downloadVideo = async (req: Request, res: Response): Promise<any> => {
       });
     }
     let videoURL: string;
-    videoURL = path.join("uploads", "youtube-videos", file.filename);
+    const fileName = file.filename;
+    videoURL = path.join("uploads", "youtube-videos", fileName);
+    const { frames: framesArray, videoMetaData } = await getVideoFrames(
+      fileName
+    );
+    delete videoMetaData.filename;
+    const frames = framesArray.map(
+      (frame: string) => `${ServerURL}/uploads/youtube-videos/${frame}`
+    );
     const moveResult: Document | any = new MoveModel({
       videoUrl: videoURL,
-      userId: headToken.id
+      userId: headToken.id,
+      frames,
+      videoMetaData
     });
     await moveResult.save();
     res.status(200).json({
@@ -84,7 +95,7 @@ const downloadYoutubeVideo = async (
     if (IsProductionMode) {
       originalVideoPath = path.join(
         __dirname,
-        "/uploads",
+        "uploads",
         "youtube-videos",
         fileName
       );
@@ -106,16 +117,25 @@ const downloadYoutubeVideo = async (
         (videoStream = fs.createWriteStream(originalVideoPath))
       );
       videoStream.on("close", async function() {
+        const { frames: framesArray, videoMetaData } = await getVideoFrames(
+          fileName
+        );
+        delete videoMetaData.filename;
+        const frames = framesArray.map(
+          (frame: string) => `${ServerURL}/uploads/youtube-videos/${frame}`
+        );
         const moveResult: Document | any = new MoveModel({
           videoUrl: videoURL,
-          userId: headToken.id
+          frames: orderBy(frames),
+          userId: headToken.id,
+          videoMetaData
         });
         await moveResult.save();
-
         return res.status(200).json({
           message: "Video uploaded successfully!",
           videoUrl: videoURL,
-          moveData: moveResult
+          moveData: moveResult,
+          frames
         });
       });
     } else {
@@ -133,33 +153,38 @@ const downloadYoutubeVideo = async (
 /**
  *
  */
-const getVideoFrames = () => {
-  try {
-    const videoURL = path.join(
-      "uploads",
-      "youtube-videos",
-      "5d95d121e2998035dac56ad51570109042759deep_play_video.webm"
-    );
-    var process = new ffmpeg(videoURL);
-    process.then(
-      function(video) {
-        video.addCommand("-ss", "00:01:30");
-        video.addCommand("-vframes", "1");
-        video.save("./test.jpg", (error, file) => {
-          console.log(error);
-          if (!error) console.log("Video file: " + file);
-        });
+const getVideoFrames = async (videoName: string): Promise<any> => {
+  const videoURL: string = path.join(
+    __dirname,
+    "..",
+    "uploads",
+    "youtube-videos",
+    videoName
+  );
+  const dirName: string = videoURL;
+  const video = await new ffmpeg(videoURL);
+  const videoDuration = (video.metadata.duration as any).seconds;
+  return await new Promise((resolve, reject) => {
+    video.fnExtractFrameToJPG(
+      `${dirName.split(".")[0]}_frames`,
+      {
+        start_time: 0,
+        frame_rate: 1 / (videoDuration / 10)
       },
-      function(err) {
-        console.log("Error: " + err);
+      (error, file) => {
+        console.log(error);
+        if (error) {
+          reject(error);
+        }
+        const frames: string[] = (file as any).map((f: string) => {
+          const fArray = f.split("/");
+          return `${fArray[fArray.length - 2]}/${fArray[fArray.length - 1]}`;
+        });
+        resolve({ frames, videoMetaData: video.metadata });
       }
     );
-  } catch (e) {
-    console.log(e);
-    console.log(e);
-  }
+  });
 };
-getVideoFrames();
 /*  */
 // --------------Get all set info---------------------
 const getMoveBySetId = async (req: Request, res: Response): Promise<any> => {

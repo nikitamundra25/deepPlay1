@@ -148,44 +148,51 @@ class MoveComponent extends React.Component {
             <div className="set-content-block w-100">
               <CardHeader className="border-bottom pt-4 pb-2">
                 <div className="content-header set-header flex-column">
-                  <span className="content-title creat-set-title">Creat a move</span>
-               
+                  <span className="content-title creat-set-title">
+                    Creat a move
+                  </span>
                 </div>
               </CardHeader>
               <CardBody className="p-0">
                 <div className="create-set-tile">
                   <Form className="url-update-wrap">
-                   <div className="ml-3 mr-3">
-                    <FormGroup className="flex-fill flex-column ">
-                    <Label className="text-center d-block mt-4 mb-3">Paste YouTube Video URL or Type URL Manually </Label>
-                    </FormGroup>
-                    <FormGroup className="flex-fill flex-column mt-0 ">
-                    <InputGroup>
-                        <Input
-                          id="url"
-                          className={
-                            errors
-                              ? "capitalize pl-2 boder-1-invalid is-invalid "
-                              : "capitalize pl-2 boder-1 "
-                          }
-                          placeholder="Ex: https://www.youtube.com/watch?v=I5t894l5b1w"
-                          type="text"
-                          onPaste={this.handlePasteEvent}
-                          name="url"
-                          onChange={this.handleChange}
-                          value={url}
-                        />
-                        <InputGroupAddon addonType="append" id="upload-title">
-          <InputGroupText>
-          <i class="fa fa-exclamation-circle display-5" aria-hidden="true"></i></InputGroupText>
-        </InputGroupAddon>
-        <UncontrolledTooltip
-            placement="top"
-            target="upload-title"
-          >
-            Paste YouTube Video URL or Type URL Manually 
-          </UncontrolledTooltip>
-        </InputGroup>
+                    <div className="ml-3 mr-3">
+                      <FormGroup className="flex-fill flex-column ">
+                        <Label className="text-center d-block mt-4 mb-3">
+                          Paste YouTube Video URL or Type URL Manually{" "}
+                        </Label>
+                      </FormGroup>
+                      <FormGroup className="flex-fill flex-column mt-0 ">
+                        <InputGroup>
+                          <Input
+                            id="url"
+                            className={
+                              errors
+                                ? "capitalize pl-2 boder-1-invalid is-invalid "
+                                : "capitalize pl-2 boder-1 "
+                            }
+                            placeholder="Ex: https://www.youtube.com/watch?v=I5t894l5b1w"
+                            type="text"
+                            onPaste={this.handlePasteEvent}
+                            name="url"
+                            onChange={this.handleChange}
+                            value={url}
+                          />
+                          <InputGroupAddon addonType="append" id="upload-title">
+                            <InputGroupText>
+                              <i
+                                class="fa fa-exclamation-circle display-5"
+                                aria-hidden="true"
+                              ></i>
+                            </InputGroupText>
+                          </InputGroupAddon>
+                          <UncontrolledTooltip
+                            placement="top"
+                            target="upload-title"
+                          >
+                            Paste YouTube Video URL or Type URL Manually
+                          </UncontrolledTooltip>
+                        </InputGroup>
                         <FormFeedback>
                           {errors.notUrl
                             ? errors.notUrl
@@ -193,17 +200,19 @@ class MoveComponent extends React.Component {
                             ? errors.validUrl
                             : null}
                         </FormFeedback>
-                      
-                    </FormGroup>
+                      </FormGroup>
                     </div>
                     <div className="divider-or mt-5 mb-5">
-                     <span> OR </span>
+                      <span> OR </span>
                     </div>
                     <div className="text-center video-upload-manually pb-4">
                       <FormGroup>
-                      <FormGroup className="flex-fill flex-column ">
-                    <Label className="mb-3 set-wrap ">Upload video file from your system (mp4, 3gp, ogg, wmv, webm, flv etc..) </Label>
-                    </FormGroup>
+                        <FormGroup className="flex-fill flex-column ">
+                          <Label className="mb-3 set-wrap ">
+                            Upload video file from your system (mp4, 3gp, ogg,
+                            wmv, webm, flv etc..){" "}
+                          </Label>
+                        </FormGroup>
                         <Label
                           for="videoUpload"
                           className="btn-black btn url-upload-btn"

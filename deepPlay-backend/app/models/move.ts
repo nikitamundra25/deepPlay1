@@ -28,7 +28,14 @@ const moveSchema: Mongoose.Schema = new Schema({
   },
   setId: {
     type: Schema.Types.ObjectId,
-    ref: "set",
+    ref: "set"
+  },
+  frames: {
+    type: [String],
+    default: new Array()
+  },
+  videoMetaData: {
+    type: Object
   },
   userId: {
     type: Schema.Types.ObjectId,

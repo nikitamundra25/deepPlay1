@@ -6,6 +6,7 @@ import VideoDetails from "./videoDetails";
 import { getMoveDetailsRequest, getAllSetRequest } from "../../../actions";
 import "./index.scss";
 import Loader from "components/comman/Loader/Loader";
+import FrameDetails from "./FrameDetails";
 // core components
 class MoveDetails extends React.Component {
   constructor(props) {
@@ -13,7 +14,11 @@ class MoveDetails extends React.Component {
     this.state = {
       url: "",
       errors: "",
-      isPaste: false
+      isPaste: false,
+      timer: {
+        min: 0,
+        max: 15
+      }
     };
   }
 
@@ -23,10 +28,22 @@ class MoveDetails extends React.Component {
     this.props.getMoveDetailsRequest({ moveId: moveId[2] });
     this.props.getAllSetRequest({ isSetNoLimit: false });
   };
-
+  /**
+   *
+   */
+  onTimerChange = timer => {
+    this.setState({
+      timer
+    });
+  };
+  /**
+   *
+   */
   render() {
     const { setReducer, moveReducer } = this.props;
     const { moveDetails } = moveReducer;
+    const { frames, videoMetaData } = moveDetails || {};
+    const { timer } = this.state;
     return (
       <>
         <div className="create-set-section step-2 ">
@@ -48,7 +65,7 @@ class MoveDetails extends React.Component {
                   <Row className={"mt-3"}>
                     {moveDetails && moveDetails.videoUrl ? (
                       <>
-                        <VideoView moveReducer={moveReducer} />
+                        <VideoView moveReducer={moveReducer} timer={timer} />
                         <VideoDetails setReducer={setReducer} />
                       </>
                     ) : (
@@ -57,6 +74,11 @@ class MoveDetails extends React.Component {
                   </Row>
                 </Col>
               </Row>
+              <FrameDetails
+                frames={frames || []}
+                videoMetaData={videoMetaData || {}}
+                onTimerChange={this.onTimerChange}
+              />
             </CardBody>
           </Card>
         </div>

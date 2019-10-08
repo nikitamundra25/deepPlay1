@@ -13,6 +13,7 @@ import "./index.scss";
 
 // core components
 class VideoView extends React.Component {
+  video;
   constructor(props) {
     super(props);
     this.state = {
@@ -21,65 +22,35 @@ class VideoView extends React.Component {
       isPaste: false
     };
   }
+  /**
+   *
+   */
   componentDidMount() {
-    var vid = document.getElementById("myVideo");
-    vid.onloadedmetadata = function() {
-      console.log(vid.duration);
-    };
+    this.video = document.getElementById("video-trimmer");
+    this.video.addEventListener("timeupdate", () => {
+      const { timer } = this.props;
+      const { min, max } = timer || {};
+      const { currentTime } = this.video;
+      if (parseInt(currentTime) >= max) {
+        this.video.pause();
+        setTimeout(() => {
+          this.video.currentTime = min;
+          this.video.play();
+        }, 500);
+      }
+    });
   }
   /**
    *
    */
-  extractFramesFromVideo = async (videoUrl, fps = 25) => {
-    return new Promise(async resolve => {
-      // fully download it first (no buffering):
-      let videoBlob = await fetch(videoUrl).then(r => r.blob());
-      let videoObjectUrl = URL.createObjectURL(videoBlob);
-      let video = document.createElement("video");
-      let seekResolve;
-      video.addEventListener("seeked", async function() {
-        if (seekResolve) seekResolve();
-      });
-
-      video.src = videoObjectUrl;
-      // workaround chromium metadata bug (https://stackoverflow.com/q/38062864/993683)
-      while (
-        (video.duration === Infinity || isNaN(video.duration)) &&
-        video.readyState < 2
-      ) {
-        await new Promise(r => setTimeout(r, 1000));
-        video.currentTime = 100 * Math.random();
-        console.log("video.currentTime", video.currentTime);
-      }
-      console.log(video.duration);
-      let duration = video.duration;
-
-      let canvas = document.createElement("canvas");
-      let context = canvas.getContext("2d");
-      let [w, h] = [video.videoWidth, video.videoHeight];
-      canvas.width = w;
-      canvas.height = h;
-
-      let frames = [];
-      let interval = 1 / fps;
-      let currentTime = 0;
-
-      while (currentTime < duration) {
-        video.currentTime = currentTime;
-        // eslint-disable-next-line no-loop-func
-        await new Promise(r => (seekResolve = r));
-
-        context.drawImage(video, 0, 0, w, h);
-        let base64ImageData = canvas.toDataURL();
-        frames.push(base64ImageData);
-
-        currentTime += interval;
-        console.log(video.currentTime);
-      }
-      console.log("Resolved");
-      resolve(frames);
-    });
-  };
+  componentDidUpdate({ timer: oldTimer }) {
+    const { timer } = this.props;
+    const { max: oldMax, min: oldMin } = oldTimer || {};
+    const { max, min } = timer || {};
+    if (this.video && (min !== oldMin || max !== oldMax)) {
+      this.video.currentTime = min;
+    }
+  }
   /**
    *
    */
@@ -99,7 +70,10 @@ class VideoView extends React.Component {
                   type="text"
                   name="title"
                 />
-                <InputGroupAddon addonType="prepend" className="discription-btn-wrap">
+                <InputGroupAddon
+                  addonType="prepend"
+                  className="discription-btn-wrap"
+                >
                   <InputGroupText
                     id="description"
                     className={"discription-btn cursor_pointer"}
@@ -115,7 +89,7 @@ class VideoView extends React.Component {
           </FormGroup>
           {moveDetails && moveDetails.videoUrl ? (
             <>
-              <video width={"100%"} autoPlay loop id={"myVideo"}>
+              <video width={"100%"} autoPlay loop id={"video-trimmer"}>
                 <source
                   src={`${AppConfig.API_ENDPOINT}${moveDetails.videoUrl}`}
                 />
