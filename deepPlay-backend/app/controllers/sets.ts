@@ -32,7 +32,7 @@ const createSet = async (req: Request, res: Response): Promise<any> => {
     /* Add items to algolia */
     setDataForAlgolia = {
       ...setResult._doc,
-      title: "sets"
+      searchType: "sets"
     };
     index.addObjects([setDataForAlgolia], (err: string, content: string) => {
       if (err) {

@@ -83,7 +83,7 @@ const createFolder = async (req: Request, res: Response): Promise<any> => {
     /* Add items to algolia */
     folderDataForAlgolia = {
       ...Result._doc,
-      title: "folder"
+      searchType: "folder"
     };
     index.addObjects([folderDataForAlgolia], (err: string, content: string) => {
       if (err) {

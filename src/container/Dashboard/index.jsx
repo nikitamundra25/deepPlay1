@@ -68,31 +68,52 @@ class Dashboard extends React.Component {
                   recentSets.slice(0, 4).map((set, i) => {
                     return (
                       <Col md="6" key={i}>
-                        <div className="tile-wrap card">
+                        <div
+                          className="tile-wrap card"
+                        >
                           <div className="badge-wrap mb-2">
                             <Badge variant="secondary" className="draft-wrap">
                               DRAFT
                           </Badge>
                           </div>
-                          <div className="cotent-tile d-flex">
-                            <div className="cotent-text-tile">
-                              <div className="content-heading-tile">
+                          <div className="cotent-tile d-flex content-with-tip">
+                            <div
+                              className="cotent-text-tile cursor_pointer "
+                              onClick={() => this.handleSetDetails(set._id)}
+                            >
+                              <div className="content-heading-tile d-flex">
                                 {" "}
-                                {set.title}
+                                <span
+                                  // onClick={() => this.handleSetDetails(set._id)}
+                                  className={" text-capitalize"}
+                                >
+                                  <span>{set.title}</span>
+                                </span>
                               </div>
-                              <div className="content-heading-tile">
+                              {set.description ? set.description : ""}
+                              <div className="content-number-tile">
                                 {" "}
-                                {set.description ? set.description : ""}
-                              </div>
-                              <div className="content-number-tile"> 4 items</div>
+                                {set.moveCount || 0} moves
+                          </div>
                             </div>
                             <div
-                              className="cotent-img-tile" /* style={{ backgroundImage: 'url("' + "https://content3.jdmagicbox.com/comp/mangalore/n5/0824px824.x824.161117105721.j6n5/catalogue/maruthi-hi-tech-gym-mangalore-ee6a9z8iv5.jpg" + '")' }} */
-                            ></div>
+                              className="d-flex img-tile-wrap cursor_pointer"
+                              onClick={() => this.handleSetDetails(set._id)}
+                            >
+                              <div
+                                className="cotent-img-tile "
+                                style={{
+                                  backgroundImage:
+                                    'url("' +
+                                    "https://res.cloudinary.com/fleetnation/image/private/c_fit,w_1120/g_south,l_text:style_gothic2:%C2%A9%20Nikita%20Buida,o_20,y_10/g_center,l_watermark4,o_25,y_50/v1469756538/dd3acf4nzzavkv4rf2ji.jpg" +
+                                    '")'
+                                }}
+                              />
+                            </div>
                           </div>
                           <div className="bottom-content-tile">
                             <div
-                              className="cotent-img-tile teacher-profile-img" /* style={{ backgroundImage: 'url("' + "https://content3.jdmagicbox.com/comp/mangalore/n5/0824px824.x824.161117105721.j6n5/catalogue/maruthi-hi-tech-gym-mangalore-ee6a9z8iv5.jpg" + '")' }} */
+                              className="cotent-img-tile teacher-profile-img" style={{ backgroundImage: 'url("' + "https://content3.jdmagicbox.com/comp/mangalore/n5/0824px824.x824.161117105721.j6n5/catalogue/maruthi-hi-tech-gym-mangalore-ee6a9z8iv5.jpg" + '")' }}
                             ></div>
                             <span className="bottom-text-tile">
                               {" "}
@@ -167,34 +188,36 @@ class Dashboard extends React.Component {
                 recentFolders && recentFolders.length ? (
                   recentFolders.slice(0, 4).map((folder, i) => {
                     return (
-                      <Col md="6" key={i}>
-                        <div className="tile-wrap card">
+                      <Col key={i} md={"6"}>
+                        <div
+                          className="tile-wrap card"
+                        >
                           <div className="badge-wrap">
                             <Badge variant="secondary" className="draft-wrap">
                               DRAFT
                           </Badge>
                           </div>
-                          <div className="cotent-tile d-flex">
-                            <div className="cotent-text-tile">
-                              <div className="content-heading-tile">
+                          <div className="cotent-tile d-flex content-with-tip">
+                            <div className="cotent-text-tile pt-2">
+                              <div className="content-heading-tile d-flex">
                                 {" "}
-                                {folder.isCopy
-                                  ? `Copy of ${folder.title}`
-                                  : folder.title}
+                                <span
+                                  className={"cursor_pointer"}
+                                >
+                                  {folder.isCopy
+                                    ? `Copy of ${folder.title}`
+                                    : folder.title}
+                                </span>
                               </div>
-                              <div className="content-sub-heading-tile">
+                              <div className="content-number-tile">
                                 {" "}
-                                {folder.description ? folder.description : ""}
+                                {folder.setCount || 0} sets
                               </div>
-                              <div className="content-number-tile"> 4 items</div>
                             </div>
-                            <div
-                              className="cotent-img-tile" /* style={{ backgroundImage: 'url("' + "https://content3.jdmagicbox.com/comp/mangalore/n5/0824px824.x824.161117105721.j6n5/catalogue/maruthi-hi-tech-gym-mangalore-ee6a9z8iv5.jpg" + '")' }} */
-                            ></div>
                           </div>
-                          <div className="bottom-content-tile">
+                          <div className="bottom-content-tile pt-3">
                             <div
-                              className="cotent-img-tile teacher-profile-img" /* style={{ backgroundImage: 'url("' + "https://content3.jdmagicbox.com/comp/mangalore/n5/0824px824.x824.161117105721.j6n5/catalogue/maruthi-hi-tech-gym-mangalore-ee6a9z8iv5.jpg" + '")' }} */
+                              className="cotent-img-tile teacher-profile-img" style={{ backgroundImage: 'url("' + "https://content3.jdmagicbox.com/comp/mangalore/n5/0824px824.x824.161117105721.j6n5/catalogue/maruthi-hi-tech-gym-mangalore-ee6a9z8iv5.jpg" + '")' }}
                             ></div>
                             <span className="bottom-text-tile">
                               {" "}
