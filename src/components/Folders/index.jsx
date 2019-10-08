@@ -131,7 +131,7 @@ class FolderComponent extends React.Component {
 
         <div className="wrap-folder">
           <Row className="set-wrap">
-            <Col>
+      
             {!isFolderLoading ? (
               getAllFolders && getAllFolders.length ? (
                 // eslint-disable-next-line
@@ -238,7 +238,7 @@ class FolderComponent extends React.Component {
                 <Loader />
               </Col>
             )}
-            </Col>
+         
           </Row>
           <FolderModal
             modal={createFolderOpen}
