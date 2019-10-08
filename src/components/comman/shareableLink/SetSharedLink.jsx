@@ -109,7 +109,7 @@ class SetSharedLink extends React.Component {
                             </CardHeader>
                             <CardBody className="">
                               <div className="create-set-tile"></div>
-                              <div className="text-center">
+                              {/* <div className="text-center">
                                 <Button
                                   color=" "
                                   type="button"
@@ -121,7 +121,7 @@ class SetSharedLink extends React.Component {
                                   <i className="fas fa-plus mr-1"></i>
                                   Create a Set
                                 </Button>
-                              </div>
+                              </div> */}
                             </CardBody>
                           </div>
                         </div>

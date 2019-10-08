@@ -7,6 +7,8 @@ import {
   Modal,
   ModalBody,
   Form,
+  InputGroup, 
+  InputGroupAddon,
   ModalFooter
 } from "reactstrap";
 import closeIcon from "../../../assets/img/close-img.png";
@@ -105,6 +107,7 @@ class SharableLinkModal extends React.Component {
             <Form inline className="url-update-wrap copylink-form">
               <FormGroup className="flex-fill flex-column ">
                 <div className="flex-fill w-100">
+                <InputGroup>
                   <Input
                     id="url"
                     placeholder="Link"
@@ -112,12 +115,10 @@ class SharableLinkModal extends React.Component {
                     name="url"
                     readOnly
                     value={pathUrl}
-                    className="w-100"
+                   
                   />
-                </div>
-              </FormGroup>
-              <div className="text-center ml-1">
-                <CopyToClipboard
+                  <InputGroupAddon addonType="append">
+                  <CopyToClipboard
                   text={pathUrl}
                   onCopy={() => this.setState({ copied: true })}
                 >
@@ -130,7 +131,11 @@ class SharableLinkModal extends React.Component {
                     {this.state.copied ? "Copied" : " Copy Link"}
                   </Button>
                 </CopyToClipboard>
-              </div>
+                  </InputGroupAddon>
+                   </InputGroup>
+                </div>
+              </FormGroup>
+            
             </Form>
           </div>
         </ModalBody>

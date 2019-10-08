@@ -176,7 +176,7 @@ class SettingComponent extends Component {
       <div>
         <div className="setting-section">
           <div className="page-body">
-            <div className="content-header mb-3">
+            <div className="content-header ">
               <span className="content-title">SETTINGS</span>
             </div>
             {!isprofileInfoLoading ? (
@@ -418,11 +418,11 @@ class SettingComponent extends Component {
                 </Card>
               </>
             ) : (
-                <div>
+                <Row>
                   <Col sm={12} className="loader-col">
                     <Loader />
                   </Col>
-                </div>
+                </Row>
               )}
           </div>
         </div>
