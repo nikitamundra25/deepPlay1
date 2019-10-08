@@ -25,6 +25,8 @@ import { SidebarComponent } from "../../components/Sidebar";
 import logoutIcon from "../../assets/img/icons/logout.svg";
 import { AppConfig } from "../../config/Appconfig";
 import passwordLock from "../../assets/img/icons/lock.svg";
+import emptyFolderIc from "../../assets/img/empty-folder.png";
+// import emptyFolderIc from "../../assets/img/empty-folder.png";
 
 class DefaultHeader extends React.Component {
   constructor(props) {
@@ -130,252 +132,395 @@ class DefaultHeader extends React.Component {
                 <h3 className="mb-0 header-title">Deep Play</h3>
               </NavbarBrand> */}
             {path !== AppRoutes.FOLDER_SHARED_LINK.url &&
-            path !== AppRoutes.SET_SHARED_LINK.url &&
-            path !== "/404" ? (
-              <>
+              path !== AppRoutes.SET_SHARED_LINK.url &&
+              path !== "/404" ? (
+                <>
+                  <Navbar
+                    className="navbar-main"
+                    // expand="lg"
+                    id="navbar-main"
+                  >
+                    <NavbarBrand className="mr-lg-5" to="/" tag={Link}>
+                      <h3 className="mb-0 header-title">Deep Play</h3>
+                    </NavbarBrand>
+                    {isLoggedIn ? (
+                      <Nav className="navbar-nav align-items-center nav-main-section flex-fill creat-option">
+                        <div className="nav-inputs-wrap d-flex">
+                          <Col>
+                            <UncontrolledDropdown className="header-manu-wrap">
+                              <DropdownToggle
+                                caret
+                                color=" "
+                                className="nav-dropdown-btn"
+                              >
+                                <i className="fas fa-plus-square"></i> &nbsp;
+                                Create
+                            </DropdownToggle>
+                              <DropdownMenu>
+                                <DropdownItem></DropdownItem>
+                              </DropdownMenu>
+
+                              <DropdownMenu>
+                                <DropdownItem
+                                  active={routePath === "/move" ? true : false}
+                                  onClick={() =>
+                                    this.props.redirectTo(AppRoutes.MOVE.url)
+                                  }
+                                >
+                                  Create Move
+                              </DropdownItem>
+                                <DropdownItem
+                                  active={
+                                    routePath === "/create-set" ? true : false
+                                  }
+                                  onClick={() =>
+                                    this.props.redirectTo(
+                                      AppRoutes.CREATE_SET.url
+                                    )
+                                  }
+                                >
+                                  Create Set
+                              </DropdownItem>
+                                <DropdownItem onClick={this.handleFolderModel}>
+                                  {" "}
+                                  Create Folder
+                              </DropdownItem>
+                              </DropdownMenu>
+                            </UncontrolledDropdown>
+                          </Col>
+                          <Col className="flex-fill">
+                            <FormGroup className="mb-0 header-search-wrap">
+                              <InputGroup className="">
+                                <InputGroupAddon addonType="prepend">
+                                  <span className="input-group-text">
+                                    <i
+                                      className="fa fa-search"
+                                      aria-hidden="true"
+                                    ></i>
+                                  </span>
+                                </InputGroupAddon>
+                                <Input placeholder="Search" type="text" />
+                              
+                              <div className="search-result-wrap">
+                                <div className="search-result-block">
+                                  <div className="category-wrap">
+                                  <div className="category-heading">
+                                    Folders
+                                  </div>
+                                  <div className="category-view-all">
+                                    View all
+                                  </div>
+                                  </div>
+                                 <div className="folder-searched-wrap searched-wrap">
+                                 <div className="searched-block">
+                                   <div className="searched-tile">
+                                     <div className="searhed-img-main-wrap">
+                                     <div className="searched-img-wrap">
+                                    <div className="searched-img">
+                                      <img src={emptyFolderIc} alt={"folder"} />
+                                    </div>
+                                    </div>
+                                    </div>
+                                    <div className="searched-text">
+                                    Rishte Naate
+                                    </div>
+                                 </div>
+                                   <div className="searched-tile">
+                                     <div className="searhed-img-main-wrap">
+                                     <div className="searched-img-wrap">
+                                    <div className="searched-img">
+                                      <img src={emptyFolderIc} alt={"folder"} />
+                                    </div>
+                                    </div>
+                                    </div>
+                                    <div className="searched-text">
+                                    Rishte Naate
+                                    </div>
+                                 </div>
+                                   <div className="searched-tile">
+                                     <div className="searhed-img-main-wrap">
+                                     <div className="searched-img-wrap">
+                                    <div className="searched-img">
+                                      <img src={emptyFolderIc} alt={"folder"} />
+                                    </div>
+                                    </div>
+                                    </div>
+                                    <div className="searched-text">
+                                    Rishte Naate
+                                    </div>
+                                 </div>
+                                 </div>
+                                 </div>
+                                </div>
+                                <div className="search-result-block">
+                                  <div className="category-wrap">
+                                  <div className="category-heading">
+                                   Sets
+                                  </div>
+                                  <div className="category-view-all">
+                                   View all
+                                  </div>
+                                  </div>
+                                 <div className="searched-wrap">
+                                 <div className="searched-block">
+                                   <div className="searched-tile">
+                                     <div className="searhed-img-main-wrap">
+                                     <div className="searched-img-wrap">
+                                    <div className="searched-img">
+                                      <img src="https://a10.gaanacdn.com/gn_img/albums/P7m3GNKqxo/7m3GjN47Kq/size_m.jpg" />
+                                    </div>
+                                    </div>
+                                    </div>
+                                    <div className="searched-text">
+                                    Rishte Naate
+                                    </div>
+                                 </div>
+                                   <div className="searched-tile">
+                                     <div className="searhed-img-main-wrap">
+                                     <div className="searched-img-wrap">
+                                    <div className="searched-img">
+                                      <img src="https://a10.gaanacdn.com/gn_img/albums/P7m3GNKqxo/7m3GjN47Kq/size_m.jpg" />
+                                    </div>
+                                    </div>
+                                    </div>
+                                    <div className="searched-text">
+                                    Rishte Naate
+                                    </div>
+                                 </div>
+                                   <div className="searched-tile">
+                                     <div className="searhed-img-main-wrap">
+                                     <div className="searched-img-wrap">
+                                    <div className="searched-img">
+                                      <img src="https://a10.gaanacdn.com/gn_img/albums/P7m3GNKqxo/7m3GjN47Kq/size_m.jpg" />
+                                    </div>
+                                    </div>
+                                    </div>
+                                    <div className="searched-text">
+                                    Rishte Naate
+                                    </div>
+                                 </div>
+                                 </div>
+                                 </div>
+                                </div>
+                                <div className="search-result-block moves-block">
+                                  <div className="category-wrap">
+                                  <div className="category-heading">
+                                   Moves
+                                  </div>
+                                  <div className="category-view-all">
+                                   View all
+                                  </div>
+                                  </div>
+                                 <div className="searched-wrap">
+                                 <div className="searched-block">
+                                   <div className="searched-tile">
+                                     <div className="searhed-img-main-wrap">
+                                     <div className="searched-img-wrap">
+                                    <div className="searched-img">
+                                      <img src="https://a10.gaanacdn.com/gn_img/albums/P7m3GNKqxo/7m3GjN47Kq/size_m.jpg" />
+                                    </div>
+                                    </div>
+                                    </div>
+                                    <div className="searched-text">
+                                    Rishte Naate
+                                    </div>
+                                 </div>
+                                   <div className="searched-tile">
+                                     <div className="searhed-img-main-wrap">
+                                     <div className="searched-img-wrap">
+                                    <div className="searched-img">
+                                      <img src="https://a10.gaanacdn.com/gn_img/albums/P7m3GNKqxo/7m3GjN47Kq/size_m.jpg" />
+                                    </div>
+                                    </div>
+                                    </div>
+                                    <div className="searched-text">
+                                    Rishte Naate
+                                    </div>
+                                 </div>
+                                   <div className="searched-tile">
+                                     <div className="searhed-img-main-wrap">
+                                     <div className="searched-img-wrap">
+                                    <div className="searched-img">
+                                      <img src="https://a10.gaanacdn.com/gn_img/albums/P7m3GNKqxo/7m3GjN47Kq/size_m.jpg" />
+                                    </div>
+                                    </div>
+                                    </div>
+                                    <div className="searched-text">
+                                    Rishte Naate
+                                    </div>
+                                 </div>
+                                 </div>
+                                 </div>
+                                </div>
+                              </div>
+                              </InputGroup>
+                            </FormGroup>
+                          </Col>
+                        </div>
+                      </Nav>
+                    ) : null}
+                    <Nav
+                      className="navbar-nav align-items-center nav-main-section user-section"
+                      navbar
+                    >
+                      {!isUserLoggedIn ? (
+                        <div className="nav-main-section">
+                          <React.Fragment>
+                            <span
+                              onClick={this.handleLoginModel}
+                              className="nav-link-inner--text pr-4 cusror_pointer"
+                            >
+                              Login
+                          </span>
+                            <span
+                              onClick={this.handleSignupModel}
+                              className="nav-link-inner--text pr-2 cusror_pointer"
+                            >
+                              Signup
+                          </span>
+                          </React.Fragment>
+                        </div>
+                      ) : (
+                          <>
+                            <UncontrolledDropdown className="header-manu-wrap  dropdown-with-ic">
+                              <DropdownToggle
+                                tag="a"
+                                className="nav-link user-section"
+                                caret
+                              >
+                                <div className="user-wrap">
+                                  <div
+                                    className={
+                                      profiledata
+                                        ? "user-img round-img"
+                                        : "user-img"
+                                    }
+                                  >
+                                    {profiledata && profiledata.profileImage ? (
+                                      <img
+                                        src={
+                                          splitedImage[0] === "uploads"
+                                            ? `${AppConfig.API_ENDPOINT}${profiledata.profileImage}`
+                                            : profiledata.profileImage
+                                        }
+                                        className="w-100 "
+                                        alt={"img"}
+                                      />
+                                    ) : (
+                                        <img
+                                          src={profileImage}
+                                          className="w-100 "
+                                          alt={"img"}
+                                        />
+                                      )}
+                                  </div>
+                                  <div className="user-text">
+                                    {profiledata
+                                      ? `${profiledata.firstName}${" "} ${
+                                      profiledata.lastName
+                                      }`
+                                      : ""}
+                                  </div>
+                                </div>
+                              </DropdownToggle>
+                              <DropdownMenu>
+                                {SidebarComponent.map((item, index) => {
+                                  return (
+                                    <DropdownItem
+                                      onClick={() =>
+                                        this.props.redirectTo(item.url)
+                                      }
+
+                                      key={index}
+                                      active={routePath === item.url ? true : false}
+                                    >
+                                      <div
+                                        className="dropdown-img"
+                                      >
+                                        <img
+                                          src={item.iconUrl}
+                                          alt={item.iconUrl}
+                                          width="20"
+                                        />{" "}
+                                      </div>
+                                      <div className="dropdown-txt">
+                                        {item.name}
+                                      </div>
+                                    </DropdownItem>
+                                  );
+                                })}
+                                <DropdownItem
+                                  onClick={() =>
+                                    this.props.redirectTo(
+                                      AppRoutes.CHANGE_PASSWORD.url
+                                    )
+                                  }
+                                  active={
+                                    routePath === "/change-password" ? true : false
+                                  }
+                                >
+                                  <div
+                                    className="dropdown-img"
+                                  >
+                                    <img
+                                      src={passwordLock}
+                                      alt={"changePassword"}
+                                      width="20"
+                                    /></div>{" "}
+                                  <div className="dropdown-txt">
+                                    Change Password
+                              </div>
+                                </DropdownItem>
+                                <DropdownItem onClick={e => logoutRequest(e)}>
+                                  <div
+                                    className="dropdown-img"
+                                  >
+                                    <img src={logoutIcon} alt={"Logout"} width="20" /></div>{" "}
+                                  <div className="dropdown-txt"> Log Out</div>
+                                </DropdownItem>
+                              </DropdownMenu>
+                            </UncontrolledDropdown>
+                            {/* <span onClick={e => logoutRequest(e)} className="nav-link-inner--text pr-4">Logout</span> */}
+                          </>
+                        )}
+                    </Nav>
+                    <UncontrolledCollapse
+                      navbar
+                      toggler="#navbar_global"
+                      className="justify-content-end"
+                    >
+                      <div className="navbar-collapse-header">
+                        <Row>
+                          <Col className="collapse-brand" xs="6">
+                            <Link to="/">
+                              <img
+                                alt="..."
+                                src={require("assets/img/brand/argon-react.png")}
+                              />
+                            </Link>
+                          </Col>
+                          <Col className="collapse-close" xs="6">
+                            <button className="navbar-toggler" id="navbar_global">
+                              <span />
+                              <span />
+                            </button>
+                          </Col>
+                        </Row>
+                      </div>
+                    </UncontrolledCollapse>
+                  </Navbar>
+                </>
+              ) : (
                 <Navbar
-                  className="navbar-main"
+                  className="navbar-main d-flex justify-content-center"
                   // expand="lg"
                   id="navbar-main"
                 >
-                  <NavbarBrand className="mr-lg-5" to="/" tag={Link}>
-                    <h3 className="mb-0 header-title">Deep Play</h3>
+                  <NavbarBrand className="m-0" to="/" tag={Link}>
+                    <h3 className="mb-0 header-title ">Deep Play</h3>
                   </NavbarBrand>
-                  {isLoggedIn ? (
-                    <Nav className="navbar-nav align-items-center nav-main-section flex-fill creat-option">
-                      <div className="nav-inputs-wrap d-flex">
-                        <Col>
-                          <UncontrolledDropdown className="header-manu-wrap">
-                            <DropdownToggle
-                              caret
-                              color=" "
-                              className="nav-dropdown-btn"
-                            >
-                              <i className="fas fa-plus-square"></i> &nbsp;
-                              Create
-                            </DropdownToggle>
-                            <DropdownMenu>
-                              <DropdownItem></DropdownItem>
-                            </DropdownMenu>
-
-                            <DropdownMenu>
-                              <DropdownItem
-                                active={routePath === "/move" ? true : false}
-                                onClick={() =>
-                                  this.props.redirectTo(AppRoutes.MOVE.url)
-                                }
-                              >
-                                Create Move
-                              </DropdownItem>
-                              <DropdownItem
-                                active={
-                                  routePath === "/create-set" ? true : false
-                                }
-                                onClick={() =>
-                                  this.props.redirectTo(
-                                    AppRoutes.CREATE_SET.url
-                                  )
-                                }
-                              >
-                                Create Set
-                              </DropdownItem>
-                              <DropdownItem onClick={this.handleFolderModel}>
-                                {" "}
-                                Create Folder
-                              </DropdownItem>
-                            </DropdownMenu>
-                          </UncontrolledDropdown>
-                        </Col>
-                        <Col className="flex-fill">
-                          <FormGroup className="mb-0 header-search-wrap">
-                            <InputGroup className="">
-                              <InputGroupAddon addonType="prepend">
-                                <span className="input-group-text">
-                                  <i
-                                    className="fa fa-search"
-                                    aria-hidden="true"
-                                  ></i>
-                                </span>
-                              </InputGroupAddon>
-                              <Input placeholder="Search" type="text" />
-                            </InputGroup>
-                            <div className="search-result-wrap">
-                              <div className="search-result-block">
-                                  <div className="category-heading">
-                                    
-                                  </div>
-                                  <div className="category-heading">
-
-                                  </div>
-                              </div>
-                            </div>
-                          </FormGroup>
-                        </Col>
-                      </div>
-                    </Nav>
-                  ) : null}
-                  <Nav
-                    className="navbar-nav align-items-center nav-main-section user-section"
-                    navbar
-                  >
-                    {!isUserLoggedIn ? (
-                      <div className="nav-main-section">
-                        <React.Fragment>
-                          <span
-                            onClick={this.handleLoginModel}
-                            className="nav-link-inner--text pr-4 cusror_pointer"
-                          >
-                            Login
-                          </span>
-                          <span
-                            onClick={this.handleSignupModel}
-                            className="nav-link-inner--text pr-2 cusror_pointer"
-                          >
-                            Signup
-                          </span>
-                        </React.Fragment>
-                      </div>
-                    ) : (
-                      <>
-                        <UncontrolledDropdown className="header-manu-wrap  dropdown-with-ic">
-                          <DropdownToggle
-                            tag="a"
-                            className="nav-link user-section"
-                            caret
-                          >
-                            <div className="user-wrap">
-                              <div
-                                className={
-                                  profiledata
-                                    ? "user-img round-img"
-                                    : "user-img"
-                                }
-                              >
-                                {profiledata && profiledata.profileImage ? (
-                                  <img
-                                    src={
-                                      splitedImage[0] === "uploads"
-                                        ? `${AppConfig.API_ENDPOINT}${profiledata.profileImage}`
-                                        : profiledata.profileImage
-                                    }
-                                    className="w-100 "
-                                    alt={"img"}
-                                  />
-                                ) : (
-                                  <img
-                                    src={profileImage}
-                                    className="w-100 "
-                                    alt={"img"}
-                                  />
-                                )}
-                              </div>
-                              <div className="user-text">
-                                {profiledata
-                                  ? `${profiledata.firstName}${" "} ${
-                                      profiledata.lastName
-                                    }`
-                                  : ""}
-                              </div>
-                            </div>
-                          </DropdownToggle>
-                          <DropdownMenu>
-                            {SidebarComponent.map((item, index) => {
-                              return (
-                                <DropdownItem
-                                  onClick={() =>
-                                    this.props.redirectTo(item.url)
-                                  }
-                                 
-                                  key={index}
-                                  active={routePath === item.url ? true : false}
-                                >
-                                  <div 
-                                  className="dropdown-img"
-                                  >
-                                  <img
-                                    src={item.iconUrl}
-                                    alt={item.iconUrl}
-                                    width="20"
-                                  />{" "}
-                                  </div>
-                                  <div    className="dropdown-txt">
-                                  {item.name}
-                                  </div>
-                                </DropdownItem>
-                              );
-                            })}
-                            <DropdownItem
-                              onClick={() =>
-                                this.props.redirectTo(
-                                  AppRoutes.CHANGE_PASSWORD.url
-                                )
-                              }
-                              active={
-                                routePath === "/change-password" ? true : false
-                              }
-                            >
-                                 <div 
-                                  className="dropdown-img"
-                                  >
-                              <img
-                                src={passwordLock}
-                                alt={"changePassword"}
-                                width="20"
-                              /></div>{" "}
-                               <div    className="dropdown-txt">
-                              Change Password
-                              </div>
-                            </DropdownItem>
-                            <DropdownItem onClick={e => logoutRequest(e)}>
-                            <div 
-                                  className="dropdown-img"
-                                  >
-                              <img src={logoutIcon} alt={"Logout"} width="20" /></div>{" "}
-                              <div    className="dropdown-txt"> Log Out</div>  
-                            </DropdownItem>
-                          </DropdownMenu>
-                        </UncontrolledDropdown>
-                        {/* <span onClick={e => logoutRequest(e)} className="nav-link-inner--text pr-4">Logout</span> */}
-                      </>
-                    )}
-                  </Nav>
-                  <UncontrolledCollapse
-                    navbar
-                    toggler="#navbar_global"
-                    className="justify-content-end"
-                  >
-                    <div className="navbar-collapse-header">
-                      <Row>
-                        <Col className="collapse-brand" xs="6">
-                          <Link to="/">
-                            <img
-                              alt="..."
-                              src={require("assets/img/brand/argon-react.png")}
-                            />
-                          </Link>
-                        </Col>
-                        <Col className="collapse-close" xs="6">
-                          <button className="navbar-toggler" id="navbar_global">
-                            <span />
-                            <span />
-                          </button>
-                        </Col>
-                      </Row>
-                    </div>
-                  </UncontrolledCollapse>
                 </Navbar>
-              </>
-            ) : (
-              <Navbar
-                className="navbar-main d-flex justify-content-center"
-                // expand="lg"
-                id="navbar-main"
-              >
-                <NavbarBrand className="m-0" to="/" tag={Link}>
-                  <h3 className="mb-0 header-title ">Deep Play</h3>
-                </NavbarBrand>
-              </Navbar>
-            )}
+              )}
           </div>
         </header>
         <Login
