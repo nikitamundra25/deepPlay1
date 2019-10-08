@@ -11,6 +11,7 @@ import { MoveModel } from "../models";
 import fs from "fs";
 import path from "path";
 import * as ffmpeg from "ffmpeg";
+import { decrypt } from "../common";
 
 const __basedir = path.join(__dirname, "../public");
 
@@ -111,7 +112,7 @@ const downloadYoutubeVideo = async (
         });
         await moveResult.save();
 
-        res.status(200).json({
+        return res.status(200).json({
           message: "Video uploaded successfully!",
           videoUrl: videoURL,
           moveData: moveResult
@@ -129,7 +130,6 @@ const downloadYoutubeVideo = async (
     });
   }
 };
-// 5d95d121e2998035dac56ad51570099990950deep_play_video.webm
 /**
  *
  */
@@ -138,7 +138,7 @@ const getVideoFrames = () => {
     const videoURL = path.join(
       "uploads",
       "youtube-videos",
-      "5d95d121e2998035dac56ad51570099990950deep_play_video.webm"
+      "5d95d121e2998035dac56ad51570109042759deep_play_video.webm"
     );
     var process = new ffmpeg(videoURL);
     process.then(
@@ -172,7 +172,6 @@ const getMoveBySetId = async (req: Request, res: Response): Promise<any> => {
       });
     }
     const movesData: Document | any = await MoveModel.find({
-      userId: headToken.id,
       setId: query.setId
     });
 
@@ -211,9 +210,42 @@ const getMoveDetailsById = async (
   }
 };
 
+//-----Decrypt  setId to get moveDetails for shared link[public access set component]-----------------
+const publicUrlMoveDetails = async (
+  req: Request,
+  res: Response
+): Promise<any> => {
+  try {
+    const { query } = req;
+    const { setId, isPublic } = query;
+    const decryptedSetId = decrypt(setId);
+    let result: Document | any | null;
+    if (isPublic === "true") {
+      result = await MoveModel.find({
+        setId: decryptedSetId
+      });
+    } else {
+      return res.status(400).json({
+        message: "Public access link is not enabled."
+      });
+    }
+    return res.status(200).json({
+      responsecode: 200,
+      data: result,
+      success: true
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).send({
+      message: error.message
+    });
+  }
+};
+
 export {
   downloadVideo,
   getMoveBySetId,
   downloadYoutubeVideo,
-  getMoveDetailsById
+  getMoveDetailsById,
+  publicUrlMoveDetails
 };

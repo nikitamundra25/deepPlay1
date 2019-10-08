@@ -109,6 +109,9 @@ class SignupComponent extends React.Component {
   /* 
   */
   handleChange = e => {
+    this.setState({
+      errors: ""
+    });
     const { name, value, checked } = e.target;
     if (name === "roleType") {
       this.setState({
@@ -128,7 +131,7 @@ class SignupComponent extends React.Component {
       }
     }
     this.setState({
-      [name]: value
+      [name]: value.trim()
     });
   };
   /*
@@ -193,7 +196,7 @@ class SignupComponent extends React.Component {
           className="modal-dialog-centered auth-user-model"
           isOpen={openSignupModel}
           toggle={handleSignupModel}
-          backdrop={"static"}
+          // backdrop={"static"}
           size={"sm"}
         >
           <ModalHeader toggle={handleSignupModel} />

@@ -170,14 +170,14 @@ class PaginationHelper extends Component {
                 </PaginationLink>
               </PaginationItem>
             ) : (
-              <PaginationItem
-                key={index}
-                onClick={this.handleClick(page)}
-                active={currentPage === page}
-              >
-                <PaginationLink tag="button">{page}</PaginationLink>
-              </PaginationItem>
-            );
+                      <PaginationItem
+                        key={index}
+                        onClick={this.handleClick(page)}
+                        active={currentPage === page}
+                      >
+                        <PaginationLink tag="button">{page}</PaginationLink>
+                      </PaginationItem>
+                    );
           })}
         </Pagination>
       </div>

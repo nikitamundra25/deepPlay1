@@ -123,7 +123,7 @@ class LoginComponent extends React.Component {
   */
   render() {
     const { openLoginModel, handleLoginModel, loginReducer } = this.props;
-    const { isLoginRequest } = loginReducer
+    const { isLoginRequest } = loginReducer;
     const { email, password, errors } = this.state;
     return (
       <>
@@ -184,6 +184,10 @@ class LoginComponent extends React.Component {
                         name={"email"}
                         value={email}
                         type="email"
+                        // title="Please Provide A Valid Email Address !"
+                        // oninvalid={() =>
+                        //   this.setCustomValidity("Enter User Name Here")
+                        // }
                       />
                       <FormFeedback>
                         {errors.email ? errors.email : null}
@@ -211,15 +215,12 @@ class LoginComponent extends React.Component {
                     </InputGroup>
                   </FormGroup>
                   <div
-                   
                     className={
-                      "text-center cursor_pointer forgot-password-wrap"
+                      "text-center cursor_pointer forgot-password-bottom-wrap"
                     }
                   >
-                    <span
-                     onClick={this.props.handleForgotPasswordModel}
-                    >
-                    Forgot password?
+                    <span onClick={this.props.handleForgotPasswordModel}>
+                      Forgot password?
                     </span>
                   </div>
                   <div className="text-center auth-btn-wrap">
@@ -229,11 +230,7 @@ class LoginComponent extends React.Component {
                       color={" "}
                       disabled={isLoginRequest ? true : false}
                     >
-                      {
-                        isLoginRequest ?
-                          "Please Wait..." :
-                          "Sign in"
-                      }
+                      {isLoginRequest ? "Please Wait..." : "Sign in"}
                     </Button>
 
                     <Button

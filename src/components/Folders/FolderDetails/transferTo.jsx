@@ -79,7 +79,6 @@ class TransferToModal extends React.Component {
         if (folderId && folderId._id) {
           isNotAccesible = item._id === folderId._id
         }
-        //console.log("#############", item._id === folderId._id);
         if (!isNotAccesible) {
           defaultFolderList.push({
             label: item && item.isCopy ? `Copy of ${item.title}` : item.title,

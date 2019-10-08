@@ -3,7 +3,8 @@ import { Row, Col, Card, CardHeader, Container } from "reactstrap";
 import { connect } from "react-redux";
 import {
   sharedFolderInfoRequest,
-  publicUrlSetDetailsRequest
+  publicUrlSetDetailsRequest,
+  shareableLinkRequest
 } from "../../../actions";
 import emptySetIc from "../../../assets/img/empty-sets.png";
 import qs from "query-string";
@@ -37,22 +38,34 @@ class FolderSharedLink extends React.Component {
     }
   }
 
+  handleSetDetails = id => {
+    let parsed = qs.parse(this.props.location.search);
+    this.props.shareableLink({
+      setId: id,
+      linkOf: "set",
+      publicAccess: "set",
+      isPublic: parsed.isPublic
+    });
+  };
+
   render() {
     const { shareLinkReducer } = this.props;
     const { setListItem } = this.state;
-    const { decryptedFolderDetails } = shareLinkReducer;
+    const { decryptedDetails } = shareLinkReducer;
+
     return (
-      <div className="create-set-section mt-2 w-100">
-        <Container className={" xl: 1140px"}>
+      <div className={"mt-5 "}>
+        <Container className={"mt-5"}>
+          <div className="text-center h3">
+            <b> Folder Details</b>
+          </div>{" "}
           <div className="content-header">
             <span className="content-title">
-              {decryptedFolderDetails
-                ? decryptedFolderDetails.title
-                : "MyFolder"}
+              {decryptedDetails  ? decryptedDetails.title : "MyFolder"}
             </span>
-          </div>{" "}
-          <span className="content-title">
-            {decryptedFolderDetails ? decryptedFolderDetails.description : ""}
+          </div>
+          <span className="capitalize content-title">
+            {decryptedDetails ? decryptedDetails.description : ""}
           </span>
           <Row className="set-wrap">
             {setListItem && setListItem.length ? (
@@ -64,8 +77,12 @@ class FolderSharedLink extends React.Component {
                       <div className="cotent-tile d-flex">
                         <div className="cotent-text-tile">
                           <div className="content-heading-tile">
-                            {" "}
-                            {list.title}
+                            <span
+                              onClick={() => this.handleSetDetails(list._id)}
+                              className={"cursor_pointer"}
+                            >
+                              {list.title}
+                            </span>
                           </div>
                           <div className="content-heading-tile">
                             {" "}
@@ -90,10 +107,10 @@ class FolderSharedLink extends React.Component {
               })
             ) : (
               <>
-                <div className="create-set-section mt-2 w-100">
-                  <Card className="w-100 set-content-wrap">
+                <div className="create-set-section w-100 empty-folder-section">
+                  <Card className="set-content-wrap empty-folder-card">
                     <div className="set-content-block w-100 empty-folder-wrap">
-                      <CardHeader className="empty-folder-header">
+                      <CardHeader className="empty-folder-header ">
                         <img src={emptySetIc} alt={"Images"} />
                         <div className="content-header set-header">
                           <span className="content-title">
@@ -122,7 +139,10 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => ({
   encryptedQuery: data => dispatch(sharedFolderInfoRequest(data)),
-  publicUrlSetDetails: data => dispatch(publicUrlSetDetailsRequest(data))
+  publicUrlSetDetails: data => dispatch(publicUrlSetDetailsRequest(data)),
+  shareableLink: data => {
+    dispatch(shareableLinkRequest(data));
+  }
 });
 
 export default connect(

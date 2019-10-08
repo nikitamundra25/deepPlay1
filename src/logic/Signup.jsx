@@ -3,6 +3,7 @@ import { ApiHelper } from "../helper";
 import { signupActions, modelOpenRequest, signupSuccess } from "../actions";
 import { AppRoutes } from "../config/AppRoutes";
 import { toast } from "react-toastify";
+let toastId = null;
 /**
  *
  */
@@ -19,7 +20,9 @@ const signupLogic = createLogic({
       action.payload
     );
     if (result.isError || !result.data.userData) {
-      toast.error(result.messages[0]);
+      if (!toast.isActive(toastId)) {
+        toastId = toast.error(result.messages[0]);
+      }
       dispatch(signupSuccess({ isLoginSuccess: false }));
       done();
       return;

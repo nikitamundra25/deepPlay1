@@ -1,6 +1,6 @@
 import React from "react";
 import { connect } from "react-redux";
-import { Card, CardBody, Col, Row } from "reactstrap";
+import { Card, CardBody, Row, Col } from "reactstrap";
 import VideoView from "./videoView";
 import VideoDetails from "./videoDetails";
 import { getMoveDetailsRequest, getAllSetRequest } from "../../../actions";
@@ -21,7 +21,7 @@ class MoveDetails extends React.Component {
     const location = this.props.location.pathname;
     const moveId = location.split("/");
     this.props.getMoveDetailsRequest({ moveId: moveId[2] });
-    this.props.getAllSetRequest();
+    this.props.getAllSetRequest({ isSetNoLimit: false });
   };
 
   render() {
@@ -29,7 +29,7 @@ class MoveDetails extends React.Component {
     const { moveDetails } = moveReducer;
     return (
       <>
-        <div className="create-set-section step-2 mt-2">
+        <div className="create-set-section step-2 ">
           <Card className="w-100">
             <CardBody>
               <div>
@@ -37,24 +37,26 @@ class MoveDetails extends React.Component {
                   onClick={() => {
                     this.props.redirectTo("/move");
                   }}
-                  className={"cursor_pointer"}
+                  className={"cursor_pointer back-arrow"}
                 >
                   {" "}
                   <i className="fas fa-long-arrow-alt-left" /> Back
                 </span>
               </div>
-              <Col md={"12"}>
-                <Row className={"mt-3"}>
-                  {moveDetails && moveDetails.videoUrl ? (
-                    <>
-                      <VideoView moveReducer={moveReducer} />
-                      <VideoDetails setReducer={setReducer} />
-                    </>
-                  ) : (
-                    <Loader />
-                  )}
-                </Row>
-              </Col>
+              <Row>
+                <Col md={"12"}>
+                  <Row className={"mt-3"}>
+                    {moveDetails && moveDetails.videoUrl ? (
+                      <>
+                        <VideoView moveReducer={moveReducer} />
+                        <VideoDetails setReducer={setReducer} />
+                      </>
+                    ) : (
+                      <Loader />
+                    )}
+                  </Row>
+                </Col>
+              </Row>
             </CardBody>
           </Card>
         </div>

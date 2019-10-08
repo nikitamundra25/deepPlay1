@@ -8,6 +8,10 @@ import {
   CardBody,
   CardHeader,
   FormFeedback,
+  InputGroupAddon,
+  InputGroupText,
+  InputGroup,
+  UncontrolledTooltip,
   Form
 } from "reactstrap";
 import "./index.scss";
@@ -39,12 +43,15 @@ class MoveComponent extends React.Component {
       var match = value.match(myregexp);
       if (match) {
         const ValidYouTubeUrl = this.validateYouTubeUrl(value);
-        this.setState({
-          url: ValidYouTubeUrl,
-          isYouTubeUrl: true
-        }, () => {
-          this.handleMoveUpload()
-        })
+        this.setState(
+          {
+            url: ValidYouTubeUrl,
+            isYouTubeUrl: true
+          },
+          () => {
+            this.handleMoveUpload();
+          }
+        );
       } else {
         this.setState({
           errors: {
@@ -52,7 +59,7 @@ class MoveComponent extends React.Component {
           }
         });
       }
-    }else{
+    } else {
       this.setState({
         errors: ""
       });
@@ -108,15 +115,18 @@ class MoveComponent extends React.Component {
     }
   };
 
-  handleVideoFileSelect = (e) => {
-    let files = e.target.files
-    this.setState({
-      url: files[0].name,
-      errors:""
-    }, () => {
-      this.props.downloadVideo({ url: files[0], isYoutubeUrl: false })
-    })
-  }
+  handleVideoFileSelect = e => {
+    let files = e.target.files;
+    this.setState(
+      {
+        url: files[0].name,
+        errors: ""
+      },
+      () => {
+        this.props.downloadVideo({ url: files[0], isYoutubeUrl: false });
+      }
+    );
+  };
 
   render() {
     const { errors, url } = this.state;
@@ -124,25 +134,79 @@ class MoveComponent extends React.Component {
     const { isVideoDownloading } = moveReducer;
     return (
       <>
-        <div className="create-set-section step-2 mt-2">
-          <Card className="w-100 set-content-wrap">
+        {/* <div className="content-header mt-3 mb-3">
+          <span className="content-title">
+           <div className="main-title">Add set</div>
+            <div className="sub-title">
+          Add youtube Url or upload video
+        </div>
+          </span>
+         
+        </div> */}
+        <div className="create-set-section step-2 ">
+          <Card className="set-content-wrap create-a-move p-0">
             <div className="set-content-block w-100">
-              <CardHeader className="">
+              <CardHeader className="border-bottom pt-4 pb-2">
                 <div className="content-header set-header flex-column">
-                  <span className="content-title">CREATE A MOVE</span>
-                  <p className="font-weight-bold">
-                    Trim any video to create a move
-                  </p>
+                  <span className="content-title creat-set-title">Creat a move</span>
+               
                 </div>
               </CardHeader>
-              <CardBody className="">
+              <CardBody className="p-0">
                 <div className="create-set-tile">
-                  <Form inline className="url-update-wrap">
-                    <div className="text-center mr-2">
+                  <Form className="url-update-wrap">
+                   <div className="ml-3 mr-3">
+                    <FormGroup className="flex-fill flex-column ">
+                    <Label className="text-center d-block mt-4 mb-3">Paste YouTube Video URL or Type URL Manually </Label>
+                    </FormGroup>
+                    <FormGroup className="flex-fill flex-column mt-0 ">
+                    <InputGroup>
+                        <Input
+                          id="url"
+                          className={
+                            errors
+                              ? "capitalize pl-2 boder-1-invalid is-invalid "
+                              : "capitalize pl-2 boder-1 "
+                          }
+                          placeholder="Ex: https://www.youtube.com/watch?v=I5t894l5b1w"
+                          type="text"
+                          onPaste={this.handlePasteEvent}
+                          name="url"
+                          onChange={this.handleChange}
+                          value={url}
+                        />
+                        <InputGroupAddon addonType="append" id="upload-title">
+          <InputGroupText>
+          <i class="fa fa-exclamation-circle display-5" aria-hidden="true"></i></InputGroupText>
+        </InputGroupAddon>
+        <UncontrolledTooltip
+            placement="top"
+            target="upload-title"
+          >
+            Paste YouTube Video URL or Type URL Manually 
+          </UncontrolledTooltip>
+        </InputGroup>
+                        <FormFeedback>
+                          {errors.notUrl
+                            ? errors.notUrl
+                            : errors.validUrl && url
+                            ? errors.validUrl
+                            : null}
+                        </FormFeedback>
+                      
+                    </FormGroup>
+                    </div>
+                    <div className="divider-or mt-5 mb-5">
+                     <span> OR </span>
+                    </div>
+                    <div className="text-center video-upload-manually pb-4">
                       <FormGroup>
+                      <FormGroup className="flex-fill flex-column ">
+                    <Label className="mb-3 set-wrap ">Upload video file from your system (mp4, 3gp, ogg, wmv, webm, flv etc..) </Label>
+                    </FormGroup>
                         <Label
                           for="videoUpload"
-                          className="btn-black btn"
+                          className="btn-black btn url-upload-btn"
                         >
                           <i className="fa fa-cloud-upload mr-2"></i>
                           {isVideoDownloading ? "Please wait..." : "Upload"}
@@ -153,44 +217,10 @@ class MoveComponent extends React.Component {
                           disabled={isVideoDownloading ? true : false}
                           className={"d-none"}
                           id="videoUpload"
-                          name="customFile" />
-                      </FormGroup>
-                      {/* <Input
-                        color=" "
-                        type="file"
-
-                        className="btn-black btn mt-3"
-                        disabled={isVideoDownloading ? true : false}
-                      // onClick={this.handleMoveUpload}
-                      >
-
-                      </Input> */}
-                    </div>
-                    <FormGroup className="flex-fill flex-column ">
-                      <div className="flex-fill w-100">
-                        <Input
-                          id="url"
-                          className={
-                            errors
-                              ? "capitalize pl-2 boder-1-invalid is-invalid w-100"
-                              : "capitalize pl-2 boder-1 w-100"
-                          }
-                          placeholder="Paste YouTube Video URL or Type URL Manually"
-                          type="text"
-                          onPaste={this.handlePasteEvent}
-                          name="url"
-                          onChange={this.handleChange}
-                          value={url}
+                          name="customFile"
                         />
-                        <FormFeedback>
-                          {errors.notUrl
-                            ? errors.notUrl
-                            : errors.validUrl && url
-                              ? errors.validUrl
-                              : null}
-                        </FormFeedback>
-                      </div>
-                    </FormGroup>
+                      </FormGroup>
+                    </div>
                   </Form>
                 </div>
               </CardBody>

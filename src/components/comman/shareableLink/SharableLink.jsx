@@ -38,14 +38,11 @@ class SharableLinkModal extends React.Component {
     }
   };
 
-  handleOpen = () => {
-    const { modelInfoReducer } = this.props;
-    const { modelDetails } = modelInfoReducer;
-    this.props.modelOperate({
-      modelDetails: {
-        sharableLinkModalOpen: !modelDetails.sharableLinkModalOpen
-      }
+  handleClose = () => {
+    this.setState({
+      copied: false
     });
+    this.props.handleOpen();
   };
 
   handlePublicAccess = e => {
@@ -58,12 +55,24 @@ class SharableLinkModal extends React.Component {
   };
 
   render() {
-    const { handleOpen, modal, userEncryptedInfo } = this.props;
-    const { encryptedUserId, encryptedFolderId } = userEncryptedInfo;
+    const { handleOpen, modal, userEncryptedInfo, shareComponent } = this.props;
+    const {
+      encryptedUserId,
+      encryptedFolderId,
+      encryptedSetId
+    } = userEncryptedInfo;
     const { isPublic } = this.state;
-    const path =
-      AppRoutes.FOLDER_SHARED_LINK.url +
-      `?userId=${encryptedUserId}&folderId=${encryptedFolderId}&isPublic=${this.state.isPublic}`;
+    let path = "";
+    // eslint-disable-next-line
+    {
+      shareComponent === "Folder"
+        ? (path =
+            AppRoutes.FOLDER_SHARED_LINK.url +
+            `?userId=${encryptedUserId}&folderId=${encryptedFolderId}&isPublic=${this.state.isPublic}`)
+        : (path =
+            AppRoutes.SET_SHARED_LINK.url +
+            `?userId=${encryptedUserId}&setId=${encryptedSetId}&isPublic=${this.state.isPublic}`);
+    }
     const pathUrl = window.location.origin + path;
 
     return (
@@ -81,7 +90,7 @@ class SharableLinkModal extends React.Component {
             className="close"
             data-dismiss="modal"
             type="button"
-            onClick={handleOpen}
+            onClick={this.handleClose}
           >
             <span aria-hidden="true">
               <img src={closeIcon} alt="close-ic" />
@@ -115,7 +124,7 @@ class SharableLinkModal extends React.Component {
                   <Button
                     color=" "
                     type="button"
-                    disabled-={this.state.copied}
+                    disabled={this.state.copied}
                     className="btn-black"
                   >
                     {this.state.copied ? "Copied" : " Copy Link"}
@@ -130,7 +139,7 @@ class SharableLinkModal extends React.Component {
             <span className="font-14">
               <b>Enable Public Access Link </b>
             </span>
-            <label className="custom-toggle sharable-toggle ml-auto">
+            <label className="custom-toggle sharable-toggle ml-auto custom-toggle-wrap">
               <input
                 type="checkbox"
                 name="toggle"
