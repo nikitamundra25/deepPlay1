@@ -178,7 +178,9 @@ class Dashboard extends React.Component {
                             <div className="cotent-text-tile">
                               <div className="content-heading-tile">
                                 {" "}
-                                {folder.title}
+                                {folder.isCopy
+                                  ? `Copy of ${folder.title}`
+                                  : folder.title}
                               </div>
                               <div className="content-sub-heading-tile">
                                 {" "}
