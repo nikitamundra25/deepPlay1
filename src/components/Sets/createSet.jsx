@@ -40,7 +40,7 @@ class CreateSetComponent extends React.Component {
 
   componentDidMount = () => {
     let parsed = qs.parse(this.props.location.search);
-    if (parsed && parsed.setid) {
+    if (parsed && parsed.setId) {
       this.props.getSetDetailsRequest({ setId: parsed.setId });
     }
   };
@@ -111,8 +111,10 @@ class CreateSetComponent extends React.Component {
     let parsed = qs.parse(this.props.location.search);
 
     return (
-      <div className="create-set-section mt-2">
-        <Card className="w-100 set-content-wrap">
+      <>
+      
+      <div className="create-set-section mt-5">
+        <Card className="set-content-wrap">
           <div className="set-content-block w-100">
             <CardHeader className="">
               <div className="content-header set-header">
@@ -127,7 +129,6 @@ class CreateSetComponent extends React.Component {
                   <InputGroup>
                     <Input
                       id="exampleFormControlInput1"
-
                       placeholder="Enter your title here"
                       type="text"
                       name="title"
@@ -171,16 +172,16 @@ class CreateSetComponent extends React.Component {
                     Add a Move
                   </Button>
                 ) : (
-                    <Button
-                      color=" "
-                      type="button"
-                      className="btn-black btn mt-3"
-                      disabled={!title}
-                      onClick={this.updateSet}
-                    >
-                      Update Set
+                  <Button
+                    color=" "
+                    type="button"
+                    className="btn-black btn mt-3"
+                    disabled={!title}
+                    onClick={this.updateSet}
+                  >
+                    Update Set
                   </Button>
-                  )}
+                )}
               </div>
             </CardBody>
           </div>
@@ -192,9 +193,11 @@ class CreateSetComponent extends React.Component {
           toggle={() => this.handleModal}
         >
           <ModalHeader>
-            <h5 className="modal-title" id="exampleModalLabel">
-              <span class="custom-title">Description</span>
-            </h5>
+            <div>
+              <h5 className="modal-title" id="exampleModalLabel">
+                <span className="custom-title">Description</span>
+              </h5>
+            </div>
             <button
               aria-label="Close"
               className="close"
@@ -235,6 +238,7 @@ class CreateSetComponent extends React.Component {
           </ModalFooter>
         </Modal>
       </div>
+      </>
     );
   }
 }

@@ -15,7 +15,6 @@ class Setting extends React.Component {
   };
 
   handleData = data => {
-    console.log("data", data);
     this.props.updateProfile(data);
   };
   onDelete = () => {

@@ -2,6 +2,7 @@ import React from "react";
 import {
   Col,
   FormGroup,
+  Label
 } from "reactstrap";
 import TagsInput from 'react-tagsinput'
 import 'react-tagsinput/react-tagsinput.css'
@@ -67,13 +68,14 @@ class VideoDetails extends React.Component {
     }
     return (
       <>
-        <Col md={"6"}>
+        <Col md={"6"} className="trim-video-text">
           <div>
             <div className={"font-weight-bold h4"}>Trim your video</div>
             <span>Use sliders below to trim your video (15 secs max).Or use your arrow keys on timestamps to get really precise.</span>
           </div>
-          <FormGroup className="flex-fill flex-column mt-3">
+          <FormGroup className="flex-fill flex-column mt-3 input-w">
             {/* add tag-input-wrap class for tagInput design  */}
+            <Label className="">Add tag and press enter for separate</Label>
             <div className="w-100 tag-input-wrap">
               <TagsInput
                 value={this.state.tags}
@@ -85,6 +87,7 @@ class VideoDetails extends React.Component {
           </FormGroup>
           <FormGroup className="flex-fill flex-column mt-3">
              {/* add search-select class for search select design  */}
+             <Label >select sets</Label>
             <div className="w-100 search-select-wrap">
               <AsyncSelect
                 loadOptions={this.loadSets}

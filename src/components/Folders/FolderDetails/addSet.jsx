@@ -21,13 +21,13 @@ class AddSetModal extends React.Component {
       selectedSet: "yourSet"
     };
   }
+
   componentDidUpdate(prevProps) {
     if (prevProps.getAllSet !== this.props.getAllSet) {
-      const setList = this.props.getAllSet;
-      const setItem = setList.filter(
-        item => item.folderId === this.props.folderId
+      let setList = this.props.getAllSet;
+      const setItem = setList.filter(item =>
+        item && item.folderId ? item.folderId._id === this.props.folderId : null
       );
-
       this.setState({
         setList: setItem
       });
@@ -51,14 +51,30 @@ class AddSetModal extends React.Component {
   handleAddNewSet = folderId => {
     this.props.redirectTo(AppRoutes.CREATE_SET.url + `?folderId=${folderId}`);
   };
+
   handleSelect = e => {
     e.preventDefault();
     const setList = this.props.getAllSet;
     let setItem = [];
     if (e.target.value === "yourSet") {
-      setItem = setList.filter(item => item.folderId === this.props.folderId);
+      setItem = setList.filter(item =>
+        item && item.folderId ? item.folderId._id === this.props.folderId : null
+      );
     } else {
-      setItem = this.props.getAllSet;
+      if (setList && setList.length) {
+        setList.map(item => {
+          if (
+            (item &&
+              item.folderId &&
+              item.folderId._id === this.props.folderId) ||
+            item.folderId === null
+          ) {
+            setItem.push(item);
+          }
+          return true;
+        });
+      }
+      // setItem = this.props.getAllSet;
     }
     this.setState({
       selectedSet: e.target.value,
@@ -89,7 +105,6 @@ class AddSetModal extends React.Component {
               onClick={handleOpen}
             >
               <span aria-hidden={true}>
-              
                 <img src={closeIcon} alt="close-ic" />
               </span>
             </button>

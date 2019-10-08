@@ -79,7 +79,7 @@ class HomePage extends React.Component {
               </div>
               <div className="text-center">
                 <Button
-                color={" "}
+                  color={" "}
                   className="fill-btn btn w-75 m-auto h3"
                   onClick={
                     isLoggedIn
@@ -114,7 +114,10 @@ class HomePage extends React.Component {
                   <div className="h5 font-dark-bold">
                     Create your own set to learn or teach
                   </div>
-                  <Button color={" "} className="fill-btn btn mt-4"> Create Now</Button>
+                  <Button color={" "} className="fill-btn btn mt-4">
+                    {" "}
+                    Create Now
+                  </Button>
                 </div>
               </div>
             </Col>
@@ -154,7 +157,15 @@ class HomePage extends React.Component {
               <h6 className="h3 text-center theme-heading font-weight-bold mb-5">
                 Store and learn all your movements in one place
               </h6>
-              <Button     color={" "} className="fill-btn btn home-message-btn">
+              <Button
+                color={" "}
+                className="fill-btn btn home-message-btn"
+                onClick={
+                  isLoggedIn
+                    ? this.handleDashboardOpen
+                    : this.handleLoginModalOpen
+                }
+              >
                 Get Started
               </Button>
             </Col>

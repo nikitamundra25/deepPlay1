@@ -17,17 +17,17 @@ class MoveDetails extends React.Component {
   }
 
   componentDidMount = () => {
-    const location = this.props.location.pathname
-    const moveId = location.split("/")
-    this.props.getMoveDetailsRequest({ moveId: moveId[2] })
-    this.props.getAllSetRequest()
+    const location = this.props.location.pathname;
+    const moveId = location.split("/");
+    this.props.getMoveDetailsRequest({ moveId: moveId[2] });
+    this.props.getAllSetRequest({ isSetNoLimit: false });
   };
 
   render() {
     const { setReducer, moveReducer } = this.props;
     return (
       <>
-        <div className="create-set-section step-2 mt-2">
+        <div className="create-set-section step-2 ">
           <Card className="w-100">
             <CardBody>
               <span
@@ -38,11 +38,9 @@ class MoveDetails extends React.Component {
               >
                 {" "}
                 <i className="fas fa-long-arrow-alt-left" /> Back
-                </span>
+              </span>
               <Row className={"mt-3"}>
-                <VideoView
-                  moveReducer={moveReducer}
-                />
+                <VideoView moveReducer={moveReducer} />
                 <VideoDetails setReducer={setReducer} />
               </Row>
             </CardBody>

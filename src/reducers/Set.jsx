@@ -9,7 +9,9 @@ const initialState = {
   isSetListLoading: false,
   isFolderSetLoading: false,
   isRecentSetLoading: false,
-  isSetDetailsLoading: false
+  isSetDetailsLoading: false,
+  totalSetsInFolder: 0,
+  totalSets: 0
 };
 export const setReducer = handleActions(
   {

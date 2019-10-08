@@ -62,8 +62,6 @@ class FolderModal extends React.Component {
   render() {
     const { modal, handleOpen, folderDetails } = this.props;
     const { title, description } = this.state;
-    console.log(">>>>>", folderDetails);
-
     return (
       <div>
         <Modal

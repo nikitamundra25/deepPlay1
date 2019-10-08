@@ -16,6 +16,7 @@ import {
   getSetDetailsSuccess
 } from "../actions";
 import { toast } from "react-toastify";
+import { AppConfig } from "../config/Appconfig";
 let toastId = null;
 
 //  Create sets
@@ -55,7 +56,7 @@ const createSetLogic = createLogic({
         if (!toast.isActive(toastId)) {
           toastId = toast.success("Set Copy has been created successfully");
         }
-        dispatch(getAllSetRequest());
+        dispatch(getAllSetRequest({ isSetNoLimit: false }));
       }
       done();
     }
@@ -114,7 +115,7 @@ const deleteSetLogic = createLogic({
         toastId = toast.success(result.messages[0]);
       }
       dispatch(redirectTo({ path: "/set" }));
-      dispatch(getAllSetRequest());
+      dispatch(getAllSetRequest({ isSetNoLimit: false }));
       done();
     }
   }
@@ -124,14 +125,21 @@ const getAllSetLogic = createLogic({
   type: SetsAction.GET_ALL_SET_REQUEST,
   async process({ action }, dispatch, done) {
     let api = new ApiHelper();
-    dispatch(showLoader());
+    let setPayload;
+    if (action.payload.isSetNoLimit) {
+      setPayload = action.payload;
+    } else {
+      setPayload = {
+        ...action.payload,
+        limit: AppConfig.ITEMS_PER_PAGE
+      };
+    }
     let result = await api.FetchFromServer(
       "set",
       "/get-all-set",
       "GET",
       true,
-      undefined,
-      undefined
+      setPayload
     );
     if (result.isError) {
       dispatch(hideLoader());
@@ -143,7 +151,8 @@ const getAllSetLogic = createLogic({
       dispatch(
         getAllSetSuccess({
           showLoader: false,
-          allSetList: result.data.result
+          allSetList: result.data.result,
+          totalSets: result.data.totalSets ? result.data.totalSets : 0
         })
       );
       done();
@@ -161,7 +170,10 @@ const getSetOfFolderLogic = createLogic({
       "/get-sets-of-folder",
       "GET",
       true,
-      action.payload
+      {
+        ...action.payload,
+        limit: AppConfig.ITEMS_PER_PAGE
+      }
     );
     if (result.isError) {
       toast.error(result.messages[0]);
@@ -177,7 +189,8 @@ const getSetOfFolderLogic = createLogic({
       dispatch(
         getFolderSetSuccess({
           showLoader: false,
-          setListinFolder: result.data.data
+          setListinFolder: result.data.data,
+          totalSetsInFolder: result.data.totalSets ? result.data.totalSets : 0
         })
       );
       done();
@@ -191,7 +204,7 @@ const ManageSetLogic = createLogic({
   async process({ action }, dispatch, done) {
     let api = new ApiHelper();
     dispatch(hideLoader());
-    console.log("act", action.payload);
+
     let result = await api.FetchFromServer(
       "set",
       "/manage-sets",
@@ -220,6 +233,7 @@ const ManageSetLogic = createLogic({
           }
         })
       );
+      dispatch(getAllSetRequest({ isSetNoLimit: false }));
       if (action.payload.previousFolderId) {
         dispatch(
           getFolderSetRequest({
@@ -230,7 +244,7 @@ const ManageSetLogic = createLogic({
         if (!toast.isActive(toastId)) {
           toastId = toast.success("Your set has been transfered successfully");
         }
-        dispatch(getAllSetRequest())
+        dispatch(getAllSetRequest({ isSetNoLimit: false }));
         dispatch(getFolderSetRequest());
       }
       done();

@@ -24,7 +24,9 @@ import {
   publicAccessRequest,
   shareableLinkRequest,
   deleteFolderRequest,
-  updateFolderRequest
+  updateFolderRequest,
+  redirectTo,
+  getAllSetRequest
 } from "../../../actions";
 import AddSetModal from "./addSet";
 import TransferToModal from "./transferTo";
@@ -34,6 +36,9 @@ import emptySetIc from "../../../assets/img/empty-sets.png";
 import { AppRoutes } from "../../../config/AppRoutes";
 import Loader from "../../comman/Loader/Loader";
 import FolderModal from "../createFolderModal";
+import PaginationHelper from "helper/Pagination";
+import qs from "query-string";
+import { AppConfig } from "../../../config/Appconfig";
 
 // core components
 class RecentFolderComponent extends React.Component {
@@ -45,26 +50,32 @@ class RecentFolderComponent extends React.Component {
       show: false, //show setting popOver,
       folderId: "", // pathName of folderId
       setToTransfer: "", // pass set id to transfer to different folder,
-      setIndex: -1
+      setIndex: -1,
+      page: 1,
+      showAll: false
     };
   }
   componentDidMount() {
-    const loaction = this.props.location;
-    const pathName = loaction.pathname.split("/");
+    const location = this.props.location;
+    const lSearch = location.search;
+    const { page } = qs.parse(lSearch);
+    const pathName = location.pathname.split("/");
     this.props.folderDetail({ id: pathName[2] });
     this.props.getSetsList({ folderId: pathName[2] });
+    this.props.getAllSetRequest({ isSetNoLimit: true });
     this.setState({
-      folderId: pathName[2]
+      folderId: pathName[2],
+      page: parseInt(page) || 1
     });
   }
 
   componentDidUpdate(prevProps) {
     if (
-      prevProps.getAllSetReducer &&
-      prevProps.getAllSetReducer.setListinFolder !==
-        this.props.getAllSetReducer.setListinFolder
+      prevProps.setReducer &&
+      prevProps.setReducer.setListinFolder !==
+        this.props.setReducer.setListinFolder
     ) {
-      const setList = this.props.getAllSetReducer.setListinFolder;
+      const setList = this.props.setReducer.setListinFolder;
       this.setState({
         setListItem: setList
       });
@@ -78,6 +89,13 @@ class RecentFolderComponent extends React.Component {
       modelDetails: {
         addSetModalOpen: !modelDetails.addSetModalOpen
       }
+    });
+    // this.props.getSetsList({
+    //   folderId: this.state.folderId,
+    //   showAll: true
+    // });
+    this.setState({
+      showAll: true
     });
   };
 
@@ -187,6 +205,7 @@ class RecentFolderComponent extends React.Component {
       setIndex: index
     });
   };
+
   closePopOver = () => {
     this.setState({
       show: false,
@@ -223,31 +242,57 @@ class RecentFolderComponent extends React.Component {
     this.props.updateFolderRequest(data);
   };
 
+  onPageChange = page => {
+    this.props.onGoPage(
+      `${AppRoutes.FOLDER_DETAILS.url.replace(
+        ":id",
+        this.state.folderId
+      )}?${qs.stringify({ page: page })}`
+    );
+    this.props.getSetsList({ folderId: this.state.folderId, page: page });
+  };
+
   render() {
     const {
       modelInfoReducer,
       getFolderReducer,
       shareLinkReducer,
-      getAllSetReducer
+      setReducer
     } = this.props;
-    const { setListItem, show, setToTransfer, folderId, setIndex } = this.state;
+    const {
+      setListItem,
+      show,
+      setToTransfer,
+      folderId,
+      setIndex,
+      page
+    } = this.state;
     const { modelDetails } = modelInfoReducer;
     const { folderDetails, getAllFolders } = getFolderReducer;
     const { userEncryptedInfo } = shareLinkReducer;
-    const { isFolderSetLoading } = getAllSetReducer;
+    const { isFolderSetLoading, totalSetsInFolder, allSetList } = setReducer;
+
     const {
       transferToModalOpen,
       addSetModalOpen,
       sharableLinkModalOpen,
       createFolderOpen
     } = modelDetails;
-    const setOfFolder = setListItem.filter(item => item.folderId === folderId);
+    const setOfFolder = setListItem.filter(
+      item => item.folderId._id === folderId
+    );
 
     return (
       <div className="page-body">
         <div className="content-header">
           <span className="content-title">
-            {folderDetails ? folderDetails.title : "MyFolder"}
+            <div className="main-title">
+              {" "}
+              {folderDetails ? folderDetails.title : "MyFolder"}
+            </div>
+            <div className="sub-title">
+              {folderDetails ? folderDetails.description : ""}
+            </div>
           </span>
           <div>
             <span
@@ -267,12 +312,9 @@ class RecentFolderComponent extends React.Component {
             >
               <i className="fas fa-share icon-font"></i>
             </span>
-            <UncontrolledTooltip placement="bottom" target="share">
-              Get Shareable Link
-            </UncontrolledTooltip>
-            <UncontrolledDropdown className="header-manu-wrap ">
+            <UncontrolledDropdown className="header-dropdown  ">
               <DropdownToggle color={" "}>
-                <span id="edit" className="cursor_pointer">
+                <span id="edit" className="cursor_pointer ml-4">
                   <i className="fas fa-sliders-h icon-font"></i>
                 </span>
               </DropdownToggle>
@@ -293,53 +335,59 @@ class RecentFolderComponent extends React.Component {
             </UncontrolledTooltip>
           </div>
         </div>{" "}
-        <span className="content-title">
-          {folderDetails ? folderDetails.description : ""}
-        </span>
         <Row className="set-wrap">
+          <Col>
           {!isFolderSetLoading ? (
             setOfFolder && setOfFolder.length ? (
               // eslint-disable-next-line
               setOfFolder.map((list, i) => {
                 return (
                   <Col md="6" key={i}>
-                    <div className="tile-wrap card">
-                      <div className="cotent-tile d-flex">
-                        <div className="cotent-text-tile">
-                          <div className="content-heading-tile">
+                    <div
+                      className="tile-wrap card"
+                      onMouseLeave={() => this.closePopOver()}
+                    >
+                      <div className="cotent-tile d-flex content-with-tip">
+                        <div
+                          className="cotent-text-tile cursor_pointer text-capitalize"
+                          onClick={() => this.handleSetDetails(list._id)}
+                        >
+                          <div className="content-heading-tile d-flex">
                             {" "}
                             <span
-                              onClick={() => this.handleSetDetails(list._id)}
-                              className={"cursor_pointer"}
+                              // onClick={() => this.handleSetDetails(list._id)}
+                              className={"text-capitalize"}
                             >
-                              {list.title}
+                              <span>{list.title} </span>
                             </span>
                           </div>
-                          <div className="content-heading-tile">
+                          <span className={"text-capitalize"}>
+                            {list.description ? list.description : ""}
+                          </span>
+                          <div className="content-number-tile">
                             {" "}
-                            {list.description}
+                            {list.moveCount ? list.moveCount : 0} items
                           </div>
-
-                          <div className="content-number-tile"> 4 items</div>
                         </div>
                         <div
-                          className="cotent-img-tile"
-                          style={{
-                            backgroundImage:
-                              'url("' +
-                              "https://res.cloudinary.com/fleetnation/image/private/c_fit,w_1120/g_south,l_text:style_gothic2:%C2%A9%20Nikita%20Buida,o_20,y_10/g_center,l_watermark4,o_25,y_50/v1469756538/dd3acf4nzzavkv4rf2ji.jpg" +
-                              '")'
-                          }}
-                        ></div>
+                          className="d-flex img-tile-wrap cursor_pointer"
+                          onClick={() => this.handleSetDetails(list._id)}
+                        >
+                          <div
+                            className="cotent-img-tile"
+                            style={{
+                              backgroundImage:
+                                'url("' +
+                                "https://res.cloudinary.com/fleetnation/image/private/c_fit,w_1120/g_south,l_text:style_gothic2:%C2%A9%20Nikita%20Buida,o_20,y_10/g_center,l_watermark4,o_25,y_50/v1469756538/dd3acf4nzzavkv4rf2ji.jpg" +
+                                '")'
+                            }}
+                          />
+                        </div>
                         <div
                           onMouseOver={() => this.showPopOver(i, show)}
-                          onMouseLeave={() => this.closePopOver()}
-                          className={"p-3 tooltip-btn-wrap right-btn-tip"}
+                          className={"tooltip-btn-wrap right-btn-tip"}
                         >
-                          <span
-                            onClick={() => this.showPopOver(i)}
-                            className="cursor_pointer"
-                          >
+                          <span className="cursor_pointer">
                             {" "}
                             <i className="fas fa-ellipsis-v setting-icon "></i>
                           </span>
@@ -374,8 +422,8 @@ class RecentFolderComponent extends React.Component {
               })
             ) : (
               <>
-                <div className="create-set-section mt-2 w-100">
-                  <Card className="w-100 set-content-wrap">
+                <div className="create-set-section mt-2 w-100 empty-folder-section">
+                  <Card className="set-content-wrap empty-folder-card">
                     <div className="set-content-block w-100 empty-folder-wrap">
                       <CardHeader className="empty-folder-header">
                         <img src={emptySetIc} alt={"Images"} />
@@ -393,7 +441,7 @@ class RecentFolderComponent extends React.Component {
                           <Button
                             color=" "
                             type="button"
-                            className="btn-black btn mt-3"
+                            className="btn-black btn "
                             onClick={this.openAddSetModel}
                           >
                             <i className="fas fa-plus mr-1"></i>
@@ -411,11 +459,12 @@ class RecentFolderComponent extends React.Component {
               <Loader />
             </Col>
           )}
+          </Col>
         </Row>
         <AddSetModal
           handleOpen={this.openAddSetModel}
           modal={addSetModalOpen}
-          getAllSet={setListItem}
+          getAllSet={allSetList}
           folderId={folderId}
           handleSets={this.handleSets}
           {...this.props}
@@ -444,6 +493,17 @@ class RecentFolderComponent extends React.Component {
           editFolder="true"
           folderDetails={folderDetails ? folderDetails : null}
         />
+        {totalSetsInFolder && !isFolderSetLoading ? (
+          <PaginationHelper
+            totalRecords={totalSetsInFolder}
+            currentPage={page}
+            onPageChanged={page => {
+              this.setState({ page });
+              this.onPageChange(page);
+            }}
+            pageLimit={AppConfig.ITEMS_PER_PAGE}
+          />
+        ) : null}
       </div>
     );
   }
@@ -452,7 +512,7 @@ const mapStateToProps = state => {
   return {
     getFolderReducer: state.getFolderReducer,
     modelInfoReducer: state.modelInfoReducer,
-    getAllSetReducer: state.setReducer,
+    setReducer: state.setReducer,
     shareLinkReducer: state.shareLinkReducer
   };
 };
@@ -482,7 +542,11 @@ const mapDispatchToProps = dispatch => ({
   },
   updateFolderRequest: data => {
     dispatch(updateFolderRequest(data));
-  }
+  },
+  onGoPage: data => {
+    dispatch(redirectTo({ path: data }));
+  },
+  getAllSetRequest: data => dispatch(getAllSetRequest(data))
 });
 
 export default connect(

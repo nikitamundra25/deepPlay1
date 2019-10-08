@@ -23,6 +23,7 @@ const FolderSharedLink = React.lazy(() =>
 const setSharedLink = React.lazy(() =>
   import("./components/comman/shareableLink/SetSharedLink")
 );
+const changePassword = React.lazy(() => import("./container/ChangePassword"));
 const routes = [
   {
     path: AppRoutes.HOME_PAGE.url,
@@ -107,6 +108,12 @@ const routes = [
     name: AppRoutes.SET_SHARED_LINK.name,
     exact: AppRoutes.SET_SHARED_LINK.exact,
     component: setSharedLink
+  },
+  {
+    path: AppRoutes.CHANGE_PASSWORD.url,
+    name: AppRoutes.CHANGE_PASSWORD.name,
+    exact: AppRoutes.CHANGE_PASSWORD.exact,
+    component: changePassword
   }
 ];
 

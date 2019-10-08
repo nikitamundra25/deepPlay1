@@ -49,7 +49,7 @@ class Dashboard extends React.Component {
             <span className="content-title">RECENT</span>
           </div> */}
           <div className="content-header">
-            <span className="content-title">RECENT SETS</span>
+            <span className="content-title ">RECENT SETS</span>
             {recentSets && recentSets.length > 4 ? (
               <span
                 className="dashboard-right-content cursor_pointer"
@@ -69,7 +69,7 @@ class Dashboard extends React.Component {
                     return (
                       <Col md="6" key={i}>
                         <div className="tile-wrap card">
-                          <div className="badge-wrap">
+                          <div className="badge-wrap mb-2">
                             <Badge variant="secondary" className="draft-wrap">
                               DRAFT
                           </Badge>
@@ -109,8 +109,8 @@ class Dashboard extends React.Component {
                   })
                 ) : (
                     <>
-                      <div className="create-set-section mt-2 w-100">
-                        <Card className="w-100 set-content-wrap">
+                      <div className="create-set-section w-100 empty-folder-section">
+                        <Card className="set-content-wrap empty-folder-card">
                           <div className="set-content-block w-100 empty-folder-wrap">
                             <CardHeader className="empty-folder-header">
                               <img src={emptySetIc} alt={"Folder"} />
@@ -127,7 +127,7 @@ class Dashboard extends React.Component {
                                 <Button
                                   color=" "
                                   type="button"
-                                  className="btn-black btn mt-3 folder-create-btn"
+                                  className="btn-black btn folder-create-btn"
                                   onClick={() =>
                                     this.props.redirectTo(AppRoutes.SETS.url)
                                   }
@@ -180,7 +180,7 @@ class Dashboard extends React.Component {
                                 {" "}
                                 {folder.title}
                               </div>
-                              <div className="content-heading-tile">
+                              <div className="content-sub-heading-tile">
                                 {" "}
                                 {folder.description ? folder.description : ""}
                               </div>
@@ -209,8 +209,8 @@ class Dashboard extends React.Component {
                   })
                 ) : (
                     <>
-                      <div className="create-set-section mt-2 w-100">
-                        <Card className="w-100 set-content-wrap">
+                      <div className="create-set-section w-100 empty-folder-section">
+                        <Card className="set-content-wrap empty-folder-card">
                           <div className="set-content-block w-100 empty-folder-wrap">
                             <CardHeader className="empty-folder-header">
                               <img src={emptyFolderIc} alt={"folder"} />
@@ -227,7 +227,7 @@ class Dashboard extends React.Component {
                                 <Button
                                   color=" "
                                   type="button"
-                                  className="btn-black btn mt-3 folder-create-btn"
+                                  className="btn-black btn folder-create-btn"
                                   onClick={() =>
                                     this.props.redirectTo(AppRoutes.FOLDERS.url)
                                   }

@@ -36,6 +36,8 @@ export const profileImage = handleActions(
     [ProfileAction.UPLOAD_IMAGE_SUCCESS]: (state, { payload }) => ({
       ...state,
       profileImage: payload.imageDetails,
+      profileInfo: payload.profileInfo,
+      // profileInfo: payload.imageDetails.profileThumbnail,
       isImageUploading: false
     })
   },

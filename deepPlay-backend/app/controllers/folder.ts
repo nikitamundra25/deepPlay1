@@ -79,12 +79,12 @@ const createFolder = async (req: Request, res: Response): Promise<any> => {
       }
     }
 
-    let folderDataForAlgolia: Document | any
+    let folderDataForAlgolia: Document | any;
     /* Add items to algolia */
     folderDataForAlgolia = {
       ...Result._doc,
       title: "folder"
-    }
+    };
     index.addObjects([folderDataForAlgolia], (err: string, content: string) => {
       if (err) {
         console.error(err);
@@ -119,7 +119,7 @@ const getAllFolder = async (req: Request, res: Response): Promise<void> => {
     };
     // set default value for condition
     condition.$and.push({
-      isDeleted: false,
+      isDeleted: false
     });
     // check for search condition
     if (search) {
@@ -140,7 +140,7 @@ const getAllFolder = async (req: Request, res: Response): Promise<void> => {
     }
     if (!roleType || roleType !== "admin") {
       condition.$and.push({
-        userId: headToken.id,
+        userId: headToken.id
       });
     }
     // check for sort option
@@ -177,7 +177,9 @@ const getAllFolder = async (req: Request, res: Response): Promise<void> => {
         message: "User id not found"
       });
     }
-    let result: Document | any, setCount: Document | any, folderResult: any = []
+    let result: Document | any,
+      setCount: Document | any,
+      folderResult: any = [];
     result = await FolderModel.find(condition)
       .sort(sortOption)
       .skip(pageNumber)
@@ -197,11 +199,11 @@ const getAllFolder = async (req: Request, res: Response): Promise<void> => {
         setCount = await SetModel.count({
           folderId: folderData._id,
           isDeleted: false
-        })
+        });
         folderResult.push({
           ...folderData._doc,
           setCount: setCount
-        })
+        });
       }
     }
     res.status(200).json({
@@ -491,7 +493,10 @@ const updateFolder = async (req: Request, res: Response): Promise<any> => {
   }
 };
 //------------------ Update Folder Status --------------------//
-const updateFolderStatus = async (req: Request, res: Response): Promise<any> => {
+const updateFolderStatus = async (
+  req: Request,
+  res: Response
+): Promise<any> => {
   try {
     const { body } = req;
     const { folders, status } = body;

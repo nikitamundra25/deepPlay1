@@ -1,5 +1,5 @@
 import { createLogic } from "redux-logic";
-import { ApiHelper } from "../helper"
+import { ApiHelper } from "../helper";
 import {
   loginAction,
   modelOpenRequest,
@@ -8,11 +8,14 @@ import {
   loginSuccess,
   logoutSuccess,
   profileSuccess,
-  forgotPasswordSuccess
+  forgotPasswordSuccess,
+  changePasswordSuccess,
+  changePasswordAction,
+  changePasswordFailed
 } from "../actions";
 //import { logger } from "helper/Logger";
 import { toast } from "react-toastify";
-import { AppRoutes } from "../config/AppRoutes"
+import { AppRoutes } from "../config/AppRoutes";
 let toastId = null;
 /**
  *
@@ -33,28 +36,24 @@ const loginLogic = createLogic({
       if (!toast.isActive(toastId)) {
         toastId = toast.error(result.messages[0]);
       }
-      dispatch(
-        loginSuccess({ isLoginSuccess: false })
-      )
+      dispatch(loginSuccess({ isLoginSuccess: false }));
       done();
       return;
     } else {
-      localStorage.setItem("token", result.data.token)
+      localStorage.setItem("token", result.data.token);
       dispatch(
         modelOpenRequest({
           modelDetails: {
             loginModelOpen: false
           }
         })
-      )
+      );
       dispatch(
         profileSuccess({
           profileInfo: result.data.userData
         })
       );
-      dispatch(
-        loginSuccess({ isLoginSuccess: true })
-      )
+      dispatch(loginSuccess({ isLoginSuccess: true }));
       window.location.href = AppRoutes.DASHBOARD.url;
       done();
     }
@@ -66,9 +65,9 @@ const loginLogic = createLogic({
 const logOutLogic = createLogic({
   type: loginAction.LOGOUT_REQUEST,
   async process({ action }, dispatch, done) {
-    dispatch(logoutSuccess({ isLoginSuccess: false }))
+    dispatch(logoutSuccess({ isLoginSuccess: false }));
     localStorage.removeItem("token");
-    window.location.href = AppRoutes.HOME_PAGE.url
+    window.location.href = AppRoutes.HOME_PAGE.url;
     done();
   }
 });
@@ -92,9 +91,9 @@ const socialLoginLogic = createLogic({
       done();
       return;
     } else {
-      localStorage.setItem("token", result.data.token)
+      localStorage.setItem("token", result.data.token);
       if (result.data.message) {
-        toast.success(result.data.message)
+        toast.success(result.data.message);
       }
       dispatch(
         modelOpenRequest({
@@ -102,10 +101,8 @@ const socialLoginLogic = createLogic({
             loginModelOpen: false
           }
         })
-      )
-      dispatch(
-        loginSuccess({ isLoginSuccess: true })
-      )
+      );
+      dispatch(loginSuccess({ isLoginSuccess: true }));
       window.location.href = AppRoutes.DASHBOARD.url;
       done();
     }
@@ -131,7 +128,7 @@ const forgetPasswordLogic = createLogic({
       done();
       return;
     } else {
-      dispatch(forgotPasswordSuccess())
+      dispatch(forgotPasswordSuccess());
       if (!toast.isActive(toastId)) {
         toastId = toast.success(result.messages[0]);
       }
@@ -141,7 +138,7 @@ const forgetPasswordLogic = createLogic({
             forgotPasswordModalOpen: false
           }
         })
-      )
+      );
       done();
     }
   }
@@ -219,7 +216,7 @@ const verifyAccountAccessLogic = createLogic({
       dispatch(logoutRequest());
     }
     localStorage.setItem("token", user);
-    
+
     dispatch(
       redirectTo({
         path: AppRoutes.DASHBOARD.url
@@ -228,6 +225,41 @@ const verifyAccountAccessLogic = createLogic({
     done();
   }
 });
+
+//---------Change password----------
+const changePasswordLogic = createLogic({
+  type: changePasswordAction.CHANGE_PASSWORD_REQUEST,
+  async process({ action }, dispatch, done) {
+    let api = new ApiHelper();
+    let result = await api.FetchFromServer(
+      "/auth",
+      "/change-password",
+      "PUT",
+      true,
+      undefined,
+      action.payload
+    );
+    if (result.isError) {
+      if (!toast.isActive(toastId)) {
+        toastId = toast.error(
+          result.messages[0].oldPassword ||
+            result.messages[0] ||
+            result.messages
+        );
+      }
+      dispatch(changePasswordFailed())
+      done();
+      return;
+    } else {
+      dispatch(changePasswordSuccess());
+      if (!toast.isActive(toastId)) {
+        toastId = toast.success(result.messages[0]);
+      }
+      done();
+    }
+  }
+});
+
 export const LoginLogics = [
   loginLogic,
   logOutLogic,
@@ -235,5 +267,6 @@ export const LoginLogics = [
   forgetPasswordLogic,
   verifyResetTokenLogic,
   resetPasswordLogic,
-  verifyAccountAccessLogic
+  verifyAccountAccessLogic,
+  changePasswordLogic
 ];

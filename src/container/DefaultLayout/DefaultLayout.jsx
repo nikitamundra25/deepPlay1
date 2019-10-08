@@ -54,6 +54,7 @@ class DefaultLayout extends React.Component {
       profileInfoReducer
     } = this.props;
     let isLoggedIn;
+
     if (localStorage.getItem("token")) {
       isLoggedIn = true;
     } else {
@@ -62,10 +63,7 @@ class DefaultLayout extends React.Component {
     const routePath = this.props.location.pathname;
     return (
       <>
-        {routePath !== "/resetPassword" &&
-        routePath !== "/folder-shared-link" &&
-        routePath !== "/set-shared-link" &&
-        routePath !== "/404" ? (
+        {routePath !== "/resetPassword" ? (
           <DefaultHeader
             modelInfoReducer={modelInfoReducer}
             modelOpenRequest={modelOperate}

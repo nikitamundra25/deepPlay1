@@ -28,12 +28,12 @@ const createSet = async (req: Request, res: Response): Promise<any> => {
     const setResult: Document | any = new SetModel(setData);
     await setResult.save();
 
-    let setDataForAlgolia: Document | any
+    let setDataForAlgolia: Document | any;
     /* Add items to algolia */
     setDataForAlgolia = {
       ...setResult._doc,
       title: "sets"
-    }
+    };
     index.addObjects([setDataForAlgolia], (err: string, content: string) => {
       if (err) {
         console.error(err);
@@ -69,7 +69,7 @@ const getAllSetById = async (req: Request, res: Response): Promise<void> => {
     };
     // set default value for condition
     condition.$and.push({
-      isDeleted: false,
+      isDeleted: false
     });
     // check for search condition
     if (search) {
@@ -90,7 +90,7 @@ const getAllSetById = async (req: Request, res: Response): Promise<void> => {
     }
     if (!roleType || roleType !== "admin") {
       condition.$and.push({
-        userId: headToken.id,
+        userId: headToken.id
       });
     }
     // check for sort option
@@ -127,7 +127,7 @@ const getAllSetById = async (req: Request, res: Response): Promise<void> => {
         message: "User id not found"
       });
     }
-    index.search({ query: 'Sal' }, (err, hits: any = {}) => {
+    index.search({ query: "Sal" }, (err: any, hits: any = {}) => {
       if (err) {
         console.log(err);
         console.log(err.debugData);
@@ -137,7 +137,9 @@ const getAllSetById = async (req: Request, res: Response): Promise<void> => {
       console.log("@@@@@@@@@@@@@@@@@", hits);
     });
 
-    let result: Document | any, moveCount: Document | any, setResult: any = []
+    let result: Document | any,
+      moveCount: Document | any,
+      setResult: any = [];
     result = await SetModel.find(condition)
       .sort(sortOption)
       .skip(pageNumber)
@@ -163,11 +165,11 @@ const getAllSetById = async (req: Request, res: Response): Promise<void> => {
         moveCount = await MoveModel.count({
           setId: setData._id,
           isDeleted: false
-        })
+        });
         setResult.push({
           ...setData._doc,
           moveCount: moveCount
-        })
+        });
       }
     }
     res.status(200).json({
@@ -200,6 +202,7 @@ const getRecentSetById = async (req: Request, res: Response): Promise<void> => {
     })
       .sort({ isRecentTime: -1 })
       .limit(limit);
+
     res.status(200).json({
       data: result,
       message: "Sets have been fetched successfully"
@@ -217,19 +220,55 @@ const getSetsForFolder = async (req: Request, res: Response): Promise<void> => {
   try {
     const { currentUser } = req;
     const { query } = req;
+    const { limit, page } = query;
     let headToken: Request | any = currentUser;
     if (!headToken.id) {
       res.status(400).json({
         message: "User id not found"
       });
     }
-    const result: Document | any = await SetModel.find({
+    let result: Document | any,
+      moveCount: Document | any,
+      setResult: any = [];
+
+    result = await SetModel.find({
       userId: headToken.id,
-      $or: [{ folderId: query.folderId }, { folderId: null }],
+      $or: [{ folderId: Mongoose.Types.ObjectId(query.folderId) }],
       isDeleted: false
-    });
+    })
+      .populate({
+        path: "folderId",
+        match: {
+          isDeleted: false
+        }
+      })
+      .skip(((parseInt(page) || 1) - 1) * (limit || 10))
+      .limit(parseInt(limit) || 10);
+
+    if (result && result.length) {
+      for (let index = 0; index < result.length; index++) {
+        const setData = result[index];
+        moveCount = await MoveModel.count({
+          setId: setData._id,
+          isDeleted: false
+        });
+        setResult.push({
+          ...setData._doc,
+          moveCount: moveCount
+        });
+      }
+    }
+
+    let count: Document | any = await SetModel.find({
+      userId: headToken.id,
+      folderId: query.folderId,
+      $or: [{ folderId: query.folderId }],
+      isDeleted: false
+    }).count();
+
     res.status(200).json({
-      data: result
+      data: setResult,
+      totalSets: count
     });
   } catch (error) {
     console.log(error);
@@ -324,12 +363,12 @@ const getSetDetailsById = async (
     const moveCount: Document | any = await MoveModel.count({
       setId: result._id,
       isDeleted: false
-    })
+    });
 
     const SetResult: any = {
       ...result._doc,
       moveCount: moveCount
-    }
+    };
 
     res.status(200).json({
       data: SetResult
