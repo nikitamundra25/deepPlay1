@@ -18,6 +18,8 @@ import {
 import emptyFolderIc from "../../assets/img/empty-folder.png";
 import emptySetIc from "../../assets/img/empty-sets.png";
 import Loader from "../../components/comman/Loader/Loader";
+import defaultProfileImage from "../../assets/img/profile-ic.png";
+import { AppConfig } from "../../config/Appconfig";
 
 // core components
 class Dashboard extends React.Component {
@@ -39,9 +41,11 @@ class Dashboard extends React.Component {
   };
 
   render() {
-    const { folderReducer, setReducer } = this.props;
+    const { folderReducer, setReducer, profileInfoReducer } = this.props;
     const { isRecentFolderLoading, recentFolders } = folderReducer;
     const { isRecentSetLoading, recentSets } = setReducer
+    const { profileInfo } = profileInfoReducer
+    const splitedImage = profileInfo && profileInfo.profileImage ? profileInfo.profileImage.split("/") : []
     return (
       <>
         <div className="page-body">
@@ -113,16 +117,18 @@ class Dashboard extends React.Component {
                           </div>
                           <div className="bottom-content-tile">
                             <div
-                              className="cotent-img-tile teacher-profile-img" style={{ backgroundImage: 'url("' + "https://content3.jdmagicbox.com/comp/mangalore/n5/0824px824.x824.161117105721.j6n5/catalogue/maruthi-hi-tech-gym-mangalore-ee6a9z8iv5.jpg" + '")' }}
+                              className="cotent-img-tile teacher-profile-img" style={{
+                                backgroundImage: `url(${profileInfo && profileInfo.profileImage ? splitedImage[0] === "uploads" ? `${AppConfig.API_ENDPOINT}${profileInfo.profileImage}` : profileInfo.profileImage : defaultProfileImage})`
+                              }}
                             ></div>
                             <span className="bottom-text-tile">
                               {" "}
-                              Mastershipclass
-                          </span>
-                            <span className="bottom-light-tile">
-                              {" "}
-                              Mastershipclass
-                          </span>
+                              {
+                                profileInfo ?
+                                  `${profileInfo.firstName} ${" "} ${profileInfo.lastName}`
+                                  : ""
+                              }
+                            </span>
                           </div>
                         </div>
                       </Col>
@@ -217,16 +223,16 @@ class Dashboard extends React.Component {
                           </div>
                           <div className="bottom-content-tile pt-3">
                             <div
-                              className="cotent-img-tile teacher-profile-img" style={{ backgroundImage: 'url("' + "https://content3.jdmagicbox.com/comp/mangalore/n5/0824px824.x824.161117105721.j6n5/catalogue/maruthi-hi-tech-gym-mangalore-ee6a9z8iv5.jpg" + '")' }}
+                              className="cotent-img-tile teacher-profile-img" style={{ backgroundImage: `url(${profileInfo && profileInfo.profileImage ? splitedImage[0] === "uploads" ? `${AppConfig.API_ENDPOINT}${profileInfo.profileImage}` : profileInfo.profileImage : defaultProfileImage})` }}
                             ></div>
                             <span className="bottom-text-tile">
                               {" "}
-                              Mastershipclass
-                          </span>
-                            <span className="bottom-light-tile">
-                              {" "}
-                              Mastershipclass
-                          </span>
+                              {
+                                profileInfo ?
+                                  `${profileInfo.firstName} ${" "} ${profileInfo.lastName}`
+                                  : ""
+                              }
+                            </span>
                           </div>
                         </div>
                       </Col>
@@ -270,8 +276,8 @@ class Dashboard extends React.Component {
                   <Loader />
                 </Col>
             }
-          </Row>
-        </div>
+          </Row >
+        </div >
       </>
     );
   }
@@ -280,7 +286,8 @@ class Dashboard extends React.Component {
 const mapStateToProps = state => {
   return {
     folderReducer: state.getFolderReducer,
-    setReducer: state.setReducer
+    setReducer: state.setReducer,
+    profileInfoReducer: state.profileInfoReducer
   };
 };
 const mapDispatchToProps = dispatch => ({

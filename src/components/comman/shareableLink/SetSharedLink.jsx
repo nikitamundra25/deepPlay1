@@ -20,7 +20,7 @@ import "./index.scss";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import emptySetIc from "../../../assets/img/empty-sets.png";
-import { AppRoutes } from "../../../config/AppRoutes";
+//import { AppRoutes } from "../../../config/AppRoutes";
 import addPlusIc from "../../../assets/img/add_plus.png";
 import qs from "query-string";
 
