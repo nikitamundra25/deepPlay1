@@ -27,7 +27,8 @@ class MoveComponent extends React.Component {
       url: "",
       errors: "",
       isYouTubeUrl: false,
-      isPaste: false
+      isPaste: false,
+      fileErr: ""
     };
   }
 
@@ -81,10 +82,13 @@ class MoveComponent extends React.Component {
     return result;
   };
 
-  handleMoveUpload = () => {
-    this.setState({
-      errors: {}
-    });
+  handleMoveUpload = e => {
+    if (!this.state.isPaste) {
+      e.preventDefault();
+    }
+    // this.setState({
+    //   errors: {}
+    // });
     try {
       if (!this.state.url) {
         this.setState({
@@ -92,16 +96,16 @@ class MoveComponent extends React.Component {
             notUrl: "Enter youtube video link"
           }
         });
-        if (this.state.errors) {
-          return;
-        }
         return;
       }
-      const payload = {
-        url: this.state.url,
-        isYoutubeUrl: this.state.isYouTubeUrl
-      };
-      this.props.downloadVideo(payload);
+      if (!this.state.errors) {
+        console.log("fgfj", this.state.errors);
+        const payload = {
+          url: this.state.url,
+          isYoutubeUrl: this.state.isYouTubeUrl
+        };
+        this.props.downloadVideo(payload);
+      }
     } catch (error) {
       logger(error);
     }
@@ -116,22 +120,35 @@ class MoveComponent extends React.Component {
   };
 
   handleVideoFileSelect = e => {
+    this.setState({
+      fileErr: ""
+    });
     let files = e.target.files;
-    this.setState(
-      {
-        url: files[0].name,
-        errors: ""
-      },
-      () => {
-        this.props.downloadVideo({ url: files[0], isYoutubeUrl: false });
+    if (files.length) {
+      const fileType = files ? files[0].type.split("/") : "";
+      if (fileType[0] !== "video") {
+        this.setState({
+          fileErr: "Unsupported file type!! We accept only video type"
+        });
+      } else {
+        this.setState(
+          {
+            url: files[0].name,
+            errors: ""
+          },
+          () => {
+            this.props.downloadVideo({ url: files[0], isYoutubeUrl: false });
+          }
+        );
       }
-    );
+    }
   };
 
   render() {
-    const { errors, url } = this.state;
+    const { errors, url, fileErr } = this.state;
     const { moveReducer } = this.props;
     const { isVideoDownloading } = moveReducer;
+
     return (
       <>
         {/* <div className="content-header mt-3 mb-3">
@@ -148,68 +165,89 @@ class MoveComponent extends React.Component {
             <div className="set-content-block w-100">
               <CardHeader className="border-bottom pt-4 pb-2">
                 <div className="content-header set-header flex-column">
-                  <span className="content-title creat-set-title">Creat a move</span>
-               
+                  <span className="content-title creat-set-title">
+                    Creat a move
+                  </span>
                 </div>
               </CardHeader>
               <CardBody className="p-0">
                 <div className="create-set-tile">
-                  <Form className="url-update-wrap">
-                   <div className="ml-3 mr-3">
-                    <FormGroup className="flex-fill flex-column ">
-                    <Label className="text-center d-block mt-4 mb-3">Paste YouTube Video URL or Type URL Manually </Label>
-                    </FormGroup>
-                    <FormGroup className="flex-fill flex-column mt-0 ">
-                    <InputGroup>
-                        <Input
-                          id="url"
-                          className={
-                            errors
-                              ? "capitalize pl-2 boder-1-invalid is-invalid "
-                              : "capitalize pl-2 boder-1 "
-                          }
-                          placeholder="Ex: https://www.youtube.com/watch?v=I5t894l5b1w"
-                          type="text"
-                          onPaste={this.handlePasteEvent}
-                          name="url"
-                          onChange={this.handleChange}
-                          value={url}
-                        />
-                        <InputGroupAddon addonType="append" id="upload-title">
-          <InputGroupText>
-          <i class="fa fa-exclamation-circle display-5" aria-hidden="true"></i></InputGroupText>
-        </InputGroupAddon>
-        <UncontrolledTooltip
-            placement="top"
-            target="upload-title"
-          >
-            Paste YouTube Video URL or Type URL Manually 
-          </UncontrolledTooltip>
-        </InputGroup>
-                        <FormFeedback>
+                  <Form
+                    className="url-update-wrap"
+                    onSubmit={this.handleMoveUpload}
+                  >
+                    <div className="ml-3 mr-3">
+                      <FormGroup className="flex-fill flex-column ">
+                        <Label className="text-center d-block mt-4 mb-3">
+                          Paste YouTube Video URL or Type URL Manually{" "}
+                        </Label>
+                      </FormGroup>
+                      <FormGroup className="flex-fill flex-column mt-0 ">
+                        <InputGroup>
+                          <Input
+                            id="url"
+                            className={
+                              errors
+                                ? " pl-2 boder-1-invalid is-invalid "
+                                : "pl-2 boder-1 "
+                            }
+                            placeholder="Ex: https://www.youtube.com/watch?v=I5t894l5b1w"
+                            type="text"
+                            onPaste={this.handlePasteEvent}
+                            name="url"
+                            onChange={this.handleChange}
+                            value={url}
+                          />
+                          <FormFeedback>
+                            {errors.validUrl && url ? errors.validUrl : null}
+                            {errors.notUrl ? errors.notUrl : null}
+                          </FormFeedback>
+                          <InputGroupAddon addonType="append" id="upload-title">
+                            <InputGroupText>
+                              {!isVideoDownloading ? (
+                                <i
+                                  className="fa fa-exclamation-circle display-5"
+                                  aria-hidden="true"
+                                ></i>
+                              ) : (
+                                "Loading..."
+                              )}
+                            </InputGroupText>
+                          </InputGroupAddon>
+                          <UncontrolledTooltip
+                            placement="top"
+                            target="upload-title"
+                          >
+                            Paste YouTube Video URL or Type URL Manually
+                          </UncontrolledTooltip>
+                        </InputGroup>
+
+                        {/* <FormFeedback>
                           {errors.notUrl
                             ? errors.notUrl
                             : errors.validUrl && url
                             ? errors.validUrl
                             : null}
-                        </FormFeedback>
-                      
-                    </FormGroup>
+                        </FormFeedback> */}
+                      </FormGroup>
                     </div>
                     <div className="divider-or mt-5 mb-5">
-                     <span> OR </span>
+                      <span> OR </span>
                     </div>
                     <div className="text-center video-upload-manually pb-4">
                       <FormGroup>
-                      <FormGroup className="flex-fill flex-column ">
-                    <Label className="mb-3 set-wrap ">Upload video file from your system (mp4, 3gp, ogg, wmv, webm, flv etc..) </Label>
-                    </FormGroup>
+                        <FormGroup className="flex-fill flex-column ">
+                          <Label className="mb-3 set-wrap ">
+                            Upload video file from your system (mp4, 3gp, ogg,
+                            wmv, webm, flv etc..){" "}
+                          </Label>
+                        </FormGroup>
                         <Label
                           for="videoUpload"
                           className="btn-black btn url-upload-btn"
                         >
                           <i className="fa fa-cloud-upload mr-2"></i>
-                          {isVideoDownloading ? "Please wait..." : "Upload"}
+                          Upload
                         </Label>
                         <CustomInput
                           onChange={this.handleVideoFileSelect}
@@ -218,7 +256,12 @@ class MoveComponent extends React.Component {
                           className={"d-none"}
                           id="videoUpload"
                           name="customFile"
+                          accept="video/mp4,video/x-m4v,video/*"
                         />
+                        {/* <FormFeedback>{fileErr ? fileErr : null}</FormFeedback> */}
+                        {fileErr ? (
+                          <p className="text-danger"> {fileErr} </p>
+                        ) : null}
                       </FormGroup>
                     </div>
                   </Form>

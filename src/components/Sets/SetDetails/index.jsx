@@ -10,6 +10,7 @@ import {
   DropdownToggle,
   UncontrolledDropdown,
   DropdownMenu,
+  UncontrolledTooltip,
   DropdownItem,
   ButtonGroup
 } from "reactstrap";
@@ -58,8 +59,8 @@ class SetDetails extends React.Component {
   componentDidMount = () => {
     const location = this.props.location;
     const pathName = location.pathname.split("/");
-    this.props.getSetDetailsRequest({ setId: pathName[2] });
-    this.props.getMovesOfSetRequest({ setId: pathName[2] });
+    this.props.getSetDetailsRequest({ setId: pathName[3] });
+    this.props.getMovesOfSetRequest({ setId: pathName[3] });
   };
   /*
   /*  
@@ -74,7 +75,7 @@ class SetDetails extends React.Component {
     const pathName = location.pathname.split("/");
     const data = {
       isFolderId: null,
-      isSetId: pathName[2],
+      isSetId: pathName[3],
       isMoveId: null,
       isPublic: isPublic
     };
@@ -85,7 +86,7 @@ class SetDetails extends React.Component {
     const location = this.props.location;
     const pathName = location.pathname.split("/");
     this.props.shareableLink({
-      setId: pathName[2],
+      setId: pathName[3],
       linkOf: "set"
     });
     const { modelInfoReducer } = this.props;
@@ -131,12 +132,13 @@ class SetDetails extends React.Component {
             {setDetails && setDetails.folderId ? (
               <span className="content-title">
                 <div className="main-title">
-                  {setDetails && setDetails.folderId
+                  {/* {setDetails && setDetails.folderId
                     ? setDetails.folderId.isCopy
                       ? `Copy of ${setDetails.folderId.title}`
                       : setDetails.folderId.title
-                    : null}
-                  /<span className={"text-light"}>{setDetails.title}</span>
+                    : null} */}
+                  {setDetails.title ? setDetails.title : "MyFolder"}
+                  {/* <span className={"text-light"}>{setDetails.title}</span> */}
                 </div>
               </span>
             ) : (
@@ -149,12 +151,15 @@ class SetDetails extends React.Component {
 
             <div>
               <span
-                id="UncontrolledTooltipExample"
+                id="move"
                 className={"cursor_pointer"}
                 onClick={() => this.props.redirectTo(AppRoutes.CREATE_SET.url)}
               >
                 <i className="fas fa-plus-circle icon-font"></i>
               </span>
+              <UncontrolledTooltip placement="bottom" target="move">
+                Add new move
+              </UncontrolledTooltip>
               <span
                 id="share"
                 onClick={this.handleSharableLink}
@@ -162,6 +167,9 @@ class SetDetails extends React.Component {
               >
                 <i className="fas fa-share icon-font"></i>
               </span>
+              <UncontrolledTooltip placement="bottom" target="share">
+                Get Shareable Link
+              </UncontrolledTooltip>
               <UncontrolledDropdown
                 className="header-dropdown  custom-dropdown"
                 direction="bottom"
@@ -182,6 +190,9 @@ class SetDetails extends React.Component {
                   </DropdownItem>
                 </DropdownMenu>
               </UncontrolledDropdown>
+              <UncontrolledTooltip placement="bottom" target="edit">
+                Edit & Delete
+              </UncontrolledTooltip>
             </div>
           </div>
           <Card className="video-slider-section">
@@ -258,7 +269,7 @@ class SetDetails extends React.Component {
                               onClick={this.handleMoveAdd}
                             >
                               <i className="fas fa-plus mr-1"></i>
-                              Add a Set
+                              Add a Move
                             </Button>
                           </div>
                         </CardBody>

@@ -16,7 +16,11 @@ class DefaultSidebar extends React.Component {
       profileInfoReducer && profileInfoReducer.profileInfo
         ? profileInfoReducer.profileInfo
         : null;
-    const splitedImage = profiledata && profiledata.profileImage ? profiledata.profileImage.split("/") : []
+    const splitedImage =
+      profiledata && profiledata.profileImage
+        ? profiledata.profileImage.split("/")
+        : [];
+
     return (
       <div className="dashboard-left-wrap">
         <div className="dashboard-left">
@@ -44,21 +48,30 @@ class DefaultSidebar extends React.Component {
         <div className="profile-wrap">
           <div className="profile-img-tile">
             <div className={profiledata ? "user-profile-img" : "profile-img"}>
-              {profiledata && profiledata.profileImage? (
+              {profiledata && profiledata.profileImage ? (
                 <img
-                  src={splitedImage[0] === "uploads" ? `${AppConfig.API_ENDPOINT}${profiledata.profileImage}` : profiledata.profileImage}
+                  src={
+                    splitedImage[0] === "uploads"
+                      ? `${AppConfig.API_ENDPOINT}${profiledata.profileImage}`
+                      : profiledata.profileImage
+                  }
                   className="w-100"
                   alt={"img"}
                 />
               ) : (
-                  <img src={defaultProfileImage} className="w-100" alt={"img"} />
-                )}
+                <img src={defaultProfileImage} className="w-100" alt={"img"} />
+              )}
             </div>
           </div>
           <div className="profile-text-tile color-black">
             <div className="font-weight-bold text-center mt-2">
-              {profiledata
+              {/* {profiledata
                 ? `${profiledata.firstName}${" "} ${profiledata.lastName}`
+                : ""} */}
+              {profiledata
+                ? profiledata.roleType
+                  ? profiledata.roleType
+                  : "Unclassified"
                 : ""}
             </div>
           </div>

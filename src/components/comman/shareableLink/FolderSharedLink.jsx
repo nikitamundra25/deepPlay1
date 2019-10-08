@@ -44,7 +44,8 @@ class FolderSharedLink extends React.Component {
       setId: id,
       linkOf: "set",
       publicAccess: "set",
-      isPublic: parsed.isPublic
+      isPublic: parsed.isPublic,
+      fromFolder: true
     });
   };
 
@@ -61,7 +62,7 @@ class FolderSharedLink extends React.Component {
           </div>{" "}
           <div className="content-header">
             <span className="content-title">
-              {decryptedDetails  ? decryptedDetails.title : "MyFolder"}
+              {decryptedDetails ? decryptedDetails.title : "MyFolder"}
             </span>
           </div>
           <span className="capitalize content-title">

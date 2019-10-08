@@ -18,10 +18,11 @@ class SharableLinkModal extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      isPublic: false,
+      isPublic: true,
       copied: false
     };
   }
+
   handleChange = e => {
     e.preventDefault();
     const { name, value } = e.target;
@@ -61,7 +62,7 @@ class SharableLinkModal extends React.Component {
       encryptedFolderId,
       encryptedSetId
     } = userEncryptedInfo;
-    const { isPublic } = this.state;
+    const { isPublic, copied } = this.state;
     let path = "";
     // eslint-disable-next-line
     {
@@ -124,10 +125,10 @@ class SharableLinkModal extends React.Component {
                   <Button
                     color=" "
                     type="button"
-                    disabled={this.state.copied}
+                    disabled={copied}
                     className="btn-black"
                   >
-                    {this.state.copied ? "Copied" : " Copy Link"}
+                    {copied ? "Copied" : " Copy Link"}
                   </Button>
                 </CopyToClipboard>
               </div>
@@ -145,6 +146,7 @@ class SharableLinkModal extends React.Component {
                 name="toggle"
                 onChange={this.handlePublicAccess}
                 checked={isPublic ? isPublic : false}
+                disabled={copied ? true : false}
               />
               <span className="custom-toggle-slider rounded-circle" />
             </label>

@@ -60,11 +60,11 @@ class RecentFolderComponent extends React.Component {
     const lSearch = location.search;
     const { page } = qs.parse(lSearch);
     const pathName = location.pathname.split("/");
-    this.props.folderDetail({ id: pathName[2] });
-    this.props.getSetsList({ folderId: pathName[2] });
+    this.props.folderDetail({ id: pathName[3] });
+    this.props.getSetsList({ folderId: pathName[3] });
     this.props.getAllSetRequest({ isSetNoLimit: true });
     this.setState({
-      folderId: pathName[2],
+      folderId: pathName[3],
       page: parseInt(page) || 1
     });
   }
@@ -121,8 +121,8 @@ class RecentFolderComponent extends React.Component {
     data = {
       isFolderAdd: name !== "add" ? true : false,
       setId: id,
-      folderId: pathName[2],
-      previousFolderId: pathName[2]
+      folderId: pathName[3],
+      previousFolderId: pathName[3]
     };
     this.props.manageSets(data);
   };
@@ -135,8 +135,8 @@ class RecentFolderComponent extends React.Component {
     data = {
       isFolderAdd: name === "add" ? true : false,
       setId: id,
-      folderId: pathName[2],
-      previousFolderId: pathName[2]
+      folderId: pathName[3],
+      previousFolderId: pathName[3]
     };
     const { value } = await ConfirmBox({
       text: "You want to remove Set from this folder."
@@ -281,6 +281,7 @@ class RecentFolderComponent extends React.Component {
     const setOfFolder = setListItem.filter(
       item => item.folderId._id === folderId
     );
+    console.log("folderDetails", folderDetails);
 
     return (
       <div className="page-body">
@@ -312,6 +313,9 @@ class RecentFolderComponent extends React.Component {
             >
               <i className="fas fa-share icon-font"></i>
             </span>
+            <UncontrolledTooltip placement="bottom" target="share">
+              Get Shareable Link
+            </UncontrolledTooltip>
             <UncontrolledDropdown className="header-dropdown  ">
               <DropdownToggle color={" "}>
                 <span id="edit" className="cursor_pointer ml-4">
@@ -337,128 +341,128 @@ class RecentFolderComponent extends React.Component {
         </div>{" "}
         <Row className="set-wrap">
           <Col>
-          {!isFolderSetLoading ? (
-            setOfFolder && setOfFolder.length ? (
-              // eslint-disable-next-line
-              setOfFolder.map((list, i) => {
-                return (
-                  <Col md="6" key={i}>
-                    <div
-                      className="tile-wrap card"
-                      onMouseLeave={() => this.closePopOver()}
-                    >
-                      <div className="cotent-tile d-flex content-with-tip">
-                        <div
-                          className="cotent-text-tile cursor_pointer text-capitalize"
-                          onClick={() => this.handleSetDetails(list._id)}
-                        >
-                          <div className="content-heading-tile d-flex">
-                            {" "}
-                            <span
-                              // onClick={() => this.handleSetDetails(list._id)}
-                              className={"text-capitalize"}
-                            >
-                              <span>{list.title} </span>
-                            </span>
-                          </div>
-                          <span className={"text-capitalize"}>
-                            {list.description ? list.description : ""}
-                          </span>
-                          <div className="content-number-tile">
-                            {" "}
-                            {list.moveCount ? list.moveCount : 0} items
-                          </div>
-                        </div>
-                        <div
-                          className="d-flex img-tile-wrap cursor_pointer"
-                          onClick={() => this.handleSetDetails(list._id)}
-                        >
+            {!isFolderSetLoading ? (
+              setOfFolder && setOfFolder.length ? (
+                // eslint-disable-next-line
+                setOfFolder.map((list, i) => {
+                  return (
+                    <Col md="6" key={i}>
+                      <div
+                        className="tile-wrap card"
+                        onMouseLeave={() => this.closePopOver()}
+                      >
+                        <div className="cotent-tile d-flex content-with-tip">
                           <div
-                            className="cotent-img-tile"
-                            style={{
-                              backgroundImage:
-                                'url("' +
-                                "https://res.cloudinary.com/fleetnation/image/private/c_fit,w_1120/g_south,l_text:style_gothic2:%C2%A9%20Nikita%20Buida,o_20,y_10/g_center,l_watermark4,o_25,y_50/v1469756538/dd3acf4nzzavkv4rf2ji.jpg" +
-                                '")'
-                            }}
-                          />
-                        </div>
-                        <div
-                          onMouseOver={() => this.showPopOver(i, show)}
-                          className={"tooltip-btn-wrap right-btn-tip"}
-                        >
-                          <span className="cursor_pointer">
-                            {" "}
-                            <i className="fas fa-ellipsis-v setting-icon "></i>
-                          </span>
-                          {show && setIndex === i ? (
-                            <ButtonGroup size="sm">
-                              <Button
-                                onClick={() => this.OnCreateSetCopy(list)}
+                            className="cotent-text-tile cursor_pointer text-capitalize"
+                            onClick={() => this.handleSetDetails(list._id)}
+                          >
+                            <div className="content-heading-tile d-flex">
+                              {" "}
+                              <span
+                                // onClick={() => this.handleSetDetails(list._id)}
+                                className={"text-capitalize"}
                               >
-                                Copy
-                              </Button>
-                              <Button
-                                onClick={() =>
-                                  this.openTransferToModal(list._id)
-                                }
-                              >
-                                Transfer
-                              </Button>
-                              <Button
-                                onClick={() =>
-                                  this.onRemoveSets(list._id, "remove")
-                                }
-                              >
-                                Remove
-                              </Button>
-                            </ButtonGroup>
-                          ) : null}
+                                <span>{list.title} </span>
+                              </span>
+                            </div>
+                            <span className={"text-capitalize"}>
+                              {list.description ? list.description : ""}
+                            </span>
+                            <div className="content-number-tile">
+                              {" "}
+                              {list.moveCount ? list.moveCount : 0} items
+                            </div>
+                          </div>
+                          <div
+                            className="d-flex img-tile-wrap cursor_pointer"
+                            onClick={() => this.handleSetDetails(list._id)}
+                          >
+                            <div
+                              className="cotent-img-tile"
+                              style={{
+                                backgroundImage:
+                                  'url("' +
+                                  "https://res.cloudinary.com/fleetnation/image/private/c_fit,w_1120/g_south,l_text:style_gothic2:%C2%A9%20Nikita%20Buida,o_20,y_10/g_center,l_watermark4,o_25,y_50/v1469756538/dd3acf4nzzavkv4rf2ji.jpg" +
+                                  '")'
+                              }}
+                            />
+                          </div>
+                          <div
+                            onMouseOver={() => this.showPopOver(i, show)}
+                            className={"tooltip-btn-wrap right-btn-tip"}
+                          >
+                            <span className="cursor_pointer">
+                              {" "}
+                              <i className="fas fa-ellipsis-v setting-icon "></i>
+                            </span>
+                            {show && setIndex === i ? (
+                              <ButtonGroup size="sm">
+                                <Button
+                                  onClick={() => this.OnCreateSetCopy(list)}
+                                >
+                                  Copy
+                                </Button>
+                                <Button
+                                  onClick={() =>
+                                    this.openTransferToModal(list._id)
+                                  }
+                                >
+                                  Transfer
+                                </Button>
+                                <Button
+                                  onClick={() =>
+                                    this.onRemoveSets(list._id, "remove")
+                                  }
+                                >
+                                  Remove
+                                </Button>
+                              </ButtonGroup>
+                            ) : null}
+                          </div>
                         </div>
                       </div>
-                    </div>
-                  </Col>
-                );
-              })
+                    </Col>
+                  );
+                })
+              ) : (
+                <>
+                  <div className="create-set-section mt-2 w-100 empty-folder-section">
+                    <Card className="set-content-wrap empty-folder-card">
+                      <div className="set-content-block w-100 empty-folder-wrap">
+                        <CardHeader className="empty-folder-header">
+                          <img src={emptySetIc} alt={"Images"} />
+                          <div className="content-header set-header">
+                            <span className="content-title">
+                              {" "}
+                              <h3>This folder has no Sets yet</h3>
+                              <p>Organize your Sets for you or your students</p>
+                            </span>
+                          </div>
+                        </CardHeader>
+                        <CardBody className="">
+                          <div className="create-set-tile"></div>
+                          <div className="text-center">
+                            <Button
+                              color=" "
+                              type="button"
+                              className="btn-black btn "
+                              onClick={this.openAddSetModel}
+                            >
+                              <i className="fas fa-plus mr-1"></i>
+                              Add a Set
+                            </Button>
+                          </div>
+                        </CardBody>
+                      </div>
+                    </Card>
+                  </div>
+                </>
+              )
             ) : (
-              <>
-                <div className="create-set-section mt-2 w-100 empty-folder-section">
-                  <Card className="set-content-wrap empty-folder-card">
-                    <div className="set-content-block w-100 empty-folder-wrap">
-                      <CardHeader className="empty-folder-header">
-                        <img src={emptySetIc} alt={"Images"} />
-                        <div className="content-header set-header">
-                          <span className="content-title">
-                            {" "}
-                            <h3>This folder has no Sets yet</h3>
-                            <p>Organize your Sets for you or your students</p>
-                          </span>
-                        </div>
-                      </CardHeader>
-                      <CardBody className="">
-                        <div className="create-set-tile"></div>
-                        <div className="text-center">
-                          <Button
-                            color=" "
-                            type="button"
-                            className="btn-black btn "
-                            onClick={this.openAddSetModel}
-                          >
-                            <i className="fas fa-plus mr-1"></i>
-                            Add a Set
-                          </Button>
-                        </div>
-                      </CardBody>
-                    </div>
-                  </Card>
-                </div>
-              </>
-            )
-          ) : (
-            <Col sm={12} className="loader-col">
-              <Loader />
-            </Col>
-          )}
+              <Col sm={12} className="loader-col">
+                <Loader />
+              </Col>
+            )}
           </Col>
         </Row>
         <AddSetModal

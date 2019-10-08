@@ -52,6 +52,7 @@ class UploadImage extends Component {
       await picReader.readAsDataURL(data);
     });
   };
+  
   handleCancel = () => {
     this.setState({
       imageData: ""

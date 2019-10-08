@@ -110,6 +110,7 @@ class FolderModal extends React.Component {
                 name="description"
                 onChange={this.handleChange}
                 value={description}
+                rows={3}
               />
             </FormGroup>
           </ModalBody>

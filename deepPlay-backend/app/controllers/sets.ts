@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { SetModel, MoveModel } from "../models";
+import { SetModel, MoveModel, FolderModel } from "../models";
 import Mongoose, { Document } from "mongoose";
 import { ISet, IUpdateSet } from "../interfaces";
 import { algoliaAppId, algoliaAPIKey } from "../config/app";
@@ -8,6 +8,7 @@ const algoliasearch = require("algoliasearch");
 const client = algoliasearch(algoliaAppId, algoliaAPIKey);
 const index = client.initIndex("deep_play_data");
 import { decrypt, encrypt } from "../common";
+import { template } from "handlebars";
 
 // --------------Create set---------------------
 const createSet = async (req: Request, res: Response): Promise<any> => {
@@ -391,7 +392,10 @@ const publicUrlsetDetails = async (
     const { folderId, isPublic } = query;
     const decryptedFolderId = decrypt(folderId);
     let result: Document | any | null;
-    if (isPublic === "true") {
+    let temp: Document | any | null = await FolderModel.findOne({
+      _id: decryptedFolderId
+    });
+    if (temp.isPublic) {
       result = await SetModel.find({
         folderId: decryptedFolderId,
         isDeleted: false
@@ -421,11 +425,21 @@ const publicAccessSetInfoById = async (
 ): Promise<any> => {
   try {
     const { query } = req;
-    const { userId, setId, isPublic } = query;
+    const { userId, setId, isPublic, fromFolder } = query;
     const decryptedUserId = decrypt(userId);
     const decryptedSetId = decrypt(setId);
     let result: Document | any | null;
-    if (isPublic === "true") {
+    let temp: Document | any | null;
+    if (fromFolder) {
+      temp = {
+        isPublic: true
+      };
+    } else {
+      temp = await SetModel.findOne({
+        _id: decryptedSetId
+      });
+    }
+    if (temp.isPublic) {
       result = await SetModel.findOne({
         userId: decryptedUserId,
         _id: decryptedSetId,

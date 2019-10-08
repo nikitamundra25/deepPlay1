@@ -17,6 +17,7 @@ import {
 } from "../actions";
 import { toast } from "react-toastify";
 import { AppConfig } from "../config/Appconfig";
+import { AppRoutes } from "../config/AppRoutes";
 let toastId = null;
 
 //  Create sets
@@ -51,7 +52,7 @@ const createSetLogic = createLogic({
         if (!toast.isActive(toastId)) {
           toastId = toast.success(result.messages[0]);
         }
-        dispatch(redirectTo({ path: "/move" }));
+        dispatch(redirectTo({ path: AppRoutes.MOVE.url }));
       } else {
         if (!toast.isActive(toastId)) {
           toastId = toast.success("Set Copy has been created successfully");
@@ -114,7 +115,7 @@ const deleteSetLogic = createLogic({
       if (!toast.isActive(toastId)) {
         toastId = toast.success(result.messages[0]);
       }
-      dispatch(redirectTo({ path: "/set" }));
+      dispatch(redirectTo({ path: AppRoutes.SET.url }));
       dispatch(getAllSetRequest({ isSetNoLimit: false }));
       done();
     }
@@ -307,9 +308,14 @@ const UpdateSetLogic = createLogic({
       return;
     } else {
       dispatch(hideLoader());
-      dispatch(redirectTo({ path: `/set-details/${action.payload.setId}` }));
-      if (!toast.isActive(this.toastId)) {
-        this.toastId = toast.success(result.messages[0]);
+      dispatch(
+        redirectTo({
+          path: AppRoutes.SET_DETAILS.url.replace(":id", action.payload.setId)
+        })
+      );
+      // dispatch(redirectTo({ path: `/set/details/${action.payload.setId}` }));
+      if (!toast.isActive(toastId)) {
+        toastId = toast.success(result.messages[0]);
       }
       done();
     }

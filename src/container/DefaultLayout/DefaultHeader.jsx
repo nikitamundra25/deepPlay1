@@ -24,7 +24,6 @@ import { AppRoutes } from "../../config/AppRoutes";
 import { SidebarComponent } from "../../components/Sidebar";
 import logoutIcon from "../../assets/img/icons/logout.svg";
 import { AppConfig } from "../../config/Appconfig";
-import passwordLock from "../../assets/img/icons/lock.svg";
 
 class DefaultHeader extends React.Component {
   constructor(props) {
@@ -275,26 +274,23 @@ class DefaultHeader extends React.Component {
                                   onClick={() =>
                                     this.props.redirectTo(item.url)
                                   }
-                                 
                                   key={index}
                                   active={routePath === item.url ? true : false}
                                 >
-                                  <div 
-                                  className="dropdown-img"
-                                  >
-                                  <img
-                                    src={item.iconUrl}
-                                    alt={item.iconUrl}
-                                    width="20"
-                                  />{" "}
+                                  <div className="dropdown-img">
+                                    <img
+                                      src={item.iconUrl}
+                                      alt={item.iconUrl}
+                                      width="20"
+                                    />{" "}
                                   </div>
-                                  <div    className="dropdown-txt">
-                                  {item.name}
+                                  <div className="dropdown-txt">
+                                    {item.name}
                                   </div>
                                 </DropdownItem>
                               );
                             })}
-                            <DropdownItem
+                            {/* <DropdownItem
                               onClick={() =>
                                 this.props.redirectTo(
                                   AppRoutes.CHANGE_PASSWORD.url
@@ -315,13 +311,16 @@ class DefaultHeader extends React.Component {
                                <div    className="dropdown-txt">
                               Change Password
                               </div>
-                            </DropdownItem>
+                            </DropdownItem> */}
                             <DropdownItem onClick={e => logoutRequest(e)}>
-                            <div 
-                                  className="dropdown-img"
-                                  >
-                              <img src={logoutIcon} alt={"Logout"} width="20" /></div>{" "}
-                              <div    className="dropdown-txt"> Log Out</div>  
+                              <div className="dropdown-img">
+                                <img
+                                  src={logoutIcon}
+                                  alt={"Logout"}
+                                  width="20"
+                                />
+                              </div>{" "}
+                              <div className="dropdown-txt"> Log Out</div>
                             </DropdownItem>
                           </DropdownMenu>
                         </UncontrolledDropdown>
