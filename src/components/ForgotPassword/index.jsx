@@ -122,7 +122,7 @@ class ForgotPasswordComponent extends React.Component {
                   </FormGroup>
                   <div className="text-center">
                     <Button
-                      className="my-4 btn-black btn-block"
+                      className="mt-3 mb-4 btn-black btn-block"
                       color=" "
                       type="submit"
                       disabled={isSendingLink ? true : false}

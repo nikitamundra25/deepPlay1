@@ -231,11 +231,11 @@ class SetComponent extends React.Component {
               </>
             )
           ) : (
-            <div>
+            
               <Col sm={12} className="loader-col">
                 <Loader />
               </Col>
-            </div>
+            
           )}
         
         </Row>

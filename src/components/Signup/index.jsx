@@ -193,7 +193,7 @@ class SignupComponent extends React.Component {
     return (
       <>
         <Modal
-          className="modal-dialog-centered auth-user-model"
+          className="modal-dialog-centered auth-user-model sign-up-model"
           isOpen={openSignupModel}
           toggle={handleSignupModel}
           // backdrop={"static"}
@@ -201,7 +201,7 @@ class SignupComponent extends React.Component {
         >
           <ModalHeader toggle={handleSignupModel} />
           <ModalBody className="modal-body p-0">
-            <Card className="bg-secondaryborder-0">
+            <Card className="bg-secondaryborder-0 pb-0 sign">
               <CardHeader>
                 <div className=" login-heading text-center  mb-3">
                   Sign up with

@@ -199,6 +199,16 @@ class DefaultHeader extends React.Component {
                               </InputGroupAddon>
                               <Input placeholder="Search" type="text" />
                             </InputGroup>
+                            <div className="search-result-wrap">
+                              <div className="search-result-block">
+                                  <div className="category-heading">
+                                    
+                                  </div>
+                                  <div className="category-heading">
+
+                                  </div>
+                              </div>
+                            </div>
                           </FormGroup>
                         </Col>
                       </div>

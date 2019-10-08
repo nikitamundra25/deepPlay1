@@ -6,7 +6,7 @@ import {
   publicUrlSetDetailsRequest,
   shareableLinkRequest
 } from "../../../actions";
-import emptySetIc from "../../../assets/img/empty-sets.png";
+import emptyFolderIc from "../../../assets/img/empty-folder.png";
 import qs from "query-string";
 import "./index.scss";
 // core components
@@ -54,26 +54,27 @@ class FolderSharedLink extends React.Component {
     const { decryptedDetails } = shareLinkReducer;
 
     return (
-      <div className={"mt-5 "}>
-        <Container className={"mt-5"}>
-          <div className="text-center h3">
+      <div className={"dashboard-full-section without-sidebar"}>
+        <Container>
+          {/* <div className="text-center h3">
             <b> Folder Details</b>
-          </div>{" "}
-          <div className="content-header">
-            <span className="content-title">
-              {decryptedDetails  ? decryptedDetails.title : "MyFolder"}
+          </div>{" "} */}
+          <div className="content-header mt-3">
+          <span className="content-title">
+            <div className="main-title">{decryptedDetails  ? decryptedDetails.title : "MyFolder"}</div>
+            <div className="sub-title">  {decryptedDetails ? decryptedDetails.description : ""}</div>
             </span>
+           
           </div>
-          <span className="capitalize content-title">
-            {decryptedDetails ? decryptedDetails.description : ""}
-          </span>
+         
           <Row className="set-wrap">
+          
             {setListItem && setListItem.length ? (
               // eslint-disable-next-line
               setListItem.map((list, i) => {
                 return (
                   <Col md="6" key={i}>
-                    <div className="tile-wrap card">
+                    <div className="tile-wrap card mb-4">
                       <div className="cotent-tile d-flex">
                         <div className="cotent-text-tile">
                           <div className="content-heading-tile">
@@ -107,11 +108,12 @@ class FolderSharedLink extends React.Component {
               })
             ) : (
               <>
+              <Col>
                 <div className="create-set-section w-100 empty-folder-section">
-                  <Card className="set-content-wrap empty-folder-card">
+                  <Card className="set-content-wrap empty-folder-card mb-4">
                     <div className="set-content-block w-100 empty-folder-wrap">
-                      <CardHeader className="empty-folder-header ">
-                        <img src={emptySetIc} alt={"Images"} />
+                      <CardHeader className="empty-folder-header">
+                        <img src={emptyFolderIc} alt={"Images"} />
                         <div className="content-header set-header">
                           <span className="content-title">
                             {" "}
@@ -123,8 +125,10 @@ class FolderSharedLink extends React.Component {
                     </div>
                   </Card>
                 </div>
+                </Col>
               </>
             )}
+       
           </Row>
         </Container>
       </div>
