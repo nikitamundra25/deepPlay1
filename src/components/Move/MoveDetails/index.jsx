@@ -5,6 +5,7 @@ import VideoView from "./videoView";
 import VideoDetails from "./videoDetails";
 import { getMoveDetailsRequest, getAllSetRequest } from "../../../actions";
 import "./index.scss";
+import Loader from "components/comman/Loader/Loader";
 // core components
 class MoveDetails extends React.Component {
   constructor(props) {
@@ -17,14 +18,15 @@ class MoveDetails extends React.Component {
   }
 
   componentDidMount = () => {
-    const location = this.props.location.pathname
-    const moveId = location.split("/")
-    this.props.getMoveDetailsRequest({ moveId: moveId[2] })
-    this.props.getAllSetRequest()
+    const location = this.props.location.pathname;
+    const moveId = location.split("/");
+    this.props.getMoveDetailsRequest({ moveId: moveId[2] });
+    this.props.getAllSetRequest();
   };
 
   render() {
     const { setReducer, moveReducer } = this.props;
+    const { moveDetails } = moveReducer;
     return (
       <>
         <div className="create-set-section step-2 mt-2">
@@ -43,10 +45,14 @@ class MoveDetails extends React.Component {
               </div>
               <Col md={"12"}>
                 <Row className={"mt-3"}>
-                  <VideoView
-                    moveReducer={moveReducer}
-                  />
-                  <VideoDetails setReducer={setReducer} />
+                  {moveDetails && moveDetails.videoUrl ? (
+                    <>
+                      <VideoView moveReducer={moveReducer} />
+                      <VideoDetails setReducer={setReducer} />
+                    </>
+                  ) : (
+                    <Loader />
+                  )}
                 </Row>
               </Col>
             </CardBody>

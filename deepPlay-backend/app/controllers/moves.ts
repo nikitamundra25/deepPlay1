@@ -110,24 +110,7 @@ const downloadYoutubeVideo = async (
           userId: headToken.id
         });
         await moveResult.save();
-        try {
-          var process = new ffmpeg(videoURL);
-          process.then(
-            function(video) {
-              video.addCommand("-ss", "00:01:30");
-              video.addCommand("-vframes", "1");
-              video.save("./test.jpg", function(error, file) {
-                if (!error) console.log("Video file: " + file);
-              });
-            },
-            function(err) {
-              console.log("Error: " + err);
-            }
-          );
-        } catch (e) {
-          console.log(e.code);
-          console.log(e.msg);
-        }
+
         res.status(200).json({
           message: "Video uploaded successfully!",
           videoUrl: videoURL,
@@ -135,7 +118,7 @@ const downloadYoutubeVideo = async (
         });
       });
     } else {
-      res.status(400).json({
+      return res.status(400).json({
         message: "Enter a valid youtube url"
       });
     }
@@ -146,7 +129,38 @@ const downloadYoutubeVideo = async (
     });
   }
 };
-
+// 5d95d121e2998035dac56ad51570099990950deep_play_video.webm
+/**
+ *
+ */
+const getVideoFrames = () => {
+  try {
+    const videoURL = path.join(
+      "uploads",
+      "youtube-videos",
+      "5d95d121e2998035dac56ad51570099990950deep_play_video.webm"
+    );
+    var process = new ffmpeg(videoURL);
+    process.then(
+      function(video) {
+        video.addCommand("-ss", "00:01:30");
+        video.addCommand("-vframes", "1");
+        video.save("./test.jpg", (error, file) => {
+          console.log(error);
+          if (!error) console.log("Video file: " + file);
+        });
+      },
+      function(err) {
+        console.log("Error: " + err);
+      }
+    );
+  } catch (e) {
+    console.log(e);
+    console.log(e);
+  }
+};
+getVideoFrames();
+/*  */
 // --------------Get all set info---------------------
 const getMoveBySetId = async (req: Request, res: Response): Promise<any> => {
   try {
