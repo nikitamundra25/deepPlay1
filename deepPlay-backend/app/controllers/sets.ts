@@ -389,17 +389,46 @@ const publicUrlsetDetails = async (
 ): Promise<any> => {
   try {
     const { query } = req;
-    const { folderId, isPublic } = query;
+    const { folderId, isPublic, limit, page } = query;
     const decryptedFolderId = decrypt(folderId);
-    let result: Document | any | null;
+    const pageNumber: number = ((parseInt(page) || 1) - 1) * (limit || 10);
+    const limitNumber: number = parseInt(limit) || 10;
+    let result: Document | any | null,
+      moveCount: Document | any,
+      setResult: any = [];
+
     let temp: Document | any | null = await FolderModel.findOne({
       _id: decryptedFolderId
     });
+
     if (temp.isPublic) {
       result = await SetModel.find({
         folderId: decryptedFolderId,
         isDeleted: false
-      });
+      })
+        .populate({
+          path: "folderId",
+          match: {
+            isDeleted: false
+          }
+        })
+        .skip(pageNumber)
+        .limit(limitNumber);
+
+      //Count of moves in folder
+      if (result && result.length) {
+        for (let index = 0; index < result.length; index++) {
+          const setData = result[index];
+          moveCount = await MoveModel.count({
+            setId: setData._id,
+            isDeleted: false
+          });
+          setResult.push({
+            ...setData._doc,
+            moveCount: moveCount
+          });
+        }
+      }
     } else {
       return res.status(400).json({
         message: "Public access link is not enabled."
@@ -407,7 +436,7 @@ const publicUrlsetDetails = async (
     }
     return res.status(200).json({
       responsecode: 200,
-      data: result,
+      data: setResult,
       success: true
     });
   } catch (error) {

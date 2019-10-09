@@ -103,17 +103,18 @@ class SharableLinkModal extends React.Component {
             <p className="text-center sharable-modal-text">
               {isPublic ? "Anyone with link can view." : "Only you can view"}
             </p>
-            <Form inline className="url-update-wrap copylink-form">
+            <Form className="url-update-wrap copylink-form">
               <FormGroup className="flex-fill flex-column ">
                 <div className="flex-fill w-100">
                   <Input
                     id="url"
                     placeholder="Link"
-                    type="text"
+                    type="textarea"
                     name="url"
                     readOnly
                     value={pathUrl}
                     className="w-100"
+                    rows={5}
                   />
                 </div>
               </FormGroup>

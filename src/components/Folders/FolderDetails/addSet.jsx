@@ -24,10 +24,31 @@ class AddSetModal extends React.Component {
 
   componentDidUpdate(prevProps) {
     if (prevProps.getAllSet !== this.props.getAllSet) {
+      const { selectedSet } = this.state;
       let setList = this.props.getAllSet;
-      const setItem = setList.filter(item =>
-        item && item.folderId ? item.folderId._id === this.props.folderId : null
-      );
+      let setItem = [];
+
+      if (selectedSet === "yourSet") {
+        setItem = setList.filter(item =>
+          item && item.folderId
+            ? item.folderId._id === this.props.folderId
+            : null
+        );
+      } else {
+        if (setList && setList.length) {
+          setList.map(item => {
+            if (
+              (item &&
+                item.folderId &&
+                item.folderId._id === this.props.folderId) ||
+              item.folderId === null
+            ) {
+              setItem.push(item);
+            }
+            return true;
+          });
+        }
+      }
       this.setState({
         setList: setItem
       });
@@ -85,6 +106,7 @@ class AddSetModal extends React.Component {
   render() {
     const { modal, folderId, handleOpen } = this.props;
     const { setList, selectedSet } = this.state;
+    console.log(">>>>", selectedSet);
 
     return (
       <div>

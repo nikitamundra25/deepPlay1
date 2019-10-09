@@ -450,10 +450,8 @@ const publicUrlFolderInfo = async (
       userId: decryptedUserId,
       _id: decryptedFolderId
     });
-    console.log(">>>>>", temp.isPublic);
 
     if (temp.isPublic) {
-      console.log("inside");
       result = await FolderModel.findOne({
         userId: decryptedUserId,
         _id: decryptedFolderId,
