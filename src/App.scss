@@ -357,6 +357,7 @@ a {
     margin-top: 15px;
     padding: 15px 25px 15px;
     border: 1px solid #d4d4d4;
+    min-height: calc(100% - 15px);
   }
 
   .content-heading-tile {
@@ -1407,9 +1408,29 @@ a {
   border-color: $textColor;
   background-color: $textColor;
 }
-.custom-toggle input:checked + .custom-toggle-slider {
-  border-color: $blackcolor;
-}
-.custom-toggle input:checked + .custom-toggle-slider:before {
+.custom-toggle  {
+  input:checked + .custom-toggle-slider {
+    border-color: $blackcolor;
+  }
+  input:checked + .custom-toggle-slider:before{
   background: $blackcolor;
+}
+}
+.forgot-password-wrap{
+ .card-header{
+
+ }
+ .input-group-alternative{
+  border: 1px solid #cad1d7;
+  overflow: hidden;
+ }
+ .card{
+  width: 500px;
+  max-width: 100%;
+}
+.form-group .input-group input{
+  border: 1px solid #cad1d7;
+  border-radius: 0px 4px 4px 0px;
+  border-width: 1px 1px 1px 0px;
+}
 }

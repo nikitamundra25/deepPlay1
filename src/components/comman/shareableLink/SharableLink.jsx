@@ -112,11 +112,10 @@ class SharableLinkModal extends React.Component {
                   <Input
                     id="url"
                     placeholder="Link"
-                    type="textarea"
+                    type="text"
                     name="url"
                     readOnly
                     value={pathUrl}
-                    className="w-100"
                     rows={5}
                   />
                   <InputGroupAddon addonType="append">

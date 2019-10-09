@@ -140,8 +140,11 @@ class FolderComponent extends React.Component {
                     return (
                       <Col key={i} md={"6"}>
                         <div
-                          className="tile-wrap card"
+                          className="tile-wrap card cursor_pointer"
                           onMouseLeave={() => this.closePopOver()}
+                          onClick={() =>
+                            this.handleFolderdetails(folder._id)
+                          }
                         >
                           <div className="cotent-tile d-flex content-with-tip">
                             <div className="cotent-text-tile">
@@ -152,9 +155,7 @@ class FolderComponent extends React.Component {
                               <div className="content-heading-tile d-flex">
                                 {" "}
                                 <span
-                                  onClick={() =>
-                                    this.handleFolderdetails(folder._id)
-                                  }
+                                 
                                   className={"cursor_pointer"}
                                 >
                                   {folder.isCopy
