@@ -458,7 +458,7 @@ const updateSet = async (req: Request, res: Response): Promise<any> => {
       description
     };
     await SetModel.findByIdAndUpdate(setId, {
-      $set: updateSet
+      $set: { ...updateSet, updatedAt: Date.now() }
     });
     return res.status(200).json({
       message: "Set details updated successfully."

@@ -258,8 +258,8 @@ const UpdateFolderLogic = createLogic({
         })
       );
       dispatch(folderDetailRequest({ id: action.payload.id }));
-      if (!toast.isActive(this.toastId)) {
-        this.toastId = toast.success(result.messages[0]);
+      if (!toast.isActive(toastId)) {
+        toastId = toast.success(result.messages[0]);
       }
       done();
     }

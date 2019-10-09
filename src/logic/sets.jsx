@@ -308,8 +308,8 @@ const UpdateSetLogic = createLogic({
     } else {
       dispatch(hideLoader());
       dispatch(redirectTo({ path: `/set-details/${action.payload.setId}` }));
-      if (!toast.isActive(this.toastId)) {
-        this.toastId = toast.success(result.messages[0]);
+      if (!toast.isActive(toastId)) {
+        toastId = toast.success(result.messages[0]);
       }
       done();
     }
