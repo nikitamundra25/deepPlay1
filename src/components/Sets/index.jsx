@@ -261,7 +261,7 @@ class SetComponent extends React.Component {
           )}
         </Row>
         {/* <SharableLinkModal
-          modal={sharableLinkModalOpen}
+          modal={sharableLinkModalOpen}n
           handleOpen={this.handleSharableLink}
           shareComponent="yourSets"
         /> */}
