@@ -24,23 +24,20 @@ import { AppRoutes } from "../../config/AppRoutes";
 import { SidebarComponent } from "../../components/Sidebar";
 import logoutIcon from "../../assets/img/icons/logout.svg";
 import { AppConfig } from "../../config/Appconfig";
-import passwordLock from "../../assets/img/icons/lock.svg";
-import emptyFolderIc from "../../assets/img/empty-folder.png";
-// import emptyFolderIc from "../../assets/img/empty-folder.png";
+import AllSearchComponent from "../../components/AllSearch";
 
 class DefaultHeader extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       isUserLoggedIn: false,
-      path: ""
+      path: "",
+      search: ""
     };
   }
 
   componentDidMount = () => {
     const temp = this.props.history.location.pathname;
-    console.log("temp", temp);
-
     if (localStorage.getItem("token")) {
       this.setState({
         isUserLoggedIn: true,
@@ -89,6 +86,15 @@ class DefaultHeader extends React.Component {
     this.props.onFolderCreation(data);
   };
 
+  /*  */
+  handleChange = (e) => {
+    const { name, value } = e.target;
+    this.setState({
+      [name]: value
+    })
+    this.props.allSearchRequest({ search: value })
+  }
+  /*  */
   render() {
     const {
       modelInfoReducer,
@@ -101,7 +107,8 @@ class DefaultHeader extends React.Component {
       profileInfoReducer,
       modelOpenRequest,
       isLoggedIn,
-      routePath
+      routePath,
+      allSearchReducer
     } = this.props;
     const { modelDetails } = modelInfoReducer;
     const {
@@ -110,7 +117,7 @@ class DefaultHeader extends React.Component {
       forgotPasswordModalOpen,
       createFolderModalOpen
     } = modelDetails;
-    const { isUserLoggedIn, path } = this.state;
+    const { isUserLoggedIn, path, search } = this.state;
     const profiledata =
       profileInfoReducer && profileInfoReducer.profileInfo
         ? profileInfoReducer.profileInfo
@@ -119,6 +126,7 @@ class DefaultHeader extends React.Component {
       profiledata && profiledata.profileImage
         ? profiledata.profileImage.split("/")
         : [];
+    const { searchData, isSearchLoading } = allSearchReducer
     return (
       <>
         <header className="header-global theme-header ">
@@ -199,160 +207,19 @@ class DefaultHeader extends React.Component {
                                     ></i>
                                   </span>
                                 </InputGroupAddon>
-                                <Input placeholder="Search" type="text" />
-                              
-                              <div className="search-result-wrap">
-                                <div className="search-result-block">
-                                  <div className="category-wrap">
-                                  <div className="category-heading">
-                                    Folders
-                                  </div>
-                                  <div className="category-view-all">
-                                    View all
-                                  </div>
-                                  </div>
-                                 <div className="folder-searched-wrap searched-wrap">
-                                 <div className="searched-block">
-                                   <div className="searched-tile">
-                                     <div className="searhed-img-main-wrap">
-                                     <div className="searched-img-wrap">
-                                    <div className="searched-img">
-                                      <img src={emptyFolderIc} alt={"folder"} />
-                                    </div>
-                                    </div>
-                                    </div>
-                                    <div className="searched-text">
-                                    Rishte Naate
-                                    </div>
-                                 </div>
-                                   <div className="searched-tile">
-                                     <div className="searhed-img-main-wrap">
-                                     <div className="searched-img-wrap">
-                                    <div className="searched-img">
-                                      <img src={emptyFolderIc} alt={"folder"} />
-                                    </div>
-                                    </div>
-                                    </div>
-                                    <div className="searched-text">
-                                    Rishte Naate
-                                    </div>
-                                 </div>
-                                   <div className="searched-tile">
-                                     <div className="searhed-img-main-wrap">
-                                     <div className="searched-img-wrap">
-                                    <div className="searched-img">
-                                      <img src={emptyFolderIc} alt={"folder"} />
-                                    </div>
-                                    </div>
-                                    </div>
-                                    <div className="searched-text">
-                                    Rishte Naate
-                                    </div>
-                                 </div>
-                                 </div>
-                                 </div>
-                                </div>
-                                <div className="search-result-block">
-                                  <div className="category-wrap">
-                                  <div className="category-heading">
-                                   Sets
-                                  </div>
-                                  <div className="category-view-all">
-                                   View all
-                                  </div>
-                                  </div>
-                                 <div className="searched-wrap">
-                                 <div className="searched-block">
-                                   <div className="searched-tile">
-                                     <div className="searhed-img-main-wrap">
-                                     <div className="searched-img-wrap">
-                                    <div className="searched-img">
-                                      <img src="https://a10.gaanacdn.com/gn_img/albums/P7m3GNKqxo/7m3GjN47Kq/size_m.jpg" />
-                                    </div>
-                                    </div>
-                                    </div>
-                                    <div className="searched-text">
-                                    Rishte Naate
-                                    </div>
-                                 </div>
-                                   <div className="searched-tile">
-                                     <div className="searhed-img-main-wrap">
-                                     <div className="searched-img-wrap">
-                                    <div className="searched-img">
-                                      <img src="https://a10.gaanacdn.com/gn_img/albums/P7m3GNKqxo/7m3GjN47Kq/size_m.jpg" />
-                                    </div>
-                                    </div>
-                                    </div>
-                                    <div className="searched-text">
-                                    Rishte Naate
-                                    </div>
-                                 </div>
-                                   <div className="searched-tile">
-                                     <div className="searhed-img-main-wrap">
-                                     <div className="searched-img-wrap">
-                                    <div className="searched-img">
-                                      <img src="https://a10.gaanacdn.com/gn_img/albums/P7m3GNKqxo/7m3GjN47Kq/size_m.jpg" />
-                                    </div>
-                                    </div>
-                                    </div>
-                                    <div className="searched-text">
-                                    Rishte Naate
-                                    </div>
-                                 </div>
-                                 </div>
-                                 </div>
-                                </div>
-                                <div className="search-result-block moves-block">
-                                  <div className="category-wrap">
-                                  <div className="category-heading">
-                                   Moves
-                                  </div>
-                                  <div className="category-view-all">
-                                   View all
-                                  </div>
-                                  </div>
-                                 <div className="searched-wrap">
-                                 <div className="searched-block">
-                                   <div className="searched-tile">
-                                     <div className="searhed-img-main-wrap">
-                                     <div className="searched-img-wrap">
-                                    <div className="searched-img">
-                                      <img src="https://a10.gaanacdn.com/gn_img/albums/P7m3GNKqxo/7m3GjN47Kq/size_m.jpg" />
-                                    </div>
-                                    </div>
-                                    </div>
-                                    <div className="searched-text">
-                                    Rishte Naate
-                                    </div>
-                                 </div>
-                                   <div className="searched-tile">
-                                     <div className="searhed-img-main-wrap">
-                                     <div className="searched-img-wrap">
-                                    <div className="searched-img">
-                                      <img src="https://a10.gaanacdn.com/gn_img/albums/P7m3GNKqxo/7m3GjN47Kq/size_m.jpg" />
-                                    </div>
-                                    </div>
-                                    </div>
-                                    <div className="searched-text">
-                                    Rishte Naate
-                                    </div>
-                                 </div>
-                                   <div className="searched-tile">
-                                     <div className="searhed-img-main-wrap">
-                                     <div className="searched-img-wrap">
-                                    <div className="searched-img">
-                                      <img src="https://a10.gaanacdn.com/gn_img/albums/P7m3GNKqxo/7m3GjN47Kq/size_m.jpg" />
-                                    </div>
-                                    </div>
-                                    </div>
-                                    <div className="searched-text">
-                                    Rishte Naate
-                                    </div>
-                                 </div>
-                                 </div>
-                                 </div>
-                                </div>
-                              </div>
+                                <Input placeholder="Search" onChange={this.handleChange} value={search} name={"search"} type="text" />
+                                {
+                                  search ?
+                                    <AllSearchComponent
+                                      searchData={searchData}
+                                      isSearchLoading={isSearchLoading}
+                                      handleSearchEmpty={() => this.setState({
+                                        search: ""
+                                      })}
+                                      {...this.props}
+                                    /> :
+                                    null
+                                }
                               </InputGroup>
                             </FormGroup>
                           </Col>
@@ -449,28 +316,7 @@ class DefaultHeader extends React.Component {
                                     </DropdownItem>
                                   );
                                 })}
-                                <DropdownItem
-                                  onClick={() =>
-                                    this.props.redirectTo(
-                                      AppRoutes.CHANGE_PASSWORD.url
-                                    )
-                                  }
-                                  active={
-                                    routePath === "/change-password" ? true : false
-                                  }
-                                >
-                                  <div
-                                    className="dropdown-img"
-                                  >
-                                    <img
-                                      src={passwordLock}
-                                      alt={"changePassword"}
-                                      width="20"
-                                    /></div>{" "}
-                                  <div className="dropdown-txt">
-                                    Change Password
-                              </div>
-                                </DropdownItem>
+                                
                                 <DropdownItem onClick={e => logoutRequest(e)}>
                                   <div
                                     className="dropdown-img"

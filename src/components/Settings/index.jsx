@@ -171,7 +171,7 @@ class SettingComponent extends Component {
     } = this.state;
     const { modelDetails } = modelInfoReducer;
     const { uploadImageModalOpen } = modelDetails;
-    const splitedImage = this.state.file.split("/")
+    const splitedImage = this.state.file.split("/");
     return (
       <div>
         <div className="setting-section">
@@ -195,25 +195,25 @@ class SettingComponent extends Component {
                         Edit Profile
                       </Button>
                     ) : (
-                        <ButtonGroup>
-                          <Button
-                            className="dashboard-right-content btn-line-black "
-                            onClick={this.onSaveData}
-                          >
-                            Update Info
+                      <ButtonGroup>
+                        <Button
+                          className="dashboard-right-content btn-line-black "
+                          onClick={this.onSaveData}
+                        >
+                          Update Info
                         </Button>
-                          <Button
-                            className="dashboard-right-content btn-line-black ml-2"
-                            onClick={() => {
-                              this.setState({
-                                isDisabled: !this.state.isDisabled
-                              });
-                            }}
-                          >
-                            Cancle
+                        <Button
+                          className="dashboard-right-content btn-line-black ml-2"
+                          onClick={() => {
+                            this.setState({
+                              isDisabled: !this.state.isDisabled
+                            });
+                          }}
+                        >
+                          Cancel
                         </Button>
-                        </ButtonGroup>
-                      )}
+                      </ButtonGroup>
+                    )}
                   </CardHeader>
                   <CardBody>
                     <div className="profile-wrap">
@@ -222,12 +222,16 @@ class SettingComponent extends Component {
                           {file ? (
                             <img
                               alt={"No Img Found"}
-                              src={splitedImage[0] === "uploads" ? `${AppConfig.API_ENDPOINT}${this.state.file}` : this.state.file}
+                              src={
+                                splitedImage[0] === "uploads"
+                                  ? `${AppConfig.API_ENDPOINT}${this.state.file}`
+                                  : this.state.file
+                              }
                               className="w-100"
                             />
                           ) : (
-                              <img alt="" src={profileIcon} className="w-100" />
-                            )}
+                            <img alt="" src={profileIcon} className="w-100" />
+                          )}
                           {!isDisabled ? (
                             <span
                               className="changeProfile"
@@ -236,8 +240,8 @@ class SettingComponent extends Component {
                               Change Profile
                             </span>
                           ) : (
-                              ""
-                            )}
+                            ""
+                          )}
                         </div>
                         {imgError ? (
                           <div className="text-danger"> {imgError} </div>
@@ -326,7 +330,7 @@ class SettingComponent extends Component {
                 <Card className="card-wrap mt-4">
                   <CardHeader>
                     <CardTitle className="card-heading mb-0 h5">
-                      Account Type
+                      ACCOUNT TYPE
                     </CardTitle>
                     <div className="heading-divider mr-0"></div>
                   </CardHeader>

@@ -153,7 +153,7 @@ class SignupComponent extends React.Component {
       firstName,
       lastName,
       confirmPassword,
-      roleType: roleType ? "I am a teacher" : "Unclassified"
+      roleType: roleType ? "teacher" : "Unclassified"
     };
     let { isValid, errors } = Validator(
       data,
@@ -250,7 +250,7 @@ class SignupComponent extends React.Component {
                         onChange={this.handleChange}
                         placeholder="First Name"
                         type="text"
-                        // invalid={errors.firstName}
+                      // invalid={errors.firstName}
                       />
                       <FormFeedback>
                         {errors.firstName && !firstName
@@ -328,7 +328,7 @@ class SignupComponent extends React.Component {
                               passwordStrength === "week"
                                 ? "text-danger"
                                 : "text-success"
-                            } font-weight-700`}
+                              } font-weight-700`}
                           >
                             {passwordStrength}
                           </span>

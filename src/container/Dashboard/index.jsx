@@ -18,6 +18,8 @@ import {
 import emptyFolderIc from "../../assets/img/empty-folder.png";
 import emptySetIc from "../../assets/img/empty-sets.png";
 import Loader from "../../components/comman/Loader/Loader";
+import defaultProfileImage from "../../assets/img/profile-ic.png";
+import { AppConfig } from "../../config/Appconfig";
 
 // core components
 class Dashboard extends React.Component {
@@ -38,10 +40,22 @@ class Dashboard extends React.Component {
     }
   };
 
+  handleSetDetails = setId => {
+    this.props.redirectTo(AppRoutes.SET_DETAILS.url.replace(":id", setId));
+  };
+
+  handleFolderdetails = folderId => {
+    this.props.redirectTo(
+      AppRoutes.FOLDER_DETAILS.url.replace(":id", folderId)
+    );
+  };
+
   render() {
-    const { folderReducer, setReducer } = this.props;
+    const { folderReducer, setReducer, profileInfoReducer } = this.props;
     const { isRecentFolderLoading, recentFolders } = folderReducer;
     const { isRecentSetLoading, recentSets } = setReducer
+    const { profileInfo } = profileInfoReducer
+    const splitedImage = profileInfo && profileInfo.profileImage ? profileInfo.profileImage.split("/") : []
     return (
       <>
         <div className="page-body">
@@ -58,8 +72,8 @@ class Dashboard extends React.Component {
                 View all
               </span>
             ) : (
-                " "
-              )}
+              " "
+            )}
           </div>
           <Row>
             {
@@ -67,84 +81,106 @@ class Dashboard extends React.Component {
                 recentSets && recentSets.length ? (
                   recentSets.slice(0, 4).map((set, i) => {
                     return (
-                      <Col md="6" key={i}>
-                        <div className="tile-wrap card">
+                      <Col md="6" key={i} onClick={() => this.handleSetDetails(set._id)} className = "cursor_pointer">
+                        <div
+                          className="tile-wrap card"
+                        >
                           <div className="badge-wrap mb-2">
                             <Badge variant="secondary" className="draft-wrap">
                               DRAFT
                           </Badge>
                           </div>
-                          <div className="cotent-tile d-flex">
-                            <div className="cotent-text-tile">
-                              <div className="content-heading-tile">
+                          <div className="cotent-tile d-flex content-with-tip">
+                            <div
+                              className="cotent-text-tile "
+                            >
+                              <div className="content-heading-tile d-flex">
                                 {" "}
-                                {set.title}
+                                <span
+                                  className={" text-capitalize"}
+                                >
+                                  <span>{set.title}</span>
+                                </span>
                               </div>
-                              <div className="content-heading-tile">
+                              {set.description ? set.description : ""}
+                              <div className="content-number-tile">
                                 {" "}
-                                {set.description ? set.description : ""}
-                              </div>
-                              <div className="content-number-tile"> 4 items</div>
+                                {set.moveCount || 0} moves
+                          </div>
                             </div>
                             <div
-                              className="cotent-img-tile" /* style={{ backgroundImage: 'url("' + "https://content3.jdmagicbox.com/comp/mangalore/n5/0824px824.x824.161117105721.j6n5/catalogue/maruthi-hi-tech-gym-mangalore-ee6a9z8iv5.jpg" + '")' }} */
-                            ></div>
+                              className="d-flex img-tile-wrap cursor_pointer"
+                              onClick={() => this.handleSetDetails(set._id)}
+                            >
+                              <div
+                                className="cotent-img-tile "
+                                style={{
+                                  backgroundImage:
+                                    'url("' +
+                                    "https://res.cloudinary.com/fleetnation/image/private/c_fit,w_1120/g_south,l_text:style_gothic2:%C2%A9%20Nikita%20Buida,o_20,y_10/g_center,l_watermark4,o_25,y_50/v1469756538/dd3acf4nzzavkv4rf2ji.jpg" +
+                                    '")'
+                                }}
+                              />
+                            </div>
                           </div>
                           <div className="bottom-content-tile">
                             <div
-                              className="cotent-img-tile teacher-profile-img" /* style={{ backgroundImage: 'url("' + "https://content3.jdmagicbox.com/comp/mangalore/n5/0824px824.x824.161117105721.j6n5/catalogue/maruthi-hi-tech-gym-mangalore-ee6a9z8iv5.jpg" + '")' }} */
+                              className="cotent-img-tile teacher-profile-img" style={{
+                                backgroundImage: `url(${profileInfo && profileInfo.profileImage ? splitedImage[0] === "uploads" ? `${AppConfig.API_ENDPOINT}${profileInfo.profileImage}` : profileInfo.profileImage : defaultProfileImage})`
+                              }}
                             ></div>
                             <span className="bottom-text-tile">
                               {" "}
-                              Mastershipclass
-                          </span>
-                            <span className="bottom-light-tile">
-                              {" "}
-                              Mastershipclass
-                          </span>
+                              {
+                                profileInfo ?
+                                  `${profileInfo.firstName} ${" "} ${profileInfo.lastName}`
+                                  : ""
+                              }
+                            </span>
                           </div>
                         </div>
-                      </Col>
-                    );
-                  })
-                ) : (
-                    <>
-                      <div className="create-set-section w-100 empty-folder-section">
-                        <Card className="set-content-wrap empty-folder-card">
-                          <div className="set-content-block w-100 empty-folder-wrap">
-                            <CardHeader className="empty-folder-header">
-                              <img src={emptySetIc} alt={"Folder"} />
-                              <div className="content-header set-header">
-                                <span className="content-title">
-                                  {" "}
-                                  <h3>You haven't visited any set yet</h3>
-                                </span>
-                              </div>
-                            </CardHeader>
-                            <CardBody className="">
-                              <div className="create-set-tile"></div>
-                              <div className="text-center">
-                                <Button
-                                  color=" "
-                                  type="button"
-                                  className="btn-black btn folder-create-btn"
-                                  onClick={() =>
-                                    this.props.redirectTo(AppRoutes.SETS.url)
-                                  }
-                                >
-                                  View Set
-                            </Button>
-                              </div>
-                            </CardBody>
+                    </Col>
+                  );
+                })
+              ) : (
+                <>
+                  <div className="create-set-section w-100 empty-folder-section">
+                    <Card className="set-content-wrap empty-folder-card">
+                      <div className="set-content-block w-100 empty-folder-wrap">
+                        <CardHeader className="empty-folder-header">
+                          <img src={emptySetIc} alt={"Folder"} />
+                          <div className="content-header set-header">
+                            <span className="content-title">
+                              {" "}
+                              <h3>You haven't visited any set yet</h3>
+                            </span>
                           </div>
-                        </Card>
+                        </CardHeader>
+                        <CardBody className="">
+                          <div className="create-set-tile"></div>
+                          <div className="text-center">
+                            <Button
+                              color=" "
+                              type="button"
+                              className="btn-black btn folder-create-btn"
+                              onClick={() =>
+                                this.props.redirectTo(AppRoutes.SETS.url)
+                              }
+                            >
+                              View Set
+                            </Button>
+                          </div>
+                        </CardBody>
                       </div>
-                    </>
-                  ) :
-                <Col sm={12} className="loader-col">
-                  <Loader />
-                </Col>
-            }
+                    </Card>
+                  </div>
+                </>
+              
+            ) : (
+              <Col sm={12} className="loader-col">
+                <Loader />
+              </Col>
+            )}
           </Row>
         </div>
         <div className="page-body mt-4">
@@ -158,8 +194,8 @@ class Dashboard extends React.Component {
                 View all
               </span>
             ) : (
-                ""
-              )}
+              ""
+            )}
           </div>
           <Row>
             {
@@ -167,84 +203,90 @@ class Dashboard extends React.Component {
                 recentFolders && recentFolders.length ? (
                   recentFolders.slice(0, 4).map((folder, i) => {
                     return (
-                      <Col md="6" key={i}>
-                        <div className="tile-wrap card">
+                      <Col key={i} md={"6"} onClick={() => this.handleFolderdetails(folder._id)}>
+                        <div
+                          className="tile-wrap card"
+                        >
                           <div className="badge-wrap">
                             <Badge variant="secondary" className="draft-wrap">
                               DRAFT
                           </Badge>
                           </div>
-                          <div className="cotent-tile d-flex">
-                            <div className="cotent-text-tile">
-                              <div className="content-heading-tile">
+                          <div className="cotent-tile d-flex content-with-tip">
+                            <div className="cotent-text-tile pt-2">
+                              <div className="content-heading-tile d-flex">
                                 {" "}
-                                {folder.title}
+                                <span
+                                  className={"cursor_pointer"}
+                                >
+                                  {folder.isCopy
+                                    ? `Copy of ${folder.title}`
+                                    : folder.title}
+                                </span>
                               </div>
-                              <div className="content-sub-heading-tile">
+                              <div className="content-number-tile">
                                 {" "}
-                                {folder.description ? folder.description : ""}
+                                {folder.setCount || 0} sets
                               </div>
-                              <div className="content-number-tile"> 4 items</div>
                             </div>
-                            <div
-                              className="cotent-img-tile" /* style={{ backgroundImage: 'url("' + "https://content3.jdmagicbox.com/comp/mangalore/n5/0824px824.x824.161117105721.j6n5/catalogue/maruthi-hi-tech-gym-mangalore-ee6a9z8iv5.jpg" + '")' }} */
-                            ></div>
                           </div>
-                          <div className="bottom-content-tile">
+                          <div className="bottom-content-tile pt-3">
                             <div
-                              className="cotent-img-tile teacher-profile-img" /* style={{ backgroundImage: 'url("' + "https://content3.jdmagicbox.com/comp/mangalore/n5/0824px824.x824.161117105721.j6n5/catalogue/maruthi-hi-tech-gym-mangalore-ee6a9z8iv5.jpg" + '")' }} */
+                              className="cotent-img-tile teacher-profile-img" style={{ backgroundImage: `url(${profileInfo && profileInfo.profileImage ? splitedImage[0] === "uploads" ? `${AppConfig.API_ENDPOINT}${profileInfo.profileImage}` : profileInfo.profileImage : defaultProfileImage})` }}
                             ></div>
                             <span className="bottom-text-tile">
                               {" "}
-                              Mastershipclass
-                          </span>
-                            <span className="bottom-light-tile">
-                              {" "}
-                              Mastershipclass
-                          </span>
+                              {
+                                profileInfo ?
+                                  `${profileInfo.firstName} ${" "} ${profileInfo.lastName}`
+                                  : ""
+                              }
+                            </span>
                           </div>
                         </div>
-                      </Col>
-                    );
-                  })
-                ) : (
-                    <>
-                      <div className="create-set-section w-100 empty-folder-section">
-                        <Card className="set-content-wrap empty-folder-card">
-                          <div className="set-content-block w-100 empty-folder-wrap">
-                            <CardHeader className="empty-folder-header">
-                              <img src={emptyFolderIc} alt={"folder"} />
-                              <div className="content-header set-header">
-                                <span className="content-title">
-                                  {" "}
-                                  <h3>You haven't visited any folder yet</h3>
-                                </span>
-                              </div>
-                            </CardHeader>
-                            <CardBody className="">
-                              <div className="create-set-tile"></div>
-                              <div className="text-center">
-                                <Button
-                                  color=" "
-                                  type="button"
-                                  className="btn-black btn folder-create-btn"
-                                  onClick={() =>
-                                    this.props.redirectTo(AppRoutes.FOLDERS.url)
-                                  }
-                                >
-                                  View Folder
-                            </Button>
-                              </div>
-                            </CardBody>
+                    </Col>
+                  );
+                })
+              ) : (
+                <>
+                  <div className="create-set-section w-100 empty-folder-section">
+                    <Card className="set-content-wrap empty-folder-card">
+                      <div className="set-content-block w-100 empty-folder-wrap">
+                        <CardHeader className="empty-folder-header">
+                          <img src={emptyFolderIc} alt={"folder"} />
+                          <div className="content-header set-header">
+                            <span className="content-title">
+                              {" "}
+                              <h3>You haven't visited any folder yet</h3>
+                            </span>
                           </div>
-                        </Card>
+                        </CardHeader>
+                        <CardBody className="">
+                          <div className="create-set-tile"></div>
+                          <div className="text-center">
+                            <Button
+                              color=" "
+                              type="button"
+                              className="btn-black btn folder-create-btn"
+                              onClick={() =>
+                                this.props.redirectTo(AppRoutes.FOLDERS.url)
+                              }
+                            >
+                              View Folder
+                            </Button>
+                          </div>
+                        </CardBody>
                       </div>
-                    </>
-                  ) :
-                <Col sm={12} className="loader-col">
-                  <Loader />
-                </Col>
-            }
+                    </Card>
+                  </div>
+                </>
+            ) : (
+              <Row>
+              <Col sm={12} className="loader-col">
+                <Loader />
+              </Col>
+              </Row>
+            )}
           </Row>
         </div>
       </>
@@ -255,7 +297,8 @@ class Dashboard extends React.Component {
 const mapStateToProps = state => {
   return {
     folderReducer: state.getFolderReducer,
-    setReducer: state.setReducer
+    setReducer: state.setReducer,
+    profileInfoReducer: state.profileInfoReducer
   };
 };
 const mapDispatchToProps = dispatch => ({

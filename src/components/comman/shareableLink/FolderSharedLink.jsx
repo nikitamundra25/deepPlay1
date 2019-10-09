@@ -9,6 +9,7 @@ import {
 import emptyFolderIc from "../../../assets/img/empty-folder.png";
 import qs from "query-string";
 import "./index.scss";
+import Loader from "../Loader/Loader";
 // core components
 
 class FolderSharedLink extends React.Component {
@@ -44,14 +45,15 @@ class FolderSharedLink extends React.Component {
       setId: id,
       linkOf: "set",
       publicAccess: "set",
-      isPublic: parsed.isPublic
+      isPublic: parsed.isPublic,
+      fromFolder: true
     });
   };
 
   render() {
     const { shareLinkReducer } = this.props;
     const { setListItem } = this.state;
-    const { decryptedDetails } = shareLinkReducer;
+    const { decryptedDetails, isSetDetailsLoading } = shareLinkReducer;
 
     return (
       <div className={"dashboard-full-section without-sidebar"}>
@@ -68,65 +70,73 @@ class FolderSharedLink extends React.Component {
           </div>
          
           <Row className="set-wrap">
-          
-            {setListItem && setListItem.length ? (
-              // eslint-disable-next-line
-              setListItem.map((list, i) => {
-                return (
-                  <Col md="6" key={i}>
-                    <div className="tile-wrap card mb-4">
-                      <div className="cotent-tile d-flex">
-                        <div className="cotent-text-tile">
-                          <div className="content-heading-tile">
-                            <span
-                              onClick={() => this.handleSetDetails(list._id)}
-                              className={"cursor_pointer"}
-                            >
-                              {list.title}
+            {!isSetDetailsLoading ? (
+              setListItem && setListItem.length ? (
+                // eslint-disable-next-line
+                setListItem.map((list, i) => {
+                  return (
+                    <Col md="6" key={i}>
+                      <div className="tile-wrap card">
+                        <div className="cotent-tile d-flex">
+                          <div className="cotent-text-tile">
+                            <div className="content-heading-tile">
+                              <span
+                                onClick={() => this.handleSetDetails(list._id)}
+                                className={"cursor_pointer"}
+                              >
+                                {list.title}
+                              </span>
+                            </div>
+                            <div className="content-heading-tile">
+                              {" "}
+                              {list.description}
+                            </div>
+
+                            <div className="content-number-tile">
+                              {" "}
+                              {list.moveCount} items
+                            </div>
+                          </div>
+                          <div
+                            className="cotent-img-tile"
+                            style={{
+                              backgroundImage:
+                                'url("' +
+                                "https://res.cloudinary.com/fleetnation/image/private/c_fit,w_1120/g_south,l_text:style_gothic2:%C2%A9%20Nikita%20Buida,o_20,y_10/g_center,l_watermark4,o_25,y_50/v1469756538/dd3acf4nzzavkv4rf2ji.jpg" +
+                                '")'
+                            }}
+                          ></div>
+                        </div>
+                      </div>
+                    </Col>
+                  );
+                })
+              ) : (
+                <>
+                  <div className="create-set-section w-100 empty-folder-section">
+                    <Card className="set-content-wrap empty-folder-card">
+                      <div className="set-content-block w-100 empty-folder-wrap">
+                        <CardHeader className="empty-folder-header ">
+                          <img src={emptyFolderIc} alt={"Images"} />
+                          <div className="content-header set-header">
+                            <span className="content-title">
+                              {" "}
+                              <h3>This folder has no Sets yet</h3>
+                              {/* <p>Organize your Sets for you or your students</p> */}
                             </span>
                           </div>
-                          <div className="content-heading-tile">
-                            {" "}
-                            {list.description}
-                          </div>
-
-                          <div className="content-number-tile"> 4 items</div>
-                        </div>
-                        <div
-                          className="cotent-img-tile"
-                          style={{
-                            backgroundImage:
-                              'url("' +
-                              "https://res.cloudinary.com/fleetnation/image/private/c_fit,w_1120/g_south,l_text:style_gothic2:%C2%A9%20Nikita%20Buida,o_20,y_10/g_center,l_watermark4,o_25,y_50/v1469756538/dd3acf4nzzavkv4rf2ji.jpg" +
-                              '")'
-                          }}
-                        ></div>
+                        </CardHeader>
                       </div>
-                    </div>
-                  </Col>
-                );
-              })
+                    </Card>
+                  </div>
+                </>
+              )
             ) : (
-              <>
-              <Col>
-                <div className="create-set-section w-100 empty-folder-section">
-                  <Card className="set-content-wrap empty-folder-card mb-4">
-                    <div className="set-content-block w-100 empty-folder-wrap">
-                      <CardHeader className="empty-folder-header">
-                        <img src={emptyFolderIc} alt={"Images"} />
-                        <div className="content-header set-header">
-                          <span className="content-title">
-                            {" "}
-                            <h3>This folder has no Sets yet</h3>
-                            {/* <p>Organize your Sets for you or your students</p> */}
-                          </span>
-                        </div>
-                      </CardHeader>
-                    </div>
-                  </Card>
-                </div>
+              <Row>
+                <Col sm={12} className="loader-col">
+                  <Loader />
                 </Col>
-              </>
+              </Row>
             )}
        
           </Row>

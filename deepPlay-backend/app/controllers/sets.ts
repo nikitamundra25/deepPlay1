@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { SetModel, MoveModel } from "../models";
+import { SetModel, MoveModel, FolderModel } from "../models";
 import Mongoose, { Document } from "mongoose";
 import { ISet, IUpdateSet } from "../interfaces";
 import { algoliaAppId, algoliaAPIKey } from "../config/app";
@@ -8,6 +8,7 @@ const algoliasearch = require("algoliasearch");
 const client = algoliasearch(algoliaAppId, algoliaAPIKey);
 const index = client.initIndex("deep_play_data");
 import { decrypt, encrypt } from "../common";
+import { template } from "handlebars";
 
 // --------------Create set---------------------
 const createSet = async (req: Request, res: Response): Promise<any> => {
@@ -32,7 +33,7 @@ const createSet = async (req: Request, res: Response): Promise<any> => {
     /* Add items to algolia */
     setDataForAlgolia = {
       ...setResult._doc,
-      title: "sets"
+      searchType: "sets"
     };
     index.addObjects([setDataForAlgolia], (err: string, content: string) => {
       if (err) {
@@ -388,14 +389,46 @@ const publicUrlsetDetails = async (
 ): Promise<any> => {
   try {
     const { query } = req;
-    const { folderId, isPublic } = query;
+    const { folderId, isPublic, limit, page } = query;
     const decryptedFolderId = decrypt(folderId);
-    let result: Document | any | null;
-    if (isPublic === "true") {
+    const pageNumber: number = ((parseInt(page) || 1) - 1) * (limit || 10);
+    const limitNumber: number = parseInt(limit) || 10;
+    let result: Document | any | null,
+      moveCount: Document | any,
+      setResult: any = [];
+
+    let temp: Document | any | null = await FolderModel.findOne({
+      _id: decryptedFolderId
+    });
+
+    if (temp.isPublic) {
       result = await SetModel.find({
         folderId: decryptedFolderId,
         isDeleted: false
-      });
+      })
+        .populate({
+          path: "folderId",
+          match: {
+            isDeleted: false
+          }
+        })
+        .skip(pageNumber)
+        .limit(limitNumber);
+
+      //Count of moves in folder
+      if (result && result.length) {
+        for (let index = 0; index < result.length; index++) {
+          const setData = result[index];
+          moveCount = await MoveModel.count({
+            setId: setData._id,
+            isDeleted: false
+          });
+          setResult.push({
+            ...setData._doc,
+            moveCount: moveCount
+          });
+        }
+      }
     } else {
       return res.status(400).json({
         message: "Public access link is not enabled."
@@ -403,7 +436,7 @@ const publicUrlsetDetails = async (
     }
     return res.status(200).json({
       responsecode: 200,
-      data: result,
+      data: setResult,
       success: true
     });
   } catch (error) {
@@ -421,11 +454,21 @@ const publicAccessSetInfoById = async (
 ): Promise<any> => {
   try {
     const { query } = req;
-    const { userId, setId, isPublic } = query;
+    const { userId, setId, isPublic, fromFolder } = query;
     const decryptedUserId = decrypt(userId);
     const decryptedSetId = decrypt(setId);
     let result: Document | any | null;
-    if (isPublic === "true") {
+    let temp: Document | any | null;
+    if (fromFolder) {
+      temp = {
+        isPublic: true
+      };
+    } else {
+      temp = await SetModel.findOne({
+        _id: decryptedSetId
+      });
+    }
+    if (temp.isPublic) {
       result = await SetModel.findOne({
         userId: decryptedUserId,
         _id: decryptedSetId,

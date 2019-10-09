@@ -83,7 +83,7 @@ const createFolder = async (req: Request, res: Response): Promise<any> => {
     /* Add items to algolia */
     folderDataForAlgolia = {
       ...Result._doc,
-      title: "folder"
+      searchType: "folder"
     };
     index.addObjects([folderDataForAlgolia], (err: string, content: string) => {
       if (err) {
@@ -392,7 +392,7 @@ const sharableLinkPublicAccess = async (
   }
 };
 
-//-----------------SharableLink user details------------------------------
+//-----------------SharableLink user details encrypt------------------------------
 const sharableLink = async (req: Request, res: Response): Promise<any> => {
   try {
     const { query, currentUser } = req;
@@ -445,7 +445,13 @@ const publicUrlFolderInfo = async (
     const decryptedUserId = decrypt(userId);
     const decryptedFolderId = decrypt(folderId);
     let result: Document | any | null;
-    if (isPublic === "true") {
+
+    let temp: Document | any | null = await FolderModel.findOne({
+      userId: decryptedUserId,
+      _id: decryptedFolderId
+    });
+
+    if (temp.isPublic) {
       result = await FolderModel.findOne({
         userId: decryptedUserId,
         _id: decryptedFolderId,

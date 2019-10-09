@@ -3,18 +3,15 @@ import {
   FormGroup,
   Input,
   Button,
-  Modal,
-  ModalFooter,
-  ModalHeader,
-  ModalBody,
-  Label,
   Card,
   CardBody,
   CardHeader,
-  UncontrolledTooltip,
+  Form,
   InputGroup,
   InputGroupText,
-  InputGroupAddon
+  InputGroupAddon,
+  Col,
+  Row
 } from "reactstrap";
 import { connect } from "react-redux";
 import {
@@ -23,7 +20,7 @@ import {
   UpdateSetRequest
 } from "../../actions";
 import * as qs from "query-string";
-import { AppRoutes } from "../../config/AppRoutes";
+import Loader from "../comman/Loader/Loader";
 import "./index.scss";
 
 class CreateSetComponent extends React.Component {
@@ -69,15 +66,15 @@ class CreateSetComponent extends React.Component {
     });
   };
 
-  handleBlur = async () => {
-    let parsed = qs.parse(this.props.location.search);
-    const data = {
-      title: this.state.title,
-      description: this.state.description,
-      folderId: parsed.folderId ? parsed.folderId : ""
-    };
-    await this.props.onSetsCreation(data);
-  };
+  // handleBlur = async () => {
+  //   let parsed = qs.parse(this.props.location.search);
+  //   const data = {
+  //     title: this.state.title,
+  //     description: this.state.description,
+  //     folderId: parsed.folderId ? parsed.folderId : ""
+  //   };
+  //   await this.props.onSetsCreation(data);
+  // };
 
   updateSet = () => {
     let parsed = qs.parse(this.props.location.search);
@@ -90,154 +87,171 @@ class CreateSetComponent extends React.Component {
   };
 
   onAddMove = async () => {
-    this.props.redirectTo(AppRoutes.MOVE.url);
+    let parsed = qs.parse(this.props.location.search);
+    const data = {
+      title: this.state.title,
+      description: this.state.description,
+      folderId: parsed.folderId ? parsed.folderId : ""
+    };
+    await this.props.onSetsCreation(data);
   };
 
-  onSaveDesc = () => {
-    this.setState({
-      open: !this.state.open
-    });
-  };
+  // onSaveDesc = () => {
+  //   this.setState({
+  //     open: !this.state.open
+  //   });
+  // };
 
-  handleModal = () => {
-    this.setState({
-      open: !this.state.open,
-      description: ""
-    });
-  };
+  // handleModal = () => {
+  //   this.setState({
+  //     open: !this.state.open,
+  //     description: ""
+  //   });
+  // };
 
   render() {
-    const { title, open, description, isEdit } = this.state;
+    const { title, description, isEdit } = this.state;
+    const { isSetDetailsLoading } = this.props.setReducer;
     let parsed = qs.parse(this.props.location.search);
 
     return (
       <>
-      
-      <div className="create-set-section mt-5">
-        <Card className="set-content-wrap">
-          <div className="set-content-block w-100">
-            <CardHeader className="">
-              <div className="content-header set-header">
-                <span className="content-title">
-                  {isEdit ? "Update Set" : "CREATE A NEW SET OF MOVES"}
-                </span>
-              </div>
-            </CardHeader>
-            <CardBody className="">
-              <div className="create-set-tile">
-                <FormGroup className="flex-fill">
-                  <InputGroup>
-                    <Input
-                      id="exampleFormControlInput1"
-                      placeholder="Enter your title here"
-                      type="text"
-                      name="title"
-                      onChange={this.handleChange}
-                      value={title}
-                      onBlur={!isEdit && title ? this.handleBlur : null}
-                    />
-                    <InputGroupAddon addonType="prepend">
-                      <InputGroupText
-                        id="description"
-                        onClick={() =>
-                          this.setState({
-                            open: !open
-                          })
-                        }
+        <div className="create-set-section mt-5">
+          {!isSetDetailsLoading ? (
+            <Card className="set-content-wrap">
+              <div className="set-content-block w-100">
+                <CardHeader className="">
+                  <div className="content-header set-header">
+                    <span className="content-title">
+                      {isEdit ? "Update Set" : "CREATE A NEW SET OF MOVES"}
+                    </span>
+                  </div>
+                </CardHeader>
+                <CardBody className="">
+                  <div className="create-set-tile">
+                    <Form onSubmit={this.onAddMove}>
+                      <FormGroup className="flex-fill">
+                        <InputGroup>
+                          <Input
+                            id="title"
+                            placeholder="Enter your title here"
+                            type="text"
+                            name="title"
+                            onChange={this.handleChange}
+                            value={title}
+                            // onBlur={!isEdit && title ? this.handleBlur : null}
+                          />
+                          <InputGroupAddon addonType="prepend">
+                            <InputGroupText>
+                              <span className="cursor_pointer ">
+                                <i className="fas fas fa-info "></i>
+                              </span>
+                            </InputGroupText>
+                          </InputGroupAddon>
+                        </InputGroup>
+                      </FormGroup>
+                      <FormGroup className="flex-fill">
+                        <InputGroup>
+                          <Input
+                            id="description"
+                            type="textarea"
+                            placeholder="Enter description (Optional)"
+                            name="description"
+                            onChange={this.handleChange}
+                            value={description}
+                            rows={3}
+                          />
+                        </InputGroup>
+                      </FormGroup>
+                    </Form>
+                  </div>
+                  <div className="text-center">
+                    {!parsed.isEdit ? (
+                      <Button
+                        color=" "
+                        type="submit"
+                        className="btn-black btn mt-3"
+                        disabled={!title}
+                        onClick={this.onAddMove}
                       >
-                        <span className="cursor_pointer ">
-                          <i className="fas fas fa-info "></i>
-                        </span>
-                        <UncontrolledTooltip
-                          placement="top"
-                          target="description"
-                        >
-                          Add description
-                        </UncontrolledTooltip>
-                      </InputGroupText>
-                    </InputGroupAddon>
-                  </InputGroup>
-                </FormGroup>
+                        Create a Set
+                      </Button>
+                    ) : (
+                      <Button
+                        color=" "
+                        type="button"
+                        className="btn-black btn mt-3"
+                        disabled={!title}
+                        onClick={this.updateSet}
+                      >
+                        Update Set
+                      </Button>
+                    )}
+                  </div>
+                </CardBody>
               </div>
-              <div className="text-center">
-                {!parsed.isEdit ? (
-                  <Button
-                    color=" "
-                    type="button"
-                    className="btn-black btn mt-3"
-                    disabled={!title}
-                    onClick={this.onAddMove}
-                  >
-                    <i className="fas fa-plus mr-1"></i>
-                    Add a Move
-                  </Button>
-                ) : (
-                  <Button
-                    color=" "
-                    type="button"
-                    className="btn-black btn mt-3"
-                    disabled={!title}
-                    onClick={this.updateSet}
-                  >
-                    Update Set
-                  </Button>
-                )}
+            </Card>
+          ) : (
+            <Row>
+              <Col sm={12} className="loader-col">
+                <Loader />
+              </Col>
+            </Row>
+          )}
+          {/* <Modal
+            className="modal-dialog-centered custom-model-wrap"
+            isOpen={open}
+            toggle={() => this.handleModal}
+          >
+            <ModalHeader>
+              <div>
+                <h5 className="modal-title" id="exampleModalLabel">
+                  <span className="custom-title">Description</span>
+                </h5>
               </div>
-            </CardBody>
-          </div>
-        </Card>
+              <button
+                aria-label="Close"
+                className="close"
+                data-dismiss="modal"
+                type="button"
+                onClick={this.handleModal}
+              >
+                <span aria-hidden="true">
+                  {" "}
+                  <img src="./assets/img/close-img.png" alt="close-ic" />
+                </span>
+              </button>
+            </ModalHeader>
+            <ModalBody>
+              <FormGroup>
+                <Label
+                  for="description"
+                  className="font-weight-bold text-center"
+                >
+                  DESCRIPTION
+                </Label>
+                <Input
+                  id="exampleFormControlInput1"
+                  type="textarea"
+                  name="description"
+                  onChange={this.handleChange}
+                  value={description}
+                />
+              </FormGroup>
+            </ModalBody>
 
-        <Modal
-          className="modal-dialog-centered custom-model-wrap"
-          isOpen={open}
-          toggle={() => this.handleModal}
-        >
-          <ModalHeader>
-            <div>
-              <h5 className="modal-title" id="exampleModalLabel">
-                <span className="custom-title">Description</span>
-              </h5>
-            </div>
-            <button
-              aria-label="Close"
-              className="close"
-              data-dismiss="modal"
-              type="button"
-              onClick={this.handleModal}
-            >
-              <span aria-hidden="true">
-                {" "}
-                <img src="./assets/img/close-img.png" alt="close-ic" />
-              </span>
-            </button>
-          </ModalHeader>
-          <ModalBody>
-            <FormGroup>
-              <Label for="description" className="font-weight-bold text-center">
-                DESCRIPTION
-              </Label>
-              <Input
-                id="exampleFormControlInput1"
-                type="textarea"
-                name="description"
-                onChange={this.handleChange}
-                value={description}
-              />
-            </FormGroup>
-          </ModalBody>
-
-          <ModalFooter>
-            <Button
-              color=" "
-              type="button"
-              onClick={this.onSaveDesc}
-              className="btn btn-black"
-            >
-              Save changes
-            </Button>
-          </ModalFooter>
-        </Modal>
-      </div>
+            <ModalFooter>
+              <Button
+                color=" "
+                type="button"
+                onClick={this.onSaveDesc}
+                className="btn btn-black"
+              >
+                Save changes
+              </Button>
+            </ModalFooter>
+          </Modal> */}
+        </div>
       </>
     );
   }

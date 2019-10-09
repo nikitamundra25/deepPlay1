@@ -8,7 +8,7 @@ import { SetLogics } from "./sets";
 import { FolderLogics } from "./Folder";
 import { MoveLogics } from "./Moves";
 import { SharableLinkLogics } from "./SharableLink";
-
+import { AllSearchLogics } from "./AllSearch";
 export const redirectToLogic = createLogic({
   type: "REDIRET_TO",
   async process({ action }, dispatch, done) {
@@ -25,5 +25,6 @@ export default [
   ...FolderLogics,
   ...MoveLogics,
   ...SharableLinkLogics,
+  ...AllSearchLogics,
   redirectToLogic
 ];
