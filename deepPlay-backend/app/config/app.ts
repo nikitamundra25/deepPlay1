@@ -12,5 +12,5 @@ export const CloudName = IsProductionMode ? "rishabhbula" : "rishabhbula";
 export const algoliaAppId = "0RMKRXX9E0";
 export const algoliaAPIKey = "72e9502244d283d58ceda3c80fe15422";
 export const ServerURL = !IsProductionMode
-  ? "//localhost:8000"
+  ? "//192.168.2.133:8000"
   : "//3.19.246.229";
