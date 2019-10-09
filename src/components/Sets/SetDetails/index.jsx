@@ -64,7 +64,16 @@ class SetDetails extends React.Component {
   /*
   /*  
   */
-
+  componentDidUpdate = ({ location }) => {
+    const oldLoaction = location
+    const oldpathName = oldLoaction.pathname.split("/");
+    const newLocation = this.props.location;
+    const pathName = newLocation.pathname.split("/");
+    if (oldpathName[2] !== pathName[2]) {
+      this.props.getSetDetailsRequest({ setId: pathName[2] });
+      this.props.getMovesOfSetRequest({ setId: pathName[2] });
+    }
+  }
   handleMoveAdd = () => {
     this.props.redirectTo(AppRoutes.MOVE.url);
   };
@@ -132,22 +141,22 @@ class SetDetails extends React.Component {
               <span className="content-title">
                 <div className="main-title">
                   <span className={"text-light"}>
-                  {setDetails && setDetails.folderId
-                    ? setDetails.folderId.isCopy
-                      ? `Copy of ${setDetails.folderId.title}`
-                      : setDetails.folderId.title
-                    : null}
-                    </span>
+                    {setDetails && setDetails.folderId
+                      ? setDetails.folderId.isCopy
+                        ? `Copy of ${setDetails.folderId.title}`
+                        : setDetails.folderId.title
+                      : null}
+                  </span>
                   /<span >{setDetails.title}</span>
                 </div>
               </span>
             ) : (
-              <span className="content-title">
-                <div className="main-title">
-                  {setDetails ? setDetails.title : "MyFolder"}
-                </div>
-              </span>
-            )}
+                <span className="content-title">
+                  <div className="main-title">
+                    {setDetails ? setDetails.title : "MyFolder"}
+                  </div>
+                </span>
+              )}
 
             <div>
               <span
@@ -237,37 +246,37 @@ class SetDetails extends React.Component {
                     );
                   })
                 ) : (
-                  <div className="create-set-section w-100 empty-folder-section">
-                    <div className="set-content-wrap empty-folder-card">
-                      <div className="set-content-block w-100 empty-folder-wrap">
-                        <CardHeader className="empty-folder-header text-center">
-                          <img src={emptySetIc} alt={"Images"} />
-                          <div className="content-header set-header">
-                            <span className="content-title">
-                              {" "}
-                              <h3>You have add atleast one</h3>
-                              <p>No move availabe for this set</p>
-                            </span>
-                          </div>
-                        </CardHeader>
-                        <CardBody className="">
-                          <div className="create-set-tile"></div>
-                          <div className="text-center">
-                            <Button
-                              color=" "
-                              type="button"
-                              className="btn-black btn "
-                              onClick={this.handleMoveAdd}
-                            >
-                              <i className="fas fa-plus mr-1"></i>
-                              Add a Set
+                    <div className="create-set-section w-100 empty-folder-section">
+                      <div className="set-content-wrap empty-folder-card">
+                        <div className="set-content-block w-100 empty-folder-wrap">
+                          <CardHeader className="empty-folder-header text-center">
+                            <img src={emptySetIc} alt={"Images"} />
+                            <div className="content-header set-header">
+                              <span className="content-title">
+                                {" "}
+                                <h3>You have add atleast one</h3>
+                                <p>No move availabe for this set</p>
+                              </span>
+                            </div>
+                          </CardHeader>
+                          <CardBody className="">
+                            <div className="create-set-tile"></div>
+                            <div className="text-center">
+                              <Button
+                                color=" "
+                                type="button"
+                                className="btn-black btn "
+                                onClick={this.handleMoveAdd}
+                              >
+                                <i className="fas fa-plus mr-1"></i>
+                                Add a Set
                             </Button>
-                          </div>
-                        </CardBody>
+                            </div>
+                          </CardBody>
+                        </div>
                       </div>
                     </div>
-                  </div>
-                )}
+                  )}
               </Slider>
             </div>
           </Card>

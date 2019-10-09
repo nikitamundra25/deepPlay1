@@ -18,30 +18,28 @@ const allSearchModule = async (req: Request, res: Response): Promise<any> => {
     condition.$and.push({
       isDeleted: false
     });
-    if (search) {
-      condition.$and.push({
-        $or: [
-          {
-            title: {
-              $regex: new RegExp(search.trim(), "i")
-            }
-          },
-          {
-            description: {
-              $regex: new RegExp(search.trim(), "i")
-            }
-          }
-        ]
-      });
-    }
-    console.log("!!!!!!!!!!!!!!", condition);
+    // if (search) {
+    //   condition.$and.push({
+    //     $or: [
+    //       {
+    //         title: {
+    //           $regex: new RegExp(search.trim(), "i")
+    //         }
+    //       },
+    //       {
+    //         description: {
+    //           $regex: new RegExp(search.trim(), "i")
+    //         }
+    //       }
+    //     ]
+    //   });
+    // }
+    // console.log("!!!!!!!!!!!!!!", condition);
     
     index.search({
-      query: {
-        ...condition
-      }
+      query: query.search
     }).then((data: string | any) => {
-      //console.log("########################", data);
+      console.log("########################", data);
       return res.status(200).json({
         data: data.hits,
         message: "This is algolia search data"
