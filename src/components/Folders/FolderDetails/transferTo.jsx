@@ -67,12 +67,7 @@ class TransferToModal extends React.Component {
   render() {
     const { handleOpen, modal, folderId } = this.props;
     const { transferToList, selectFolderOptions } = this.state;
-    const defaultFolderList = [
-      {
-        label: "+ Add New folder",
-        value: ""
-      }
-    ]
+    const defaultFolderList = []
     if (transferToList && transferToList.length) {
       transferToList.map((item) => {
         let isNotAccesible

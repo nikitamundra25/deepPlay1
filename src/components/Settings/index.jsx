@@ -182,7 +182,7 @@ class SettingComponent extends Component {
             {!isprofileInfoLoading ? (
               <>
                 <Card className="card-wrap">
-                  <CardHeader clas>
+                  <CardHeader>
                     <CardTitle className="card-heading mb-0 h5">
                       Profile
                     </CardTitle>

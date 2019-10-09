@@ -39,7 +39,6 @@ const allSearchModule = async (req: Request, res: Response): Promise<any> => {
     index.search({
       query: query.search
     }).then((data: string | any) => {
-      console.log("########################", data);
       return res.status(200).json({
         data: data.hits,
         message: "This is algolia search data"

@@ -20,6 +20,7 @@ const getAllSearchDataLogic = createLogic({
     );
     if (result.isError) {
       toast.error(result.messages[0]);
+      dispatch(allSearchSuccess({ searchData: []}));
       done();
       return;
     } else {

@@ -128,16 +128,6 @@ const getAllSetById = async (req: Request, res: Response): Promise<void> => {
         message: "User id not found"
       });
     }
-    index.search({ query: "Sal" }, (err: any, hits: any = {}) => {
-      if (err) {
-        console.log(err);
-        console.log(err.debugData);
-        return;
-      }
-
-      console.log("@@@@@@@@@@@@@@@@@", hits);
-    });
-
     let result: Document | any,
       moveCount: Document | any,
       setResult: any = [];
