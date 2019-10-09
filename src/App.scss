@@ -1409,3 +1409,13 @@ width:100%;
 .creat-set-title{
   font-size: 24px;
 }
+
+.fram-wrap{
+  display: flex;
+  .frem-inner{
+    flex: 1;
+    img{
+      width: 100%;
+    }
+  }
+}

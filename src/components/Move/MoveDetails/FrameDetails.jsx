@@ -91,7 +91,7 @@ class FrameDetails extends Component {
 
     return (
       <>
-        <div>
+        <div className="fram-picker">
           <InputRange
             draggableTrack
             maxValue={maxValue}
@@ -101,19 +101,18 @@ class FrameDetails extends Component {
             onChange={this.labelValueChange}
           />
         </div>
+        <div className="fram-wrap">
         {orderBy(frames).map((frame, index) => {
           return (
             <div
+            className="frem-inner"
               key={index}
-              style={{
-                float: "left"
-              }}
             >
-              <img src={frame} alt={`Frame ${index + 1}`} width={100} />
-              <br />
+              <img src={frame} alt={`Frame ${index + 1}`}  />
             </div>
           );
         })}
+        </div>
         <div className={"clearfix"}></div>
         <Row>
           <Col sm={"6"}>
