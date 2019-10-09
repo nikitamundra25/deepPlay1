@@ -43,7 +43,13 @@ class VideoDetails extends React.Component {
       });
     }
   };
-
+  getDetails = () => {
+    const { tags, selectSetOptions } = this.state;
+    return {
+      tags,
+      setId: selectSetOptions ? selectSetOptions.value : null
+    };
+  };
   render() {
     const { selectSetOptions } = this.state;
     const { setReducer } = this.props;

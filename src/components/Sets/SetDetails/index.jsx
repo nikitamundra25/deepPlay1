@@ -22,8 +22,6 @@ import {
   getMovesOfSetRequest
 } from "../../../actions";
 import SharableLinkModal from "../../comman/shareableLink/SharableLink";
-import Slider from "react-slick";
-import { AppConfig } from "../../../config/Appconfig";
 import { AppRoutes } from "../../../config/AppRoutes";
 import "./index.scss";
 import "slick-carousel/slick/slick.css";
@@ -31,6 +29,7 @@ import "slick-carousel/slick/slick-theme.css";
 import emptySetIc from "../../../assets/img/empty-sets.png";
 import addPlusIc from "../../../assets/img/add_plus.png";
 import { ConfirmBox } from "../../../helper/SweetAleart";
+import WebmView from "./WebmView";
 const homePageImage = [
   "https://images.pexels.com/photos/67636/rose-blue-flower-rose-blooms-67636.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500",
   "https://p.bigstockphoto.com/GeFvQkBbSLaMdpKXF1Zv_bigstock-Aerial-View-Of-Blue-Lakes-And--227291596.jpg",
@@ -38,13 +37,7 @@ const homePageImage = [
   "https://helpx.adobe.com/content/dam/help/en/stock/how-to/visual-reverse-image-search/jcr_content/main-pars/image/visual-reverse-image-search-v2_intro.jpg",
   "https://i.pinimg.com/originals/26/94/93/269493fbeb10e31ad3867248e3f68b94.jpg"
 ];
-var settings = {
-  dots: true,
-  infinite: true,
-  speed: 500,
-  slidesToShow: 1,
-  slidesToScroll: 1
-};
+
 // core components
 class SetDetails extends React.Component {
   constructor(props) {
@@ -185,88 +178,43 @@ class SetDetails extends React.Component {
             </div>
           </div>
           <Card className="video-slider-section">
-            <div className="create-set-section step-2 w-100 video-slider-wrap">
-              <Slider {...settings} className="w-100">
-                {movesOfSet && movesOfSet.length ? (
-                  movesOfSet.map((video, index) => {
-                    return (
-                      <div className="w-100">
-                        <div className="video-slider-text">
-                          <div className="video-slider-title">
+            <div className="step-2">
+              {movesOfSet && movesOfSet.length ? (
+                movesOfSet.map((video, index) => {
+                  return <WebmView key={index} video={video} />;
+                })
+              ) : (
+                <div className="create-set-section w-100 empty-folder-section">
+                  <div className="set-content-wrap empty-folder-card">
+                    <div className="set-content-block w-100 empty-folder-wrap">
+                      <CardHeader className="empty-folder-header text-center">
+                        <img src={emptySetIc} alt={"Images"} />
+                        <div className="content-header set-header">
+                          <span className="content-title">
                             {" "}
-                            title of webM{" "}
-                          </div>
-                          <div className="video-slider-dropDown">
-                            <div>
-                              <UncontrolledDropdown
-                                className="header-dropdown  custom-dropdown"
-                                direction="left"
-                              >
-                                <DropdownToggle color={" "}>
-                                  <span
-                                    id="edit"
-                                    className="cursor_pointer ml-4"
-                                  >
-                                    <i
-                                      class="fa fa-ellipsis-v"
-                                      aria-hidden="true"
-                                    ></i>
-                                  </span>
-                                </DropdownToggle>
-                                <DropdownMenu>
-                                  <DropdownItem>Edit</DropdownItem>
-                                  <DropdownItem>View Info</DropdownItem>
-                                  <DropdownItem>Tranfer</DropdownItem>
-                                  <DropdownItem>Delete</DropdownItem>
-                                </DropdownMenu>
-                              </UncontrolledDropdown>
-                            </div>
-                          </div>
+                            <h3>You have add atleast one</h3>
+                            <p>No move availabe for this set</p>
+                          </span>
                         </div>
-                        <div className="video-slider-img">
-                          <video width={"100%"} controls>
-                            <source
-                              src={`${AppConfig.API_ENDPOINT}${video.videoUrl}`}
-                              type="video/mp4"
-                            />
-                          </video>
+                      </CardHeader>
+                      <CardBody className="">
+                        <div className="create-set-tile"></div>
+                        <div className="text-center">
+                          <Button
+                            color=" "
+                            type="button"
+                            className="btn-black btn "
+                            onClick={this.handleMoveAdd}
+                          >
+                            <i className="fas fa-plus mr-1"></i>
+                            Add a Set
+                          </Button>
                         </div>
-                      </div>
-                    );
-                  })
-                ) : (
-                  <div className="create-set-section w-100 empty-folder-section">
-                    <div className="set-content-wrap empty-folder-card">
-                      <div className="set-content-block w-100 empty-folder-wrap">
-                        <CardHeader className="empty-folder-header text-center">
-                          <img src={emptySetIc} alt={"Images"} />
-                          <div className="content-header set-header">
-                            <span className="content-title">
-                              {" "}
-                              <h3>You have add atleast one</h3>
-                              <p>No move availabe for this set</p>
-                            </span>
-                          </div>
-                        </CardHeader>
-                        <CardBody className="">
-                          <div className="create-set-tile"></div>
-                          <div className="text-center">
-                            <Button
-                              color=" "
-                              type="button"
-                              className="btn-black btn "
-                              onClick={this.handleMoveAdd}
-                            >
-                              <i className="fas fa-plus mr-1"></i>
-                              Add a Set
-                            </Button>
-                          </div>
-                        </CardBody>
-                      </div>
+                      </CardBody>
                     </div>
                   </div>
-                )}
-              </Slider>
+                </div>
+              )}
             </div>
           </Card>
           <section className="play-list-collection set-detail-section">

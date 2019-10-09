@@ -1,12 +1,14 @@
 import React from "react";
 import { connect } from "react-redux";
-import { Card, CardBody, Row, Col } from "reactstrap";
+import { Card, CardBody, Row, Col, Button } from "reactstrap";
 import VideoView from "./videoView";
 import VideoDetails from "./videoDetails";
 import { getMoveDetailsRequest, getAllSetRequest } from "../../../actions";
 import "./index.scss";
 import Loader from "components/comman/Loader/Loader";
 import FrameDetails from "./FrameDetails";
+import { logger } from "helper/Logger";
+import { completeVideoEditing } from "actions/Moves";
 // core components
 class MoveDetails extends React.Component {
   constructor(props) {
@@ -20,6 +22,7 @@ class MoveDetails extends React.Component {
         max: 15
       }
     };
+    this.videoDetails = React.createRef();
   }
 
   componentDidMount = () => {
@@ -34,6 +37,26 @@ class MoveDetails extends React.Component {
   onTimerChange = timer => {
     this.setState({
       timer
+    });
+  };
+  /**
+   *
+   */
+  completeEditing = e => {
+    e.preventDefault();
+    const { moveReducer } = this.props;
+    const { moveDetails } = moveReducer;
+    const { _id: moveId } = moveDetails;
+    const { timer } = this.state;
+    const { tags, setId } = this.videoDetails.current.getDetails();
+    logger(this.state, moveId);
+    this.props.completeVideoEditing({
+      timer,
+      moveId,
+      tags,
+      setId,
+      title: "Test Title",
+      description: "this is a test description"
     });
   };
   /**
@@ -66,7 +89,10 @@ class MoveDetails extends React.Component {
                     {moveDetails && moveDetails.videoUrl ? (
                       <>
                         <VideoView moveReducer={moveReducer} timer={timer} />
-                        <VideoDetails setReducer={setReducer} />
+                        <VideoDetails
+                          setReducer={setReducer}
+                          ref={this.videoDetails}
+                        />
                       </>
                     ) : (
                       <Loader />
@@ -79,6 +105,13 @@ class MoveDetails extends React.Component {
                 videoMetaData={videoMetaData || {}}
                 onTimerChange={this.onTimerChange}
               />
+              <Button
+                color={"default"}
+                className={"btn-black btn url-upload-btn"}
+                onClick={this.completeEditing}
+              >
+                Finish
+              </Button>
             </CardBody>
           </Card>
         </div>
@@ -93,7 +126,8 @@ const mapStateToProps = state => ({
 });
 const mapDispatchToProps = dispatch => ({
   getMoveDetailsRequest: data => dispatch(getMoveDetailsRequest(data)),
-  getAllSetRequest: data => dispatch(getAllSetRequest(data))
+  getAllSetRequest: data => dispatch(getAllSetRequest(data)),
+  completeVideoEditing: data => dispatch(completeVideoEditing(data))
 });
 export default connect(
   mapStateToProps,

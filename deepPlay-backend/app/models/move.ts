@@ -11,9 +11,15 @@ const moveSchema: Mongoose.Schema = new Schema({
     type: String,
     default: null
   },
+  videoName: {
+    type: String
+  },
   videoUrl: {
     type: String,
     default: null
+  },
+  moveURL: {
+    type: String
   },
   tags: {
     type: [String],

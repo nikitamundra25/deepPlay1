@@ -89,7 +89,7 @@ class VideoView extends React.Component {
           </FormGroup>
           {moveDetails && moveDetails.videoUrl ? (
             <>
-              <video width={"100%"} autoPlay loop id={"video-trimmer"}>
+              <video width={"100%"} autoPlay loop id={"video-trimmer"} muted>
                 <source
                   src={`${AppConfig.API_ENDPOINT}${moveDetails.videoUrl}`}
                 />
