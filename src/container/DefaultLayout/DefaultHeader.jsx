@@ -92,7 +92,9 @@ class DefaultHeader extends React.Component {
     this.setState({
       [name]: value
     })
-    this.props.allSearchRequest({ search: value })
+    setTimeout(() => {
+      this.props.allSearchRequest({ search: value })
+    }, 500);
   }
   /*  */
   render() {
@@ -207,7 +209,14 @@ class DefaultHeader extends React.Component {
                                     ></i>
                                   </span>
                                 </InputGroupAddon>
-                                <Input placeholder="Search" onChange={this.handleChange} value={search} name={"search"} type="text" />
+                                <Input
+                                  placeholder="Search"
+                                  onChange={
+                                    this.handleChange
+                                  }
+                                  value={search}
+                                  name={"search"}
+                                  type="text" />
                                 {
                                   search ?
                                     <AllSearchComponent
@@ -316,7 +325,7 @@ class DefaultHeader extends React.Component {
                                     </DropdownItem>
                                   );
                                 })}
-                                
+
                                 <DropdownItem onClick={e => logoutRequest(e)}>
                                   <div
                                     className="dropdown-img"

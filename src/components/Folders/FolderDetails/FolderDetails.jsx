@@ -70,16 +70,28 @@ class RecentFolderComponent extends React.Component {
   }
 
   componentDidUpdate(prevProps) {
+    const oldLocation = prevProps.location
+    const oldPathname = oldLocation.pathname.split("/");
+    const newLocation = this.props.location
+    const newPathname = newLocation.pathname.split("/");
     if (
       prevProps.setReducer &&
       prevProps.setReducer.setListinFolder !==
-        this.props.setReducer.setListinFolder
+      this.props.setReducer.setListinFolder
     ) {
       const setList = this.props.setReducer.setListinFolder;
       this.setState({
         setListItem: setList
       });
     }
+    if (oldPathname[3] !== newPathname[3]) {
+      this.props.folderDetail({ id: newPathname[3] });
+      this.props.getSetsList({ folderId: newPathname[3] });
+      this.setState({
+        folderId: newPathname[3],
+      });
+    }
+
   }
 
   openAddSetModel = () => {
@@ -90,10 +102,6 @@ class RecentFolderComponent extends React.Component {
         addSetModalOpen: !modelDetails.addSetModalOpen
       }
     });
-    // this.props.getSetsList({
-    //   folderId: this.state.folderId,
-    //   showAll: true
-    // });
     this.setState({
       showAll: true
     });
@@ -425,44 +433,44 @@ class RecentFolderComponent extends React.Component {
                   );
                 })
               ) : (
-                <>
-                  <div className="create-set-section mt-2 w-100 empty-folder-section">
-                    <Card className="set-content-wrap empty-folder-card">
-                      <div className="set-content-block w-100 empty-folder-wrap">
-                        <CardHeader className="empty-folder-header">
-                          <img src={emptySetIc} alt={"Images"} />
-                          <div className="content-header set-header">
-                            <span className="content-title">
-                              {" "}
-                              <h3>This folder has no Sets yet</h3>
-                              <p>Organize your Sets for you or your students</p>
-                            </span>
-                          </div>
-                        </CardHeader>
-                        <CardBody className="">
-                          <div className="create-set-tile"></div>
-                          <div className="text-center">
-                            <Button
-                              color=" "
-                              type="button"
-                              className="btn-black btn "
-                              onClick={this.openAddSetModel}
-                            >
-                              <i className="fas fa-plus mr-1"></i>
-                              Add a Set
+                  <>
+                    <div className="create-set-section mt-2 w-100 empty-folder-section">
+                      <Card className="set-content-wrap empty-folder-card">
+                        <div className="set-content-block w-100 empty-folder-wrap">
+                          <CardHeader className="empty-folder-header">
+                            <img src={emptySetIc} alt={"Images"} />
+                            <div className="content-header set-header">
+                              <span className="content-title">
+                                {" "}
+                                <h3>This folder has no Sets yet</h3>
+                                <p>Organize your Sets for you or your students</p>
+                              </span>
+                            </div>
+                          </CardHeader>
+                          <CardBody className="">
+                            <div className="create-set-tile"></div>
+                            <div className="text-center">
+                              <Button
+                                color=" "
+                                type="button"
+                                className="btn-black btn "
+                                onClick={this.openAddSetModel}
+                              >
+                                <i className="fas fa-plus mr-1"></i>
+                                Add a Set
                             </Button>
-                          </div>
-                        </CardBody>
-                      </div>
-                    </Card>
-                  </div>
-                </>
-              )
+                            </div>
+                          </CardBody>
+                        </div>
+                      </Card>
+                    </div>
+                  </>
+                )
             ) : (
-              <Col sm={12} className="loader-col">
-                <Loader />
-              </Col>
-            )}
+                <Col sm={12} className="loader-col">
+                  <Loader />
+                </Col>
+              )}
           </Col>
         </Row>
         <AddSetModal

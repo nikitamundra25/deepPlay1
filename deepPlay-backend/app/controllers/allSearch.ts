@@ -35,9 +35,12 @@ const allSearchModule = async (req: Request, res: Response): Promise<any> => {
     //   });
     // }
     // console.log("!!!!!!!!!!!!!!", condition);
-    
+
     index.search({
-      query: query.search
+      query: search,
+      condition: {
+        userId: headToken.id
+      }
     }).then((data: string | any) => {
       return res.status(200).json({
         data: data.hits,
