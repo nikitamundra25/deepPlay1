@@ -16,6 +16,7 @@ import Loader from "../comman/Loader/Loader";
 import PaginationHelper from "helper/Pagination";
 import qs from "query-string";
 import { AppConfig } from "../../config/Appconfig";
+import SharableLinkModal from "components/comman/shareableLink/SharableLink";
 
 // core components
 class SetComponent extends React.Component {
@@ -70,9 +71,21 @@ class SetComponent extends React.Component {
     });
   };
 
+  handleSharableLink = () => {
+    const { modelInfoReducer } = this.props;
+    const { modelDetails } = modelInfoReducer;
+    this.props.modelOperate({
+      modelDetails: {
+        sharableLinkModalOpen: !modelDetails.sharableLinkModalOpen
+      }
+    });
+  };
+
   render() {
-    const { setReducer } = this.props;
+    const { setReducer, modelInfoReducer } = this.props;
     const { allSetList, isSetListLoading, totalSets } = setReducer;
+    const { modelDetails } = modelInfoReducer;
+    const { sharableLinkModalOpen } = modelDetails;
     const { show, setIndex, page } = this.state;
 
     return (
@@ -85,22 +98,33 @@ class SetComponent extends React.Component {
               {allSetList && allSetList.length ? allSetList.length : "0"}
             </div>
           </span>
-          <span
-            id="UncontrolledTooltipExample"
-            className={"cursor_pointer"}
-            onClick={() => this.props.redirectTo(AppRoutes.CREATE_SET.url)}
-          >
-            <i className="fas fa-plus-circle icon-font"></i>
-          </span>
-          <UncontrolledTooltip
-            placement="bottom"
-            target="UncontrolledTooltipExample"
-          >
-            Create New Set
-          </UncontrolledTooltip>
+          <div>
+            <span
+              id="UncontrolledTooltipExample"
+              className={"cursor_pointer"}
+              onClick={() => this.props.redirectTo(AppRoutes.CREATE_SET.url)}
+            >
+              <i className="fas fa-plus-circle icon-font"></i>
+            </span>
+            <UncontrolledTooltip
+              placement="bottom"
+              target="UncontrolledTooltipExample"
+            >
+              Create New Set
+            </UncontrolledTooltip>
+            <span
+              id="share"
+              onClick={this.handleSharableLink}
+              className="cursor_pointer ml-4"
+            >
+              <i className="fas fa-share icon-font"></i>
+            </span>
+            <UncontrolledTooltip placement="bottom" target="share">
+              Get Shareable Link
+            </UncontrolledTooltip>
+          </div>
         </div>
         <Row className="set-wrap">
-       
           {!isSetListLoading ? (
             allSetList && allSetList.length ? (
               // eslint-disable-next-line
@@ -231,14 +255,16 @@ class SetComponent extends React.Component {
               </>
             )
           ) : (
-            
-              <Col sm={12} className="loader-col">
-                <Loader />
-              </Col>
-            
+            <Col sm={12} className="loader-col">
+              <Loader />
+            </Col>
           )}
-        
         </Row>
+        {/* <SharableLinkModal
+          modal={sharableLinkModalOpen}
+          handleOpen={this.handleSharableLink}
+          shareComponent="yourSets"
+        /> */}
         {totalSets && !isSetListLoading ? (
           <PaginationHelper
             totalRecords={totalSets}

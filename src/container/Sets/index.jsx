@@ -163,6 +163,7 @@ class Set extends React.Component {
             setReducer={setReducer}
             OnCreateSetCopy={this.OnCreateSetCopy}
             onRemoveSets={this.onHandleDelete}
+            modelInfoReducer={modelInfoReducer}
             handleRecentTime={this.handleRecentTime}
             openTransferToModal={this.openTransferToModal}
             allFolders={this.props.allFolders}

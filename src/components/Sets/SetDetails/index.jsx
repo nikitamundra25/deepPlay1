@@ -87,7 +87,6 @@ class SetDetails extends React.Component {
     const data = {
       isFolderId: null,
       isSetId: pathName[3],
-      isMoveId: null,
       isPublic: isPublic
     };
     this.props.publicAccess(data);

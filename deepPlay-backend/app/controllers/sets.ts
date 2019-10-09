@@ -134,8 +134,6 @@ const getAllSetById = async (req: Request, res: Response): Promise<void> => {
         console.log(err.debugData);
         return;
       }
-
-      console.log("@@@@@@@@@@@@@@@@@", hits);
     });
 
     let result: Document | any,

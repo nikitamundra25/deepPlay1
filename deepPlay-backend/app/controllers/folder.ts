@@ -236,6 +236,13 @@ const getRecentFolder = async (req: Request, res: Response): Promise<void> => {
     })
       .sort({ isRecentTime: -1 })
       .limit(limit);
+
+      if (!result) {
+        res.status(400).json({
+          message: "Folderid not found"
+        });
+      }
+      
     res.status(200).json({
       data: result,
       message: "Folder have been fetched successfully"
@@ -261,6 +268,11 @@ const getCretedFolderById = async (
       });
     }
     const result: Document | any = await FolderModel.findOne({ _id: query.id });
+    if (!result) {
+      res.status(400).json({
+        message: "Folderid not found"
+      });
+    }
     res.status(200).json({
       data: result,
       message: "Folder has been fetched successfully"
@@ -485,7 +497,7 @@ const updateFolder = async (req: Request, res: Response): Promise<any> => {
       description
     };
     await FolderModel.findByIdAndUpdate(id, {
-      $set: {...updateFolder, updatedAt: Date.now()}
+      $set: { ...updateFolder, updatedAt: Date.now() }
     });
 
     return res.status(200).json({
