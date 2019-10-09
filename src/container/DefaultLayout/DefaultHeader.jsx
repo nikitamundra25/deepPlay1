@@ -24,7 +24,6 @@ import { AppRoutes } from "../../config/AppRoutes";
 import { SidebarComponent } from "../../components/Sidebar";
 import logoutIcon from "../../assets/img/icons/logout.svg";
 import { AppConfig } from "../../config/Appconfig";
-import passwordLock from "../../assets/img/icons/lock.svg";
 import AllSearchComponent from "../../components/AllSearch";
 
 class DefaultHeader extends React.Component {
@@ -317,28 +316,7 @@ class DefaultHeader extends React.Component {
                                     </DropdownItem>
                                   );
                                 })}
-                                <DropdownItem
-                                  onClick={() =>
-                                    this.props.redirectTo(
-                                      AppRoutes.CHANGE_PASSWORD.url
-                                    )
-                                  }
-                                  active={
-                                    routePath === "/change-password" ? true : false
-                                  }
-                                >
-                                  <div
-                                    className="dropdown-img"
-                                  >
-                                    <img
-                                      src={passwordLock}
-                                      alt={"changePassword"}
-                                      width="20"
-                                    /></div>{" "}
-                                  <div className="dropdown-txt">
-                                    Change Password
-                              </div>
-                                </DropdownItem>
+                                
                                 <DropdownItem onClick={e => logoutRequest(e)}>
                                   <div
                                     className="dropdown-img"

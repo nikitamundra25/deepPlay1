@@ -28,8 +28,8 @@ class DefaultLayout extends React.Component {
     if (
       !token &&
       pathname !== "/resetPassword" &&
-      pathname !== "/folder-shared-link" &&
-      pathname !== "/set-shared-link" &&
+      pathname !== "/folder/shared/link" &&
+      pathname !== "/set/shared/link" &&
       pathname !== "/404"
     ) {
       this.props.redirectTo("/");
@@ -90,8 +90,8 @@ class DefaultLayout extends React.Component {
             className={
               routePath !== "/" &&
                 routePath !== "/resetPassword" &&
-                routePath !== "/folder-shared-link" &&
-                routePath !== "/set-shared-link" &&
+                routePath !== "/folder/shared/link" &&
+                routePath !== "/set/shared/link" &&
                 routePath !== "/404"
                 ? "dashboard-full-section"
                 : ""
@@ -110,8 +110,8 @@ class DefaultLayout extends React.Component {
                 {isLoggedIn &&
                   (routePath !== "/" &&
                     routePath !== "/resetPassword" &&
-                    routePath !== "/folder-shared-link" &&
-                    routePath !== "/set-shared-link" &&
+                    routePath !== "/folder/shared/link" &&
+                    routePath !== "/set/shared/link" &&
                     routePath !== "/404") ? (
                     <div className="ct-sidebar app-sidebar">
                       <DefaultSidebar profileInfoReducer={profileInfoReducer} />
@@ -120,8 +120,8 @@ class DefaultLayout extends React.Component {
                 {isLoggedIn &&
                   (routePath !== "/" &&
                     routePath !== "/resetPassword" &&
-                    routePath !== "/folder-shared-link" &&
-                    routePath !== "/set-shared-link" &&
+                    routePath !== "/folder/shared/link" &&
+                    routePath !== "/set/shared/link" &&
                     routePath !== "/404") ? (
                     <div className="dashboard-right-wrap">
                       <div className="dashboard-right-section">
@@ -170,11 +170,11 @@ class DefaultLayout extends React.Component {
         {isLoggedIn &&
           (routePath !== "/" &&
             routePath !== "/resetPassword" &&
-            routePath !== "/folder-shared-link" &&
-            routePath !== "/set-shared-link" &&
+            routePath !== "/folder/shared/link" &&
+            routePath !== "/set/shared/link" &&
             routePath !== "/404") ? null : routePath !== "/resetPassword" &&
-              routePath !== "/folder-shared-link" &&
-              routePath !== "/set-shared-link" &&
+              routePath !== "/folder/shared/link" &&
+              routePath !== "/set/shared/link" &&
               routePath !== "/404" ? (
               <DefaultFooter />
             ) : null}

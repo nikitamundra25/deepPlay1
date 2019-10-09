@@ -40,6 +40,16 @@ class Dashboard extends React.Component {
     }
   };
 
+  handleSetDetails = setId => {
+    this.props.redirectTo(AppRoutes.SET_DETAILS.url.replace(":id", setId));
+  };
+
+  handleFolderdetails = folderId => {
+    this.props.redirectTo(
+      AppRoutes.FOLDER_DETAILS.url.replace(":id", folderId)
+    );
+  };
+
   render() {
     const { folderReducer, setReducer, profileInfoReducer } = this.props;
     const { isRecentFolderLoading, recentFolders } = folderReducer;
@@ -62,8 +72,8 @@ class Dashboard extends React.Component {
                 View all
               </span>
             ) : (
-                " "
-              )}
+              " "
+            )}
           </div>
           <Row>
             {
@@ -71,7 +81,7 @@ class Dashboard extends React.Component {
                 recentSets && recentSets.length ? (
                   recentSets.slice(0, 4).map((set, i) => {
                     return (
-                      <Col md="6" key={i}>
+                      <Col md="6" key={i} onClick={() => this.handleSetDetails(set._id)} className = "cursor_pointer">
                         <div
                           className="tile-wrap card"
                         >
@@ -82,13 +92,11 @@ class Dashboard extends React.Component {
                           </div>
                           <div className="cotent-tile d-flex content-with-tip">
                             <div
-                              className="cotent-text-tile cursor_pointer "
-                              onClick={() => this.handleSetDetails(set._id)}
+                              className="cotent-text-tile "
                             >
                               <div className="content-heading-tile d-flex">
                                 {" "}
                                 <span
-                                  // onClick={() => this.handleSetDetails(set._id)}
                                   className={" text-capitalize"}
                                 >
                                   <span>{set.title}</span>
@@ -131,47 +139,48 @@ class Dashboard extends React.Component {
                             </span>
                           </div>
                         </div>
-                      </Col>
-                    );
-                  })
-                ) : (
-                    <>
-                      <div className="create-set-section w-100 empty-folder-section">
-                        <Card className="set-content-wrap empty-folder-card">
-                          <div className="set-content-block w-100 empty-folder-wrap">
-                            <CardHeader className="empty-folder-header">
-                              <img src={emptySetIc} alt={"Folder"} />
-                              <div className="content-header set-header">
-                                <span className="content-title">
-                                  {" "}
-                                  <h3>You haven't visited any set yet</h3>
-                                </span>
-                              </div>
-                            </CardHeader>
-                            <CardBody className="">
-                              <div className="create-set-tile"></div>
-                              <div className="text-center">
-                                <Button
-                                  color=" "
-                                  type="button"
-                                  className="btn-black btn folder-create-btn"
-                                  onClick={() =>
-                                    this.props.redirectTo(AppRoutes.SETS.url)
-                                  }
-                                >
-                                  View Set
-                            </Button>
-                              </div>
-                            </CardBody>
+                    </Col>
+                  );
+                })
+              ) : (
+                <>
+                  <div className="create-set-section w-100 empty-folder-section">
+                    <Card className="set-content-wrap empty-folder-card">
+                      <div className="set-content-block w-100 empty-folder-wrap">
+                        <CardHeader className="empty-folder-header">
+                          <img src={emptySetIc} alt={"Folder"} />
+                          <div className="content-header set-header">
+                            <span className="content-title">
+                              {" "}
+                              <h3>You haven't visited any set yet</h3>
+                            </span>
                           </div>
-                        </Card>
+                        </CardHeader>
+                        <CardBody className="">
+                          <div className="create-set-tile"></div>
+                          <div className="text-center">
+                            <Button
+                              color=" "
+                              type="button"
+                              className="btn-black btn folder-create-btn"
+                              onClick={() =>
+                                this.props.redirectTo(AppRoutes.SETS.url)
+                              }
+                            >
+                              View Set
+                            </Button>
+                          </div>
+                        </CardBody>
                       </div>
-                    </>
-                  ) :
-                <Col sm={12} className="loader-col">
-                  <Loader />
-                </Col>
-            }
+                    </Card>
+                  </div>
+                </>
+              
+            ) : (
+              <Col sm={12} className="loader-col">
+                <Loader />
+              </Col>
+            )}
           </Row>
         </div>
         <div className="page-body mt-4">
@@ -185,8 +194,8 @@ class Dashboard extends React.Component {
                 View all
               </span>
             ) : (
-                ""
-              )}
+              ""
+            )}
           </div>
           <Row>
             {
@@ -194,7 +203,7 @@ class Dashboard extends React.Component {
                 recentFolders && recentFolders.length ? (
                   recentFolders.slice(0, 4).map((folder, i) => {
                     return (
-                      <Col key={i} md={"6"}>
+                      <Col key={i} md={"6"} onClick={() => this.handleFolderdetails(folder._id)}>
                         <div
                           className="tile-wrap card"
                         >
@@ -235,49 +244,51 @@ class Dashboard extends React.Component {
                             </span>
                           </div>
                         </div>
-                      </Col>
-                    );
-                  })
-                ) : (
-                    <>
-                      <div className="create-set-section w-100 empty-folder-section">
-                        <Card className="set-content-wrap empty-folder-card">
-                          <div className="set-content-block w-100 empty-folder-wrap">
-                            <CardHeader className="empty-folder-header">
-                              <img src={emptyFolderIc} alt={"folder"} />
-                              <div className="content-header set-header">
-                                <span className="content-title">
-                                  {" "}
-                                  <h3>You haven't visited any folder yet</h3>
-                                </span>
-                              </div>
-                            </CardHeader>
-                            <CardBody className="">
-                              <div className="create-set-tile"></div>
-                              <div className="text-center">
-                                <Button
-                                  color=" "
-                                  type="button"
-                                  className="btn-black btn folder-create-btn"
-                                  onClick={() =>
-                                    this.props.redirectTo(AppRoutes.FOLDERS.url)
-                                  }
-                                >
-                                  View Folder
-                            </Button>
-                              </div>
-                            </CardBody>
+                    </Col>
+                  );
+                })
+              ) : (
+                <>
+                  <div className="create-set-section w-100 empty-folder-section">
+                    <Card className="set-content-wrap empty-folder-card">
+                      <div className="set-content-block w-100 empty-folder-wrap">
+                        <CardHeader className="empty-folder-header">
+                          <img src={emptyFolderIc} alt={"folder"} />
+                          <div className="content-header set-header">
+                            <span className="content-title">
+                              {" "}
+                              <h3>You haven't visited any folder yet</h3>
+                            </span>
                           </div>
-                        </Card>
+                        </CardHeader>
+                        <CardBody className="">
+                          <div className="create-set-tile"></div>
+                          <div className="text-center">
+                            <Button
+                              color=" "
+                              type="button"
+                              className="btn-black btn folder-create-btn"
+                              onClick={() =>
+                                this.props.redirectTo(AppRoutes.FOLDERS.url)
+                              }
+                            >
+                              View Folder
+                            </Button>
+                          </div>
+                        </CardBody>
                       </div>
-                    </>
-                  ) :
-                <Col sm={12} className="loader-col">
-                  <Loader />
-                </Col>
-            }
-          </Row >
-        </div >
+                    </Card>
+                  </div>
+                </>
+            ) : (
+              <Row>
+              <Col sm={12} className="loader-col">
+                <Loader />
+              </Col>
+              </Row>
+            )}
+          </Row>
+        </div>
       </>
     );
   }
