@@ -109,3 +109,29 @@
 }
 
 /*# sourceMappingURL=react-input-range.css.map*/
+.video-controls {
+  position: relative;
+  height: 60px;
+  .frame-container {
+    position: absolute;
+    top: 0;
+  }
+  .input-range {
+    z-index: 1;
+    .input-range__track {
+      height: 50px;
+    }
+    .input-range__track--background {
+      height: 50px;
+      background: none;
+      top: 0;
+    }
+    .input-range__track--active {
+      background: #3f51b500;
+    }
+    .input-range__slider-container {
+      top: 50%;
+      transform: translateY(-50%);
+    }
+  }
+}
