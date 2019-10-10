@@ -1419,3 +1419,22 @@ width:100%;
     }
   }
 }
+// custom-video-player
+.custom-video-player{
+  color: $whiteColor;
+  position: relative;
+  .controls{
+    position: absolute;
+    width: 100%;
+    bottom: 0px;
+    padding: 10px;
+  }
+  .controls-wrap{
+    display: flex;
+    justify-content: space-between;
+    .control-left-block{
+      display: flex;
+      align-items: center;
+    }
+  }
+}

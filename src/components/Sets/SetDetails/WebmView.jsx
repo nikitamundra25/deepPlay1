@@ -137,104 +137,111 @@ class WebmView extends Component {
           </div>
         </div>
         <div className="video-slider-img">
-          <video width={"100%"} id="webm-video" muted={isMuted}>
-            <source
-              src={`${AppConfig.IMAGE_ENDPOINT}${moveURL}`}
-              type="video/webm"
-            />
-          </video>
-          <div className={"controls"}>
-            <InputRange
-              draggableTrack
-              maxValue={videoLength}
-              minValue={0}
-              step={0.05}
-              formatLabel={value => ``}
-              value={currentTime}
-              onChange={this.labelValueChange}
-            />
-            <div className={"duration"}>
-              {isPlaying ? (
-                <span onClick={this.pauseVideo} className={"cursor_pointer"}>
-                  <i className={"fa fa-pause"}></i>
-                </span>
-              ) : (
-                <span onClick={this.playVideo} className={"cursor_pointer"}>
-                  <i className={"fa fa-play"}></i>
-                </span>
-              )}
-              &nbsp;&nbsp;
-              {SecondsToHHMMSS(parseInt(currentTime))}/
-              {SecondsToHHMMSS(videoLength)}
-              &nbsp;&nbsp;
-              <div className="audio-controls cursor_pointer">
-                <span onClick={this.toggleMute}>
-                  {isMuted ? (
-                    <i class="fas fa-volume-mute"></i>
-                  ) : audioSpeed ? (
-                    audioSpeed > 0.6 ? (
-                      <i class="fas fa-volume-up"></i>
-                    ) : (
-                      <i class="fas fa-volume-down"></i>
-                    )
+          <div className="custom-video-player">
+            <video width={"100%"} id="webm-video" muted={isMuted}>
+              <source
+                src={`${AppConfig.IMAGE_ENDPOINT}${moveURL}`}
+                type="video/webm"
+              />
+            </video>
+            <div className={"controls"}>
+              <InputRange
+                draggableTrack
+                maxValue={videoLength}
+                minValue={0}
+                step={0.05}
+                formatLabel={value => ``}
+                value={currentTime}
+                onChange={this.labelValueChange}
+              />
+              <div className={"controls-wrap"}>
+              <div className={"control-left-block"}>
+                <div className="play-paus-wrap">
+                  {isPlaying ? (
+                    <span onClick={this.pauseVideo} className={"cursor_pointer"}>
+                      <i className={"fa fa-pause"}></i>
+                    </span>
                   ) : (
-                    <i class="fas fa-volume-mute"></i>
-                  )}
-                </span>
-                <div
-                  style={{
-                    width: 100
-                  }}
-                >
-                  <InputRange
-                    draggableTrack
-                    maxValue={1}
-                    minValue={0}
-                    step={0.1}
-                    formatLabel={value => ``}
-                    value={audioSpeed}
-                    onChange={this.onVolumeChange}
-                  />
+                      <span onClick={this.playVideo} className={"cursor_pointer"}>
+                        <i className={"fa fa-play"}></i>
+                      </span>
+                    )}
+                </div>
+                <div className="video-time-wrap">
+                  {SecondsToHHMMSS(parseInt(currentTime))}/
+              {SecondsToHHMMSS(videoLength)}
+                </div>
+                <div className="audio-controls cursor_pointer">
+                  <span onClick={this.toggleMute}>
+                    {isMuted ? (
+                      <i class="fas fa-volume-mute"></i>
+                    ) : audioSpeed ? (
+                      audioSpeed > 0.6 ? (
+                        <i class="fas fa-volume-up"></i>
+                      ) : (
+                          <i class="fas fa-volume-down"></i>
+                        )
+                    ) : (
+                          <i class="fas fa-volume-mute"></i>
+                        )}
+                  </span>
+                  <div
+                    style={{
+                      width: 100
+                    }}
+                  >
+                    <InputRange
+                      draggableTrack
+                      maxValue={1}
+                      minValue={0}
+                      step={0.1}
+                      formatLabel={value => ``}
+                      value={audioSpeed}
+                      onChange={this.onVolumeChange}
+                    />
+                  </div>
+                </div>
+                <div className="speed-wrap">
+                  <UncontrolledDropdown
+                    className="header-dropdown custom-dropdown"
+                    direction="auto"
+                  >
+                    <DropdownToggle color={" "}>
+                      <span id="playback-speed" className="cursor_pointer ml-4">
+                        {playBackSpeed !== 1 ? `${playBackSpeed}x` : null}{" "}
+                        <i class="fa fa-clock-o" aria-hidden="true"></i>
+                      </span>
+                    </DropdownToggle>
+                    <DropdownMenu>
+                      <DropdownItem
+                        active={playBackSpeed === 0.5}
+                        onClick={() => this.handleSpeed(0.5)}
+                      >
+                        0.5
+                    </DropdownItem>
+                      <DropdownItem
+                        active={playBackSpeed === 1}
+                        onClick={() => this.handleSpeed(1)}
+                      >
+                        1
+                    </DropdownItem>
+                      <DropdownItem
+                        active={playBackSpeed === 1.5}
+                        onClick={() => this.handleSpeed(1.5)}
+                      >
+                        1.5
+                    </DropdownItem>
+                      <DropdownItem
+                        active={playBackSpeed === 2}
+                        onClick={() => this.handleSpeed(2)}
+                      >
+                        2
+                    </DropdownItem>
+                    </DropdownMenu>
+                  </UncontrolledDropdown>
                 </div>
               </div>
-              <div>
-                <UncontrolledDropdown
-                  className="header-dropdown custom-dropdown"
-                  direction="auto"
-                >
-                  <DropdownToggle color={" "}>
-                    <span id="playback-speed" className="cursor_pointer ml-4">
-                      {playBackSpeed !== 1 ? `${playBackSpeed}x` : null}{" "}
-                      <i class="fa fa-clock-o" aria-hidden="true"></i>
-                    </span>
-                  </DropdownToggle>
-                  <DropdownMenu>
-                    <DropdownItem
-                      active={playBackSpeed === 0.5}
-                      onClick={() => this.handleSpeed(0.5)}
-                    >
-                      0.5
-                    </DropdownItem>
-                    <DropdownItem
-                      active={playBackSpeed === 1}
-                      onClick={() => this.handleSpeed(1)}
-                    >
-                      1
-                    </DropdownItem>
-                    <DropdownItem
-                      active={playBackSpeed === 1.5}
-                      onClick={() => this.handleSpeed(1.5)}
-                    >
-                      1.5
-                    </DropdownItem>
-                    <DropdownItem
-                      active={playBackSpeed === 2}
-                      onClick={() => this.handleSpeed(2)}
-                    >
-                      2
-                    </DropdownItem>
-                  </DropdownMenu>
-                </UncontrolledDropdown>
+                <div className="control-left-block"></div>
               </div>
             </div>
           </div>
