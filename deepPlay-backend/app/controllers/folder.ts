@@ -48,6 +48,7 @@ const createFolder = async (req: Request, res: Response): Promise<any> => {
             sharableLink: element.sharableLink,
             status: true,
             userId: headToken.id,
+            isCopy: element.isCopy,
             isDeleted: element.isDeleted
           };
           const setData: Document | any = new SetModel(newSetData);

@@ -13,6 +13,7 @@ import {
   publicUrlMoveDetailsSuccess
 } from "../actions";
 import { toast } from "react-toastify";
+import { AppConfig } from "../config/Appconfig";
 import { AppRoutes } from "config/AppRoutes";
 
 //Sharable link public access api
@@ -125,7 +126,10 @@ const getPublicUrlSetsDetailsLogic = createLogic({
       "/public-url-set-details",
       "GET",
       false,
-      action.payload
+      {
+        ...action.payload,
+        limit: AppConfig.ITEMS_PER_PAGE
+      }
     );
     if (result.isError) {
       dispatch(hideLoader());
@@ -138,7 +142,7 @@ const getPublicUrlSetsDetailsLogic = createLogic({
       dispatch(
         publicUrlSetDetailsSuccess({
           publicUrlSetDetails: result.data.data,
-          totalSets: result.data.totalSets
+          totalSets: result.data.totalSets ? result.data.totalSets : 0
         })
       );
       done();

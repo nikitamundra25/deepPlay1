@@ -11,7 +11,7 @@ const allSearchModule = async (req: Request, res: Response): Promise<any> => {
     const { search } = query
     const headToken: Request | any = currentUser;
 
-    const filterData: String = 'isDeleted = 0 AND userId:5d84b3b8ccc85b49995a899d'
+    const filterData: String = ''
 
     // define condition
     let condition: any = {

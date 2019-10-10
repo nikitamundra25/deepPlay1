@@ -8,7 +8,6 @@ import {
   ModalBody,
   Form,
   InputGroup,
-  InputGroupAddon,
   ModalFooter
 } from "reactstrap";
 import closeIcon from "../../../assets/img/close-img.png";
@@ -128,24 +127,24 @@ class SharableLinkModal extends React.Component {
                         rows={5}
                       />
                     </CopyToClipboard>
-                    <InputGroupAddon addonType="append">
-                      <CopyToClipboard
-                        text={pathUrl}
-                        onCopy={() => this.setState({ copied: true })}
-                      >
-                        <Button
-                          color=" "
-                          type="button"
-                          disabled={copied}
-                          className=" btn-black"
-                        >
-                          {copied ? "Copied" : " Copy Link"}
-                        </Button>
-                      </CopyToClipboard>
-                    </InputGroupAddon>
                   </InputGroup>
                 </div>
               </FormGroup>
+              <div className=" d-flex justify-content-center">
+                <CopyToClipboard
+                  text={pathUrl}
+                  onCopy={() => this.setState({ copied: true })}
+                >
+                  <Button
+                    color=" "
+                    type="button"
+                    disabled={copied}
+                    className=" btn-black "
+                  >
+                    {copied ? "Copied" : " Copy Link"}
+                  </Button>
+                </CopyToClipboard>
+              </div>
             </Form>
           </div>
         </ModalBody>

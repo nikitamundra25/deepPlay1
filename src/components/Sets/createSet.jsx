@@ -48,10 +48,6 @@ class CreateSetComponent extends React.Component {
 
   handleChange = e => {
     const { name, value } = e.target;
-
-    if (isNaN(value)) {
-      return;
-    }
     this.setState({
       [name]: value,
       errors: {
@@ -82,6 +78,10 @@ class CreateSetComponent extends React.Component {
       addMove: name === "addMove" ? true : false
     };
     await this.props.createSet(data);
+    this.setState({
+      title: "",
+      description: ""
+    });
   };
 
   render() {

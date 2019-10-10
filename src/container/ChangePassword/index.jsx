@@ -32,6 +32,19 @@ class ChangePassword extends Component {
     };
   }
 
+  componentDidUpdate = ({ loginReducer }) => {
+    const previsousState = loginReducer.isChangePasswordDone
+    const currentState = this.props.loginReducer.isChangePasswordDone;
+    if (previsousState !== currentState) {
+      this.setState({
+        oldPassword: "",
+        newPassword: "",
+        confirmPassword: "",
+        errors: {}
+      })
+    }
+  }
+
   handleChange = e => {
     const { target } = e;
     const { value, name } = target;

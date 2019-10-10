@@ -70,14 +70,14 @@ class RecentFolderComponent extends React.Component {
   }
 
   componentDidUpdate(prevProps) {
-    const oldLocation = prevProps.location
+    const oldLocation = prevProps.location;
     const oldPathname = oldLocation.pathname.split("/");
-    const newLocation = this.props.location
+    const newLocation = this.props.location;
     const newPathname = newLocation.pathname.split("/");
     if (
       prevProps.setReducer &&
       prevProps.setReducer.setListinFolder !==
-      this.props.setReducer.setListinFolder
+        this.props.setReducer.setListinFolder
     ) {
       const setList = this.props.setReducer.setListinFolder;
       this.setState({
@@ -88,10 +88,9 @@ class RecentFolderComponent extends React.Component {
       this.props.folderDetail({ id: newPathname[3] });
       this.props.getSetsList({ folderId: newPathname[3] });
       this.setState({
-        folderId: newPathname[3],
+        folderId: newPathname[3]
       });
     }
-
   }
 
   openAddSetModel = () => {
@@ -147,7 +146,7 @@ class RecentFolderComponent extends React.Component {
       previousFolderId: pathName[3]
     };
     const { value } = await ConfirmBox({
-      text: "You want to remove Set from this folder."
+      text: "You want to remove Set from this folder!"
     });
     if (value) {
       this.props.manageSets(data);
@@ -156,7 +155,7 @@ class RecentFolderComponent extends React.Component {
 
   handleFolder = async data => {
     const { value } = await ConfirmBox({
-      text: "You want to transfer this set"
+      text: "You want to transfer this set!"
     });
     if (value) {
       this.props.manageSets(data);
@@ -165,7 +164,7 @@ class RecentFolderComponent extends React.Component {
 
   handleDeleteFolder = async id => {
     const { value } = await ConfirmBox({
-      text: "You want to delete this folder."
+      text: "You want to delete this folder!"
     });
     if (value) {
       this.props.deleteFolder(id);
@@ -185,7 +184,7 @@ class RecentFolderComponent extends React.Component {
       isCopy: true
     };
     const { value } = await ConfirmBox({
-      text: "You want to copy this set!! "
+      text: "You want to copy this set!"
     });
     if (value) {
       this.props.onSetsCreation(data);
@@ -305,6 +304,9 @@ class RecentFolderComponent extends React.Component {
             <div className="sub-title">
               {folderDetails ? folderDetails.description : ""}
             </div>
+            <div className="sub-title">
+              Total sets: {totalSetsInFolder ? totalSetsInFolder : 0}
+            </div>
           </span>
           <div>
             <span
@@ -373,7 +375,11 @@ class RecentFolderComponent extends React.Component {
                                 // onClick={() => this.handleSetDetails(list._id)}
                                 className={"text-capitalize"}
                               >
-                                <span>{list.title} </span>
+                                <span>
+                                  {list.isCopy
+                                    ? `Copy of ${list.title}`
+                                    : list.title}{" "}
+                                </span>
                               </span>
                             </div>
                             <span className={"text-capitalize"}>
@@ -436,44 +442,44 @@ class RecentFolderComponent extends React.Component {
                   );
                 })
               ) : (
-                  <>
-                    <div className="create-set-section mt-2 w-100 empty-folder-section">
-                      <Card className="set-content-wrap empty-folder-card">
-                        <div className="set-content-block w-100 empty-folder-wrap">
-                          <CardHeader className="empty-folder-header">
-                            <img src={emptySetIc} alt={"Images"} />
-                            <div className="content-header set-header">
-                              <span className="content-title">
-                                {" "}
-                                <h3>This folder has no Sets yet</h3>
-                                <p>Organize your Sets for you or your students</p>
-                              </span>
-                            </div>
-                          </CardHeader>
-                          <CardBody className="">
-                            <div className="create-set-tile"></div>
-                            <div className="text-center">
-                              <Button
-                                color=" "
-                                type="button"
-                                className="btn-black btn "
-                                onClick={this.openAddSetModel}
-                              >
-                                <i className="fas fa-plus mr-1"></i>
-                                Add a Set
+                <>
+                  <div className="create-set-section mt-2 w-100 empty-folder-section">
+                    <Card className="set-content-wrap empty-folder-card">
+                      <div className="set-content-block w-100 empty-folder-wrap">
+                        <CardHeader className="empty-folder-header">
+                          <img src={emptySetIc} alt={"Images"} />
+                          <div className="content-header set-header">
+                            <span className="content-title">
+                              {" "}
+                              <h3>This folder has no Sets yet</h3>
+                              <p>Organize your Sets for you or your students</p>
+                            </span>
+                          </div>
+                        </CardHeader>
+                        <CardBody className="">
+                          <div className="create-set-tile"></div>
+                          <div className="text-center">
+                            <Button
+                              color=" "
+                              type="button"
+                              className="btn-black btn "
+                              onClick={this.openAddSetModel}
+                            >
+                              <i className="fas fa-plus mr-1"></i>
+                              Add a Set
                             </Button>
-                            </div>
-                          </CardBody>
-                        </div>
-                      </Card>
-                    </div>
-                  </>
-                )
+                          </div>
+                        </CardBody>
+                      </div>
+                    </Card>
+                  </div>
+                </>
+              )
             ) : (
-                <Col sm={12} className="loader-col">
-                  <Loader />
-                </Col>
-              )}
+              <Col sm={12} className="loader-col">
+                <Loader />
+              </Col>
+            )}
           </Col>
         </Row>
         <AddSetModal

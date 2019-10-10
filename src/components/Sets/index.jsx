@@ -105,7 +105,7 @@ class SetComponent extends React.Component {
     const { modelDetails } = modelInfoReducer;
     const { sharableLinkModalOpen, createSetModalOpen } = modelDetails;
     const { show, setIndex, page } = this.state;
-    console.log(">>>", totalSets);
+    console.log("allSetList", allSetList);
 
     return (
       <div className="set-main-section">
@@ -113,8 +113,7 @@ class SetComponent extends React.Component {
           <span className="content-title">
             <div className="main-title"> {" Your Sets"}</div>
             <div className="sub-title">
-              Total sets{" "}
-              {allSetList && allSetList.length ? allSetList.length : "0"}
+              Total sets {totalSets ? totalSets : "0"}
             </div>
           </span>
           <div>
@@ -165,7 +164,11 @@ class SetComponent extends React.Component {
                               // onClick={() => this.handleSetDetails(setList._id)}
                               className={" text-capitalize"}
                             >
-                              <span>{setList.title}</span>
+                              <span>
+                                {setList.isCopy
+                                  ? `Copy of ${setList.title}`
+                                  : setList.title}
+                              </span>
                             </span>
                           </div>
                           {setList.description ? setList.description : ""}
@@ -259,9 +262,7 @@ class SetComponent extends React.Component {
                             color=" "
                             type="button"
                             className="btn-black btn mt-3 folder-create-btn"
-                            onClick={() =>
-                              this.props.redirectTo(AppRoutes.CREATE_SET.url)
-                            }
+                            onClick={this.handleSetModal}
                           >
                             <i className="fas fa-plus mr-1"></i>
                             Create a Set

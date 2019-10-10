@@ -115,7 +115,7 @@ class SetDetails extends React.Component {
 
   handleDeleteSet = async id => {
     const { value } = await ConfirmBox({
-      text: "You want to delete this set.!! "
+      text: "You want to delete this set!"
     });
     if (value) {
       this.props.onDeleteSets(id);

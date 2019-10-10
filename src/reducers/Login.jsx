@@ -6,7 +6,8 @@ const initialState = {
   isSendingLink: false,
   isSignupLoading: false,
   isLoginRequest: false,
-  isChangePasswordSuccess: false
+  isChangePasswordSuccess: false,
+  isChangePasswordDone: false
 };
 
 export const loginReducer = handleActions(
@@ -37,15 +38,17 @@ export const loginReducer = handleActions(
     }),
     [changePasswordAction.CHANGE_PASSWORD_REQUEST]: (state, { payload }) => ({
       ...state,
-      isChangePasswordSuccess: true
+      isChangePasswordSuccess: true,
+      isChangePasswordDone: false
     }),
     [changePasswordAction.CHANGE_PASSWORD_SUCCESS]: (state, { payload }) => ({
       ...state,
-      isChangePasswordSuccess: false
+      isChangePasswordSuccess: false,
+      isChangePasswordDone: true
     }),
     [changePasswordAction.CHANGE_PASSWORD_FAILED]: (state, { payload }) => ({
       ...state,
-      isChangePasswordSuccess: false
+      isChangePasswordSuccess: false,
     })
   },
   initialState

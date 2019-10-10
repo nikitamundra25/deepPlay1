@@ -4,12 +4,15 @@ import { connect } from "react-redux";
 import {
   sharedFolderInfoRequest,
   publicUrlSetDetailsRequest,
-  shareableLinkRequest
+  shareableLinkRequest,
+  redirectTo
 } from "../../../actions";
 import emptyFolderIc from "../../../assets/img/empty-folder.png";
 import qs from "query-string";
 // import { isEqual } from "../../../helper/Object";
-// import { AppRoutes } from "../../../config/AppRoutes";
+import { AppRoutes } from "../../../config/AppRoutes";
+import PaginationHelper from "helper/Pagination";
+import { AppConfig } from "../../../config/Appconfig";
 import "./index.scss";
 import Loader from "../Loader/Loader";
 // core components
@@ -18,12 +21,17 @@ class FolderSharedLink extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      setListItem: []
+      setListItem: [],
+      page: 1,
+      parsedUrl: ""
     };
   }
 
   componentDidMount() {
     let parsed = qs.parse(this.props.location.search);
+    this.setState({
+      parsedUrl: parsed
+    });
     this.props.encryptedQuery(parsed);
     this.props.publicUrlSetDetails(parsed);
   }
@@ -41,6 +49,22 @@ class FolderSharedLink extends React.Component {
     }
   }
 
+  onPageChange = page => {
+    const { parsedUrl } = this.state;
+    console.log("pa", parsedUrl);
+    this.props.onGoPage(
+      `${AppRoutes.FOLDER_SHARED_LINK.url +
+        `?userId=${parsedUrl.userId}&folderId=${parsedUrl.folderId}&isPublic=${parsedUrl.isPublic}`}?${qs.stringify(
+        { page: page }
+      )}`
+    );
+    const parsed = {
+      ...parsedUrl,
+      page: page
+    };
+    this.props.publicUrlSetDetails(parsed);
+  };
+
   handleSetDetails = id => {
     let parsed = qs.parse(this.props.location.search);
     this.props.shareableLink({
@@ -54,8 +78,12 @@ class FolderSharedLink extends React.Component {
 
   render() {
     const { shareLinkReducer } = this.props;
-    const { setListItem } = this.state;
-    const { decryptedDetails, isSetDetailsLoading } = shareLinkReducer;
+    const { setListItem, page } = this.state;
+    const {
+      decryptedDetails,
+      isSetDetailsLoading,
+      totalSets
+    } = shareLinkReducer;
 
     return (
       <div className={"dashboard-full-section without-sidebar"}>
@@ -71,6 +99,9 @@ class FolderSharedLink extends React.Component {
               <div className="sub-title">
                 {" "}
                 {decryptedDetails ? decryptedDetails.description : ""}
+              </div>
+              <div className="sub-title">
+                Total sets: {totalSets ? totalSets : 0}
               </div>
             </span>
           </div>
@@ -138,13 +169,24 @@ class FolderSharedLink extends React.Component {
                 </>
               )
             ) : (
-              <Row>
-                <Col sm={12} className="loader-col">
-                  <Loader />
-                </Col>
-              </Row>
+              <Col sm={12} className="loader-col">
+                <Loader />
+              </Col>
             )}
           </Row>
+          {totalSets && !isSetDetailsLoading ? (
+            <div className={"d-flex justify-content-center pt-3"}>
+              <PaginationHelper
+                totalRecords={totalSets}
+                currentPage={page}
+                onPageChanged={page => {
+                  this.setState({ page });
+                  this.onPageChange(page);
+                }}
+                pageLimit={AppConfig.ITEMS_PER_PAGE}
+              />
+            </div>
+          ) : null}
         </Container>
       </div>
     );
@@ -161,6 +203,9 @@ const mapDispatchToProps = dispatch => ({
   publicUrlSetDetails: data => dispatch(publicUrlSetDetailsRequest(data)),
   shareableLink: data => {
     dispatch(shareableLinkRequest(data));
+  },
+  onGoPage: data => {
+    dispatch(redirectTo({ path: data }));
   }
 });
 

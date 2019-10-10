@@ -27,7 +27,6 @@ class AllSetSharedLink extends React.Component {
   componentDidMount() {
     let parsed = qs.parse(this.props.location.search);
     this.props.getSetList({ isSetNoLimit: false, parsed });
-    // this.props.publicUrlSetDetails(parsed);
   }
 
   componentDidUpdate({ location }) {
@@ -70,8 +69,7 @@ class AllSetSharedLink extends React.Component {
             <span className="content-title">
               <div className="main-title"> {" Your Sets"}</div>
               <div className="sub-title">
-                Total sets{" "}
-                {allSetList && allSetList.length ? allSetList.length : "0"}
+                Total sets {totalSets ? totalSets : "0"}
               </div>
             </span>
           </div>
@@ -151,15 +149,17 @@ class AllSetSharedLink extends React.Component {
             )}
           </Row>
           {totalSets && !isSetListLoading ? (
-            <PaginationHelper
-              totalRecords={totalSets}
-              currentPage={page}
-              onPageChanged={page => {
-                this.setState({ page });
-                this.onPageChange(page);
-              }}
-              pageLimit={AppConfig.ITEMS_PER_PAGE}
-            />
+            <div className={"d-flex justify-content-center pt-3"}>
+              <PaginationHelper
+                totalRecords={totalSets}
+                currentPage={page}
+                onPageChanged={page => {
+                  this.setState({ page });
+                  this.onPageChange(page);
+                }}
+                pageLimit={AppConfig.ITEMS_PER_PAGE}
+              />
+            </div>
           ) : null}
         </Container>
       </div>
