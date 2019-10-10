@@ -307,7 +307,7 @@ class RecentFolderComponent extends React.Component {
             <div className="sub-title">
               Total sets: {totalSetsInFolder ? totalSetsInFolder : 0}
             </div>
-          </span> 
+          </span>
           <div>
             <span
               className="dashboard-right-content cursor_pointer ml-4"
@@ -375,7 +375,11 @@ class RecentFolderComponent extends React.Component {
                                 // onClick={() => this.handleSetDetails(list._id)}
                                 className={"text-capitalize"}
                               >
-                                <span>{list.title} </span>
+                                <span>
+                                  {list.isCopy
+                                    ? `Copy of ${list.title}`
+                                    : list.title}{" "}
+                                </span>
                               </span>
                             </div>
                             <span className={"text-capitalize"}>

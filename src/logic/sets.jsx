@@ -86,7 +86,9 @@ const createSetLogic = createLogic({
         dispatch(getAllSetRequest({ isSetNoLimit: false }));
         dispatch(
           getFolderSetRequest({
-            folderId: action.payload.folderId._id,
+            folderId: action.payload.folderId
+              ? action.payload.folderId._id
+              : "",
             limit: AppConfig.ITEMS_PER_PAGE
           })
         );

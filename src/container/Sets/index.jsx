@@ -96,6 +96,7 @@ class Set extends React.Component {
       sharableLink: list.sharableLink,
       status: list.status,
       userId: list.userId,
+      copyOfSetId: list._id,
       isCopy: true
     };
     const { value } = await ConfirmBox({

@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import { SetModel, MoveModel, FolderModel } from "../models";
 import Mongoose, { Document } from "mongoose";
-import { ISet, IUpdateSet } from "../interfaces";
+import { ISet, IUpdateSet, IMove } from "../interfaces";
 import { algoliaAppId, algoliaAPIKey } from "../config/app";
 //import * as algoliasearch from 'algoliasearch'; // When using TypeScript
 const algoliasearch = require("algoliasearch");
@@ -24,10 +24,37 @@ const createSet = async (req: Request, res: Response): Promise<any> => {
       folderId: body.folderId ? body.folderId : null,
       sharableLink: body.sharableLink ? body.sharableLink : "",
       isPublic: body.isPublic ? body.isPublic : true,
-      isDeleted: body.isDeleted ? body.isDeleted : false
+      isDeleted: body.isDeleted ? body.isDeleted : false,
+      isCopy: body.isCopy ? true : false
     };
     const setResult: Document | any = new SetModel(setData);
     await setResult.save();
+
+    const setId: String = setResult._id;
+    if (body.isCopy) {
+      const moveResult: Document | any | null = await MoveModel.find({
+        setId: body.copyOfSetId,
+        isDeleted: false
+      });
+      if (moveResult && moveResult.length) {
+        for (let index = 0; index < moveResult.length; index++) {
+          const moveElement = moveResult[index];
+          const newMoveData: IMove = {
+            title: moveElement.title,
+            description: moveElement.description,
+            videoUrl: moveElement.videoUrl,
+            tags: moveElement.tags,
+            isPublic: moveElement.isPublic ? moveElement.isPublic : false,
+            userId: headToken.id,
+            sharableLink: moveElement.sharableLink,
+            status: true,
+            setId: setId
+          };
+          const moveData: Document | any = new MoveModel(newMoveData);
+          await moveData.save();
+        }
+      }
+    }
 
     let setDataForAlgolia: Document | any;
     /* Add items to algolia */
@@ -437,7 +464,6 @@ const publicUrlsetDetails = async (
         folderId: decryptedFolderId,
         isDeleted: false
       }).count();
-      
     } else {
       return res.status(400).json({
         message: "Public access link is not enabled."

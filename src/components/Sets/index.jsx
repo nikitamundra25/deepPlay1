@@ -105,6 +105,7 @@ class SetComponent extends React.Component {
     const { modelDetails } = modelInfoReducer;
     const { sharableLinkModalOpen, createSetModalOpen } = modelDetails;
     const { show, setIndex, page } = this.state;
+    console.log("allSetList", allSetList);
 
     return (
       <div className="set-main-section">
@@ -163,7 +164,11 @@ class SetComponent extends React.Component {
                               // onClick={() => this.handleSetDetails(setList._id)}
                               className={" text-capitalize"}
                             >
-                              <span>{setList.title}</span>
+                              <span>
+                                {setList.isCopy
+                                  ? `Copy of ${setList.title}`
+                                  : setList.title}
+                              </span>
                             </span>
                           </div>
                           {setList.description ? setList.description : ""}
