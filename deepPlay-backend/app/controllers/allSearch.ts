@@ -1,5 +1,4 @@
 import { Request, Response, response } from "express";
-import Mongoose, { Document } from "mongoose";
 import { algoliaAppId, algoliaAPIKey } from "../config/app";
 const algoliasearch = require("algoliasearch");
 const client = algoliasearch(algoliaAppId, algoliaAPIKey);
@@ -11,6 +10,7 @@ const allSearchModule = async (req: Request, res: Response): Promise<any> => {
     const { query } = req;
     const { search } = query
     const headToken: Request | any = currentUser;
+
     // define condition
     let condition: any = {
       $and: []
@@ -18,35 +18,21 @@ const allSearchModule = async (req: Request, res: Response): Promise<any> => {
     condition.$and.push({
       isDeleted: false
     });
-    // if (search) {
-    //   condition.$and.push({
-    //     $or: [
-    //       {
-    //         title: {
-    //           $regex: new RegExp(search.trim(), "i")
-    //         }
-    //       },
-    //       {
-    //         description: {
-    //           $regex: new RegExp(search.trim(), "i")
-    //         }
-    //       }
-    //     ]
-    //   });
-    // }
-    // console.log("!!!!!!!!!!!!!!", condition);
 
-    index.search({
-      query: search,
-      condition: {
-        userId: headToken.id
+    index.search(
+      {
+        query: search,
+        filters: "userId:" + headToken.id,
+        hitsPerPage: 50,
+      },
+      (err: string, hits: Object | any) => {
+        if (err) throw err;
+        return res.status(200).json({
+          data: hits.hits,
+          message: "This is algolia search data"
+        });
       }
-    }).then((data: string | any) => {
-      return res.status(200).json({
-        data: data.hits,
-        message: "This is algolia search data"
-      });
-    });
+    );
   } catch (error) {
     console.log(error);
     res.status(500).send({

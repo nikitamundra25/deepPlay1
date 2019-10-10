@@ -236,19 +236,20 @@ class SetComponent extends React.Component {
                 <Loader />
               </Col>
             
-          )}
-        
+          )}   
         </Row>
         {totalSets && !isSetListLoading ? (
-          <PaginationHelper
-            totalRecords={totalSets}
-            currentPage={page}
-            onPageChanged={page => {
-              this.setState({ page });
-              this.props.onPageChange(page);
-            }}
-            pageLimit={AppConfig.ITEMS_PER_PAGE}
-          />
+          <div className={"text-center"}>
+            <PaginationHelper
+              totalRecords={totalSets}
+              currentPage={page}
+              onPageChanged={page => {
+                this.setState({ page });
+                this.props.onPageChange(page);
+              }}
+              pageLimit={AppConfig.ITEMS_PER_PAGE}
+            />
+          </div>
         ) : null}
       </div>
     );

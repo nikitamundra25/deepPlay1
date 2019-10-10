@@ -115,7 +115,7 @@ const deleteSetLogic = createLogic({
       if (!toast.isActive(toastId)) {
         toastId = toast.success(result.messages[0]);
       }
-      dispatch(redirectTo({ path: AppRoutes.SET.url }));
+      // dispatch(redirectTo({ path: AppRoutes.SET.url }));
       dispatch(getAllSetRequest({ isSetNoLimit: false }));
       done();
     }
