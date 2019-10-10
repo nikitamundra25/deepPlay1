@@ -3,16 +3,18 @@ import {
   CloudinaryAPIKey,
   CloudinaryAPISecretKey,
   CloudName,
-  IsProductionMode
+  IsProductionMode,
+  ServerURL
 } from "../config";
 import cloudinary from "cloudinary";
 import ytdl from "ytdl-core";
 import { MoveModel } from "../models";
 import fs from "fs";
 import path from "path";
-import ThumbnailGenerator from "video-thumbnail-generator";
+import ffmpeg from "ffmpeg";
 import { decrypt } from "../common";
-
+import { orderBy } from "natural-orderby";
+import moment from "moment";
 const __basedir = path.join(__dirname, "../public");
 
 cloudinary.config({
@@ -27,9 +29,11 @@ var up_options = {
   eager_async: true
 };
 
-/* Title:- Download Video to local server
-Prams:- valid youtube video url 
-Created By:- Rishabh Bula*/
+/**
+ * Title:- Download Video to local server
+ * Prams:- valid youtube video url
+ * Created By:- Rishabh Bula
+ */
 
 const downloadVideo = async (req: Request, res: Response): Promise<any> => {
   const { file, currentUser } = req;
@@ -41,10 +45,23 @@ const downloadVideo = async (req: Request, res: Response): Promise<any> => {
       });
     }
     let videoURL: string;
-    videoURL = path.join("uploads", "youtube-videos", file.filename);
+    const fileName = file.filename;
+    videoURL = path.join("uploads", "youtube-videos", fileName);
+    const {
+      frames: framesArray,
+      videoMetaData,
+      videoName
+    } = await getVideoFrames(fileName);
+    delete videoMetaData.filename;
+    const frames = framesArray.map(
+      (frame: string) => `${ServerURL}/uploads/youtube-videos/${frame}`
+    );
     const moveResult: Document | any = new MoveModel({
       videoUrl: videoURL,
-      userId: headToken.id
+      userId: headToken.id,
+      frames,
+      videoMetaData,
+      videoName
     });
     await moveResult.save();
     res.status(200).json({
@@ -84,7 +101,7 @@ const downloadYoutubeVideo = async (
     if (IsProductionMode) {
       originalVideoPath = path.join(
         __dirname,
-        "/uploads",
+        "uploads",
         "youtube-videos",
         fileName
       );
@@ -96,48 +113,42 @@ const downloadYoutubeVideo = async (
         fileName
       );
     }
-    /*  */
-    const videoThumbnailPath = path.join(
-      __basedir,
-      "../uploads",
-      "video-image-thumbnail"
-    );
-    const tg: any = new ThumbnailGenerator({
-      sourcePath: originalVideoPath,
-      thumbnailPath: videoThumbnailPath
-    });
-    tg.generateCb((err: string, result: string) => {
-      if (err) {
-        console.log("err", err);
-      } else {
-        console.log("####################", result);
-      }
-    });
-    /*  */
     videoURL = path.join("uploads", "youtube-videos", fileName);
     let videoStream: any;
 
     /* Download youtube videos on localserver */
     const trueYoutubeUrl = ytdl.validateURL(body.url);
     if (trueYoutubeUrl) {
-      ytdl(body.url).pipe(
-        (videoStream = fs.createWriteStream(originalVideoPath))
-      );
+      ytdl(body.url, {
+        quality: "134"
+      }).pipe((videoStream = fs.createWriteStream(originalVideoPath)));
       videoStream.on("close", async function() {
+        const {
+          frames: framesArray,
+          videoMetaData,
+          videoName
+        } = await getVideoFrames(fileName);
+        delete videoMetaData.filename;
+        const frames = framesArray.map(
+          (frame: string) => `${ServerURL}/uploads/youtube-videos/${frame}`
+        );
         const moveResult: Document | any = new MoveModel({
           videoUrl: videoURL,
-          userId: headToken.id
+          frames: orderBy(frames),
+          userId: headToken.id,
+          videoMetaData,
+          videoName
         });
         await moveResult.save();
-
-        res.status(200).json({
+        return res.status(200).json({
           message: "Video uploaded successfully!",
           videoUrl: videoURL,
-          moveData: moveResult
+          moveData: moveResult,
+          frames
         });
       });
     } else {
-      res.status(400).json({
+      return res.status(400).json({
         message: "Enter a valid youtube url"
       });
     }
@@ -148,7 +159,46 @@ const downloadYoutubeVideo = async (
     });
   }
 };
-
+/**
+ *
+ */
+const getVideoFrames = async (videoName: string): Promise<any> => {
+  const videoURL: string = path.join(
+    __dirname,
+    "..",
+    "uploads",
+    "youtube-videos",
+    videoName
+  );
+  const dirName: string = videoURL;
+  const video = await new ffmpeg(videoURL);
+  const videoDuration = (video.metadata.duration as any).seconds;
+  console.log(videoDuration / 10);
+  return await new Promise((resolve, reject) => {
+    video.fnExtractFrameToJPG(
+      `${dirName.split(".")[0]}_frames`,
+      {
+        start_time: 0,
+        every_n_percentage: 10
+      },
+      (error: any, file: any) => {
+        console.log(error);
+        if (error) {
+          reject(error);
+        }
+        console.log("====================================");
+        console.log(file);
+        console.log("====================================");
+        const frames: string[] = (file as any).map((f: string) => {
+          const fArray = f.split("/");
+          return `${fArray[fArray.length - 2]}/${fArray[fArray.length - 1]}`;
+        });
+        resolve({ frames, videoMetaData: video.metadata, videoName });
+      }
+    );
+  });
+};
+/*  */
 // --------------Get all set info---------------------
 const getMoveBySetId = async (req: Request, res: Response): Promise<any> => {
   try {
@@ -229,11 +279,81 @@ const publicUrlMoveDetails = async (
     });
   }
 };
-
+/**
+ *
+ */
+const updateMoveDetailsAndTrimVideo = async (
+  req: Request,
+  res: Response
+): Promise<any> => {
+  try {
+    const { body } = req;
+    const { timer, moveId, title, description, tags, setId } = body;
+    const result: Document | null | any = await MoveModel.findById(moveId);
+    if (result) {
+      const videoFile = path.join(__dirname, "..", result.videoUrl);
+      const fileName = `${
+        result.videoUrl.split(".")[0]
+      }_clip_${moment().unix()}.webm`;
+      const videoFileMain = path.join(__dirname, "..", `${fileName}`);
+      const video = await new ffmpeg(videoFile);
+      const duration = timer.max - timer.min - 1;
+      video
+        .setVideoStartTime(timer.min)
+        .setVideoDuration(duration)
+        .setVideoFormat("webm")
+        .save(videoFileMain, async (err: any, file: any) => {
+          console.log(err, videoFile, file);
+          if (err) {
+            return res.status(400).json({
+              message:
+                "We are having an issue while creating webm for you. Please try again."
+            });
+          }
+          await MoveModel.updateOne(
+            {
+              _id: result._id
+            },
+            {
+              moveURL: fileName,
+              title,
+              description,
+              tags,
+              setId,
+              videoMetaData: {
+                ...result.videoMetaData,
+                duration: {
+                  ...result.videoMetaData.duration,
+                  seconds: duration
+                }
+              }
+            }
+          );
+          return res.status(200).json({
+            responsecode: 200,
+            data: result
+          });
+        });
+    } else {
+      return res.status(400).json({
+        message: "You've requested to update an unknown move."
+      });
+    }
+  } catch (error) {
+    console.log(error);
+    return res.status(500).send({
+      message: error.message
+    });
+  }
+};
+/**
+ *
+ */
 export {
   downloadVideo,
   getMoveBySetId,
   downloadYoutubeVideo,
   getMoveDetailsById,
-  publicUrlMoveDetails
+  publicUrlMoveDetails,
+  updateMoveDetailsAndTrimVideo
 };
