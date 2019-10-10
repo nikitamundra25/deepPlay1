@@ -10,9 +10,9 @@
   padding: $pagination-padding-y $pagination-padding-x;
   margin-left: -$pagination-border-width;
   line-height: $pagination-line-height;
-  color: $pagination-color;
-  background-color: #000 !important;
-  border: $pagination-border-width solid  #000 !important;
+  color: #000 !important;
+  background-color: #fff !important;
+  border: $pagination-border-width solid  #fff !important;
 
   &:hover {
     z-index: 2;
@@ -49,9 +49,9 @@
 
   &.active .page-link {
     z-index: 1;
-    color: $pagination-active-color;
-    background-color: $pagination-active-bg;
-    border-color: $pagination-active-border-color;
+    color: #fff !important;
+    background-color: #000 !important;
+    border-color: #000 !important;
   }
 
   &.disabled .page-link {

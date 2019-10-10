@@ -74,6 +74,11 @@ export const AppRoutes = {
     name: "Set Sharedlink",
     exact: true
   },
+  ALL_SET_SHARED_LINK: {
+    url: "/all/set/shared/link",
+    name: "Allset Sharedlink",
+    exact: true
+  },
   CHANGE_PASSWORD: {
     url: "/change/password",
     name: "Change Password",

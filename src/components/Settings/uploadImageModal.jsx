@@ -8,7 +8,7 @@ class UploadImage extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      imageData: "",
+      imageData: ""
     };
   }
 
@@ -52,7 +52,7 @@ class UploadImage extends Component {
       await picReader.readAsDataURL(data);
     });
   };
-  
+
   handleCancel = () => {
     this.setState({
       imageData: ""
@@ -61,6 +61,8 @@ class UploadImage extends Component {
   };
   render() {
     const { isImageUploading } = this.props;
+    console.log("??", this.state.imageData);
+
     return (
       <div className="modal-text-center">
         <Modal

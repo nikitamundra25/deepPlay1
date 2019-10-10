@@ -131,7 +131,7 @@ class LoginComponent extends React.Component {
           className="modal-dialog-centered auth-user-model"
           isOpen={openLoginModel}
           toggle={handleLoginModel}
-          backdrop={"static"}
+          // backdrop={"static"}
           size={"sm"}
         >
           <ModalHeader toggle={handleLoginModel}></ModalHeader>

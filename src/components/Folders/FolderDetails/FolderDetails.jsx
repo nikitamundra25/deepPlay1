@@ -221,6 +221,10 @@ class RecentFolderComponent extends React.Component {
     });
   };
 
+  addSets = data => {
+    this.props.onSetsCreation(data);
+  };
+
   onTogglePublicAccess = isPublic => {
     const { folderId } = this.state;
     const data = {
@@ -289,7 +293,6 @@ class RecentFolderComponent extends React.Component {
     const setOfFolder = setListItem.filter(
       item => item.folderId._id === folderId
     );
-    console.log("folderDetails", folderDetails);
 
     return (
       <div className="page-body">
@@ -478,6 +481,7 @@ class RecentFolderComponent extends React.Component {
           modal={addSetModalOpen}
           getAllSet={allSetList}
           folderId={folderId}
+          addNewSet={this.addSets}
           handleSets={this.handleSets}
           {...this.props}
         />

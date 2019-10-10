@@ -136,7 +136,10 @@ const getPublicUrlSetsDetailsLogic = createLogic({
     } else {
       dispatch(hideLoader());
       dispatch(
-        publicUrlSetDetailsSuccess({ publicUrlSetDetails: result.data.data })
+        publicUrlSetDetailsSuccess({
+          publicUrlSetDetails: result.data.data,
+          totalSets: result.data.totalSets
+        })
       );
       done();
     }

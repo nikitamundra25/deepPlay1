@@ -1,42 +1,43 @@
 import React from "react";
-import { Row, Col, Card, CardHeader, Container } from "reactstrap";
 import { connect } from "react-redux";
+import { Card, Container, Col, CardHeader, Row } from "reactstrap";
 import {
-  sharedFolderInfoRequest,
-  publicUrlSetDetailsRequest,
-  shareableLinkRequest
+  getAllSetRequest,
+  shareableLinkRequest,
+  redirectTo
 } from "../../../actions";
-import emptyFolderIc from "../../../assets/img/empty-folder.png";
-import qs from "query-string";
-import { isEqual } from "../../../helper/Object";
-import { AppRoutes } from "../../../config/AppRoutes";
 import "./index.scss";
+import emptySetIc from "../../../assets/img/empty-sets.png";
+import PaginationHelper from "helper/Pagination";
+import { AppConfig } from "../../../config/Appconfig";
+import { AppRoutes } from "../../../config/AppRoutes";
+import qs from "query-string";
 import Loader from "../Loader/Loader";
-// core components
+import { isEqual } from "../../../helper/Object";
 
-class FolderSharedLink extends React.Component {
+// core components
+class AllSetSharedLink extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      setListItem: []
+      page: 1
     };
   }
 
   componentDidMount() {
     let parsed = qs.parse(this.props.location.search);
-    this.props.encryptedQuery(parsed);
-    this.props.publicUrlSetDetails(parsed);
+    this.props.getSetList({ isSetNoLimit: false, parsed });
+    // this.props.publicUrlSetDetails(parsed);
   }
 
-  componentDidUpdate(prevProps) {
-    if (
-      prevProps.shareLinkReducer &&
-      prevProps.shareLinkReducer.publicUrlSetDetails !==
-        this.props.shareLinkReducer.publicUrlSetDetails
-    ) {
-      const setList = this.props.shareLinkReducer.publicUrlSetDetails;
-      this.setState({
-        setListItem: setList
+  componentDidUpdate({ location }) {
+    const prevQuery = qs.parse(location.search);
+    const currQuery = qs.parse(this.props.location.search);
+    if (!isEqual(prevQuery, currQuery)) {
+      this.props.getSetList({
+        ...currQuery,
+        page: currQuery.page || 1,
+        isSetNoLimit: false
       });
     }
   }
@@ -47,39 +48,39 @@ class FolderSharedLink extends React.Component {
       setId: id,
       linkOf: "set",
       publicAccess: "set",
-      isPublic: parsed.isPublic,
+      isPublic: true,
       fromFolder: true
     });
   };
 
+  onPageChange = page => {
+    this.props.onGoPage(
+      `${AppRoutes.ALL_SET_SHARED_LINK.url}?${qs.stringify({ page: page })}`
+    );
+  };
+
   render() {
-    const { shareLinkReducer } = this.props;
-    const { setListItem } = this.state;
-    const { decryptedDetails, isSetDetailsLoading } = shareLinkReducer;
+    const { setReducer } = this.props;
+    const { allSetList, isSetListLoading, totalSets } = setReducer;
+    const { page } = this.state;
 
     return (
-      <div className={"dashboard-full-section without-sidebar"}>
+      <div className="dashboard-full-section without-sidebar">
         <Container>
-          {/* <div className="text-center h3">
-            <b> Folder Details</b>
-          </div>{" "} */}
-          <div className="content-header mt-3">
+          <div className="content-header mt-3 mb-3">
             <span className="content-title">
-              <div className="main-title">
-                {decryptedDetails ? decryptedDetails.title : "MyFolder"}
-              </div>
+              <div className="main-title"> {" Your Sets"}</div>
               <div className="sub-title">
-                {" "}
-                {decryptedDetails ? decryptedDetails.description : ""}
+                Total sets{" "}
+                {allSetList && allSetList.length ? allSetList.length : "0"}
               </div>
             </span>
           </div>
-
           <Row className="set-wrap">
-            {!isSetDetailsLoading ? (
-              setListItem && setListItem.length ? (
+            {!isSetListLoading ? (
+              allSetList && allSetList.length ? (
                 // eslint-disable-next-line
-                setListItem.map((list, i) => {
+                allSetList.map((list, i) => {
                   return (
                     <Col
                       md="6"
@@ -91,7 +92,12 @@ class FolderSharedLink extends React.Component {
                         <div className="cotent-tile d-flex">
                           <div className="cotent-text-tile">
                             <div className="content-heading-tile">
-                              <span>{list.title}</span>
+                              <span
+                                onClick={() => this.handleSetDetails(list._id)}
+                                className={"cursor_pointer"}
+                              >
+                                {list.title}
+                              </span>
                             </div>
                             <div className="content-heading-tile">
                               {" "}
@@ -123,7 +129,7 @@ class FolderSharedLink extends React.Component {
                     <Card className="set-content-wrap empty-folder-card">
                       <div className="set-content-block w-100 empty-folder-wrap">
                         <CardHeader className="empty-folder-header ">
-                          <img src={emptyFolderIc} alt={"Images"} />
+                          <img src={emptySetIc} alt={"Images"} />
                           <div className="content-header set-header">
                             <span className="content-title">
                               {" "}
@@ -145,26 +151,38 @@ class FolderSharedLink extends React.Component {
               </Row>
             )}
           </Row>
+          {totalSets && !isSetListLoading ? (
+            <PaginationHelper
+              totalRecords={totalSets}
+              currentPage={page}
+              onPageChanged={page => {
+                this.setState({ page });
+                this.onPageChange(page);
+              }}
+              pageLimit={AppConfig.ITEMS_PER_PAGE}
+            />
+          ) : null}
         </Container>
       </div>
     );
   }
 }
-const mapStateToProps = state => {
-  return {
-    shareLinkReducer: state.shareLinkReducer
-  };
-};
 
+const mapStateToProps = state => ({
+  setReducer: state.setReducer
+});
 const mapDispatchToProps = dispatch => ({
-  encryptedQuery: data => dispatch(sharedFolderInfoRequest(data)),
-  publicUrlSetDetails: data => dispatch(publicUrlSetDetailsRequest(data)),
+  getSetList: data => {
+    dispatch(getAllSetRequest(data));
+  },
   shareableLink: data => {
     dispatch(shareableLinkRequest(data));
+  },
+  onGoPage: data => {
+    dispatch(redirectTo({ path: data }));
   }
 });
-
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(FolderSharedLink);
+)(AllSetSharedLink);

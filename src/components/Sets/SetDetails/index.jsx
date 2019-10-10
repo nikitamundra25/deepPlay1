@@ -20,7 +20,8 @@ import {
   publicAccessRequest,
   shareableLinkRequest,
   deleteSetRequest,
-  getMovesOfSetRequest
+  getMovesOfSetRequest,
+  UpdateSetRequest
 } from "../../../actions";
 import SharableLinkModal from "../../comman/shareableLink/SharableLink";
 import Slider from "react-slick";
@@ -33,6 +34,7 @@ import emptySetIc from "../../../assets/img/empty-sets.png";
 import addPlusIc from "../../../assets/img/add_plus.png";
 import { ConfirmBox } from "../../../helper/SweetAleart";
 import Loader from "../../comman/Loader/Loader";
+import CreateSetComponent from "../../Sets/createSet";
 
 const homePageImage = [
   "https://images.pexels.com/photos/67636/rose-blue-flower-rose-blooms-67636.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500",
@@ -68,17 +70,20 @@ class SetDetails extends React.Component {
   /*  
   */
   componentDidUpdate = ({ location }) => {
-    const oldLoaction = location
+    const oldLoaction = location;
     const oldpathName = oldLoaction.pathname.split("/");
     const newLocation = this.props.location;
     const pathName = newLocation.pathname.split("/");
-    if (oldpathName[2] !== pathName[2]) {
-      this.props.getSetDetailsRequest({ setId: pathName[2] });
-      this.props.getMovesOfSetRequest({ setId: pathName[2] });
+    if (oldpathName[3] !== pathName[3]) {
+      this.props.getSetDetailsRequest({ setId: pathName[3] });
+      this.props.getMovesOfSetRequest({ setId: pathName[3] });
     }
-  }
+  };
+
   handleMoveAdd = () => {
-    this.props.redirectTo(AppRoutes.MOVE.url);
+    const location = this.props.location;
+    const pathName = location.pathname.split("/");
+    this.props.redirectTo(AppRoutes.MOVE.url + `?setId=${pathName[3]}`);
   };
 
   onTogglePublicAccess = isPublic => {
@@ -87,7 +92,6 @@ class SetDetails extends React.Component {
     const data = {
       isFolderId: null,
       isSetId: pathName[3],
-      isMoveId: null,
       isPublic: isPublic
     };
     this.props.publicAccess(data);
@@ -118,10 +122,18 @@ class SetDetails extends React.Component {
     }
   };
 
-  editSet = id => {
-    this.props.redirectTo(
-      AppRoutes.CREATE_SET.url + `?setId=${id}&isEdit=${true}`
-    );
+  handleSetModal = () => {
+    const { modelInfoReducer } = this.props;
+    const { modelDetails } = modelInfoReducer;
+    this.props.modelOperate({
+      modelDetails: {
+        createSetModalOpen: !modelDetails.createSetModalOpen
+      }
+    });
+  };
+
+  updateSet = data => {
+    this.props.UpdateSetRequest(data);
   };
 
   render() {
@@ -135,7 +147,7 @@ class SetDetails extends React.Component {
     const { modelDetails } = modelInfoReducer;
     const { movesOfSet, isMoveofSetLoading } = moveReducer;
     const { userEncryptedInfo } = shareLinkReducer;
-    const { sharableLinkModalOpen } = modelDetails;
+    const { sharableLinkModalOpen, createSetModalOpen } = modelDetails;
     return (
       <>
         <div className="set-main-section">
@@ -148,23 +160,26 @@ class SetDetails extends React.Component {
                       ? `Copy of ${setDetails.folderId.title}`
                       : setDetails.folderId.title
                     : null} */}
-                  {setDetails.title ? setDetails.title : "MyFolder"}
+                  {setDetails.title ? setDetails.title : "MySet"}
                   {/* <span className={"text-light"}>{setDetails.title}</span> */}
                 </div>
               </span>
             ) : (
-                <span className="content-title">
-                  <div className="main-title">
-                    {setDetails ? setDetails.title : "MyFolder"}
-                  </div>
-                </span>
-              )}
+              <span className="content-title">
+                <div className="main-title">
+                  {setDetails ? setDetails.title : "MySet"}
+                </div>
+                <div className="sub-title">
+                  {setDetails ? setDetails.description : ""}
+                </div>
+              </span>
+            )}
 
             <div>
               <span
                 id="move"
                 className={"cursor_pointer"}
-                onClick={() => this.props.redirectTo(AppRoutes.CREATE_SET.url)}
+                onClick={this.handleMoveAdd}
               >
                 <i className="fas fa-plus-circle icon-font"></i>
               </span>
@@ -191,7 +206,7 @@ class SetDetails extends React.Component {
                   </span>
                 </DropdownToggle>
                 <DropdownMenu>
-                  <DropdownItem onClick={() => this.editSet(setDetails._id)}>
+                  <DropdownItem onClick={() => this.handleSetModal()}>
                     Edit
                   </DropdownItem>
                   <DropdownItem
@@ -377,6 +392,13 @@ class SetDetails extends React.Component {
           userEncryptedInfo={userEncryptedInfo ? userEncryptedInfo : ""}
           shareComponent="Sets"
         />
+        <CreateSetComponent
+          modal={createSetModalOpen}
+          handleOpen={this.handleSetModal}
+          createSet={this.updateSet}
+          editSet="true"
+          setDetails={setDetails ? setDetails : null}
+        />
       </>
     );
   }
@@ -400,7 +422,8 @@ const mapDispatchToProps = dispatch => ({
   onDeleteSets: data => {
     dispatch(deleteSetRequest(data));
   },
-  getMovesOfSetRequest: data => dispatch(getMovesOfSetRequest(data))
+  getMovesOfSetRequest: data => dispatch(getMovesOfSetRequest(data)),
+  UpdateSetRequest: data => dispatch(UpdateSetRequest(data))
 });
 export default connect(
   mapStateToProps,

@@ -11,7 +11,7 @@ data = {
   API_VERSION: process.env.REACT_APP_API_VERSION,
   phoneLength: 3,
   DEFAULT_DATE_FORMAT: "LLL",
-  ITEMS_PER_PAGE: 20,
+  ITEMS_PER_PAGE: 1,
   IMAGE_ENDPOINT: process.env.REACT_APP_API_ENDPOINT
 };
 
