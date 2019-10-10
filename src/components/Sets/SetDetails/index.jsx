@@ -180,10 +180,13 @@ class SetDetails extends React.Component {
           <Card className="video-slider-section">
             <div className="step-2">
               {movesOfSet && movesOfSet.length ? (
-                movesOfSet.map((video, index) => {
-                  return <WebmView key={index} video={video} />;
-                })
+                // movesOfSet.map((video, index) => {
+                <WebmView
+                  // key={index}
+                  video={movesOfSet[0]}
+                />
               ) : (
+                // })
                 <div className="create-set-section w-100 empty-folder-section">
                   <div className="set-content-wrap empty-folder-card">
                     <div className="set-content-block w-100 empty-folder-wrap">

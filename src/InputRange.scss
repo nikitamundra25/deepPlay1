@@ -109,3 +109,15 @@
 }
 
 /*# sourceMappingURL=react-input-range.css.map*/
+.video-controls {
+  .frame-container {
+    position: absolute;
+    top: 0;
+  }
+  .input-range {
+    z-index: 1;
+    .input-range__track--background {
+      background: none;
+    }
+  }
+}
