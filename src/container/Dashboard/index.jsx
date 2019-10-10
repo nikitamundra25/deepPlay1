@@ -124,7 +124,7 @@ class Dashboard extends React.Component {
                             />
                           </div>
                         </div>
-                        <div className="bottom-content-tile">
+                        {/* <div className="bottom-content-tile">
                           <div
                             className="cotent-img-tile teacher-profile-img"
                             style={{
@@ -145,7 +145,7 @@ class Dashboard extends React.Component {
                                 }`
                               : ""}
                           </span>
-                        </div>
+                        </div> */}
                       </div>
                     </Col>
                   );
@@ -238,7 +238,7 @@ class Dashboard extends React.Component {
                             </div>
                           </div>
                         </div>
-                        <div className="bottom-content-tile pt-3">
+                        {/* <div className="bottom-content-tile pt-3">
                           <div
                             className="cotent-img-tile teacher-profile-img"
                             style={{
@@ -259,7 +259,7 @@ class Dashboard extends React.Component {
                                 }`
                               : ""}
                           </span>
-                        </div>
+                        </div> */}
                       </div>
                     </Col>
                   );

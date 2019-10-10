@@ -51,3 +51,26 @@ export const SingupValidationsMessaages = {
     [ValidationTypes.EQUAL]: "Password and confirm password didn't match."
   }
 };
+
+// Validations for title & description
+
+export const CreateFolderValidations = {
+  title: {
+    [ValidationTypes.REQUIRED]: true,
+    [ValidationTypes.MAXLENGTH]: 50,
+    [ValidationTypes.MINLENGTH]: 2
+  },
+  description: {
+    [ValidationTypes.MAXLENGTH]: 250,
+  },
+};
+export const CreateFolderValidationsMessaages = {
+  title: {
+    [ValidationTypes.REQUIRED]: "Please enter title.",
+    [ValidationTypes.MINLENGTH]: "Please enter atleast 2 characters.",
+    [ValidationTypes.MAXLENGTH]: "Title cannot have more that 50 characters"
+  },
+  description: {
+    [ValidationTypes.MAXLENGTH]: "Description cannot have more that 250 characters"
+  },
+};

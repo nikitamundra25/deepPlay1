@@ -17,6 +17,7 @@ import PaginationHelper from "helper/Pagination";
 import qs from "query-string";
 import { AppConfig } from "../../config/Appconfig";
 import SharableLinkModal from "components/comman/shareableLink/SharableLink";
+import CreateSetComponent from "../Sets/createSet";
 
 // core components
 class SetComponent extends React.Component {
@@ -72,6 +73,9 @@ class SetComponent extends React.Component {
   };
 
   handleSharableLink = () => {
+    this.props.shareableLink({
+      linkOf: "yourSet"
+    });
     const { modelInfoReducer } = this.props;
     const { modelDetails } = modelInfoReducer;
     this.props.modelOperate({
@@ -81,12 +85,27 @@ class SetComponent extends React.Component {
     });
   };
 
+  handleSetModal = () => {
+    const { modelInfoReducer } = this.props;
+    const { modelDetails } = modelInfoReducer;
+    this.props.modelOperate({
+      modelDetails: {
+        createSetModalOpen: !modelDetails.createSetModalOpen
+      }
+    });
+  };
+
+  createSet = data => {
+    this.props.onSetsCreation(data);
+  };
+
   render() {
-    const { setReducer, modelInfoReducer } = this.props;
+    const { setReducer, modelInfoReducer, userEncryptedInfo } = this.props;
     const { allSetList, isSetListLoading, totalSets } = setReducer;
     const { modelDetails } = modelInfoReducer;
-    const { sharableLinkModalOpen } = modelDetails;
+    const { sharableLinkModalOpen, createSetModalOpen } = modelDetails;
     const { show, setIndex, page } = this.state;
+    console.log(">>>", totalSets);
 
     return (
       <div className="set-main-section">
@@ -102,7 +121,7 @@ class SetComponent extends React.Component {
             <span
               id="UncontrolledTooltipExample"
               className={"cursor_pointer"}
-              onClick={() => this.props.redirectTo(AppRoutes.CREATE_SET.url)}
+              onClick={this.handleSetModal}
             >
               <i className="fas fa-plus-circle icon-font"></i>
             </span>
@@ -260,11 +279,19 @@ class SetComponent extends React.Component {
             </Col>
           )}
         </Row>
-        {/* <SharableLinkModal
-          modal={sharableLinkModalOpen}n
+
+        <SharableLinkModal
+          modal={sharableLinkModalOpen}
           handleOpen={this.handleSharableLink}
+          userEncryptedInfo={userEncryptedInfo ? userEncryptedInfo : ""}
           shareComponent="yourSets"
-        /> */}
+        />
+        <CreateSetComponent
+          modal={createSetModalOpen}
+          handleOpen={this.handleSetModal}
+          createSet={this.createSet}
+        />
+
         {totalSets && !isSetListLoading ? (
           <PaginationHelper
             totalRecords={totalSets}
