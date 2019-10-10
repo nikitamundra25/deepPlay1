@@ -99,7 +99,7 @@ class Set extends React.Component {
       isCopy: true
     };
     const { value } = await ConfirmBox({
-      text: "You want to copy this set!! "
+      text: "You want to copy this set! "
     });
     if (value) {
       this.props.onSetsCreation(data);
@@ -108,7 +108,7 @@ class Set extends React.Component {
 
   onHandleDelete = async id => {
     const { value } = await ConfirmBox({
-      text: "You want to delete this folder.!! "
+      text: "You want to delete this set!"
     });
     if (value) {
       this.props.onDeleteSets(id);
@@ -139,7 +139,7 @@ class Set extends React.Component {
       previousFolderid: ""
     };
     const { value } = await ConfirmBox({
-      text: "You want to transfer this set!! "
+      text: "You want to transfer this set!"
     });
     if (value) {
       this.props.manageSets(payload);

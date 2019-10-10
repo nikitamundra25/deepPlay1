@@ -166,7 +166,7 @@ class MoveComponent extends React.Component {
               <CardHeader className="border-bottom pt-4 pb-2">
                 <div className="content-header set-header flex-column">
                   <span className="content-title creat-set-title">
-                    Creat a move
+                    Create a move
                   </span>
                 </div>
               </CardHeader>
@@ -253,15 +253,12 @@ class MoveComponent extends React.Component {
                           onChange={this.handleVideoFileSelect}
                           type="file"
                           disabled={isVideoDownloading ? true : false}
-                          className={"d-none"}
+                          className={fileErr ? "is-invalid d-none" : "d-none"}
                           id="videoUpload"
                           name="customFile"
                           accept="video/mp4,video/x-m4v,video/*"
                         />
-                        {/* <FormFeedback>{fileErr ? fileErr : null}</FormFeedback> */}
-                        {fileErr ? (
-                          <p className="text-danger"> {fileErr} </p>
-                        ) : null}
+                        <FormFeedback>{fileErr ? fileErr : null}</FormFeedback>
                       </FormGroup>
                     </div>
                   </Form>

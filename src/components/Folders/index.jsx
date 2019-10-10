@@ -55,7 +55,7 @@ class FolderComponent extends React.Component {
 
   onHandleDelete = async id => {
     const { value } = await ConfirmBox({
-      text: "You want to delete this folder.!! "
+      text: "You want to delete this folder! "
     });
     if (value) {
       this.props.onDelete(id);
@@ -96,7 +96,7 @@ class FolderComponent extends React.Component {
       isCopy: true
     };
     const { value } = await ConfirmBox({
-      text: "You want to copy this folder!! "
+      text: "You want to copy this folder!"
     });
     if (value) {
       this.props.createFolder(data);
@@ -115,13 +115,14 @@ class FolderComponent extends React.Component {
           <span className="content-title">
             <div className="main-title"> {" Your Folders"}</div>
             <div className="sub-title">
-              Total folders{" "}
-              {getAllFolders && getAllFolders.length
-                ? getAllFolders.length
-                : "0"}
+              Total folders {totalFolders ? totalFolders : "0"}
             </div>
           </span>
-          <span onClick={this.handleFolderModel} id="move" className="dashboard-right-content cursor_pointer ml-4">
+          <span
+            onClick={this.handleFolderModel}
+            id="move"
+            className="dashboard-right-content cursor_pointer ml-4"
+          >
             <i className="fas fa-plus-circle icon-font"></i>
           </span>
           <UncontrolledTooltip placement="bottom" target="move">
@@ -131,7 +132,6 @@ class FolderComponent extends React.Component {
 
         <div className="wrap-folder">
           <Row className="set-wrap">
-      
             {!isFolderLoading ? (
               getAllFolders && getAllFolders.length ? (
                 // eslint-disable-next-line
@@ -238,7 +238,6 @@ class FolderComponent extends React.Component {
                 <Loader />
               </Col>
             )}
-         
           </Row>
           <FolderModal
             modal={createFolderOpen}

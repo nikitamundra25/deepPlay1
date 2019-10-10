@@ -19,7 +19,7 @@ import {
 } from "../../validations";
 import { logger } from "../../helper/Logger";
 import Validator from "js-object-validation";
-import { changePasswordRequest } from "../../actions";
+import { changePasswordRequest, changePasswordSuccess } from "../../actions";
 
 class ChangePassword extends Component {
   constructor(props) {
