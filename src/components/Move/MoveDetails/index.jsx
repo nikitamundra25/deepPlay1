@@ -1,6 +1,6 @@
 import React from "react";
 import { connect } from "react-redux";
-import { Card, CardBody, Row, Col, Button } from "reactstrap";
+import { Card, CardBody, Row, Col } from "reactstrap";
 import VideoView from "./videoView";
 import VideoDetails from "./videoDetails";
 import { getMoveDetailsRequest, getAllSetRequest } from "../../../actions";
@@ -112,14 +112,8 @@ class MoveDetails extends React.Component {
                     frames={frames || []}
                     videoMetaData={videoMetaData || {}}
                     onTimerChange={this.onTimerChange}
+                    completeEditing={this.completeEditing}
                   />
-                  <Button
-                    color={"default"}
-                    className={"btn-black btn url-upload-btn"}
-                    onClick={this.completeEditing}
-                  >
-                    Finish
-                  </Button>
                 </>
               )}
             </CardBody>
