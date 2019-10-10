@@ -104,14 +104,9 @@ class MoveDetails extends React.Component {
                 frames={frames || []}
                 videoMetaData={videoMetaData || {}}
                 onTimerChange={this.onTimerChange}
+                completeEditing={this.completeEditing}
               />
-              <Button
-                color={"default"}
-                className={"btn-black btn url-upload-btn"}
-                onClick={this.completeEditing}
-              >
-                Finish
-              </Button>
+              
             </CardBody>
           </Card>
         </div>

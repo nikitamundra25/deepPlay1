@@ -37,9 +37,25 @@
 
 #left-container,
 #right-container {
+  transition: all 0.3s ease-out;
   position: absolute;
   background: #00000085;
   top: 0;
   height: 50px;
   z-index: 1;
+}
+.fram-picker {
+  .input-range__slider {
+    background: #3ab59b;
+    border-color: #3ab59b;
+    border-radius: 0px;
+    top: -17px;
+    transform: none;
+    height: 50.1px;
+    &:active {
+      transform: none;
+      box-shadow: none;
+    }
+  }
+
 }

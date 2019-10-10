@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import InputRange from "react-input-range";
 import { AppConfig } from "config/Appconfig";
-import { Input, Row, Col, FormGroup, Label } from "reactstrap";
+import { Input, Row, Col, FormGroup, Label,Button  } from "reactstrap";
 import { orderBy } from "natural-orderby";
 import { SecondsToHHMMSS } from "helper/Time";
 import { logger } from "helper/Logger";
@@ -137,7 +137,7 @@ class FrameDetails extends Component {
     const { time } = this.state;
     return (
       <>
-        <div className="fram-picker video-controls" id={"video-controls"}>
+        <div className="fram-picker mt-3 video-controls" id={"video-controls"}>
           <div id={"left-container"}></div>
           <div id={"right-container"}></div>
           <InputRange
@@ -162,11 +162,11 @@ class FrameDetails extends Component {
         </div>
 
         <div className={"clearfix"}></div>
-        <Row>
+        <Row className="mt-3">
           <Col sm={"6"}>
             <Row>
               <Col sm={"6"}>
-                <FormGroup inline>
+                <FormGroup inline className="m-0">
                   <Label>Trim From: </Label>
                   <Input
                     type={"select"}
@@ -183,7 +183,7 @@ class FrameDetails extends Component {
                 </FormGroup>
               </Col>
               <Col sm={"6"}>
-                <FormGroup inline>
+                <FormGroup inline className="m-0">
                   <Label>Trim to: </Label>
                   <Input
                     type={"select"}
@@ -200,6 +200,15 @@ class FrameDetails extends Component {
                 </FormGroup>
               </Col>
             </Row>
+          </Col>
+          <Col md={"6"} className="text-right d-flex align-items-end justify-content-end">
+            <Button
+              color={"default"}
+              className={"btn-black btn url-upload-btn"}
+              onClick={()=>this.props.completeEditing()}
+            >
+              Finish
+            </Button>
           </Col>
         </Row>
       </>
