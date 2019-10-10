@@ -1340,7 +1340,7 @@ a {
     position: relative;
     z-index: 1;
     margin-left: 15px;
-    padding: 10px 0px 10px 15px;
+    padding: 10px 0px 0px 15px;
   }
   .add-img {
     width: 60px;
@@ -1431,4 +1431,20 @@ a {
   border-width: 1px 1px 1px 0px;
 }
 
+}
+.play-list-tile{
+  width: 20%;
+  padding:0px 15px;
+}
+.loader-no-height{
+  .loader-wrap{
+    min-height: unset;
+  }
+ 
+}
+.loader-no-background{
+  .loader-block{
+    background:transparent;
+    border: none;
+  }
 }

@@ -300,7 +300,7 @@ class SetDetails extends React.Component {
                       <span class="content-title">Chapter business 247</span>
                     </div>
                   </Col>
-                  <Col md="4">
+                  <div className="play-list-tile">
                     <div className="play-list-block  d-flex h-100 ">
                       <div className="add-play-list-block d-flex w-100 justify-content-center align-items-center text-center flex-column">
                         <div className="h5 font-dark-bold add-img">
@@ -312,13 +312,14 @@ class SetDetails extends React.Component {
                         </Button>
                       </div>
                     </div>
-                  </Col>
+                  </div>
                   {homePageImage.map((images, index) => {
                     return (
-                      <Col md="4" key={index}>
+                      <div className="play-list-tile" key={index}>
                         <div className="play-list-block ">
                           <div className="play-sub-block ">
                             <div className="play-list-img blur-img-wrap">
+                            
                               <img src={images} alt="" />
                               <div
                                 className="blur-img"
@@ -355,7 +356,7 @@ class SetDetails extends React.Component {
                             </div>
                           </div>
                         </div>
-                      </Col>
+                      </div>
                     );
                   })}
                 </Row>

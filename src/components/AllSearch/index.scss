@@ -1,6 +1,20 @@
 // search-box-design
 .search-result-wrap{
     display: flex;
+    left: -180px;
+    /* max-width: 100%; */
+    position: absolute;
+    z-index: 999;
+    height: 75vh;
+    max-height: 450px;
+    overflow: hidden;
+    width: 800px;
+    /* max-width: 100%; */
+    background: #fff;
+    border-radius: 4px;
+    top: 120%;
+    box-shadow: 0 2px 32px 0 rgba(0, 0, 0, 0.17);
+    overflow: auto;
     .searched-img-wrap{
       width: 100%;
       padding-top: 100%;
@@ -18,23 +32,9 @@
         padding: 0px;
       }
     }
-    left: 0;
-    max-width: 100%;
-    position: absolute;
-    z-index: 999;
-    height: 75vh;
-    max-height: 450px;
-    overflow: hidden;
-    min-width: 450px;
-    width: auto;
-    background: #fff;
-    border-radius: 4px;
-    top: 120%;
-    box-shadow: 0 2px 32px 0 rgba(0,0,0,.17);
-    overflow: auto;
     .search-result-block{
       color: #000;
-  
+      flex: 1;
       font-size: 14px;
     }
     .category-wrap{
@@ -65,6 +65,9 @@
          height: auto;  
         }
       }
+      &:hover{
+        background: #dcdcdc;
+      }
       }
     }
   }
@@ -73,7 +76,7 @@
       background: #f1f1f1;
       .searched-img{
       img{
-        width: 50%;
+        width: 60%;
       }}
     }
   }

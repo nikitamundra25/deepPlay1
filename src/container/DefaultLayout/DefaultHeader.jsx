@@ -197,7 +197,7 @@ class DefaultHeader extends React.Component {
                             </UncontrolledDropdown>
                           </Col>
                           <Col className="flex-fill">
-                            <FormGroup className="mb-0 header-search-wrap">
+                            <FormGroup className="mb-0 header-search-wrap ">
                               <InputGroup className="">
                                 <InputGroupAddon addonType="prepend">
                                   <span className="input-group-text">
@@ -207,7 +207,7 @@ class DefaultHeader extends React.Component {
                                     ></i>
                                   </span>
                                 </InputGroupAddon>
-                                <Input placeholder="Search" onChange={this.handleChange} value={search} name={"search"} type="text" />
+                                <Input placeholder="Search" onChange={this.handleChange} value={search} name={"search"} type="text" autocomplete="off" />
                                 {
                                   search ?
                                     <AllSearchComponent
