@@ -119,9 +119,9 @@ const downloadYoutubeVideo = async (
     /* Download youtube videos on localserver */
     const trueYoutubeUrl = ytdl.validateURL(body.url);
     if (trueYoutubeUrl) {
-      ytdl(body.url).pipe(
-        (videoStream = fs.createWriteStream(originalVideoPath))
-      );
+      ytdl(body.url, {
+        quality: "134"
+      }).pipe((videoStream = fs.createWriteStream(originalVideoPath)));
       videoStream.on("close", async function() {
         const {
           frames: framesArray,
