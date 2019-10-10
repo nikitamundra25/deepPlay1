@@ -8,7 +8,7 @@ import {
   FormGroup,
   Input
 } from "reactstrap";
-import { AppRoutes } from "../../../config/AppRoutes";
+//import { AppRoutes } from "../../../config/AppRoutes";
 import closeIcon from "../../../assets/img/close-img.png";
 import CreateSetComponent from "../../Sets/createSet";
 import "./index.scss";

@@ -29,7 +29,6 @@ class CreateSetComponent extends React.Component {
     super(props);
     this.state = {
       title: "",
-      errors: "",
       description: "",
       isEdit: false,
       open: false,

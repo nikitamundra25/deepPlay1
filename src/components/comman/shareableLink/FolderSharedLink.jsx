@@ -8,8 +8,8 @@ import {
 } from "../../../actions";
 import emptyFolderIc from "../../../assets/img/empty-folder.png";
 import qs from "query-string";
-import { isEqual } from "../../../helper/Object";
-import { AppRoutes } from "../../../config/AppRoutes";
+// import { isEqual } from "../../../helper/Object";
+// import { AppRoutes } from "../../../config/AppRoutes";
 import "./index.scss";
 import Loader from "../Loader/Loader";
 // core components

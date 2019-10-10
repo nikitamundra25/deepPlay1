@@ -43,7 +43,6 @@ class AllSetSharedLink extends React.Component {
   }
 
   handleSetDetails = id => {
-    let parsed = qs.parse(this.props.location.search);
     this.props.shareableLink({
       setId: id,
       linkOf: "set",

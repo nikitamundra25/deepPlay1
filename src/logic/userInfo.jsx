@@ -8,7 +8,7 @@ import {
   hideLoader,
   modelOpenRequest,
   uploadImageFailed,
-  profileRequest
+  //profileRequest
 } from "../actions";
 import { AppRoutes } from "../config/AppRoutes";
 import { toast } from "react-toastify";
