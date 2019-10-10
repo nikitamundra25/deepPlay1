@@ -145,6 +145,9 @@ class WebmView extends Component {
               />
             </video>
             <div className={"controls"}>
+              <div className="control-background-wrap">
+                
+              </div>
               <InputRange
                 draggableTrack
                 maxValue={videoLength}
@@ -156,7 +159,7 @@ class WebmView extends Component {
               />
               <div className={"controls-wrap"}>
               <div className={"control-left-block"}>
-                <div className="play-paus-wrap">
+                <div className="play-paus-wrap control-tile">
                   {isPlaying ? (
                     <span onClick={this.pauseVideo} className={"cursor_pointer"}>
                       <i className={"fa fa-pause"}></i>
@@ -167,12 +170,11 @@ class WebmView extends Component {
                       </span>
                     )}
                 </div>
-                <div className="video-time-wrap">
-                  {SecondsToHHMMSS(parseInt(currentTime))}/
-              {SecondsToHHMMSS(videoLength)}
+                <div className="video-time-wrap control-tile">
+                  {SecondsToHHMMSS(parseInt(currentTime))} / {SecondsToHHMMSS(videoLength)}
                 </div>
-                <div className="audio-controls cursor_pointer">
-                  <span onClick={this.toggleMute}>
+                <div className="volume-up-down control-tile">
+                <span onClick={this.toggleMute}>
                     {isMuted ? (
                       <i class="fas fa-volume-mute"></i>
                     ) : audioSpeed ? (
@@ -185,6 +187,9 @@ class WebmView extends Component {
                           <i class="fas fa-volume-mute"></i>
                         )}
                   </span>
+                </div>
+                <div className="volume-range cursor_pointer control-tile">
+                
                   <div
                     style={{
                       width: 100
@@ -201,7 +206,7 @@ class WebmView extends Component {
                     />
                   </div>
                 </div>
-                <div className="speed-wrap">
+                <div className="speed-wrap control-tile">
                   <UncontrolledDropdown
                     className="header-dropdown custom-dropdown"
                     direction="auto"

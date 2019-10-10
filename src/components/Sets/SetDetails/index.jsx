@@ -7,6 +7,7 @@ import {
   Col,
   Row,
   CardHeader,
+  Input,
   DropdownToggle,
   UncontrolledDropdown,
   DropdownMenu,
@@ -29,6 +30,7 @@ import "slick-carousel/slick/slick-theme.css";
 import emptySetIc from "../../../assets/img/empty-sets.png";
 import addPlusIc from "../../../assets/img/add_plus.png";
 import { ConfirmBox } from "../../../helper/SweetAleart";
+import starIc from "../../../assets/img/star.svg";
 import WebmView from "./WebmView";
 const homePageImage = [
   "https://images.pexels.com/photos/67636/rose-blue-flower-rose-blooms-67636.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500",
@@ -133,12 +135,12 @@ class SetDetails extends React.Component {
                 </div>
               </span>
             ) : (
-              <span className="content-title">
-                <div className="main-title">
-                  {setDetails ? setDetails.title : "MyFolder"}
-                </div>
-              </span>
-            )}
+                <span className="content-title">
+                  <div className="main-title">
+                    {setDetails ? setDetails.title : "MyFolder"}
+                  </div>
+                </span>
+              )}
 
             <div>
               <span
@@ -184,37 +186,37 @@ class SetDetails extends React.Component {
                   return <WebmView key={index} video={video} />;
                 })
               ) : (
-                <div className="create-set-section w-100 empty-folder-section">
-                  <div className="set-content-wrap empty-folder-card">
-                    <div className="set-content-block w-100 empty-folder-wrap">
-                      <CardHeader className="empty-folder-header text-center">
-                        <img src={emptySetIc} alt={"Images"} />
-                        <div className="content-header set-header">
-                          <span className="content-title">
-                            {" "}
-                            <h3>You have add atleast one</h3>
-                            <p>No move availabe for this set</p>
-                          </span>
-                        </div>
-                      </CardHeader>
-                      <CardBody className="">
-                        <div className="create-set-tile"></div>
-                        <div className="text-center">
-                          <Button
-                            color=" "
-                            type="button"
-                            className="btn-black btn "
-                            onClick={this.handleMoveAdd}
-                          >
-                            <i className="fas fa-plus mr-1"></i>
-                            Add a Set
+                  <div className="create-set-section w-100 empty-folder-section">
+                    <div className="set-content-wrap empty-folder-card">
+                      <div className="set-content-block w-100 empty-folder-wrap">
+                        <CardHeader className="empty-folder-header text-center">
+                          <img src={emptySetIc} alt={"Images"} />
+                          <div className="content-header set-header">
+                            <span className="content-title">
+                              {" "}
+                              <h3>You have add atleast one</h3>
+                              <p>No move availabe for this set</p>
+                            </span>
+                          </div>
+                        </CardHeader>
+                        <CardBody className="">
+                          <div className="create-set-tile"></div>
+                          <div className="text-center">
+                            <Button
+                              color=" "
+                              type="button"
+                              className="btn-black btn "
+                              onClick={this.handleMoveAdd}
+                            >
+                              <i className="fas fa-plus mr-1"></i>
+                              Add a Set
                           </Button>
-                        </div>
-                      </CardBody>
+                          </div>
+                        </CardBody>
+                      </div>
                     </div>
                   </div>
-                </div>
-              )}
+                )}
             </div>
           </Card>
           <section className="play-list-collection set-detail-section">
@@ -242,7 +244,26 @@ class SetDetails extends React.Component {
                   <Col md="4" key={index}>
                     <div className="play-list-block ">
                       <div className="play-sub-block ">
-                        <div className="play-list-img blur-img-wrap">
+                        <div className="play-list-img blur-img-wrap checked-wrap">
+                          <div className="custom-control custom-control-alternative custom-checkbox set-img-thumnail">
+                            <Input
+                              className="custom-control-input"
+                              id="customCheckRegister"
+                        
+                              name={"roleType"}
+                        
+                              type="checkbox"
+                            />
+                            <label
+                              className="custom-control-label"
+                              htmlFor="customCheckRegister"
+                            >
+                          
+                            </label>
+                          </div>
+                          <div className="star-wrap">
+                            <img src={starIc} />
+                          </div>
                           <img src={images} alt="" />
                           <div
                             className="blur-img"
