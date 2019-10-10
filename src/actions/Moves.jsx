@@ -10,7 +10,8 @@ export const MovesAction = {
   GET_MOVES_OF_SET_SUCCESS: "Get moves for sets success!",
   GET_ALL_MOVE_REQUEST: "Get All Move Request",
   GET_ALL_MOVE_SUCCESS: "Get All Move Success",
-  UPDATE_VIDEO_SETTINGS: "Update the webm details."
+  UPDATE_VIDEO_SETTINGS: "Update the webm details.",
+  UPDATE_VIDEO_SETTINGS_SUCCESS: "Update the webm details success."
 };
 
 export const downloadYoutubeVideoRequest = createAction(
@@ -38,4 +39,7 @@ export const getMoveDetailsSuccess = createAction(
 );
 export const completeVideoEditing = createAction(
   MovesAction.UPDATE_VIDEO_SETTINGS
+);
+export const completeVideoEditingSuccess = createAction(
+  MovesAction.UPDATE_VIDEO_SETTINGS_SUCCESS
 );

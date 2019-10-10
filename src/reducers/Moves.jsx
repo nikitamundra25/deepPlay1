@@ -5,8 +5,9 @@ import { MovesAction } from "../actions";
 const initialState = {
   isVideoDownloading: false,
   movesOfSet: [],
-  moveDetails:"",
-  isMoveDetailsLoading: false
+  moveDetails: {},
+  isMoveDetailsLoading: false,
+  isSavingWebM: false
 };
 
 export const moveReducer = handleActions(
@@ -14,14 +15,14 @@ export const moveReducer = handleActions(
     [MovesAction.DOWNLOAD_YOUTUBE_VIDEO_REQUEST]: (state, { payload }) => ({
       ...state,
       isVideoDownloading: true,
-      moveDetails:{
+      moveDetails: {
         videoUrl: ""
       }
     }),
     [MovesAction.DOWNLOAD_YOUTUBE_VIDEO_SUCCESS]: (state, { payload }) => ({
       ...state,
       isVideoDownloading: false,
-      moveDetails:{
+      moveDetails: {
         videoUrl: payload.videoUrl
       }
     }),
@@ -38,6 +39,10 @@ export const moveReducer = handleActions(
       ...state,
       moveDetails: payload.moveDetails,
       isMoveDetailsLoading: false
+    }),
+    [MovesAction.UPDATE_VIDEO_SETTINGS_SUCCESS]: (state, { payload }) => ({
+      ...state,
+      ...payload
     })
   },
   initialState

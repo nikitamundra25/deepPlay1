@@ -10,6 +10,7 @@ import {
 import { AppRoutes } from "../config/AppRoutes";
 import { toast } from "react-toastify";
 import { logger } from "helper/Logger";
+import { completeVideoEditingSuccess } from "actions/Moves";
 let toastId = null;
 
 //  Download video
@@ -126,6 +127,11 @@ const getMovesDetailsByIdLogic = createLogic({
 const completeVideoEditingLogic = createLogic({
   type: MovesAction.UPDATE_VIDEO_SETTINGS,
   async process({ action }, dispatch, done) {
+    dispatch(
+      completeVideoEditingSuccess({
+        isSavingWebM: true
+      })
+    );
     let api = new ApiHelper();
     let result = await api.FetchFromServer(
       "move",
@@ -136,6 +142,11 @@ const completeVideoEditingLogic = createLogic({
       action.payload
     );
     logger(result, action.payload);
+    dispatch(
+      completeVideoEditingSuccess({
+        isSavingWebM: false
+      })
+    );
     done();
   }
 });

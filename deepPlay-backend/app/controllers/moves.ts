@@ -173,6 +173,7 @@ const getVideoFrames = async (videoName: string): Promise<any> => {
   const dirName: string = videoURL;
   const video = await new ffmpeg(videoURL);
   const videoDuration = (video.metadata.duration as any).seconds;
+  console.log(videoDuration / 10);
   return await new Promise((resolve, reject) => {
     video.fnExtractFrameToJPG(
       `${dirName.split(".")[0]}_frames`,
@@ -185,6 +186,9 @@ const getVideoFrames = async (videoName: string): Promise<any> => {
         if (error) {
           reject(error);
         }
+        console.log("====================================");
+        console.log(file);
+        console.log("====================================");
         const frames: string[] = (file as any).map((f: string) => {
           const fArray = f.split("/");
           return `${fArray[fArray.length - 2]}/${fArray[fArray.length - 1]}`;

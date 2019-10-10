@@ -45,7 +45,8 @@ class MoveDetails extends React.Component {
   completeEditing = e => {
     e.preventDefault();
     const { moveReducer } = this.props;
-    const { moveDetails } = moveReducer;
+    const { moveDetails, isSavingWebM } = moveReducer;
+    logger(isSavingWebM);
     const { _id: moveId } = moveDetails;
     const { timer } = this.state;
     const { tags, setId } = this.videoDetails.current.getDetails();
@@ -64,7 +65,7 @@ class MoveDetails extends React.Component {
    */
   render() {
     const { setReducer, moveReducer } = this.props;
-    const { moveDetails } = moveReducer;
+    const { moveDetails, isSavingWebM } = moveReducer;
     const { frames, videoMetaData } = moveDetails || {};
     const { timer } = this.state;
     return (
@@ -83,35 +84,44 @@ class MoveDetails extends React.Component {
                   <i className="fas fa-long-arrow-alt-left" /> Back
                 </span>
               </div>
-              <Row>
-                <Col md={"12"}>
-                  <Row className={"mt-3"}>
-                    {moveDetails && moveDetails.videoUrl ? (
-                      <>
-                        <VideoView moveReducer={moveReducer} timer={timer} />
-                        <VideoDetails
-                          setReducer={setReducer}
-                          ref={this.videoDetails}
-                        />
-                      </>
-                    ) : (
-                      <Loader />
-                    )}
+              {isSavingWebM ? (
+                <Loader />
+              ) : (
+                <>
+                  <Row>
+                    <Col md={"12"}>
+                      <Row className={"mt-3"}>
+                        {moveDetails && moveDetails.videoUrl ? (
+                          <>
+                            <VideoView
+                              moveReducer={moveReducer}
+                              timer={timer}
+                            />
+                            <VideoDetails
+                              setReducer={setReducer}
+                              ref={this.videoDetails}
+                            />
+                          </>
+                        ) : (
+                          <Loader />
+                        )}
+                      </Row>
+                    </Col>
                   </Row>
-                </Col>
-              </Row>
-              <FrameDetails
-                frames={frames || []}
-                videoMetaData={videoMetaData || {}}
-                onTimerChange={this.onTimerChange}
-              />
-              <Button
-                color={"default"}
-                className={"btn-black btn url-upload-btn"}
-                onClick={this.completeEditing}
-              >
-                Finish
-              </Button>
+                  <FrameDetails
+                    frames={frames || []}
+                    videoMetaData={videoMetaData || {}}
+                    onTimerChange={this.onTimerChange}
+                  />
+                  <Button
+                    color={"default"}
+                    className={"btn-black btn url-upload-btn"}
+                    onClick={this.completeEditing}
+                  >
+                    Finish
+                  </Button>
+                </>
+              )}
             </CardBody>
           </Card>
         </div>
