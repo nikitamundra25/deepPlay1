@@ -91,10 +91,7 @@ class FrameDetails extends Component {
 
     return (
       <>
-        <div
-          className={"position-relative video-controls"}
-          style={{ minHeight: 80 }}
-        >
+        <div className="fram-picker video-controls">
           <InputRange
             draggableTrack
             maxValue={maxValue}
@@ -104,21 +101,18 @@ class FrameDetails extends Component {
             onChange={this.labelValueChange}
           />
           <div className={"frame-container"}>
-            {orderBy(frames).map((frame, index) => {
-              return (
-                <div
-                  key={index}
-                  style={{
-                    float: "left"
-                  }}
-                >
-                  <img src={frame} alt={`Frame ${index + 1}`} width={100} />
-                  <br />
-                </div>
-              );
-            })}
+            <div className="fram-wrap">
+              {orderBy(frames).map((frame, index) => {
+                return (
+                  <div className="frem-inner" key={index}>
+                    <img src={frame} alt={`Frame ${index + 1}`} />
+                  </div>
+                );
+              })}
+            </div>
           </div>
         </div>
+
         <div className={"clearfix"}></div>
         <Row>
           <Col sm={"6"}>
