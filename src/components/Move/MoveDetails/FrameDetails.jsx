@@ -4,6 +4,7 @@ import { AppConfig } from "config/Appconfig";
 import { Input, Row, Col, FormGroup, Label } from "reactstrap";
 import { orderBy } from "natural-orderby";
 import { SecondsToHHMMSS } from "helper/Time";
+import { logger } from "helper/Logger";
 
 class FrameDetails extends Component {
   constructor(props) {
@@ -14,6 +15,47 @@ class FrameDetails extends Component {
         max: 15
       }
     };
+  }
+  componentDidUpdate() {
+    this.updateSlider();
+  }
+  /**
+   *
+   */
+  updateSlider() {
+    const containerEle = document.getElementById("video-controls");
+    if (containerEle) {
+      try {
+        const { childNodes } = containerEle;
+        for (let i = 0; i < childNodes.length; i++) {
+          const child = childNodes[i];
+          if (child.classList.contains("input-range")) {
+            for (let k = 0; k < child.childNodes.length; k++) {
+              const newChild = child.childNodes[k];
+              if (newChild.classList.contains("input-range__track")) {
+                const leftContainer = document.getElementById("left-container");
+                const rightContainer = document.getElementById(
+                  "right-container"
+                );
+                // get width for left and right container
+                const leftWidth = newChild.childNodes[1].style.left;
+                const rightWidth = newChild.childNodes[2].style.left;
+                const siderWidth = newChild.childNodes[0].style.width;
+                const actualRightWidth = 100 - parseFloat(rightWidth);
+                // set properties
+                leftContainer.style.width = leftWidth;
+                leftContainer.style.left = 0;
+                rightContainer.style.width = `${actualRightWidth}%`;
+                rightContainer.style.left = rightWidth;
+                logger(leftWidth, actualRightWidth, siderWidth);
+              }
+            }
+          }
+        }
+      } catch (error) {
+        logger(error);
+      }
+    }
   }
   /**
    *
@@ -53,6 +95,7 @@ class FrameDetails extends Component {
 
       return;
     }
+
     this.setState(
       {
         time: value
@@ -75,7 +118,11 @@ class FrameDetails extends Component {
       index <= (maxValue - (type === "max" ? 0 : 1) || 0);
       index++
     ) {
-      options.push(<option value={index}>{SecondsToHHMMSS(index)}</option>);
+      options.push(
+        <option key={index} value={index}>
+          {SecondsToHHMMSS(index)}
+        </option>
+      );
     }
 
     return options;
@@ -88,10 +135,11 @@ class FrameDetails extends Component {
     const { duration } = videoMetaData || {};
     const { seconds: maxValue } = duration || {};
     const { time } = this.state;
-
     return (
       <>
-        <div className="fram-picker video-controls">
+        <div className="fram-picker video-controls" id={"video-controls"}>
+          <div id={"left-container"}></div>
+          <div id={"right-container"}></div>
           <InputRange
             draggableTrack
             maxValue={maxValue}
