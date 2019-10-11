@@ -20,10 +20,7 @@ class Setting extends React.Component {
   onDelete = () => {
     this.props.onDeleteUserAccount();
   };
-  // uploadImage = file => {
-  //   console.log(">>>>.", file);
-  //   this.props.uploadProfileImage(file);
-  // };
+ 
   render() {
     const {
       modelOperate,

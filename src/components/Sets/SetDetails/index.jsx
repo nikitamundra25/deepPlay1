@@ -282,7 +282,7 @@ class SetDetails extends React.Component {
                               <div className="content-header set-header">
                                 <span className="content-title">
                                   {" "}
-                                  <h3>You have add atleast one</h3>
+                                  <h3>You haven't add any move yet!</h3>
                                   <p>No move availabe for this set</p>
                                 </span>
                               </div>

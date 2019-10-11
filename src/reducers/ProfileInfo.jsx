@@ -19,6 +19,10 @@ export const profileInfoReducer = handleActions(
       profileInfo: payload.profileInfo,
       isprofileInfoLoading: false
     }),
+    [ProfileAction.UPDATEPROFILEINFO_SUCCESS]: (state, { payload }) => ({
+      ...state,
+      profileInfo: payload.profileInfo
+    }),
     [ProfileAction.UPLOAD_IMAGE_REQUEST]: (state, { payload }) => ({
       ...state,
       isImageUploading: true

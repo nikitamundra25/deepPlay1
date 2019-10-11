@@ -8,7 +8,6 @@ import {
   ModalBody,
   Form,
   InputGroup,
-  InputGroupAddon,
   ModalFooter
 } from "reactstrap";
 import closeIcon from "../../../assets/img/close-img.png";

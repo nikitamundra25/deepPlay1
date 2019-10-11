@@ -173,6 +173,7 @@ const getMoveBySetId = async (req: Request, res: Response): Promise<any> => {
   }
 };
 
+
 const getMoveDetailsById = async (
   req: Request,
   res: Response

@@ -51,7 +51,6 @@ class FolderSharedLink extends React.Component {
 
   onPageChange = page => {
     const { parsedUrl } = this.state;
-    console.log("pa", parsedUrl);
     this.props.onGoPage(
       `${AppRoutes.FOLDER_SHARED_LINK.url +
         `?userId=${parsedUrl.userId}&folderId=${parsedUrl.folderId}&isPublic=${parsedUrl.isPublic}`}?${qs.stringify(

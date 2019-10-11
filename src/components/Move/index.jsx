@@ -99,7 +99,6 @@ class MoveComponent extends React.Component {
         return;
       }
       if (!this.state.errors) {
-        console.log("fgfj", this.state.errors);
         const payload = {
           url: this.state.url,
           isYoutubeUrl: this.state.isYouTubeUrl
