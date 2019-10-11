@@ -6,10 +6,28 @@ import {
   FormFeedback,
   InputGroup
 } from "reactstrap";
-import TagsInput from "react-tagsinput";
+import CreatableSelect from 'react-select/creatable';
 import "react-tagsinput/react-tagsinput.css";
 import AsyncSelect from "react-select/async";
 import "./index.scss";
+const colourOptions = [
+  {
+    label:"Red",
+    value: "red"
+  },
+  {
+    label:"Green",
+    value: "Green"
+  },
+  {
+    label:"Yellow",
+    value: "Yellow"
+  },
+  {
+    label:"Blue",
+    value: "Blue"
+  }
+]
 // core components
 class VideoDetails extends React.Component {
   constructor(props) {
@@ -60,11 +78,18 @@ class VideoDetails extends React.Component {
             {/* add tag-input-wrap class for tagInput design  */}
             <Label className="">Add tag and press enter for separate</Label>
             <div className="w-100 tag-input-wrap">
-              <TagsInput
+              {/* <TagsInput
                 value={tags}
                 className={"form-control"}
                 maxTags={"5"}
                 onChange={this.props.handleTagChange}
+              /> */}
+              <CreatableSelect
+                isMulti
+                onChange={this.props.handleTagChange}
+                value={tags}
+                options={colourOptions}
+              // options={colourOptions}
               />
             </div>
           </FormGroup>

@@ -15,7 +15,7 @@ import {
 } from "reactstrap";
 import VideoView from "./videoView";
 import VideoDetails from "./videoDetails";
-import { getMoveDetailsRequest, getAllSetRequest, modelOpenRequest } from "../../../actions";
+import { getMoveDetailsRequest, getAllSetRequest, modelOpenRequest, addNewTagToList } from "../../../actions";
 import "./index.scss";
 import Loader from "components/comman/Loader/Loader";
 import FrameDetails from "./FrameDetails";
@@ -23,6 +23,7 @@ import { logger } from "helper/Logger";
 import { completeVideoEditing } from "actions/Moves";
 import closeBtn from "../../../assets/img/close-img.png";
 import MoveSuccessModal from "./moveSuccessModal"
+
 // core components
 class MoveDetails extends React.Component {
   constructor(props) {
@@ -125,10 +126,24 @@ class MoveDetails extends React.Component {
   /**
    *
    */
-  handleTagChange = tags => {
-    this.setState({
-      tags
-    });
+  handleTagChange = (newValue, actionMeta) => {
+    //const { tagsList } = this.props.moveReducer
+    console.log(newValue);
+    if (newValue) {
+      this.setState({
+        tags: newValue
+      })
+    } else {
+      this.setState({
+        tags: []
+      })
+    }
+    // if (actionMeta.action === 'create-option') {
+    //   const tags = tagsList.push(newValue)
+    //   this.props.addNewTagToList(tags)
+    // }
+    console.log(`action: ${actionMeta.action}`);
+    console.groupEnd();
   };
   handleChange = (e) => {
     const { name, value } = e.target;
@@ -190,7 +205,7 @@ class MoveDetails extends React.Component {
       modelInfoReducer } = this.props;
     const { modelDetails } = modelInfoReducer;
     const { isDescriptionModalOpen, isMoveSuccessModal } = modelDetails
-    const { moveDetails, isSavingWebM } = moveReducer;
+    const { moveDetails, isSavingWebM, tagsList } = moveReducer;
     const { frames, videoMetaData } = moveDetails || {};
     const {
       timer,
@@ -242,6 +257,7 @@ class MoveDetails extends React.Component {
                                 errors={errors}
                                 handleTagChange={this.handleTagChange}
                                 tags={tags}
+                                tagsList={tagsList}
                                 ref={this.videoDetails}
                               />
                             </>
@@ -344,6 +360,7 @@ const mapDispatchToProps = dispatch => ({
   getAllSetRequest: data => dispatch(getAllSetRequest(data)),
   completeVideoEditing: data => dispatch(completeVideoEditing(data)),
   modelOperate: data => dispatch(modelOpenRequest(data)),
+  addNewTagToList: data => dispatch(addNewTagToList(data))
 });
 export default connect(
   mapStateToProps,
