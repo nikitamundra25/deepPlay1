@@ -18,8 +18,8 @@ import {
 import emptyFolderIc from "../../assets/img/empty-folder.png";
 import emptySetIc from "../../assets/img/empty-sets.png";
 import Loader from "../../components/comman/Loader/Loader";
-import defaultProfileImage from "../../assets/img/profile-ic.png";
-import { AppConfig } from "../../config/Appconfig";
+// import defaultProfileImage from "../../assets/img/profile-ic.png";
+// import { AppConfig } from "../../config/Appconfig";
 
 // core components
 class Dashboard extends React.Component {
@@ -51,14 +51,10 @@ class Dashboard extends React.Component {
   };
 
   render() {
-    const { folderReducer, setReducer, profileInfoReducer } = this.props;
+    const { folderReducer, setReducer } = this.props;
     const { isRecentFolderLoading, recentFolders } = folderReducer;
     const { isRecentSetLoading, recentSets } = setReducer;
-    const { profileInfo } = profileInfoReducer;
-    const splitedImage =
-      profileInfo && profileInfo.profileImage
-        ? profileInfo.profileImage.split("/")
-        : [];
+    
     return (
       <>
         <div className="page-body">

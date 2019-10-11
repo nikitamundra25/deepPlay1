@@ -15,8 +15,7 @@ import {
   profileRequest,
   createFolderRequest,
   createSetRequest,
-  allSearchRequest,
-  redirectTo
+  allSearchRequest
 } from "../../actions/index.jsx";
 import { AppRoutes } from "../../config/AppRoutes";
 

@@ -11,6 +11,8 @@ const allSearchModule = async (req: Request, res: Response): Promise<any> => {
     const { search } = query
     const headToken: Request | any = currentUser;
 
+    const filterData: String = ''
+
     // define condition
     let condition: any = {
       $and: []
@@ -19,14 +21,14 @@ const allSearchModule = async (req: Request, res: Response): Promise<any> => {
       isDeleted: false
     });
 
-    index.search(
+    index.search(search,
       {
-        query: search,
-        filters: "userId:" + headToken.id,
-        hitsPerPage: 50,
+        filters: filterData,
       },
       (err: string, hits: Object | any) => {
         if (err) throw err;
+        console.log("FFFFFFFFFFFFFFFFFF", hits);
+
         return res.status(200).json({
           data: hits.hits,
           message: "This is algolia search data"

@@ -19,7 +19,7 @@ import {
 } from "../../validations";
 import { logger } from "../../helper/Logger";
 import Validator from "js-object-validation";
-import { changePasswordRequest, changePasswordSuccess } from "../../actions";
+import { changePasswordRequest } from "../../actions";
 
 class ChangePassword extends Component {
   constructor(props) {
@@ -30,6 +30,19 @@ class ChangePassword extends Component {
       confirmPassword: "",
       errors: {}
     };
+  }
+
+  componentDidUpdate = ({ loginReducer }) => {
+    const previsousState = loginReducer.isChangePasswordDone
+    const currentState = this.props.loginReducer.isChangePasswordDone;
+    if (previsousState !== currentState) {
+      this.setState({
+        oldPassword: "",
+        newPassword: "",
+        confirmPassword: "",
+        errors: {}
+      })
+    }
   }
 
   handleChange = e => {

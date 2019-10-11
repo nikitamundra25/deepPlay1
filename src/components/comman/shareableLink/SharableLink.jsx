@@ -66,7 +66,6 @@ class SharableLinkModal extends React.Component {
     const { isPublic, copied } = this.state;
     let path = "";
     // eslint-disable-next-line
-
     {
       shareComponent !== "yourSets"
         ? shareComponent === "Folder"

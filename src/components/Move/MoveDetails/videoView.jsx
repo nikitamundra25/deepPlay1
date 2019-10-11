@@ -9,10 +9,11 @@ import {
   UncontrolledTooltip
 } from "reactstrap";
 import { AppConfig } from "../../../config/Appconfig";
-import "./index.scss"
+import "./index.scss";
 
 // core components
 class VideoView extends React.Component {
+  video;
   constructor(props) {
     super(props);
     this.state = {
@@ -21,10 +22,41 @@ class VideoView extends React.Component {
       isPaste: false
     };
   }
-
+  /**
+   *
+   */
+  componentDidMount() {
+    this.video = document.getElementById("video-trimmer");
+    this.video.addEventListener("timeupdate", () => {
+      const { timer } = this.props;
+      const { min, max } = timer || {};
+      const { currentTime } = this.video;
+      if (parseInt(currentTime) >= max) {
+        this.video.pause();
+        setTimeout(() => {
+          this.video.currentTime = min;
+          this.video.play();
+        }, 500);
+      }
+    });
+  }
+  /**
+   *
+   */
+  componentDidUpdate({ timer: oldTimer }) {
+    const { timer } = this.props;
+    const { max: oldMax, min: oldMin } = oldTimer || {};
+    const { max, min } = timer || {};
+    if (this.video && (min !== oldMin || max !== oldMax)) {
+      this.video.currentTime = min;
+    }
+  }
+  /**
+   *
+   */
   render() {
-    const { moveReducer } = this.props
-    const { moveDetails } = moveReducer
+    const { moveReducer, description } = this.props;
+    const { moveDetails } = moveReducer;
     return (
       <>
         <Col md={"6"}>
@@ -35,38 +67,44 @@ class VideoView extends React.Component {
                   id="title"
                   className={"move-title"}
                   placeholder="Enter your title (optional)"
+                  onChange={(e) => this.props.handleChange(e)}
                   type="text"
                   name="title"
                 />
-                <InputGroupAddon addonType="prepend" className="discription-btn-wrap">
-                  <InputGroupText
-                    id="description"
-                    className={"discription-btn cursor_pointer"}
-                  >
-                    <i className="fas fas fa-info " />
-                    <UncontrolledTooltip
-                      placement="top"
-                      target="description"
+                <InputGroupAddon
+                  addonType="prepend"
+                  className="discription-btn-wrap"
+                >
+                  <div onClick={this.props.handleDesriptionModal}>
+                    <InputGroupText
+                      id="description"
+                      className={"discription-btn cursor_pointer"}
                     >
-                      Add description
-                  </UncontrolledTooltip>
-                  </InputGroupText>
+                      <i className="fas fas fa-info " />
+                      <UncontrolledTooltip placement="top" target="description">
+                        {
+                          description ?
+                            "Update Description" :
+                            "Add description"
+                        }
+                      </UncontrolledTooltip>
+                    </InputGroupText>
+                  </div>
                 </InputGroupAddon>
               </InputGroup>
             </div>
           </FormGroup>
-          {
-            moveDetails && moveDetails.videoUrl ?
-              <>
-                <video width={"100%"} autoplay controls>
-                  <source
-                    src={`${AppConfig.API_ENDPOINT}${moveDetails.videoUrl}`}
-                  />
-                </video>
-              </>
-              :
+          {moveDetails && moveDetails.videoUrl ? (
+            <>
+              <video width={"100%"} autoPlay loop id={"video-trimmer"} muted>
+                <source
+                  src={`${AppConfig.API_ENDPOINT}${moveDetails.videoUrl}`}
+                />
+              </video>
+            </>
+          ) : (
               <span>No video available for trimming</span>
-          }
+            )}
         </Col>
       </>
     );

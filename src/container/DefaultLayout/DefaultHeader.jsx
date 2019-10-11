@@ -221,7 +221,7 @@ class DefaultHeader extends React.Component {
                                 </span>
                               </InputGroupAddon>
                               <Input
-                                placeholder="Search"
+                                placeholder="Search for folder,sets and moves"
                                 onChange={this.handleChange}
                                 value={search}
                                 name={"search"}
