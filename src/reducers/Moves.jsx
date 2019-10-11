@@ -6,6 +6,7 @@ const initialState = {
   isVideoDownloading: false,
   movesOfSet: [],
   moveDetails: "",
+  tagsList: [],
   isMoveDetailsLoading: false,
   isMoveofSetLoading: false,
   isSavingWebM: false
@@ -50,6 +51,10 @@ export const moveReducer = handleActions(
     [MovesAction.UPDATE_VIDEO_SETTINGS_SUCCESS]: (state, { payload }) => ({
       ...state,
       ...payload
+    }),
+    [MovesAction.ADD_NEW_TAG_TO_LIST]: (state, { payload }) => ({
+      ...state,
+      tagsList: payload
     })
   },
   initialState
