@@ -86,6 +86,17 @@ class FolderSharedLink extends React.Component {
 
     return (
       <div className={"dashboard-full-section without-sidebar"}>
+        <div className="p-3">
+          <span
+            onClick={() => {
+              window.history.back();
+            }}
+            className={"cursor_pointer back-arrow"}
+          >
+            {" "}
+            <i className="fas fa-long-arrow-alt-left" /> Back
+          </span>
+        </div>
         <Container>
           {/* <div className="text-center h3">
             <b> Folder Details</b>

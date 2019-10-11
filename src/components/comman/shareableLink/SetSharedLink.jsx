@@ -74,17 +74,17 @@ class SetSharedLink extends React.Component {
 
     return (
       <div className="dashboard-full-section without-sidebar">
-        {/* <div className="p-3">
+        <div className="p-3">
           <span
-            // onClick={() => {
-            //   this.props.redirectTo("/");
-            // }}
+            onClick={() => {
+              window.history.back();
+            }}
             className={"cursor_pointer back-arrow"}
           >
             {" "}
             <i className="fas fa-long-arrow-alt-left" /> Back
           </span>
-        </div> */}
+        </div>
         <Container>
           <div className="content-header mt-3 mb-3">
             <span className="content-title">

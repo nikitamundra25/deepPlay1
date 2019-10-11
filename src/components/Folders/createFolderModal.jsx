@@ -112,7 +112,7 @@ class FolderModal extends React.Component {
           <ModalBody>
             <FormGroup>
               <Label for="title" className="font-weight-bold text-center">
-                TITLE
+                TITLE <span className="text-danger">*</span>
               </Label>
               <Input
                 id="title"
