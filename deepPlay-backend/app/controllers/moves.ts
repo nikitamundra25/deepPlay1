@@ -268,7 +268,7 @@ const publicUrlMoveDetails = async (
         _id: decryptedSetId
       });
     }
-    
+
     if (temp.isPublic) {
       result = await MoveModel.find({
         setId: decryptedSetId

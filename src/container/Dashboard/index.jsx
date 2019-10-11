@@ -96,7 +96,11 @@ class Dashboard extends React.Component {
                             <div className="content-heading-tile d-flex">
                               {" "}
                               <span className={" text-capitalize"}>
-                                <span>{set.title}</span>
+                                <span>
+                                  {set.isCopy
+                                    ? `Copy of ${set.title}`
+                                    : set.title}
+                                </span>
                               </span>
                             </div>
                             {set.description ? set.description : ""}

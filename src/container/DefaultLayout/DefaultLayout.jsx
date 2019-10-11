@@ -17,6 +17,7 @@ import {
   createSetRequest,
   allSearchRequest
 } from "../../actions/index.jsx";
+import { AppRoutes } from "../../config/AppRoutes";
 
 // core components
 class DefaultLayout extends React.Component {
@@ -43,6 +44,9 @@ class DefaultLayout extends React.Component {
   };
   onSetsCreation = data => {
     this.props.onSetsCreation(data);
+  };
+  handleSetting = () => {
+    this.props.redirectTo(AppRoutes.SETTINGS.url);
   };
   /*
   /*  
@@ -122,7 +126,10 @@ class DefaultLayout extends React.Component {
                   routePath !== "/all/set/shared/link" &&
                   routePath !== "/404") ? (
                   <div className="ct-sidebar app-sidebar">
-                    <DefaultSidebar profileInfoReducer={profileInfoReducer} />
+                    <DefaultSidebar
+                      profileInfoReducer={profileInfoReducer}
+                      handleSetting={this.handleSetting}
+                    />
                   </div>
                 ) : null}
                 {isLoggedIn &&

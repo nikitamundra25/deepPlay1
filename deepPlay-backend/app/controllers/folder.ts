@@ -226,12 +226,29 @@ const getRecentFolder = async (req: Request, res: Response): Promise<void> => {
         message: "User id not found"
       });
     }
+    let setCount: Document | any,
+      folderResult: any = [];
+
     const result: Document | any = await FolderModel.find({
       userId: headToken.id,
       isDeleted: false
     })
       .sort({ isRecentTime: -1 })
       .limit(limit);
+
+    if (result && result.length) {
+      for (let index = 0; index < result.length; index++) {
+        const folderData = result[index];
+        setCount = await SetModel.count({
+          folderId: folderData._id,
+          isDeleted: false
+        });
+        folderResult.push({
+          ...folderData._doc,
+          setCount: setCount
+        });
+      }
+    }
 
     if (!result) {
       res.status(400).json({
@@ -240,7 +257,7 @@ const getRecentFolder = async (req: Request, res: Response): Promise<void> => {
     }
 
     res.status(200).json({
-      data: result,
+      data: folderResult,
       message: "Folder have been fetched successfully"
     });
   } catch (error) {

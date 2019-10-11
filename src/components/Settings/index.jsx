@@ -35,13 +35,13 @@ class SettingComponent extends Component {
       roleType: false,
       imgError: "",
       file: "",
+      name: "",
       modal: false,
       errors: {}
     };
   }
   componentDidUpdate(prevProps) {
     if (prevProps.profileInfoReducer !== this.props.profileInfoReducer) {
-      console.log("happy");
       const {
         firstName,
         lastName,
@@ -49,6 +49,7 @@ class SettingComponent extends Component {
         roleType
       } = this.props.profileInfoReducer;
       this.setState({
+        name: firstName + " " + lastName,
         firstName,
         lastName,
         file: profileImage,
@@ -56,7 +57,6 @@ class SettingComponent extends Component {
       });
     }
     if (prevProps.profileImageThumb !== this.props.profileImageThumb) {
-      console.log("sad");
       this.setState({
         file: this.props.profileImageThumb,
         modal: false
@@ -89,6 +89,7 @@ class SettingComponent extends Component {
       });
     }
   };
+
   onSaveData = () => {
     const { firstName, lastName, roleType } = this.state;
     const data = {
@@ -152,8 +153,6 @@ class SettingComponent extends Component {
   };
 
   handleImage = data => {
-    console.log("data", data);
-
     this.props.uploadImage(data);
   };
 
@@ -171,12 +170,12 @@ class SettingComponent extends Component {
       roleType,
       file,
       errors,
-      imgError
+      imgError,
+      name
     } = this.state;
     const { modelDetails } = modelInfoReducer;
     const { uploadImageModalOpen } = modelDetails;
     const splitedImage = this.state.file.split("/");
-    console.log(">>", this.state.file);
 
     return (
       <div>
@@ -255,7 +254,7 @@ class SettingComponent extends Component {
                       </div>
                       <div className="profile-text-tile color-black">
                         <div className="h5 font-weight-bold text-center mt-2">
-                          {firstName + " " + lastName}
+                          {name}
                         </div>
                       </div>
                     </div>
