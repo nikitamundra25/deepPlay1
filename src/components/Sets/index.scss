@@ -14,12 +14,26 @@
 .profileimg-wrap {
   margin: 1px auto 10px;
 }
-
-
+.text-light{
+  color: rgb(54, 53, 53);
+}
+.img-tile-wrap{
+  background: #ffffff;
+  padding: 5px;
+  box-shadow: 0px 0px 1px 1px #3a373733;
+}
 .disable-span {
   color: #e6e6e6;
   cursor: not-allowed;
 }
 .capitalize {
   text-transform: capitalize;
+}
+.font-weight-normal{
+  font-weight: normal;
+}
+.trim-video-text{
+  label{
+    font-size: 16px;
+  }
 }

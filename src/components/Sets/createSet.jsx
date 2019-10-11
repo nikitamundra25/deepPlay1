@@ -17,7 +17,13 @@ import {
   InputGroupAddon
 } from "reactstrap";
 import { connect } from "react-redux";
-import { createSetRequest } from "../../actions"
+import {
+  createSetRequest,
+  getSetDetailsRequest,
+  UpdateSetRequest
+} from "../../actions";
+import * as qs from "query-string";
+import { AppRoutes } from "../../config/AppRoutes";
 import "./index.scss";
 
 class CreateSetComponent extends React.Component {
@@ -27,9 +33,35 @@ class CreateSetComponent extends React.Component {
       title: "",
       errors: "",
       description: "",
+      isEdit: false,
       open: false
     };
   }
+
+  componentDidMount = () => {
+    let parsed = qs.parse(this.props.location.search);
+    if (parsed && parsed.setId) {
+      this.props.getSetDetailsRequest({ setId: parsed.setId });
+    }
+  };
+
+  componentDidUpdate(prevProps) {
+    let parsed = qs.parse(this.props.location.search);
+    if (
+      prevProps.setReducer &&
+      prevProps.setReducer.setDetails !== this.props.setReducer.setDetails
+    ) {
+      const setList = this.props.setReducer.setDetails;
+      if (parsed.isEdit) {
+        this.setState({
+          title: setList.title ? setList.title : " ",
+          description: setList.description ? setList.description : " ",
+          isEdit: true
+        });
+      }
+    }
+  }
+
   handleChange = e => {
     const { name, value } = e.target;
     this.setState({
@@ -37,18 +69,28 @@ class CreateSetComponent extends React.Component {
     });
   };
 
+  handleBlur = async () => {
+    let parsed = qs.parse(this.props.location.search);
+    const data = {
+      title: this.state.title,
+      description: this.state.description,
+      folderId: parsed.folderId ? parsed.folderId : ""
+    };
+    await this.props.onSetsCreation(data);
+  };
+
+  updateSet = () => {
+    let parsed = qs.parse(this.props.location.search);
+    const data = {
+      title: this.state.title,
+      description: this.state.description,
+      setId: parsed.setId ? parsed.setId : ""
+    };
+    this.props.UpdateSetRequest(data);
+  };
+
   onAddMove = async () => {
-    if (!this.state.title) {
-      await this.setState({
-        errors: "Title is required"
-      });
-    } else {
-      const data = {
-        title: this.state.title,
-        description: this.state.description
-      };
-      this.props.onSetsCreation(data);
-    }
+    this.props.redirectTo(AppRoutes.MOVE.url);
   };
 
   onSaveDesc = () => {
@@ -65,14 +107,20 @@ class CreateSetComponent extends React.Component {
   };
 
   render() {
-    const { title, open, description } = this.state;
+    const { title, open, description, isEdit } = this.state;
+    let parsed = qs.parse(this.props.location.search);
+
     return (
-      <div className="create-set-section mt-2">
-        <Card className="w-100 set-content-wrap">
+      <>
+      
+      <div className="create-set-section mt-5">
+        <Card className="set-content-wrap">
           <div className="set-content-block w-100">
             <CardHeader className="">
               <div className="content-header set-header">
-                <span className="content-title">CREATE A NEW SET OF MOVES</span>
+                <span className="content-title">
+                  {isEdit ? "Update Set" : "CREATE A NEW SET OF MOVES"}
+                </span>
               </div>
             </CardHeader>
             <CardBody className="">
@@ -81,12 +129,12 @@ class CreateSetComponent extends React.Component {
                   <InputGroup>
                     <Input
                       id="exampleFormControlInput1"
-                      className="capitalize"
                       placeholder="Enter your title here"
                       type="text"
                       name="title"
                       onChange={this.handleChange}
                       value={title}
+                      onBlur={!isEdit && title ? this.handleBlur : null}
                     />
                     <InputGroupAddon addonType="prepend">
                       <InputGroupText
@@ -110,32 +158,30 @@ class CreateSetComponent extends React.Component {
                     </InputGroupAddon>
                   </InputGroup>
                 </FormGroup>
-                {/* <div className="">
-                <span
-                  onClick={this.onAddMove}
-                  className={this.state.title ? "cursor_pointer" : "disable-span"}
-                  id="move"
-                >
-                  <i className="fas fa-plus-square fa-2x "></i>
-                </span>
-                <UncontrolledTooltip placement="top" target="move">
-                  Add a move
-            </UncontrolledTooltip>
-              
-
-              </div> */}
               </div>
               <div className="text-center">
-                <Button
-                  color=" "
-                  type="button"
-                  className="btn-black btn mt-3"
-                  disabled={!title}
-                  onClick={this.onAddMove}
-                >
-                  <i className="fas fa-plus mr-1"></i>
-                  Add a Move
-                </Button>
+                {!parsed.isEdit ? (
+                  <Button
+                    color=" "
+                    type="button"
+                    className="btn-black btn mt-3"
+                    disabled={!title}
+                    onClick={this.onAddMove}
+                  >
+                    <i className="fas fa-plus mr-1"></i>
+                    Add a Move
+                  </Button>
+                ) : (
+                  <Button
+                    color=" "
+                    type="button"
+                    className="btn-black btn mt-3"
+                    disabled={!title}
+                    onClick={this.updateSet}
+                  >
+                    Update Set
+                  </Button>
+                )}
               </div>
             </CardBody>
           </div>
@@ -145,13 +191,13 @@ class CreateSetComponent extends React.Component {
           className="modal-dialog-centered custom-model-wrap"
           isOpen={open}
           toggle={() => this.handleModal}
-
         >
           <ModalHeader>
-            <h5 className="modal-title" id="exampleModalLabel">
-              <span class="custom-title">Upload profile image</span>
-              <span class="custom-title">Description</span>
-            </h5>
+            <div>
+              <h5 className="modal-title" id="exampleModalLabel">
+                <span className="custom-title">Description</span>
+              </h5>
+            </div>
             <button
               aria-label="Close"
               className="close"
@@ -159,7 +205,10 @@ class CreateSetComponent extends React.Component {
               type="button"
               onClick={this.handleModal}
             >
-              <span aria-hidden="true">  <img src="./assets/img/close-img.png" alt="close-ic" /></span>
+              <span aria-hidden="true">
+                {" "}
+                <img src="./assets/img/close-img.png" alt="close-ic" />
+              </span>
             </button>
           </ModalHeader>
           <ModalBody>
@@ -169,8 +218,7 @@ class CreateSetComponent extends React.Component {
               </Label>
               <Input
                 id="exampleFormControlInput1"
-                className="capitalize"
-                type="text"
+                type="textarea"
                 name="description"
                 onChange={this.handleChange}
                 value={description}
@@ -190,6 +238,7 @@ class CreateSetComponent extends React.Component {
           </ModalFooter>
         </Modal>
       </div>
+      </>
     );
   }
 }
@@ -197,11 +246,13 @@ class CreateSetComponent extends React.Component {
 const mapStateToProps = state => {
   return {
     modelInfoReducer: state.modelInfoReducer,
-    getAllSetReducer: state.getAllSetReducer
+    setReducer: state.setReducer
   };
 };
 const mapDispatchToProps = dispatch => ({
-  onSetsCreation: data => dispatch(createSetRequest(data))
+  onSetsCreation: data => dispatch(createSetRequest(data)),
+  getSetDetailsRequest: data => dispatch(getSetDetailsRequest(data)),
+  UpdateSetRequest: data => dispatch(UpdateSetRequest(data))
 });
 export default connect(
   mapStateToProps,

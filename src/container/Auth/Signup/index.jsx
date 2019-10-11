@@ -1,9 +1,14 @@
 import React from "react";
-import SignupComponent from "../../../components/Signup"
+import SignupComponent from "../../../components/Signup";
 // core components
 class Signup extends React.Component {
   render() {
-    const { openSignupModel, handleSignupModel, signupRequest, loginReducer } = this.props
+    const {
+      openSignupModel,
+      handleSignupModel,
+      signupRequest,
+      loginReducer
+    } = this.props;
     return (
       <>
         <SignupComponent
@@ -11,6 +16,7 @@ class Signup extends React.Component {
           handleSignupModel={handleSignupModel}
           signupRequest={signupRequest}
           loginReducer={loginReducer}
+          handleLoginModal={this.props.handleLoginModal}
         />
       </>
     );

@@ -6,7 +6,8 @@ import { SignupLogics } from "./Signup.jsx";
 import { profileInfoLogics } from "./userInfo";
 import { SetLogics } from "./sets";
 import { FolderLogics } from "./Folder";
-import { MoveLogics } from "./Moves"
+import { MoveLogics } from "./Moves";
+import { SharableLinkLogics } from "./SharableLink";
 
 export const redirectToLogic = createLogic({
   type: "REDIRET_TO",
@@ -23,5 +24,6 @@ export default [
   ...SetLogics,
   ...FolderLogics,
   ...MoveLogics,
+  ...SharableLinkLogics,
   redirectToLogic
 ];

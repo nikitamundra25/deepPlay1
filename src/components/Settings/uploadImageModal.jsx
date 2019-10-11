@@ -2,14 +2,24 @@ import React, { Component } from "react";
 import { Button, Modal, ModalFooter, ModalHeader, ModalBody } from "reactstrap";
 import Dropzone from "react-dropzone";
 import { ConfirmBox } from "helper/SweetAleart";
+import closeIcon from "../../assets/img/close-img.png";
 
 class UploadImage extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      imageData: ""
+      imageData: "",
     };
   }
+
+  componentDidUpdate = ({ modal }) => {
+    if (modal !== this.props.modal) {
+      this.setState({
+        imageData: ""
+      });
+    }
+  };
+
   onSelectFile = async (file, index) => {
     for (let x = 0; x < file.length; x++) {
       if (file[x].size > 10000000) {
@@ -49,6 +59,7 @@ class UploadImage extends Component {
     this.props.handleOpen();
   };
   render() {
+    const { isImageUploading } = this.props;
     return (
       <div className="modal-text-center">
         <Modal
@@ -68,17 +79,17 @@ class UploadImage extends Component {
               type="button"
               onClick={this.props.handleOpen}
             >
-              <span aria-hidden={true}>  <img src="./assets/img/close-img.png" alt="close-ic" /></span>
+              <span aria-hidden={true}>
+                {" "}
+                <img src={closeIcon} alt="close-ic" />
+              </span>
             </button>
           </ModalHeader>
           <ModalBody className="modal-text-center">
             {this.state.imageData ? (
               <div className="file-upload-wrap">
-              <img
-                alt="..."
-                src={this.state.imageData}
-               
-              /></div>
+                <img alt="..." src={this.state.imageData} />
+              </div>
             ) : (
               <>
                 <div className="upload-file-wrap">
@@ -113,13 +124,14 @@ class UploadImage extends Component {
               </>
             )}
           </ModalBody>
-          <ModalFooter >
+          <ModalFooter>
             <Button
               color=" "
               onClick={() => this.props.handleImage(this.state.imageData)}
               className="btn btn-black"
+              disabled={!isImageUploading ? false : true}
             >
-              Set profile picture
+              {!isImageUploading ? "Set profile picture" : "Please Wait..."}
             </Button>{" "}
             <Button
               color=" "

@@ -1,17 +1,17 @@
 # See https://help.github.com/ignore-files/ for more about ignoring files.
 
 # dependencies
-/node_modules
+node_modules
 package-lock.json
-/deepPlay-backend/node_modules
-/deepPlay-backend/build
-/deepPlay-backend/public
-
+deepPlay-backend/node_modules
+deepPlay-backend/build
+deepPlay-backend/public
+uploads/
 # testing
 /coverage
 
 # production
-/build
+build
 
 # misc
 .DS_Store

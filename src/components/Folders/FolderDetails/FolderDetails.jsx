@@ -1,5 +1,18 @@
 import React from "react";
-import { UncontrolledTooltip, Button, Row, Col, ButtonGroup } from "reactstrap";
+import {
+  UncontrolledTooltip,
+  Button,
+  Row,
+  Col,
+  ButtonGroup,
+  Card,
+  CardBody,
+  CardHeader,
+  DropdownToggle,
+  UncontrolledDropdown,
+  DropdownMenu,
+  DropdownItem
+} from "reactstrap";
 import { connect } from "react-redux";
 import {
   folderDetailRequest,
@@ -7,39 +20,62 @@ import {
   getFolderSetRequest,
   ManageSetRequest,
   getAllFolderRequest,
-  createSetRequest
+  createSetRequest,
+  publicAccessRequest,
+  shareableLinkRequest,
+  deleteFolderRequest,
+  updateFolderRequest,
+  redirectTo,
+  getAllSetRequest
 } from "../../../actions";
 import AddSetModal from "./addSet";
 import TransferToModal from "./transferTo";
 import { ConfirmBox } from "../../../helper/SweetAleart";
+import SharableLinkModal from "../../comman/shareableLink/SharableLink";
+import emptySetIc from "../../../assets/img/empty-sets.png";
+import { AppRoutes } from "../../../config/AppRoutes";
+import Loader from "../../comman/Loader/Loader";
+import FolderModal from "../createFolderModal";
+import PaginationHelper from "helper/Pagination";
+import qs from "query-string";
+import { AppConfig } from "../../../config/Appconfig";
+
 // core components
 class RecentFolderComponent extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       setListItem: [],
+      modal: false,
       show: false, //show setting popOver,
       folderId: "", // pathName of folderId
-      setToTransfer: "" // pass set id to transfer to different folder
+      setToTransfer: "", // pass set id to transfer to different folder,
+      setIndex: -1,
+      page: 1,
+      showAll: false
     };
   }
   componentDidMount() {
-    const loaction = this.props.location;
-    const pathName = loaction.pathname.split("/");
+    const location = this.props.location;
+    const lSearch = location.search;
+    const { page } = qs.parse(lSearch);
+    const pathName = location.pathname.split("/");
     this.props.folderDetail({ id: pathName[2] });
     this.props.getSetsList({ folderId: pathName[2] });
+    this.props.getAllSetRequest({ isSetNoLimit: true });
     this.setState({
-      folderId: pathName[2]
+      folderId: pathName[2],
+      page: parseInt(page) || 1
     });
   }
 
   componentDidUpdate(prevProps) {
     if (
-      prevProps.getAllSetReducer &&
-      (prevProps.getAllSetReducer.setListinFolder !==
-      this.props.getAllSetReducer.setListinFolder)
+      prevProps.setReducer &&
+      prevProps.setReducer.setListinFolder !==
+        this.props.setReducer.setListinFolder
     ) {
-      const setList = this.props.getAllSetReducer.setListinFolder;
+      const setList = this.props.setReducer.setListinFolder;
       this.setState({
         setListItem: setList
       });
@@ -53,6 +89,13 @@ class RecentFolderComponent extends React.Component {
       modelDetails: {
         addSetModalOpen: !modelDetails.addSetModalOpen
       }
+    });
+    // this.props.getSetsList({
+    //   folderId: this.state.folderId,
+    //   showAll: true
+    // });
+    this.setState({
+      showAll: true
     });
   };
 
@@ -96,24 +139,32 @@ class RecentFolderComponent extends React.Component {
       previousFolderId: pathName[2]
     };
     const { value } = await ConfirmBox({
-      text: "You want to remove Set from this folder!! "
+      text: "You want to remove Set from this folder."
     });
     if (value) {
       this.props.manageSets(data);
     }
   };
 
-  handleFolder = data => {
-    this.props.manageSets(data);
-  };
-
-  showPopOver = () => {
-    this.setState({
-      show: !this.state.show
+  handleFolder = async data => {
+    const { value } = await ConfirmBox({
+      text: "You want to transfer this set"
     });
+    if (value) {
+      this.props.manageSets(data);
+    }
   };
 
-  OnCreateSetCopy = list => {
+  handleDeleteFolder = async id => {
+    const { value } = await ConfirmBox({
+      text: "You want to delete this folder."
+    });
+    if (value) {
+      this.props.deleteFolder(id);
+    }
+  };
+
+  OnCreateSetCopy = async list => {
     const data = {
       title: list.title,
       description: list.description,
@@ -125,157 +176,344 @@ class RecentFolderComponent extends React.Component {
       userId: list.userId,
       isCopy: true
     };
-    this.props.onSetsCreation(data);
+    const { value } = await ConfirmBox({
+      text: "You want to copy this set!! "
+    });
+    if (value) {
+      this.props.onSetsCreation(data);
+    }
+  };
+
+  handleSharableLink = () => {
+    const { folderId } = this.state;
+    this.props.shareableLink({
+      folderId: folderId,
+      linkOf: "folder"
+    });
+    const { modelInfoReducer } = this.props;
+    const { modelDetails } = modelInfoReducer;
+    this.props.modelOperate({
+      modelDetails: {
+        sharableLinkModalOpen: !modelDetails.sharableLinkModalOpen
+      }
+    });
+  };
+
+  showPopOver = index => {
+    this.setState({
+      show: true,
+      setIndex: index
+    });
+  };
+
+  closePopOver = () => {
+    this.setState({
+      show: false,
+      setIndex: -1
+    });
+  };
+
+  onTogglePublicAccess = isPublic => {
+    const { folderId } = this.state;
+    const data = {
+      isFolderId: folderId,
+      isSetId: null,
+      isMoveId: null,
+      isPublic: isPublic
+    };
+    this.props.publicAccess(data);
+  };
+
+  handleSetDetails = setId => {
+    this.props.redirectTo(AppRoutes.SET_DETAILS.url.replace(":id", setId));
+  };
+
+  handleFolderModel = () => {
+    const { modelInfoReducer } = this.props;
+    const { modelDetails } = modelInfoReducer;
+    this.props.modelOperate({
+      modelDetails: {
+        createFolderOpen: !modelDetails.createFolderOpen
+      }
+    });
+  };
+
+  updateFolder = data => {
+    this.props.updateFolderRequest(data);
+  };
+
+  onPageChange = page => {
+    this.props.onGoPage(
+      `${AppRoutes.FOLDER_DETAILS.url.replace(
+        ":id",
+        this.state.folderId
+      )}?${qs.stringify({ page: page })}`
+    );
+    this.props.getSetsList({ folderId: this.state.folderId, page: page });
   };
 
   render() {
     const {
-      modelOperate,
       modelInfoReducer,
-      folderDetails,
-      getAllFolders
+      getFolderReducer,
+      shareLinkReducer,
+      setReducer
     } = this.props;
-    const { setListItem, show, pathName, setToTransfer, folderId } = this.state;
+    const {
+      setListItem,
+      show,
+      setToTransfer,
+      folderId,
+      setIndex,
+      page
+    } = this.state;
+    const { modelDetails } = modelInfoReducer;
+    const { folderDetails, getAllFolders } = getFolderReducer;
+    const { userEncryptedInfo } = shareLinkReducer;
+    const { isFolderSetLoading, totalSetsInFolder, allSetList } = setReducer;
+
+    const {
+      transferToModalOpen,
+      addSetModalOpen,
+      sharableLinkModalOpen,
+      createFolderOpen
+    } = modelDetails;
+    const setOfFolder = setListItem.filter(
+      item => item.folderId._id === folderId
+    );
 
     return (
-      <div className="page-body container">
+      <div className="page-body">
         <div className="content-header">
           <span className="content-title">
-            {folderDetails ? folderDetails.title : "MyFolder"}
+            <div className="main-title">
+              {" "}
+              {folderDetails ? folderDetails.title : "MyFolder"}
+            </div>
+            <div className="sub-title">
+              {folderDetails ? folderDetails.description : ""}
+            </div>
           </span>
           <div>
             <span
-              className="dashboard-right-content"
+              className="dashboard-right-content cursor_pointer ml-4"
               onClick={this.openAddSetModel}
               id="move"
             >
-              <i className="fas fa-plus-circle fa-2x  "></i>
+              <i className="fas fa-plus-circle icon-font"></i>
             </span>
             <UncontrolledTooltip placement="bottom" target="move">
               Add Sets
             </UncontrolledTooltip>
+            <span
+              id="share"
+              onClick={this.handleSharableLink}
+              className="cursor_pointer ml-4"
+            >
+              <i className="fas fa-share icon-font"></i>
+            </span>
+            <UncontrolledDropdown className="header-dropdown  ">
+              <DropdownToggle color={" "}>
+                <span id="edit" className="cursor_pointer ml-4">
+                  <i className="fas fa-sliders-h icon-font"></i>
+                </span>
+              </DropdownToggle>
+              <DropdownMenu>
+                <DropdownItem onClick={this.handleFolderModel}>
+                  Edit
+                </DropdownItem>
+                <DropdownItem
+                  onClick={() => this.handleDeleteFolder(folderDetails._id)}
+                >
+                  Delete
+                </DropdownItem>
+              </DropdownMenu>
+            </UncontrolledDropdown>
 
-            <span id="share">
-              <i className="fas fa-share fa-2x"></i>
-            </span>
-            <UncontrolledTooltip placement="bottom" target="share">
-              Share
-            </UncontrolledTooltip>
-            <span id="edit">
-              <i className="fas fa-sliders-h fa-2x"></i>
-            </span>
             <UncontrolledTooltip placement="bottom" target="edit">
               Edit & Delete
             </UncontrolledTooltip>
           </div>
         </div>{" "}
-        <span className="content-title">
-          {folderDetails ? folderDetails.description : ""}
-        </span>
         <Row className="set-wrap">
-          {setListItem.length ? (
-            // eslint-disable-next-line
-            setListItem.map((list, i) => {
-              if (list.folderId) {
+          <Col>
+          {!isFolderSetLoading ? (
+            setOfFolder && setOfFolder.length ? (
+              // eslint-disable-next-line
+              setOfFolder.map((list, i) => {
                 return (
                   <Col md="6" key={i}>
-                    <div className="tile-wrap card">
-                      <div className="cotent-tile d-flex">
-                        <div className="cotent-text-tile">
-                          <div className="content-heading-tile">
+                    <div
+                      className="tile-wrap card"
+                      onMouseLeave={() => this.closePopOver()}
+                    >
+                      <div className="cotent-tile d-flex content-with-tip">
+                        <div
+                          className="cotent-text-tile cursor_pointer text-capitalize"
+                          onClick={() => this.handleSetDetails(list._id)}
+                        >
+                          <div className="content-heading-tile d-flex">
                             {" "}
-                            {list.title}
+                            <span
+                              // onClick={() => this.handleSetDetails(list._id)}
+                              className={"text-capitalize"}
+                            >
+                              <span>{list.title} </span>
+                            </span>
                           </div>
-                          <div className="content-heading-tile">
+                          <span className={"text-capitalize"}>
+                            {list.description ? list.description : ""}
+                          </span>
+                          <div className="content-number-tile">
                             {" "}
-                            {list.description}
+                            {list.moveCount ? list.moveCount : 0} items
                           </div>
-
-                          <div className="content-number-tile"> 4 items</div>
                         </div>
                         <div
-                          className="cotent-img-tile"
-                          style={{
-                            backgroundImage:
-                              'url("' +
-                              "https://res.cloudinary.com/fleetnation/image/private/c_fit,w_1120/g_south,l_text:style_gothic2:%C2%A9%20Nikita%20Buida,o_20,y_10/g_center,l_watermark4,o_25,y_50/v1469756538/dd3acf4nzzavkv4rf2ji.jpg" +
-                              '")'
-                          }}
-                        ></div>
-                        <span
-                          onClick={this.showPopOver}
-                          className="cursor_pointer"
+                          className="d-flex img-tile-wrap cursor_pointer"
+                          onClick={() => this.handleSetDetails(list._id)}
                         >
-                          {" "}
-                          <i className="fas fa-ellipsis-v setting-icon "></i>
-                        </span>
-                        {show ? (
-                          <ButtonGroup size="sm">
-                            <Button onClick={() => this.OnCreateSetCopy(list)}>
-                              Copy
-                            </Button>
-                            <Button
-                              onClick={() => this.openTransferToModal(list._id)}
-                            >
-                              Transfer
-                            </Button>
-                            <Button
-                              onClick={() =>
-                                this.onRemoveSets(list._id, "remove")
-                              }
-                            >
-                              Remove
-                            </Button>
-                          </ButtonGroup>
-                        ) : null}
+                          <div
+                            className="cotent-img-tile"
+                            style={{
+                              backgroundImage:
+                                'url("' +
+                                "https://res.cloudinary.com/fleetnation/image/private/c_fit,w_1120/g_south,l_text:style_gothic2:%C2%A9%20Nikita%20Buida,o_20,y_10/g_center,l_watermark4,o_25,y_50/v1469756538/dd3acf4nzzavkv4rf2ji.jpg" +
+                                '")'
+                            }}
+                          />
+                        </div>
+                        <div
+                          onMouseOver={() => this.showPopOver(i, show)}
+                          className={"tooltip-btn-wrap right-btn-tip"}
+                        >
+                          <span className="cursor_pointer">
+                            {" "}
+                            <i className="fas fa-ellipsis-v setting-icon "></i>
+                          </span>
+                          {show && setIndex === i ? (
+                            <ButtonGroup size="sm">
+                              <Button
+                                onClick={() => this.OnCreateSetCopy(list)}
+                              >
+                                Copy
+                              </Button>
+                              <Button
+                                onClick={() =>
+                                  this.openTransferToModal(list._id)
+                                }
+                              >
+                                Transfer
+                              </Button>
+                              <Button
+                                onClick={() =>
+                                  this.onRemoveSets(list._id, "remove")
+                                }
+                              >
+                                Remove
+                              </Button>
+                            </ButtonGroup>
+                          ) : null}
+                        </div>
                       </div>
                     </div>
                   </Col>
                 );
-              }
-            })
+              })
+            ) : (
+              <>
+                <div className="create-set-section mt-2 w-100 empty-folder-section">
+                  <Card className="set-content-wrap empty-folder-card">
+                    <div className="set-content-block w-100 empty-folder-wrap">
+                      <CardHeader className="empty-folder-header">
+                        <img src={emptySetIc} alt={"Images"} />
+                        <div className="content-header set-header">
+                          <span className="content-title">
+                            {" "}
+                            <h3>This folder has no Sets yet</h3>
+                            <p>Organize your Sets for you or your students</p>
+                          </span>
+                        </div>
+                      </CardHeader>
+                      <CardBody className="">
+                        <div className="create-set-tile"></div>
+                        <div className="text-center">
+                          <Button
+                            color=" "
+                            type="button"
+                            className="btn-black btn "
+                            onClick={this.openAddSetModel}
+                          >
+                            <i className="fas fa-plus mr-1"></i>
+                            Add a Set
+                          </Button>
+                        </div>
+                      </CardBody>
+                    </div>
+                  </Card>
+                </div>
+              </>
+            )
           ) : (
-              <div className="inner-wrap">
-                <h3>This folder has no Sets yet</h3>
-                <p>Organize your Sets for you or your students</p>
-                <Button
-                  color="default"
-                  type="button"
-                  className="btn-btn-right"
-                  onClick={this.openAddSetModel}
-                >
-                  Add a Set
-              </Button>
-              </div>
-            )}
+            <Col sm={12} className="loader-col">
+              <Loader />
+            </Col>
+          )}
+          </Col>
         </Row>
         <AddSetModal
-          openAddSetModel={this.openAddSetModel}
-          modelInfoReducer={modelInfoReducer}
-          modelOperate={modelOperate}
-          getAllSet={setListItem}
+          handleOpen={this.openAddSetModel}
+          modal={addSetModalOpen}
+          getAllSet={allSetList}
           folderId={folderId}
           handleSets={this.handleSets}
           {...this.props}
         />
         <TransferToModal
-          modelInfoReducer={modelInfoReducer}
-          modelOperate={modelOperate}
+          modal={transferToModalOpen}
           AllFolders={getAllFolders}
-          pathName={pathName}
+          folderId={folderId}
+          handleOpen={this.openTransferToModal}
           setToTransfer={setToTransfer}
           handleFolder={this.handleFolder}
         />
+        <SharableLinkModal
+          modal={sharableLinkModalOpen}
+          handleOpen={this.handleSharableLink}
+          onTogglePublicAccess={this.onTogglePublicAccess}
+          isPublic={folderDetails ? folderDetails.isPublic : ""}
+          userEncryptedInfo={userEncryptedInfo ? userEncryptedInfo : ""}
+          shareComponent="Folder"
+        />
+        <FolderModal
+          modal={createFolderOpen}
+          modelInfoReducer={modelInfoReducer}
+          handleOpen={this.handleFolderModel}
+          createFolder={this.updateFolder}
+          editFolder="true"
+          folderDetails={folderDetails ? folderDetails : null}
+        />
+        {totalSetsInFolder && !isFolderSetLoading ? (
+          <PaginationHelper
+            totalRecords={totalSetsInFolder}
+            currentPage={page}
+            onPageChanged={page => {
+              this.setState({ page });
+              this.onPageChange(page);
+            }}
+            pageLimit={AppConfig.ITEMS_PER_PAGE}
+          />
+        ) : null}
       </div>
     );
   }
 }
 const mapStateToProps = state => {
   return {
-    folderDetails: state.getFolderReducer.folderDetails,
+    getFolderReducer: state.getFolderReducer,
     modelInfoReducer: state.modelInfoReducer,
-    getAllSetReducer: state.getAllSetReducer,
-    getAllFolders: state.getFolderReducer.getAllFolders
+    setReducer: state.setReducer,
+    shareLinkReducer: state.shareLinkReducer
   };
 };
 const mapDispatchToProps = dispatch => ({
@@ -292,7 +530,23 @@ const mapDispatchToProps = dispatch => ({
   },
   onSetsCreation: data => {
     dispatch(createSetRequest(data));
-  }
+  },
+  publicAccess: data => {
+    dispatch(publicAccessRequest(data));
+  },
+  shareableLink: data => {
+    dispatch(shareableLinkRequest(data));
+  },
+  deleteFolder: id => {
+    dispatch(deleteFolderRequest(id));
+  },
+  updateFolderRequest: data => {
+    dispatch(updateFolderRequest(data));
+  },
+  onGoPage: data => {
+    dispatch(redirectTo({ path: data }));
+  },
+  getAllSetRequest: data => dispatch(getAllSetRequest(data))
 });
 
 export default connect(

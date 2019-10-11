@@ -5,8 +5,13 @@ import {
   modelOpenRequest,
   createFolderRequest,
   getAllFolderRequest,
-  deleteFolderRequest
+  deleteFolderRequest,
+  updateRecentTimeRequest,
+  redirectTo
 } from "../../actions";
+import qs from "query-string";
+import { AppRoutes } from "../../config/AppRoutes";
+import { isEqual } from "../../helper/Object";
 
 // core components
 class Folder extends React.Component {
@@ -14,14 +19,12 @@ class Folder extends React.Component {
     this.props.allFolders();
   };
 
-  handleFolderModel = () => {
-    const { modelInfoReducer } = this.props;
-    const { modelDetails } = modelInfoReducer;
-    this.props.modelOperate({
-      modelDetails: {
-        createFolderModalOpen: !modelDetails.createFolderModalOpen
-      }
-    });
+  handleForRecentFolder = folderId => {
+    const data = {
+      isSetId: null,
+      isFolderId: folderId ? folderId : null
+    };
+    this.props.updateRecentTime(data);
   };
 
   createFolder = data => {
@@ -31,17 +34,34 @@ class Folder extends React.Component {
     this.props.deleteFolder(id);
   };
 
+  componentDidUpdate({ location }) {
+    const prevQuery = qs.parse(location.search);
+    const currQuery = qs.parse(this.props.location.search);
+    if (!isEqual(prevQuery, currQuery)) {
+      this.props.allFolders({ ...currQuery, page: currQuery.page || 1 });
+    }
+  }
+
+  onPageChange = page => {
+    this.props.onGoPage(
+      `${AppRoutes.FOLDERS.url}?${qs.stringify({ page: page })}`
+    );
+  };
+
   render() {
-    const { modelOperate, modelInfoReducer, getAllFolders } = this.props;
+    const { modelOperate, modelInfoReducer, folderReducer } = this.props;
     return (
       <>
         <FolderComponent
           handleFolderModel={this.handleFolderModel}
           modelInfoReducer={modelInfoReducer}
           modelOperate={modelOperate}
+          handleForRecentFolder={this.handleForRecentFolder}
           createFolder={this.createFolder}
-          getAllFolders={getAllFolders}
+          folderReducer={folderReducer}
+          isFolderLoading={folderReducer.isFolderLoading}
           onDelete={this.onDelete}
+          onPageChange={this.onPageChange}
           {...this.props}
         />
       </>
@@ -52,7 +72,7 @@ class Folder extends React.Component {
 const mapStateToProps = state => {
   return {
     modelInfoReducer: state.modelInfoReducer,
-    getAllFolders: state.getFolderReducer.getAllFolders
+    folderReducer: state.getFolderReducer
   };
 };
 const mapDispatchToProps = dispatch => {
@@ -61,11 +81,17 @@ const mapDispatchToProps = dispatch => {
       dispatch(createFolderRequest(data));
     },
     modelOperate: data => dispatch(modelOpenRequest(data)),
-    allFolders: () => {
-      dispatch(getAllFolderRequest());
+    allFolders: data => {
+      dispatch(getAllFolderRequest(data));
     },
     deleteFolder: id => {
       dispatch(deleteFolderRequest(id));
+    },
+    updateRecentTime: data => {
+      dispatch(updateRecentTimeRequest(data));
+    },
+    onGoPage: data => {
+      dispatch(redirectTo({ path: data }));
     }
   };
 };

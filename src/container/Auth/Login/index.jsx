@@ -1,11 +1,10 @@
 import React from "react";
-import LoginComponent from "../../../components/Login"
+import LoginComponent from "../../../components/Login";
 import { connect } from "react-redux";
 import ForgotPassword from "../ForgotPassword";
 
 // core components
 class Login extends React.Component {
-
   handleForgotPasswordModel = () => {
     const { modelInfoReducer } = this.props;
     const { modelDetails } = modelInfoReducer;
@@ -13,8 +12,10 @@ class Login extends React.Component {
       modelDetails: {
         forgotPasswordModalOpen: !modelDetails.forgotPasswordModalOpen
       }
-    })
-  }
+    });
+  };
+  /*
+   */
   render() {
     const {
       openLoginModel,
@@ -23,7 +24,8 @@ class Login extends React.Component {
       socialLoginRequest,
       modelInfoReducer,
       forgotPasswordRequest,
-      loginReducer } = this.props
+      loginReducer
+    } = this.props;
     const { modelDetails } = modelInfoReducer;
     return (
       <>
@@ -31,10 +33,13 @@ class Login extends React.Component {
           openLoginModel={openLoginModel}
           handleLoginModel={handleLoginModel}
           loginRequest={loginRequest}
+          loginReducer={loginReducer}
           socialLoginRequest={socialLoginRequest}
           handleForgotPasswordModel={this.handleForgotPasswordModel}
+          handleSignupModal={this.props.handleSignupModal}
           {...this.props}
         />
+
         <ForgotPassword
           openForgotPasswordModel={modelDetails.forgotPasswordModalOpen}
           handleForgotPasswordModel={this.handleForgotPasswordModel}

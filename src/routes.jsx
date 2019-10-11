@@ -7,13 +7,23 @@ const Settings = React.lazy(() => import("./container/Settings"));
 const Folders = React.lazy(() => import("./container/Folders"));
 const Sets = React.lazy(() => import("./container/Sets"));
 const CreateSets = React.lazy(() => import("./components/Sets/createSet"));
-const ResetPassword = React.lazy(() =>import("./container/Auth/ResetPassword"));
+const ResetPassword = React.lazy(() =>
+  import("./container/Auth/ResetPassword")
+);
 const Page404 = React.lazy(() => import("./components/Page404"));
 const Move = React.lazy(() => import("./container/Move"));
-const FolderDetails = React.lazy(() => import("./components/Folders/FolderDetails/FolderDetails"));
+const FolderDetails = React.lazy(() =>
+  import("./components/Folders/FolderDetails/FolderDetails")
+);
 const MoveDetails = React.lazy(() => import("./components/Move/MoveDetails"));
 const SetDetails = React.lazy(() => import("./components/Sets/SetDetails"));
-
+const FolderSharedLink = React.lazy(() =>
+  import("./components/comman/shareableLink/FolderSharedLink")
+);
+const setSharedLink = React.lazy(() =>
+  import("./components/comman/shareableLink/SetSharedLink")
+);
+const changePassword = React.lazy(() => import("./container/ChangePassword"));
 const routes = [
   {
     path: AppRoutes.HOME_PAGE.url,
@@ -86,6 +96,24 @@ const routes = [
     name: AppRoutes.SET_DETAILS.name,
     exact: AppRoutes.SET_DETAILS.exact,
     component: SetDetails
+  },
+  {
+    path: AppRoutes.FOLDER_SHARED_LINK.url,
+    name: AppRoutes.FOLDER_SHARED_LINK.name,
+    exact: AppRoutes.FOLDER_SHARED_LINK.exact,
+    component: FolderSharedLink
+  },
+  {
+    path: AppRoutes.SET_SHARED_LINK.url,
+    name: AppRoutes.SET_SHARED_LINK.name,
+    exact: AppRoutes.SET_SHARED_LINK.exact,
+    component: setSharedLink
+  },
+  {
+    path: AppRoutes.CHANGE_PASSWORD.url,
+    name: AppRoutes.CHANGE_PASSWORD.name,
+    exact: AppRoutes.CHANGE_PASSWORD.exact,
+    component: changePassword
   }
 ];
 

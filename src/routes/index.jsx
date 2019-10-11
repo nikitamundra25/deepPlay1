@@ -2,16 +2,26 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import { Route, Switch, withRouter } from "react-router-dom";
 import { redirectTo } from "../actions/index.jsx";
-import {AppRoutes as routesData}  from "../config/AppRoutes";
-import "../App.scss";
+import { AppRoutes as routesData } from "../config/AppRoutes";
 // Pages
 const DefaultLayout = React.lazy(() =>
-import("../container/DefaultLayout/DefaultLayout")
+  import("../container/DefaultLayout/DefaultLayout")
 );
-const ResetPassword = React.lazy(() => import("../container/Auth/ResetPassword"));
+const ResetPassword = React.lazy(() =>
+  import("../container/Auth/ResetPassword")
+);
 const Page404 = React.lazy(() => import("../components/Page404"));
+const VerifyLoginForWildcard = React.lazy(() =>
+  import("../container/Auth/VerifyLoginForWildcard")
+);
 
 const Routes = [
+  {
+    exact: false,
+    path: "/verify-user-details",
+    name: "Verify User Details",
+    component: VerifyLoginForWildcard
+  },
   {
     exact: false,
     path: "/",
@@ -29,8 +39,7 @@ const Routes = [
     path: "/404",
     name: "Page 404",
     component: Page404
-  },
- 
+  }
 ];
 
 class AppRoutes extends Component {

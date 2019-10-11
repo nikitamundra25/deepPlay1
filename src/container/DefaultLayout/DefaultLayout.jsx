@@ -19,12 +19,18 @@ import {
 // core components
 class DefaultLayout extends React.Component {
   componentDidMount() {
-    const pathname = this.props.location.pathname
-    const token = localStorage.getItem("token")
+    const pathname = this.props.location.pathname;
+    const token = localStorage.getItem("token");
     if (token) {
-      this.props.getProfile()
+      this.props.getProfile();
     }
-    if (!token && pathname !== "/resetPassword") {
+    if (
+      !token &&
+      pathname !== "/resetPassword" &&
+      pathname !== "/folder-shared-link" &&
+      pathname !== "/set-shared-link" &&
+      pathname !== "/404"
+    ) {
       this.props.redirectTo("/");
     }
   }
@@ -48,6 +54,7 @@ class DefaultLayout extends React.Component {
       profileInfoReducer
     } = this.props;
     let isLoggedIn;
+
     if (localStorage.getItem("token")) {
       isLoggedIn = true;
     } else {
@@ -70,83 +77,102 @@ class DefaultLayout extends React.Component {
             onFolderCreation={this.onFolderCreation}
             routePath={routePath}
             isLoggedIn={isLoggedIn}
+            {...this.props}
           />
         ) : null}
         <>
           <div
             className={
-              (routePath !== "/" && routePath !== "/resetPassword") ? "dashboard-full-section" : ""
+              routePath !== "/" &&
+              routePath !== "/resetPassword" &&
+              routePath !== "/folder-shared-link" &&
+              routePath !== "/set-shared-link" &&
+              routePath !== "/404"
+                ? "dashboard-full-section"
+                : ""
             }
           >
             <div
               className={`${
                 routePath !== "/" ? "dashboard-container-wrap " : " "
-                }`}
+              }`}
             >
               <div
                 className={`theme-container ${
                   routePath !== "/" ? "dashboard-container " : "home-container"
-                  }`}
+                }`}
               >
                 {isLoggedIn &&
-                  (routePath !== "/" && routePath !== "/resetPassword") ? (
-                    <div className="ct-sidebar app-sidebar">
-                      <DefaultSidebar profileInfoReducer={profileInfoReducer} />
-                    </div>
-                  ) : null}
+                (routePath !== "/" &&
+                  routePath !== "/resetPassword" &&
+                  routePath !== "/folder-shared-link" &&
+                  routePath !== "/set-shared-link" &&
+                  routePath !== "/404") ? (
+                  <div className="ct-sidebar app-sidebar">
+                    <DefaultSidebar profileInfoReducer={profileInfoReducer} />
+                  </div>
+                ) : null}
                 {isLoggedIn &&
-                  (routePath !== "/" && routePath !== "/resetPassword") ? (
-                    <div className="dashboard-right-wrap">
-                      <div className="dashboard-right-section">
-                        <Suspense fallback={""}>
-                          <Switch>
-                            {routes.map((route, idx) => {
-                              return route.component ? (
-                                <Route
-                                  key={idx}
-                                  path={route.path}
-                                  exact={route.exact}
-                                  name={route.name}
-                                  render={props => (
-                                    <route.component {...props} {...this.props} />
-                                  )}
-                                />
-                              ) : null;
-                            })}
-                          </Switch>
-                        </Suspense>
-                      </div>
+                (routePath !== "/" &&
+                  routePath !== "/resetPassword" &&
+                  routePath !== "/folder-shared-link" &&
+                  routePath !== "/set-shared-link" &&
+                  routePath !== "/404") ? (
+                  <div className="dashboard-right-wrap">
+                    <div className="dashboard-right-section">
+                      <Suspense fallback={""}>
+                        <Switch>
+                          {routes.map((route, idx) => {
+                            return route.component ? (
+                              <Route
+                                key={idx}
+                                path={route.path}
+                                exact={route.exact}
+                                name={route.name}
+                                render={props => (
+                                  <route.component {...props} {...this.props} />
+                                )}
+                              />
+                            ) : null;
+                          })}
+                        </Switch>
+                      </Suspense>
                     </div>
-                  ) : (
-                    <Suspense fallback={""}>
-                      <Switch>
-                        {routes.map((route, idx) => {
-                          return route.component ? (
-                            <Route
-                              key={idx}
-                              path={route.path}
-                              exact={route.exact}
-                              name={route.name}
-                              render={props => (
-                                <route.component {...props} {...this.props} />
-                              )}
-                            />
-                          ) : null;
-                        })}
-                      </Switch>
-                    </Suspense>
-                  )}
+                  </div>
+                ) : (
+                  <Suspense fallback={""}>
+                    <Switch>
+                      {routes.map((route, idx) => {
+                        return route.component ? (
+                          <Route
+                            key={idx}
+                            path={route.path}
+                            exact={route.exact}
+                            name={route.name}
+                            render={props => (
+                              <route.component {...props} {...this.props} />
+                            )}
+                          />
+                        ) : null;
+                      })}
+                    </Switch>
+                  </Suspense>
+                )}
               </div>
             </div>
           </div>
         </>
         {isLoggedIn &&
-          (routePath !== "/" &&
-            routePath !== "/resetPassword") ? null : routePath !==
-              "/resetPassword" ? (
-              <DefaultFooter />
-            ) : null
-        }
+        (routePath !== "/" &&
+          routePath !== "/resetPassword" &&
+          routePath !== "/folder-shared-link" &&
+          routePath !== "/set-shared-link" &&
+          routePath !== "/404") ? null : routePath !== "/resetPassword" &&
+          routePath !== "/folder-shared-link" &&
+          routePath !== "/set-shared-link" &&
+          routePath !== "/404" ? (
+          <DefaultFooter />
+        ) : null}
       </>
     );
   }

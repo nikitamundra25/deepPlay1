@@ -10,9 +10,9 @@ import {
   encrypt,
   decrypt
 } from "../common";
-import { IUser } from "../interfaces"
-import { comparePassword } from "../common/password"
-import { webURL } from "../config/app"
+import { IUser } from "../interfaces";
+import { comparePassword } from "../common/password";
+import { webURL } from "../config/app";
 import { ValidationError, Result, validationResult } from "express-validator";
 
 /* Title:- Login For User
@@ -29,7 +29,58 @@ const login = async (req: Request, res: Response): Promise<any> => {
     }).select("firstName lastName email password");
     if (result === null) {
       return res.status(400).json({
-        message: "User not found."
+        message:
+          "Email address is not registered with us. Please try to login with valid email address."
+      });
+    }
+    if (result.password) {
+      if (!comparePassword(password, result.password)) {
+        return res.status(400).json({
+          message: "Password didn't match."
+        });
+      }
+    } else {
+      return res.status(400).json({
+        message: "Password didn't match."
+      });
+    }
+
+    const token = await GenerateToken({
+      id: result._id,
+      firstName: result.firstName,
+      lastName: result.lastName,
+      email: result.lastName,
+      role: result.roleType
+    });
+    delete result.password;
+    return res.status(200).send({
+      token: token,
+      userData: result
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).send({
+      message: error.message
+    });
+  }
+};
+
+/* Title:- Login For Admin
+Prams:- email and password 
+Created By:- Rishabh Bula*/
+
+const adminLogin = async (req: Request, res: Response): Promise<any> => {
+  try {
+    const { body } = req;
+    const { email, password } = body;
+    const result: Document | null | any = await UserModel.findOne({
+      email,
+      isDeleted: false,
+      roleType: "admin"
+    }).select("firstName lastName email password");
+    if (result === null) {
+      return res.status(400).json({
+        message: "Email Address is not Registred with us. Please try to login with registered email address."
       });
     }
     if (result.password) {
@@ -73,11 +124,12 @@ const signup = async (req: Request, res: Response): Promise<any> => {
     const { body } = req;
     body.password = encryptPassword(body.password);
     const result: Document | null | any = await UserModel.findOne({
-      email: body.email
+      email: body.email,
+      isDeleted: false
     });
     if (result) {
       return res.status(400).json({
-        message: "Email already exist",
+        message: "This Email Address is already regisred with us. Please try to register with another Email Address.",
         success: false
       });
     } else {
@@ -111,7 +163,7 @@ const signup = async (req: Request, res: Response): Promise<any> => {
       const emailVar = new Email(req);
       await emailVar.setTemplate(AvailiableTemplates.SIGNUP_CONFIRM, {
         firstName: userResult.firstName,
-        lastName: userResult.lastName,
+        lastName: userResult.lastName
       });
       await emailVar.sendEmail(body.email);
       return res.status(200).json({
@@ -138,7 +190,8 @@ const socialSignup = async (req: Request, res: Response) => {
   try {
     if (body.accessToken) {
       const userData: Document | null = await UserModel.findOne({
-        email: body.email
+        email: body.email,
+        isDeleted: false
       });
       if (!userData) {
         const userSignup: IUser = {
@@ -202,13 +255,16 @@ const socialSignup = async (req: Request, res: Response) => {
       message: error.message
     });
   }
-}
+};
 
 /*  Title:- User forgot Password
 Prams:- email
 Created By:- Rishabh Bula */
 
-const userForgotPassword = async (req: Request, res: Response): Promise<any> => {
+const userForgotPassword = async (
+  req: Request,
+  res: Response
+): Promise<any> => {
   try {
     const errors: Result<ValidationError> = validationResult(req);
     if (!errors.isEmpty()) {
@@ -223,14 +279,12 @@ const userForgotPassword = async (req: Request, res: Response): Promise<any> => 
     });
     if (result === null) {
       return res.status(400).json({
-        message: "Email not found."
+        message: "Email Address is not Registred with us. Please try with registered email address."
       });
     }
     const encryptedUserId = encrypt(result.id);
     const encrypteUserEmail = encrypt(result.email);
-    const encrypteVerifyToken = encrypt(
-      result.email + result.id
-    );
+    const encrypteVerifyToken = encrypt(result.email + result.id);
     const emailVar = new Email(req);
     await emailVar.setTemplate(AvailiableTemplates.FORGET_PASSWORD, {
       fullName: result.firstName + " " + result.lastName,
@@ -318,7 +372,9 @@ const userResetpassword = async (req: Request, res: Response): Promise<any> => {
     }
     const { body } = req;
     const decryptedUserEmail = decrypt(body.user);
-    const userData: Document | any | null = await UserModel.findOne({ email: decryptedUserEmail });
+    const userData: Document | any | null = await UserModel.findOne({
+      email: decryptedUserEmail
+    });
     if (!userData) {
       return res.status(400).json({
         responsecode: 400,
@@ -326,9 +382,7 @@ const userResetpassword = async (req: Request, res: Response): Promise<any> => {
         success: false
       });
     }
-    const encryptedUserpassword = encryptPassword(
-      body.password
-    );
+    const encryptedUserpassword = encryptPassword(body.password);
     if (!userData.verifyToken) {
       return res.status(400).json({
         responsecode: 400,
@@ -367,14 +421,48 @@ const userResetpassword = async (req: Request, res: Response): Promise<any> => {
     });
   }
 };
-/**
- *
- */
+/*Title:- Admin Password Change
+Body:- newPassword, oldPassword 
+Created By:- Hariom */
+const updateAdminPassword = async (
+  req: Request,
+  res: Response
+): Promise<any> => {
+  try {
+    const errors: Result<ValidationError> = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(422).json({
+        message: ValidationFormatter(errors.mapped())
+      });
+    }
+    const { body, currentUser } = req;
+    const { id } = currentUser || { id: null };
+    const { newPassword: password } = body;
+    let dataToUpdate: Object = {
+      password: encryptPassword(password)
+    };
+    await UserModel.findByIdAndUpdate(id, {
+      $set: dataToUpdate
+    });
+    return res.status(200).json({
+      message: "Password updated successfully."
+    });
+  } catch (error) {
+    console.log(error)
+    res.status(500).json({
+      message: error.message ? error.message : "Unexpected error occure.",
+      success: false
+    });
+  }
+};
+
 export {
   login,
+  adminLogin,
   signup,
   socialSignup,
   userForgotPassword,
   userVerifyLink,
-  userResetpassword
+  userResetpassword,
+  updateAdminPassword
 };

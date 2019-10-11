@@ -7,4 +7,5 @@ export interface IMove {
   userId: String;
   sharableLink: String;
   status: Boolean;
+  setId: String;
 }

@@ -13,6 +13,7 @@ app.use(bodyParser.urlencoded({ extended: false }));
 
 // parse application/json
 app.use(bodyParser.json({ limit: "50mb" }));
+console.log(`Directory name ${__dirname}`);
 
 app.use("/", express.static(path.join(__dirname, "public")));
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
@@ -21,7 +22,7 @@ const corsOption = {
   origin: true,
   methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
   credentials: true,
-  exposedHeaders: ["x-auth-token", "authorization"]
+  exposedHeaders: ["x-auth-token", "authorization", "Content-Type"]
 };
 app.use(cors(corsOption));
 
@@ -40,6 +41,10 @@ app.use("/api/v1", router);
  *
  */
 app.get("/", (req: express.Request, res: express.Response) => {
+  console.log("req", req.query);
+  return res.sendFile(path.join(__dirname, "public", "index.html"));
+});
+app.get("/*", (req: express.Request, res: express.Response) => {
   console.log("req", req.query);
   return res.sendFile(path.join(__dirname, "public", "index.html"));
 });

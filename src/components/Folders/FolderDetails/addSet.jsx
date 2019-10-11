@@ -1,21 +1,35 @@
 import React from "react";
-import { Modal, ModalBody, ModalHeader, Row, Col, Button } from "reactstrap";
-import { AppRoutes } from "../../../config/AppRoutes"
-// import CreateSetComponent from "../../Sets/createSet"
+import {
+  Modal,
+  ModalBody,
+  ModalHeader,
+  Row,
+  Col,
+  FormGroup,
+  Input
+} from "reactstrap";
+import { AppRoutes } from "../../../config/AppRoutes";
+import closeIcon from "../../../assets/img/close-img.png";
+import "./index.scss";
 
 // core components
 class AddSetModal extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      setList: []
+      setList: [],
+      selectedSet: "yourSet"
     };
   }
+
   componentDidUpdate(prevProps) {
     if (prevProps.getAllSet !== this.props.getAllSet) {
-      const setList = this.props.getAllSet;
+      let setList = this.props.getAllSet;
+      const setItem = setList.filter(item =>
+        item && item.folderId ? item.folderId._id === this.props.folderId : null
+      );
       this.setState({
-        setList: setList
+        setList: setItem
       });
     }
   }
@@ -34,23 +48,52 @@ class AddSetModal extends React.Component {
     this.props.handleSets(id, name);
   };
 
-  handleAddNewSet = (folderId) => {
-    this.props.redirectTo(AppRoutes.CREATE_SET.url)
-  }
+  handleAddNewSet = folderId => {
+    this.props.redirectTo(AppRoutes.CREATE_SET.url + `?folderId=${folderId}`);
+  };
+
+  handleSelect = e => {
+    e.preventDefault();
+    const setList = this.props.getAllSet;
+    let setItem = [];
+    if (e.target.value === "yourSet") {
+      setItem = setList.filter(item =>
+        item && item.folderId ? item.folderId._id === this.props.folderId : null
+      );
+    } else {
+      if (setList && setList.length) {
+        setList.map(item => {
+          if (
+            (item &&
+              item.folderId &&
+              item.folderId._id === this.props.folderId) ||
+            item.folderId === null
+          ) {
+            setItem.push(item);
+          }
+          return true;
+        });
+      }
+      // setItem = this.props.getAllSet;
+    }
+    this.setState({
+      selectedSet: e.target.value,
+      setList: setItem
+    });
+  };
 
   render() {
-    const { modelInfoReducer, folderId } = this.props;
-    const { modelDetails } = modelInfoReducer;
-    const { addSetModalOpen } = modelDetails;
-    const { setList } = this.state;
+    const { modal, folderId, handleOpen } = this.props;
+    const { setList, selectedSet } = this.state;
+
     return (
       <div>
         <Modal
           className="modal-dialog-centered custom-model-wrap"
-          isOpen={addSetModalOpen}
+          isOpen={modal}
           size="md"
           backdrop={"static"}
-          toggle={() => this.handleOpen}
+          toggle={() => handleOpen}
         >
           <ModalHeader>
             <span className="custom-title">Add a Set</span>
@@ -59,58 +102,80 @@ class AddSetModal extends React.Component {
               className="close"
               data-dismiss="modal"
               type="button"
-              onClick={this.handleOpen}
+              onClick={handleOpen}
             >
-              <span aria-hidden={true}>  <img src="./assets/img/close-img.png" alt="close-ic" /></span>
+              <span aria-hidden={true}>
+                <img src={closeIcon} alt="close-ic" />
+              </span>
             </button>
           </ModalHeader>
           <ModalBody className="modal-text-center">
             <div className="wrap-folder">
-              <Button color=" "  onClick={() => this.handleAddNewSet(folderId)} className={"cursor_pointer btn btn-black"}>+ Create New Set</Button>
-              {setList
+              <div className="tile-wrap card mb-3 d-block">
+                <span
+                  onClick={() => this.handleAddNewSet(folderId)}
+                  className={"cursor_pointer create-btn font-14 text-uppercase"}
+                >
+                  + Create New Set
+                </span>
+              </div>
+              <FormGroup>
+                <Input
+                  type="select"
+                  name="select"
+                  id="exampleSelect"
+                  className="rounded-0"
+                  onChange={this.handleSelect}
+                  value={selectedSet}
+                >
+                  <option value="yourSet">Your Sets</option>
+                  <option value="allSet">All Sets</option>
+                </Input>
+              </FormGroup>
+              {setList && setList.length
                 ? setList.map((set, i) => {
-                  return (
-                    <Row className="set-wrap" key={i}>
-                      <Col md="12">
-                        <div className="tile-wrap card">
-                          <div className="cotent-tile d-flex">
-                            <div className="cotent-text-tile d-flex">
-                              <div className="content-heading-tile">
+                    return (
+                      <Row className="set-wrap" key={i}>
+                        <Col md="12">
+                          <div className="tile-wrap card">
+                            <div className="d-flex flex-warp align-item-center">
+                              <div className="sets-heading text-capitalize">
                                 {" "}
                                 {set.title}
                               </div>
-                              <div>
+                              <div className="sets-icon ml-auto">
                                 {set.folderId !== null ? (
                                   <span
                                     onClick={() =>
                                       this.OnhandleSets(set._id, "add")
                                     }
+                                    className="text-center cursor_pointer"
                                   >
                                     <i
-                                      className="fa fa-plus-square-o"
+                                      className="fa fa-minus"
                                       aria-hidden="true"
                                     ></i>
                                   </span>
                                 ) : (
-                                    <span
-                                      onClick={() =>
-                                        this.OnhandleSets(set._id, "remove")
-                                      }
-                                    >
-                                      <i
-                                        className="fa fa-minus"
-                                        aria-hidden="true"
-                                      ></i>
-                                    </span>
-                                  )}
+                                  <span
+                                    onClick={() =>
+                                      this.OnhandleSets(set._id, "remove")
+                                    }
+                                    className="text-center cursor_pointer "
+                                  >
+                                    <i
+                                      className="fa fa-plus"
+                                      aria-hidden="true"
+                                    ></i>
+                                  </span>
+                                )}
                               </div>
                             </div>
                           </div>
-                        </div>
-                      </Col>
-                    </Row>
-                  );
-                })
+                        </Col>
+                      </Row>
+                    );
+                  })
                 : ""}
             </div>
           </ModalBody>

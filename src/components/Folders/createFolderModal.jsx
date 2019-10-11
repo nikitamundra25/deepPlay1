@@ -9,6 +9,8 @@ import {
   ModalBody,
   ModalFooter
 } from "reactstrap";
+import closeBtn from "../../assets/img/close-img.png";
+
 // core components
 class FolderModal extends React.Component {
   constructor(props) {
@@ -18,6 +20,17 @@ class FolderModal extends React.Component {
       description: ""
     };
   }
+
+  componentDidUpdate(prevProps) {
+    if (prevProps.folderDetails !== this.props.folderDetails) {
+      const { title, description } = this.props.folderDetails;
+      this.setState({
+        title,
+        description
+      });
+    }
+  }
+
   handleChange = e => {
     const { name, value } = e.target;
     this.setState({
@@ -36,7 +49,9 @@ class FolderModal extends React.Component {
   };
 
   onCreateFolder = () => {
+    const { folderDetails } = this.props;
     const data = {
+      id: folderDetails ? folderDetails._id : "",
       title: this.state.title,
       description: this.state.description,
       isCopy: false
@@ -45,30 +60,28 @@ class FolderModal extends React.Component {
   };
 
   render() {
-    const { modelInfoReducer } = this.props;
-    const { modelDetails } = modelInfoReducer;
-    const { createFolderModalOpen } = modelDetails;
+    const { modal, handleOpen, folderDetails } = this.props;
     const { title, description } = this.state;
     return (
       <div>
         <Modal
           className="modal-dialog-centered custom-model-wrap"
-          isOpen={createFolderModalOpen}
-          toggle={() => this.handleOpen}
+          isOpen={modal}
+          toggle={handleOpen}
         >
           <ModalHeader>
             <span className="custom-title" id="exampleModalLabel">
-              Create a New Folder
+              {folderDetails ? "Update Folder" : "Create a New Folder"}
             </span>
             <button
               aria-label="Close"
               className="close"
               data-dismiss="modal"
               type="button"
-              onClick={this.handleOpen}
+              onClick={handleOpen}
             >
               <span aria-hidden="true">
-                <img src="./assets/img/close-img.png" alt="close-ic" />
+                <img src={closeBtn} alt="close-ic" />
               </span>
             </button>
           </ModalHeader>
@@ -92,7 +105,7 @@ class FolderModal extends React.Component {
               </Label>
               <Input
                 id="exampleFormControlInput1"
-                type="text"
+                type="textarea"
                 placeholder="Enter a description (optional)"
                 name="description"
                 onChange={this.handleChange}
@@ -108,8 +121,8 @@ class FolderModal extends React.Component {
               className="btn btn-black"
               disabled={!title}
             >
-              Create Folder
-              </Button>
+              {folderDetails ? "Update Folder" : "Create Folder"}
+            </Button>
           </ModalFooter>
         </Modal>
       </div>

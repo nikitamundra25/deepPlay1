@@ -8,9 +8,14 @@ import {
   showLoader,
   hideLoader,
   getAllFolderSuccess,
-  getAllFolderRequest
+  getAllFolderRequest,
+  recentFolderSuccess,
+  updateRecentTimeSuccess,
+  folderDetailRequest
 } from "../actions";
 import { toast } from "react-toastify";
+import { AppConfig } from "../config/Appconfig";
+let toastId = null;
 
 //  Create folder
 const createFolderLogic = createLogic({
@@ -20,14 +25,16 @@ const createFolderLogic = createLogic({
     dispatch(showLoader());
     let result = await api.FetchFromServer(
       "folder",
-      "/createFolder",
+      "/create-folder",
       "POST",
       true,
       undefined,
       action.payload
     );
     if (result.isError) {
-      toast.error(result.messages[0]);
+      if (!toast.isActive(toastId)) {
+        toastId = toast.error(result.messages[0]);
+      }
       dispatch(hideLoader());
       done();
       return;
@@ -36,17 +43,22 @@ const createFolderLogic = createLogic({
       dispatch(
         modelOpenRequest({
           modelDetails: {
-            createFolderModalOpen: false
+            createFolderModalOpen: false,
+            createFolderOpen: false
           }
         })
       );
       if (!action.payload.isCopy) {
-        toast.success(result.messages[0]);
+        if (!toast.isActive(toastId)) {
+          toastId = toast.success(result.messages[0]);
+        }
         dispatch(
           redirectTo({ path: `/folder-details/${result.data.Result._id}` })
         );
       } else {
-        toast.success("Folder Copy has been created successfully");
+        if (!toast.isActive(toastId)) {
+          toastId = toast.success("Folder Copy has been created successfully");
+        }
         dispatch(getAllFolderRequest());
       }
       done();
@@ -59,26 +71,71 @@ const allFolderLogic = createLogic({
   type: FolderAction.GET_ALL_FOLDER_REQUEST,
   async process({ action }, dispatch, done) {
     let api = new ApiHelper();
+    let result = await api.FetchFromServer(
+      "folder",
+      "/all-folder",
+      "GET",
+      true,
+      {
+        ...action.payload,
+        limit: AppConfig.ITEMS_PER_PAGE
+      },
+      undefined
+    );
+    if (result.isError) {
+      if (!toast.isActive(toastId)) {
+        toastId = toast.error(result.messages[0]);
+      }
+      getAllFolderSuccess({
+        getAllFolders: []
+      });
+      done();
+      return;
+    } else {
+      // toast.success(result.messages[0]);
+      dispatch(
+        modelOpenRequest({
+          modelDetails: {
+            createFolderModalOpen: false
+          }
+        })
+      );
+      dispatch(
+        getAllFolderSuccess({
+          getAllFolders: result.data.data,
+          totalFolders: result.data.totalFolders ? result.data.totalFolders : 0
+        })
+      );
+      done();
+    }
+  }
+});
+
+// Recent Folder (dashboard)
+const recentFolderLogic = createLogic({
+  type: FolderAction.RECENT_FOLDER_REQUEST,
+  async process({ action }, dispatch, done) {
+    let api = new ApiHelper();
     dispatch(showLoader());
     let result = await api.FetchFromServer(
       "folder",
-      "/allFolder",
+      "/recent-folder",
       "GET",
       true,
       undefined,
       undefined
     );
     if (result.isError) {
-      toast.error(result.messages[0]);
-      dispatch(hideLoader());
+      if (!toast.isActive(toastId)) {
+        toastId = toast.error(result.messages[0]);
+      }
       done();
       return;
     } else {
       // toast.success(result.messages[0]);
-      dispatch(hideLoader());
       dispatch(
-        getAllFolderSuccess({
-          getAllFolders: result.data.data
+        recentFolderSuccess({
+          recentFolders: result.data.data
         })
       );
       done();
@@ -91,23 +148,25 @@ const deleteFolderLogic = createLogic({
   type: FolderAction.DELETE_FOLDER_REQUEST,
   async process({ action }, dispatch, done) {
     let api = new ApiHelper();
-    dispatch(showLoader());
     let result = await api.FetchFromServer(
       "folder",
-      "/deleteFolder",
-      "DELETE",
+      "/delete-folder",
+      "PATCH",
       true,
       { id: action.payload },
       undefined
     );
     if (result.isError) {
-      dispatch(hideLoader());
-      toast.error(result.messages[0]);
+      if (!toast.isActive(toastId)) {
+        toastId = toast.error(result.messages[0]);
+      }
       done();
       return;
     } else {
-      dispatch(hideLoader());
-      toast.success(result.messages[0]);
+      if (!toast.isActive(toastId)) {
+        toastId = toast.success(result.messages[0]);
+      }
+      dispatch(redirectTo({ path: "/folder" }));
       dispatch(getAllFolderRequest());
       done();
     }
@@ -115,15 +174,71 @@ const deleteFolderLogic = createLogic({
 });
 
 //  Recent folder
-const getRecentFolderLogic = createLogic({
+const getFolderDetailsLogic = createLogic({
   type: FolderAction.FOLDER_DETAIL_REQUEST,
+  async process({ action }, dispatch, done) {
+    let api = new ApiHelper();
+    let result = await api.FetchFromServer(
+      "folder",
+      "/get-folder-by-id",
+      "GET",
+      true,
+      action.payload,
+      undefined
+    );
+    if (result.isError) {
+      if (!toast.isActive(toastId)) {
+        toastId = toast.error(result.messages[0]);
+      }
+      done();
+      return;
+    } else {
+      dispatch(
+        folderDetailSuccess({
+          folderDetails: result.data.data
+        })
+      );
+      done();
+    }
+  }
+});
+
+//updateRecentTime api
+const updateRecentTimeLogic = createLogic({
+  type: FolderAction.UPDATE_RECENT_TIME_REQUEST,
+  async process({ action }, dispatch, done) {
+    let api = new ApiHelper();
+    let result = await api.FetchFromServer(
+      "folder",
+      "/update-recent-time",
+      "PATCH",
+      true,
+      undefined,
+      action.payload
+    );
+    if (result.isError) {
+      if (!toast.isActive(toastId)) {
+        toastId = toast.error(result.messages[0]);
+      }
+      done();
+      return;
+    } else {
+      dispatch(updateRecentTimeSuccess());
+      done();
+    }
+  }
+});
+
+//update folder
+const UpdateFolderLogic = createLogic({
+  type: FolderAction.UPDATE_FOLDER_REQUEST,
   async process({ action }, dispatch, done) {
     let api = new ApiHelper();
     dispatch(showLoader());
     let result = await api.FetchFromServer(
       "folder",
-      "/getFolderById",
-      "POST",
+      "/update-folder",
+      "PUT",
       true,
       undefined,
       action.payload
@@ -136,17 +251,27 @@ const getRecentFolderLogic = createLogic({
     } else {
       dispatch(hideLoader());
       dispatch(
-        folderDetailSuccess({
-          folderDetails: result.data.data
+        modelOpenRequest({
+          modelDetails: {
+            createFolderOpen: false
+          }
         })
       );
+      dispatch(folderDetailRequest({ id: action.payload.id }));
+      if (!toast.isActive(this.toastId)) {
+        this.toastId = toast.success(result.messages[0]);
+      }
       done();
     }
   }
 });
+
 export const FolderLogics = [
   createFolderLogic,
-  getRecentFolderLogic,
+  getFolderDetailsLogic,
   allFolderLogic,
-  deleteFolderLogic
+  deleteFolderLogic,
+  recentFolderLogic,
+  updateRecentTimeLogic,
+  UpdateFolderLogic
 ];

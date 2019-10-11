@@ -6,4 +6,10 @@ export interface IFolder {
   sharableLink: String;
   status: Boolean;
   isDeleted: Boolean;
+  isCopy: Boolean;
+}
+
+export interface IUpdateFolder {
+  title: String;
+  description: String;
 }

@@ -4,7 +4,10 @@ import { MovesAction } from "../actions";
 
 const initialState = {
   isVideoDownloading: false,
-  videoUrl:""
+  movesOfSet: [],
+  moveDetails: {},
+  isMoveDetailsLoading: false,
+  isSavingWebM: false
 };
 
 export const moveReducer = handleActions(
@@ -12,13 +15,35 @@ export const moveReducer = handleActions(
     [MovesAction.DOWNLOAD_YOUTUBE_VIDEO_REQUEST]: (state, { payload }) => ({
       ...state,
       isVideoDownloading: true,
-      videoUrl:""
+      moveDetails: {
+        videoUrl: ""
+      }
     }),
     [MovesAction.DOWNLOAD_YOUTUBE_VIDEO_SUCCESS]: (state, { payload }) => ({
       ...state,
       isVideoDownloading: false,
-      videoUrl: payload.videoUrl
+      moveDetails: {
+        videoUrl: payload.videoUrl
+      }
     }),
+    [MovesAction.GET_MOVES_OF_SET_SUCCESS]: (state, { payload }) => ({
+      ...state,
+      movesOfSet: payload.movesOfSet
+    }),
+    [MovesAction.GET_MOVE_DETAILS_REQUEST]: (state, { payload }) => ({
+      ...state,
+      moveDetails: "",
+      isMoveDetailsLoading: true
+    }),
+    [MovesAction.GET_MOVES_DETAILS_SUCCESS]: (state, { payload }) => ({
+      ...state,
+      moveDetails: payload.moveDetails,
+      isMoveDetailsLoading: false
+    }),
+    [MovesAction.UPDATE_VIDEO_SETTINGS_SUCCESS]: (state, { payload }) => ({
+      ...state,
+      ...payload
+    })
   },
   initialState
 );

@@ -11,6 +11,10 @@ const folderSchema: Mongoose.Schema = new Schema({
     type: String,
     default: null
   },
+  isCopy: {
+    type: Boolean,
+    default: false
+  },
   isPublic: {
     type: Boolean,
     default: false
@@ -26,6 +30,10 @@ const folderSchema: Mongoose.Schema = new Schema({
   status: {
     type: Boolean,
     default: true
+  },
+  isRecentTime: {
+    type: Date,
+    default: Date.now
   },
   createdAt: {
     type: Date,

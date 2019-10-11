@@ -12,9 +12,12 @@ import {
   getFolderSetRequest,
   modelOpenRequest,
   getAllSetRequest,
+  recentSetSuccess,
   getSetDetailsSuccess
 } from "../actions";
 import { toast } from "react-toastify";
+import { AppConfig } from "../config/Appconfig";
+let toastId = null;
 
 //  Create sets
 const createSetLogic = createLogic({
@@ -24,7 +27,7 @@ const createSetLogic = createLogic({
     dispatch(showLoader());
     let result = await api.FetchFromServer(
       "set",
-      "/createSet",
+      "/create-set",
       "POST",
       true,
       undefined,
@@ -32,12 +35,12 @@ const createSetLogic = createLogic({
     );
     if (result.isError) {
       dispatch(hideLoader());
-      toast.error(result.messages[0]);
+      if (!toast.isActive(toastId)) {
+        toastId = toast.error(result.messages[0]);
+      }
       done();
       return;
     } else {
-      dispatch(hideLoader());
-      toast.success(result.messages[0]);
       dispatch(
         createSetSuccess({
           showLoader: false,
@@ -45,29 +48,98 @@ const createSetLogic = createLogic({
         })
       );
       if (!action.payload.isCopy) {
+        if (!toast.isActive(toastId)) {
+          toastId = toast.success(result.messages[0]);
+        }
         dispatch(redirectTo({ path: "/move" }));
       } else {
-        toast.success("Set Copy has been created successfully");
-        dispatch(getAllSetRequest());
+        if (!toast.isActive(toastId)) {
+          toastId = toast.success("Set Copy has been created successfully");
+        }
+        dispatch(getAllSetRequest({ isSetNoLimit: false }));
       }
       done();
     }
   }
 });
 
+// Recent Folder (dashboard)
+const recentSetLogic = createLogic({
+  type: SetsAction.RECENT_SET_REQUEST,
+  async process({ action }, dispatch, done) {
+    let api = new ApiHelper();
+    let result = await api.FetchFromServer(
+      "set",
+      "/get-recent-set",
+      "GET",
+      true,
+      undefined,
+      undefined
+    );
+    if (result.isError) {
+      toast.error(result.messages[0]);
+      done();
+      return;
+    } else {
+      dispatch(
+        recentSetSuccess({
+          recentSets: result.data.data
+        })
+      );
+      done();
+    }
+  }
+});
+
+//Delete folder
+const deleteSetLogic = createLogic({
+  type: SetsAction.DELETE_SET_REQUEST,
+  async process({ action }, dispatch, done) {
+    let api = new ApiHelper();
+    let result = await api.FetchFromServer(
+      "set",
+      "/delete-set",
+      "PATCH",
+      true,
+      undefined,
+      { id: action.payload }
+    );
+    if (result.isError) {
+      if (!toast.isActive(toastId)) {
+        toastId = toast.error(result.messages[0]);
+      }
+      done();
+      return;
+    } else {
+      if (!toast.isActive(toastId)) {
+        toastId = toast.success(result.messages[0]);
+      }
+      dispatch(redirectTo({ path: "/set" }));
+      dispatch(getAllSetRequest({ isSetNoLimit: false }));
+      done();
+    }
+  }
+});
 //  ---------------Get all sets ---------------
 const getAllSetLogic = createLogic({
   type: SetsAction.GET_ALL_SET_REQUEST,
   async process({ action }, dispatch, done) {
     let api = new ApiHelper();
-    dispatch(showLoader());
+    let setPayload;
+    if (action.payload.isSetNoLimit) {
+      setPayload = action.payload;
+    } else {
+      setPayload = {
+        ...action.payload,
+        limit: AppConfig.ITEMS_PER_PAGE
+      };
+    }
     let result = await api.FetchFromServer(
       "set",
-      "/getAllSet",
+      "/get-all-set",
       "GET",
       true,
-      undefined,
-      undefined
+      setPayload
     );
     if (result.isError) {
       dispatch(hideLoader());
@@ -79,7 +151,8 @@ const getAllSetLogic = createLogic({
       dispatch(
         getAllSetSuccess({
           showLoader: false,
-          allSetList: result.data.result
+          allSetList: result.data.result,
+          totalSets: result.data.totalSets ? result.data.totalSets : 0
         })
       );
       done();
@@ -88,33 +161,38 @@ const getAllSetLogic = createLogic({
 });
 
 //  ---------------Get sets list to add or remove in folders---------------
-const getSetLogic = createLogic({
+const getSetOfFolderLogic = createLogic({
   type: SetsAction.GET_FOLDER_SET_REQUEST,
   async process({ action }, dispatch, done) {
     let api = new ApiHelper();
-    dispatch(showLoader());
     let result = await api.FetchFromServer(
       "set",
-      "/getSets",
-      "POST",
+      "/get-sets-of-folder",
+      "GET",
       true,
-      undefined,
-      action.payload
+      {
+        ...action.payload,
+        limit: AppConfig.ITEMS_PER_PAGE
+      }
     );
     if (result.isError) {
-      dispatch(hideLoader());
       toast.error(result.messages[0]);
-      done();
-      return;
-    } else {
-      dispatch(hideLoader());
       dispatch(
         getFolderSetSuccess({
           showLoader: false,
-          setListinFolder: result.data.data
+          setListinFolder: []
         })
       );
-
+      done();
+      return;
+    } else {
+      dispatch(
+        getFolderSetSuccess({
+          showLoader: false,
+          setListinFolder: result.data.data,
+          totalSetsInFolder: result.data.totalSets ? result.data.totalSets : 0
+        })
+      );
       done();
     }
   }
@@ -126,29 +204,25 @@ const ManageSetLogic = createLogic({
   async process({ action }, dispatch, done) {
     let api = new ApiHelper();
     dispatch(hideLoader());
-    console.log("act", action.payload);
+
     let result = await api.FetchFromServer(
       "set",
-      "/manageSets",
-      "POST",
+      "/manage-sets",
+      "PATCH",
       true,
       undefined,
       action.payload
     );
     if (result.isError) {
-      toast.error(result.messages[0]);
+      if (!toast.isActive(toastId)) {
+        toastId = toast.error(result.messages[0]);
+      }
       done();
       return;
     } else {
       dispatch(
         ManageSetSuccess({
           showLoader: false
-        })
-      );
-
-      dispatch(
-        getFolderSetRequest({
-          folderId: action.payload.previousFolderId
         })
       );
       dispatch(
@@ -159,6 +233,20 @@ const ManageSetLogic = createLogic({
           }
         })
       );
+      dispatch(getAllSetRequest({ isSetNoLimit: false }));
+      if (action.payload.previousFolderId) {
+        dispatch(
+          getFolderSetRequest({
+            folderId: action.payload.previousFolderId
+          })
+        );
+      } else {
+        if (!toast.isActive(toastId)) {
+          toastId = toast.success("Your set has been transfered successfully");
+        }
+        dispatch(getAllSetRequest({ isSetNoLimit: false }));
+        dispatch(getFolderSetRequest());
+      }
       done();
     }
   }
@@ -168,7 +256,6 @@ const getSetDetailsLogic = createLogic({
   type: SetsAction.GET_SET_DETAILS_REQUEST,
   async process({ action }, dispatch, done) {
     let api = new ApiHelper();
-    dispatch(showLoader());
     let result = await api.FetchFromServer(
       "set",
       "/getSetById",
@@ -178,7 +265,6 @@ const getSetDetailsLogic = createLogic({
       undefined
     );
     if (result.isError) {
-      dispatch(hideLoader());
       toast.error(result.messages[0]);
       dispatch(
         getSetDetailsSuccess({
@@ -189,7 +275,6 @@ const getSetDetailsLogic = createLogic({
       done();
       return;
     } else {
-      dispatch(hideLoader());
       dispatch(
         getSetDetailsSuccess({
           showLoader: false,
@@ -201,10 +286,42 @@ const getSetDetailsLogic = createLogic({
   }
 });
 
+//update set
+const UpdateSetLogic = createLogic({
+  type: SetsAction.UPDATE_SET_REQUEST,
+  async process({ action }, dispatch, done) {
+    let api = new ApiHelper();
+    dispatch(showLoader());
+    let result = await api.FetchFromServer(
+      "set",
+      "/update-set",
+      "PUT",
+      true,
+      undefined,
+      action.payload
+    );
+    if (result.isError) {
+      dispatch(hideLoader());
+      toast.error(result.messages[0]);
+      done();
+      return;
+    } else {
+      dispatch(hideLoader());
+      dispatch(redirectTo({ path: `/set-details/${action.payload.setId}` }));
+      if (!toast.isActive(this.toastId)) {
+        this.toastId = toast.success(result.messages[0]);
+      }
+      done();
+    }
+  }
+});
 export const SetLogics = [
   createSetLogic,
   getAllSetLogic,
-  getSetLogic,
+  getSetOfFolderLogic,
   ManageSetLogic,
-  getSetDetailsLogic
+  recentSetLogic,
+  deleteSetLogic,
+  getSetDetailsLogic,
+  UpdateSetLogic
 ];

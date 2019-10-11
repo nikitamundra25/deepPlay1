@@ -21,8 +21,8 @@ import {
   SingupValidations,
   SingupValidationsMessaages
 } from "../../validations";
-import FacebookLogin from 'react-facebook-login';
-import GoogleLogin from 'react-google-login';
+import FacebookLogin from "react-facebook-login";
+import GoogleLogin from "react-google-login";
 import { toast } from "react-toastify";
 import { logger } from "helper/Logger";
 
@@ -38,7 +38,7 @@ class SignupComponent extends React.Component {
       roleType: false,
       passwordStrength: "week",
       errors: {}
-    }
+    };
   }
   componentDidUpdate = ({ openSignupModel }) => {
     if (openSignupModel !== this.props.openSignupModel) {
@@ -50,43 +50,41 @@ class SignupComponent extends React.Component {
         confirmPassword: "",
         roleType: false,
         errors: {}
-      })
+      });
     }
-  }
+  };
   /*
   /* 
   */
   /*
    /* 
    */
-  handleFacebookLogin = (response) => {
+  handleFacebookLogin = response => {
     try {
-      const name = response.name.split(" ")
+      const name = response.name.split(" ");
       const payload = {
         email: response.email,
         firstName: name[0],
         lastName: name[1],
         profileImage: response.picture.data.url,
         accessToken: response.accessToken
-      }
+      };
       this.setState({
         email: payload.email,
         firstName: payload.firstName,
-        lastName: payload.lastName,
-      })
+        lastName: payload.lastName
+      });
     } catch (error) {
-      logger(error)
+      logger(error);
       if (!toast.isActive(this.toastId)) {
-        this.toastId = toast.error(
-          error
-        );
+        this.toastId = toast.error(error);
       }
     }
-  }
+  };
   /*
   /* 
   */
-  handleGoogleLogin = (response) => {
+  handleGoogleLogin = response => {
     try {
       const payload = {
         email: response.profileObj.email,
@@ -94,53 +92,61 @@ class SignupComponent extends React.Component {
         lastName: response.profileObj.familyName,
         profileImage: response.profileObj.imageUrl,
         accessToken: response.accessToken
-      }
+      };
       this.setState({
         email: payload.email,
         firstName: payload.firstName,
-        lastName: payload.lastName,
-      })
+        lastName: payload.lastName
+      });
     } catch (error) {
-      logger(error)
+      logger(error);
       if (!toast.isActive(this.toastId)) {
-        this.toastId = toast.error(
-          error
-        );
+        this.toastId = toast.error(error);
       }
     }
-  }
+  };
   /*
   /* 
   */
   handleChange = e => {
+    this.setState({
+      errors: ""
+    });
     const { name, value, checked } = e.target;
     if (name === "roleType") {
       this.setState({
         roleType: checked
-      })
+      });
     }
     if (name === "password") {
-      let res = (value).match(/^(?:[0-9]+[a-z]|[a-z]+[0-9])[a-z0-9]*$/i);
+      let res = value.match(/^(?:[0-9]+[a-z]|[a-z]+[0-9])[a-z0-9]*$/i);
       if (res) {
         this.setState({
           passwordStrength: "strong"
-        })
+        });
       } else {
         this.setState({
           passwordStrength: "week"
-        })
+        });
       }
     }
     this.setState({
-      [name]: value
-    })
-  }
+      [name]: value.trim()
+    });
+  };
   /*
   /* 
   */
   handleSignupRequest = e => {
     e.preventDefault();
-    const { email, password, firstName, lastName, confirmPassword, roleType } = this.state;
+    const {
+      email,
+      password,
+      firstName,
+      lastName,
+      confirmPassword,
+      roleType
+    } = this.state;
     const data = {
       email,
       password,
@@ -148,7 +154,7 @@ class SignupComponent extends React.Component {
       lastName,
       confirmPassword,
       roleType: roleType ? "I am a teacher" : "Unclassified"
-    }
+    };
     let { isValid, errors } = Validator(
       data,
       SingupValidations,
@@ -160,14 +166,18 @@ class SignupComponent extends React.Component {
         isLoading: false
       });
       return;
+    } else {
+      this.setState({
+        errors: {}
+      });
     }
-    this.props.signupRequest(data)
-  }
+    this.props.signupRequest(data);
+  };
   /*
   /* 
   */
   render() {
-    const { openSignupModel, handleSignupModel, loginReducer } = this.props
+    const { openSignupModel, handleSignupModel, loginReducer } = this.props;
     const {
       email,
       password,
@@ -178,7 +188,7 @@ class SignupComponent extends React.Component {
       errors,
       passwordStrength
     } = this.state;
-    const { isSignupLoading } = loginReducer
+    const { isSignupLoading } = loginReducer;
 
     return (
       <>
@@ -186,14 +196,14 @@ class SignupComponent extends React.Component {
           className="modal-dialog-centered auth-user-model"
           isOpen={openSignupModel}
           toggle={handleSignupModel}
-          backdrop={"static"}
+          // backdrop={"static"}
           size={"sm"}
         >
           <ModalHeader toggle={handleSignupModel} />
           <ModalBody className="modal-body p-0">
             <Card className="bg-secondaryborder-0">
-              <CardHeader   >
-                <div className=" login-heading text-center mt-2 mb-3">
+              <CardHeader>
+                <div className=" login-heading text-center  mb-3">
                   Sign up with
                 </div>
                 <div className="btn-wrapper text-center social-media-wrap">
@@ -215,14 +225,13 @@ class SignupComponent extends React.Component {
                       className={"btn-neutral btn-icon btn btn-default"}
                       onSuccess={this.handleGoogleLogin}
                       onFailure={this.handleGoogleLogin}
-                      cookiePolicy={'single_host_origin'}
+                      cookiePolicy={"single_host_origin"}
                     />
                   </span>
                 </div>
               </CardHeader>
 
               <CardBody className="px-lg-5">
-
                 <div className="text-center login-heading mb-4 auth-subheading">
                   Or sign up and generate your credentials
                 </div>
@@ -241,10 +250,12 @@ class SignupComponent extends React.Component {
                         onChange={this.handleChange}
                         placeholder="First Name"
                         type="text"
-                      // invalid={errors.firstName}
+                        // invalid={errors.firstName}
                       />
                       <FormFeedback>
-                        {errors.firstName && !firstName ? errors.firstName : null}
+                        {errors.firstName && !firstName
+                          ? errors.firstName
+                          : null}
                       </FormFeedback>
                     </InputGroup>
                   </FormGroup>
@@ -308,18 +319,22 @@ class SignupComponent extends React.Component {
                         {errors.password ? errors.password : null}
                       </FormFeedback>
                     </InputGroup>
-                    {
-                      password ?
-                        <div className="text-muted font-italic">
-                          <small>
-                            password strength:{" "}
-                            <span className={`${passwordStrength === "week" ? "text-danger" : "text-success"} font-weight-700`}>
-                              {passwordStrength}
-                            </span>
-                          </small>
-                        </div> :
-                        null
-                    }
+                    {password ? (
+                      <div className="text-muted font-italic">
+                        <small>
+                          password strength:{" "}
+                          <span
+                            className={`${
+                              passwordStrength === "week"
+                                ? "text-danger"
+                                : "text-success"
+                            } font-weight-700`}
+                          >
+                            {passwordStrength}
+                          </span>
+                        </small>
+                      </div>
+                    ) : null}
                   </FormGroup>
 
                   <FormGroup>
@@ -355,9 +370,7 @@ class SignupComponent extends React.Component {
                         className="custom-control-label"
                         htmlFor="customCheckRegister"
                       >
-                        <span>
-                          I am a Teacher
-                          </span>
+                        <span>I am a Teacher</span>
                       </label>
                     </div>
                   </FormGroup>
@@ -366,20 +379,15 @@ class SignupComponent extends React.Component {
                     <Button
                       className="mb-4 btn-black btn-block"
                       color=" "
-
                       type="submit"
                       disabled={isSignupLoading ? true : false}
                     >
-                      {
-                        isSignupLoading ?
-                          "Please wait..." :
-                          "Create account"
-                      }
+                      {isSignupLoading ? "Please wait..." : "Create account"}
                     </Button>
                     <Button
                       className="my-4 btn-black btn-line-black btn-block"
                       color=" "
-
+                      onClick={this.props.handleLoginModal}
                       type="button"
                     >
                       Already have an account? Sign in
