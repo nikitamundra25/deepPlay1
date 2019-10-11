@@ -53,8 +53,6 @@ class SetDetails extends React.Component {
   componentDidMount = () => {
     const location = this.props.location;
     const pathName = location.pathname.split("/");
-    console.log("#################", pathName[3]);
-
     this.props.getSetDetailsRequest({ setId: pathName[3] });
     this.props.getMovesOfSetRequest({ setId: pathName[3] });
   };
@@ -71,7 +69,7 @@ class SetDetails extends React.Component {
     const pathName = location.pathname.split("/");
     const data = {
       isFolderId: null,
-      isSetId: pathName[2],
+      isSetId: pathName[3],
       isMoveId: null,
       isPublic: isPublic
     };
@@ -82,7 +80,7 @@ class SetDetails extends React.Component {
     const location = this.props.location;
     const pathName = location.pathname.split("/");
     this.props.shareableLink({
-      setId: pathName[2],
+      setId: pathName[3],
       linkOf: "set"
     });
     const { modelInfoReducer } = this.props;
@@ -125,22 +123,14 @@ class SetDetails extends React.Component {
       <>
         <div className="set-main-section">
           <div className="content-header">
-            {setDetails && setDetails.folderId ? (
-              <span className="content-title">
-                <div className="main-title">
-                  <span>{setDetails.title}</span>
-                </div>
-              </span>
-            ) : (
-              <span className="content-title">
-                <div className="main-title">
-                  {setDetails ? setDetails.title : "MyFolder"}
-                </div>
-                <div className="sub-title">
-                  {setDetails ? setDetails.moveCount : "0"} moves
-                </div>
-              </span>
-            )}
+            <span className="content-title">
+              <div className="main-title">
+                {setDetails ? setDetails.title : "MySet"}
+              </div>
+              <div className="sub-title">
+                {setDetails ? setDetails.moveCount : "0"} moves
+              </div>
+            </span>
 
             <div>
               <span

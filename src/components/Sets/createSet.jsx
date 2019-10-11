@@ -94,6 +94,7 @@ class CreateSetComponent extends React.Component {
           className="modal-dialog-centered custom-model-wrap"
           isOpen={modal}
           toggle={handleOpen}
+          backdrop={"static"}
         >
           <ModalHeader>
             <span className="custom-title" id="exampleModalLabel">
