@@ -12,6 +12,7 @@ import {
   UncontrolledDropdown,
   DropdownMenu,
   DropdownItem,
+  UncontrolledTooltip,
   ButtonGroup
 } from "reactstrap";
 import {
@@ -33,6 +34,7 @@ import { ConfirmBox } from "../../../helper/SweetAleart";
 import starIc from "../../../assets/img/star.svg";
 import WebmView from "./WebmView";
 import Loader from "../../comman/Loader/Loader";
+import CreateSetComponent from "../../Sets/createSet";
 const homePageImage = [
   "https://images.pexels.com/photos/67636/rose-blue-flower-rose-blooms-67636.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500",
   "https://p.bigstockphoto.com/GeFvQkBbSLaMdpKXF1Zv_bigstock-Aerial-View-Of-Blue-Lakes-And--227291596.jpg",
@@ -95,7 +97,7 @@ class SetDetails extends React.Component {
 
   handleDeleteSet = async id => {
     const { value } = await ConfirmBox({
-      text: "You want to delete this set.!! "
+      text: "You want to delete this set! "
     });
     if (value) {
       this.props.onDeleteSets(id);
@@ -108,6 +110,19 @@ class SetDetails extends React.Component {
     );
   };
 
+  handleSetModal = () => {
+    const { modelInfoReducer } = this.props;
+    const { modelDetails } = modelInfoReducer;
+    this.props.modelOperate({
+      modelDetails: {
+        createSetModalOpen: !modelDetails.createSetModalOpen
+      }
+    });
+  };
+
+  updateSet = data => {
+    this.props.UpdateSetRequest(data);
+  };
   render() {
     const {
       setReducer,
@@ -119,7 +134,7 @@ class SetDetails extends React.Component {
     const { modelDetails } = modelInfoReducer;
     const { movesOfSet, isMoveofSetLoading } = moveReducer;
     const { userEncryptedInfo } = shareLinkReducer;
-    const { sharableLinkModalOpen } = modelDetails;
+    const { sharableLinkModalOpen, createSetModalOpen } = modelDetails;
     return (
       <>
         <div className="set-main-section">
@@ -135,12 +150,15 @@ class SetDetails extends React.Component {
 
             <div>
               <span
-                id="UncontrolledTooltipExample"
+                id="move"
                 className={"cursor_pointer"}
-                onClick={() => this.props.redirectTo(AppRoutes.CREATE_SET.url)}
+                onClick={() => this.props.redirectTo(AppRoutes.MOVE.url)}
               >
                 <i className="fas fa-plus-circle icon-font"></i>
               </span>
+              <UncontrolledTooltip placement="bottom" target="move">
+                Add new move
+              </UncontrolledTooltip>
               <span
                 id="share"
                 onClick={this.handleSharableLink}
@@ -148,6 +166,9 @@ class SetDetails extends React.Component {
               >
                 <i className="fas fa-share icon-font"></i>
               </span>
+              <UncontrolledTooltip placement="bottom" target="share">
+                Get Shareable Link
+              </UncontrolledTooltip>
               <UncontrolledDropdown
                 className="header-dropdown  custom-dropdown"
                 direction="bottom"
@@ -158,7 +179,7 @@ class SetDetails extends React.Component {
                   </span>
                 </DropdownToggle>
                 <DropdownMenu>
-                  <DropdownItem onClick={() => this.editSet(setDetails._id)}>
+                  <DropdownItem onClick={() => this.handleSetModal()}>
                     Edit
                   </DropdownItem>
                   <DropdownItem
@@ -168,6 +189,9 @@ class SetDetails extends React.Component {
                   </DropdownItem>
                 </DropdownMenu>
               </UncontrolledDropdown>
+              <UncontrolledTooltip placement="bottom" target="edit">
+                Edit & Delete
+              </UncontrolledTooltip>
             </div>
           </div>
           {!isMoveofSetLoading ? (
@@ -204,7 +228,7 @@ class SetDetails extends React.Component {
                                 onClick={this.handleMoveAdd}
                               >
                                 <i className="fas fa-plus mr-1"></i>
-                                Add a Set
+                                Add a Move
                               </Button>
                             </div>
                           </CardBody>
@@ -312,6 +336,13 @@ class SetDetails extends React.Component {
           isPublic={setDetails ? setDetails.isPublic : ""}
           userEncryptedInfo={userEncryptedInfo ? userEncryptedInfo : ""}
           shareComponent="Sets"
+        />
+        <CreateSetComponent
+          modal={createSetModalOpen}
+          handleOpen={this.handleSetModal}
+          createSet={this.updateSet}
+          editSet="true"
+          setDetails={setDetails ? setDetails : null}
         />
       </>
     );
