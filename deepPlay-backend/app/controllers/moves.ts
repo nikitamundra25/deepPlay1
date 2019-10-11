@@ -8,7 +8,7 @@ import {
 } from "../config";
 import cloudinary from "cloudinary";
 import ytdl from "ytdl-core";
-import { MoveModel } from "../models";
+import { MoveModel, SetModel } from "../models";
 import fs from "fs";
 import path from "path";
 import ffmpeg from "ffmpeg";
@@ -70,7 +70,6 @@ const downloadVideo = async (req: Request, res: Response): Promise<any> => {
       moveData: moveResult
     });
   } catch (error) {
-    console.log(error);
     res.status(500).send({
       message: error.message
     });
@@ -153,7 +152,7 @@ const downloadYoutubeVideo = async (
       });
     }
   } catch (error) {
-    console.log(error);
+    console.log(error, "kkkkk");
     res.status(500).send({
       message: error.message
     });
@@ -255,10 +254,22 @@ const publicUrlMoveDetails = async (
 ): Promise<any> => {
   try {
     const { query } = req;
-    const { setId, isPublic } = query;
+    const { setId, isPublic, fromFolder } = query;
     const decryptedSetId = decrypt(setId);
     let result: Document | any | null;
-    if (isPublic === "true") {
+    let temp: Document | any | null;
+
+    if (fromFolder) {
+      temp = {
+        isPublic: true
+      };
+    } else {
+      temp = await SetModel.findOne({
+        _id: decryptedSetId
+      });
+    }
+    
+    if (temp.isPublic) {
       result = await MoveModel.find({
         setId: decryptedSetId
       });

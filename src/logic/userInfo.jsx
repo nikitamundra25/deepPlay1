@@ -7,7 +7,8 @@ import {
   showLoader,
   hideLoader,
   modelOpenRequest,
-  uploadImageFailed
+  uploadImageFailed,
+  //profileRequest
 } from "../actions";
 import { AppRoutes } from "../config/AppRoutes";
 import { toast } from "react-toastify";
@@ -111,6 +112,7 @@ const DeleteUserAccountLogic = createLogic({
 const uploadImageLogic = createLogic({
   type: ProfileAction.UPLOAD_IMAGE_REQUEST,
   async process({ action }, dispatch, done) {
+    console.log("payload", action.payload);
     let api = new ApiHelper();
     let result = await api.FetchFromServer(
       "user",

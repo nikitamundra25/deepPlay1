@@ -55,7 +55,7 @@ class VideoView extends React.Component {
    *
    */
   render() {
-    const { moveReducer } = this.props;
+    const { moveReducer, description } = this.props;
     const { moveDetails } = moveReducer;
     return (
       <>
@@ -67,6 +67,7 @@ class VideoView extends React.Component {
                   id="title"
                   className={"move-title"}
                   placeholder="Enter your title (optional)"
+                  onChange={(e) => this.props.handleChange(e)}
                   type="text"
                   name="title"
                 />
@@ -74,15 +75,21 @@ class VideoView extends React.Component {
                   addonType="prepend"
                   className="discription-btn-wrap"
                 >
-                  <InputGroupText
-                    id="description"
-                    className={"discription-btn cursor_pointer"}
-                  >
-                    <i className="fas fas fa-info " />
-                    <UncontrolledTooltip placement="top" target="description">
-                      Add description
-                    </UncontrolledTooltip>
-                  </InputGroupText>
+                  <div onClick={this.props.handleDesriptionModal}>
+                    <InputGroupText
+                      id="description"
+                      className={"discription-btn cursor_pointer"}
+                    >
+                      <i className="fas fas fa-info " />
+                      <UncontrolledTooltip placement="top" target="description">
+                        {
+                          description ?
+                            "Update Description" :
+                            "Add description"
+                        }
+                      </UncontrolledTooltip>
+                    </InputGroupText>
+                  </div>
                 </InputGroupAddon>
               </InputGroup>
             </div>
@@ -96,8 +103,8 @@ class VideoView extends React.Component {
               </video>
             </>
           ) : (
-            <span>No video available for trimming</span>
-          )}
+              <span>No video available for trimming</span>
+            )}
         </Col>
       </>
     );

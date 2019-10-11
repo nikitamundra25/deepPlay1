@@ -5,7 +5,8 @@ import {
   MovesAction,
   downloadYoutubeVideoSuccess,
   getMovesOfSetSuccess,
-  getMoveDetailsSuccess
+  getMoveDetailsSuccess,
+  modelOpenRequest
 } from "../actions";
 import { AppRoutes } from "../config/AppRoutes";
 import { toast } from "react-toastify";
@@ -142,6 +143,13 @@ const completeVideoEditingLogic = createLogic({
       action.payload
     );
     logger(result, action.payload);
+    dispatch(
+      modelOpenRequest({
+        modelDetails: {
+          isMoveSuccessModal: true
+        }
+      })
+    );
     dispatch(
       completeVideoEditingSuccess({
         isSavingWebM: false

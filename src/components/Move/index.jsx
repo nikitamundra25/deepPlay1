@@ -28,7 +28,8 @@ class MoveComponent extends React.Component {
       url: "",
       errors: "",
       isYouTubeUrl: false,
-      isPaste: false
+      isPaste: false,
+      fileErr: ""
     };
   }
 
@@ -82,10 +83,13 @@ class MoveComponent extends React.Component {
     return result;
   };
 
-  handleMoveUpload = () => {
-    this.setState({
-      errors: {}
-    });
+  handleMoveUpload = e => {
+    if (!this.state.isPaste) {
+      e.preventDefault();
+    }
+    // this.setState({
+    //   errors: {}
+    // });
     try {
       if (!this.state.url) {
         this.setState({
@@ -93,16 +97,16 @@ class MoveComponent extends React.Component {
             notUrl: "Enter youtube video link"
           }
         });
-        if (this.state.errors) {
-          return;
-        }
         return;
       }
-      const payload = {
-        url: this.state.url,
-        isYoutubeUrl: this.state.isYouTubeUrl
-      };
-      this.props.downloadVideo(payload);
+      if (!this.state.errors) {
+        console.log("fgfj", this.state.errors);
+        const payload = {
+          url: this.state.url,
+          isYoutubeUrl: this.state.isYouTubeUrl
+        };
+        this.props.downloadVideo(payload);
+      }
     } catch (error) {
       logger(error);
     }
@@ -117,22 +121,35 @@ class MoveComponent extends React.Component {
   };
 
   handleVideoFileSelect = e => {
+    this.setState({
+      fileErr: ""
+    });
     let files = e.target.files;
-    this.setState(
-      {
-        url: files[0].name,
-        errors: ""
-      },
-      () => {
-        this.props.downloadVideo({ url: files[0], isYoutubeUrl: false });
+    if (files.length) {
+      const fileType = files ? files[0].type.split("/") : "";
+      if (fileType[0] !== "video") {
+        this.setState({
+          fileErr: "Unsupported file type!! We accept only video type"
+        });
+      } else {
+        this.setState(
+          {
+            url: files[0].name,
+            errors: ""
+          },
+          () => {
+            this.props.downloadVideo({ url: files[0], isYoutubeUrl: false });
+          }
+        );
       }
-    );
+    }
   };
 
   render() {
     const { errors, url } = this.state;
     const { moveReducer } = this.props;
     const { isVideoDownloading } = moveReducer;
+
     return (
       <>
         <div className="create-set-section step-2 ">
@@ -186,7 +203,7 @@ class MoveComponent extends React.Component {
                             >
                               <InputGroupText>
                                 <i
-                                  class="fa fa-exclamation-circle display-5"
+                                  className="fa fa-exclamation-circle display-5"
                                   aria-hidden="true"
                                 ></i>
                               </InputGroupText>

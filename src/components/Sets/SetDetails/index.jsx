@@ -53,8 +53,10 @@ class SetDetails extends React.Component {
   componentDidMount = () => {
     const location = this.props.location;
     const pathName = location.pathname.split("/");
-    this.props.getSetDetailsRequest({ setId: pathName[2] });
-    this.props.getMovesOfSetRequest({ setId: pathName[2] });
+    console.log("#################",pathName[3]);
+    
+    this.props.getSetDetailsRequest({ setId: pathName[3] });
+    this.props.getMovesOfSetRequest({ setId: pathName[3] });
   };
   /*
   /*  

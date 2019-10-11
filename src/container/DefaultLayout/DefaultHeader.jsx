@@ -24,21 +24,21 @@ import { AppRoutes } from "../../config/AppRoutes";
 import { SidebarComponent } from "../../components/Sidebar";
 import logoutIcon from "../../assets/img/icons/logout.svg";
 import { AppConfig } from "../../config/Appconfig";
-import passwordLock from "../../assets/img/icons/lock.svg";
+import AllSearchComponent from "../../components/AllSearch";
+import CreateSetComponent from "../../components/Sets/createSet";
 
 class DefaultHeader extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       isUserLoggedIn: false,
-      path: ""
+      path: "",
+      search: ""
     };
   }
 
   componentDidMount = () => {
     const temp = this.props.history.location.pathname;
-    console.log("temp", temp);
-
     if (localStorage.getItem("token")) {
       this.setState({
         isUserLoggedIn: true,
@@ -73,6 +73,16 @@ class DefaultHeader extends React.Component {
     });
   };
 
+  handleSetModal = () => {
+    const { modelInfoReducer } = this.props;
+    const { modelDetails } = modelInfoReducer;
+    this.props.modelOpenRequest({
+      modelDetails: {
+        createSetOpen: !modelDetails.createSetOpen
+      }
+    });
+  };
+
   handleFolderModel = () => {
     const { modelInfoReducer } = this.props;
     const { modelDetails } = modelInfoReducer;
@@ -86,7 +96,20 @@ class DefaultHeader extends React.Component {
   createFolder = data => {
     this.props.onFolderCreation(data);
   };
-
+  createSet = data => {
+    this.props.onSetsCreation(data);
+  };
+  /*  */
+  handleChange = e => {
+    const { name, value } = e.target;
+    this.setState({
+      [name]: value
+    })
+    setTimeout(() => {
+      this.props.allSearchRequest({ search: value })
+    }, 500);
+  }
+  /*  */
   render() {
     const {
       modelInfoReducer,
@@ -99,16 +122,18 @@ class DefaultHeader extends React.Component {
       profileInfoReducer,
       modelOpenRequest,
       isLoggedIn,
-      routePath
+      routePath,
+      allSearchReducer
     } = this.props;
     const { modelDetails } = modelInfoReducer;
     const {
       loginModelOpen,
       signupModelOpen,
       forgotPasswordModalOpen,
-      createFolderModalOpen
+      createFolderModalOpen,
+      createSetOpen
     } = modelDetails;
-    const { isUserLoggedIn, path } = this.state;
+    const { isUserLoggedIn, path, search } = this.state;
     const profiledata =
       profileInfoReducer && profileInfoReducer.profileInfo
         ? profileInfoReducer.profileInfo
@@ -117,6 +142,7 @@ class DefaultHeader extends React.Component {
       profiledata && profiledata.profileImage
         ? profiledata.profileImage.split("/")
         : [];
+    const { searchData, isSearchLoading } = allSearchReducer;
     return (
       <>
         <header className="header-global theme-header ">
@@ -131,6 +157,7 @@ class DefaultHeader extends React.Component {
               </NavbarBrand> */}
             {path !== AppRoutes.FOLDER_SHARED_LINK.url &&
             path !== AppRoutes.SET_SHARED_LINK.url &&
+            path !== AppRoutes.ALL_SET_SHARED_LINK.url &&
             path !== "/404" ? (
               <>
                 <Navbar
@@ -168,14 +195,10 @@ class DefaultHeader extends React.Component {
                                 Create Move
                               </DropdownItem>
                               <DropdownItem
-                                active={
-                                  routePath === "/create-set" ? true : false
-                                }
-                                onClick={() =>
-                                  this.props.redirectTo(
-                                    AppRoutes.CREATE_SET.url
-                                  )
-                                }
+                                // active={
+                                //   routePath === "/create-set" ? true : false
+                                // }
+                                onClick={this.handleSetModal}
                               >
                                 Create Set
                               </DropdownItem>
@@ -197,7 +220,25 @@ class DefaultHeader extends React.Component {
                                   ></i>
                                 </span>
                               </InputGroupAddon>
-                              <Input placeholder="Search" type="text" />
+                              <Input
+                                placeholder="Search for folder,sets and moves"
+                                onChange={this.handleChange}
+                                value={search}
+                                name={"search"}
+                                type="text"
+                              />
+                              {search ? (
+                                <AllSearchComponent
+                                  searchData={searchData}
+                                  isSearchLoading={isSearchLoading}
+                                  handleSearchEmpty={() =>
+                                    this.setState({
+                                      search: ""
+                                    })
+                                  }
+                                  {...this.props}
+                                />
+                              ) : null}
                             </InputGroup>
                           </FormGroup>
                         </Col>
@@ -275,53 +316,32 @@ class DefaultHeader extends React.Component {
                                   onClick={() =>
                                     this.props.redirectTo(item.url)
                                   }
-                                 
                                   key={index}
                                   active={routePath === item.url ? true : false}
                                 >
-                                  <div 
-                                  className="dropdown-img"
-                                  >
-                                  <img
-                                    src={item.iconUrl}
-                                    alt={item.iconUrl}
-                                    width="20"
-                                  />{" "}
+                                  <div className="dropdown-img">
+                                    <img
+                                      src={item.iconUrl}
+                                      alt={item.iconUrl}
+                                      width="20"
+                                    />{" "}
                                   </div>
-                                  <div    className="dropdown-txt">
-                                  {item.name}
+                                  <div className="dropdown-txt">
+                                    {item.name}
                                   </div>
                                 </DropdownItem>
                               );
                             })}
-                            <DropdownItem
-                              onClick={() =>
-                                this.props.redirectTo(
-                                  AppRoutes.CHANGE_PASSWORD.url
-                                )
-                              }
-                              active={
-                                routePath === "/change-password" ? true : false
-                              }
-                            >
-                                 <div 
-                                  className="dropdown-img"
-                                  >
-                              <img
-                                src={passwordLock}
-                                alt={"changePassword"}
-                                width="20"
-                              /></div>{" "}
-                               <div    className="dropdown-txt">
-                              Change Password
-                              </div>
-                            </DropdownItem>
+
                             <DropdownItem onClick={e => logoutRequest(e)}>
-                            <div 
-                                  className="dropdown-img"
-                                  >
-                              <img src={logoutIcon} alt={"Logout"} width="20" /></div>{" "}
-                              <div    className="dropdown-txt"> Log Out</div>  
+                              <div className="dropdown-img">
+                                <img
+                                  src={logoutIcon}
+                                  alt={"Logout"}
+                                  width="20"
+                                />
+                              </div>{" "}
+                              <div className="dropdown-txt"> Log Out</div>
                             </DropdownItem>
                           </DropdownMenu>
                         </UncontrolledDropdown>
@@ -391,6 +411,11 @@ class DefaultHeader extends React.Component {
           modal={createFolderModalOpen}
           handleOpen={this.handleFolderModel}
           createFolder={this.createFolder}
+        />
+        <CreateSetComponent
+          modal={createSetOpen}
+          handleOpen={this.handleSetModal}
+          createSet={this.createSet}
         />
       </>
     );

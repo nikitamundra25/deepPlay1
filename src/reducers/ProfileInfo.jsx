@@ -18,6 +18,22 @@ export const profileInfoReducer = handleActions(
       ...state,
       profileInfo: payload.profileInfo,
       isprofileInfoLoading: false
+    }),
+    [ProfileAction.UPLOAD_IMAGE_REQUEST]: (state, { payload }) => ({
+      ...state,
+      isImageUploading: true
+    }),
+    [ProfileAction.UPLOAD_IMAGE_FAILED]: (state, { payload }) => ({
+      ...state,
+      isImageUploading: false
+    }),
+    [ProfileAction.UPLOAD_IMAGE_SUCCESS]: (state, { payload }) => ({
+      ...state,
+      profileInfo: {
+        ...state.profileInfo,
+        profileImage: payload.imageDetails.profileThumbnail
+      },
+      isImageUploading: false
     })
   },
   initialState
@@ -36,8 +52,10 @@ export const profileImage = handleActions(
     [ProfileAction.UPLOAD_IMAGE_SUCCESS]: (state, { payload }) => ({
       ...state,
       profileImage: payload.imageDetails,
-      profileInfo: payload.profileInfo,
-      // profileInfo: payload.imageDetails.profileThumbnail,
+      //profileInfo: payload.profileInfo,
+      profileInfo: {
+        profileImage: payload.imageDetails.profileThumbnail
+      },
       isImageUploading: false
     })
   },

@@ -40,12 +40,12 @@ export const AppRoutes = {
     exact: true
   },
   SET_DETAILS: {
-    url: "/set-details/:id",
+    url: "/set/details/:id",
     name: "Set Details",
     exact: true
   },
   CREATE_SET: {
-    url: "/create-set",
+    url: "/create/set",
     name: "CreateSet",
     exact: true
   },
@@ -55,27 +55,32 @@ export const AppRoutes = {
     exact: true
   },
   MOVE_DETAILS: {
-    url: "/move-details/:id",
+    url: "/move/details/:id",
     name: "Move Details",
     exact: true
   },
   FOLDER_DETAILS: {
-    url: "/folder-details/:id",
+    url: "/folder/details/:id",
     name: "Folder Details",
     exact: true
   },
   FOLDER_SHARED_LINK: {
-    url: "/folder-shared-link",
+    url: "/folder/shared/link",
     name: "Folder Sharedlink",
     exact: true
   },
   SET_SHARED_LINK: {
-    url: "/set-shared-link",
+    url: "/set/shared/link",
     name: "Set Sharedlink",
     exact: true
   },
+  ALL_SET_SHARED_LINK: {
+    url: "/all/set/shared/link",
+    name: "Allset Sharedlink",
+    exact: true
+  },
   CHANGE_PASSWORD: {
-    url: "/change-password",
+    url: "/change/password",
     name: "Change Password",
     exact: true
   }

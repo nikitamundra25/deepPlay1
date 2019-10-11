@@ -16,6 +16,8 @@ import Loader from "../comman/Loader/Loader";
 import PaginationHelper from "helper/Pagination";
 import qs from "query-string";
 import { AppConfig } from "../../config/Appconfig";
+import SharableLinkModal from "components/comman/shareableLink/SharableLink";
+import CreateSetComponent from "../Sets/createSet";
 
 // core components
 class SetComponent extends React.Component {
@@ -70,10 +72,40 @@ class SetComponent extends React.Component {
     });
   };
 
+  handleSharableLink = () => {
+    this.props.shareableLink({
+      linkOf: "yourSet"
+    });
+    const { modelInfoReducer } = this.props;
+    const { modelDetails } = modelInfoReducer;
+    this.props.modelOperate({
+      modelDetails: {
+        sharableLinkModalOpen: !modelDetails.sharableLinkModalOpen
+      }
+    });
+  };
+
+  handleSetModal = () => {
+    const { modelInfoReducer } = this.props;
+    const { modelDetails } = modelInfoReducer;
+    this.props.modelOperate({
+      modelDetails: {
+        createSetModalOpen: !modelDetails.createSetModalOpen
+      }
+    });
+  };
+
+  createSet = data => {
+    this.props.onSetsCreation(data);
+  };
+
   render() {
-    const { setReducer } = this.props;
+    const { setReducer, modelInfoReducer, userEncryptedInfo } = this.props;
     const { allSetList, isSetListLoading, totalSets } = setReducer;
+    const { modelDetails } = modelInfoReducer;
+    const { sharableLinkModalOpen, createSetModalOpen } = modelDetails;
     const { show, setIndex, page } = this.state;
+    console.log("allSetList", allSetList);
 
     return (
       <div className="set-main-section">
@@ -81,26 +113,36 @@ class SetComponent extends React.Component {
           <span className="content-title">
             <div className="main-title"> {" Your Sets"}</div>
             <div className="sub-title">
-              Total sets{" "}
-              {allSetList && allSetList.length ? allSetList.length : "0"}
+              Total sets {totalSets ? totalSets : "0"}
             </div>
           </span>
-          <span
-            id="UncontrolledTooltipExample"
-            className={"cursor_pointer"}
-            onClick={() => this.props.redirectTo(AppRoutes.CREATE_SET.url)}
-          >
-            <i className="fas fa-plus-circle icon-font"></i>
-          </span>
-          <UncontrolledTooltip
-            placement="bottom"
-            target="UncontrolledTooltipExample"
-          >
-            Create New Set
-          </UncontrolledTooltip>
+          <div>
+            <span
+              id="UncontrolledTooltipExample"
+              className={"cursor_pointer"}
+              onClick={this.handleSetModal}
+            >
+              <i className="fas fa-plus-circle icon-font"></i>
+            </span>
+            <UncontrolledTooltip
+              placement="bottom"
+              target="UncontrolledTooltipExample"
+            >
+              Create New Set
+            </UncontrolledTooltip>
+            <span
+              id="share"
+              onClick={this.handleSharableLink}
+              className="cursor_pointer ml-4"
+            >
+              <i className="fas fa-share icon-font"></i>
+            </span>
+            <UncontrolledTooltip placement="bottom" target="share">
+              Get Shareable Link
+            </UncontrolledTooltip>
+          </div>
         </div>
         <Row className="set-wrap">
-       
           {!isSetListLoading ? (
             allSetList && allSetList.length ? (
               // eslint-disable-next-line
@@ -122,7 +164,11 @@ class SetComponent extends React.Component {
                               // onClick={() => this.handleSetDetails(setList._id)}
                               className={" text-capitalize"}
                             >
-                              <span>{setList.title}</span>
+                              <span>
+                                {setList.isCopy
+                                  ? `Copy of ${setList.title}`
+                                  : setList.title}
+                              </span>
                             </span>
                           </div>
                           {setList.description ? setList.description : ""}
@@ -216,9 +262,7 @@ class SetComponent extends React.Component {
                             color=" "
                             type="button"
                             className="btn-black btn mt-3 folder-create-btn"
-                            onClick={() =>
-                              this.props.redirectTo(AppRoutes.CREATE_SET.url)
-                            }
+                            onClick={this.handleSetModal}
                           >
                             <i className="fas fa-plus mr-1"></i>
                             Create a Set
@@ -231,24 +275,36 @@ class SetComponent extends React.Component {
               </>
             )
           ) : (
-            <div>
-              <Col sm={12} className="loader-col">
-                <Loader />
-              </Col>
-            </div>
+            <Col sm={12} className="loader-col">
+              <Loader />
+            </Col>
           )}
-        
         </Row>
+
+        <SharableLinkModal
+          modal={sharableLinkModalOpen}
+          handleOpen={this.handleSharableLink}
+          userEncryptedInfo={userEncryptedInfo ? userEncryptedInfo : ""}
+          shareComponent="yourSets"
+        />
+        <CreateSetComponent
+          modal={createSetModalOpen}
+          handleOpen={this.handleSetModal}
+          createSet={this.createSet}
+        />
+
         {totalSets && !isSetListLoading ? (
-          <PaginationHelper
-            totalRecords={totalSets}
-            currentPage={page}
-            onPageChanged={page => {
-              this.setState({ page });
-              this.props.onPageChange(page);
-            }}
-            pageLimit={AppConfig.ITEMS_PER_PAGE}
-          />
+          <div className={"d-flex justify-content-center pt-3"}>
+            <PaginationHelper
+              totalRecords={totalSets}
+              currentPage={page}
+              onPageChanged={page => {
+                this.setState({ page });
+                this.props.onPageChange(page);
+              }}
+              pageLimit={AppConfig.ITEMS_PER_PAGE}
+            />
+          </div>
         ) : null}
       </div>
     );

@@ -146,7 +146,7 @@ const signup = async (req: Request, res: Response): Promise<any> => {
         isDeleted: false,
         updatedAt: new Date(),
         verifyToken: "",
-        roleType: body.roleType || "isUnclassified",
+        roleType: body.roleType || "Unclassified",
         status: true
       };
       const userResult: Document | any = new UserModel(userData);

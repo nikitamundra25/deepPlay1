@@ -205,7 +205,7 @@ class FrameDetails extends Component {
             <Button
               color={"default"}
               className={"btn-black btn url-upload-btn"}
-              onClick={()=>this.props.completeEditing()}
+              onClick={(e)=>this.props.completeEditing(e)}
             >
               Finish
             </Button>

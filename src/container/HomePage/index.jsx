@@ -80,7 +80,7 @@ class HomePage extends React.Component {
               <div className="text-center">
                 <Button
                   color={" "}
-                  className="fill-btn btn w-75 m-auto h3"
+                  className="fill-btn btn w-75 m-auto h3 white-color"
                   onClick={
                     isLoggedIn
                       ? this.handleDashboardOpen
@@ -125,26 +125,22 @@ class HomePage extends React.Component {
               return (
                 <Col md="4" key={index}>
                   <div className="play-list-block ">
-                  <div className="play-sub-block ">
-                    <div
-                      className="play-list-img blur-img-wrap"
-                    >
-                     <img src={images} alt={""}/>
-                     <div
-                      className="blur-img"
-                      style={{ backgroundImage: 'url("' + images + '")' }}
-                    >
-                     
-                    </div>
-                    </div>
-                   
-                    <div className="play-list-text">
-                      <div className="play-list-number">25 Moves</div>
-                      <div className="play-list-heading h6 ">
-                        Salsa Footwork
+                    <div className="play-sub-block ">
+                      <div className="play-list-img blur-img-wrap">
+                        <img src={images} alt={""} />
+                        <div
+                          className="blur-img"
+                          style={{ backgroundImage: 'url("' + images + '")' }}
+                        ></div>
+                      </div>
+
+                      <div className="play-list-text">
+                        <div className="play-list-number">25 Moves</div>
+                        <div className="play-list-heading h6 ">
+                          Salsa Footwork
+                        </div>
                       </div>
                     </div>
-                  </div>
                   </div>
                 </Col>
               );

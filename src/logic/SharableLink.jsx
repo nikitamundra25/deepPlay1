@@ -13,6 +13,8 @@ import {
   publicUrlMoveDetailsSuccess
 } from "../actions";
 import { toast } from "react-toastify";
+import { AppConfig } from "../config/Appconfig";
+import { AppRoutes } from "config/AppRoutes";
 
 //Sharable link public access api
 const publicAccessLogic = createLogic({
@@ -63,13 +65,23 @@ const shareLinkLogic = createLogic({
       dispatch(hideLoader());
       dispatch(shareableLinkSuccess({ userEncryptedInfo: result.data.data }));
       if (action.payload.publicAccess === "set") {
-        dispatch(
-          redirectTo({
-            path:
-              "/set-shared-link" +
-              `?userId=${result.data.data.encryptedUserId}&setId=${result.data.data.encryptedSetId}&isPublic=${action.payload.isPublic}`
-          })
-        );
+        if (action.payload.fromFolder) {
+          dispatch(
+            redirectTo({
+              path:
+                AppRoutes.SET_SHARED_LINK.url +
+                `?userId=${result.data.data.encryptedUserId}&setId=${result.data.data.encryptedSetId}&isPublic=${action.payload.isPublic}&fromFolder=${action.payload.fromFolder}`
+            })
+          );
+        } else {
+          dispatch(
+            redirectTo({
+              path:
+                AppRoutes.SET_SHARED_LINK.url +
+                `?userId=${result.data.data.encryptedUserId}&setId=${result.data.data.encryptedSetId}&isPublic=${action.payload.isPublic}`
+            })
+          );
+        }
       }
       done();
     }
@@ -114,7 +126,10 @@ const getPublicUrlSetsDetailsLogic = createLogic({
       "/public-url-set-details",
       "GET",
       false,
-      action.payload
+      {
+        ...action.payload,
+        limit: AppConfig.ITEMS_PER_PAGE
+      }
     );
     if (result.isError) {
       dispatch(hideLoader());
@@ -125,7 +140,10 @@ const getPublicUrlSetsDetailsLogic = createLogic({
     } else {
       dispatch(hideLoader());
       dispatch(
-        publicUrlSetDetailsSuccess({ publicUrlSetDetails: result.data.data })
+        publicUrlSetDetailsSuccess({
+          publicUrlSetDetails: result.data.data,
+          totalSets: result.data.totalSets ? result.data.totalSets : 0
+        })
       );
       done();
     }

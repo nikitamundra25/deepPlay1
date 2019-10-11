@@ -5,7 +5,10 @@ const initialState = {
   decryptedDetails: "",
   decryptedSetDetails: "",
   publicUrlSetDetails: [],
-  publicUrlMoveDetails: []
+  isSetDetailsLoading: false,
+  publicUrlMoveDetails: [],
+  isMoveDetailsLoading: false,
+  totalSets: 0
 };
 export const shareLinkReducer = handleActions(
   {
@@ -20,12 +23,21 @@ export const shareLinkReducer = handleActions(
       ...state,
       ...payload
     }),
+    [SharableLinkAction.PUBLIC_URL_SET_DETAILS_REQUEST]: (
+      state,
+      { payload }
+    ) => ({
+      ...state,
+      ...payload,
+      isSetDetailsLoading: true
+    }),
     [SharableLinkAction.PUBLIC_URL_SET_DETAILS_SUCCESS]: (
       state,
       { payload }
     ) => ({
       ...state,
-      ...payload
+      ...payload,
+      isSetDetailsLoading: false
     }),
     [SharableLinkAction.GET_PUBLIC_URL_FOR_SET_SUCCESS]: (
       state,
@@ -34,12 +46,21 @@ export const shareLinkReducer = handleActions(
       ...state,
       ...payload
     }),
+    [SharableLinkAction.PUBLIC_URL_MOVE_DETAILS_REQUEST]: (
+      state,
+      { payload }
+    ) => ({
+      ...state,
+      ...payload,
+      isMoveDetailsLoading: true
+    }),
     [SharableLinkAction.PUBLIC_URL_MOVE_DETAILS_SUCCESS]: (
       state,
       { payload }
     ) => ({
       ...state,
-      ...payload
+      ...payload,
+      isMoveDetailsLoading: false
     })
   },
   initialState

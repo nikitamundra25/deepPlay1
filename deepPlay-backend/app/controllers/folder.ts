@@ -48,6 +48,7 @@ const createFolder = async (req: Request, res: Response): Promise<any> => {
             sharableLink: element.sharableLink,
             status: true,
             userId: headToken.id,
+            isCopy: element.isCopy,
             isDeleted: element.isDeleted
           };
           const setData: Document | any = new SetModel(newSetData);
@@ -83,7 +84,7 @@ const createFolder = async (req: Request, res: Response): Promise<any> => {
     /* Add items to algolia */
     folderDataForAlgolia = {
       ...Result._doc,
-      title: "folder"
+      searchType: "folder"
     };
     index.addObjects([folderDataForAlgolia], (err: string, content: string) => {
       if (err) {
@@ -185,14 +186,9 @@ const getAllFolder = async (req: Request, res: Response): Promise<void> => {
       .skip(pageNumber)
       .limit(limitNumber);
     // get count for the conditions
-    const folderCount: any[] = await FolderModel.aggregate([
-      {
-        $match: { ...condition }
-      },
-      {
-        $count: "count"
-      }
-    ]);
+    const folderCount: number | any[] = await FolderModel.countDocuments(
+      condition
+    );
     if (result && result.length) {
       for (let index = 0; index < result.length; index++) {
         const folderData = result[index];
@@ -208,7 +204,7 @@ const getAllFolder = async (req: Request, res: Response): Promise<void> => {
     }
     res.status(200).json({
       data: folderResult,
-      totalFolders: folderCount[0] ? folderCount[0].count : 0,
+      totalFolders: folderCount ? folderCount : 0,
       message: "Folders has been fetched successfully."
     });
   } catch (error) {
@@ -236,6 +232,13 @@ const getRecentFolder = async (req: Request, res: Response): Promise<void> => {
     })
       .sort({ isRecentTime: -1 })
       .limit(limit);
+
+    if (!result) {
+      res.status(400).json({
+        message: "Folderid not found"
+      });
+    }
+
     res.status(200).json({
       data: result,
       message: "Folder have been fetched successfully"
@@ -261,6 +264,11 @@ const getCretedFolderById = async (
       });
     }
     const result: Document | any = await FolderModel.findOne({ _id: query.id });
+    if (!result) {
+      res.status(400).json({
+        message: "Folderid not found"
+      });
+    }
     res.status(200).json({
       data: result,
       message: "Folder has been fetched successfully"
@@ -392,7 +400,7 @@ const sharableLinkPublicAccess = async (
   }
 };
 
-//-----------------SharableLink user details------------------------------
+//-----------------SharableLink user details encrypt------------------------------
 const sharableLink = async (req: Request, res: Response): Promise<any> => {
   try {
     const { query, currentUser } = req;
@@ -421,6 +429,13 @@ const sharableLink = async (req: Request, res: Response): Promise<any> => {
         encryptedSetId: encryptedSetId
       };
     }
+
+    if (linkOf === "yourSet") {
+      data = {
+        encryptedUserId: encryptedUserId
+      };
+    }
+
     return res.status(200).json({
       responsecode: 200,
       data: data,
@@ -445,7 +460,13 @@ const publicUrlFolderInfo = async (
     const decryptedUserId = decrypt(userId);
     const decryptedFolderId = decrypt(folderId);
     let result: Document | any | null;
-    if (isPublic === "true") {
+
+    let temp: Document | any | null = await FolderModel.findOne({
+      userId: decryptedUserId,
+      _id: decryptedFolderId
+    });
+
+    if (temp.isPublic) {
       result = await FolderModel.findOne({
         userId: decryptedUserId,
         _id: decryptedFolderId,
@@ -479,7 +500,7 @@ const updateFolder = async (req: Request, res: Response): Promise<any> => {
       description
     };
     await FolderModel.findByIdAndUpdate(id, {
-      $set: updateFolder
+      $set: { ...updateFolder, updatedAt: Date.now() }
     });
 
     return res.status(200).json({

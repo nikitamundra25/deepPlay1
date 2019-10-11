@@ -95,7 +95,7 @@ class ForgotPasswordComponent extends React.Component {
           <ModalHeader toggle={handleForgotPasswordModel}></ModalHeader>
           <ModalBody className="modal-body p-0">
             <Card className="bg-secondary shadow border-0 pb-0">
-              <CardHeader className={"text-center p-2"}>
+              <CardHeader className={"text-center p-2 font-weight-bold"}>
                 Forgot Password
               </CardHeader>
               <CardBody className="px-lg-5">
@@ -122,7 +122,7 @@ class ForgotPasswordComponent extends React.Component {
                   </FormGroup>
                   <div className="text-center">
                     <Button
-                      className="my-4 btn-black btn-block"
+                      className="mt-3 mb-4 btn-black btn-block"
                       color=" "
                       type="submit"
                       disabled={isSendingLink ? true : false}
