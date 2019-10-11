@@ -109,9 +109,9 @@ class SignupComponent extends React.Component {
   /* 
   */
   handleChange = e => {
-    this.setState({
-      errors: ""
-    });
+    // this.setState({
+    //   errors: ""
+    // });
     const { name, value, checked } = e.target;
     if (name === "roleType") {
       this.setState({
@@ -131,7 +131,11 @@ class SignupComponent extends React.Component {
       }
     }
     this.setState({
-      [name]: value.trim()
+      [name]: value.trim(),
+      errors: {
+        ...this.state.errors,
+        [name]: null
+      }
     });
   };
   /*
@@ -250,7 +254,7 @@ class SignupComponent extends React.Component {
                         onChange={this.handleChange}
                         placeholder="First Name"
                         type="text"
-                      // invalid={errors.firstName}
+                        // invalid={errors.firstName}
                       />
                       <FormFeedback>
                         {errors.firstName && !firstName
@@ -328,7 +332,7 @@ class SignupComponent extends React.Component {
                               passwordStrength === "week"
                                 ? "text-danger"
                                 : "text-success"
-                              } font-weight-700`}
+                            } font-weight-700`}
                           >
                             {passwordStrength}
                           </span>
@@ -390,7 +394,7 @@ class SignupComponent extends React.Component {
                       onClick={this.props.handleLoginModal}
                       type="button"
                     >
-                      Already have an account? Sign in
+                      Already have an account? Login
                     </Button>
                   </div>
                 </Form>

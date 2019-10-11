@@ -4,10 +4,15 @@ import { connect } from "react-redux";
 
 // core components
 class Move extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {};
+  }
   render() {
     return (
       <>
         <MoveComponent />
+        <div className={"row"}></div>
       </>
     );
   }

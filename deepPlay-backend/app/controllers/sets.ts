@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import { SetModel, MoveModel, FolderModel } from "../models";
 import Mongoose, { Document } from "mongoose";
-import { ISet, IUpdateSet } from "../interfaces";
+import { ISet, IUpdateSet, IMove } from "../interfaces";
 import { algoliaAppId, algoliaAPIKey } from "../config/app";
 //import * as algoliasearch from 'algoliasearch'; // When using TypeScript
 const algoliasearch = require("algoliasearch");
@@ -24,10 +24,37 @@ const createSet = async (req: Request, res: Response): Promise<any> => {
       folderId: body.folderId ? body.folderId : null,
       sharableLink: body.sharableLink ? body.sharableLink : "",
       isPublic: body.isPublic ? body.isPublic : true,
-      isDeleted: body.isDeleted ? body.isDeleted : false
+      isDeleted: body.isDeleted ? body.isDeleted : false,
+      isCopy: body.isCopy ? true : false
     };
     const setResult: Document | any = new SetModel(setData);
     await setResult.save();
+
+    const setId: String = setResult._id;
+    if (body.isCopy) {
+      const moveResult: Document | any | null = await MoveModel.find({
+        setId: body.copyOfSetId,
+        isDeleted: false
+      });
+      if (moveResult && moveResult.length) {
+        for (let index = 0; index < moveResult.length; index++) {
+          const moveElement = moveResult[index];
+          const newMoveData: IMove = {
+            title: moveElement.title,
+            description: moveElement.description,
+            videoUrl: moveElement.videoUrl,
+            tags: moveElement.tags,
+            isPublic: moveElement.isPublic ? moveElement.isPublic : false,
+            userId: headToken.id,
+            sharableLink: moveElement.sharableLink,
+            status: true,
+            setId: setId
+          };
+          const moveData: Document | any = new MoveModel(newMoveData);
+          await moveData.save();
+        }
+      }
+    }
 
     let setDataForAlgolia: Document | any;
     /* Add items to algolia */
@@ -61,9 +88,21 @@ const getAllSetById = async (req: Request, res: Response): Promise<void> => {
   try {
     const { currentUser, query } = req;
     let headToken: Request | any = currentUser;
-    const { limit, page, search, sort, status, roleType } = query;
+    const {
+      limit,
+      page,
+      search,
+      sort,
+      status,
+      roleType,
+      userId,
+      fromSet
+    } = query;
     const pageNumber: number = ((parseInt(page) || 1) - 1) * (limit || 10);
     const limitNumber: number = parseInt(limit) || 10;
+    let decryptedUserId: String;
+    let temp: any | null;
+
     // define condition
     let condition: any = {
       $and: []
@@ -72,6 +111,12 @@ const getAllSetById = async (req: Request, res: Response): Promise<void> => {
     condition.$and.push({
       isDeleted: false
     });
+
+    // dcrypt userId for shareable link in yoursets component
+    if (userId) {
+      headToken = { id: decrypt(userId) };
+      console.log("<<<,headToken.id", headToken.id);
+    }
     // check for search condition
     if (search) {
       condition.$and.push({
@@ -128,19 +173,10 @@ const getAllSetById = async (req: Request, res: Response): Promise<void> => {
         message: "User id not found"
       });
     }
-    index.search({ query: "Sal" }, (err: any, hits: any = {}) => {
-      if (err) {
-        console.log(err);
-        console.log(err.debugData);
-        return;
-      }
-
-      console.log("@@@@@@@@@@@@@@@@@", hits);
-    });
-
-    let result: Document | any,
+    let result: Document | any | null,
       moveCount: Document | any,
       setResult: any = [];
+
     result = await SetModel.find(condition)
       .sort(sortOption)
       .skip(pageNumber)
@@ -152,14 +188,7 @@ const getAllSetById = async (req: Request, res: Response): Promise<void> => {
         }
       });
     // get count for the conditions
-    const setCount: any[] = await SetModel.aggregate([
-      {
-        $match: { ...condition }
-      },
-      {
-        $count: "count"
-      }
-    ]);
+    const setCount: number | any[] = await SetModel.countDocuments(condition);
     if (result && result.length) {
       for (let index = 0; index < result.length; index++) {
         const setData = result[index];
@@ -173,9 +202,10 @@ const getAllSetById = async (req: Request, res: Response): Promise<void> => {
         });
       }
     }
+
     res.status(200).json({
       result: setResult,
-      totalSets: setCount[0] ? setCount[0].count : 0,
+      totalSets: setCount ? setCount : 0,
       message: "Sets have been fetched successfully"
     });
   } catch (error) {
@@ -395,7 +425,8 @@ const publicUrlsetDetails = async (
     const limitNumber: number = parseInt(limit) || 10;
     let result: Document | any | null,
       moveCount: Document | any,
-      setResult: any = [];
+      setResult: any = [],
+      count: Document | any;
 
     let temp: Document | any | null = await FolderModel.findOne({
       _id: decryptedFolderId
@@ -429,6 +460,10 @@ const publicUrlsetDetails = async (
           });
         }
       }
+      count = await SetModel.find({
+        folderId: decryptedFolderId,
+        isDeleted: false
+      }).count();
     } else {
       return res.status(400).json({
         message: "Public access link is not enabled."
@@ -437,6 +472,7 @@ const publicUrlsetDetails = async (
     return res.status(200).json({
       responsecode: 200,
       data: setResult,
+      totalSets: count,
       success: true
     });
   } catch (error) {

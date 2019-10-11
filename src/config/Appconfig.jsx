@@ -11,8 +11,9 @@ data = {
   API_VERSION: process.env.REACT_APP_API_VERSION,
   phoneLength: 3,
   DEFAULT_DATE_FORMAT: "LLL",
-  ITEMS_PER_PAGE: 20,
-  IMAGE_ENDPOINT: process.env.REACT_APP_API_ENDPOINT
+  ITEMS_PER_PAGE: 16,
+  IMAGE_ENDPOINT: process.env.REACT_APP_API_ENDPOINT,
+  MAX_VIDEO_LENGTH: 15
 };
 
 export const AppConfig = data;

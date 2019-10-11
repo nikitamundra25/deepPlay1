@@ -12,7 +12,8 @@ import {
   InputGroupText,
   InputGroup,
   UncontrolledTooltip,
-  Form
+  Form,
+  Progress
 } from "reactstrap";
 import "./index.scss";
 import { logger } from "helper/Logger";
@@ -145,126 +146,114 @@ class MoveComponent extends React.Component {
   };
 
   render() {
-    const { errors, url, fileErr } = this.state;
+    const { errors, url } = this.state;
     const { moveReducer } = this.props;
     const { isVideoDownloading } = moveReducer;
 
     return (
       <>
-        {/* <div className="content-header mt-3 mb-3">
-          <span className="content-title">
-           <div className="main-title">Add set</div>
-            <div className="sub-title">
-          Add youtube Url or upload video
-        </div>
-          </span>
-         
-        </div> */}
         <div className="create-set-section step-2 ">
           <Card className="set-content-wrap create-a-move p-0">
             <div className="set-content-block w-100">
               <CardHeader className="border-bottom pt-4 pb-2">
                 <div className="content-header set-header flex-column">
                   <span className="content-title creat-set-title">
-                    Creat a move
+                    {isVideoDownloading ? "Preparing WebM" : "Creat a move"}
                   </span>
                 </div>
               </CardHeader>
               <CardBody className="p-0">
                 <div className="create-set-tile">
-                  <Form
-                    className="url-update-wrap"
-                    onSubmit={this.handleMoveUpload}
-                  >
-                    <div className="ml-3 mr-3">
-                      <FormGroup className="flex-fill flex-column ">
-                        <Label className="text-center d-block mt-4 mb-3">
-                          Paste YouTube Video URL or Type URL Manually{" "}
-                        </Label>
-                      </FormGroup>
-                      <FormGroup className="flex-fill flex-column mt-0 ">
-                        <InputGroup>
-                          <Input
-                            id="url"
-                            className={
-                              errors
-                                ? " pl-2 boder-1-invalid is-invalid "
-                                : "pl-2 boder-1 "
-                            }
-                            placeholder="Ex: https://www.youtube.com/watch?v=I5t894l5b1w"
-                            type="text"
-                            onPaste={this.handlePasteEvent}
-                            name="url"
-                            onChange={this.handleChange}
-                            value={url}
-                          />
-                          <FormFeedback>
-                            {errors.validUrl && url ? errors.validUrl : null}
-                            {errors.notUrl ? errors.notUrl : null}
-                          </FormFeedback>
-                          <InputGroupAddon addonType="append" id="upload-title">
-                            <InputGroupText>
-                              {!isVideoDownloading ? (
+                  {isVideoDownloading ? (
+                    <div className="url-update-wrap text-center download-process-container">
+                      <Progress animated value={100} />
+                      <h5>Please wait while we prepare WebM for you.</h5>
+                      <p>
+                        Please do not refresh or close this page while we are
+                        processing.
+                      </p>
+                    </div>
+                  ) : (
+                    <Form className="url-update-wrap">
+                      <div className="ml-3 mr-3">
+                        <FormGroup className="flex-fill flex-column ">
+                          <Label className="text-center d-block mt-4 mb-3">
+                            Paste YouTube Video URL or Type URL Manually{" "}
+                          </Label>
+                        </FormGroup>
+                        <FormGroup className="flex-fill flex-column mt-0 ">
+                          <InputGroup>
+                            <Input
+                              id="url"
+                              className={
+                                errors
+                                  ? "capitalize pl-2 boder-1-invalid is-invalid "
+                                  : "capitalize pl-2 boder-1 "
+                              }
+                              placeholder="Ex: https://www.youtube.com/watch?v=I5t894l5b1w"
+                              type="text"
+                              onPaste={this.handlePasteEvent}
+                              name="url"
+                              onChange={this.handleChange}
+                              value={url}
+                            />
+                            <InputGroupAddon
+                              addonType="append"
+                              id="upload-title"
+                            >
+                              <InputGroupText>
                                 <i
                                   className="fa fa-exclamation-circle display-5"
                                   aria-hidden="true"
                                 ></i>
-                              ) : (
-                                "Loading..."
-                              )}
-                            </InputGroupText>
-                          </InputGroupAddon>
-                          <UncontrolledTooltip
-                            placement="top"
-                            target="upload-title"
-                          >
-                            Paste YouTube Video URL or Type URL Manually
-                          </UncontrolledTooltip>
-                        </InputGroup>
-
-                        {/* <FormFeedback>
-                          {errors.notUrl
-                            ? errors.notUrl
-                            : errors.validUrl && url
-                            ? errors.validUrl
-                            : null}
-                        </FormFeedback> */}
-                      </FormGroup>
-                    </div>
-                    <div className="divider-or mt-5 mb-5">
-                      <span> OR </span>
-                    </div>
-                    <div className="text-center video-upload-manually pb-4">
-                      <FormGroup>
-                        <FormGroup className="flex-fill flex-column ">
-                          <Label className="mb-3 set-wrap ">
-                            Upload video file from your system (mp4, 3gp, ogg,
-                            wmv, webm, flv etc..){" "}
-                          </Label>
+                              </InputGroupText>
+                            </InputGroupAddon>
+                            <UncontrolledTooltip
+                              placement="top"
+                              target="upload-title"
+                            >
+                              Paste YouTube Video URL or Type URL Manually
+                            </UncontrolledTooltip>
+                          </InputGroup>
+                          <FormFeedback>
+                            {errors.notUrl
+                              ? errors.notUrl
+                              : errors.validUrl && url
+                              ? errors.validUrl
+                              : null}
+                          </FormFeedback>
                         </FormGroup>
-                        <Label
-                          for="videoUpload"
-                          className="btn-black btn url-upload-btn"
-                        >
-                          <i className="fa fa-cloud-upload mr-2"></i>
-                          Upload
-                        </Label>
-                        <CustomInput
-                          onChange={this.handleVideoFileSelect}
-                          type="file"
-                          disabled={isVideoDownloading ? true : false}
-                          className={"d-none"}
-                          id="videoUpload"
-                          name="customFile"
-                          accept="video/mp4,video/x-m4v,video/*"
-                        />
-                        {/* <FormFeedback>{fileErr ? fileErr : null}</FormFeedback> */}
-                        {fileErr ? (
-                          <p className="text-danger"> {fileErr} </p>
-                        ) : null}
-                      </FormGroup>
-                    </div>
-                  </Form>
+                      </div>
+                      <div className="divider-or mt-5 mb-5">
+                        <span> OR </span>
+                      </div>
+                      <div className="text-center video-upload-manually pb-4">
+                        <FormGroup>
+                          <FormGroup className="flex-fill flex-column ">
+                            <Label className="mb-3 set-wrap ">
+                              Upload video file from your system (mp4, 3gp, ogg,
+                              wmv, webm, flv etc..){" "}
+                            </Label>
+                          </FormGroup>
+                          <Label
+                            for="videoUpload"
+                            className="btn-black btn url-upload-btn"
+                          >
+                            <i className="fa fa-cloud-upload mr-2"></i>
+                            {isVideoDownloading ? "Please wait..." : "Upload"}
+                          </Label>
+                          <CustomInput
+                            onChange={this.handleVideoFileSelect}
+                            type="file"
+                            disabled={false}
+                            className={"d-none"}
+                            id="videoUpload"
+                            name="customFile"
+                          />
+                        </FormGroup>
+                      </div>
+                    </Form>
+                  )}
                 </div>
               </CardBody>
             </div>

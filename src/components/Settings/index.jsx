@@ -41,6 +41,7 @@ class SettingComponent extends Component {
   }
   componentDidUpdate(prevProps) {
     if (prevProps.profileInfoReducer !== this.props.profileInfoReducer) {
+      console.log("happy");
       const {
         firstName,
         lastName,
@@ -55,6 +56,7 @@ class SettingComponent extends Component {
       });
     }
     if (prevProps.profileImageThumb !== this.props.profileImageThumb) {
+      console.log("sad");
       this.setState({
         file: this.props.profileImageThumb,
         modal: false
@@ -150,6 +152,8 @@ class SettingComponent extends Component {
   };
 
   handleImage = data => {
+    console.log("data", data);
+
     this.props.uploadImage(data);
   };
 
@@ -172,6 +176,8 @@ class SettingComponent extends Component {
     const { modelDetails } = modelInfoReducer;
     const { uploadImageModalOpen } = modelDetails;
     const splitedImage = this.state.file.split("/");
+    console.log(">>", this.state.file);
+
     return (
       <div>
         <div className="setting-section">
@@ -182,7 +188,7 @@ class SettingComponent extends Component {
             {!isprofileInfoLoading ? (
               <>
                 <Card className="card-wrap">
-                  <CardHeader clas>
+                  <CardHeader>
                     <CardTitle className="card-heading mb-0 h5">
                       Profile
                     </CardTitle>
@@ -422,12 +428,12 @@ class SettingComponent extends Component {
                 </Card>
               </>
             ) : (
-                <Row>
-                  <Col sm={12} className="loader-col">
-                    <Loader />
-                  </Col>
-                </Row>
-              )}
+              <Row>
+                <Col sm={12} className="loader-col">
+                  <Loader />
+                </Col>
+              </Row>
+            )}
           </div>
         </div>
         <UploadImage

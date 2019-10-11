@@ -1,17 +1,14 @@
 import React from "react";
 import {
+  Button,
+  Modal,
   FormGroup,
   Input,
-  Button,
-  Card,
-  CardBody,
-  CardHeader,
-  Form,
-  InputGroup,
-  InputGroupText,
-  InputGroupAddon,
-  Col,
-  Row
+  Label,
+  ModalHeader,
+  ModalBody,
+  ModalFooter,
+  FormFeedback
 } from "reactstrap";
 import { connect } from "react-redux";
 import {
@@ -19,240 +16,162 @@ import {
   getSetDetailsRequest,
   UpdateSetRequest
 } from "../../actions";
-import * as qs from "query-string";
-import Loader from "../comman/Loader/Loader";
+import {
+  CreateFolderValidations,
+  CreateFolderValidationsMessaages
+} from "../../validations";
+import Validator from "js-object-validation";
 import "./index.scss";
+import closeBtn from "../../assets/img/close-img.png";
 
 class CreateSetComponent extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       title: "",
-      errors: "",
       description: "",
       isEdit: false,
-      open: false
+      open: false,
+      errors: {}
     };
   }
 
-  componentDidMount = () => {
-    let parsed = qs.parse(this.props.location.search);
-    if (parsed && parsed.setId) {
-      this.props.getSetDetailsRequest({ setId: parsed.setId });
-    }
-  };
-
   componentDidUpdate(prevProps) {
-    let parsed = qs.parse(this.props.location.search);
-    if (
-      prevProps.setReducer &&
-      prevProps.setReducer.setDetails !== this.props.setReducer.setDetails
-    ) {
-      const setList = this.props.setReducer.setDetails;
-      if (parsed.isEdit) {
-        this.setState({
-          title: setList.title ? setList.title : " ",
-          description: setList.description ? setList.description : " ",
-          isEdit: true
-        });
-      }
+    if (prevProps.setDetails !== this.props.setDetails) {
+      const { title, description } = this.props.setDetails;
+      this.setState({
+        title,
+        description
+      });
     }
   }
 
   handleChange = e => {
     const { name, value } = e.target;
     this.setState({
-      [name]: value
+      [name]: value,
+      errors: {
+        ...this.state.errors,
+        [name]: null
+      }
     });
   };
 
-  // handleBlur = async () => {
-  //   let parsed = qs.parse(this.props.location.search);
-  //   const data = {
-  //     title: this.state.title,
-  //     description: this.state.description,
-  //     folderId: parsed.folderId ? parsed.folderId : ""
-  //   };
-  //   await this.props.onSetsCreation(data);
-  // };
-
-  updateSet = () => {
-    let parsed = qs.parse(this.props.location.search);
+  onCreateSet = async name => {
+    const { isValid, errors } = Validator(
+      this.state,
+      CreateFolderValidations,
+      CreateFolderValidationsMessaages
+    );
+    if (!isValid) {
+      this.setState({
+        errors
+      });
+      return;
+    }
+    const { setDetails, folderId } = this.props;
     const data = {
+      setId: setDetails ? setDetails._id : "",
       title: this.state.title,
       description: this.state.description,
-      setId: parsed.setId ? parsed.setId : ""
+      folderId: folderId ? folderId : "",
+      addMove: name === "addMove" ? true : false
     };
-    this.props.UpdateSetRequest(data);
+    await this.props.createSet(data);
+    this.setState({
+      title: "",
+      description: ""
+    });
   };
-
-  onAddMove = async () => {
-    let parsed = qs.parse(this.props.location.search);
-    const data = {
-      title: this.state.title,
-      description: this.state.description,
-      folderId: parsed.folderId ? parsed.folderId : ""
-    };
-    await this.props.onSetsCreation(data);
-  };
-
-  // onSaveDesc = () => {
-  //   this.setState({
-  //     open: !this.state.open
-  //   });
-  // };
-
-  // handleModal = () => {
-  //   this.setState({
-  //     open: !this.state.open,
-  //     description: ""
-  //   });
-  // };
 
   render() {
-    const { title, description, isEdit } = this.state;
-    const { isSetDetailsLoading } = this.props.setReducer;
-    let parsed = qs.parse(this.props.location.search);
+    const { modal, handleOpen, setDetails } = this.props;
+    const { title, description, errors } = this.state;
 
     return (
-      <>
-        <div className="create-set-section mt-5">
-          {!isSetDetailsLoading ? (
-            <Card className="set-content-wrap">
-              <div className="set-content-block w-100">
-                <CardHeader className="">
-                  <div className="content-header set-header">
-                    <span className="content-title">
-                      {isEdit ? "Update Set" : "CREATE A NEW SET OF MOVES"}
-                    </span>
-                  </div>
-                </CardHeader>
-                <CardBody className="">
-                  <div className="create-set-tile">
-                    <Form onSubmit={this.onAddMove}>
-                      <FormGroup className="flex-fill">
-                        <InputGroup>
-                          <Input
-                            id="title"
-                            placeholder="Enter your title here"
-                            type="text"
-                            name="title"
-                            onChange={this.handleChange}
-                            value={title}
-                            // onBlur={!isEdit && title ? this.handleBlur : null}
-                          />
-                          <InputGroupAddon addonType="prepend">
-                            <InputGroupText>
-                              <span className="cursor_pointer ">
-                                <i className="fas fas fa-info "></i>
-                              </span>
-                            </InputGroupText>
-                          </InputGroupAddon>
-                        </InputGroup>
-                      </FormGroup>
-                      <FormGroup className="flex-fill">
-                        <InputGroup>
-                          <Input
-                            id="description"
-                            type="textarea"
-                            placeholder="Enter description (Optional)"
-                            name="description"
-                            onChange={this.handleChange}
-                            value={description}
-                            rows={3}
-                          />
-                        </InputGroup>
-                      </FormGroup>
-                    </Form>
-                  </div>
-                  <div className="text-center">
-                    {!parsed.isEdit ? (
-                      <Button
-                        color=" "
-                        type="submit"
-                        className="btn-black btn mt-3"
-                        disabled={!title}
-                        onClick={this.onAddMove}
-                      >
-                        Create a Set
-                      </Button>
-                    ) : (
-                      <Button
-                        color=" "
-                        type="button"
-                        className="btn-black btn mt-3"
-                        disabled={!title}
-                        onClick={this.updateSet}
-                      >
-                        Update Set
-                      </Button>
-                    )}
-                  </div>
-                </CardBody>
-              </div>
-            </Card>
-          ) : (
-            <Row>
-              <Col sm={12} className="loader-col">
-                <Loader />
-              </Col>
-            </Row>
-          )}
-          {/* <Modal
-            className="modal-dialog-centered custom-model-wrap"
-            isOpen={open}
-            toggle={() => this.handleModal}
-          >
-            <ModalHeader>
-              <div>
-                <h5 className="modal-title" id="exampleModalLabel">
-                  <span className="custom-title">Description</span>
-                </h5>
-              </div>
-              <button
-                aria-label="Close"
-                className="close"
-                data-dismiss="modal"
-                type="button"
-                onClick={this.handleModal}
-              >
-                <span aria-hidden="true">
-                  {" "}
-                  <img src="./assets/img/close-img.png" alt="close-ic" />
-                </span>
-              </button>
-            </ModalHeader>
-            <ModalBody>
-              <FormGroup>
-                <Label
-                  for="description"
-                  className="font-weight-bold text-center"
-                >
-                  DESCRIPTION
-                </Label>
-                <Input
-                  id="exampleFormControlInput1"
-                  type="textarea"
-                  name="description"
-                  onChange={this.handleChange}
-                  value={description}
-                />
-              </FormGroup>
-            </ModalBody>
-
-            <ModalFooter>
+      <div>
+        <Modal
+          className="modal-dialog-centered custom-model-wrap"
+          isOpen={modal}
+          toggle={handleOpen}
+        >
+          <ModalHeader>
+            <span className="custom-title" id="exampleModalLabel">
+              {setDetails ? "Update Set" : "Create a New Set"}
+            </span>
+            <button
+              aria-label="Close"
+              className="close"
+              data-dismiss="modal"
+              type="button"
+              onClick={handleOpen}
+            >
+              <span aria-hidden="true">
+                <img src={closeBtn} alt="close-ic" />
+              </span>
+            </button>
+          </ModalHeader>
+          <ModalBody>
+            <FormGroup>
+              <Label for="title" className="font-weight-bold text-center">
+                TITLE
+              </Label>
+              <Input
+                id="title"
+                type="text"
+                placeholder="Enter a title"
+                name="title"
+                className={errors.title ? "is-invalid" : ""}
+                onChange={this.handleChange}
+                value={title}
+              />
+              <FormFeedback>{errors.title ? errors.title : null}</FormFeedback>
+            </FormGroup>
+            <FormGroup>
+              <Label for="description" className="font-weight-bold text-center">
+                DESCRIPTION
+              </Label>
+              <Input
+                id="exampleFormControlInput1"
+                type="textarea"
+                placeholder="Enter a description (optional)"
+                name="description"
+                className={errors.description ? "is-invalid" : ""}
+                onChange={this.handleChange}
+                value={description}
+                rows={3}
+              />
+              <FormFeedback>
+                {errors.description ? errors.description : null}
+              </FormFeedback>
+            </FormGroup>
+          </ModalBody>
+          <ModalFooter>
+            <Button
+              type="button"
+              onClick={this.onCreateSet}
+              color=" "
+              className="btn btn-black"
+              disabled={!title}
+            >
+              {setDetails ? "Update Set" : "Create Set"}
+            </Button>
+            {!setDetails ? (
               <Button
-                color=" "
                 type="button"
-                onClick={this.onSaveDesc}
+                onClick={() => this.onCreateSet("addMove")}
+                color=" "
                 className="btn btn-black"
+                disabled={!title}
               >
-                Save changes
+                Add a Move
               </Button>
-            </ModalFooter>
-          </Modal> */}
-        </div>
-      </>
+            ) : (
+              ""
+            )}
+          </ModalFooter>
+        </Modal>
+      </div>
     );
   }
 }

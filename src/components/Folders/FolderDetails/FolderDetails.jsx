@@ -70,6 +70,10 @@ class RecentFolderComponent extends React.Component {
   }
 
   componentDidUpdate(prevProps) {
+    const oldLocation = prevProps.location;
+    const oldPathname = oldLocation.pathname.split("/");
+    const newLocation = this.props.location;
+    const newPathname = newLocation.pathname.split("/");
     if (
       prevProps.setReducer &&
       prevProps.setReducer.setListinFolder !==
@@ -78,6 +82,13 @@ class RecentFolderComponent extends React.Component {
       const setList = this.props.setReducer.setListinFolder;
       this.setState({
         setListItem: setList
+      });
+    }
+    if (oldPathname[3] !== newPathname[3]) {
+      this.props.folderDetail({ id: newPathname[3] });
+      this.props.getSetsList({ folderId: newPathname[3] });
+      this.setState({
+        folderId: newPathname[3]
       });
     }
   }
@@ -90,10 +101,6 @@ class RecentFolderComponent extends React.Component {
         addSetModalOpen: !modelDetails.addSetModalOpen
       }
     });
-    // this.props.getSetsList({
-    //   folderId: this.state.folderId,
-    //   showAll: true
-    // });
     this.setState({
       showAll: true
     });
@@ -139,7 +146,7 @@ class RecentFolderComponent extends React.Component {
       previousFolderId: pathName[3]
     };
     const { value } = await ConfirmBox({
-      text: "You want to remove Set from this folder."
+      text: "You want to remove Set from this folder!"
     });
     if (value) {
       this.props.manageSets(data);
@@ -148,7 +155,7 @@ class RecentFolderComponent extends React.Component {
 
   handleFolder = async data => {
     const { value } = await ConfirmBox({
-      text: "You want to transfer this set"
+      text: "You want to transfer this set!"
     });
     if (value) {
       this.props.manageSets(data);
@@ -157,7 +164,7 @@ class RecentFolderComponent extends React.Component {
 
   handleDeleteFolder = async id => {
     const { value } = await ConfirmBox({
-      text: "You want to delete this folder."
+      text: "You want to delete this folder!"
     });
     if (value) {
       this.props.deleteFolder(id);
@@ -177,7 +184,7 @@ class RecentFolderComponent extends React.Component {
       isCopy: true
     };
     const { value } = await ConfirmBox({
-      text: "You want to copy this set!! "
+      text: "You want to copy this set!"
     });
     if (value) {
       this.props.onSetsCreation(data);
@@ -211,6 +218,10 @@ class RecentFolderComponent extends React.Component {
       show: false,
       setIndex: -1
     });
+  };
+
+  addSets = data => {
+    this.props.onSetsCreation(data);
   };
 
   onTogglePublicAccess = isPublic => {
@@ -281,7 +292,6 @@ class RecentFolderComponent extends React.Component {
     const setOfFolder = setListItem.filter(
       item => item.folderId._id === folderId
     );
-    console.log("folderDetails", folderDetails);
 
     return (
       <div className="page-body">
@@ -293,6 +303,9 @@ class RecentFolderComponent extends React.Component {
             </div>
             <div className="sub-title">
               {folderDetails ? folderDetails.description : ""}
+            </div>
+            <div className="sub-title">
+              Total sets: {totalSetsInFolder ? totalSetsInFolder : 0}
             </div>
           </span>
           <div>
@@ -362,7 +375,11 @@ class RecentFolderComponent extends React.Component {
                                 // onClick={() => this.handleSetDetails(list._id)}
                                 className={"text-capitalize"}
                               >
-                                <span>{list.title} </span>
+                                <span>
+                                  {list.isCopy
+                                    ? `Copy of ${list.title}`
+                                    : list.title}{" "}
+                                </span>
                               </span>
                             </div>
                             <span className={"text-capitalize"}>
@@ -470,6 +487,7 @@ class RecentFolderComponent extends React.Component {
           modal={addSetModalOpen}
           getAllSet={allSetList}
           folderId={folderId}
+          addNewSet={this.addSets}
           handleSets={this.handleSets}
           {...this.props}
         />

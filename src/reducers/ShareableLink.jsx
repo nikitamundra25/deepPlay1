@@ -7,7 +7,8 @@ const initialState = {
   publicUrlSetDetails: [],
   isSetDetailsLoading: false,
   publicUrlMoveDetails: [],
-  isMoveDetailsLoading: false
+  isMoveDetailsLoading: false,
+  totalSets: 0
 };
 export const shareLinkReducer = handleActions(
   {
