@@ -223,7 +223,7 @@ class SetDetails extends React.Component {
               )}
             </div>
           </Card>
-          <section className="play-list-collection set-detail-section">
+        <section className="play-list-collection set-detail-section">
             <Row>
               <Col md="12">
                 <div class="content-header mt-3 mb-2">
