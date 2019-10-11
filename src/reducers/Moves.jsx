@@ -7,7 +7,8 @@ const initialState = {
   movesOfSet: [],
   moveDetails: "",
   isMoveDetailsLoading: false,
-  isMoveofSetLoading: false
+  isMoveofSetLoading: false,
+  isSavingWebM: false
 };
 
 export const moveReducer = handleActions(
@@ -45,6 +46,10 @@ export const moveReducer = handleActions(
       ...state,
       moveDetails: payload.moveDetails,
       isMoveDetailsLoading: false
+    }),
+    [MovesAction.UPDATE_VIDEO_SETTINGS_SUCCESS]: (state, { payload }) => ({
+      ...state,
+      ...payload
     })
   },
   initialState

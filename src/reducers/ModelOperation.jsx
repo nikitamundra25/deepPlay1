@@ -13,7 +13,9 @@ const initialAuthState = {
     createSetOpen: false,
     transferToModalOpen: false,
     sharableLinkModalOpen: false,
-    createSetModalOpen: false
+    createSetModalOpen: false,
+    isDescriptionModalOpen: false,
+    isMoveSuccessModal: false
   }
 };
 
