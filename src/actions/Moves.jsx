@@ -11,7 +11,8 @@ export const MovesAction = {
   GET_ALL_MOVE_REQUEST: "Get All Move Request",
   GET_ALL_MOVE_SUCCESS: "Get All Move Success",
   UPDATE_VIDEO_SETTINGS: "Update the webm details.",
-  UPDATE_VIDEO_SETTINGS_SUCCESS: "Update the webm details success."
+  UPDATE_VIDEO_SETTINGS_SUCCESS: "Update the webm details success.",
+  ADD_NEW_TAG_TO_LIST: "Add new tag to list!"
 };
 
 export const downloadYoutubeVideoRequest = createAction(
@@ -43,3 +44,5 @@ export const completeVideoEditing = createAction(
 export const completeVideoEditingSuccess = createAction(
   MovesAction.UPDATE_VIDEO_SETTINGS_SUCCESS
 );
+
+export const addNewTagToList = createAction(MovesAction.ADD_NEW_TAG_TO_LIST)
