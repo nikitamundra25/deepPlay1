@@ -142,20 +142,24 @@ const completeVideoEditingLogic = createLogic({
       undefined,
       action.payload
     );
-    logger(result, action.payload);
-    dispatch(
-      modelOpenRequest({
-        modelDetails: {
-          isMoveSuccessModal: true
-        }
-      })
-    );
-    dispatch(
-      completeVideoEditingSuccess({
-        isSavingWebM: false
-      })
-    );
-    done();
+    if (result.isError) {
+      toast.error(result.messages[0]);
+    } else {
+      logger(result, action.payload);
+      dispatch(
+        modelOpenRequest({
+          modelDetails: {
+            isMoveSuccessModal: true
+          }
+        })
+      );
+      dispatch(
+        completeVideoEditingSuccess({
+          isSavingWebM: false
+        })
+      );
+      done();
+    }
   }
 });
 /**
