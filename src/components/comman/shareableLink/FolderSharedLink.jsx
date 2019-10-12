@@ -119,7 +119,7 @@ class FolderSharedLink extends React.Component {
                       className={"cursor_pointer"}
                     >
                       <div className="tile-wrap card">
-                        <div className="cotent-tile d-flex">
+                        <div className="cotent-tile d-flex content-with-img">
                           <div className="cotent-text-tile">
                             <div className="content-heading-tile">
                               <span>{list.title}</span>

@@ -95,7 +95,7 @@ class ForgotPasswordComponent extends React.Component {
           <ModalHeader toggle={handleForgotPasswordModel}></ModalHeader>
           <ModalBody className="modal-body p-0">
             <Card className="bg-secondary shadow border-0 pb-0">
-              <CardHeader className={"text-center p-2 font-weight-bold"}>
+              <CardHeader className={"text-center p-2 "}>
                 Forgot Password
               </CardHeader>
               <CardBody className="px-lg-5">

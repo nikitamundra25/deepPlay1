@@ -91,7 +91,7 @@ class Dashboard extends React.Component {
                             DRAFT
                           </Badge>
                         </div>
-                        <div className="cotent-tile d-flex content-with-tip">
+                        <div className="cotent-tile d-flex content-with-tip content-with-img">
                           <div className="cotent-text-tile ">
                             <div className="content-heading-tile d-flex">
                               {" "}
@@ -218,7 +218,7 @@ class Dashboard extends React.Component {
                             DRAFT
                           </Badge>
                         </div>
-                        <div className="cotent-tile d-flex content-with-tip">
+                        <div className="cotent-tile d-flex content-with-tip ">
                           <div className="cotent-text-tile pt-2">
                             <div className="content-heading-tile d-flex">
                               {" "}
