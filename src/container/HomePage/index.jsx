@@ -137,7 +137,12 @@ class HomePage extends React.Component {
               return (
                 <Col md="4" key={index}>
                   <div className="play-list-block ">
-                    <div className="play-sub-block ">
+                    <div
+                      className="play-sub-block cursor_pointer"
+                      onClick={() =>
+                        this.props.redirectTo(AppRoutes.SAMPLE_SET.url)
+                      }
+                    >
                       <div className="play-list-img blur-img-wrap">
                         <img src={images} alt={""} />
                         <div

@@ -27,7 +27,7 @@ const changePassword = React.lazy(() => import("./container/ChangePassword"));
 const allSetSharedLink = React.lazy(() =>
   import("./components/comman/shareableLink/AllSetSharedLink")
 );
-
+const sampleSet = React.lazy(() => import("./components/SampleSet"));
 const routes = [
   {
     path: AppRoutes.HOME_PAGE.url,
@@ -124,6 +124,12 @@ const routes = [
     name: AppRoutes.ALL_SET_SHARED_LINK.name,
     exact: AppRoutes.ALL_SET_SHARED_LINK.exact,
     component: allSetSharedLink
+  },
+  {
+    path: AppRoutes.SAMPLE_SET.url,
+    name: AppRoutes.SAMPLE_SET.name,
+    exact: AppRoutes.SAMPLE_SET.exact,
+    component: sampleSet
   }
 ];
 

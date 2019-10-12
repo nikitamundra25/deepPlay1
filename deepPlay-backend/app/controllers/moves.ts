@@ -14,6 +14,7 @@ import path from "path";
 import ffmpeg from "ffmpeg";
 import { decrypt } from "../common";
 import { orderBy } from "natural-orderby";
+import { IUpdateMove } from "../interfaces";
 import moment from "moment";
 const __basedir = path.join(__dirname, "../public");
 
@@ -357,6 +358,29 @@ const updateMoveDetailsAndTrimVideo = async (
     });
   }
 };
+
+//----------------Edit Move Details-------------------------
+const updateMove = async (req: Request, res: Response): Promise<any> => {
+  try {
+    const { body } = req;
+    const { title, description, moveId } = body;
+    let updateMove: IUpdateMove = {
+      title,
+      description
+    };
+    await SetModel.findByIdAndUpdate(moveId, {
+      $set: { ...updateMove, updatedAt: Date.now() }
+    });
+    return res.status(200).json({
+      message: "Move details updated successfully."
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).send({
+      message: error.message
+    });
+  }
+};
 /**
  *
  */
@@ -366,5 +390,6 @@ export {
   downloadYoutubeVideo,
   getMoveDetailsById,
   publicUrlMoveDetails,
-  updateMoveDetailsAndTrimVideo
+  updateMoveDetailsAndTrimVideo,
+  updateMove
 };

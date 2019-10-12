@@ -14,10 +14,23 @@ $source: "Roboto", sans-serif;
   align-items: center;
   justify-content: center;
 }
-h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6{
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+.h1,
+.h2,
+.h3,
+.h4,
+.h5,
+.h6 {
   color: #000;
 }
-.white-color{color:$whiteColor}
+.white-color {
+  color: $whiteColor;
+}
 %justifyContentSpaceBitween {
   justify-content: space-between;
 }
@@ -967,10 +980,10 @@ a {
   border: 1px solid #d4d4d4;
 }
 .auth-user-model {
-  i{
-    color:#555;
+  i {
+    color: #555;
   }
-  .card{
+  .card {
     border-radius: 4px 4px 0px 0px;
     border: none;
   }
@@ -1419,14 +1432,14 @@ a {
 .creat-set-title {
   font-size: 24px;
 }
-.custom-control-input:active ~ .custom-control-label::before{
+.custom-control-input:active ~ .custom-control-label::before {
   border-color: $textColor;
   background-color: $textColor;
 }
-.custom-toggle input:checked + .custom-toggle-slider{
+.custom-toggle input:checked + .custom-toggle-slider {
   border-color: $blackcolor;
 }
-.custom-toggle input:checked+.custom-toggle-slider:before{
+.custom-toggle input:checked + .custom-toggle-slider:before {
   background: $blackcolor;
 }
 
@@ -1526,11 +1539,14 @@ a {
   right: 5px;
   z-index: 2;
 }
-.set-img-thumnail{
+.set-img-thumnail {
   position: absolute;
   z-index: 2;
-    width: 20px;
-    height: 20px;
-    top: -9px;
-    right: 26px;
+  width: 20px;
+  height: 20px;
+  top: -9px;
+  right: 26px;
+}
+.list-4 img {
+  width: 18px;
 }

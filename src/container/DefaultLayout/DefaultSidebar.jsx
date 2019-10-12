@@ -30,7 +30,7 @@ class DefaultSidebar extends React.Component {
                 <React.Fragment key={index}>
                   <li>
                     <NavLink
-                      className="list-group-item"
+                      className={`list-group-item list-${index}`}
                       activeClassName="active"
                       aria-current="page"
                       to={items.url}

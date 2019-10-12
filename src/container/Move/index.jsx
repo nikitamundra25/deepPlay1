@@ -10,7 +10,7 @@ class Move extends React.Component {
   }
   render() {
     return (
-      <>
+      <>  
         <MoveComponent />
         <div className={"row"}></div>
       </>

@@ -169,7 +169,7 @@ class SetDetails extends React.Component {
               >
                 <i className="fas fa-plus-circle icon-font"></i>
               </span>
-              <UncontrolledTooltip placement="bottom" target="move">
+              <UncontrolledTooltip placement="top" target="move">
                 Add new move
               </UncontrolledTooltip>
               <span
@@ -179,7 +179,7 @@ class SetDetails extends React.Component {
               >
                 <i className="fas fa-share icon-font"></i>
               </span>
-              <UncontrolledTooltip placement="bottom" target="share">
+              <UncontrolledTooltip placement="top" target="share">
                 Get Shareable Link
               </UncontrolledTooltip>
               <UncontrolledDropdown
@@ -202,7 +202,7 @@ class SetDetails extends React.Component {
                   </DropdownItem>
                 </DropdownMenu>
               </UncontrolledDropdown>
-              <UncontrolledTooltip placement="bottom" target="edit">
+              <UncontrolledTooltip placement="top" target="edit">
                 Edit & Delete
               </UncontrolledTooltip>
             </div>

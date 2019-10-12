@@ -346,7 +346,7 @@ class SettingComponent extends Component {
                   </CardHeader>
                   <CardBody>
                     <div className="account-type-wrap">
-                      <Form className="form-wrap ">
+                      <Form className="form-wrap">
                         <Row>
                           <Col md="6">
                             <FormGroup className="custom-control custom-radio mb-3 ">
