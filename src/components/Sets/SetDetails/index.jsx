@@ -183,10 +183,10 @@ class SetDetails extends React.Component {
                 Get Shareable Link
               </UncontrolledTooltip>
               <UncontrolledDropdown
-                className="header-dropdown  custom-dropdown"
+                className="header-dropdown "
                 direction="bottom"
               >
-                <DropdownToggle color={" "}>
+                <DropdownToggle color={" "} caret>
                   <span id="edit" className="cursor_pointer ml-4">
                     <i className="fas fa-sliders-h icon-font"></i>
                   </span>
@@ -274,69 +274,67 @@ class SetDetails extends React.Component {
                   {homePageImage.map((images, index) => {
                     return (
                       <Col md="4" key={index}>
-                        <div
-                          className="tile-wrap card"
-                          onMouseLeave={() => this.closePopOver()}
-                        >
-                          <div className="play-list-block ">
-                            <div className="play-sub-block ">
-                              <div className="play-list-img blur-img-wrap checked-wrap">
-                                <div className="custom-control custom-control-alternative custom-checkbox set-img-thumnail">
-                                  <Input
-                                    className="custom-control-input"
-                                    id="customCheckRegister"
-                                    name={"roleType"}
-                                    type="checkbox"
-                                  />
-                                  <label
-                                    className="custom-control-label"
-                                    htmlFor="customCheckRegister"
-                                  ></label>
-                                </div>
-                                <div className="star-wrap">
-                                  <img src={starIc} alt={"star"} />
-                                </div>
-                                <img src={images} alt="" />
-                                <div
-                                  className="blur-img"
-                                  style={{
-                                    backgroundImage: 'url("' + images + '")'
-                                  }}
-                                ></div>
+                        <div className="play-list-block ">
+                          <div className="play-sub-block ">
+                            <div className="play-list-img blur-img-wrap checked-wrap">
+                              <div className="custom-control custom-control-alternative custom-checkbox set-img-thumnail">
+                                <Input
+                                  className="custom-control-input"
+                                  id="customCheckRegister"
+                                  name={"roleType"}
+                                  type="checkbox"
+                                />
+                                <label
+                                  className="custom-control-label"
+                                  htmlFor="customCheckRegister"
+                                ></label>
                               </div>
+                              <div className="star-wrap">
+                                <img src={starIc} alt={"star"} />
+                              </div>
+                              <img src={images} alt="" />
+                              <div
+                                className="blur-img"
+                                style={{
+                                  backgroundImage: 'url("' + images + '")'
+                                }}
+                              ></div>
+                            </div>
 
-                              <div className="play-list-text">
-                                <div className="play-list-number">25 Moves</div>
-                                <div className="play-list-heading h6 ">
-                                  Salsa Footwork
-                                </div>
-                                <div
-                                  onMouseOver={() =>
-                                    this.showPopOver(index, show)
-                                  }
-                                  className={"tooltip-btn-wrap right-btn-tip"}
-                                >
-                                  <span className="cursor_pointer">
-                                    {" "}
-                                    <i className="fas fa-ellipsis-v setting-icon "></i>
-                                    {show && setIndex === index ? (
-                                      <ButtonGroup
-                                        size="sm"
-                                        onMouseOver={() =>
-                                          this.showPopOver(index, show)
-                                        }
+                            <div
+                              className="play-list-text"
+                              onMouseLeave={() => this.closePopOver()}
+                            >
+                              <div className="play-list-number">25 Moves</div>
+                              <div className="play-list-heading h6 ">
+                                Salsa Footwork
+                              </div>
+                              <div
+                                onMouseOver={() =>
+                                  this.showPopOver(index, show)
+                                }
+                                className={"tooltip-btn-wrap right-btn-tip"}
+                              >
+                                <span className="cursor_pointer">
+                                  {" "}
+                                  <i className="fas fa-ellipsis-v setting-icon "></i>
+                                  {show && setIndex === index ? (
+                                    <ButtonGroup
+                                      size="sm"
+                                      onMouseOver={() =>
+                                        this.showPopOver(index, show)
+                                      }
+                                    >
+                                      <Button
+                                      // onClick={() => this.OnCreateSetCopy(list)}
                                       >
-                                        <Button
-                                        // onClick={() => this.OnCreateSetCopy(list)}
-                                        >
-                                          Copy
-                                        </Button>
-                                        <Button>Transfer</Button>
-                                        <Button>Remove</Button>
-                                      </ButtonGroup>
-                                    ) : null}
-                                  </span>
-                                </div>
+                                        Copy
+                                      </Button>
+                                      <Button>Transfer</Button>
+                                      <Button>Remove</Button>
+                                    </ButtonGroup>
+                                  ) : null}
+                                </span>
                               </div>
                             </div>
                           </div>
