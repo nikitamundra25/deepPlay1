@@ -23,7 +23,7 @@ import { logger } from "helper/Logger";
 import { completeVideoEditing } from "actions/Moves";
 import closeBtn from "../../../assets/img/close-img.png";
 import MoveSuccessModal from "./moveSuccessModal"
-
+import { AppRoutes } from "../../../config/AppRoutes";
 // core components
 class MoveDetails extends React.Component {
   constructor(props) {
@@ -162,6 +162,12 @@ class MoveDetails extends React.Component {
         isDescriptionModalOpen: !modelDetails.isDescriptionModalOpen
       }
     });
+  }
+  /**
+   *
+   */
+  redirectToSetDetails = () => {
+    this.props.redirectTo(AppRoutes.SET_DETAILS.url.replace(":id", this.state.setId))
   }
   /**
    *

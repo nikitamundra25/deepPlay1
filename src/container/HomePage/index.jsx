@@ -46,6 +46,16 @@ class HomePage extends React.Component {
       }
     });
   };
+
+  handleSetModal = () => {
+    const { modelInfoReducer } = this.props;
+    const { modelDetails } = modelInfoReducer;
+    this.props.modelOpenRequest({
+      modelDetails: {
+        createSetOpen: !modelDetails.createSetOpen
+      }
+    });
+  };
   /*
    */
   render() {
@@ -56,12 +66,6 @@ class HomePage extends React.Component {
     } else {
       isLoggedIn = false;
     }
-    // const { modelInfoReducer, socialLoginRequest, loginRequest, forgotPasswordRequest, loginReducer } = this.props
-    // const { modelDetails } = modelInfoReducer;
-    // const {
-    //   loginModelOpen,
-    //   forgotPasswordModalOpen
-    // } = modelDetails;
     return (
       <Container>
         <section className="home-video-section mt-5">
@@ -114,7 +118,15 @@ class HomePage extends React.Component {
                   <div className="h5 font-dark-bold">
                     Create your own set to learn or teach
                   </div>
-                  <Button color={" "} className="fill-btn btn mt-4">
+                  <Button
+                    color={" "}
+                    className="fill-btn btn mt-4"
+                    onClick={
+                      isLoggedIn
+                        ? this.handleSetModal
+                        : this.handleLoginModalOpen
+                    }
+                  >
                     {" "}
                     Create Now
                   </Button>

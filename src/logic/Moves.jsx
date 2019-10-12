@@ -155,7 +155,7 @@ const completeVideoEditingLogic = createLogic({
       );
       dispatch(
         completeVideoEditingSuccess({
-          isSavingWebM: false
+          isSavingWebM: false,
         })
       );
       done();

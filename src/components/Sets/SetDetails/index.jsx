@@ -5,14 +5,12 @@ import {
   CardBody,
   Button,
   Col,
-  Row,
   CardHeader,
-  Input,
   DropdownToggle,
   UncontrolledDropdown,
   DropdownMenu,
   DropdownItem,
-  ButtonGroup
+  UncontrolledTooltip,
 } from "reactstrap";
 import {
   getSetDetailsRequest,
@@ -20,7 +18,8 @@ import {
   publicAccessRequest,
   shareableLinkRequest,
   deleteSetRequest,
-  getMovesOfSetRequest
+  getMovesOfSetRequest,
+  UpdateSetRequest
 } from "../../../actions";
 import SharableLinkModal from "../../comman/shareableLink/SharableLink";
 import { AppRoutes } from "../../../config/AppRoutes";
@@ -28,18 +27,11 @@ import "./index.scss";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import emptySetIc from "../../../assets/img/empty-sets.png";
-import addPlusIc from "../../../assets/img/add_plus.png";
 import { ConfirmBox } from "../../../helper/SweetAleart";
-import starIc from "../../../assets/img/star.svg";
 import WebmView from "./WebmView";
-const homePageImage = [
-  "https://images.pexels.com/photos/67636/rose-blue-flower-rose-blooms-67636.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500",
-  "https://p.bigstockphoto.com/GeFvQkBbSLaMdpKXF1Zv_bigstock-Aerial-View-Of-Blue-Lakes-And--227291596.jpg",
-  "https://images.pexels.com/photos/462118/pexels-photo-462118.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500",
-  "https://helpx.adobe.com/content/dam/help/en/stock/how-to/visual-reverse-image-search/jcr_content/main-pars/image/visual-reverse-image-search-v2_intro.jpg",
-  "https://i.pinimg.com/originals/26/94/93/269493fbeb10e31ad3867248e3f68b94.jpg"
-];
-
+import Loader from "../../comman/Loader/Loader";
+import CreateSetComponent from "../../Sets/createSet";
+import MoveList from "./moveList";
 // core components
 class SetDetails extends React.Component {
   constructor(props) {
@@ -47,25 +39,23 @@ class SetDetails extends React.Component {
     this.state = {
       url: "",
       errors: "",
-      isPaste: false
+      show: false,
+      setIndex: -1,
+      isPaste: false,
+      showVideoIndex: 0
     };
   }
   componentDidMount = () => {
     const location = this.props.location;
     const pathName = location.pathname.split("/");
-    console.log("#################",pathName[3]);
-    
+    console.log("#################", pathName[3]);
+
     this.props.getSetDetailsRequest({ setId: pathName[3] });
     this.props.getMovesOfSetRequest({ setId: pathName[3] });
   };
   /*
   /*  
   */
-
-  handleMoveAdd = () => {
-    this.props.redirectTo(AppRoutes.MOVE.url);
-  };
-
   onTogglePublicAccess = isPublic => {
     const location = this.props.location;
     const pathName = location.pathname.split("/");
@@ -77,7 +67,8 @@ class SetDetails extends React.Component {
     };
     this.props.publicAccess(data);
   };
-
+  /* 
+   */
   handleSharableLink = () => {
     const location = this.props.location;
     const pathName = location.pathname.split("/");
@@ -93,22 +84,62 @@ class SetDetails extends React.Component {
       }
     });
   };
-
+  /* 
+   */
   handleDeleteSet = async id => {
     const { value } = await ConfirmBox({
-      text: "You want to delete this set.!! "
+      text: "You want to delete this set! "
     });
     if (value) {
       this.props.onDeleteSets(id);
     }
   };
-
-  editSet = id => {
-    this.props.redirectTo(
-      AppRoutes.CREATE_SET.url + `?setId=${id}&isEdit=${true}`
-    );
+  /* 
+   */
+  handleMoveAdd = () => {
+    const location = this.props.location;
+    const pathName = location.pathname.split("/");
+    this.props.redirectTo(AppRoutes.MOVE.url + `?setId=${pathName[3]}`);
   };
-
+  /* 
+   */
+  handleSetModal = () => {
+    const { modelInfoReducer } = this.props;
+    const { modelDetails } = modelInfoReducer;
+    this.props.modelOperate({
+      modelDetails: {
+        createSetModalOpen: !modelDetails.createSetModalOpen
+      }
+    });
+  };
+  /* 
+  */
+  showPopOver = index => {
+    this.setState({
+      show: true,
+      setIndex: index
+    });
+  };
+  /* 
+ */
+  closePopOver = () => {
+    this.setState({
+      show: false,
+      setIndex: -1
+    });
+  };
+  /* 
+   */
+  updateSet = data => {
+    this.props.UpdateSetRequest(data);
+  };
+  /* 
+  */
+  handleShowVideo = (videoIndex) => {
+    this.setState({
+      showVideoIndex: videoIndex
+    })
+  }
   render() {
     const {
       setReducer,
@@ -118,9 +149,11 @@ class SetDetails extends React.Component {
     } = this.props;
     const { setDetails } = setReducer;
     const { modelDetails } = modelInfoReducer;
-    const { movesOfSet } = moveReducer;
+    const { movesOfSet, isMoveofSetLoading } = moveReducer;
     const { userEncryptedInfo } = shareLinkReducer;
-    const { sharableLinkModalOpen } = modelDetails;
+    const { sharableLinkModalOpen, createSetModalOpen } = modelDetails;
+    const { show, setIndex, showVideoIndex } = this.state;
+    
     return (
       <>
         <div className="set-main-section">
@@ -137,21 +170,24 @@ class SetDetails extends React.Component {
                 </div>
               </span>
             ) : (
-              <span className="content-title">
-                <div className="main-title">
-                  {setDetails ? setDetails.title : "MyFolder"}
-                </div>
-              </span>
-            )}
+                <span className="content-title">
+                  <div className="main-title">
+                    {setDetails ? setDetails.title : "MyFolder"}
+                  </div>
+                </span>
+              )}
 
             <div>
               <span
-                id="UncontrolledTooltipExample"
+                id="move"
                 className={"cursor_pointer"}
-                onClick={() => this.props.redirectTo(AppRoutes.CREATE_SET.url)}
+                onClick={this.handleMoveAdd}
               >
                 <i className="fas fa-plus-circle icon-font"></i>
               </span>
+              <UncontrolledTooltip placement="bottom" target="move">
+                Add new move
+              </UncontrolledTooltip>
               <span
                 id="share"
                 onClick={this.handleSharableLink}
@@ -159,17 +195,20 @@ class SetDetails extends React.Component {
               >
                 <i className="fas fa-share icon-font"></i>
               </span>
+              <UncontrolledTooltip placement="bottom" target="share">
+                Get Shareable Link
+              </UncontrolledTooltip>
               <UncontrolledDropdown
-                className="header-dropdown  custom-dropdown"
+                className="header-dropdown "
                 direction="bottom"
               >
-                <DropdownToggle color={" "}>
+                <DropdownToggle color={" "} caret>
                   <span id="edit" className="cursor_pointer ml-4">
                     <i className="fas fa-sliders-h icon-font"></i>
                   </span>
                 </DropdownToggle>
                 <DropdownMenu>
-                  <DropdownItem onClick={() => this.editSet(setDetails._id)}>
+                  <DropdownItem onClick={() => this.handleSetModal()}>
                     Edit
                   </DropdownItem>
                   <DropdownItem
@@ -179,130 +218,70 @@ class SetDetails extends React.Component {
                   </DropdownItem>
                 </DropdownMenu>
               </UncontrolledDropdown>
+              <UncontrolledTooltip placement="bottom" target="edit">
+                Edit & Delete
+              </UncontrolledTooltip>
             </div>
           </div>
-          <Card className="video-slider-section">
-            <div className="step-2">
-              {movesOfSet && movesOfSet.length ? (
-                // movesOfSet.map((video, index) => {
-                <WebmView
-                  // key={index}
-                  video={movesOfSet[0]}
+          {
+            !isMoveofSetLoading ?
+              <>
+                <Card className="video-slider-section">
+                  <div className="step-2">
+                    {movesOfSet && movesOfSet.length ? (
+                      // movesOfSet.map((video, index) => {
+                      <WebmView
+                        // key={index}
+                        video={movesOfSet[showVideoIndex]}
+                      />
+                    ) : (
+                        <div className="create-set-section w-100 empty-folder-section">
+                          <div className="set-content-wrap empty-folder-card">
+                            <div className="set-content-block w-100 empty-folder-wrap">
+                              <CardHeader className="empty-folder-header text-center">
+                                <img src={emptySetIc} alt={"Images"} />
+                                <div className="content-header set-header">
+                                  <span className="content-title">
+                                    {" "}
+                                    <h3>You haven't added any move yet!</h3>
+                                    <p>No move availabe for this set</p>
+                                  </span>
+                                </div>
+                              </CardHeader>
+                              <CardBody className="">
+                                <div className="create-set-tile"></div>
+                                <div className="text-center">
+                                  <Button
+                                    color=" "
+                                    type="button"
+                                    className="btn-black btn "
+                                    onClick={this.handleMoveAdd}
+                                  >
+                                    <i className="fas fa-plus mr-1"></i>
+                                    Add a Move
+                                </Button>
+                                </div>
+                              </CardBody>
+                            </div>
+                          </div>
+                        </div>
+                      )}
+                  </div>
+                </Card>
+                <MoveList
+                  show={show}
+                  setIndex={setIndex}
+                  closePopOver={this.closePopOver}
+                  showPopOver={this.showPopOver}
+                  moveCount={setDetails.moveCount}
+                  movesOfSet={movesOfSet}
+                  handleShowVideo={this.handleShowVideo}
                 />
-              ) : (
-                <div className="create-set-section w-100 empty-folder-section">
-                  <div className="set-content-wrap empty-folder-card">
-                    <div className="set-content-block w-100 empty-folder-wrap">
-                      <CardHeader className="empty-folder-header text-center">
-                        <img src={emptySetIc} alt={"Images"} />
-                        <div className="content-header set-header">
-                          <span className="content-title">
-                            {" "}
-                            <h3>You have add atleast one</h3>
-                            <p>No move availabe for this set</p>
-                          </span>
-                        </div>
-                      </CardHeader>
-                      <CardBody className="">
-                        <div className="create-set-tile"></div>
-                        <div className="text-center">
-                          <Button
-                            color=" "
-                            type="button"
-                            className="btn-black btn "
-                            onClick={this.handleMoveAdd}
-                          >
-                            <i className="fas fa-plus mr-1"></i>
-                            Add a Set
-                          </Button>
-                        </div>
-                      </CardBody>
-                    </div>
-                  </div>
-                </div>
-              )}
-            </div>
-          </Card>
-        <section className="play-list-collection set-detail-section">
-            <Row>
+              </> :
               <Col md="12">
-                <div class="content-header mt-3 mb-2">
-                  <span class="content-title">Chapter business 247</span>
-                </div>
+                <Loader />
               </Col>
-              <div className="play-list-tile" >
-                <div className="play-list-block  d-flex h-100 ">
-                  <div className="add-play-list-block d-flex w-100 justify-content-center align-items-center text-center flex-column">
-                    <div className="h5 font-dark-bold add-img">
-                      <img src={addPlusIc} alt="" />
-                    </div>
-                    <Button color={" "} className="fill-btn btn mt-4">
-                      {" "}
-                      Create Now
-                    </Button>
-                  </div>
-                </div>
-                </div>
-              {homePageImage.map((images, index) => {
-                return (
-                  <div className="play-list-tile" key={index}>
-                    <div className="play-list-block">
-                      <div className="play-sub-block">
-                        <div className="play-list-img blur-img-wrap checked-wrap">
-                          <div className="custom-control custom-control-alternative custom-checkbox set-img-thumnail">
-                            <Input
-                              className="custom-control-input"
-                              id="customCheckRegister"
-                              name={"roleType"}
-                              type="checkbox"
-                            />
-                            <label
-                              className="custom-control-label"
-                              htmlFor="customCheckRegister"
-                            ></label>
-                          </div>
-                          <div className="star-wrap">
-                            <img src={starIc} alt={"star"} />
-                          </div>
-                          <img src={images} alt="" />
-                          <div
-                            className="blur-img"
-                            style={{ backgroundImage: 'url("' + images + '")' }}
-                          ></div>
-                        </div>
-
-                        <div className="play-list-text">
-                          <div className="play-list-number">25 Moves</div>
-                          <div className="play-list-heading h6 m-0">
-                            Salsa Footwork
-                          </div>
-                          <div
-                            // onMouseOver={() => this.showPopOver(i, show)}
-                            className={"tooltip-btn-wrap right-btn-tip"}
-                          >
-                            <span className="cursor_pointer">
-                              {" "}
-                              <i className="fas fa-ellipsis-v setting-icon "></i>
-                            </span>
-
-                            <ButtonGroup size="sm">
-                              <Button
-                              // onClick={() => this.OnCreateSetCopy(list)}
-                              >
-                                Copy
-                              </Button>
-                              <Button>Transfer</Button>
-                              <Button>Remove</Button>
-                            </ButtonGroup>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                );
-              })}
-            </Row>
-          </section>
+          }
         </div>
         <SharableLinkModal
           modal={sharableLinkModalOpen}
@@ -311,6 +290,13 @@ class SetDetails extends React.Component {
           isPublic={setDetails ? setDetails.isPublic : ""}
           userEncryptedInfo={userEncryptedInfo ? userEncryptedInfo : ""}
           shareComponent="Sets"
+        />
+        <CreateSetComponent
+          modal={createSetModalOpen}
+          handleOpen={this.handleSetModal}
+          createSet={this.updateSet}
+          editSet="true"
+          setDetails={setDetails ? setDetails : null}
         />
       </>
     );
@@ -335,7 +321,8 @@ const mapDispatchToProps = dispatch => ({
   onDeleteSets: data => {
     dispatch(deleteSetRequest(data));
   },
-  getMovesOfSetRequest: data => dispatch(getMovesOfSetRequest(data))
+  getMovesOfSetRequest: data => dispatch(getMovesOfSetRequest(data)),
+  UpdateSetRequest: data => dispatch(UpdateSetRequest(data))
 });
 export default connect(
   mapStateToProps,

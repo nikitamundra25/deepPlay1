@@ -156,6 +156,15 @@ class SettingComponent extends Component {
     this.props.uploadImage(data);
   };
 
+  handlecancel = () => {
+    const { firstName, lastName } = this.props.profileInfoReducer;
+    this.setState({
+      firstName,
+      lastName,
+      isDisabled: !this.state.isDisabled
+    });
+  };
+
   render() {
     const {
       profileInfoReducer,
@@ -209,11 +218,7 @@ class SettingComponent extends Component {
                         </Button>
                         <Button
                           className="dashboard-right-content btn-line-black ml-2"
-                          onClick={() => {
-                            this.setState({
-                              isDisabled: !this.state.isDisabled
-                            });
-                          }}
+                          onClick={this.handlecancel}
                         >
                           Cancel
                         </Button>

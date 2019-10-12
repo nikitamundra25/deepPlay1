@@ -227,6 +227,9 @@ a {
   .play-sub-block {
     border: solid $videoAddBannerBorder;
     border-width: 2px 2px 2px 2px;
+    video{
+      z-index: 1;
+    }
   }
   &.set-detail-section {
     .play-sub-block {
