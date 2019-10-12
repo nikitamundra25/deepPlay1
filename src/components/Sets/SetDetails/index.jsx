@@ -11,7 +11,9 @@ import {
   DropdownToggle,
   UncontrolledDropdown,
   DropdownMenu,
+  FormGroup,
   DropdownItem,
+  InputGroup,
   ButtonGroup
 } from "reactstrap";
 import {
@@ -227,7 +229,25 @@ class SetDetails extends React.Component {
             <Row>
               <Col md="12">
                 <div class="content-header mt-3 mb-2">
-                  <span class="content-title">Chapter business 247</span>
+                  <span class="content-title">Move in this set(47)</span>
+                  <div className="set-detail-right-section">
+                  <ButtonGroup size="sm" className="mr-2">
+                              <Button
+                              // onClick={() => this.OnCreateSetCopy(list)}
+                              className="active"
+                              >
+                                All
+                              </Button>
+                      
+                              <Button>Starred</Button>
+
+                            </ButtonGroup>
+                            <FormGroup className="mb-0 header-search-wrap ">
+                              <InputGroup className="">
+                                <Input placeholder="Type to filter moves" type="text" autocomplete="off" />
+                              </InputGroup>
+                            </FormGroup>
+                  </div>
                 </div>
               </Col>
               <div className="play-list-tile" >
