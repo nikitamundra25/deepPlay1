@@ -227,6 +227,9 @@ const getRecentSetById = async (req: Request, res: Response): Promise<void> => {
         message: "User id not found"
       });
     }
+    let moveCount: Document | any,
+      setResult: any = [];
+
     const result: Document | any = await SetModel.find({
       userId: headToken.id,
       isDeleted: false
@@ -234,8 +237,23 @@ const getRecentSetById = async (req: Request, res: Response): Promise<void> => {
       .sort({ isRecentTime: -1 })
       .limit(limit);
 
+    // get move count 
+    if (result && result.length) {
+      for (let index = 0; index < result.length; index++) {
+        const setData = result[index];
+        moveCount = await MoveModel.count({
+          setId: setData._id,
+          isDeleted: false
+        });
+        setResult.push({
+          ...setData._doc,
+          moveCount: moveCount
+        });
+      }
+    }
+
     res.status(200).json({
-      data: result,
+      data: setResult,
       message: "Sets have been fetched successfully"
     });
   } catch (error) {
@@ -494,7 +512,9 @@ const publicAccessSetInfoById = async (
     const decryptedUserId = decrypt(userId);
     const decryptedSetId = decrypt(setId);
     let result: Document | any | null;
-    let temp: Document | any | null;
+    let temp: Document | any | null,
+      moveCount: Document | any,
+      setResult: any = [];
     if (fromFolder) {
       temp = {
         isPublic: true
@@ -504,12 +524,23 @@ const publicAccessSetInfoById = async (
         _id: decryptedSetId
       });
     }
+
     if (temp.isPublic) {
       result = await SetModel.findOne({
         userId: decryptedUserId,
-        _id: decryptedSetId,
+        _id: Mongoose.Types.ObjectId(decryptedSetId),
+        isDeleted: false
+      }).populate("folderId");
+
+      const moveCount: Document | any = await MoveModel.count({
+        setId: result._id,
         isDeleted: false
       });
+
+      setResult = {
+        ...result._doc,
+        moveCount: moveCount
+      };
     } else {
       return res.status(400).json({
         message: "Public access link is not enabled."
@@ -517,7 +548,7 @@ const publicAccessSetInfoById = async (
     }
     return res.status(200).json({
       responsecode: 200,
-      data: result,
+      data: setResult,
       success: true
     });
   } catch (error) {

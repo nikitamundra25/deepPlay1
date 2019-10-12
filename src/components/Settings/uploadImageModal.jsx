@@ -61,7 +61,6 @@ class UploadImage extends Component {
   };
   render() {
     const { isImageUploading } = this.props;
-    console.log("??", this.state.imageData);
 
     return (
       <div className="modal-text-center">

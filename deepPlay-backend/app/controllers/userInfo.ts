@@ -39,6 +39,7 @@ const editUserInfo = async (req: Request, res: Response): Promise<any> => {
   try {
     const { body, currentUser } = req;
     const headToken: Request | any = currentUser;
+    let result: Document | any | null;
     const { firstName, lastName, roleType } = body;
     let dataToUpdate: IDataToUpdate = {
       firstName,
@@ -53,12 +54,13 @@ const editUserInfo = async (req: Request, res: Response): Promise<any> => {
     };
 
     if (checkProperties) {
-      await UserModel.findByIdAndUpdate(headToken.id, {
+      result = await UserModel.findByIdAndUpdate(headToken.id, {
         $set: dataToUpdate
       });
     }
 
     return res.status(200).json({
+      data: result,
       message: "Profile details udpated successfully."
     });
   } catch (error) {

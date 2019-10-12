@@ -59,10 +59,10 @@ class SetSharedLink extends React.Component {
   componentDidUpdate(prevProps) {
     if (
       prevProps.shareLinkReducer &&
-      prevProps.shareLinkReducer.publicUrlMoveDetails !==
-        this.props.shareLinkReducer.publicUrlMoveDetails
+      prevProps.shareLinkReducer.publicUrlmoveDetails !==
+        this.props.shareLinkReducer.publicUrlmoveDetails
     ) {
-      const setList = this.props.shareLinkReducer.publicUrlMoveDetails;
+      const setList = this.props.shareLinkReducer.publicUrlmoveDetails;
       this.setState({
         moveListItem: setList
       });
@@ -76,6 +76,17 @@ class SetSharedLink extends React.Component {
 
     return (
       <div className="dashboard-full-section without-sidebar">
+        <div className="p-3">
+          <span
+            onClick={() => {
+              window.history.back();
+            }}
+            className={"cursor_pointer back-arrow"}
+          >
+            {" "}
+            <i className="fas fa-long-arrow-alt-left" /> Back
+          </span>
+        </div>
         <Container>
           <div className="content-header mt-3 mb-3">
             <span className="content-title">
@@ -83,7 +94,9 @@ class SetSharedLink extends React.Component {
                 {" "}
                 {decryptedSetDetails ? decryptedSetDetails.title : "No Title "}
               </div>
-              <div className="sub-title">3 Moves</div>
+              <div className="sub-title">
+                {decryptedSetDetails ? decryptedSetDetails.moveCount : 0} Moves
+              </div>
             </span>
           </div>
           {!isMoveDetailsLoading ? (
@@ -95,13 +108,19 @@ class SetSharedLink extends React.Component {
                       {moveListItem && moveListItem.length ? (
                         moveListItem.map((video, index) => {
                           return (
-                            <div>
-                              <video width={"100%"} controls>
-                                <source
-                                  src={`${AppConfig.API_ENDPOINT}${video.videoUrl}`}
-                                  type="video/mp4"
-                                />
-                              </video>
+                            <div className="w-100">
+                              <div className="video-slider-title">
+                                {" "}
+                                title of webM{" "}
+                              </div>
+                              <div className="video-slider-img ">
+                                <video width={"100%"} controls>
+                                  <source
+                                    src={`${AppConfig.API_ENDPOINT}${video.videoUrl}`}
+                                    type="video/mp4"
+                                  />
+                                </video>
+                              </div>
                             </div>
                           );
                         })

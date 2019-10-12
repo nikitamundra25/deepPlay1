@@ -105,7 +105,6 @@ class SetComponent extends React.Component {
     const { modelDetails } = modelInfoReducer;
     const { sharableLinkModalOpen, createSetModalOpen } = modelDetails;
     const { show, setIndex, page } = this.state;
-    console.log("allSetList", allSetList);
 
     return (
       <div className="set-main-section">
