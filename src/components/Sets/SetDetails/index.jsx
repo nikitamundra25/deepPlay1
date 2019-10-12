@@ -21,7 +21,8 @@ import {
   publicAccessRequest,
   shareableLinkRequest,
   deleteSetRequest,
-  getMovesOfSetRequest
+  getMovesOfSetRequest,
+  UpdateSetRequest
 } from "../../../actions";
 import SharableLinkModal from "../../comman/shareableLink/SharableLink";
 import { AppRoutes } from "../../../config/AppRoutes";
@@ -35,6 +36,7 @@ import starIc from "../../../assets/img/star.svg";
 import WebmView from "./WebmView";
 import Loader from "../../comman/Loader/Loader";
 import CreateSetComponent from "../../Sets/createSet";
+
 const homePageImage = [
   "https://images.pexels.com/photos/67636/rose-blue-flower-rose-blooms-67636.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500",
   "https://p.bigstockphoto.com/GeFvQkBbSLaMdpKXF1Zv_bigstock-Aerial-View-Of-Blue-Lakes-And--227291596.jpg",
@@ -50,6 +52,8 @@ class SetDetails extends React.Component {
     this.state = {
       url: "",
       errors: "",
+      show: false,
+      setIndex: -1,
       isPaste: false
     };
   }
@@ -62,10 +66,6 @@ class SetDetails extends React.Component {
   /*
   /*  
   */
-
-  handleMoveAdd = () => {
-    this.props.redirectTo(AppRoutes.MOVE.url);
-  };
 
   onTogglePublicAccess = isPublic => {
     const location = this.props.location;
@@ -104,10 +104,10 @@ class SetDetails extends React.Component {
     }
   };
 
-  editSet = id => {
-    this.props.redirectTo(
-      AppRoutes.CREATE_SET.url + `?setId=${id}&isEdit=${true}`
-    );
+  handleMoveAdd = () => {
+    const location = this.props.location;
+    const pathName = location.pathname.split("/");
+    this.props.redirectTo(AppRoutes.MOVE.url + `?setId=${pathName[3]}`);
   };
 
   handleSetModal = () => {
@@ -119,10 +119,22 @@ class SetDetails extends React.Component {
       }
     });
   };
-
+  showPopOver = index => {
+    this.setState({
+      show: true,
+      setIndex: index
+    });
+  };
+  closePopOver = () => {
+    this.setState({
+      show: false,
+      setIndex: -1
+    });
+  };
   updateSet = data => {
     this.props.UpdateSetRequest(data);
   };
+
   render() {
     const {
       setReducer,
@@ -135,6 +147,7 @@ class SetDetails extends React.Component {
     const { movesOfSet, isMoveofSetLoading } = moveReducer;
     const { userEncryptedInfo } = shareLinkReducer;
     const { sharableLinkModalOpen, createSetModalOpen } = modelDetails;
+    const { show, setIndex } = this.state;
     return (
       <>
         <div className="set-main-section">
@@ -152,7 +165,7 @@ class SetDetails extends React.Component {
               <span
                 id="move"
                 className={"cursor_pointer"}
-                onClick={() => this.props.redirectTo(AppRoutes.MOVE.url)}
+                onClick={this.handleMoveAdd}
               >
                 <i className="fas fa-plus-circle icon-font"></i>
               </span>
@@ -261,56 +274,69 @@ class SetDetails extends React.Component {
                   {homePageImage.map((images, index) => {
                     return (
                       <Col md="4" key={index}>
-                        <div className="play-list-block ">
-                          <div className="play-sub-block ">
-                            <div className="play-list-img blur-img-wrap checked-wrap">
-                              <div className="custom-control custom-control-alternative custom-checkbox set-img-thumnail">
-                                <Input
-                                  className="custom-control-input"
-                                  id="customCheckRegister"
-                                  name={"roleType"}
-                                  type="checkbox"
-                                />
-                                <label
-                                  className="custom-control-label"
-                                  htmlFor="customCheckRegister"
-                                ></label>
+                        <div
+                          className="tile-wrap card"
+                          onMouseLeave={() => this.closePopOver()}
+                        >
+                          <div className="play-list-block ">
+                            <div className="play-sub-block ">
+                              <div className="play-list-img blur-img-wrap checked-wrap">
+                                <div className="custom-control custom-control-alternative custom-checkbox set-img-thumnail">
+                                  <Input
+                                    className="custom-control-input"
+                                    id="customCheckRegister"
+                                    name={"roleType"}
+                                    type="checkbox"
+                                  />
+                                  <label
+                                    className="custom-control-label"
+                                    htmlFor="customCheckRegister"
+                                  ></label>
+                                </div>
+                                <div className="star-wrap">
+                                  <img src={starIc} alt={"star"} />
+                                </div>
+                                <img src={images} alt="" />
+                                <div
+                                  className="blur-img"
+                                  style={{
+                                    backgroundImage: 'url("' + images + '")'
+                                  }}
+                                ></div>
                               </div>
-                              <div className="star-wrap">
-                                <img src={starIc} alt={"star"} />
-                              </div>
-                              <img src={images} alt="" />
-                              <div
-                                className="blur-img"
-                                style={{
-                                  backgroundImage: 'url("' + images + '")'
-                                }}
-                              ></div>
-                            </div>
 
-                            <div className="play-list-text">
-                              <div className="play-list-number">25 Moves</div>
-                              <div className="play-list-heading h6 ">
-                                Salsa Footwork
-                              </div>
-                              <div
-                                // onMouseOver={() => this.showPopOver(i, show)}
-                                className={"tooltip-btn-wrap right-btn-tip"}
-                              >
-                                <span className="cursor_pointer">
-                                  {" "}
-                                  <i className="fas fa-ellipsis-v setting-icon "></i>
-                                </span>
-
-                                <ButtonGroup size="sm">
-                                  <Button
-                                  // onClick={() => this.OnCreateSetCopy(list)}
-                                  >
-                                    Copy
-                                  </Button>
-                                  <Button>Transfer</Button>
-                                  <Button>Remove</Button>
-                                </ButtonGroup>
+                              <div className="play-list-text">
+                                <div className="play-list-number">25 Moves</div>
+                                <div className="play-list-heading h6 ">
+                                  Salsa Footwork
+                                </div>
+                                <div
+                                  onMouseOver={() =>
+                                    this.showPopOver(index, show)
+                                  }
+                                  className={"tooltip-btn-wrap right-btn-tip"}
+                                >
+                                  <span className="cursor_pointer">
+                                    {" "}
+                                    <i className="fas fa-ellipsis-v setting-icon "></i>
+                                    {show && setIndex === index ? (
+                                      <ButtonGroup
+                                        size="sm"
+                                        onMouseOver={() =>
+                                          this.showPopOver(index, show)
+                                        }
+                                      >
+                                        <Button
+                                        // onClick={() => this.OnCreateSetCopy(list)}
+                                        >
+                                          Copy
+                                        </Button>
+                                        <Button>Transfer</Button>
+                                        <Button>Remove</Button>
+                                      </ButtonGroup>
+                                    ) : null}
+                                  </span>
+                                </div>
                               </div>
                             </div>
                           </div>
@@ -367,7 +393,8 @@ const mapDispatchToProps = dispatch => ({
   onDeleteSets: data => {
     dispatch(deleteSetRequest(data));
   },
-  getMovesOfSetRequest: data => dispatch(getMovesOfSetRequest(data))
+  getMovesOfSetRequest: data => dispatch(getMovesOfSetRequest(data)),
+  UpdateSetRequest: data => dispatch(UpdateSetRequest(data))
 });
 export default connect(
   mapStateToProps,
