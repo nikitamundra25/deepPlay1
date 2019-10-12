@@ -64,8 +64,8 @@ class HomePage extends React.Component {
     // } = modelDetails;
     return (
       <Container>
-        <section className="home-video-section mt-5">
-          <Row className="mb-5">
+        <section className="home-video-section">
+          <Row className="">
             <Col md="6" className="d-flex flex-column justify-content-between ">
               <div className="banner-text">
                 <h3 className="banner-heading">
@@ -101,7 +101,7 @@ class HomePage extends React.Component {
             </Col>
           </Row>
         </section>
-        <section className="play-list-collection ">
+        <section className="play-list-collection home-page-play-list">
           <Row className="mb-5">
             <Col md="12" className="mb-5">
               <h6 className="h3 text-center theme-heading">
@@ -111,7 +111,7 @@ class HomePage extends React.Component {
             <Col md="4">
               <div className="play-list-block  d-flex h-100">
                 <div className="add-play-list-block d-flex  justify-content-center align-items-center text-center flex-column">
-                  <div className="h5 font-dark-bold">
+                  <div className="h4 font-dark-bold">
                     Create your own set to learn or teach
                   </div>
                   <Button color={" "} className="fill-btn btn mt-4">
@@ -151,7 +151,7 @@ class HomePage extends React.Component {
           <Row className="mb-5">
             <Col md="12" className="mb-5 text-center">
               <h6 className="h3 text-center theme-heading font-weight-bold mb-5">
-                Store and learn all your movements in one place
+                Store and learn all your movements in one place!
               </h6>
               <Button
                 color={" "}

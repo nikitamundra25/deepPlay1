@@ -237,7 +237,7 @@ class SignupComponent extends React.Component {
 
               <CardBody className="px-lg-5">
                 <div className="text-center login-heading mb-4 auth-subheading">
-                  Or sign up and generate your credentials
+                  Sign up with email
                 </div>
                 <Form role="form" onSubmit={this.handleSignupRequest}>
                   <FormGroup>
@@ -381,7 +381,7 @@ class SignupComponent extends React.Component {
 
                   <div className="text-center auth-btn-wrap">
                     <Button
-                      className="mb-4 btn-black btn-block"
+                      className="mb-2 btn-black btn-block"
                       color=" "
                       type="submit"
                       disabled={isSignupLoading ? true : false}
@@ -389,7 +389,7 @@ class SignupComponent extends React.Component {
                       {isSignupLoading ? "Please wait..." : "Create account"}
                     </Button>
                     <Button
-                      className="my-4 btn-black btn-line-black btn-block"
+                      className="mb-4 btn-black btn-line-black btn-block"
                       color=" "
                       onClick={this.props.handleLoginModal}
                       type="button"

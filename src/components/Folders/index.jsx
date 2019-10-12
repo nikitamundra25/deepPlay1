@@ -55,7 +55,7 @@ class FolderComponent extends React.Component {
 
   onHandleDelete = async id => {
     const { value } = await ConfirmBox({
-      text: "You want to delete this folder! "
+      text: "You want to delete this folder!"
     });
     if (value) {
       this.props.onDelete(id);
