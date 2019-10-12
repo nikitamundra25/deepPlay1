@@ -364,7 +364,7 @@ class RecentFolderComponent extends React.Component {
                         className="tile-wrap card"
                         onMouseLeave={() => this.closePopOver()}
                       >
-                        <div className="cotent-tile d-flex content-with-tip">
+                        <div className="cotent-tile d-flex content-with-tip content-with-img">
                           <div
                             className="cotent-text-tile cursor_pointer text-capitalize"
                             onClick={() => this.handleSetDetails(list._id)}

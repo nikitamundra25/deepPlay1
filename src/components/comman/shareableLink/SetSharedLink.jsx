@@ -7,6 +7,7 @@ import {
   Col,
   CardHeader,
   Button,
+  Input,
   Row,
   ButtonGroup
 } from "reactstrap";
@@ -22,6 +23,7 @@ import "slick-carousel/slick/slick-theme.css";
 import emptySetIc from "../../../assets/img/empty-sets.png";
 //import { AppRoutes } from "../../../config/AppRoutes";
 import addPlusIc from "../../../assets/img/add_plus.png";
+import starIc from "../../../assets/img/star.svg";
 import qs from "query-string";
 import Loader from "../Loader/Loader";
 
@@ -163,72 +165,85 @@ class SetSharedLink extends React.Component {
                 </div>
               </Card>
               <section className="play-list-collection set-detail-section">
-                <Row>
-                  <Col md="12">
-                    <div class="content-header mt-3 mb-2">
-                      <span class="content-title">Chapter business 247</span>
+            <Row>
+              <Col md="12">
+                <div class="content-header mt-3 mb-2">
+                  <span class="content-title">Chapter business 247</span>
+                </div>
+              </Col>
+              <div className="play-list-tile" >
+                <div className="play-list-block  d-flex h-100 ">
+                  <div className="add-play-list-block d-flex w-100 justify-content-center align-items-center text-center flex-column">
+                    <div className="h5 font-dark-bold add-img">
+                      <img src={addPlusIc} alt="" />
                     </div>
-                  </Col>
-                  <Col md="4">
-                    <div className="play-list-block  d-flex h-100 ">
-                      <div className="add-play-list-block d-flex w-100 justify-content-center align-items-center text-center flex-column">
-                        <div className="h5 font-dark-bold add-img">
-                          <img src={addPlusIc} alt="" />
+                    <Button color={" "} className="fill-btn btn mt-4">
+                      {" "}
+                      Create Now
+                    </Button>
+                  </div>
+                </div>
+                </div>
+              {homePageImage.map((images, index) => {
+                return (
+                  <div className="play-list-tile" key={index}>
+                    <div className="play-list-block">
+                      <div className="play-sub-block">
+                        <div className="play-list-img blur-img-wrap checked-wrap">
+                          <div className="custom-control custom-control-alternative custom-checkbox set-img-thumnail">
+                            <Input
+                              className="custom-control-input"
+                              id="customCheckRegister"
+                              name={"roleType"}
+                              type="checkbox"
+                            />
+                            <label
+                              className="custom-control-label"
+                              htmlFor="customCheckRegister"
+                            ></label>
+                          </div>
+                          <div className="star-wrap">
+                            <img src={starIc} alt={"star"} />
+                          </div>
+                          <img src={images} alt="" />
+                          <div
+                            className="blur-img"
+                            style={{ backgroundImage: 'url("' + images + '")' }}
+                          ></div>
                         </div>
-                        <Button color={" "} className="fill-btn btn mt-4">
-                          {" "}
-                          Create Now
-                        </Button>
-                      </div>
-                    </div>
-                  </Col>
-                  {homePageImage.map((images, index) => {
-                    return (
-                      <Col md="4" key={index}>
-                        <div className="play-list-block ">
-                          <div className="play-sub-block ">
-                            <div className="play-list-img blur-img-wrap">
-                              <img src={images} alt="" />
-                              <div
-                                className="blur-img"
-                                style={{
-                                  backgroundImage: 'url("' + images + '")'
-                                }}
-                              ></div>
-                            </div>
 
-                            <div className="play-list-text">
-                              <div className="play-list-number">25 Moves</div>
-                              <div className="play-list-heading h6 ">
-                                Salsa Footwork
-                              </div>
-                              <div
-                                // onMouseOver={() => this.showPopOver(i, show)}
-                                className={"tooltip-btn-wrap right-btn-tip"}
+                        <div className="play-list-text">
+                          <div className="play-list-number">25 Moves</div>
+                          <div className="play-list-heading h6 m-0">
+                            Salsa Footwork
+                          </div>
+                          <div
+                            // onMouseOver={() => this.showPopOver(i, show)}
+                            className={"tooltip-btn-wrap right-btn-tip"}
+                          >
+                            <span className="cursor_pointer">
+                              {" "}
+                              <i className="fas fa-ellipsis-v setting-icon "></i>
+                            </span>
+
+                            <ButtonGroup size="sm">
+                              <Button
+                              // onClick={() => this.OnCreateSetCopy(list)}
                               >
-                                <span className="cursor_pointer">
-                                  {" "}
-                                  <i className="fas fa-ellipsis-v setting-icon "></i>
-                                </span>
-
-                                <ButtonGroup size="sm">
-                                  <Button
-                                  // onClick={() => this.OnCreateSetCopy(list)}
-                                  >
-                                    Copy
-                                  </Button>
-                                  <Button>Transfer</Button>
-                                  <Button>Remove</Button>
-                                </ButtonGroup>
-                              </div>
-                            </div>
+                                Copy
+                              </Button>
+                              <Button>Transfer</Button>
+                              <Button>Remove</Button>
+                            </ButtonGroup>
                           </div>
                         </div>
-                      </Col>
-                    );
-                  })}
-                </Row>
-              </section>
+                      </div>
+                    </div>
+                  </div>
+                );
+              })}
+            </Row>
+          </section>
             </>
           ) : (
             <Row>
