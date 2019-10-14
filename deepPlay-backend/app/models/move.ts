@@ -22,7 +22,7 @@ const moveSchema: Mongoose.Schema = new Schema({
     type: String
   },
   tags: {
-    type: [String],
+    type: [Object],
     default: []
   },
   isPublic: {

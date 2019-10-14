@@ -77,7 +77,7 @@ class VideoDetails extends React.Component {
           <FormGroup className="flex-fill flex-column mt-3 input-w">
             {/* add tag-input-wrap class for tagInput design  */}
             <Label className="">Add tag and press enter for separate</Label>
-            <div className="w-100 tag-input-wrap">
+            <div className="w-100 tag-input-wrap search-select-wrap">
               {/* <TagsInput
                 value={tags}
                 className={"form-control"}
@@ -102,7 +102,7 @@ class VideoDetails extends React.Component {
                   loadOptions={this.loadSets}
                   isClearable={selectSetOptions.value ? true : false}
                   defaultOptions={defaultSetoptions}
-                  className={errors && errors.setId ? "is-invalid form-control no-form-control" : ""}
+                  className={errors && errors.setId ? "is-invalid form-control search-input-wrap" : ""}
                   onChange={e => this.props.handleInputChange(e)}
                   value={recentAddedSet ? recentAddedSet : selectSetOptions}
                 />

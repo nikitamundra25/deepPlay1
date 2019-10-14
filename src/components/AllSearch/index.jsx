@@ -21,13 +21,14 @@ class AllSearchComponent extends React.Component {
       movelist = searchData.filter(item => item.searchType === "move")
     }
     return (
-      <div className="search-result-wrap">
+      <>
+      
         {
           !isSearchLoading ?
-            <div className={"d-flex"}>
+          <div className="search-result-wrap">
               {
                 folderList && folderList.length ?
-                  <div className="search-result-block">
+                  <div className="search-result-block  moves-block">
                     <div className="category-wrap">
                       <div className="category-heading">
                         Folders
@@ -65,7 +66,7 @@ class AllSearchComponent extends React.Component {
               }
               {
                 setList && setList.length ?
-                  <div className="search-result-block">
+                  <div className="search-result-block  moves-block">
                     <div className="category-wrap">
                       <div className="category-heading">
                         Sets
@@ -140,9 +141,11 @@ class AllSearchComponent extends React.Component {
                   null
               }
             </div> :
+               <div className="search-result-wrap loader-no-height loader-no-background">
             <Loader />
+            </div>
         }
-      </div>
+      </>
     );
   }
 }
