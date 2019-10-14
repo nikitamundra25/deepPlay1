@@ -35,6 +35,7 @@
     .search-result-block{
       color: #000;
       flex: 1;
+      max-width: 33.33%;
       font-size: 14px;
     }
     .category-wrap{
@@ -94,4 +95,10 @@
       width: 100%;
       height: 100%;
     }
+  }
+  .form-custom-error{
+        .invalid-feedback{
+          position: absolute;
+          top: 100%;
+        }
   }

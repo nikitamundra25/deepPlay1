@@ -1419,6 +1419,7 @@ a {
   width: 100%;
   margin: auto;
   max-width: 370px;
+  z-index: 0;
   &::before {
     position: absolute;
     content: "";
@@ -1625,7 +1626,7 @@ a {
   transition: all 0.5s;
 }
 .content-with-img {
-  align-items: center;
+  align-items: flex-start;
   .cotent-text-tile {
     width: calc(100% - 100px);
   }
@@ -1645,6 +1646,8 @@ a {
 .set-detail-right-section {
   input{
     border: 1px solid #cad1d7;
+    padding: 10px;
+    height: 100%;
   }
   display: flex;
   align-items: center;
@@ -1653,7 +1656,7 @@ a {
     .btn {
       background: #fff;
       border: 1px solid #ddd;
-      padding: 12px 33px;
+      padding: 8px 33px;
       font-size: 14px;
     }
     .btn.active {
@@ -1661,5 +1664,15 @@ a {
       color: #fff;
       border: 1px solid #ddd;
     }
+  }
+}
+.error-with-append-btn{
+  border:1px solid #dd0e0e;
+  border-radius: 5px;
+  input{
+    border: none;
+  }
+  .input-group-text{
+    border: none;
   }
 }

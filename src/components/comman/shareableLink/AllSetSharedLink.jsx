@@ -133,6 +133,7 @@ class AllSetSharedLink extends React.Component {
                 })
               ) : (
                 <>
+                <Col>
                   <div className="create-set-section w-100 empty-folder-section">
                     <Card className="set-content-wrap empty-folder-card">
                       <div className="set-content-block w-100 empty-folder-wrap">
@@ -149,14 +150,13 @@ class AllSetSharedLink extends React.Component {
                       </div>
                     </Card>
                   </div>
+                  </Col>
                 </>
               )
             ) : (
-              <Row>
                 <Col sm={12} className="loader-col">
                   <Loader />
                 </Col>
-              </Row>
             )}
           </Row>
           {totalSets && !isSetListLoading ? (

@@ -353,7 +353,7 @@ class RecentFolderComponent extends React.Component {
           </div>
         </div>{" "}
         <Row className="set-wrap">
-          <Col>
+      
             {!isFolderSetLoading ? (
               setOfFolder && setOfFolder.length ? (
                 // eslint-disable-next-line
@@ -443,6 +443,7 @@ class RecentFolderComponent extends React.Component {
                 })
               ) : (
                 <>
+                <Col>
                   <div className="create-set-section mt-2 w-100 empty-folder-section">
                     <Card className="set-content-wrap empty-folder-card">
                       <div className="set-content-block w-100 empty-folder-wrap">
@@ -473,6 +474,7 @@ class RecentFolderComponent extends React.Component {
                       </div>
                     </Card>
                   </div>
+                  </Col>
                 </>
               )
             ) : (
@@ -480,7 +482,7 @@ class RecentFolderComponent extends React.Component {
                 <Loader />
               </Col>
             )}
-          </Col>
+         
         </Row>
         <AddSetModal
           handleOpen={this.openAddSetModel}

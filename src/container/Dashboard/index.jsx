@@ -86,13 +86,15 @@ class Dashboard extends React.Component {
                       className="cursor_pointer"
                     >
                       <div className="tile-wrap card">
-                        <div className="badge-wrap mb-2">
+                     
+                        <div className="cotent-tile d-flex content-with-tip content-with-img">
+                       
+                          <div className="cotent-text-tile ">
+                          <div className="badge-wrap mb-2">
                           <Badge variant="secondary" className="draft-wrap">
                             DRAFT
                           </Badge>
                         </div>
-                        <div className="cotent-tile d-flex content-with-tip content-with-img">
-                          <div className="cotent-text-tile ">
                             <div className="content-heading-tile d-flex">
                               {" "}
                               <span className={" text-capitalize"}>
@@ -152,6 +154,7 @@ class Dashboard extends React.Component {
                 })
               ) : (
                 <>
+                <Col>
                   <div className="create-set-section w-100 empty-folder-section">
                     <Card className="set-content-wrap empty-folder-card">
                       <div className="set-content-block w-100 empty-folder-wrap">
@@ -182,6 +185,7 @@ class Dashboard extends React.Component {
                       </div>
                     </Card>
                   </div>
+                  </Col>
                 </>
               )
             ) : (
@@ -266,6 +270,7 @@ class Dashboard extends React.Component {
                 })
               ) : (
                 <>
+                <Col>
                   <div className="create-set-section w-100 empty-folder-section">
                     <Card className="set-content-wrap empty-folder-card">
                       <div className="set-content-block w-100 empty-folder-wrap">
@@ -296,6 +301,7 @@ class Dashboard extends React.Component {
                       </div>
                     </Card>
                   </div>
+                  </Col>
                 </>
               )
             ) : (

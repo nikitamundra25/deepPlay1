@@ -211,7 +211,7 @@ class SettingComponent extends Component {
                     ) : (
                       <ButtonGroup>
                         <Button
-                          className="dashboard-right-content btn-line-black "
+                          className="dashboard-right-content btn-black "
                           onClick={this.onSaveData}
                         >
                           Update Info

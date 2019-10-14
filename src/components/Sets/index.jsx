@@ -241,6 +241,7 @@ class SetComponent extends React.Component {
               })
             ) : (
               <>
+              <Col>
                 <div className="create-set-section mt-2 w-100">
                   <Card className="set-content-wrap">
                     <div className="set-content-block w-100 empty-folder-wrap">
@@ -271,6 +272,7 @@ class SetComponent extends React.Component {
                     </div>
                   </Card>
                 </div>
+                </Col>
               </>
             )
           ) : (
