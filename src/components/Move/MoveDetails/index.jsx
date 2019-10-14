@@ -242,8 +242,8 @@ class MoveDetails extends React.Component {
               ) : (
                   <>
                     <Row>
-                      <Col md={"12"}>
-                        <Row className={"mt-3"}>
+                      <Col md={"12"} className={"mt-3"}>
+                     
                           {moveDetails && moveDetails.videoUrl ? (
                             <>
                               <VideoView
@@ -270,7 +270,7 @@ class MoveDetails extends React.Component {
                           ) : (
                               <Loader />
                             )}
-                        </Row>
+                    
                       </Col>
                     </Row>
                     <FrameDetails

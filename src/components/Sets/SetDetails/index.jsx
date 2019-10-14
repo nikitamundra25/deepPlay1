@@ -161,12 +161,15 @@ class SetDetails extends React.Component {
             {setDetails && setDetails.folderId ? (
               <span className="content-title">
                 <div className="main-title">
-                  {setDetails && setDetails.folderId
-                    ? setDetails.folderId.isCopy
-                      ? `Copy of ${setDetails.folderId.title}`
-                      : setDetails.folderId.title
-                    : null}
-                  /<span className={"text-light"}>{setDetails.title}</span>
+                  <span className="font-weight-normal">
+                    {setDetails && setDetails.folderId
+                      ? setDetails.folderId.isCopy
+                        ? `Copy of ${setDetails.folderId.title}`
+                        : setDetails.folderId.title
+                      : null}
+                  </span>
+                  /
+                  <span className={"font-weight-bold"}>{setDetails.title}</span>
                 </div>
               </span>
             ) : (

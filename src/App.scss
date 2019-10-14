@@ -28,8 +28,11 @@ h6,
 .h6 {
   color: #000;
 }
-.opacity-1{
-  opacity: 1!important;
+textarea{
+  resize: none;
+}
+.opacity-1 {
+  opacity: 1 !important;
 }
 .white-color {
   color: $whiteColor;
@@ -172,6 +175,7 @@ a {
 
 .home-video-section {
   margin-bottom: 80px;
+  margin-top: 80px;
   padding-bottom: 80px;
   border-bottom: 2px dashed $videoAddBannerBack;
 }
@@ -258,7 +262,7 @@ a {
     // border: 1px solid #ccc;
     &:hover .set-img-thumnail,
     &:hover .star-wrap {
-     opacity: 1;
+      opacity: 1;
     }
   }
 }
@@ -742,6 +746,7 @@ a {
 }
 .account-type-wrap {
   max-width: 400px;
+  margin: auto;
 }
 .theme-container.dashboard-container {
   padding: 0px;
@@ -933,7 +938,6 @@ a {
       max-width: unset;
       position: relative;
     }
- 
   }
 }
 .vieos-add-section {
@@ -1171,9 +1175,9 @@ a {
   }
 }
 .search-select-wrap {
-  .css-26l3qy-menu{
+  .css-26l3qy-menu {
     z-index: 9;
-    &>div{
+    & > div {
       padding: 0px;
     }
   }
@@ -1415,6 +1419,7 @@ a {
   width: 100%;
   margin: auto;
   max-width: 370px;
+  z-index: 0;
   &::before {
     position: absolute;
     content: "";
@@ -1621,7 +1626,7 @@ a {
   transition: all 0.5s;
 }
 .content-with-img {
-  align-items: center;
+  align-items: flex-start;
   .cotent-text-tile {
     width: calc(100% - 100px);
   }
@@ -1629,12 +1634,45 @@ a {
     width: 100px;
   }
 }
-.form-control.search-input-wrap{
+.form-control.search-input-wrap {
   border: none;
   padding: 0px;
-  &.is-invalid{
-    .css-yk16xz-control{
+  &.is-invalid {
+    .css-yk16xz-control {
       border-color: #dd0e0e;
+    }
   }
 }
+.set-detail-right-section {
+  input{
+    border: 1px solid #cad1d7;
+    padding: 10px;
+    height: 100%;
+  }
+  display: flex;
+  align-items: center;
+  .btn-group {
+    height: unset;
+    .btn {
+      background: #fff;
+      border: 1px solid #ddd;
+      padding: 8px 33px;
+      font-size: 14px;
+    }
+    .btn.active {
+      background: #000;
+      color: #fff;
+      border: 1px solid #ddd;
+    }
+  }
+}
+.error-with-append-btn{
+  border:1px solid #dd0e0e;
+  border-radius: 5px;
+  input{
+    border: none;
+  }
+  .input-group-text{
+    border: none;
+  }
 }

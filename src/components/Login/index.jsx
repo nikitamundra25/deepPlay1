@@ -225,7 +225,7 @@ class LoginComponent extends React.Component {
                   </div>
                   <div className="text-center auth-btn-wrap">
                     <Button
-                      className="mt-3 mb-4  btn-black btn-block"
+                      className="mt-3 mb-2  btn-black btn-block"
                       type="submit"
                       color={" "}
                       disabled={isLoginRequest ? true : false}
@@ -234,7 +234,7 @@ class LoginComponent extends React.Component {
                     </Button>
 
                     <Button
-                      className="my-4 btn-black btn-line-black btn-block"
+                      className="mb-4 btn-black btn-line-black btn-block"
                       color=" "
                       onClick={() => this.props.handleSignupModal()}
                       type="button"

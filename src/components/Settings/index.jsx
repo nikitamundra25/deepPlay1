@@ -211,7 +211,7 @@ class SettingComponent extends Component {
                     ) : (
                       <ButtonGroup>
                         <Button
-                          className="dashboard-right-content btn-line-black "
+                          className="dashboard-right-content btn-black "
                           onClick={this.onSaveData}
                         >
                           Update Info
@@ -340,7 +340,7 @@ class SettingComponent extends Component {
                 <Card className="card-wrap mt-4">
                   <CardHeader>
                     <CardTitle className="card-heading mb-0 h5">
-                      ACCOUNT TYPE
+                      Account type
                     </CardTitle>
                     <div className="heading-divider mr-0"></div>
                   </CardHeader>
@@ -398,7 +398,7 @@ class SettingComponent extends Component {
                 <Card className="card-wrap mt-4">
                   <CardHeader>
                     <CardTitle className="card-heading mb-0 h5 text-danger">
-                      DELETE ACCOUNT
+                      Delete account
                     </CardTitle>
                     <div className="heading-divider mr-0"></div>
                   </CardHeader>

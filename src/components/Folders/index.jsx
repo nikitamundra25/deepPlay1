@@ -55,7 +55,7 @@ class FolderComponent extends React.Component {
 
   onHandleDelete = async id => {
     const { value } = await ConfirmBox({
-      text: "You want to delete this folder! "
+      text: "You want to delete this folder!"
     });
     if (value) {
       this.props.onDelete(id);
@@ -142,12 +142,14 @@ class FolderComponent extends React.Component {
                         <div
                           className="tile-wrap card cursor_pointer"
                           onMouseLeave={() => this.closePopOver()}
-                          onClick={() =>
-                            this.handleFolderdetails(folder._id)
-                          }
+                         
                         >
                           <div className="cotent-tile d-flex content-with-tip">
-                            <div className="cotent-text-tile">
+                            <div className="cotent-text-tile "
+                             onClick={() =>
+                              this.handleFolderdetails(folder._id)
+                            }
+                            >
                               <div className="content-number-tile">
                                 {" "}
                                 {folder.setCount} sets
@@ -162,7 +164,14 @@ class FolderComponent extends React.Component {
                                     ? `Copy of ${folder.title}`
                                     : folder.title}
                                 </span>
-                                <div
+                              
+                              </div>
+                              <span className={"content-sub-heading-tile"}>
+                                {folder.description ? folder.description : ""}
+                              </span>
+                            </div>
+                          </div>
+                          <div
                                   onMouseOver={() => this.showPopOver(i, show)}
                                   className={"tooltip-btn-wrap right-btn-tip"}
                                 >
@@ -189,12 +198,6 @@ class FolderComponent extends React.Component {
                                     </ButtonGroup>
                                   ) : null}
                                 </div>
-                              </div>
-                              <span className={"content-sub-heading-tile"}>
-                                {folder.description ? folder.description : ""}
-                              </span>
-                            </div>
-                          </div>
                         </div>
                       </Col>
                     );
@@ -202,6 +205,7 @@ class FolderComponent extends React.Component {
                 })
               ) : (
                 <>
+                <Col>
                   <div className="create-set-section mt-2 w-100">
                     <Card className="set-content-wrap">
                       <div className="set-content-block w-100 empty-folder-wrap">
@@ -232,6 +236,7 @@ class FolderComponent extends React.Component {
                       </div>
                     </Card>
                   </div>
+                  </Col>
                 </>
               )
             ) : (
