@@ -359,28 +359,7 @@ const updateMoveDetailsAndTrimVideo = async (
   }
 };
 
-//----------------Edit Move Details-------------------------
-const updateMove = async (req: Request, res: Response): Promise<any> => {
-  try {
-    const { body } = req;
-    const { title, description, moveId } = body;
-    let updateMove: IUpdateMove = {
-      title,
-      description
-    };
-    await SetModel.findByIdAndUpdate(moveId, {
-      $set: { ...updateMove, updatedAt: Date.now() }
-    });
-    return res.status(200).json({
-      message: "Move details updated successfully."
-    });
-  } catch (error) {
-    console.log(error);
-    res.status(500).send({
-      message: error.message
-    });
-  }
-};
+
 /**
  *
  */
@@ -391,5 +370,5 @@ export {
   getMoveDetailsById,
   publicUrlMoveDetails,
   updateMoveDetailsAndTrimVideo,
-  updateMove
+
 };

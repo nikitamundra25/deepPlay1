@@ -5,8 +5,7 @@ import {
   downloadYoutubeVideo,
   getMoveDetailsById,
   publicUrlMoveDetails,
-  updateMoveDetailsAndTrimVideo,
-  updateMove
+  updateMoveDetailsAndTrimVideo
 } from "../controllers";
 import { ValidateAdminToken } from "../common";
 import { storageFile } from "../common/video";
@@ -34,6 +33,5 @@ MoveRouter.get(
 );
 MoveRouter.get("/public-url-move-details", publicUrlMoveDetails);
 MoveRouter.post("/update", updateMoveDetailsAndTrimVideo);
-MoveRouter.post("/update-move", updateMove);
 
 export default MoveRouter;
