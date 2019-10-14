@@ -117,15 +117,15 @@ class SetComponent extends React.Component {
           </span>
           <div>
             <span
-              id="UncontrolledTooltipExample"
+              id="set"
               className={"cursor_pointer"}
               onClick={this.handleSetModal}
             >
               <i className="fas fa-plus-circle icon-font"></i>
             </span>
             <UncontrolledTooltip
-              placement="bottom"
-              target="UncontrolledTooltipExample"
+              placement="top"
+              target="set"
             >
               Create New Set
             </UncontrolledTooltip>
@@ -136,7 +136,7 @@ class SetComponent extends React.Component {
             >
               <i className="fas fa-share icon-font"></i>
             </span>
-            <UncontrolledTooltip placement="bottom" target="share">
+            <UncontrolledTooltip placement="top" target="share">
               Get Shareable Link
             </UncontrolledTooltip>
           </div>

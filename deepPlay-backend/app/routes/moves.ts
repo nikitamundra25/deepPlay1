@@ -5,7 +5,10 @@ import {
   downloadYoutubeVideo,
   getMoveDetailsById,
   publicUrlMoveDetails,
-  updateMoveDetailsAndTrimVideo
+  updateMoveDetailsAndTrimVideo,
+  copyMove,
+  isStarredMove,
+  deleteMove
 } from "../controllers";
 import { ValidateAdminToken } from "../common";
 import { storageFile } from "../common/video";
@@ -33,5 +36,8 @@ MoveRouter.get(
 );
 MoveRouter.get("/public-url-move-details", publicUrlMoveDetails);
 MoveRouter.post("/update", updateMoveDetailsAndTrimVideo);
+MoveRouter.put("/copy-move", copyMove);
+MoveRouter.put("/starred-move", isStarredMove);
+MoveRouter.patch("/delete-move", deleteMove);
 
 export default MoveRouter;

@@ -17,30 +17,20 @@ class DefaultFooter extends React.Component {
               <Col md="6">
                 <Nav className=" nav-footer justify-content-end">
                   <NavItem>
-                    <NavLink
-                      href="/"
-                      target="_blank"
-                    >
-                      Term and Condition
+                    <NavLink href="/" target="_blank">
+                      Terms and Condition
                     </NavLink>
                   </NavItem>
                   <NavItem>
-                    <NavLink
-                      href="/"
-                      target="_blank"
-                    >
+                    <NavLink href="/" target="_blank">
                       About Us
                     </NavLink>
                   </NavItem>
                   <NavItem>
-                    <NavLink
-                      href="/"
-                      target="_blank"
-                    >
+                    <NavLink href="/" target="_blank">
                       Contact Us
                     </NavLink>
                   </NavItem>
-               
                 </Nav>
               </Col>
             </Row>

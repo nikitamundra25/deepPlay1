@@ -83,5 +83,10 @@ export const AppRoutes = {
     url: "/change/password",
     name: "Change Password",
     exact: true
+  },
+  SAMPLE_SET: {
+    url: "/sample-set",
+    name: "Sample Set",
+    exact: true
   }
 };

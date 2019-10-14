@@ -30,6 +30,7 @@ class DefaultLayout extends React.Component {
     if (
       !token &&
       pathname !== "/resetPassword" &&
+      pathname !== "/sample-set" &&
       pathname !== "/folder/shared/link" &&
       pathname !== "/set/shared/link" &&
       pathname !== "/all/set/shared/link" &&
@@ -99,6 +100,7 @@ class DefaultLayout extends React.Component {
           <div
             className={
               routePath !== "/" &&
+              routePath !== "/sample-set" &&
               routePath !== "/resetPassword" &&
               routePath !== "/folder/shared/link" &&
               routePath !== "/set/shared/link" &&
@@ -110,16 +112,21 @@ class DefaultLayout extends React.Component {
           >
             <div
               className={`${
-                routePath !== "/" ? "dashboard-container-wrap " : " "
+                routePath !== "/" && routePath !== "/sample-set"
+                  ? "dashboard-container-wrap "
+                  : " "
               }`}
             >
               <div
                 className={`theme-container ${
-                  routePath !== "/" ? "dashboard-container " : "home-container"
+                  routePath !== "/" && routePath !== "/sample-set"
+                    ? "dashboard-container "
+                    : "home-container"
                 }`}
               >
                 {isLoggedIn &&
                 (routePath !== "/" &&
+                  routePath !== "/sample-set" &&
                   routePath !== "/resetPassword" &&
                   routePath !== "/folder/shared/link" &&
                   routePath !== "/set/shared/link" &&
@@ -134,6 +141,7 @@ class DefaultLayout extends React.Component {
                 ) : null}
                 {isLoggedIn &&
                 (routePath !== "/" &&
+                  routePath !== "/sample-set" &&
                   routePath !== "/resetPassword" &&
                   routePath !== "/folder/shared/link" &&
                   routePath !== "/set/shared/link" &&
@@ -185,6 +193,7 @@ class DefaultLayout extends React.Component {
         </>
         {isLoggedIn &&
         (routePath !== "/" &&
+          routePath !== "/sample-set" &&
           routePath !== "/resetPassword" &&
           routePath !== "/folder/shared/link" &&
           routePath !== "/set/shared/link" &&

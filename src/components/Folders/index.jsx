@@ -125,7 +125,7 @@ class FolderComponent extends React.Component {
           >
             <i className="fas fa-plus-circle icon-font"></i>
           </span>
-          <UncontrolledTooltip placement="bottom" target="move">
+          <UncontrolledTooltip placement="top" target="move">
             Create a New Folder
           </UncontrolledTooltip>
         </div>
