@@ -56,10 +56,11 @@ class MoveList extends React.Component {
                   <Button
                     // onClick={() => this.OnCreateSetCopy(list)}
                     className="active"
+                    color=" "
                   >
                     All
                   </Button>
-                  <Button>Starred</Button>
+                  <Button color=" ">Starred</Button>
                 </ButtonGroup>
                 <FormGroup className="mb-0 header-search-wrap ">
                   <InputGroup className="">
@@ -142,11 +143,11 @@ class MoveList extends React.Component {
                               this.props.showPopOver(index, show)
                             }
                             size="sm">
-                            <Button>
+                            <Button color=" ">
                               Copy
                             </Button>
-                            <Button>Transfer</Button>
-                            <Button>Remove</Button>
+                            <Button color=" ">Transfer</Button>
+                            <Button color=" ">Remove</Button>
                           </ButtonGroup>) :
                           null}
                       </div>

@@ -232,7 +232,7 @@ class SetSharedLink extends React.Component {
                               >
                                 Copy
                               </Button>
-                              <Button>Transfer</Button>
+                              <Button >Transfer</Button>
                               <Button>Remove</Button>
                             </ButtonGroup>
                           </div>
