@@ -96,12 +96,9 @@ const getAllSetById = async (req: Request, res: Response): Promise<void> => {
       status,
       roleType,
       userId,
-      fromSet
     } = query;
     const pageNumber: number = ((parseInt(page) || 1) - 1) * (limit || 10);
     const limitNumber: number = parseInt(limit) || 10;
-    let decryptedUserId: String;
-    let temp: any | null;
 
     // define condition
     let condition: any = {
@@ -371,6 +368,15 @@ const deleteSet = async (req: Request, res: Response): Promise<void> => {
     const result: Document | any = await SetModel.findByIdAndUpdate(body.id, {
       $set: { isDeleted: true }
     });
+
+    await MoveModel.updateMany(
+      { setId: { $in: body.id } },
+      {
+        $set: {
+          isDeleted: true
+        }
+      }
+    );
 
     res.status(200).json({
       data: result[0],

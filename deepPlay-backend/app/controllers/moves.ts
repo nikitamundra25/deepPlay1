@@ -211,7 +211,8 @@ const getMoveBySetId = async (req: Request, res: Response): Promise<any> => {
       });
     }
     const movesData: Document | any = await MoveModel.find({
-      setId: query.setId
+      setId: query.setId,
+      isDeleted: false
     });
 
     return res.status(200).json({
@@ -442,7 +443,7 @@ const isStarredMove = async (req: Request, res: Response): Promise<any> => {
 const deleteMove = async (req: Request, res: Response): Promise<any> => {
   try {
     const { body } = req;
-    const { moveId, isDeleted } = body;
+    const { moveId } = body;
     if (!moveId) {
       res.status(400).json({
         message: "MoveId not found"
@@ -453,7 +454,7 @@ const deleteMove = async (req: Request, res: Response): Promise<any> => {
       { _id: { $in: moveId } },
       {
         $set: {
-          isDeleted: isDeleted
+          isDeleted: true
         }
       }
     );
@@ -479,6 +480,7 @@ const transferMove = async (req: Request, res: Response): Promise<any> => {
         message: "SetId not found"
       });
     }
+
     await MoveModel.updateMany(
       { _id: { $in: moveId } },
       {
@@ -487,6 +489,10 @@ const transferMove = async (req: Request, res: Response): Promise<any> => {
         }
       }
     );
+
+    res.status(200).json({
+      message: "Move has been transferred successfully!"
+    });
   } catch (error) {
     console.log(error);
     return res.status(500).send({
@@ -494,6 +500,45 @@ const transferMove = async (req: Request, res: Response): Promise<any> => {
     });
   }
 };
+
+// //-----------------------Filter move details-----------------------
+// const filterMove = async (req: Request, res: Response): Promise<any> => {
+//   try {
+//     const { body } = req;
+//     const { search } = body;
+//     let condition: any = {
+//       $and: []
+//     };
+//     if (search) {
+//       condition.$and.push({
+//         $or: [
+//           {
+//             title: {
+//               $regex: new RegExp(search.trim(), "i")
+//             }
+//           },
+//           {
+//             description: {
+//               $regex: new RegExp(search.trim(), "i")
+//             }
+//           },
+//           {
+//             tags: {
+//               $regex: new RegExp(search.trim(), "i")
+//             }
+//           }
+//         ]
+//       });
+//     }
+//     const searchData: Document | any | null = MoveModel.find({ condition });
+//     console.log(">>>", searchData);
+//   } catch (error) {
+//     console.log(error);
+//     return res.status(500).send({
+//       message: error.message
+//     });
+//   }
+// };
 
 export {
   downloadVideo,

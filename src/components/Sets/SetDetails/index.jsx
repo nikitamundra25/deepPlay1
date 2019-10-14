@@ -91,7 +91,11 @@ class SetDetails extends React.Component {
       text: "You want to delete this set! "
     });
     if (value) {
-      this.props.onDeleteSets(id);
+      const data = {
+        id,
+        setDetails: true
+      };
+      this.props.onDeleteSets(data);
     }
   };
   /*
