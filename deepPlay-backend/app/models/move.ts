@@ -32,6 +32,14 @@ const moveSchema: Mongoose.Schema = new Schema({
   sharableLink: {
     type: String
   },
+  isCopy: {
+    type: Boolean,
+    default: false
+  },
+  isStarred: {
+    type: Boolean,
+    default: false
+  },
   setId: {
     type: Schema.Types.ObjectId,
     ref: "set"
