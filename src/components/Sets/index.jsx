@@ -117,15 +117,15 @@ class SetComponent extends React.Component {
           </span>
           <div>
             <span
-              id="UncontrolledTooltipExample"
+              id="set"
               className={"cursor_pointer"}
               onClick={this.handleSetModal}
             >
               <i className="fas fa-plus-circle icon-font"></i>
             </span>
             <UncontrolledTooltip
-              placement="bottom"
-              target="UncontrolledTooltipExample"
+              placement="top"
+              target="set"
             >
               Create New Set
             </UncontrolledTooltip>
@@ -136,7 +136,7 @@ class SetComponent extends React.Component {
             >
               <i className="fas fa-share icon-font"></i>
             </span>
-            <UncontrolledTooltip placement="bottom" target="share">
+            <UncontrolledTooltip placement="top" target="share">
               Get Shareable Link
             </UncontrolledTooltip>
           </div>
@@ -207,6 +207,7 @@ class SetComponent extends React.Component {
                                   onClick={() =>
                                     this.props.OnCreateSetCopy(setList)
                                   }
+                                  color=" "
                                 >
                                   Copy
                                 </Button>
@@ -217,6 +218,7 @@ class SetComponent extends React.Component {
                                       setList.folderId
                                     )
                                   }
+                                  color=" "
                                 >
                                   Transfer
                                 </Button>
@@ -241,6 +243,7 @@ class SetComponent extends React.Component {
               })
             ) : (
               <>
+              <Col>
                 <div className="create-set-section mt-2 w-100">
                   <Card className="set-content-wrap">
                     <div className="set-content-block w-100 empty-folder-wrap">
@@ -271,6 +274,7 @@ class SetComponent extends React.Component {
                     </div>
                   </Card>
                 </div>
+                </Col>
               </>
             )
           ) : (

@@ -37,8 +37,8 @@ class MoveAddedSuccess extends React.Component {
                   Would you like to create another Move from the same video?
                 </p>
                 <div className="text-center mt-4">
-                  <Button className="btn-line-black">Yes create another</Button>
-                  <Button className="btn-black">No i'am done</Button>
+                  <Button className="btn-line-black" color=" ">Yes create another</Button>
+                  <Button className="btn-black" color=" ">No i'am done</Button>
                 </div>
               </CardBody>
             </div>

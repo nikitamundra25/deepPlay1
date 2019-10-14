@@ -10,7 +10,7 @@ import {
   UncontrolledDropdown,
   DropdownMenu,
   DropdownItem,
-  UncontrolledTooltip,
+  UncontrolledTooltip
 } from "reactstrap";
 import {
   getSetDetailsRequest,
@@ -61,19 +61,19 @@ class SetDetails extends React.Component {
     const pathName = location.pathname.split("/");
     const data = {
       isFolderId: null,
-      isSetId: pathName[2],
+      isSetId: pathName[3],
       isMoveId: null,
       isPublic: isPublic
     };
     this.props.publicAccess(data);
   };
-  /* 
+  /*
    */
   handleSharableLink = () => {
     const location = this.props.location;
     const pathName = location.pathname.split("/");
     this.props.shareableLink({
-      setId: pathName[2],
+      setId: pathName[3],
       linkOf: "set"
     });
     const { modelInfoReducer } = this.props;
@@ -84,7 +84,7 @@ class SetDetails extends React.Component {
       }
     });
   };
-  /* 
+  /*
    */
   handleDeleteSet = async id => {
     const { value } = await ConfirmBox({
@@ -94,14 +94,14 @@ class SetDetails extends React.Component {
       this.props.onDeleteSets(id);
     }
   };
-  /* 
+  /*
    */
   handleMoveAdd = () => {
     const location = this.props.location;
     const pathName = location.pathname.split("/");
     this.props.redirectTo(AppRoutes.MOVE.url + `?setId=${pathName[3]}`);
   };
-  /* 
+  /*
    */
   handleSetModal = () => {
     const { modelInfoReducer } = this.props;
@@ -112,34 +112,34 @@ class SetDetails extends React.Component {
       }
     });
   };
-  /* 
-  */
+  /*
+   */
   showPopOver = index => {
     this.setState({
       show: true,
       setIndex: index
     });
   };
-  /* 
- */
+  /*
+   */
   closePopOver = () => {
     this.setState({
       show: false,
       setIndex: -1
     });
   };
-  /* 
+  /*
    */
   updateSet = data => {
     this.props.UpdateSetRequest(data);
   };
-  /* 
-  */
-  handleShowVideo = (videoIndex) => {
+  /*
+   */
+  handleShowVideo = videoIndex => {
     this.setState({
       showVideoIndex: videoIndex
-    })
-  }
+    });
+  };
   render() {
     const {
       setReducer,
@@ -153,7 +153,7 @@ class SetDetails extends React.Component {
     const { userEncryptedInfo } = shareLinkReducer;
     const { sharableLinkModalOpen, createSetModalOpen } = modelDetails;
     const { show, setIndex, showVideoIndex } = this.state;
-    
+
     return (
       <>
         <div className="set-main-section">
@@ -161,12 +161,15 @@ class SetDetails extends React.Component {
             {setDetails && setDetails.folderId ? (
               <span className="content-title">
                 <div className="main-title">
-                  {setDetails && setDetails.folderId
-                    ? setDetails.folderId.isCopy
-                      ? `Copy of ${setDetails.folderId.title}`
-                      : setDetails.folderId.title
-                    : null}
-                  /<span className={"text-light"}>{setDetails.title}</span>
+                  <span className="font-weight-normal">
+                    {setDetails && setDetails.folderId
+                      ? setDetails.folderId.isCopy
+                        ? `Copy of ${setDetails.folderId.title}`
+                        : setDetails.folderId.title
+                      : null}
+                  </span>
+                  /
+                  <span className={"font-weight-bold"}>{setDetails.title}</span>
                 </div>
               </span>
             ) : (
@@ -185,7 +188,7 @@ class SetDetails extends React.Component {
               >
                 <i className="fas fa-plus-circle icon-font"></i>
               </span>
-              <UncontrolledTooltip placement="bottom" target="move">
+              <UncontrolledTooltip placement="top" target="move">
                 Add new move
               </UncontrolledTooltip>
               <span
@@ -195,7 +198,7 @@ class SetDetails extends React.Component {
               >
                 <i className="fas fa-share icon-font"></i>
               </span>
-              <UncontrolledTooltip placement="bottom" target="share">
+              <UncontrolledTooltip placement="top" target="share">
                 Get Shareable Link
               </UncontrolledTooltip>
               <UncontrolledDropdown
@@ -218,71 +221,71 @@ class SetDetails extends React.Component {
                   </DropdownItem>
                 </DropdownMenu>
               </UncontrolledDropdown>
-              <UncontrolledTooltip placement="bottom" target="edit">
+              <UncontrolledTooltip placement="top" target="edit">
                 Edit & Delete
               </UncontrolledTooltip>
             </div>
           </div>
-          {
-            !isMoveofSetLoading ?
-              <>
-                <Card className="video-slider-section">
-                  <div className="step-2">
-                    {movesOfSet && movesOfSet.length ? (
-                      // movesOfSet.map((video, index) => {
-                      <WebmView
-                        // key={index}
-                        video={movesOfSet[showVideoIndex]}
-                      />
-                    ) : (
-                        <div className="create-set-section w-100 empty-folder-section">
-                          <div className="set-content-wrap empty-folder-card">
-                            <div className="set-content-block w-100 empty-folder-wrap">
-                              <CardHeader className="empty-folder-header text-center">
-                                <img src={emptySetIc} alt={"Images"} />
-                                <div className="content-header set-header">
-                                  <span className="content-title">
-                                    {" "}
-                                    <h3>You haven't added any move yet!</h3>
-                                    <p>No move availabe for this set</p>
-                                  </span>
-                                </div>
-                              </CardHeader>
-                              <CardBody className="">
-                                <div className="create-set-tile"></div>
-                                <div className="text-center">
-                                  <Button
-                                    color=" "
-                                    type="button"
-                                    className="btn-black btn "
-                                    onClick={this.handleMoveAdd}
-                                  >
-                                    <i className="fas fa-plus mr-1"></i>
-                                    Add a Move
-                                </Button>
-                                </div>
-                              </CardBody>
-                            </div>
+          {!isMoveofSetLoading ? (
+            <>
+              <Card className="video-slider-section">
+                <div className="step-2">
+                  {movesOfSet && movesOfSet.length ? (
+                    // movesOfSet.map((video, index) => {
+                    <WebmView
+                      // key={index}
+                      video={movesOfSet[showVideoIndex]}
+                    />
+                  ) : (
+                      <div className="create-set-section w-100 empty-folder-section">
+                        <div className="set-content-wrap empty-folder-card">
+                          <div className="set-content-block w-100 empty-folder-wrap">
+                            <CardHeader className="empty-folder-header text-center">
+                              <img src={emptySetIc} alt={"Images"} />
+                              <div className="content-header set-header">
+                                <span className="content-title">
+                                  {" "}
+                                  <h3>You haven't added any move yet!</h3>
+                                  <p>No move availabe for this set</p>
+                                </span>
+                              </div>
+                            </CardHeader>
+                            <CardBody className="">
+                              <div className="create-set-tile"></div>
+                              <div className="text-center">
+                                <Button
+                                  color=" "
+                                  type="button"
+                                  className="btn-black btn "
+                                  onClick={this.handleMoveAdd}
+                                >
+                                  <i className="fas fa-plus mr-1"></i>
+                                  Add a Move
+                              </Button>
+                              </div>
+                            </CardBody>
                           </div>
                         </div>
-                      )}
-                  </div>
-                </Card>
-                <MoveList
-                  show={show}
-                  setIndex={setIndex}
-                  closePopOver={this.closePopOver}
-                  showPopOver={this.showPopOver}
-                  moveCount={setDetails.moveCount}
-                  movesOfSet={movesOfSet}
-                  handleShowVideo={this.handleShowVideo}
-                  {...this.props}
-                />
-              </> :
+                      </div>
+                    )}
+                </div>
+              </Card>
+              <MoveList
+                show={show}
+                setIndex={setIndex}
+                closePopOver={this.closePopOver}
+                showPopOver={this.showPopOver}
+                moveCount={setDetails.moveCount}
+                movesOfSet={movesOfSet}
+                handleShowVideo={this.handleShowVideo}
+                {...this.props}
+              />
+            </>
+          ) : (
               <Col md="12">
                 <Loader />
               </Col>
-          }
+            )}
         </div>
         <SharableLinkModal
           modal={sharableLinkModalOpen}

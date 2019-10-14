@@ -205,18 +205,21 @@ class SettingComponent extends Component {
                       <Button
                         className="dashboard-right-content btn-line-black"
                         onClick={this.onHandleEdit}
+                        color=" "
                       >
                         Edit Profile
                       </Button>
                     ) : (
                       <ButtonGroup>
                         <Button
-                          className="dashboard-right-content btn-line-black "
+                        color=" "
+                          className="dashboard-right-content btn-black "
                           onClick={this.onSaveData}
                         >
                           Update Info
                         </Button>
                         <Button
+                        color=" "
                           className="dashboard-right-content btn-line-black ml-2"
                           onClick={this.handlecancel}
                         >
@@ -340,13 +343,13 @@ class SettingComponent extends Component {
                 <Card className="card-wrap mt-4">
                   <CardHeader>
                     <CardTitle className="card-heading mb-0 h5">
-                      ACCOUNT TYPE
+                      Account type
                     </CardTitle>
                     <div className="heading-divider mr-0"></div>
                   </CardHeader>
                   <CardBody>
                     <div className="account-type-wrap">
-                      <Form className="form-wrap ">
+                      <Form className="form-wrap">
                         <Row>
                           <Col md="6">
                             <FormGroup className="custom-control custom-radio mb-3 ">
@@ -398,7 +401,7 @@ class SettingComponent extends Component {
                 <Card className="card-wrap mt-4">
                   <CardHeader>
                     <CardTitle className="card-heading mb-0 h5 text-danger">
-                      DELETE ACCOUNT
+                      Delete account
                     </CardTitle>
                     <div className="heading-divider mr-0"></div>
                   </CardHeader>

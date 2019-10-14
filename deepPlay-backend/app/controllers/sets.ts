@@ -237,7 +237,7 @@ const getRecentSetById = async (req: Request, res: Response): Promise<void> => {
       .sort({ isRecentTime: -1 })
       .limit(limit);
 
-    // get move count 
+    // get move count
     if (result && result.length) {
       for (let index = 0; index < result.length; index++) {
         const setData = result[index];
@@ -558,7 +558,7 @@ const publicAccessSetInfoById = async (
     });
   }
 };
-//------------------Update Folder Details-------------------------------
+//------------------Update Set Details-------------------------------
 const updateSet = async (req: Request, res: Response): Promise<any> => {
   try {
     const { body } = req;

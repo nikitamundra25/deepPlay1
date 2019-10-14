@@ -28,8 +28,11 @@ h6,
 .h6 {
   color: #000;
 }
-.opacity-1{
-  opacity: 1!important;
+textarea{
+  resize: none;
+}
+.opacity-1 {
+  opacity: 1 !important;
 }
 .white-color {
   color: $whiteColor;
@@ -69,6 +72,50 @@ body {
 }
 .btn {
   border-radius: 5px;
+  overflow: hidden;
+  &::before{
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+    -webkit-transition: all 0.3s;
+    -moz-transition: all 0.3s;
+    -o-transition: all 0.3s;
+    transition: all 0.3s;
+  }
+  &:hover{
+    transform: none;
+    &::before{
+      opacity: 0;
+      -webkit-transform: scale(1.2,1.2);
+      transform: scale(1.2,1.2);
+    }
+    &:after{
+      opacity: 1;
+    -webkit-transform: scale(1,1);
+    transform: scale(1.1,1.1);
+    }
+  } 
+  &:after{
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+    opacity: 0;
+    background-color: rgba(255,255,255,0.2);
+    -webkit-transition: all 0.3s;
+    -moz-transition: all 0.3s;
+    -o-transition: all 0.3s;
+    transition: all 0.3s;
+    -webkit-transform: scale(0.5,0.5);
+    transform: scale(0.5,0.5);
+  }
 }
 a {
   color: inherit;
@@ -172,6 +219,7 @@ a {
 
 .home-video-section {
   margin-bottom: 80px;
+  margin-top: 80px;
   padding-bottom: 80px;
   border-bottom: 2px dashed $videoAddBannerBack;
 }
@@ -258,7 +306,7 @@ a {
     // border: 1px solid #ccc;
     &:hover .set-img-thumnail,
     &:hover .star-wrap {
-     opacity: 1;
+      opacity: 1;
     }
   }
 }
@@ -293,7 +341,7 @@ a {
   .app-sidebar {
     position: fixed;
     height: 100%;
-    width: 200px;
+    width: 210px;
     bottom: 0px;
     top: 58px;
     .dashboard-left-wrap {
@@ -347,8 +395,8 @@ a {
   }
   .dashboard-right-wrap {
     padding: 20px 30px 20px 20px;
-    margin-left: 200px;
-    width: calc(100% - 200px);
+    margin-left: 210px;
+    width: calc(100% - 210px);
     min-height: calc(100vh - 58px);
     position: relative;
   }
@@ -514,6 +562,9 @@ a {
   background: #fff;
   border: 1px solid $blackcolor;
   &:hover {
+    &::after{
+      background-color: rgba(102, 102, 102, 0.3);
+    }
     color: #343434;
     background: #fff;
     border: 1px solid #343434;
@@ -742,6 +793,7 @@ a {
 }
 .account-type-wrap {
   max-width: 400px;
+  margin: auto;
 }
 .theme-container.dashboard-container {
   padding: 0px;
@@ -933,7 +985,6 @@ a {
       max-width: unset;
       position: relative;
     }
- 
   }
 }
 .vieos-add-section {
@@ -1171,9 +1222,9 @@ a {
   }
 }
 .search-select-wrap {
-  .css-26l3qy-menu{
+  .css-26l3qy-menu {
     z-index: 9;
-    &>div{
+    & > div {
       padding: 0px;
     }
   }
@@ -1415,6 +1466,7 @@ a {
   width: 100%;
   margin: auto;
   max-width: 370px;
+  z-index: 0;
   &::before {
     position: absolute;
     content: "";
@@ -1621,7 +1673,7 @@ a {
   transition: all 0.5s;
 }
 .content-with-img {
-  align-items: center;
+  align-items: flex-start;
   .cotent-text-tile {
     width: calc(100% - 100px);
   }
@@ -1629,12 +1681,45 @@ a {
     width: 100px;
   }
 }
-.form-control.search-input-wrap{
+.form-control.search-input-wrap {
   border: none;
   padding: 0px;
-  &.is-invalid{
-    .css-yk16xz-control{
+  &.is-invalid {
+    .css-yk16xz-control {
       border-color: #dd0e0e;
+    }
   }
 }
+.set-detail-right-section {
+  input{
+    border: 1px solid #cad1d7;
+    padding: 10px;
+    height: 100%;
+  }
+  display: flex;
+  align-items: center;
+  .btn-group {
+    height: unset;
+    .btn {
+      background: #fff;
+      border: 1px solid #ddd;
+      padding: 8px 33px;
+      font-size: 14px;
+    }
+    .btn.active {
+      background: #000;
+      color: #fff;
+      border: 1px solid #ddd;
+    }
+  }
+}
+.error-with-append-btn{
+  border:1px solid #dd0e0e;
+  border-radius: 5px;
+  input{
+    border: none;
+  }
+  .input-group-text{
+    border: none;
+  }
 }

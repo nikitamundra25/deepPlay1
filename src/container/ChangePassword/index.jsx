@@ -177,7 +177,7 @@ class ChangePassword extends Component {
                   <div className="text-center">
                     <Button
                       className="btn-black btn mt-3"
-                      color=""
+                      color=" "
                       type="submit"
                       disabled={isChangePasswordSuccess ? true : false}
                     >

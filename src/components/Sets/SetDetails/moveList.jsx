@@ -4,6 +4,8 @@ import {
   Col,
   Button,
   ButtonGroup,
+  FormGroup,
+  InputGroup,
   Input
 } from "reactstrap";
 import addPlusIc from "../../../assets/img/add_plus.png";
@@ -102,6 +104,25 @@ class MoveList extends React.Component {
           <Col md="12" className={"pb-3"}>
             <div class="content-header mt-3 mb-1">
               <span class="content-title">Moves in this set ({moveCount || 0})</span>
+
+
+              <div className="set-detail-right-section">
+                <ButtonGroup size="sm" className="mr-2">
+                  <Button
+                    // onClick={() => this.OnCreateSetCopy(list)}
+                    className="active"
+                    color=" "
+                  >
+                    All
+                  </Button>
+                  <Button color=" ">Starred</Button>
+                </ButtonGroup>
+                <FormGroup className="mb-0 header-search-wrap ">
+                  <InputGroup className="">
+                    <Input placeholder="Type to filter moves" type="text" autocomplete="off" />
+                  </InputGroup>
+                </FormGroup>
+              </div>
             </div>
             {
               selectedMoveIds && selectedMoveIds.length ?
@@ -227,11 +248,11 @@ class MoveList extends React.Component {
                               this.props.showPopOver(index, show)
                             }
                             size="sm">
-                            <Button>
+                            <Button color=" ">
                               Copy
                             </Button>
-                            <Button>Transfer</Button>
-                            <Button>Remove</Button>
+                            <Button color=" ">Transfer</Button>
+                            <Button color=" ">Remove</Button>
                           </ButtonGroup>) :
                           null}
                       </div>

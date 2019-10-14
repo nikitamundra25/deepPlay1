@@ -151,7 +151,7 @@ class MoveComponent extends React.Component {
 
     return (
       <>
-        <div className="create-set-section step-2 ">
+        <div className="create-set-section step-2 create-move-section">
           <Card className="set-content-wrap create-a-move p-0">
             <div className="set-content-block w-100">
               <CardHeader className="border-bottom pt-4 pb-2">
@@ -180,7 +180,11 @@ class MoveComponent extends React.Component {
                             Paste YouTube Video URL or Type URL Manually{" "}
                           </Label>
                         </FormGroup>
-                        <FormGroup className="flex-fill flex-column mt-0 ">
+                        <FormGroup 
+                        className={
+                          errors? `flex-fill flex-column mt-0 form-custom-error error-with-append-btn`:
+                          "flex-fill flex-column mt-0 form-custom-error"
+                          }>
                           <InputGroup>
                             <Input
                               id="url"
