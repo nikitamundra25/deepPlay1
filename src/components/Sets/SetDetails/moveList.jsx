@@ -9,6 +9,7 @@ import {
 import addPlusIc from "../../../assets/img/add_plus.png";
 import starIc from "../../../assets/img/star.svg";
 import { AppConfig } from "config/Appconfig";
+import { AppRoutes } from "config/AppRoutes";
 import "./index.scss";
 
 // core components
@@ -19,28 +20,48 @@ class MoveList extends React.Component {
       show: false,
       videoIndex: -1,
       isVideoChecked: false,
+      isSelectVideo: false,
       page: 1
     };
   }
-
-  handleVideoCheckBox = (index) => {
+  handleVideoHoverLeave = () => {
     this.setState({
-      isVideoChecked: true,
+      isSelectVideo: false
+    })
+  }
+  /* 
+  */
+  handleVideoHover = (index) => {
+    this.setState({
+      isSelectVideo: true,
       videoIndex: index
     })
   }
+  /* 
+  */
+  handleVideoCheckBox = (index) => {
+    this.setState({
+      isVideoChecked: true,
 
+    })
+  }
+  /* 
+  */
   handleVideoPlay = (index) => {
     let myVideo = document.getElementById(`webm-video-${index}`);
     myVideo.play();
   }
+  /* 
+  */
   handleVideoPause = (index) => {
     let myVideo = document.getElementById(`webm-video-${index}`);
     myVideo.pause();
   }
+  /* 
+  */
   render() {
     const { show, setIndex, moveCount, movesOfSet } = this.props
-    const { isVideoChecked, videoIndex } = this.state
+    const { isVideoChecked, isSelectVideo, videoIndex } = this.state
     return (
       <section className="play-list-collection set-detail-section">
         <Row>
@@ -55,7 +76,7 @@ class MoveList extends React.Component {
                 <div className="h5 font-dark-bold add-img">
                   <img src={addPlusIc} alt="" />
                 </div>
-                <Button color={" "} className="fill-btn btn mt-4">
+                <Button onClick={() => this.props.redirectTo(AppRoutes.MOVE.url)} color={" "} className="fill-btn btn mt-4">
                   {" "}
                   Create Now
                 </Button>
@@ -64,29 +85,40 @@ class MoveList extends React.Component {
           </div>
           {movesOfSet.map((video, index) => {
             return (
-              <div onClick={() => this.props.handleShowVideo(index)} className="play-list-tile cursor_pointer" key={index}>
+              <div
+                onClick={() => this.props.handleShowVideo(index)}
+                onMouseLeave={() => {
+                  this.handleVideoHoverLeave();
+                }}
+                className="play-list-tile cursor_pointer"
+                key={index}>
                 <div className="play-list-block">
-                  <div className="play-sub-block" onMouseLeave={() => this.handleVideoPause(index)}>
+                  <div
+                    className="play-sub-block"
+                    onMouseOver={() => this.handleVideoHover(index)}
+                    onMouseLeave={() => {
+                      this.handleVideoPause(index);
+                    }}>
                     <div onMouseOver={() => this.handleVideoPlay(index)} className="play-list-img blur-img-wrap checked-wrap">
-                      <div className="custom-control custom-control-alternative custom-checkbox set-img-thumnail">
-                        {
-                          !isVideoChecked ?
-                            <span onClick={() => this.handleVideoCheckBox(index)} className="plus-ic-wrap">
-                              <i className="text-white fa fa-plus-circle" aria-hidden="true" />
-                            </span> :
+                      {
+                        !isVideoChecked && isSelectVideo && (videoIndex === index) ?
+                          <span onClick={() => this.handleVideoCheckBox(index)} className="plus-ic-wrap">
+                            <i className="text-white fa fa-plus-circle" aria-hidden="true" />
+                          </span> :
+                          null
+                      }
+                      {
+                        isVideoChecked ?
+                          <span className="plus-ic-wrap custom-control custom-checkbox">
                             <Input
                               className="custom-control-input"
-                              id="customCheckRegister"
-                              name={"videoChecked"}
-                              value={videoIndex === index ? true : false}
+                              id="customCheck1"
                               type="checkbox"
                             />
-                        }
-                        <label
-                          className="custom-control-label"
-                          htmlFor="customCheckRegister"
-                        ></label>
-                      </div>
+                            <label className="custom-control-label" htmlFor="customCheck1" />
+                          </span> :
+                          null
+                      }
                       <div className="star-wrap">
                         <img src={starIc} alt={"star"} />
                       </div>

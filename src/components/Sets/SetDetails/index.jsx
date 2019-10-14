@@ -276,6 +276,7 @@ class SetDetails extends React.Component {
                   moveCount={setDetails.moveCount}
                   movesOfSet={movesOfSet}
                   handleShowVideo={this.handleShowVideo}
+                  {...this.props}
                 />
               </> :
               <Col md="12">
