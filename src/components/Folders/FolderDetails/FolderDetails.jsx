@@ -416,6 +416,7 @@ class RecentFolderComponent extends React.Component {
                               <ButtonGroup size="sm">
                                 <Button
                                   onClick={() => this.OnCreateSetCopy(list)}
+                                  color=" "
                                 >
                                   Copy
                                 </Button>
@@ -423,6 +424,7 @@ class RecentFolderComponent extends React.Component {
                                   onClick={() =>
                                     this.openTransferToModal(list._id)
                                   }
+                                  color=" "
                                 >
                                   Transfer
                                 </Button>
@@ -430,6 +432,7 @@ class RecentFolderComponent extends React.Component {
                                   onClick={() =>
                                     this.onRemoveSets(list._id, "remove")
                                   }
+                                  color=" "
                                 >
                                   Remove
                                 </Button>

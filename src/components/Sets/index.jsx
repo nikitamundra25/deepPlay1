@@ -207,6 +207,7 @@ class SetComponent extends React.Component {
                                   onClick={() =>
                                     this.props.OnCreateSetCopy(setList)
                                   }
+                                  color=" "
                                 >
                                   Copy
                                 </Button>
@@ -217,6 +218,7 @@ class SetComponent extends React.Component {
                                       setList.folderId
                                     )
                                   }
+                                  color=" "
                                 >
                                   Transfer
                                 </Button>

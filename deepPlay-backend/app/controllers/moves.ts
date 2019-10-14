@@ -120,33 +120,38 @@ const downloadYoutubeVideo = async (
     /* Download youtube videos on localserver */
     const trueYoutubeUrl = ytdl.validateURL(body.url);
     if (trueYoutubeUrl) {
-      ytdl(body.url, {
-        quality: "134"
-      }).pipe((videoStream = fs.createWriteStream(originalVideoPath)));
-      videoStream.on("close", async function() {
-        const {
-          frames: framesArray,
-          videoMetaData,
-          videoName
-        } = await getVideoFrames(fileName);
-        delete videoMetaData.filename;
-        const frames = framesArray.map(
-          (frame: string) => `${ServerURL}/uploads/youtube-videos/${frame}`
-        );
-        const moveResult: Document | any = new MoveModel({
-          videoUrl: videoURL,
-          frames: orderBy(frames),
-          userId: headToken.id,
-          videoMetaData,
-          videoName
-        });
-        await moveResult.save();
-        return res.status(200).json({
-          message: "Video uploaded successfully!",
-          videoUrl: videoURL,
-          moveData: moveResult,
-          frames
-        });
+      ytdl.getInfo(body.url, (err, info) => {
+        if (err) throw err;
+        if (info) {
+          ytdl(body.url, {
+            quality: "lowest"
+          }).pipe((videoStream = fs.createWriteStream(originalVideoPath)));
+          videoStream.on("close", async function () {
+            const {
+              frames: framesArray,
+              videoMetaData,
+              videoName
+            } = await getVideoFrames(fileName);
+            delete videoMetaData.filename;
+            const frames = framesArray.map(
+              (frame: string) => `${ServerURL}/uploads/youtube-videos/${frame}`
+            );
+            const moveResult: Document | any = new MoveModel({
+              videoUrl: videoURL,
+              frames: orderBy(frames),
+              userId: headToken.id,
+              videoMetaData,
+              videoName
+            });
+            await moveResult.save();
+            return res.status(200).json({
+              message: "Video uploaded successfully!",
+              videoUrl: videoURL,
+              moveData: moveResult,
+              frames
+            });
+          });
+        }
       });
     } else {
       return res.status(400).json({
@@ -313,7 +318,7 @@ const updateMoveDetailsAndTrimVideo = async (
       const videoFile = path.join(__dirname, "..", result.videoUrl);
       const fileName = `${
         result.videoUrl.split(".")[0]
-      }_clip_${moment().unix()}.webm`;
+        }_clip_${moment().unix()}.webm`;
       const videoFileMain = path.join(__dirname, "..", `${fileName}`);
       const video = await new ffmpeg(videoFile);
       const duration = timer.max - timer.min - 1;

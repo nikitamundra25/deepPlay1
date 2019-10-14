@@ -185,6 +185,7 @@ class FolderComponent extends React.Component {
                                         onClick={() =>
                                           this.handleCopyFolder(folder)
                                         }
+                                        color=" "
                                       >
                                         Copy
                                       </Button>
@@ -192,6 +193,7 @@ class FolderComponent extends React.Component {
                                         onClick={() =>
                                           this.onHandleDelete(folder._id)
                                         }
+                                        color=" "
                                       >
                                         Delete
                                       </Button>

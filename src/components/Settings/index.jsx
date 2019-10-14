@@ -205,18 +205,21 @@ class SettingComponent extends Component {
                       <Button
                         className="dashboard-right-content btn-line-black"
                         onClick={this.onHandleEdit}
+                        color=" "
                       >
                         Edit Profile
                       </Button>
                     ) : (
                       <ButtonGroup>
                         <Button
+                        color=" "
                           className="dashboard-right-content btn-black "
                           onClick={this.onSaveData}
                         >
                           Update Info
                         </Button>
                         <Button
+                        color=" "
                           className="dashboard-right-content btn-line-black ml-2"
                           onClick={this.handlecancel}
                         >
