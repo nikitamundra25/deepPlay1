@@ -57,7 +57,7 @@ class Dashboard extends React.Component {
     
     return (
       <>
-        <div className="page-body">
+        <div className="page-body ">
           {/* <div className="content-header">
             <span className="content-title">RECENT</span>
           </div> */}
@@ -155,7 +155,7 @@ class Dashboard extends React.Component {
               ) : (
                 <>
                 <Col>
-                  <div className="create-set-section w-100 empty-folder-section">
+                  <div className="create-set-section w-100 empty-folder-section sjp">
                     <Card className="set-content-wrap empty-folder-card">
                       <div className="set-content-block w-100 empty-folder-wrap">
                         <CardHeader className="empty-folder-header">
