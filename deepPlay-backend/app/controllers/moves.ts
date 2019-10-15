@@ -126,7 +126,7 @@ const downloadYoutubeVideo = async (
           ytdl(body.url, {
             quality: "lowest"
           }).pipe((videoStream = fs.createWriteStream(originalVideoPath)));
-          videoStream.on("close", async function () {
+          videoStream.on("close", async function() {
             const {
               frames: framesArray,
               videoMetaData,
@@ -318,7 +318,7 @@ const updateMoveDetailsAndTrimVideo = async (
       const videoFile = path.join(__dirname, "..", result.videoUrl);
       const fileName = `${
         result.videoUrl.split(".")[0]
-        }_clip_${moment().unix()}.webm`;
+      }_clip_${moment().unix()}.webm`;
       const videoFileMain = path.join(__dirname, "..", `${fileName}`);
       const video = await new ffmpeg(videoFile);
       const duration = timer.max - timer.min - 1;
@@ -447,8 +447,10 @@ const isStarredMove = async (req: Request, res: Response): Promise<any> => {
 //--------------------Remove move----------------------
 const deleteMove = async (req: Request, res: Response): Promise<any> => {
   try {
-    const { body } = req;
-    const { moveId } = body;
+    const { query } = req;
+    const { moveId } = query;
+    console.log(">>>>>>", moveId);
+
     if (!moveId) {
       res.status(400).json({
         message: "MoveId not found"

@@ -15,8 +15,8 @@ export const MovesAction = {
   ADD_NEW_TAG_TO_LIST: "Add new tag to list!",
   DELETE_MOVES_REQUEST: "Delete Moves Request",
   DELETE_MOVES_SUCCESS: "Delete Moves Success",
-  COPY_MOVE_REQUEST: "Copy Moves Request",
-  COPY_MOVE_SUCCESS: "Copy Moves Success",
+  STARRED_MOVE_REQUEST: "Starred Moves Request",
+  STARRED_MOVE_SUCCESS: "Starred Moves Success",
   TRANSFER_MOVE_REQUEST: "Transfer Moves Request",
   TRANSFER_MOVE_SUCCESS: "Transfer Moves Success"
 };
@@ -53,16 +53,18 @@ export const completeVideoEditingSuccess = createAction(
 
 export const addNewTagToList = createAction(MovesAction.ADD_NEW_TAG_TO_LIST);
 
-
-
 export const deleteMovesRequest = createAction(
   MovesAction.DELETE_MOVES_REQUEST
 );
 export const deleteMovesSuccess = createAction(
   MovesAction.DELETE_MOVES_SUCCESS
 );
-export const copyMovesRequest = createAction(MovesAction.COPY_MOVE_REQUEST);
-export const copyMovesSuccess = createAction(MovesAction.COPY_MOVE_SUCCESS);
+export const starredMovesRequest = createAction(
+  MovesAction.STARRED_MOVE_REQUEST
+);
+export const starredMovesSuccess = createAction(
+  MovesAction.STARRED_MOVE_SUCCESS
+);
 
 export const transferMovesRequest = createAction(
   MovesAction.TRANSFER_MOVE_REQUEST
