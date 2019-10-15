@@ -8,7 +8,8 @@ import {
   updateMoveDetailsAndTrimVideo,
   copyMove,
   isStarredMove,
-  deleteMove
+  deleteMove,
+  transferMove
 } from "../controllers";
 import { ValidateAdminToken } from "../common";
 import { storageFile } from "../common/video";
@@ -39,5 +40,6 @@ MoveRouter.post("/update", updateMoveDetailsAndTrimVideo);
 MoveRouter.put("/copy-move", copyMove);
 MoveRouter.put("/starred-move", isStarredMove);
 MoveRouter.patch("/delete-move", deleteMove);
+MoveRouter.patch("/transfer-move", transferMove);
 
 export default MoveRouter;

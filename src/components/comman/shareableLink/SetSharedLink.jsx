@@ -7,7 +7,6 @@ import {
   Col,
   CardHeader,
   Button,
-  Input,
   Row,
   ButtonGroup
 } from "reactstrap";
@@ -22,8 +21,6 @@ import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import emptySetIc from "../../../assets/img/empty-sets.png";
 //import { AppRoutes } from "../../../config/AppRoutes";
-import addPlusIc from "../../../assets/img/add_plus.png";
-import starIc from "../../../assets/img/star.svg";
 import qs from "query-string";
 import Loader from "../Loader/Loader";
 
@@ -35,25 +32,17 @@ var settings = {
   slidesToScroll: 1
 };
 
-const homePageImage = [
-  "https://images.pexels.com/photos/67636/rose-blue-flower-rose-blooms-67636.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500",
-  "https://p.bigstockphoto.com/GeFvQkBbSLaMdpKXF1Zv_bigstock-Aerial-View-Of-Blue-Lakes-And--227291596.jpg",
-  "https://images.pexels.com/photos/462118/pexels-photo-462118.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500",
-  "https://helpx.adobe.com/content/dam/help/en/stock/how-to/visual-reverse-image-search/jcr_content/main-pars/image/visual-reverse-image-search-v2_intro.jpg",
-  "https://i.pinimg.com/originals/26/94/93/269493fbeb10e31ad3867248e3f68b94.jpg"
-];
 // core components
 class SetSharedLink extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      moveListItem: []
+      moveListItem: [],
+      showVideoIndex: 0
     };
   }
   componentDidMount() {
     let parsed = qs.parse(this.props.location.search);
-    console.log("gf", parsed);
-
     this.props.encryptedQuery(parsed);
     this.props.publicUrlSetDetails(parsed);
   }
@@ -70,6 +59,21 @@ class SetSharedLink extends React.Component {
       });
     }
   }
+
+  handleVideoPlay = index => {
+    let myVideo = document.getElementById(`webm-video-${index}`);
+    myVideo.play();
+  };
+  handleVideoPause = index => {
+    let myVideo = document.getElementById(`webm-video-${index}`);
+    myVideo.pause();
+  };
+
+  handleShowVideo = videoIndex => {
+    this.setState({
+      showVideoIndex: videoIndex
+    });
+  };
 
   render() {
     const { shareLinkReducer } = this.props;
@@ -170,10 +174,21 @@ class SetSharedLink extends React.Component {
                 <Row>
                   <Col md="12">
                     <div class="content-header mt-3 mb-2">
-                      <span class="content-title">Chapter business 247</span>
+                      <span class="content-title">Moves in this set</span>
+                      <div className="set-detail-right-section">
+                        <ButtonGroup size="sm" className="mr-2">
+                          <Button
+                            // onClick={() => this.OnCreateSetCopy(list)}
+                            className="active"
+                          >
+                            All
+                          </Button>
+                          <Button>Starred</Button>
+                        </ButtonGroup>
+                      </div>
                     </div>
                   </Col>
-                  <div className="play-list-tile">
+                  {/* <div className="play-list-tile">
                     <div className="play-list-block  d-flex h-100 ">
                       <div className="add-play-list-block d-flex w-100 justify-content-center align-items-center text-center flex-column">
                         <div className="h5 font-dark-bold add-img">
@@ -185,61 +200,42 @@ class SetSharedLink extends React.Component {
                         </Button>
                       </div>
                     </div>
-                  </div>
-                  {homePageImage.map((images, index) => {
+                  </div> */}
+                  {moveListItem.map((video, index) => {
                     return (
-                      <div className="play-list-tile" key={index}>
+                      <div
+                        onClick={() => this.handleShowVideo(index)}
+                        className="play-list-tile cursor_pointer"
+                        key={index}
+                      >
                         <div className="play-list-block">
-                          <div className="play-sub-block">
-                            <div className="play-list-img blur-img-wrap checked-wrap">
-                              <div className="custom-control custom-control-alternative custom-checkbox set-img-thumnail">
-                                <Input
-                                  className="custom-control-input"
-                                  id="customCheckRegister"
-                                  name={"roleType"}
-                                  type="checkbox"
+                          <div
+                            className="play-sub-block"
+                            onMouseLeave={() => this.handleVideoPause(index)}
+                          >
+                            <div
+                              onMouseOver={() => this.handleVideoPlay(index)}
+                              className="play-list-img blur-img-wrap checked-wrap"
+                            >
+                              <video
+                                width={"100%"}
+                                id={`webm-video-${index}`}
+                                muted={false}
+                              >
+                                <source
+                                  src={`${AppConfig.IMAGE_ENDPOINT}${video.moveURL}`}
+                                  type="video/webm"
                                 />
-                                <label
-                                  className="custom-control-label"
-                                  htmlFor="customCheckRegister"
-                                ></label>
-                              </div>
-                              <div className="star-wrap">
-                                <img src={starIc} alt={"star"} />
-                              </div>
-                              <img src={images} alt="" />
+                              </video>
                               <div
                                 className="blur-img"
-                                style={{
-                                  backgroundImage: 'url("' + images + '")'
-                                }}
-                              ></div>
+                                style={{ background: "#000" }}
+                              />
                             </div>
 
                             <div className="play-list-text">
-                              <div className="play-list-number">25 Moves</div>
-                              <div className="play-list-heading h6 m-0">
-                                Salsa Footwork
-                              </div>
-                              <div
-                                // onMouseOver={() => this.showPopOver(i, show)}
-                                className={"tooltip-btn-wrap right-btn-tip"}
-                              >
-                                <span className="cursor_pointer">
-                                  {" "}
-                                  <i className="fas fa-ellipsis-v setting-icon "></i>
-                                </span>
-
-                                <ButtonGroup size="sm">
-                                  <Button
-                                  // onClick={() => this.OnCreateSetCopy(list)}
-                                  color=" "
-                                  >
-                                    Copy
-                                  </Button>
-                                  <Button color=" ">Transfer</Button>
-                                  <Button color=" ">Remove</Button>
-                                </ButtonGroup>
+                              <div className="text-capitalize play-list-heading h6 m-0">
+                                {video.title || "unnamed"}
                               </div>
                             </div>
                           </div>
