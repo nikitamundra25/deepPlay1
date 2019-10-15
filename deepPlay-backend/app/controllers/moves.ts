@@ -7,6 +7,7 @@ import {
   ServerURL
 } from "../config";
 import cloudinary from "cloudinary";
+import Mongoose, { Document } from "mongoose";
 import ytdl from "ytdl-core";
 import { MoveModel, SetModel } from "../models";
 import fs from "fs";
@@ -14,6 +15,7 @@ import path from "path";
 import ffmpeg from "ffmpeg";
 import { decrypt } from "../common";
 import { orderBy } from "natural-orderby";
+import { IMove, IMoveCopy } from "../interfaces";
 import moment from "moment";
 const __basedir = path.join(__dirname, "../public");
 
@@ -118,33 +120,38 @@ const downloadYoutubeVideo = async (
     /* Download youtube videos on localserver */
     const trueYoutubeUrl = ytdl.validateURL(body.url);
     if (trueYoutubeUrl) {
-      ytdl(body.url, {
-        quality: "134"
-      }).pipe((videoStream = fs.createWriteStream(originalVideoPath)));
-      videoStream.on("close", async function() {
-        const {
-          frames: framesArray,
-          videoMetaData,
-          videoName
-        } = await getVideoFrames(fileName);
-        delete videoMetaData.filename;
-        const frames = framesArray.map(
-          (frame: string) => `${ServerURL}/uploads/youtube-videos/${frame}`
-        );
-        const moveResult: Document | any = new MoveModel({
-          videoUrl: videoURL,
-          frames: orderBy(frames),
-          userId: headToken.id,
-          videoMetaData,
-          videoName
-        });
-        await moveResult.save();
-        return res.status(200).json({
-          message: "Video uploaded successfully!",
-          videoUrl: videoURL,
-          moveData: moveResult,
-          frames
-        });
+      ytdl.getInfo(body.url, (err, info) => {
+        if (err) throw err;
+        if (info) {
+          ytdl(body.url, {
+            quality: "lowest"
+          }).pipe((videoStream = fs.createWriteStream(originalVideoPath)));
+          videoStream.on("close", async function() {
+            const {
+              frames: framesArray,
+              videoMetaData,
+              videoName
+            } = await getVideoFrames(fileName);
+            delete videoMetaData.filename;
+            const frames = framesArray.map(
+              (frame: string) => `${ServerURL}/uploads/youtube-videos/${frame}`
+            );
+            const moveResult: Document | any = new MoveModel({
+              videoUrl: videoURL,
+              frames: orderBy(frames),
+              userId: headToken.id,
+              videoMetaData,
+              videoName
+            });
+            await moveResult.save();
+            return res.status(200).json({
+              message: "Video uploaded successfully!",
+              videoUrl: videoURL,
+              moveData: moveResult,
+              frames
+            });
+          });
+        }
       });
     } else {
       return res.status(400).json({
@@ -209,7 +216,8 @@ const getMoveBySetId = async (req: Request, res: Response): Promise<any> => {
       });
     }
     const movesData: Document | any = await MoveModel.find({
-      setId: query.setId
+      setId: query.setId,
+      isDeleted: false
     });
 
     return res.status(200).json({
@@ -247,7 +255,7 @@ const getMoveDetailsById = async (
   }
 };
 
-//-----Decrypt  setId to get moveDetails for shared link[public access set component]-----------------
+//-----Decrypt  setId to get moveDetails for shared link [public access set component]-----------------
 const publicUrlMoveDetails = async (
   req: Request,
   res: Response
@@ -257,7 +265,7 @@ const publicUrlMoveDetails = async (
     const { setId, isPublic, fromFolder } = query;
     const decryptedSetId = decrypt(setId);
     let result: Document | any | null;
-    let temp: Document | any | null;
+    let temp: Document | any | null, movesData: Document | any;
 
     if (fromFolder) {
       temp = {
@@ -268,9 +276,13 @@ const publicUrlMoveDetails = async (
         _id: decryptedSetId
       });
     }
-    
+
     if (temp.isPublic) {
       result = await MoveModel.find({
+        setId: decryptedSetId
+      });
+
+      movesData = await MoveModel.find({
         setId: decryptedSetId
       });
     } else {
@@ -281,6 +293,7 @@ const publicUrlMoveDetails = async (
     return res.status(200).json({
       responsecode: 200,
       data: result,
+      movesData: movesData,
       success: true
     });
   } catch (error) {
@@ -357,14 +370,192 @@ const updateMoveDetailsAndTrimVideo = async (
     });
   }
 };
+
 /**
  *
  */
+//------------------Copy move------------------
+const copyMove = async (req: Request, res: Response): Promise<any> => {
+  try {
+    const { body } = req;
+    const moveDetails: IMoveCopy = {
+      title: body.title ? body.title : "",
+      description: body.description ? body.description : "",
+      status: body.status ? body.status : "",
+      isDeleted: body.isDeleted,
+      isPublic: body.isPublic,
+      frames: body.frames ? body.frames : "",
+      moveURL: body.moveURL,
+      setId: body.setId,
+      tags: body.tags ? body.tags : "",
+      userId: body.userId,
+      videoMetaData: body.videoMetaData ? body.videoMetaData : "",
+      videoName: body.videoName,
+      videoUrl: body.videoUrl,
+      isCopy: body.isCopy
+    };
+    const moveData: Document | any = new MoveModel(moveDetails);
+    await moveData.save();
+    if (!moveData) {
+      res.status(400).json({
+        message: "Failed to create a copy! Please try again."
+      });
+    }
+    res.status(200).json({
+      data: moveData,
+      message: "Move Copy has been created successfully!"
+    });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).send({
+      message: error.message
+    });
+  }
+};
+
+//-----------------------Starred mark api-----------------------
+const isStarredMove = async (req: Request, res: Response): Promise<any> => {
+  try {
+    const { query } = req;
+    const { moveId, isStarred } = query;
+    if (!moveId) {
+      res.status(400).json({
+        message: "MoveId not found"
+      });
+    }
+
+    await MoveModel.updateMany(
+      { _id: { $in: moveId } },
+      {
+        $set: {
+          isStarred: isStarred
+        }
+      }
+    );
+
+    res.status(200).json({
+      message: "Move has been starred successfully!"
+    });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).send({
+      message: error.message
+    });
+  }
+};
+
+//--------------------Remove move----------------------
+const deleteMove = async (req: Request, res: Response): Promise<any> => {
+  try {
+    const { query } = req;
+    const { moveId } = query;
+    console.log(">>>>>>", moveId);
+
+    if (!moveId) {
+      res.status(400).json({
+        message: "MoveId not found"
+      });
+    }
+
+    await MoveModel.updateMany(
+      { _id: { $in: moveId } },
+      {
+        $set: {
+          isDeleted: true
+        }
+      }
+    );
+
+    res.status(200).json({
+      message: "Move has been deleted successfully!"
+    });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).send({
+      message: error.message
+    });
+  }
+};
+
+//-------------------Transfer moves------------------------
+const transferMove = async (req: Request, res: Response): Promise<any> => {
+  try {
+    const { body } = req;
+    const { setId, moveId } = body;
+    if (!setId) {
+      res.status(400).json({
+        message: "SetId not found"
+      });
+    }
+
+    await MoveModel.updateMany(
+      { _id: { $in: moveId } },
+      {
+        $set: {
+          setId: setId
+        }
+      }
+    );
+
+    res.status(200).json({
+      message: "Move has been transferred successfully!"
+    });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).send({
+      message: error.message
+    });
+  }
+};
+
+// //-----------------------Filter move details-----------------------
+// const filterMove = async (req: Request, res: Response): Promise<any> => {
+//   try {
+//     const { body } = req;
+//     const { search } = body;
+//     let condition: any = {
+//       $and: []
+//     };
+//     if (search) {
+//       condition.$and.push({
+//         $or: [
+//           {
+//             title: {
+//               $regex: new RegExp(search.trim(), "i")
+//             }
+//           },
+//           {
+//             description: {
+//               $regex: new RegExp(search.trim(), "i")
+//             }
+//           },
+//           {
+//             tags: {
+//               $regex: new RegExp(search.trim(), "i")
+//             }
+//           }
+//         ]
+//       });
+//     }
+//     const searchData: Document | any | null = MoveModel.find({ condition });
+//     console.log(">>>", searchData);
+//   } catch (error) {
+//     console.log(error);
+//     return res.status(500).send({
+//       message: error.message
+//     });
+//   }
+// };
+
 export {
   downloadVideo,
   getMoveBySetId,
   downloadYoutubeVideo,
   getMoveDetailsById,
   publicUrlMoveDetails,
-  updateMoveDetailsAndTrimVideo
+  updateMoveDetailsAndTrimVideo,
+  copyMove,
+  isStarredMove,
+  deleteMove,
+  transferMove
 };

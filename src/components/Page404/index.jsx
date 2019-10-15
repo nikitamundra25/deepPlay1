@@ -21,7 +21,7 @@ class Page404Component extends Component {
                 </InputGroupAddon>
                 <Input size="16" type="text" placeholder="What are you looking for?" />
                 <InputGroupAddon addonType="append">
-                  <Button color="info">Search</Button>
+                  <Button color=" " className="btn-black">Search</Button>
                 </InputGroupAddon>
               </InputGroup>
             </Col>

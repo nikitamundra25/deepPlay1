@@ -206,57 +206,51 @@ class DefaultHeader extends React.Component {
                                 {" "}
                                 Create Folder
                               </DropdownItem>
-                            </DropdownMenu>
-                          </UncontrolledDropdown>
-                        </Col>
-                        <Col className="flex-fill">
-                          <FormGroup className="mb-0 header-search-wrap">
-                            <InputGroup className="">
-                              <InputGroupAddon addonType="prepend">
-                                <span className="input-group-text">
-                                  <i
-                                    className="fa fa-search"
-                                    aria-hidden="true"
-                                  ></i>
-                                </span>
-                              </InputGroupAddon>
-                              <Input
-                                placeholder="Search for folder,sets and moves"
-                                onChange={this.handleChange}
-                                value={search}
-                                name={"search"}
-                                type="text"
-                              />
-                              {search ? (
-                                <AllSearchComponent
-                                  searchData={searchData}
-                                  isSearchLoading={isSearchLoading}
-                                  handleSearchEmpty={() =>
-                                    this.setState({
-                                      search: ""
-                                    })
-                                  }
-                                  {...this.props}
-                                />
-                              ) : null}
-                            </InputGroup>
-                          </FormGroup>
-                        </Col>
-                      </div>
-                    </Nav>
-                  ) : null}
-                  <Nav
-                    className="navbar-nav align-items-center nav-main-section user-section"
-                    navbar
-                  >
-                    {!isUserLoggedIn ? (
-                      <div className="nav-main-section">
-                        <React.Fragment>
-                          <span
-                            onClick={this.handleLoginModel}
-                            className="nav-link-inner--text pr-4 cusror_pointer"
-                          >
-                            Login
+                              </DropdownMenu>
+                            </UncontrolledDropdown>
+                          </Col>
+                          <Col className="flex-fill">
+                            <FormGroup className="mb-0 header-search-wrap ">
+                              <InputGroup className="">
+                                <InputGroupAddon addonType="prepend">
+                                  <span className="input-group-text">
+                                    <i
+                                      className="fa fa-search"
+                                      aria-hidden="true"
+                                    ></i>
+                                  </span>
+                                </InputGroupAddon>
+                                <Input placeholder="Search" onChange={this.handleChange} value={search} name={"search"} type="text" autocomplete="off" />
+                                {
+                                  search ?
+                                    <AllSearchComponent
+                                      searchData={searchData}
+                                      isSearchLoading={isSearchLoading}
+                                      handleSearchEmpty={() => this.setState({
+                                        search: ""
+                                      })}
+                                      {...this.props}
+                                    /> :
+                                    null
+                                }
+                              </InputGroup>
+                            </FormGroup>
+                          </Col>
+                        </div>
+                      </Nav>
+                    ) : null}
+                    <Nav
+                      className="navbar-nav align-items-center nav-main-section user-section"
+                      navbar
+                    >
+                      {!isUserLoggedIn ? (
+                        <div className="nav-main-section">
+                          <React.Fragment>
+                            <span
+                              onClick={this.handleLoginModel}
+                              className="nav-link-inner--text pr-4 cusror_pointer"
+                            >
+                              Login
                           </span>
                           <span
                             onClick={this.handleSignupModel}

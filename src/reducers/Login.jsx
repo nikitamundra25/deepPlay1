@@ -36,6 +36,10 @@ export const loginReducer = handleActions(
       ...state,
       isSendingLink: false
     }),
+    [loginAction.FORGET_PASSSWORD_FAILED]: (state, { payload }) => ({
+      ...state,
+      isSendingLink: false
+    }),
     [changePasswordAction.CHANGE_PASSWORD_REQUEST]: (state, { payload }) => ({
       ...state,
       isChangePasswordSuccess: true,

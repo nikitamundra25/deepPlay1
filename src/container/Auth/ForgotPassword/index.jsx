@@ -9,7 +9,8 @@ class ForgotPassword extends React.Component {
       handleForgotPasswordModel,
       openForgotPasswordModel,
       forgotPasswordRequest,
-      loginReducer } = this.props
+      loginReducer,
+      handleLoginForgotModel } = this.props
     return (
       <>
         <ForgotPasswordComponent
@@ -17,6 +18,7 @@ class ForgotPassword extends React.Component {
           openForgotPasswordModel={openForgotPasswordModel}
           forgotPasswordRequest={forgotPasswordRequest}
           loginReducer={loginReducer}
+          handleLoginModel={handleLoginForgotModel}
         />
       </>
     );

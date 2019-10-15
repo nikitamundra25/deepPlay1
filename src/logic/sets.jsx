@@ -49,6 +49,15 @@ const createSetLogic = createLogic({
           setData: result.data.setResult
         })
       );
+      dispatch(
+        modelOpenRequest({
+          modelDetails: {
+            addSetModalOpen: false,
+            createSetOpen: false,
+            createSetModalOpen: false
+          }
+        })
+      );
       if (!action.payload.isCopy) {
         if (!toast.isActive(toastId)) {
           toastId = toast.success(result.messages[0]);
@@ -72,13 +81,6 @@ const createSetLogic = createLogic({
           );
         }
         dispatch(getAllSetRequest({ isSetNoLimit: false }));
-        dispatch(
-          modelOpenRequest({
-            modelDetails: {
-              createSetModalOpen: false
-            }
-          })
-        );
       } else {
         if (!toast.isActive(toastId)) {
           toastId = toast.success("Set Copy has been created successfully");
@@ -137,7 +139,7 @@ const deleteSetLogic = createLogic({
       "PATCH",
       true,
       undefined,
-      { id: action.payload }
+      { id: action.payload.id }
     );
     if (result.isError) {
       if (!toast.isActive(toastId)) {
@@ -149,7 +151,9 @@ const deleteSetLogic = createLogic({
       if (!toast.isActive(toastId)) {
         toastId = toast.success(result.messages[0]);
       }
-      // dispatch(redirectTo({ path: AppRoutes.SET.url }));
+      if (action.payload.setDetails) {
+        dispatch(redirectTo({ path: AppRoutes.SETS.url }));
+      }
       dispatch(getAllSetRequest({ isSetNoLimit: false }));
       done();
     }

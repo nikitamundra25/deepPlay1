@@ -99,7 +99,7 @@ class AddSetModal extends React.Component {
       }
     });
   };
-  
+
   addNewSet = data => {
     this.props.addNewSet(data);
   };

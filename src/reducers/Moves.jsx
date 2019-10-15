@@ -55,7 +55,7 @@ export const moveReducer = handleActions(
     [MovesAction.ADD_NEW_TAG_TO_LIST]: (state, { payload }) => ({
       ...state,
       tagsList: payload
-    })
+    }),
   },
   initialState
 );

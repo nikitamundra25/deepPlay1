@@ -64,6 +64,17 @@ class AllSetSharedLink extends React.Component {
 
     return (
       <div className="dashboard-full-section without-sidebar">
+        <div className="p-3">
+          <span
+            onClick={() => {
+              window.history.back();
+            }}
+            className={"cursor_pointer back-arrow"}
+          >
+            {" "}
+            <i className="fas fa-long-arrow-alt-left" /> Back
+          </span>
+        </div>
         <Container>
           <div className="content-header mt-3 mb-3">
             <span className="content-title">
@@ -86,7 +97,7 @@ class AllSetSharedLink extends React.Component {
                       className={"cursor_pointer"}
                     >
                       <div className="tile-wrap card">
-                        <div className="cotent-tile d-flex">
+                        <div className="cotent-tile d-flex content-with-img">
                           <div className="cotent-text-tile">
                             <div className="content-heading-tile">
                               <span
@@ -122,6 +133,7 @@ class AllSetSharedLink extends React.Component {
                 })
               ) : (
                 <>
+                <Col>
                   <div className="create-set-section w-100 empty-folder-section">
                     <Card className="set-content-wrap empty-folder-card">
                       <div className="set-content-block w-100 empty-folder-wrap">
@@ -138,14 +150,13 @@ class AllSetSharedLink extends React.Component {
                       </div>
                     </Card>
                   </div>
+                  </Col>
                 </>
               )
             ) : (
-              <Row>
                 <Col sm={12} className="loader-col">
                   <Loader />
                 </Col>
-              </Row>
             )}
           </Row>
           {totalSets && !isSetListLoading ? (

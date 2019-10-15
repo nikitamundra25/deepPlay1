@@ -30,7 +30,7 @@ class DefaultSidebar extends React.Component {
                 <React.Fragment key={index}>
                   <li>
                     <NavLink
-                      className="list-group-item"
+                      className={`list-group-item list-${index}`}
                       activeClassName="active"
                       aria-current="page"
                       to={items.url}
@@ -59,16 +59,18 @@ class DefaultSidebar extends React.Component {
                   alt={"img"}
                 />
               ) : (
-                  <img src={defaultProfileImage} className="w-100" alt={"img"} />
-                )}
+                <img src={defaultProfileImage} className="w-100" alt={"img"} />
+              )}
             </div>
           </div>
           <div className="profile-text-tile color-black">
             <div className="font-weight-bold text-center mt-2">
-              <div>
-                {profiledata
-                  ? `${profiledata.firstName}${" "} ${profiledata.lastName}`
-                  : ""}
+              <div className="cursor_pointer">
+                <span onClick={this.props.handleSetting}>
+                  {profiledata
+                    ? `${profiledata.firstName}${" "} ${profiledata.lastName}`
+                    : ""}
+                </span>
               </div>
             </div>
             <div className={"text-center"}>

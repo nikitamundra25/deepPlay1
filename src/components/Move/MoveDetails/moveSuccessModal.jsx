@@ -44,8 +44,12 @@ class MoveSuccessModal extends React.Component {
                     </div>
                     <p className="font-weight-bold mt-3 text-center h5">Would you like to create another Move from the same video?</p>
                     <div className="text-center mt-4">
-                      <Button onClick={this.props.handleMoveSuccessModal} className="btn-line-black">Yes create another</Button>
-                      <Button onClick={this.props.redirectToSetDetails} className="btn-black">No i'am done</Button>
+                      <Button 
+                      onClick={this.props.handleMoveSuccessModal} 
+                      className="btn-line-black"
+                      color=" "
+                      >Yes create another</Button>
+                      <Button onClick={this.props.redirectToSetDetails} className="btn-black" color=" ">No i'am done</Button>
                     </div>
                   </CardBody>
                 </div>

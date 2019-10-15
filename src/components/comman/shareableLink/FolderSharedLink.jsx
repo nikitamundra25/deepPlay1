@@ -51,7 +51,6 @@ class FolderSharedLink extends React.Component {
 
   onPageChange = page => {
     const { parsedUrl } = this.state;
-    console.log("pa", parsedUrl);
     this.props.onGoPage(
       `${AppRoutes.FOLDER_SHARED_LINK.url +
         `?userId=${parsedUrl.userId}&folderId=${parsedUrl.folderId}&isPublic=${parsedUrl.isPublic}`}?${qs.stringify(
@@ -87,6 +86,17 @@ class FolderSharedLink extends React.Component {
 
     return (
       <div className={"dashboard-full-section without-sidebar"}>
+        <div className="p-3">
+          <span
+            onClick={() => {
+              window.history.back();
+            }}
+            className={"cursor_pointer back-arrow"}
+          >
+            {" "}
+            <i className="fas fa-long-arrow-alt-left" /> Back
+          </span>
+        </div>
         <Container>
           {/* <div className="text-center h3">
             <b> Folder Details</b>
@@ -119,7 +129,7 @@ class FolderSharedLink extends React.Component {
                       className={"cursor_pointer"}
                     >
                       <div className="tile-wrap card">
-                        <div className="cotent-tile d-flex">
+                        <div className="cotent-tile d-flex content-with-img">
                           <div className="cotent-text-tile">
                             <div className="content-heading-tile">
                               <span>{list.title}</span>
@@ -150,6 +160,7 @@ class FolderSharedLink extends React.Component {
                 })
               ) : (
                 <>
+                <Col>
                   <div className="create-set-section w-100 empty-folder-section">
                     <Card className="set-content-wrap empty-folder-card">
                       <div className="set-content-block w-100 empty-folder-wrap">
@@ -166,6 +177,7 @@ class FolderSharedLink extends React.Component {
                       </div>
                     </Card>
                   </div>
+                  </Col>
                 </>
               )
             ) : (

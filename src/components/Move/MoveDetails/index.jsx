@@ -23,7 +23,7 @@ import { logger } from "helper/Logger";
 import { completeVideoEditing } from "actions/Moves";
 import closeBtn from "../../../assets/img/close-img.png";
 import MoveSuccessModal from "./moveSuccessModal"
-
+import { AppRoutes } from "../../../config/AppRoutes";
 // core components
 class MoveDetails extends React.Component {
   constructor(props) {
@@ -166,6 +166,12 @@ class MoveDetails extends React.Component {
   /**
    *
    */
+  redirectToSetDetails = () => {
+    this.props.redirectTo(AppRoutes.SET_DETAILS.url.replace(":id", this.state.setId))
+  }
+  /**
+   *
+   */
   cancelDescription = () => {
     const { modelInfoReducer } = this.props;
     const { modelDetails } = modelInfoReducer;
@@ -236,8 +242,8 @@ class MoveDetails extends React.Component {
               ) : (
                   <>
                     <Row>
-                      <Col md={"12"}>
-                        <Row className={"mt-3"}>
+                      <Col md={"12"} className={"mt-3"}>
+                     
                           {moveDetails && moveDetails.videoUrl ? (
                             <>
                               <VideoView
@@ -264,7 +270,7 @@ class MoveDetails extends React.Component {
                           ) : (
                               <Loader />
                             )}
-                        </Row>
+                    
                       </Col>
                     </Row>
                     <FrameDetails

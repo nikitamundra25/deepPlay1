@@ -5,6 +5,7 @@ import {
   MovesAction,
   downloadYoutubeVideoSuccess,
   getMovesOfSetSuccess,
+  getMovesOfSetRequest,
   getMoveDetailsSuccess,
   modelOpenRequest
 } from "../actions";
@@ -142,28 +143,90 @@ const completeVideoEditingLogic = createLogic({
       undefined,
       action.payload
     );
-    logger(result, action.payload);
-    dispatch(
-      modelOpenRequest({
-        modelDetails: {
-          isMoveSuccessModal: true
-        }
-      })
-    );
-    dispatch(
-      completeVideoEditingSuccess({
-        isSavingWebM: false
-      })
-    );
-    done();
+    if (result.isError) {
+      toast.error(result.messages[0]);
+    } else {
+      logger(result, action.payload);
+      dispatch(
+        modelOpenRequest({
+          modelDetails: {
+            isMoveSuccessModal: true
+          }
+        })
+      );
+      dispatch(
+        completeVideoEditingSuccess({
+          isSavingWebM: false
+        })
+      );
+      done();
+    }
   }
 });
 /**
  *
  */
+
+//Star move
+const starMoveLogic = createLogic({
+  type: MovesAction.STARRED_MOVE_REQUEST,
+  async process({ action, getState }, dispatch, done) {
+    let api = new ApiHelper();
+    let result = await api.FetchFromServer(
+      "move",
+      "/starred-move",
+      "PUT",
+      true,
+      action.payload
+    );
+    if (result.isError) {
+      if (!toast.isActive(toastId)) {
+        toastId = toast.error(result.messages[0]);
+      }
+      done();
+      return;
+    } else {
+      if (!toast.isActive(toastId)) {
+        toastId = toast.success(result.messages[0]);
+      }
+      dispatch(getMovesOfSetRequest({ setId: action.payload.setId }));
+      done();
+    }
+  }
+});
+
+//Delete move
+const deleteMoveLogic = createLogic({
+  type: MovesAction.DELETE_MOVES_REQUEST,
+  async process({ action }, dispatch, done) {
+    let api = new ApiHelper();
+    let result = await api.FetchFromServer(
+      "move",
+      "/delete-move",
+      "PATCH",
+      true,
+      action.payload
+    );
+    if (result.isError) {
+      if (!toast.isActive(toastId)) {
+        toastId = toast.error(result.messages[0]);
+      }
+      done();
+      return;
+    } else {
+      if (!toast.isActive(toastId)) {
+        toastId = toast.success(result.messages[0]);
+      }
+      dispatch(getMovesOfSetRequest({ setId: action.payload.setId }));
+      done();
+    }
+  }
+});
 export const MoveLogics = [
   downloadVideoLogic,
   getMovesOfSetLogic,
   getMovesDetailsByIdLogic,
-  completeVideoEditingLogic
+  completeVideoEditingLogic,
+  starMoveLogic,
+  deleteMoveLogic
 ];

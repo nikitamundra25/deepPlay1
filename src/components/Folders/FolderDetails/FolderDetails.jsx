@@ -316,7 +316,7 @@ class RecentFolderComponent extends React.Component {
             >
               <i className="fas fa-plus-circle icon-font"></i>
             </span>
-            <UncontrolledTooltip placement="bottom" target="move">
+            <UncontrolledTooltip placement="top" target="move">
               Add Sets
             </UncontrolledTooltip>
             <span
@@ -326,7 +326,7 @@ class RecentFolderComponent extends React.Component {
             >
               <i className="fas fa-share icon-font"></i>
             </span>
-            <UncontrolledTooltip placement="bottom" target="share">
+            <UncontrolledTooltip placement="top" target="share">
               Get Shareable Link
             </UncontrolledTooltip>
             <UncontrolledDropdown className="header-dropdown  ">
@@ -347,13 +347,13 @@ class RecentFolderComponent extends React.Component {
               </DropdownMenu>
             </UncontrolledDropdown>
 
-            <UncontrolledTooltip placement="bottom" target="edit">
+            <UncontrolledTooltip placement="top" target="edit">
               Edit & Delete
             </UncontrolledTooltip>
           </div>
         </div>{" "}
         <Row className="set-wrap">
-          <Col>
+      
             {!isFolderSetLoading ? (
               setOfFolder && setOfFolder.length ? (
                 // eslint-disable-next-line
@@ -364,7 +364,7 @@ class RecentFolderComponent extends React.Component {
                         className="tile-wrap card"
                         onMouseLeave={() => this.closePopOver()}
                       >
-                        <div className="cotent-tile d-flex content-with-tip">
+                        <div className="cotent-tile d-flex content-with-tip content-with-img">
                           <div
                             className="cotent-text-tile cursor_pointer text-capitalize"
                             onClick={() => this.handleSetDetails(list._id)}
@@ -416,6 +416,7 @@ class RecentFolderComponent extends React.Component {
                               <ButtonGroup size="sm">
                                 <Button
                                   onClick={() => this.OnCreateSetCopy(list)}
+                                  color=" "
                                 >
                                   Copy
                                 </Button>
@@ -423,6 +424,7 @@ class RecentFolderComponent extends React.Component {
                                   onClick={() =>
                                     this.openTransferToModal(list._id)
                                   }
+                                  color=" "
                                 >
                                   Transfer
                                 </Button>
@@ -430,6 +432,7 @@ class RecentFolderComponent extends React.Component {
                                   onClick={() =>
                                     this.onRemoveSets(list._id, "remove")
                                   }
+                                  color=" "
                                 >
                                   Remove
                                 </Button>
@@ -443,6 +446,7 @@ class RecentFolderComponent extends React.Component {
                 })
               ) : (
                 <>
+                <Col>
                   <div className="create-set-section mt-2 w-100 empty-folder-section">
                     <Card className="set-content-wrap empty-folder-card">
                       <div className="set-content-block w-100 empty-folder-wrap">
@@ -473,6 +477,7 @@ class RecentFolderComponent extends React.Component {
                       </div>
                     </Card>
                   </div>
+                  </Col>
                 </>
               )
             ) : (
@@ -480,7 +485,7 @@ class RecentFolderComponent extends React.Component {
                 <Loader />
               </Col>
             )}
-          </Col>
+         
         </Row>
         <AddSetModal
           handleOpen={this.openAddSetModel}

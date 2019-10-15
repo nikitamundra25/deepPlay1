@@ -100,7 +100,6 @@ class MoveComponent extends React.Component {
         return;
       }
       if (!this.state.errors) {
-        console.log("fgfj", this.state.errors);
         const payload = {
           url: this.state.url,
           isYoutubeUrl: this.state.isYouTubeUrl
@@ -146,19 +145,19 @@ class MoveComponent extends React.Component {
   };
 
   render() {
-    const { errors, url } = this.state;
+    const { errors, url, fileErr } = this.state;
     const { moveReducer } = this.props;
     const { isVideoDownloading } = moveReducer;
 
     return (
       <>
-        <div className="create-set-section step-2 ">
+        <div className="create-set-section step-2 create-move-section">
           <Card className="set-content-wrap create-a-move p-0">
             <div className="set-content-block w-100">
               <CardHeader className="border-bottom pt-4 pb-2">
                 <div className="content-header set-header flex-column">
                   <span className="content-title creat-set-title">
-                    {isVideoDownloading ? "Preparing WebM" : "Creat a move"}
+                    {isVideoDownloading ? "Preparing WebM" : "Create a move"}
                   </span>
                 </div>
               </CardHeader>
@@ -181,14 +180,18 @@ class MoveComponent extends React.Component {
                             Paste YouTube Video URL or Type URL Manually{" "}
                           </Label>
                         </FormGroup>
-                        <FormGroup className="flex-fill flex-column mt-0 ">
+                        <FormGroup 
+                        className={
+                          errors? `flex-fill flex-column mt-0 form-custom-error error-with-append-btn`:
+                          "flex-fill flex-column mt-0 form-custom-error"
+                          }>
                           <InputGroup>
                             <Input
                               id="url"
                               className={
                                 errors
-                                  ? "capitalize pl-2 boder-1-invalid is-invalid "
-                                  : "capitalize pl-2 boder-1 "
+                                  ? " pl-2 boder-1-invalid is-invalid "
+                                  : " pl-2 boder-1 "
                               }
                               placeholder="Ex: https://www.youtube.com/watch?v=I5t894l5b1w"
                               type="text"
@@ -197,6 +200,10 @@ class MoveComponent extends React.Component {
                               onChange={this.handleChange}
                               value={url}
                             />
+                            <FormFeedback>
+                              {errors.validUrl && url ? errors.validUrl : null}
+                              {errors.notUrl ? errors.notUrl : null}
+                            </FormFeedback>
                             <InputGroupAddon
                               addonType="append"
                               id="upload-title"
@@ -215,13 +222,13 @@ class MoveComponent extends React.Component {
                               Paste YouTube Video URL or Type URL Manually
                             </UncontrolledTooltip>
                           </InputGroup>
-                          <FormFeedback>
+                          {/* <FormFeedback>
                             {errors.notUrl
                               ? errors.notUrl
                               : errors.validUrl && url
                               ? errors.validUrl
                               : null}
-                          </FormFeedback>
+                          </FormFeedback> */}
                         </FormGroup>
                       </div>
                       <div className="divider-or mt-5 mb-5">
@@ -245,12 +252,21 @@ class MoveComponent extends React.Component {
                           <CustomInput
                             onChange={this.handleVideoFileSelect}
                             type="file"
+                            accept="video/mp4,video/x-m4v,video/*"
                             disabled={false}
-                            className={"d-none"}
+                            className={fileErr ? "is-invalid d-none" : "d-none"}
                             id="videoUpload"
                             name="customFile"
                           />
                         </FormGroup>
+                        {fileErr ? (
+                          <p className="text-danger">{fileErr} </p>
+                        ) : (
+                          ""
+                        )}
+                        <FormFeedback className="p-3">
+                          {fileErr ? fileErr : ""}
+                        </FormFeedback>
                       </div>
                     </Form>
                   )}
