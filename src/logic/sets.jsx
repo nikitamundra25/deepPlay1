@@ -65,7 +65,7 @@ const createSetLogic = createLogic({
         if (action.payload.addMove) {
           dispatch(redirectTo({ path: AppRoutes.MOVE.url }));
         }
-        if (action.payload.folderId) {
+        if (action.payload.folderId !== "") {
           dispatch(
             getFolderSetRequest({
               folderId: action.payload.folderId,

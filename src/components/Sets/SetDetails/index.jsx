@@ -21,7 +21,9 @@ import {
   getMovesOfSetRequest,
   UpdateSetRequest,
   starredMovesRequest,
-  deleteMovesRequest
+  getAllSetRequest,
+  deleteMovesRequest,
+  transferMovesRequest
 } from "../../../actions";
 import SharableLinkModal from "../../comman/shareableLink/SharableLink";
 import { AppRoutes } from "../../../config/AppRoutes";
@@ -34,6 +36,7 @@ import WebmView from "./WebmView";
 import Loader from "../../comman/Loader/Loader";
 import CreateSetComponent from "../../Sets/createSet";
 import MoveList from "./moveList";
+
 // core components
 class SetDetails extends React.Component {
   constructor(props) {
@@ -44,16 +47,19 @@ class SetDetails extends React.Component {
       show: false,
       setIndex: -1,
       isPaste: false,
-      showVideoIndex: 0
+      showVideoIndex: 0,
+      setIdPathName: ""
     };
   }
   componentDidMount = () => {
     const location = this.props.location;
     const pathName = location.pathname.split("/");
-    console.log("#################", pathName[3]);
-
     this.props.getSetDetailsRequest({ setId: pathName[3] });
     this.props.getMovesOfSetRequest({ setId: pathName[3] });
+    this.props.getSetList({ isSetNoLimit: false });
+    this.setState({
+      setIdPathName: pathName[3]
+    });
   };
   /*
   /*  
@@ -156,19 +162,24 @@ class SetDetails extends React.Component {
     this.props.deleteMoveRequest(data);
   };
 
+  transferMove = data => {
+    this.props.transferMoveRequest(data);
+  };
+
   render() {
     const {
       setReducer,
       moveReducer,
       shareLinkReducer,
-      modelInfoReducer
+      modelInfoReducer,
+      allSetList
     } = this.props;
     const { setDetails } = setReducer;
     const { modelDetails } = modelInfoReducer;
     const { movesOfSet, isMoveofSetLoading } = moveReducer;
     const { userEncryptedInfo } = shareLinkReducer;
     const { sharableLinkModalOpen, createSetModalOpen } = modelDetails;
-    const { show, setIndex, showVideoIndex } = this.state;
+    const { show, setIndex, setIdPathName } = this.state;
 
     return (
       <>
@@ -235,41 +246,42 @@ class SetDetails extends React.Component {
                   {movesOfSet && movesOfSet.length ? (
                     // movesOfSet.map((video, index) => {
                     <WebmView
-                      // key={index}
-                      video={movesOfSet[showVideoIndex]}
+                      setIdPathName={setIdPathName}
+                      video={movesOfSet[movesOfSet.length - 1]}
+                      deleteMove={this.deleteMove}
                     />
                   ) : (
-                      <div className="create-set-section w-100 empty-folder-section">
-                        <div className="set-content-wrap empty-folder-card">
-                          <div className="set-content-block w-100 empty-folder-wrap">
-                            <CardHeader className="empty-folder-header text-center">
-                              <img src={emptySetIc} alt={"Images"} />
-                              <div className="content-header set-header">
-                                <span className="content-title">
-                                  {" "}
-                                  <h3>You haven't added any move yet!</h3>
-                                  <p>No move availabe for this set</p>
-                                </span>
-                              </div>
-                            </CardHeader>
-                            <CardBody className="">
-                              <div className="create-set-tile"></div>
-                              <div className="text-center">
-                                <Button
-                                  color=" "
-                                  type="button"
-                                  className="btn-black btn "
-                                  onClick={this.handleMoveAdd}
-                                >
-                                  <i className="fas fa-plus mr-1"></i>
-                                  Add a Move
+                    <div className="create-set-section w-100 empty-folder-section">
+                      <div className="set-content-wrap empty-folder-card">
+                        <div className="set-content-block w-100 empty-folder-wrap">
+                          <CardHeader className="empty-folder-header text-center">
+                            <img src={emptySetIc} alt={"Images"} />
+                            <div className="content-header set-header">
+                              <span className="content-title">
+                                {" "}
+                                <h3>You haven't added any move yet!</h3>
+                                <p>No move availabe for this set</p>
+                              </span>
+                            </div>
+                          </CardHeader>
+                          <CardBody className="">
+                            <div className="create-set-tile"></div>
+                            <div className="text-center">
+                              <Button
+                                color=" "
+                                type="button"
+                                className="btn-black btn "
+                                onClick={this.handleMoveAdd}
+                              >
+                                <i className="fas fa-plus mr-1"></i>
+                                Add a Move
                               </Button>
-                              </div>
-                            </CardBody>
-                          </div>
+                            </div>
+                          </CardBody>
                         </div>
                       </div>
-                    )}
+                    </div>
+                  )}
                 </div>
               </Card>
               <MoveList
@@ -281,15 +293,18 @@ class SetDetails extends React.Component {
                 isStarred={this.isStarred}
                 deleteMove={this.deleteMove}
                 movesOfSet={movesOfSet}
+                allSetList={allSetList}
+                openTransferToModal={this.openTransferToModal}
                 handleShowVideo={this.handleShowVideo}
+                transferMove={this.transferMove}
                 {...this.props}
               />
             </>
           ) : (
-              <Col md="12">
-                <Loader />
-              </Col>
-            )}
+            <Col md="12">
+              <Loader />
+            </Col>
+          )}
         </div>
         <SharableLinkModal
           modal={sharableLinkModalOpen}
@@ -312,6 +327,7 @@ class SetDetails extends React.Component {
 }
 
 const mapStateToProps = state => ({
+  allSetList: state.setReducer.allSetList,
   setReducer: state.setReducer,
   moveReducer: state.moveReducer,
   modelInfoReducer: state.modelInfoReducer,
@@ -332,7 +348,11 @@ const mapDispatchToProps = dispatch => ({
   getMovesOfSetRequest: data => dispatch(getMovesOfSetRequest(data)),
   UpdateSetRequest: data => dispatch(UpdateSetRequest(data)),
   isStarredRequest: data => dispatch(starredMovesRequest(data)),
-  deleteMoveRequest: data => dispatch(deleteMovesRequest(data))
+  deleteMoveRequest: data => dispatch(deleteMovesRequest(data)),
+  transferMoveRequest: data => dispatch(transferMovesRequest(data)),
+  getSetList: data => {
+    dispatch(getAllSetRequest(data));
+  }
 });
 export default connect(
   mapStateToProps,

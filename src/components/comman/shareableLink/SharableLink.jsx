@@ -123,14 +123,14 @@ class SharableLinkModal extends React.Component {
                         name="url"
                         readOnly
                         value={pathUrl}
-                        className="w-100"
+                        className="w-100 cursor_pointer"
                         rows={5}
                       />
                     </CopyToClipboard>
                   </InputGroup>
                 </div>
               </FormGroup>
-              <div className=" d-flex justify-content-center">
+              <div className=" d-flex justify-content-center ">
                 <CopyToClipboard
                   text={pathUrl}
                   onCopy={() => this.setState({ copied: true })}

@@ -449,8 +449,6 @@ const deleteMove = async (req: Request, res: Response): Promise<any> => {
   try {
     const { query } = req;
     const { moveId } = query;
-    console.log(">>>>>>", moveId);
-
     if (!moveId) {
       res.status(400).json({
         message: "MoveId not found"
@@ -482,6 +480,7 @@ const transferMove = async (req: Request, res: Response): Promise<any> => {
   try {
     const { body } = req;
     const { setId, moveId } = body;
+    console.log(">>>>>>", moveId);
     if (!setId) {
       res.status(400).json({
         message: "SetId not found"

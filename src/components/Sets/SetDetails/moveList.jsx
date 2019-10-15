@@ -12,6 +12,7 @@ import addPlusIc from "../../../assets/img/add_plus.png";
 import starIc from "../../../assets/img/star.svg";
 import { AppConfig } from "config/Appconfig";
 import { AppRoutes } from "config/AppRoutes";
+import TransferToModal from "../../Folders/FolderDetails/transferTo";
 import "./index.scss";
 
 // core components
@@ -25,7 +26,9 @@ class MoveList extends React.Component {
       isSelectVideo: false,
       selectedMoves: [],
       selectedMoveIds: [],
-      page: 1
+      page: 1,
+      moveToTransfer: "",
+      setId: ""
     };
   }
   handleVideoHoverLeave = () => {
@@ -57,20 +60,18 @@ class MoveList extends React.Component {
   /*
    */
   handleMovesSelect = (valueCheck, e, index, moveId) => {
-    let checked
+    let checked;
     if (e && e.target && valueCheck === null) {
-      console.log(">>>>>>>", e.target.checked);
-      checked = !e.target.checked
+      checked = !e.target.checked;
     } else {
-      console.log("<<<<<<<<<<", valueCheck);
-      checked = valueCheck
+      checked = valueCheck;
     }
     const selectedMoves = [...this.state.selectedMoves];
     selectedMoves[index] = checked;
 
     let selectedMoveIds = [...this.state.selectedMoveIds];
     if (checked === true) {
-      selectedMoveIds.push(moveId)
+      selectedMoveIds.push(moveId);
     } else {
       selectedMoveIds = selectedMoveIds.filter(item => item !== moveId);
     }
@@ -122,14 +123,48 @@ class MoveList extends React.Component {
     this.props.deleteMove(data);
   };
 
+  openTransferToModal = (id, setId) => {
+    const { modelInfoReducer } = this.props;
+    const { modelDetails } = modelInfoReducer;
+    this.setState({
+      moveToTransfer: id,
+      setId: setId
+    });
+    this.props.modelOperate({
+      modelDetails: {
+        transferToModalOpen: !modelDetails.transferToModalOpen
+      }
+    });
+  };
+
+  handleMoveTransfer = data => {
+    const { selectedMoveIds } = this.state;
+    const moveData = {
+      moveId: selectedMoveIds.length ? selectedMoveIds : data.moveId,
+      setId: data.setId,
+      previousSetId: data.previousSetId
+    };
+    this.props.transferMove(moveData);
+  };
   render() {
-    const { show, setIndex, moveCount, movesOfSet } = this.props;
+    const {
+      show,
+      setIndex,
+      moveCount,
+      movesOfSet,
+      modelInfoReducer,
+      allSetList
+    } = this.props;
+    const { modelDetails } = modelInfoReducer;
+    const { transferToModalOpen } = modelDetails;
     const {
       isVideoChecked,
       isSelectVideo,
       videoIndex,
       selectedMoves,
-      selectedMoveIds
+      selectedMoveIds,
+      setId,
+      moveToTransfer
     } = this.state;
 
     return (
@@ -334,9 +369,17 @@ class MoveList extends React.Component {
                                 this.handleStarred(video._id, video.isStarred)
                               }
                             >
-                              {video.isStarred ? "UnStar" : "Star"}
+                              {video.isStarred ? "Unstar" : "Star"}
                             </Button>
-                            <Button color=" ">Transfer</Button>
+                            <Button color=" ">Add tags</Button>
+                            <Button
+                              color=" "
+                              onClick={() =>
+                                this.openTransferToModal(video._id, video.setId)
+                              }
+                            >
+                              Transfer
+                            </Button>
                             <Button
                               color=" "
                               onClick={() => this.handleMoveDelete(video._id)}
@@ -353,6 +396,16 @@ class MoveList extends React.Component {
             );
           })}
         </Row>
+        <TransferToModal
+          modal={transferToModalOpen}
+          AllFolders={allSetList}
+          moveToTransfer={moveToTransfer}
+          handleFolderModel={this.handleFolderModel}
+          folderId={setId}
+          transferMove={true}
+          handleOpen={this.openTransferToModal}
+          handleMove={this.handleMoveTransfer}
+        />
       </section>
     );
   }

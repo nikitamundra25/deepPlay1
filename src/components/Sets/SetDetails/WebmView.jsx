@@ -98,6 +98,15 @@ class WebmView extends Component {
   /**
    *
    */
+  handleMoveDelete = id => {
+    const data = {
+      moveId: id,
+      isDeleted: true,
+      setId: this.props.setIdPathName
+    };
+     this.props.deleteMove(data);
+  };
+
   render() {
     const { video } = this.props;
     const { moveURL, videoMetaData, title } = video;
@@ -130,7 +139,11 @@ class WebmView extends Component {
                   <DropdownItem>Edit</DropdownItem>
                   <DropdownItem>View Info</DropdownItem>
                   <DropdownItem>Tranfer</DropdownItem>
-                  <DropdownItem>Delete</DropdownItem>
+                  <DropdownItem
+                    onClick={() => this.handleMoveDelete(video._id)}
+                  >
+                    Delete
+                  </DropdownItem>
                 </DropdownMenu>
               </UncontrolledDropdown>
             </div>
