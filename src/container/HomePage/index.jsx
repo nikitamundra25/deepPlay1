@@ -84,7 +84,7 @@ class HomePage extends React.Component {
               <div className="text-center">
                 <Button
                   color={" "}
-                  className="fill-btn btn w-75 m-auto white-color"
+                  className="fill-btn btn w-75 m-auto white-color get-stated-btn"
                   onClick={
                     isLoggedIn
                       ? this.handleDashboardOpen

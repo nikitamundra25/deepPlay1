@@ -111,6 +111,8 @@ class SampleSet extends React.Component {
                 </div>
               </Col>
             ))} */}
+            <div className="set-drag-wrap">
+            <Col >
             <DragDropContext onDragEnd={this.onDragEnd}>
               <Droppable droppableId="droppable" direction={"horizontal"}>
                 {(provided, snapshot) => (
@@ -136,12 +138,12 @@ class SampleSet extends React.Component {
                                     <div
                                       className="blur-img"
                                       style={{
-                                        backgroundImage: 'url("' + images + '")'
+                                        background: '#000'
                                       }}
                                     ></div>
                                   </div>
                                   <div className="play-list-text">
-                                    <div className="play-list-heading h6 ">
+                                    <div className="play-list-heading h6 font-weight-bold">
                                       {images.title}
                                     </div>
                                   </div>
@@ -157,6 +159,8 @@ class SampleSet extends React.Component {
                 )}
               </Droppable>
             </DragDropContext>
+            </Col>
+            </div>
           </Row>
         </section>
       </Container>
