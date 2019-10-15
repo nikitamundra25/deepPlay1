@@ -130,6 +130,15 @@ class ForgotPasswordComponent extends React.Component {
                       {isSendingLink ? "Plaese Wait..." : "Send Link"}
                     </Button>
                   </div>
+                  <div
+                    className={
+                      "text-left cursor_pointer forgot-password-bottom-wrap"
+                    }
+                  >
+                    <span onClick={this.props.handleLoginModel}>
+                      Back to login
+                    </span>
+                  </div>
                 </Form>
               </CardBody>
             </Card>

@@ -174,28 +174,14 @@ class SetDetails extends React.Component {
       <>
         <div className="set-main-section">
           <div className="content-header">
-            {setDetails && setDetails.folderId ? (
-              <span className="content-title">
-                <div className="main-title">
-                  <span className="font-weight-normal">
-                    {setDetails && setDetails.folderId
-                      ? setDetails.folderId.isCopy
-                        ? `Copy of ${setDetails.folderId.title}`
-                        : setDetails.folderId.title
-                      : null}
-                  </span>
-                  /
-                  <span className={"font-weight-bold"}>{setDetails.title}</span>
-                </div>
-              </span>
-            ) : (
-              <span className="content-title">
-                <div className="main-title">
-                  {setDetails ? setDetails.title : "MyFolder"}
-                </div>
-              </span>
-            )}
-
+            <span className="content-title">
+              <div className="main-title">
+                {setDetails ? setDetails.title : "MyFolder"}
+              </div>
+              <div className="sub-title">
+                Total Move {setDetails ? `${setDetails.moveCount}` : 0}
+              </div>
+            </span>
             <div>
               <span
                 id="move"
@@ -253,37 +239,37 @@ class SetDetails extends React.Component {
                       video={movesOfSet[showVideoIndex]}
                     />
                   ) : (
-                    <div className="create-set-section w-100 empty-folder-section">
-                      <div className="set-content-wrap empty-folder-card">
-                        <div className="set-content-block w-100 empty-folder-wrap">
-                          <CardHeader className="empty-folder-header text-center">
-                            <img src={emptySetIc} alt={"Images"} />
-                            <div className="content-header set-header">
-                              <span className="content-title">
-                                {" "}
-                                <h3>You haven't added any move yet!</h3>
-                                <p>No move availabe for this set</p>
-                              </span>
-                            </div>
-                          </CardHeader>
-                          <CardBody className="">
-                            <div className="create-set-tile"></div>
-                            <div className="text-center">
-                              <Button
-                                color=" "
-                                type="button"
-                                className="btn-black btn "
-                                onClick={this.handleMoveAdd}
-                              >
-                                <i className="fas fa-plus mr-1"></i>
-                                Add a Move
+                      <div className="create-set-section w-100 empty-folder-section">
+                        <div className="set-content-wrap empty-folder-card">
+                          <div className="set-content-block w-100 empty-folder-wrap">
+                            <CardHeader className="empty-folder-header text-center">
+                              <img src={emptySetIc} alt={"Images"} />
+                              <div className="content-header set-header">
+                                <span className="content-title">
+                                  {" "}
+                                  <h3>You haven't added any move yet!</h3>
+                                  <p>No move availabe for this set</p>
+                                </span>
+                              </div>
+                            </CardHeader>
+                            <CardBody className="">
+                              <div className="create-set-tile"></div>
+                              <div className="text-center">
+                                <Button
+                                  color=" "
+                                  type="button"
+                                  className="btn-black btn "
+                                  onClick={this.handleMoveAdd}
+                                >
+                                  <i className="fas fa-plus mr-1"></i>
+                                  Add a Move
                               </Button>
-                            </div>
-                          </CardBody>
+                              </div>
+                            </CardBody>
+                          </div>
                         </div>
                       </div>
-                    </div>
-                  )}
+                    )}
                 </div>
               </Card>
               <MoveList
@@ -300,10 +286,10 @@ class SetDetails extends React.Component {
               />
             </>
           ) : (
-            <Col md="12">
-              <Loader />
-            </Col>
-          )}
+              <Col md="12">
+                <Loader />
+              </Col>
+            )}
         </div>
         <SharableLinkModal
           modal={sharableLinkModalOpen}
