@@ -46,6 +46,16 @@ class HomePage extends React.Component {
       }
     });
   };
+
+  handleSetModal = () => {
+    const { modelInfoReducer } = this.props;
+    const { modelDetails } = modelInfoReducer;
+    this.props.modelOpenRequest({
+      modelDetails: {
+        createSetOpen: !modelDetails.createSetOpen
+      }
+    });
+  };
   /*
    */
   render() {
@@ -56,16 +66,10 @@ class HomePage extends React.Component {
     } else {
       isLoggedIn = false;
     }
-    // const { modelInfoReducer, socialLoginRequest, loginRequest, forgotPasswordRequest, loginReducer } = this.props
-    // const { modelDetails } = modelInfoReducer;
-    // const {
-    //   loginModelOpen,
-    //   forgotPasswordModalOpen
-    // } = modelDetails;
     return (
       <Container>
-        <section className="home-video-section mt-5">
-          <Row className="mb-5">
+        <section className="home-video-section">
+          <Row className="">
             <Col md="6" className="d-flex flex-column justify-content-between ">
               <div className="banner-text">
                 <h3 className="banner-heading">
@@ -79,8 +83,8 @@ class HomePage extends React.Component {
               </div>
               <div className="text-center">
                 <Button
-                color={" "}
-                  className="fill-btn btn w-75 m-auto h3"
+                  color={" "}
+                  className="fill-btn btn w-75 m-auto white-color get-stated-btn"
                   onClick={
                     isLoggedIn
                       ? this.handleDashboardOpen
@@ -101,7 +105,7 @@ class HomePage extends React.Component {
             </Col>
           </Row>
         </section>
-        <section className="play-list-collection ">
+        <section className="play-list-collection home-page-play-list">
           <Row className="mb-5">
             <Col md="12" className="mb-5">
               <h6 className="h3 text-center theme-heading">
@@ -111,25 +115,47 @@ class HomePage extends React.Component {
             <Col md="4">
               <div className="play-list-block  d-flex h-100">
                 <div className="add-play-list-block d-flex  justify-content-center align-items-center text-center flex-column">
-                  <div className="h5 font-dark-bold">
+                  <div className="h4 font-dark-bold">
                     Create your own set to learn or teach
                   </div>
-                  <Button color={" "} className="fill-btn btn mt-4"> Create Now</Button>
+                  <Button
+                    color={" "}
+                    className="fill-btn btn mt-4"
+                    onClick={
+                      isLoggedIn
+                        ? this.handleSetModal
+                        : this.handleLoginModalOpen
+                    }
+                  >
+                    {" "}
+                    Create Now
+                  </Button>
                 </div>
               </div>
             </Col>
             {homePageImage.map((images, index) => {
               return (
                 <Col md="4" key={index}>
-                  <div className="play-list-block">
+                  <div className="play-list-block ">
                     <div
-                      className="play-list-img"
-                      style={{ backgroundImage: 'url("' + images + '")' }}
-                    ></div>
-                    <div className="play-list-text">
-                      <div className="play-list-number">25 Moves</div>
-                      <div className="play-list-heading h6 ">
-                        Salsa Footwork
+                      className="play-sub-block cursor_pointer"
+                      onClick={() =>
+                        this.props.redirectTo(AppRoutes.SAMPLE_SET.url)
+                      }
+                    >
+                      <div className="play-list-img blur-img-wrap">
+                        <img src={images} alt={""} />
+                        <div
+                          className="blur-img"
+                          style={{ backgroundImage: 'url("' + images + '")' }}
+                        ></div>
+                      </div>
+
+                      <div className="play-list-text">
+                        <div className="play-list-number">25 Moves</div>
+                        <div className="play-list-heading h6 ">
+                          Salsa Footwork
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -142,9 +168,17 @@ class HomePage extends React.Component {
           <Row className="mb-5">
             <Col md="12" className="mb-5 text-center">
               <h6 className="h3 text-center theme-heading font-weight-bold mb-5">
-                Store and learn all your movements in one place
+                Store and learn all your movements in one place!
               </h6>
-              <Button     color={" "} className="fill-btn btn home-message-btn">
+              <Button
+                color={" "}
+                className="fill-btn btn home-message-btn"
+                onClick={
+                  isLoggedIn
+                    ? this.handleDashboardOpen
+                    : this.handleLoginModalOpen
+                }
+              >
                 Get Started
               </Button>
             </Col>

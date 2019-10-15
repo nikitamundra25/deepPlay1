@@ -7,10 +7,12 @@ import {
   showLoader,
   hideLoader,
   modelOpenRequest,
-  uploadImageFailed
+  uploadImageFailed,
+  updateProfileSuccess
 } from "../actions";
 import { AppRoutes } from "../config/AppRoutes";
 import { toast } from "react-toastify";
+let toastId = null;
 /**
  *
  */
@@ -28,7 +30,6 @@ const profileInfoLogic = createLogic({
       undefined,
       undefined
     );
-    console.log("result", result);
     if (result.isError) {
       dispatch(hideLoader());
       toast.error(result.messages[0]);
@@ -52,9 +53,8 @@ const profileInfoLogic = createLogic({
 //update user info
 const UpdateUserDataLogic = createLogic({
   type: ProfileAction.UPDATEPROFILEINFO_REQUEST,
-  async process({ action }, dispatch, done) {
+  async process({ action, getState }, dispatch, done) {
     let api = new ApiHelper();
-    dispatch(showLoader());
     let result = await api.FetchFromServer(
       "user",
       "/updateUserData",
@@ -64,13 +64,27 @@ const UpdateUserDataLogic = createLogic({
       action.payload
     );
     if (result.isError) {
-      dispatch(hideLoader());
-      toast.error(result.messages[0]);
+      if (!toast.isActive(toastId)) {
+        toastId = toast.error(result.messages[0]);
+      }
       done();
       return;
     } else {
-      dispatch(hideLoader());
-      toast.success(result.messages[0]);
+      let temp = getState().profileInfoReducer.profileInfo;
+      if (!action.payload.accountType) {
+        temp = {
+          ...temp,
+          firstName: action.payload.firstName,
+          lastName: action.payload.lastName
+        };
+        dispatch(updateProfileSuccess({ profileInfo: temp }));
+        if (!toast.isActive(toastId)) {
+          toastId = toast.success(result.messages[0]);
+        }
+      } else {
+        temp = { ...temp, roleType: action.payload.roleType };
+        dispatch(updateProfileSuccess({ profileInfo: temp }));
+      }
       done();
     }
   }
@@ -81,7 +95,6 @@ const DeleteUserAccountLogic = createLogic({
   type: ProfileAction.DELETE_USER_ACCOUNT_REQUEST,
   async process({ action }, dispatch, done) {
     let api = new ApiHelper();
-    dispatch(showLoader());
     let result = await api.FetchFromServer(
       "user",
       "/userAccountDelete",
@@ -90,13 +103,15 @@ const DeleteUserAccountLogic = createLogic({
       undefined
     );
     if (result.isError) {
-      dispatch(hideLoader());
-      toast.error(result.messages[0]);
+      if (!toast.isActive(toastId)) {
+        toastId = toast.error(result.messages[0]);
+      }
       done();
       return;
     } else {
-      dispatch(hideLoader());
-      toast.success(result.messages[0]);
+      if (!toast.isActive(toastId)) {
+        toastId = toast.success(result.messages[0]);
+      }
       localStorage.removeItem("token");
       window.location.href = AppRoutes.HOME_PAGE.url;
       done();
@@ -107,7 +122,6 @@ const DeleteUserAccountLogic = createLogic({
 const uploadImageLogic = createLogic({
   type: ProfileAction.UPLOAD_IMAGE_REQUEST,
   async process({ action }, dispatch, done) {
-    console.log(" action.payload", action.payload);
     let api = new ApiHelper();
     let result = await api.FetchFromServer(
       "user",
@@ -118,20 +132,22 @@ const uploadImageLogic = createLogic({
       action.payload
     );
     if (result.isError) {
-      dispatch(hideLoader());
-      toast.error(result.messages[0]);
-      dispatch(
-        uploadImageFailed()
-      );
+      if (!toast.isActive(toastId)) {
+        toastId = toast.error(result.messages[0]);
+      }
+      dispatch(uploadImageFailed());
       done();
       return;
     } else {
-      toast.success(result.messages[0]);
+      if (!toast.isActive(toastId)) {
+        toastId = toast.success(result.messages[0]);
+      }
       dispatch(
         uploadImageSuccess({
           imageDetails: {
             profileThumbnail: result.data.profileThumbnail,
             profileImage: result.data.profileImage
+            // profileInfo: result.data.profileThumbnail
           }
         })
       );

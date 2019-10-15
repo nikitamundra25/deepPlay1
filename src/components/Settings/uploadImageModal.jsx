@@ -16,9 +16,9 @@ class UploadImage extends Component {
     if (modal !== this.props.modal) {
       this.setState({
         imageData: ""
-      })
+      });
     }
-  }
+  };
 
   onSelectFile = async (file, index) => {
     for (let x = 0; x < file.length; x++) {
@@ -40,7 +40,7 @@ class UploadImage extends Component {
       await picReader.addEventListener("load", async event => {
         var image = new Image();
         image.src = event.target.result;
-        image.onload = async function () {
+        image.onload = async function() {
           let dataURL = picReader.result;
           let imageData = "";
           imageData = dataURL;
@@ -52,6 +52,7 @@ class UploadImage extends Component {
       await picReader.readAsDataURL(data);
     });
   };
+
   handleCancel = () => {
     this.setState({
       imageData: ""
@@ -59,7 +60,8 @@ class UploadImage extends Component {
     this.props.handleOpen();
   };
   render() {
-    const { isImageUploading } = this.props
+    const { isImageUploading } = this.props;
+
     return (
       <div className="modal-text-center">
         <Modal
@@ -91,38 +93,38 @@ class UploadImage extends Component {
                 <img alt="..." src={this.state.imageData} />
               </div>
             ) : (
-                <>
-                  <div className="upload-file-wrap">
-                    <Dropzone
-                      onDrop={this.onSelectFile}
-                      accept="image/*"
-                      multiple={false}
-                    >
-                      {({ getRootProps, getInputProps }) => {
-                        return (
-                          <div {...getRootProps()}>
-                            <input {...getInputProps()} />
-                            <div className="add-more-img-wrap">
-                              <div className="add-more-text">
-                                <img
-                                  alt="..."
-                                  src={require("assets/img/icons/common/picture.svg")}
-                                  width="50px"
-                                  height="50px"
-                                />
+              <>
+                <div className="upload-file-wrap">
+                  <Dropzone
+                    onDrop={this.onSelectFile}
+                    accept="image/*"
+                    multiple={false}
+                  >
+                    {({ getRootProps, getInputProps }) => {
+                      return (
+                        <div {...getRootProps()}>
+                          <input {...getInputProps()} />
+                          <div className="add-more-img-wrap">
+                            <div className="add-more-text">
+                              <img
+                                alt="..."
+                                src={require("assets/img/icons/common/picture.svg")}
+                                width="50px"
+                                height="50px"
+                              />
 
-                                <div className="upload-heading">
-                                  Drag a profile photo here{" "}
-                                </div>
+                              <div className="upload-heading">
+                                Drag a profile photo here{" "}
                               </div>
                             </div>
                           </div>
-                        );
-                      }}
-                    </Dropzone>
-                  </div>
-                </>
-              )}
+                        </div>
+                      );
+                    }}
+                  </Dropzone>
+                </div>
+              </>
+            )}
           </ModalBody>
           <ModalFooter>
             <Button
@@ -131,11 +133,7 @@ class UploadImage extends Component {
               className="btn btn-black"
               disabled={!isImageUploading ? false : true}
             >
-              {
-                !isImageUploading ?
-                  "Set profile picture" :
-                  "Please Wait..."
-              }
+              {!isImageUploading ? "Set profile picture" : "Please Wait..."}
             </Button>{" "}
             <Button
               color=" "

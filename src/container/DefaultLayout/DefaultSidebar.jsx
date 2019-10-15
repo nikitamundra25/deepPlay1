@@ -1,7 +1,7 @@
 import React from "react";
 import { NavLink } from "react-router-dom";
 import { SidebarComponent } from "../../components/Sidebar";
-import defaultProfileImage from "../../assets/img/user-black-ic.svg";
+import defaultProfileImage from "../../assets/img/profile-ic.png";
 import { AppConfig } from "../../config/Appconfig";
 
 class DefaultSidebar extends React.Component {
@@ -16,6 +16,11 @@ class DefaultSidebar extends React.Component {
       profileInfoReducer && profileInfoReducer.profileInfo
         ? profileInfoReducer.profileInfo
         : null;
+    const splitedImage =
+      profiledata && profiledata.profileImage
+        ? profiledata.profileImage.split("/")
+        : [];
+
     return (
       <div className="dashboard-left-wrap">
         <div className="dashboard-left">
@@ -25,7 +30,7 @@ class DefaultSidebar extends React.Component {
                 <React.Fragment key={index}>
                   <li>
                     <NavLink
-                      className="list-group-item"
+                      className={`list-group-item list-${index}`}
                       activeClassName="active"
                       aria-current="page"
                       to={items.url}
@@ -43,9 +48,13 @@ class DefaultSidebar extends React.Component {
         <div className="profile-wrap">
           <div className="profile-img-tile">
             <div className={profiledata ? "user-profile-img" : "profile-img"}>
-              {profiledata ? (
+              {profiledata && profiledata.profileImage ? (
                 <img
-                  src={`${AppConfig.API_ENDPOINT}${profiledata.profileImage}`}
+                  src={
+                    splitedImage[0] === "uploads"
+                      ? `${AppConfig.API_ENDPOINT}${profiledata.profileImage}`
+                      : profiledata.profileImage
+                  }
                   className="w-100"
                   alt={"img"}
                 />
@@ -56,8 +65,19 @@ class DefaultSidebar extends React.Component {
           </div>
           <div className="profile-text-tile color-black">
             <div className="font-weight-bold text-center mt-2">
+              <div className="cursor_pointer">
+                <span onClick={this.props.handleSetting}>
+                  {profiledata
+                    ? `${profiledata.firstName}${" "} ${profiledata.lastName}`
+                    : ""}
+                </span>
+              </div>
+            </div>
+            <div className={"text-center"}>
               {profiledata
-                ? `${profiledata.firstName}${" "} ${profiledata.lastName}`
+                ? profiledata.roleType
+                  ? profiledata.roleType
+                  : "Unclassified"
                 : ""}
             </div>
           </div>

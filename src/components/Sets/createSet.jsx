@@ -1,197 +1,175 @@
 import React from "react";
 import {
-  FormGroup,
-  Input,
   Button,
   Modal,
-  ModalFooter,
+  FormGroup,
+  Input,
+  Label,
   ModalHeader,
   ModalBody,
-  Label,
-  Card,
-  CardBody,
-  CardHeader,
-  UncontrolledTooltip,
-  InputGroup,
-  InputGroupText,
-  InputGroupAddon
+  ModalFooter,
+  FormFeedback
 } from "reactstrap";
 import { connect } from "react-redux";
-import { createSetRequest } from "../../actions";
-import * as qs from "query-string";
+import {
+  createSetRequest,
+  getSetDetailsRequest,
+  UpdateSetRequest
+} from "../../actions";
+import {
+  CreateFolderValidations,
+  CreateFolderValidationsMessaages
+} from "../../validations";
+import Validator from "js-object-validation";
 import "./index.scss";
+import closeBtn from "../../assets/img/close-img.png";
 
 class CreateSetComponent extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       title: "",
-      errors: "",
       description: "",
-      open: false
+      isEdit: false,
+      open: false,
+      errors: {}
     };
   }
+
+  componentDidUpdate(prevProps) {
+    if (prevProps.setDetails !== this.props.setDetails) {
+      const { title, description } = this.props.setDetails;
+      this.setState({
+        title,
+        description
+      });
+    }
+  }
+
   handleChange = e => {
     const { name, value } = e.target;
     this.setState({
-      [name]: value
+      [name]: value,
+      errors: {
+        ...this.state.errors,
+        [name]: null
+      }
     });
   };
 
-  onAddMove = async () => {
-    if (!this.state.title) {
-      await this.setState({
-        errors: "Title is required"
+  onCreateSet = async name => {
+    const { isValid, errors } = Validator(
+      this.state,
+      CreateFolderValidations,
+      CreateFolderValidationsMessaages
+    );
+    if (!isValid) {
+      this.setState({
+        errors
       });
-    } else {
-      let parsed = qs.parse(this.props.location.search);
-      const data = {
-        title: this.state.title,
-        description: this.state.description,
-        folderId: parsed.folderId ? parsed.folderId : ""
-      };
-      this.props.onSetsCreation(data);
+      return;
     }
-  };
-
-  onSaveDesc = () => {
+    const { setDetails, folderId } = this.props;
+    const data = {
+      setId: setDetails ? setDetails._id : "",
+      title: this.state.title,
+      description: this.state.description,
+      folderId: folderId ? folderId : "",
+      addMove: name === "addMove" ? true : false
+    };
+    await this.props.createSet(data);
     this.setState({
-      open: !this.state.open
-    });
-  };
-
-  handleModal = () => {
-    this.setState({
-      open: !this.state.open,
+      title: "",
       description: ""
     });
   };
 
   render() {
-    const { title, open, description } = this.state;
+    const { modal, handleOpen, setDetails } = this.props;
+    const { title, description, errors } = this.state;
+
     return (
-      <div className="create-set-section mt-2">
-        <Card className="w-100 set-content-wrap">
-          <div className="set-content-block w-100">
-            <CardHeader className="">
-              <div className="content-header set-header">
-                <span className="content-title">CREATE A NEW SET OF MOVES</span>
-              </div>
-            </CardHeader>
-            <CardBody className="">
-              <div className="create-set-tile">
-                <FormGroup className="flex-fill">
-                  <InputGroup>
-                    <Input
-                      id="exampleFormControlInput1"
-                      className="capitalize"
-                      placeholder="Enter your title here"
-                      type="text"
-                      name="title"
-                      onChange={this.handleChange}
-                      value={title}
-                    />
-                    <InputGroupAddon addonType="prepend">
-                      <InputGroupText
-                        id="description"
-                        onClick={() =>
-                          this.setState({
-                            open: !open
-                          })
-                        }
-                      >
-                        <span className="cursor_pointer ">
-                          <i className="fas fas fa-info "></i>
-                        </span>
-                        <UncontrolledTooltip
-                          placement="top"
-                          target="description"
-                        >
-                          Add description
-                        </UncontrolledTooltip>
-                      </InputGroupText>
-                    </InputGroupAddon>
-                  </InputGroup>
-                </FormGroup>
-                {/* <div className="">
-                <span
-                  onClick={this.onAddMove}
-                  className={this.state.title ? "cursor_pointer" : "disable-span"}
-                  id="move"
-                >
-                  <i className="fas fa-plus-square fa-2x "></i>
-                </span>
-                <UncontrolledTooltip placement="top" target="move">
-                  Add a move
-            </UncontrolledTooltip>
-              
-
-              </div> */}
-              </div>
-              <div className="text-center">
-                <Button
-                  color=" "
-                  type="button"
-                  className="btn-black btn mt-3"
-                  disabled={!title}
-                  onClick={this.onAddMove}
-                >
-                  <i className="fas fa-plus mr-1"></i>
-                  Add a Move
-                </Button>
-              </div>
-            </CardBody>
-          </div>
-        </Card>
-
+      <div>
         <Modal
           className="modal-dialog-centered custom-model-wrap"
-          isOpen={open}
-          toggle={() => this.handleModal}
+          isOpen={modal}
+          toggle={handleOpen}
+          backdrop={"static"}
         >
           <ModalHeader>
-            <h5 className="modal-title" id="exampleModalLabel">
-              <span class="custom-title">Upload profile image</span>
-              <span class="custom-title">Description</span>
-            </h5>
+            <span className="custom-title" id="exampleModalLabel">
+              {setDetails ? "Update Set" : "Create a New Set"}
+            </span>
             <button
               aria-label="Close"
               className="close"
               data-dismiss="modal"
               type="button"
-              onClick={this.handleModal}
+              onClick={handleOpen}
             >
               <span aria-hidden="true">
-                {" "}
-                <img src="./assets/img/close-img.png" alt="close-ic" />
+                <img src={closeBtn} alt="close-ic" />
               </span>
             </button>
           </ModalHeader>
           <ModalBody>
+            <FormGroup>
+              <Label for="title" className="font-weight-bold text-center">
+                TITLE <span className="text-danger">*</span>
+              </Label>
+              <Input
+                id="title"
+                type="text"
+                placeholder="Enter a title"
+                name="title"
+                className={errors.title ? "is-invalid" : ""}
+                onChange={this.handleChange}
+                value={title}
+              />
+              <FormFeedback>{errors.title ? errors.title : null}</FormFeedback>
+            </FormGroup>
             <FormGroup>
               <Label for="description" className="font-weight-bold text-center">
                 DESCRIPTION
               </Label>
               <Input
                 id="exampleFormControlInput1"
-                className="capitalize"
-                type="text"
+                type="textarea"
+                placeholder="Enter a description (optional)"
                 name="description"
+                className={errors.description ? "is-invalid" : ""}
                 onChange={this.handleChange}
                 value={description}
+                rows={3}
               />
+              <FormFeedback>
+                {errors.description ? errors.description : null}
+              </FormFeedback>
             </FormGroup>
           </ModalBody>
-
           <ModalFooter>
             <Button
-              color=" "
               type="button"
-              onClick={this.onSaveDesc}
+              onClick={this.onCreateSet}
+              color=" "
               className="btn btn-black"
+              disabled={!title}
             >
-              Save changes
+              {setDetails ? "Update Set" : "Create Set"}
             </Button>
+            {!setDetails ? (
+              <Button
+                type="button"
+                onClick={() => this.onCreateSet("addMove")}
+                color=" "
+                className="btn btn-black"
+                disabled={!title}
+              >
+                Add a Move
+              </Button>
+            ) : (
+              ""
+            )}
           </ModalFooter>
         </Modal>
       </div>
@@ -202,11 +180,13 @@ class CreateSetComponent extends React.Component {
 const mapStateToProps = state => {
   return {
     modelInfoReducer: state.modelInfoReducer,
-    getAllSetReducer: state.getAllSetReducer
+    setReducer: state.setReducer
   };
 };
 const mapDispatchToProps = dispatch => ({
-  onSetsCreation: data => dispatch(createSetRequest(data))
+  onSetsCreation: data => dispatch(createSetRequest(data)),
+  getSetDetailsRequest: data => dispatch(getSetDetailsRequest(data)),
+  UpdateSetRequest: data => dispatch(UpdateSetRequest(data))
 });
 export default connect(
   mapStateToProps,

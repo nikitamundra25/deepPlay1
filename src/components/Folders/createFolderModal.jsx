@@ -7,9 +7,15 @@ import {
   Label,
   ModalHeader,
   ModalBody,
-  ModalFooter
+  ModalFooter,
+  FormFeedback
 } from "reactstrap";
 import closeBtn from "../../assets/img/close-img.png";
+import {
+  CreateFolderValidations,
+  CreateFolderValidationsMessaages
+} from "../../validations";
+import Validator from "js-object-validation";
 
 // core components
 class FolderModal extends React.Component {
@@ -17,13 +23,29 @@ class FolderModal extends React.Component {
     super(props);
     this.state = {
       title: "",
-      description: ""
+      description: "",
+      errors: {}
     };
   }
+
+  componentDidUpdate(prevProps) {
+    if (prevProps.folderDetails !== this.props.folderDetails) {
+      const { title, description } = this.props.folderDetails;
+      this.setState({
+        title,
+        description
+      });
+    }
+  }
+
   handleChange = e => {
     const { name, value } = e.target;
     this.setState({
-      [name]: value
+      [name]: value,
+      errors: {
+        ...this.state.errors,
+        [name]: null
+      }
     });
   };
 
@@ -38,7 +60,20 @@ class FolderModal extends React.Component {
   };
 
   onCreateFolder = () => {
+    const { isValid, errors } = Validator(
+      this.state,
+      CreateFolderValidations,
+      CreateFolderValidationsMessaages
+    );
+    if (!isValid) {
+      this.setState({
+        errors
+      });
+      return;
+    }
+    const { folderDetails } = this.props;
     const data = {
+      id: folderDetails ? folderDetails._id : "",
       title: this.state.title,
       description: this.state.description,
       isCopy: false
@@ -47,18 +82,20 @@ class FolderModal extends React.Component {
   };
 
   render() {
-    const { modal, handleOpen } = this.props;
-    const { title, description } = this.state;
+    const { modal, handleOpen, folderDetails } = this.props;
+    const { title, description, errors } = this.state;
+
     return (
       <div>
         <Modal
           className="modal-dialog-centered custom-model-wrap"
           isOpen={modal}
           toggle={handleOpen}
+          backdrop={"static"}
         >
           <ModalHeader>
             <span className="custom-title" id="exampleModalLabel">
-              Create a New Folder
+              {folderDetails ? "Update Folder" : "Create a New Folder"}
             </span>
             <button
               aria-label="Close"
@@ -75,16 +112,18 @@ class FolderModal extends React.Component {
           <ModalBody>
             <FormGroup>
               <Label for="title" className="font-weight-bold text-center">
-                TITLE
+                TITLE <span className="text-danger">*</span>
               </Label>
               <Input
                 id="title"
                 type="text"
                 placeholder="Enter a title"
                 name="title"
+                className={errors.title ? "is-invalid" : ""}
                 onChange={this.handleChange}
                 value={title}
               />
+              <FormFeedback>{errors.title ? errors.title : null}</FormFeedback>
             </FormGroup>
             <FormGroup>
               <Label for="description" className="font-weight-bold text-center">
@@ -92,12 +131,17 @@ class FolderModal extends React.Component {
               </Label>
               <Input
                 id="exampleFormControlInput1"
-                type="text"
+                type="textarea"
                 placeholder="Enter a description (optional)"
                 name="description"
+                className={errors.description ? "is-invalid" : ""}
                 onChange={this.handleChange}
                 value={description}
+                rows={3}
               />
+              <FormFeedback>
+                {errors.description ? errors.description : null}
+              </FormFeedback>
             </FormGroup>
           </ModalBody>
           <ModalFooter>
@@ -108,7 +152,7 @@ class FolderModal extends React.Component {
               className="btn btn-black"
               disabled={!title}
             >
-              Create Folder
+              {folderDetails ? "Update Folder" : "Create Folder"}
             </Button>
           </ModalFooter>
         </Modal>

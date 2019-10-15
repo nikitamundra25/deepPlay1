@@ -8,8 +8,9 @@ import {
   FormGroup,
   Input
 } from "reactstrap";
-import { AppRoutes } from "../../../config/AppRoutes";
+//import { AppRoutes } from "../../../config/AppRoutes";
 import closeIcon from "../../../assets/img/close-img.png";
+import CreateSetComponent from "../../Sets/createSet";
 import "./index.scss";
 
 // core components
@@ -17,39 +18,98 @@ class AddSetModal extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      setList: []
+      setList: [],
+      selectedSet: "yourSet"
     };
   }
+
   componentDidUpdate(prevProps) {
     if (prevProps.getAllSet !== this.props.getAllSet) {
-      const setList = this.props.getAllSet;
+      const { selectedSet } = this.state;
+      let setList = this.props.getAllSet;
+      let setItem = [];
+
+      if (selectedSet === "yourSet") {
+        setItem = setList.filter(item =>
+          item && item.folderId
+            ? item.folderId._id === this.props.folderId
+            : null
+        );
+      } else {
+        if (setList && setList.length) {
+          setList.map(item => {
+            if (
+              (item &&
+                item.folderId &&
+                item.folderId._id === this.props.folderId) ||
+              item.folderId === null
+            ) {
+              setItem.push(item);
+            }
+            return true;
+          });
+        }
+      }
       this.setState({
-        setList: setList
+        setList: setItem
       });
     }
   }
-
-  handleOpen = () => {
-    const { modelInfoReducer } = this.props;
-    const { modelDetails } = modelInfoReducer;
-    this.props.modelOperate({
-      modelDetails: {
-        addSetModalOpen: !modelDetails.addSetModalOpen
-      }
-    });
-  };
 
   OnhandleSets = (id, name) => {
     this.props.handleSets(id, name);
   };
 
-  handleAddNewSet = folderId => {
-    this.props.redirectTo(AppRoutes.CREATE_SET.url + `?folderId=${folderId}`);
+  handleSelect = e => {
+    e.preventDefault();
+    const setList = this.props.getAllSet;
+    let setItem = [];
+    if (e.target.value === "yourSet") {
+      setItem = setList.filter(item =>
+        item && item.folderId ? item.folderId._id === this.props.folderId : null
+      );
+    } else {
+      if (setList && setList.length) {
+        setList.map(item => {
+          if (
+            (item &&
+              item.folderId &&
+              item.folderId._id === this.props.folderId) ||
+            item.folderId === null
+          ) {
+            setItem.push(item);
+          }
+          return true;
+        });
+      }
+      // setItem = this.props.getAllSet;
+    }
+    this.setState({
+      selectedSet: e.target.value,
+      setList: setItem
+    });
+  };
+
+  handleSetModal = () => {
+    const { modelInfoReducer } = this.props;
+    const { modelDetails } = modelInfoReducer;
+    this.props.modelOperate({
+      modelDetails: {
+        createSetModalOpen: !modelDetails.createSetModalOpen
+      }
+    });
+  };
+
+  addNewSet = data => {
+    this.props.addNewSet(data);
   };
 
   render() {
-    const { modal, folderId, handleOpen } = this.props;
-    const { setList } = this.state;
+    const { modal, folderId, handleOpen, modelInfoReducer } = this.props;
+    const { setList, selectedSet } = this.state;
+    const { modelDetails } = modelInfoReducer;
+    const { createSetModalOpen } = modelDetails;
+
     return (
       <div>
         <Modal
@@ -69,7 +129,6 @@ class AddSetModal extends React.Component {
               onClick={handleOpen}
             >
               <span aria-hidden={true}>
-                {" "}
                 <img src={closeIcon} alt="close-ic" />
               </span>
             </button>
@@ -78,7 +137,7 @@ class AddSetModal extends React.Component {
             <div className="wrap-folder">
               <div className="tile-wrap card mb-3 d-block">
                 <span
-                  onClick={() => this.handleAddNewSet(folderId)}
+                  onClick={() => this.handleSetModal()}
                   className={"cursor_pointer create-btn font-14 text-uppercase"}
                 >
                   + Create New Set
@@ -90,12 +149,11 @@ class AddSetModal extends React.Component {
                   name="select"
                   id="exampleSelect"
                   className="rounded-0"
+                  onChange={this.handleSelect}
+                  value={selectedSet}
                 >
-                  <option>Your Sets</option>
-                  <option>2</option>
-                  <option>3</option>
-                  <option>4</option>
-                  <option>5</option>
+                  <option value="yourSet">Your Sets</option>
+                  <option value="allSet">All Sets</option>
                 </Input>
               </FormGroup>
               {setList && setList.length
@@ -146,6 +204,12 @@ class AddSetModal extends React.Component {
             </div>
           </ModalBody>
         </Modal>
+        <CreateSetComponent
+          modal={createSetModalOpen}
+          handleOpen={this.handleSetModal}
+          folderId={folderId}
+          createSet={this.addNewSet}
+        />
       </div>
     );
   }

@@ -9,7 +9,16 @@ export const MovesAction = {
   GET_MOVES_OF_SET_REQUEST: "Get moves for sets request!",
   GET_MOVES_OF_SET_SUCCESS: "Get moves for sets success!",
   GET_ALL_MOVE_REQUEST: "Get All Move Request",
-  GET_ALL_MOVE_SUCCESS: "Get All Move Success"
+  GET_ALL_MOVE_SUCCESS: "Get All Move Success",
+  UPDATE_VIDEO_SETTINGS: "Update the webm details.",
+  UPDATE_VIDEO_SETTINGS_SUCCESS: "Update the webm details success.",
+  ADD_NEW_TAG_TO_LIST: "Add new tag to list!",
+  DELETE_MOVES_REQUEST: "Delete Moves Request",
+  DELETE_MOVES_SUCCESS: "Delete Moves Success",
+  STARRED_MOVE_REQUEST: "Starred Moves Request",
+  STARRED_MOVE_SUCCESS: "Starred Moves Success",
+  TRANSFER_MOVE_REQUEST: "Transfer Moves Request",
+  TRANSFER_MOVE_SUCCESS: "Transfer Moves Success"
 };
 
 export const downloadYoutubeVideoRequest = createAction(
@@ -34,4 +43,32 @@ export const getMoveDetailsRequest = createAction(
 );
 export const getMoveDetailsSuccess = createAction(
   MovesAction.GET_MOVES_DETAILS_SUCCESS
+);
+export const completeVideoEditing = createAction(
+  MovesAction.UPDATE_VIDEO_SETTINGS
+);
+export const completeVideoEditingSuccess = createAction(
+  MovesAction.UPDATE_VIDEO_SETTINGS_SUCCESS
+);
+
+export const addNewTagToList = createAction(MovesAction.ADD_NEW_TAG_TO_LIST);
+
+export const deleteMovesRequest = createAction(
+  MovesAction.DELETE_MOVES_REQUEST
+);
+export const deleteMovesSuccess = createAction(
+  MovesAction.DELETE_MOVES_SUCCESS
+);
+export const starredMovesRequest = createAction(
+  MovesAction.STARRED_MOVE_REQUEST
+);
+export const starredMovesSuccess = createAction(
+  MovesAction.STARRED_MOVE_SUCCESS
+);
+
+export const transferMovesRequest = createAction(
+  MovesAction.TRANSFER_MOVE_REQUEST
+);
+export const transferMovesSuccess = createAction(
+  MovesAction.TRANSFER_MOVE_SUCCESS
 );

@@ -9,12 +9,18 @@ import {
   ManageSetRequest,
   deleteSetRequest,
   getAllFolderRequest,
-  updateRecentTimeRequest
+  shareableLinkRequest,
+  updateRecentTimeRequest,
+  redirectTo
 } from "../../actions";
 import FolderModal from "../../components/Folders/createFolderModal";
 import { createFolderRequest } from "actions/Folder";
 import { ConfirmBox } from "../../helper/SweetAleart";
 import TransferToModal from "../../components/Folders/FolderDetails/transferTo";
+import qs from "query-string";
+import { isEqual } from "../../helper/Object";
+import { AppRoutes } from "../../config/AppRoutes";
+
 // core components
 class Set extends React.Component {
   constructor(props) {
@@ -27,7 +33,25 @@ class Set extends React.Component {
   }
 
   componentDidMount = () => {
-    this.props.getSetList();
+    this.props.getSetList({ isSetNoLimit: false });
+  };
+
+  componentDidUpdate({ location }) {
+    const prevQuery = qs.parse(location.search);
+    const currQuery = qs.parse(this.props.location.search);
+    if (!isEqual(prevQuery, currQuery)) {
+      this.props.getSetList({
+        ...currQuery,
+        page: currQuery.page || 1,
+        isSetNoLimit: false
+      });
+    }
+  }
+
+  onPageChange = page => {
+    this.props.onGoPage(
+      `${AppRoutes.SETS.url}?${qs.stringify({ page: page })}`
+    );
   };
 
   onCreateSet = data => {
@@ -72,10 +96,11 @@ class Set extends React.Component {
       sharableLink: list.sharableLink,
       status: list.status,
       userId: list.userId,
+      copyOfSetId: list._id,
       isCopy: true
     };
     const { value } = await ConfirmBox({
-      text: "You want to copy this set!! "
+      text: "You want to copy this set! "
     });
     if (value) {
       this.props.onSetsCreation(data);
@@ -84,10 +109,13 @@ class Set extends React.Component {
 
   onHandleDelete = async id => {
     const { value } = await ConfirmBox({
-      text: "You want to delete this folder.!! "
+      text: "You want to delete this set!"
     });
     if (value) {
-      this.props.onDeleteSets(id);
+      const data = {
+        id
+      };
+      this.props.onDeleteSets(data);
     }
   };
 
@@ -115,7 +143,7 @@ class Set extends React.Component {
       previousFolderid: ""
     };
     const { value } = await ConfirmBox({
-      text: "You want to transfer this set!! "
+      text: "You want to transfer this set!"
     });
     if (value) {
       this.props.manageSets(payload);
@@ -126,10 +154,12 @@ class Set extends React.Component {
     const {
       modelOperate,
       modelInfoReducer,
-      getAllSetReducer,
-      getAllFolders
+      setReducer,
+      getAllFolders,
+      shareLinkReducer
     } = this.props;
     const { modelDetails } = modelInfoReducer;
+    const { userEncryptedInfo } = shareLinkReducer;
     const { transferToModalOpen } = modelDetails;
     const { folderId, setToTransfer } = this.state;
 
@@ -138,19 +168,23 @@ class Set extends React.Component {
         {this.state.createSet ? (
           <CreateSetComponent onCreateSet={this.onCreateSet} />
         ) : (
-            <SetComponent
-              handleSetComponent={this.handleSetComponent}
-              handleFolderModel={this.handleFolderModel}
-              getAllSet={getAllSetReducer.allSetList}
-              isSetListLoading={getAllSetReducer.isSetListLoading}
-              OnCreateSetCopy={this.OnCreateSetCopy}
-              onRemoveSets={this.onHandleDelete}
-              handleRecentTime={this.handleRecentTime}
-              openTransferToModal={this.openTransferToModal}
-              allFolders={this.props.allFolders}
-              {...this.props}
-            />
-          )}
+          <SetComponent
+            handleSetComponent={this.handleSetComponent}
+            handleFolderModel={this.handleFolderModel}
+            setReducer={setReducer}
+            OnCreateSetCopy={this.OnCreateSetCopy}
+            onRemoveSets={this.onHandleDelete}
+            modelInfoReducer={modelInfoReducer}
+            handleRecentTime={this.handleRecentTime}
+            openTransferToModal={this.openTransferToModal}
+            onSetsCreation={data => this.props.onSetsCreation(data)}
+            allFolders={this.props.allFolders}
+            shareableLink={data => this.props.shareableLink(data)}
+            onPageChange={this.onPageChange}
+            userEncryptedInfo={userEncryptedInfo}
+            {...this.props}
+          />
+        )}
         <FolderModal
           modal={modelDetails.createFolderModalOpen}
           handleOpen={this.handleFolderModel}
@@ -174,8 +208,9 @@ class Set extends React.Component {
 const mapStateToProps = state => {
   return {
     modelInfoReducer: state.modelInfoReducer,
-    getAllSetReducer: state.setReducer,
-    getAllFolders: state.getFolderReducer.getAllFolders
+    setReducer: state.setReducer,
+    getAllFolders: state.getFolderReducer.getAllFolders,
+    shareLinkReducer: state.shareLinkReducer
   };
 };
 const mapDispatchToProps = dispatch => {
@@ -186,8 +221,8 @@ const mapDispatchToProps = dispatch => {
     onFolderCreation: data => {
       dispatch(createFolderRequest(data));
     },
-    getSetList: () => {
-      dispatch(getAllSetRequest());
+    getSetList: data => {
+      dispatch(getAllSetRequest(data));
     },
     manageSets: data => {
       dispatch(ManageSetRequest(data));
@@ -201,7 +236,13 @@ const mapDispatchToProps = dispatch => {
     updateRecentTime: data => {
       dispatch(updateRecentTimeRequest(data));
     },
-    modelOperate: data => dispatch(modelOpenRequest(data))
+    onGoPage: data => {
+      dispatch(redirectTo({ path: data }));
+    },
+    modelOperate: data => dispatch(modelOpenRequest(data)),
+    shareableLink: data => {
+      dispatch(shareableLinkRequest(data));
+    }
   };
 };
 export default connect(

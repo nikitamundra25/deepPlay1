@@ -123,7 +123,7 @@ class LoginComponent extends React.Component {
   */
   render() {
     const { openLoginModel, handleLoginModel, loginReducer } = this.props;
-    const { isLoginRequest } = loginReducer
+    const { isLoginRequest } = loginReducer;
     const { email, password, errors } = this.state;
     return (
       <>
@@ -131,7 +131,7 @@ class LoginComponent extends React.Component {
           className="modal-dialog-centered auth-user-model"
           isOpen={openLoginModel}
           toggle={handleLoginModel}
-          backdrop={"static"}
+          // backdrop={"static"}
           size={"sm"}
         >
           <ModalHeader toggle={handleLoginModel}></ModalHeader>
@@ -184,6 +184,10 @@ class LoginComponent extends React.Component {
                         name={"email"}
                         value={email}
                         type="email"
+                        // title="Please Provide A Valid Email Address !"
+                        // oninvalid={() =>
+                        //   this.setCustomValidity("Enter User Name Here")
+                        // }
                       />
                       <FormFeedback>
                         {errors.email ? errors.email : null}
@@ -211,33 +215,26 @@ class LoginComponent extends React.Component {
                     </InputGroup>
                   </FormGroup>
                   <div
-                   
                     className={
-                      "text-center cursor_pointer forgot-password-wrap"
+                      "text-right cursor_pointer forgot-password-bottom-wrap"
                     }
                   >
-                    <span
-                     onClick={this.props.handleForgotPasswordModel}
-                    >
-                    Forgot password?
+                    <span onClick={this.props.handleForgotPasswordModel}>
+                      Forgot password?
                     </span>
                   </div>
                   <div className="text-center auth-btn-wrap">
                     <Button
-                      className="my-4 btn-black btn-block"
+                      className="mt-3 mb-2  btn-black btn-block"
                       type="submit"
                       color={" "}
                       disabled={isLoginRequest ? true : false}
                     >
-                      {
-                        isLoginRequest ?
-                          "Please Wait..." :
-                          "Sign in"
-                      }
+                      {isLoginRequest ? "Please Wait..." : "Sign in"}
                     </Button>
 
                     <Button
-                      className="my-4 btn-black btn-line-black btn-block"
+                      className="mb-4 btn-black btn-line-black btn-block"
                       color=" "
                       onClick={() => this.props.handleSignupModal()}
                       type="button"

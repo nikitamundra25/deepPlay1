@@ -13,8 +13,11 @@ import {
   socialLoginRequest,
   forgotPasswordRequest,
   profileRequest,
-  createFolderRequest
+  createFolderRequest,
+  createSetRequest,
+  allSearchRequest
 } from "../../actions/index.jsx";
+import { AppRoutes } from "../../config/AppRoutes";
 
 // core components
 class DefaultLayout extends React.Component {
@@ -27,7 +30,11 @@ class DefaultLayout extends React.Component {
     if (
       !token &&
       pathname !== "/resetPassword" &&
-      pathname !== "/folder-shared-link"
+      pathname !== "/sample-set" &&
+      pathname !== "/folder/shared/link" &&
+      pathname !== "/set/shared/link" &&
+      pathname !== "/all/set/shared/link" &&
+      pathname !== "/404"
     ) {
       this.props.redirectTo("/");
     }
@@ -35,6 +42,12 @@ class DefaultLayout extends React.Component {
 
   onFolderCreation = data => {
     this.props.onFolderCreation(data);
+  };
+  onSetsCreation = data => {
+    this.props.onSetsCreation(data);
+  };
+  handleSetting = () => {
+    this.props.redirectTo(AppRoutes.SETTINGS.url);
   };
   /*
   /*  
@@ -49,9 +62,12 @@ class DefaultLayout extends React.Component {
       signupRequest,
       socialLoginRequest,
       forgotPasswordRequest,
-      profileInfoReducer
+      profileInfoReducer,
+      allSearchRequest,
+      allSearchReducer
     } = this.props;
     let isLoggedIn;
+
     if (localStorage.getItem("token")) {
       isLoggedIn = true;
     } else {
@@ -60,8 +76,7 @@ class DefaultLayout extends React.Component {
     const routePath = this.props.location.pathname;
     return (
       <>
-        {routePath !== "/resetPassword" &&
-        routePath !== "/folder-shared-link" ? (
+        {routePath !== "/resetPassword" ? (
           <DefaultHeader
             modelInfoReducer={modelInfoReducer}
             modelOpenRequest={modelOperate}
@@ -73,8 +88,11 @@ class DefaultLayout extends React.Component {
             socialLoginRequest={socialLoginRequest}
             forgotPasswordRequest={forgotPasswordRequest}
             onFolderCreation={this.onFolderCreation}
+            onSetsCreation={this.onSetsCreation}
             routePath={routePath}
             isLoggedIn={isLoggedIn}
+            allSearchRequest={allSearchRequest}
+            allSearchReducer={allSearchReducer}
             {...this.props}
           />
         ) : null}
@@ -82,34 +100,53 @@ class DefaultLayout extends React.Component {
           <div
             className={
               routePath !== "/" &&
+              routePath !== "/sample-set" &&
               routePath !== "/resetPassword" &&
-              routePath !== "/folder-shared-link"
+              routePath !== "/folder/shared/link" &&
+              routePath !== "/set/shared/link" &&
+              routePath !== "/all/set/shared/link" &&
+              routePath !== "/404"
                 ? "dashboard-full-section"
                 : ""
             }
           >
             <div
               className={`${
-                routePath !== "/" ? "dashboard-container-wrap " : " "
+                routePath !== "/" && routePath !== "/sample-set"
+                  ? "dashboard-container-wrap "
+                  : " "
               }`}
             >
               <div
                 className={`theme-container ${
-                  routePath !== "/" ? "dashboard-container " : "home-container"
+                  routePath !== "/" && routePath !== "/sample-set"
+                    ? "dashboard-container "
+                    : "home-container"
                 }`}
               >
                 {isLoggedIn &&
                 (routePath !== "/" &&
+                  routePath !== "/sample-set" &&
                   routePath !== "/resetPassword" &&
-                  routePath !== "/folder-shared-link") ? (
+                  routePath !== "/folder/shared/link" &&
+                  routePath !== "/set/shared/link" &&
+                  routePath !== "/all/set/shared/link" &&
+                  routePath !== "/404") ? (
                   <div className="ct-sidebar app-sidebar">
-                    <DefaultSidebar profileInfoReducer={profileInfoReducer} />
+                    <DefaultSidebar
+                      profileInfoReducer={profileInfoReducer}
+                      handleSetting={this.handleSetting}
+                    />
                   </div>
                 ) : null}
                 {isLoggedIn &&
                 (routePath !== "/" &&
+                  routePath !== "/sample-set" &&
                   routePath !== "/resetPassword" &&
-                  routePath !== "/folder-shared-link") ? (
+                  routePath !== "/folder/shared/link" &&
+                  routePath !== "/set/shared/link" &&
+                  routePath !== "/all/set/shared/link" &&
+                  routePath !== "/404") ? (
                   <div className="dashboard-right-wrap">
                     <div className="dashboard-right-section">
                       <Suspense fallback={""}>
@@ -156,9 +193,16 @@ class DefaultLayout extends React.Component {
         </>
         {isLoggedIn &&
         (routePath !== "/" &&
+          routePath !== "/sample-set" &&
           routePath !== "/resetPassword" &&
-          routePath !== "/folder-shared-link") ? null : routePath !==
-            "/resetPassword" && routePath !== "/folder-shared-link" ? (
+          routePath !== "/folder/shared/link" &&
+          routePath !== "/set/shared/link" &&
+          routePath !== "/all/set/shared/link" &&
+          routePath !== "/404") ? null : routePath !== "/resetPassword" &&
+          routePath !== "/folder/shared/link" &&
+          routePath !== "/all/set/shared/link" &&
+          routePath !== "/set/shared/link" &&
+          routePath !== "/404" ? (
           <DefaultFooter />
         ) : null}
       </>
@@ -169,7 +213,8 @@ class DefaultLayout extends React.Component {
 const mapStateToProps = state => ({
   modelInfoReducer: state.modelInfoReducer,
   loginReducer: state.loginReducer,
-  profileInfoReducer: state.profileInfoReducer
+  profileInfoReducer: state.profileInfoReducer,
+  allSearchReducer: state.allSearchReducer
 });
 const mapDispatchToProps = dispatch => ({
   modelOperate: data => dispatch(modelOpenRequest(data)),
@@ -179,9 +224,9 @@ const mapDispatchToProps = dispatch => ({
   socialLoginRequest: data => dispatch(socialLoginRequest(data)),
   forgotPasswordRequest: data => dispatch(forgotPasswordRequest(data)),
   getProfile: () => dispatch(profileRequest()),
-  onFolderCreation: data => {
-    dispatch(createFolderRequest(data));
-  }
+  onFolderCreation: data => dispatch(createFolderRequest(data)),
+  allSearchRequest: data => dispatch(allSearchRequest(data)),
+  onSetsCreation: data => dispatch(createSetRequest(data))
 });
 export default connect(
   mapStateToProps,

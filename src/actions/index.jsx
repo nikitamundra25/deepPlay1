@@ -8,6 +8,8 @@ export * from "./Sets.jsx";
 export * from "./Folder.jsx";
 export * from "./Moves.jsx";
 export * from "./SharableLink";
+export * from "./ChangePassword";
+export * from "./AllSearch"
 //
 export const redirectTo = createAction("REDIRET_TO");
 //

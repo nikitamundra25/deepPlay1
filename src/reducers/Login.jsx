@@ -1,11 +1,13 @@
 import { handleActions } from "redux-actions";
-import { loginAction, signupActions } from "./../actions";
+import { loginAction, signupActions, changePasswordAction } from "./../actions";
 
 const initialState = {
   isLoginSuccess: false,
   isSendingLink: false,
   isSignupLoading: false,
-  isLoginRequest: false
+  isLoginRequest: false,
+  isChangePasswordSuccess: false,
+  isChangePasswordDone: false
 };
 
 export const loginReducer = handleActions(
@@ -33,6 +35,24 @@ export const loginReducer = handleActions(
     [loginAction.FORGET_PASSWORD_SUCCESS]: (state, { payload }) => ({
       ...state,
       isSendingLink: false
+    }),
+    [loginAction.FORGET_PASSSWORD_FAILED]: (state, { payload }) => ({
+      ...state,
+      isSendingLink: false
+    }),
+    [changePasswordAction.CHANGE_PASSWORD_REQUEST]: (state, { payload }) => ({
+      ...state,
+      isChangePasswordSuccess: true,
+      isChangePasswordDone: false
+    }),
+    [changePasswordAction.CHANGE_PASSWORD_SUCCESS]: (state, { payload }) => ({
+      ...state,
+      isChangePasswordSuccess: false,
+      isChangePasswordDone: true
+    }),
+    [changePasswordAction.CHANGE_PASSWORD_FAILED]: (state, { payload }) => ({
+      ...state,
+      isChangePasswordSuccess: false,
     })
   },
   initialState
