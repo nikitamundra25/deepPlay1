@@ -58,15 +58,18 @@ class MoveList extends React.Component {
   */
   handleMovesSelect = (valueCheck, e, index, moveId) => {
     let checked
-    if (e && e.target) {
+    if (e && e.target && valueCheck === null) {
+      console.log(">>>>>>>", e.target.checked);
       checked = !e.target.checked
     } else {
+      console.log("<<<<<<<<<<", valueCheck);
       checked = valueCheck
     }
     const selectedMoves = [...this.state.selectedMoves]
     selectedMoves[index] = checked
     let selectedMoveIds = [...this.state.selectedMoveIds]
     if (checked === true) {
+
       selectedMoveIds.push(moveId)
     } else {
       selectedMoveIds = selectedMoveIds.filter(item => item !== moveId)
@@ -98,6 +101,7 @@ class MoveList extends React.Component {
   render() {
     const { show, setIndex, moveCount, movesOfSet } = this.props
     const { isVideoChecked, isSelectVideo, videoIndex, selectedMoves, selectedMoveIds } = this.state
+    // console.log("##############", selectedMoveIds);
     return (
       <section className="play-list-collection set-detail-section">
         <Row>
