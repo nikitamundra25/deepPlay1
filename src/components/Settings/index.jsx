@@ -261,7 +261,7 @@ class SettingComponent extends Component {
                         ) : null}
                       </div>
                       <div className="profile-text-tile color-black">
-                        <div className="h5 font-weight-bold text-center mt-2">
+                        <div className="h5 font-weight-bold text-center mt-2 text-caputalize">
                           {name}
                         </div>
                       </div>
