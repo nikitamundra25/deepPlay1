@@ -19,7 +19,9 @@ import {
   shareableLinkRequest,
   deleteSetRequest,
   getMovesOfSetRequest,
-  UpdateSetRequest
+  UpdateSetRequest,
+  starredMovesRequest,
+  deleteMovesRequest
 } from "../../../actions";
 import SharableLinkModal from "../../comman/shareableLink/SharableLink";
 import { AppRoutes } from "../../../config/AppRoutes";
@@ -91,7 +93,11 @@ class SetDetails extends React.Component {
       text: "You want to delete this set! "
     });
     if (value) {
-      this.props.onDeleteSets(id);
+      const data = {
+        id,
+        setDetails: true
+      };
+      this.props.onDeleteSets(data);
     }
   };
   /*
@@ -140,6 +146,16 @@ class SetDetails extends React.Component {
       showVideoIndex: videoIndex
     });
   };
+  /*
+   */
+  isStarred = data => {
+    this.props.isStarredRequest(data);
+  };
+
+  deleteMove = data => {
+    this.props.deleteMoveRequest(data);
+  };
+
   render() {
     const {
       setReducer,
@@ -158,28 +174,14 @@ class SetDetails extends React.Component {
       <>
         <div className="set-main-section">
           <div className="content-header">
-            {setDetails && setDetails.folderId ? (
-              <span className="content-title">
-                <div className="main-title">
-                  <span className="font-weight-normal">
-                    {setDetails && setDetails.folderId
-                      ? setDetails.folderId.isCopy
-                        ? `Copy of ${setDetails.folderId.title}`
-                        : setDetails.folderId.title
-                      : null}
-                  </span>
-                  /
-                  <span className={"font-weight-bold"}>{setDetails.title}</span>
-                </div>
-              </span>
-            ) : (
-                <span className="content-title">
-                  <div className="main-title">
-                    {setDetails ? setDetails.title : "MyFolder"}
-                  </div>
-                </span>
-              )}
-
+            <span className="content-title">
+              <div className="main-title">
+                {setDetails ? setDetails.title : "MyFolder"}
+              </div>
+              <div className="sub-title">
+                Total Move {setDetails ? `${setDetails.moveCount}` : 0}
+              </div>
+            </span>
             <div>
               <span
                 id="move"
@@ -276,6 +278,8 @@ class SetDetails extends React.Component {
                 closePopOver={this.closePopOver}
                 showPopOver={this.showPopOver}
                 moveCount={setDetails.moveCount}
+                isStarred={this.isStarred}
+                deleteMove={this.deleteMove}
                 movesOfSet={movesOfSet}
                 handleShowVideo={this.handleShowVideo}
                 {...this.props}
@@ -326,7 +330,9 @@ const mapDispatchToProps = dispatch => ({
     dispatch(deleteSetRequest(data));
   },
   getMovesOfSetRequest: data => dispatch(getMovesOfSetRequest(data)),
-  UpdateSetRequest: data => dispatch(UpdateSetRequest(data))
+  UpdateSetRequest: data => dispatch(UpdateSetRequest(data)),
+  isStarredRequest: data => dispatch(starredMovesRequest(data)),
+  deleteMoveRequest: data => dispatch(deleteMovesRequest(data))
 });
 export default connect(
   mapStateToProps,

@@ -10,10 +10,20 @@ class Login extends React.Component {
     const { modelDetails } = modelInfoReducer;
     this.props.modelOpenRequest({
       modelDetails: {
-        forgotPasswordModalOpen: !modelDetails.forgotPasswordModalOpen
+        forgotPasswordModalOpen: !modelDetails.forgotPasswordModalOpen,
+        loginModelOpen: false
       }
     });
   };
+
+  handleLoginForgotModel = () => {
+    this.props.modelOpenRequest({
+      modelDetails: {
+        forgotPasswordModalOpen: false,
+        loginModelOpen: true
+      }
+    });
+  }
   /*
    */
   render() {
@@ -45,6 +55,7 @@ class Login extends React.Component {
           handleForgotPasswordModel={this.handleForgotPasswordModel}
           forgotPasswordRequest={forgotPasswordRequest}
           loginReducer={loginReducer}
+          handleLoginForgotModel={this.handleLoginForgotModel}
         />
       </>
     );
