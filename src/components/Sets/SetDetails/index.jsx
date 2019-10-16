@@ -233,9 +233,7 @@ class SetDetails extends React.Component {
               <Card className="video-slider-section">
                 <div className="step-2">
                   {movesOfSet && movesOfSet.length ? (
-                    // movesOfSet.map((video, index) => {
                     <WebmView
-                      // key={index}
                       video={movesOfSet[showVideoIndex]}
                     />
                   ) : (
