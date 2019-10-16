@@ -162,41 +162,36 @@ const downloadYoutubeVideo = async (
 /**
  *
  */
-const getVideoFrames = async (videoName: string): Promise<any> => {
-  const videoURL: string = path.join(
-    __dirname,
-    "..",
-    "uploads",
-    "youtube-videos",
-    videoName
-  );
-  const dirName: string = videoURL;
-  const video = await new ffmpeg(videoURL);
-  const videoDuration = (video.metadata.duration as any).seconds;
-  console.log(videoDuration / 10);
-  return await new Promise((resolve, reject) => {
-    video.fnExtractFrameToJPG(
-      `${dirName.split(".")[0]}_frames`,
-      {
-        start_time: 0,
-        every_n_percentage: 10
-      },
-      (error: any, file: any) => {
-        console.log(error);
-        if (error) {
-          reject(error);
-        }
-        console.log("====================================");
-        console.log(file);
-        console.log("====================================");
-        const frames: string[] = (file as any).map((f: string) => {
-          const fArray = f.split("/");
-          return `${fArray[fArray.length - 2]}/${fArray[fArray.length - 1]}`;
-        });
-        resolve({ frames, videoMetaData: video.metadata, videoName });
-      }
-    );
-  });
+const createMove = async (req: Request, res: Response): Promise<any> => {
+  try {
+    const { body, currentUser } = req;
+    const { moveUrl } = body;
+
+    let headToken: Request | any = currentUser;
+    if (!headToken.id) {
+      res.status(400).json({
+        message: "User id not found"
+      });
+    }
+
+    const moveResult: Document | any = new MoveModel({
+      videoUrl: moveUrl,
+      userId: headToken.id,
+    });
+
+    await moveResult.save();
+    return res.status(200).json({
+      message: "Created new move",
+      moveId: moveResult._id,
+      success: true
+    })
+
+  } catch (error) {
+    console.log(error, "kkkkk");
+    res.status(500).send({
+      message: error.message
+    });
+  }
 };
 /*  */
 // --------------Get all set info---------------------
@@ -340,7 +335,8 @@ const updateMoveDetailsAndTrimVideo = async (
             );
             return res.status(200).json({
               responsecode: 200,
-              data: result
+              data: result,
+              setId: setId
             });
           }
         })
@@ -543,5 +539,6 @@ export {
   copyMove,
   isStarredMove,
   deleteMove,
-  transferMove
+  transferMove,
+  createMove
 };
