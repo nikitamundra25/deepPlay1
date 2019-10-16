@@ -8,7 +8,6 @@ const algoliasearch = require("algoliasearch");
 const client = algoliasearch(algoliaAppId, algoliaAPIKey);
 const index = client.initIndex("deep_play_data");
 import { decrypt, encrypt } from "../common";
-import { template } from "handlebars";
 
 // --------------Create set---------------------
 const createSet = async (req: Request, res: Response): Promise<any> => {
