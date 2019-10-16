@@ -5,7 +5,6 @@ import {
   DropdownMenu,
   DropdownItem
 } from "reactstrap";
-import { AppConfig } from "config/Appconfig";
 import { logger } from "helper/Logger";
 import InputRange from "react-input-range";
 import { SecondsToHHMMSS } from "helper/Time";
@@ -140,7 +139,7 @@ class WebmView extends Component {
           <div className="custom-video-player">
             <video width={"100%"} id="webm-video" muted={isMuted}>
               <source
-                src={`${AppConfig.IMAGE_ENDPOINT}${moveURL}`}
+                src={`${moveURL}`}
                 type="video/webm"
               />
             </video>

@@ -10,7 +10,6 @@ import {
 } from "reactstrap";
 import addPlusIc from "../../../assets/img/add_plus.png";
 import starIc from "../../../assets/img/star.svg";
-import { AppConfig } from "config/Appconfig";
 import { AppRoutes } from "config/AppRoutes";
 import "./index.scss";
 
@@ -157,7 +156,7 @@ class MoveList extends React.Component {
                     <Input
                       placeholder="Type to filter moves"
                       type="text"
-                      autocomplete="off"
+                      autoComplete="off"
                     />
                   </InputGroup>
                 </FormGroup>
@@ -296,7 +295,7 @@ class MoveList extends React.Component {
                         muted={false}
                       >
                         <source
-                          src={`${AppConfig.IMAGE_ENDPOINT}${video.moveURL}`}
+                          src={`${video.moveURL}`}
                           type="video/webm"
                         />
                       </video>
