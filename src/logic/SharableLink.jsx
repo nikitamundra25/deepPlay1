@@ -103,7 +103,6 @@ const sharedLinkFolderDetailsLogic = createLogic({
     );
     if (result.isError) {
       dispatch(hideLoader());
-      toast.error(result.messages[0]);
       dispatch(redirectTo({ path: "/404" }));
       done();
       return;
@@ -133,7 +132,6 @@ const getPublicUrlSetsDetailsLogic = createLogic({
     );
     if (result.isError) {
       dispatch(hideLoader());
-      toast.error(result.messages[0]);
       dispatch(redirectTo({ path: "/404" }));
       done();
       return;
@@ -165,7 +163,6 @@ const sharedLinkSetDetailsLogic = createLogic({
     );
     if (result.isError) {
       dispatch(hideLoader());
-      toast.error(result.messages[0]);
       dispatch(redirectTo({ path: "/404" }));
       done();
       return;
@@ -192,7 +189,6 @@ const getPublicUrlMoveDetailsLogic = createLogic({
     );
     if (result.isError) {
       dispatch(hideLoader());
-      toast.error(result.messages[0]);
       dispatch(redirectTo({ path: "/404" }));
       done();
       return;

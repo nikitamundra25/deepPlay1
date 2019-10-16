@@ -89,15 +89,9 @@ const getAllSetById = async (req: Request, res: Response): Promise<void> => {
   try {
     const { currentUser, query } = req;
     let headToken: Request | any = currentUser;
-    const {
-      limit,
-      page,
-      search,
-      sort,
-      status,
-      roleType,
-      userId,
-    } = query;
+    const { limit, page, search, sort, status, roleType, userId } = query;
+    console.log("dfgfd", query);
+
     const pageNumber: number = ((parseInt(page) || 1) - 1) * (limit || 10);
     const limitNumber: number = parseInt(limit) || 10;
 
@@ -109,9 +103,12 @@ const getAllSetById = async (req: Request, res: Response): Promise<void> => {
     condition.$and.push({
       isDeleted: false
     });
+    console.log("userId", query.userId);
 
     // dcrypt userId for shareable link in yoursets component
     if (userId) {
+      console.log(">>>>>>fg");
+
       headToken = { id: decrypt(userId) };
       console.log("<<<,headToken.id", headToken.id);
     }

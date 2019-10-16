@@ -9,6 +9,7 @@ import { AppConfig } from "config/Appconfig";
 import { logger } from "helper/Logger";
 import InputRange from "react-input-range";
 import { SecondsToHHMMSS } from "helper/Time";
+import TransferToModal from "../../Folders/FolderDetails/transferTo";
 
 class WebmView extends Component {
   video;
@@ -20,7 +21,9 @@ class WebmView extends Component {
       exactCurrentTime: 0,
       audioSpeed: 5,
       isMuted: false,
-      playBackSpeed: 1
+      playBackSpeed: 1,
+      moveToTransfer: "",
+      setId: ""
     };
   }
   /**
@@ -104,11 +107,35 @@ class WebmView extends Component {
       isDeleted: true,
       setId: this.props.setIdPathName
     };
-     this.props.deleteMove(data);
+    this.props.deleteMove(data);
   };
 
+  openTransferToModal = (id, setId) => {
+    const { modelInfoReducer } = this.props;
+    const { modelDetails } = modelInfoReducer;
+    this.setState({
+      moveToTransfer: id,
+      setId: setId
+    });
+    this.props.modelOperate({
+      modelDetails: {
+        transferToModalOpenReq: !modelDetails.transferToModalOpenReq
+      }
+    });
+  };
+
+  handleMoveTransfer = data => {
+    this.props.transferMove(data);
+  };
+
+  onEditMove = id =>{
+
+  }
+  
   render() {
-    const { video } = this.props;
+    const { video, allSetList, modelInfoReducer } = this.props;
+    const { modelDetails } = modelInfoReducer;
+    const { transferToModalOpenReq } = modelDetails;
     const { moveURL, videoMetaData, title } = video;
     const { duration } = videoMetaData || {};
     const { seconds: videoLength } = duration || {};
@@ -117,7 +144,9 @@ class WebmView extends Component {
       currentTime,
       audioSpeed,
       isMuted,
-      playBackSpeed
+      playBackSpeed,
+      setId,
+      moveToTransfer
     } = this.state;
     logger(videoLength, videoMetaData);
     return (
@@ -136,9 +165,17 @@ class WebmView extends Component {
                   </span>
                 </DropdownToggle>
                 <DropdownMenu>
-                  <DropdownItem>Edit</DropdownItem>
+                  <DropdownItem onClick={() => this.onEditMove(video._id)}>
+                    Edit
+                  </DropdownItem>
                   <DropdownItem>View Info</DropdownItem>
-                  <DropdownItem>Tranfer</DropdownItem>
+                  <DropdownItem
+                    onClick={() =>
+                      this.openTransferToModal(video._id, video.setId)
+                    }
+                  >
+                    Tranfer
+                  </DropdownItem>
                   <DropdownItem
                     onClick={() => this.handleMoveDelete(video._id)}
                   >
@@ -271,6 +308,16 @@ class WebmView extends Component {
             </div>
           </div>
         </div>
+        <TransferToModal
+          modal={transferToModalOpenReq}
+          AllFolders={allSetList}
+          moveToTransfer={moveToTransfer}
+          handleFolderModel={this.handleFolderModel}
+          folderId={setId}
+          transferMove={true}
+          handleOpen={this.openTransferToModal}
+          handleMove={this.handleMoveTransfer}
+        />
       </div>
     );
   }

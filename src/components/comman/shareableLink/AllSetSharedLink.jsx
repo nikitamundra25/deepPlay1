@@ -26,7 +26,7 @@ class AllSetSharedLink extends React.Component {
 
   componentDidMount() {
     let parsed = qs.parse(this.props.location.search);
-    this.props.getSetList({ isSetNoLimit: false, parsed });
+    this.props.getSetList({ isSetNoLimit: false, userId: parsed.userId });
   }
 
   componentDidUpdate({ location }) {
@@ -133,30 +133,30 @@ class AllSetSharedLink extends React.Component {
                 })
               ) : (
                 <>
-                <Col>
-                  <div className="create-set-section w-100 empty-folder-section">
-                    <Card className="set-content-wrap empty-folder-card">
-                      <div className="set-content-block w-100 empty-folder-wrap">
-                        <CardHeader className="empty-folder-header ">
-                          <img src={emptySetIc} alt={"Images"} />
-                          <div className="content-header set-header">
-                            <span className="content-title">
-                              {" "}
-                              <h3>This folder has no Sets yet</h3>
-                              {/* <p>Organize your Sets for you or your students</p> */}
-                            </span>
-                          </div>
-                        </CardHeader>
-                      </div>
-                    </Card>
-                  </div>
+                  <Col>
+                    <div className="create-set-section w-100 empty-folder-section">
+                      <Card className="set-content-wrap empty-folder-card">
+                        <div className="set-content-block w-100 empty-folder-wrap">
+                          <CardHeader className="empty-folder-header ">
+                            <img src={emptySetIc} alt={"Images"} />
+                            <div className="content-header set-header">
+                              <span className="content-title">
+                                {" "}
+                                <h3>This folder has no Sets yet</h3>
+                                {/* <p>Organize your Sets for you or your students</p> */}
+                              </span>
+                            </div>
+                          </CardHeader>
+                        </div>
+                      </Card>
+                    </div>
                   </Col>
                 </>
               )
             ) : (
-                <Col sm={12} className="loader-col">
-                  <Loader />
-                </Col>
+              <Col sm={12} className="loader-col">
+                <Loader />
+              </Col>
             )}
           </Row>
           {totalSets && !isSetListLoading ? (

@@ -11,7 +11,6 @@ import {
 import addPlusIc from "../../../assets/img/add_plus.png";
 import starIc from "../../../assets/img/star.svg";
 import { AppConfig } from "config/Appconfig";
-import { AppRoutes } from "config/AppRoutes";
 import TransferToModal from "../../Folders/FolderDetails/transferTo";
 import "./index.scss";
 
@@ -239,7 +238,7 @@ class MoveList extends React.Component {
                   <img src={addPlusIc} alt="" />
                 </div>
                 <Button
-                  onClick={() => this.props.redirectTo(AppRoutes.MOVE.url)}
+                  onClick={ this.props.handleMoveAdd}
                   color={" "}
                   className="fill-btn btn mt-4"
                 >

@@ -249,6 +249,9 @@ class SetDetails extends React.Component {
                       setIdPathName={setIdPathName}
                       video={movesOfSet[movesOfSet.length - 1]}
                       deleteMove={this.deleteMove}
+                      allSetList={allSetList}
+                      transferMove={this.transferMove}
+                      {...this.props}
                     />
                   ) : (
                     <div className="create-set-section w-100 empty-folder-section">
@@ -294,9 +297,9 @@ class SetDetails extends React.Component {
                 deleteMove={this.deleteMove}
                 movesOfSet={movesOfSet}
                 allSetList={allSetList}
-                openTransferToModal={this.openTransferToModal}
                 handleShowVideo={this.handleShowVideo}
                 transferMove={this.transferMove}
+                handleMoveAdd={this.handleMoveAdd}
                 {...this.props}
               />
             </>
