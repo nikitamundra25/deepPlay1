@@ -157,7 +157,11 @@ const completeVideoEditingLogic = createLogic({
       );
       dispatch(
         completeVideoEditingSuccess({
-          isSavingWebM: false
+          isSavingWebM: false,
+          moveUrlDetails: {
+            moveURL: result.data.data.moveURL,
+            setId: result.data.setId
+          }
         })
       );
       done();
@@ -261,6 +265,50 @@ const transferMoveLogic = createLogic({
     }
   }
 });
+
+//-------------------Create Another Move Request----------------
+const createAnotherMoveLogic = createLogic({
+  type: MovesAction.CREATE_ANOTHER_MOVE_REQUEST,
+  async process({ action }, dispatch, done) {
+    let api = new ApiHelper();
+    let result = await api.FetchFromServer(
+      "move",
+      "/create-move",
+      "POST",
+      true,
+      undefined,
+      action.payload
+    );
+    if (result.isError) {
+      if (!toast.isActive(toastId)) {
+        toastId = toast.error(result.messages[0]);
+      }
+      done();
+      return;
+    } else {
+      if (!toast.isActive(toastId)) {
+        toastId = toast.success(result.messages[0]);
+      }
+      dispatch(
+        modelOpenRequest({
+          modelDetails: {
+            isMoveSuccessModal: false
+          }
+        })
+      );
+      dispatch(
+        redirectTo({
+          path: `${AppRoutes.MOVE_DETAILS.url.replace(
+            ":id",
+            result.data.moveId
+          )}`
+        })
+      );
+      done();
+    }
+  }
+});
+
 export const MoveLogics = [
   downloadVideoLogic,
   getMovesOfSetLogic,
@@ -268,5 +316,6 @@ export const MoveLogics = [
   completeVideoEditingLogic,
   starMoveLogic,
   deleteMoveLogic,
-  transferMoveLogic
+  transferMoveLogic,
+  createAnotherMoveLogic
 ];

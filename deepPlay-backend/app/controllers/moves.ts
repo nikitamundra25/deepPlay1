@@ -3,7 +3,7 @@ import {
   CloudinaryAPIKey,
   CloudinaryAPISecretKey,
   CloudName,
-  IsProductionMode,
+  IsProductionMode
 } from "../config";
 import cloudinary from "cloudinary";
 import { Document } from "mongoose";
@@ -57,7 +57,7 @@ const downloadVideo = async (req: Request, res: Response): Promise<any> => {
     // );
     const moveResult: Document | any = new MoveModel({
       videoUrl: videoURL,
-      userId: headToken.id,
+      userId: headToken.id
       // frames,
       // videoMetaData,
       // videoName
@@ -120,8 +120,10 @@ const downloadYoutubeVideo = async (
       ytdl.getInfo(body.url, (err, info) => {
         if (err) throw err;
         if (info) {
-          ytdl(body.url).pipe((videoStream = fs.createWriteStream(originalVideoPath)));
-          videoStream.on("close", async function () {
+          ytdl(body.url).pipe(
+            (videoStream = fs.createWriteStream(originalVideoPath))
+          );
+          videoStream.on("close", async function() {
             // const {
             //   frames: framesArray,
             //   videoMetaData,
@@ -134,7 +136,7 @@ const downloadYoutubeVideo = async (
             const moveResult: Document | any = new MoveModel({
               videoUrl: videoURL,
               // frames: orderBy(frames),
-              userId: headToken.id,
+              userId: headToken.id
               // videoMetaData,
               // videoName
             });
@@ -142,7 +144,7 @@ const downloadYoutubeVideo = async (
             return res.status(200).json({
               message: "Video uploaded successfully!",
               videoUrl: videoURL,
-              moveData: moveResult,
+              moveData: moveResult
             });
           });
         }
@@ -166,7 +168,7 @@ const createMove = async (req: Request, res: Response): Promise<any> => {
   try {
     const { body, currentUser } = req;
     const { moveUrl } = body;
-
+    
     let headToken: Request | any = currentUser;
     if (!headToken.id) {
       res.status(400).json({
@@ -176,7 +178,7 @@ const createMove = async (req: Request, res: Response): Promise<any> => {
 
     const moveResult: Document | any = new MoveModel({
       videoUrl: moveUrl,
-      userId: headToken.id,
+      userId: headToken.id
     });
 
     await moveResult.save();
@@ -184,8 +186,7 @@ const createMove = async (req: Request, res: Response): Promise<any> => {
       message: "Created new move",
       moveId: moveResult._id,
       success: true
-    })
-
+    });
   } catch (error) {
     console.log(error, "kkkkk");
     res.status(500).send({
@@ -305,14 +306,15 @@ const updateMoveDetailsAndTrimVideo = async (
     const result: Document | null | any = await MoveModel.findById(moveId);
     if (result) {
       const videoFile = path.join(__dirname, "..", result.videoUrl);
-      cloudinary.v2.uploader.upload(videoFile,
+      cloudinary.v2.uploader.upload(
+        videoFile,
         {
           start_offset: timer.min,
           end_offset: timer.max,
           resource_type: "video",
           format: "webm"
         },
-        async function (error, moveData) {
+        async function(error: any, moveData: any) {
           if (error) {
             console.log(">>>>>>>>>>>Error", error);
             return res.status(400).json({
@@ -330,7 +332,7 @@ const updateMoveDetailsAndTrimVideo = async (
                 title,
                 description,
                 tags,
-                setId,
+                setId
               }
             );
             return res.status(200).json({
@@ -339,7 +341,8 @@ const updateMoveDetailsAndTrimVideo = async (
               setId: setId
             });
           }
-        })
+        }
+      );
     } else {
       return res.status(400).json({
         message: "You've requested to update an unknown move."

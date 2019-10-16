@@ -9,7 +9,8 @@ const initialState = {
   tagsList: [],
   isMoveDetailsLoading: false,
   isMoveofSetLoading: false,
-  isSavingWebM: false
+  isSavingWebM: false,
+  moveUrlDetails: []
 };
 
 export const moveReducer = handleActions(
@@ -55,7 +56,7 @@ export const moveReducer = handleActions(
     [MovesAction.ADD_NEW_TAG_TO_LIST]: (state, { payload }) => ({
       ...state,
       tagsList: payload
-    }),
+    })
   },
   initialState
 );

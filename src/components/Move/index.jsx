@@ -114,7 +114,6 @@ class MoveComponent extends React.Component {
   };
 
   handlePasteEvent = e => {
-    e.preventDefault();
     if (e.target.name) {
       this.setState({
         isPaste: true

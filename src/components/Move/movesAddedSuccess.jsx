@@ -23,7 +23,7 @@ class MoveAddedSuccess extends React.Component {
                 <div className="content-header set-header flex-column">
                   <span className="content-title">
                     {" "}
-                    your move has been created!
+                    Your move has been created!
                   </span>
                 </div>
               </CardHeader>

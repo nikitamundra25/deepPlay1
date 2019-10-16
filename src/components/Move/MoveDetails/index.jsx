@@ -10,18 +10,24 @@ import {
   ModalFooter,
   Input,
   Button,
-  FormGroup,
+  FormGroup
 } from "reactstrap";
 import VideoView from "./videoView";
 import VideoDetails from "./videoDetails";
-import { getMoveDetailsRequest, getAllSetRequest, modelOpenRequest, addNewTagToList } from "../../../actions";
+import {
+  getMoveDetailsRequest,
+  getAllSetRequest,
+  modelOpenRequest,
+  addNewTagToList,
+  createAnotherMoveRequest
+} from "../../../actions";
 import "./index.scss";
 import Loader from "components/comman/Loader/Loader";
 import FrameDetails from "./FrameDetails";
 import { logger } from "helper/Logger";
 import { completeVideoEditing } from "actions/Moves";
 import closeBtn from "../../../assets/img/close-img.png";
-import MoveSuccessModal from "./moveSuccessModal"
+import MoveSuccessModal from "./moveSuccessModal";
 import { AppRoutes } from "../../../config/AppRoutes";
 // core components
 class MoveDetails extends React.Component {
@@ -54,14 +60,14 @@ class MoveDetails extends React.Component {
     const moveId = location.split("/");
     this.props.getMoveDetailsRequest({ moveId: moveId[3] });
     this.props.getAllSetRequest({ isSetNoLimit: false });
-    const { recentSetAdded } = this.props.setReducer
+    const { recentSetAdded } = this.props.setReducer;
     if (recentSetAdded !== "") {
       this.setState({
         selectSetOptions: {
           label: recentSetAdded.title,
           value: recentSetAdded._id
         }
-      })
+      });
     }
   };
   componentDidUpdate = ({ modelInfoReducer }) => {
@@ -69,12 +75,15 @@ class MoveDetails extends React.Component {
     const prevDescriptionModal = prevmodelDetails.isDescriptionModalOpen;
     const newModelInfoReducer = this.props.modelInfoReducer;
     const { modelDetails } = newModelInfoReducer;
-    if (prevDescriptionModal !== modelDetails.isDescriptionModalOpen && this.state.description !== "") {
+    if (
+      prevDescriptionModal !== modelDetails.isDescriptionModalOpen &&
+      this.state.description !== ""
+    ) {
       this.setState({
         isUpdateDescription: true
-      })
+      });
     }
-  }
+  };
   /**
    *
    */
@@ -99,8 +108,8 @@ class MoveDetails extends React.Component {
         errors: {
           setId: "Please select set from list"
         }
-      })
-      return
+      });
+      return;
     }
     logger(this.state, moveId);
     this.props.completeVideoEditing({
@@ -115,15 +124,22 @@ class MoveDetails extends React.Component {
   /**
    *
    */
-  handleMoveSuccessModal = () => {
+  handleMoveSuccessModal = data => {
     const { modelInfoReducer } = this.props;
+    // this.props.createAnotherMoveRequest({ moveUrl: data });
     const { modelDetails } = modelInfoReducer;
     this.props.modelOperate({
       modelDetails: {
         isMoveSuccessModal: !modelDetails.isMoveSuccessModal
       }
     });
-  }
+  };
+
+  createAnother = data => {
+    console.log("data", data);
+
+    this.props.createAnotherMoveRequest({ moveUrl: data });
+  };
   /**
    *
    */
@@ -133,11 +149,11 @@ class MoveDetails extends React.Component {
     if (newValue) {
       this.setState({
         tags: newValue
-      })
+      });
     } else {
       this.setState({
         tags: []
-      })
+      });
     }
     // if (actionMeta.action === 'create-option') {
     //   const tags = tagsList.push(newValue)
@@ -146,12 +162,12 @@ class MoveDetails extends React.Component {
     console.log(`action: ${actionMeta.action}`);
     console.groupEnd();
   };
-  handleChange = (e) => {
+  handleChange = e => {
     const { name, value } = e.target;
     this.setState({
       [name]: value
-    })
-  }
+    });
+  };
   /**
    *
    */
@@ -163,13 +179,15 @@ class MoveDetails extends React.Component {
         isDescriptionModalOpen: !modelDetails.isDescriptionModalOpen
       }
     });
-  }
+  };
   /**
    *
    */
   redirectToSetDetails = () => {
-    this.props.redirectTo(AppRoutes.SET_DETAILS.url.replace(":id", this.state.setId))
-  }
+    this.props.redirectTo(
+      AppRoutes.SET_DETAILS.url.replace(":id", this.state.setId)
+    );
+  };
   /**
    *
    */
@@ -183,8 +201,8 @@ class MoveDetails extends React.Component {
     });
     this.setState({
       description: ""
-    })
-  }
+    });
+  };
   handleInputChange = e => {
     if (e && e.value) {
       this.setState({
@@ -202,17 +220,18 @@ class MoveDetails extends React.Component {
       });
     }
   };
+
+  handleSetDetails = id => {
+    this.props.redirectTo(AppRoutes.SET_DETAILS.url.replace(":id", id));
+  };
   /**
    *
    */
   render() {
-    const {
-      setReducer,
-      moveReducer,
-      modelInfoReducer } = this.props;
+    const { setReducer, moveReducer, modelInfoReducer } = this.props;
     const { modelDetails } = modelInfoReducer;
-    const { isDescriptionModalOpen, isMoveSuccessModal } = modelDetails
-    const { moveDetails, isSavingWebM, tagsList } = moveReducer;
+    const { isDescriptionModalOpen, isMoveSuccessModal } = modelDetails;
+    const { moveDetails, isSavingWebM, tagsList, moveUrlDetails } = moveReducer;
     const {
       timer,
       title,
@@ -222,7 +241,10 @@ class MoveDetails extends React.Component {
       selectSetOptions,
       isUpdateDescription,
       videoDuration,
-      videoMaxDuration } = this.state;
+      videoMaxDuration
+    } = this.state;
+    console.log("fdfd", moveUrlDetails);
+
     return (
       <>
         <div className="create-set-section step-2 ">
@@ -242,48 +264,49 @@ class MoveDetails extends React.Component {
               {isSavingWebM ? (
                 <Loader />
               ) : (
-                  <>
-                    <Row className={"mt-3"}>
-                      {moveDetails && moveDetails.videoUrl ? (
-                        <>
-                          <VideoView
-                            moveReducer={moveReducer}
-                            handleChange={this.handleChange}
-                            handleDesriptionModal={this.handleDesriptionModal}
-                            description={description}
-                            timer={timer}
-                            title={title}
-                            videoDuration={(data) => this.setState({
+                <>
+                  <Row className={"mt-3"}>
+                    {moveDetails && moveDetails.videoUrl ? (
+                      <>
+                        <VideoView
+                          moveReducer={moveReducer}
+                          handleChange={this.handleChange}
+                          handleDesriptionModal={this.handleDesriptionModal}
+                          description={description}
+                          timer={timer}
+                          title={title}
+                          videoDuration={data =>
+                            this.setState({
                               videoDuration: data.timeDuration,
                               videoMaxDuration: data.videoMaxDuration
-                            })}
-                          />
-                          <VideoDetails
-                            setReducer={setReducer}
-                            isDescriptionModalOpen={isDescriptionModalOpen}
-                            selectSetOptions={selectSetOptions}
-                            handleChange={this.handleChange}
-                            handleInputChange={this.handleInputChange}
-                            errors={errors}
-                            handleTagChange={this.handleTagChange}
-                            tags={tags}
-                            tagsList={tagsList}
-                            ref={this.videoDetails}
-                          />
-                        </>
-                      ) : (
-                          <Loader />
-                        )}
-
-                    </Row>
-                    <FrameDetails
-                      videoDuration={videoDuration || []}
-                      videoMaxDuration={videoMaxDuration || 0}
-                      onTimerChange={this.onTimerChange}
-                      completeEditing={this.completeEditing}
-                    />
-                  </>
-                )}
+                            })
+                          }
+                        />
+                        <VideoDetails
+                          setReducer={setReducer}
+                          isDescriptionModalOpen={isDescriptionModalOpen}
+                          selectSetOptions={selectSetOptions}
+                          handleChange={this.handleChange}
+                          handleInputChange={this.handleInputChange}
+                          errors={errors}
+                          handleTagChange={this.handleTagChange}
+                          tags={tags}
+                          tagsList={tagsList}
+                          ref={this.videoDetails}
+                        />
+                      </>
+                    ) : (
+                      <Loader />
+                    )}
+                  </Row>
+                  <FrameDetails
+                    videoDuration={videoDuration || []}
+                    videoMaxDuration={videoMaxDuration || 0}
+                    onTimerChange={this.onTimerChange}
+                    completeEditing={this.completeEditing}
+                  />
+                </>
+              )}
             </CardBody>
           </Card>
         </div>
@@ -291,7 +314,11 @@ class MoveDetails extends React.Component {
           <Modal
             className="modal-dialog-centered custom-model-wrap"
             isOpen={isDescriptionModalOpen}
-            toggle={isUpdateDescription ? this.handleDesriptionModal : this.cancelDescription}
+            toggle={
+              isUpdateDescription
+                ? this.handleDesriptionModal
+                : this.cancelDescription
+            }
           >
             <ModalHeader>
               <span className="custom-title" id="exampleModalLabel">
@@ -332,15 +359,15 @@ class MoveDetails extends React.Component {
                 className="btn btn-black"
                 disabled={!description}
               >
-                {
-                  isUpdateDescription ?
-                    "Update description" :
-                    "Add Description"
-                }
+                {isUpdateDescription ? "Update description" : "Add Description"}
               </Button>
               <Button
                 type="button"
-                onClick={isUpdateDescription ? this.handleDesriptionModal : this.cancelDescription}
+                onClick={
+                  isUpdateDescription
+                    ? this.handleDesriptionModal
+                    : this.cancelDescription
+                }
                 color=" "
                 className="btn btn-line-black"
               >
@@ -352,6 +379,9 @@ class MoveDetails extends React.Component {
             isMoveSuccessModal={isMoveSuccessModal}
             handleMoveSuccessModal={this.handleMoveSuccessModal}
             redirectToSetDetails={this.redirectToSetDetails}
+            handleSetDetails={this.handleSetDetails}
+            moveUrlDetails={moveUrlDetails}
+            createAnother={this.createAnother}
           />
         </div>
       </>
@@ -369,7 +399,8 @@ const mapDispatchToProps = dispatch => ({
   getAllSetRequest: data => dispatch(getAllSetRequest(data)),
   completeVideoEditing: data => dispatch(completeVideoEditing(data)),
   modelOperate: data => dispatch(modelOpenRequest(data)),
-  addNewTagToList: data => dispatch(addNewTagToList(data))
+  addNewTagToList: data => dispatch(addNewTagToList(data)),
+  createAnotherMoveRequest: data => dispatch(createAnotherMoveRequest(data))
 });
 export default connect(
   mapStateToProps,

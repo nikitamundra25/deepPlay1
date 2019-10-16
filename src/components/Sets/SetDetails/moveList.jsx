@@ -237,7 +237,7 @@ class MoveList extends React.Component {
                   <img src={addPlusIc} alt="" />
                 </div>
                 <Button
-                  onClick={ this.props.handleMoveAdd}
+                  onClick={this.props.handleMoveAdd}
                   color={" "}
                   className="fill-btn btn mt-4"
                 >
@@ -328,10 +328,7 @@ class MoveList extends React.Component {
                         id={`webm-video-${index}`}
                         muted={false}
                       >
-                        <source
-                          src={`${video.moveURL}`}
-                          type="video/webm"
-                        />
+                        <source src={`${video.moveURL}`} type="video/webm" />
                       </video>
                       <div
                         className="blur-img"
