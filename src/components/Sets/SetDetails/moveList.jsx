@@ -135,7 +135,7 @@ class MoveList extends React.Component {
       <section className="play-list-collection set-detail-section">
         <Row>
 
-          
+
           <Col md="12" className={"pb-3"}>
             <div class="content-header mt-3 mb-1">
               <span class="content-title">
@@ -165,7 +165,7 @@ class MoveList extends React.Component {
               </div>
             </div>
             {selectedMoveIds && selectedMoveIds.length ? (
-              <div className={"selected-moves"}>
+              <div className={"selected-moves my-3"}>
                 <div className={"d-flex justify-content-between"}>
                   <div class="content-title">
                     Selected Moves:{" "}
@@ -173,26 +173,29 @@ class MoveList extends React.Component {
                       ? selectedMoveIds.length
                       : 0}
                   </div>
-                  <div class="content-title pr-2">
-                    <div className={"mr-2"}>
+                  <div class="content-title pr-2 set-detail-btn-wrap">
+                    <div className={"mr-2 "}>
                       <ButtonGroup size="sm">
-                        <Button>Copy</Button>
-                        <Button>Transfer</Button>
-                        <Button>Remove</Button>
+                        <Button color=" ">Copy</Button>
+                        <Button color=" ">Transfer</Button>
+                        <Button color=" ">Remove</Button>
+                        <Button color=" "
+                        className="btn-line-black"
+                         onClick={() =>
+                          this.setState({
+                            selectedMoves: [],
+                            selectedMoveIds: [],
+                            isVideoChecked: false
+                          })
+                        }
+                        >
+                     
+                      <i class="fa fa-times" aria-hidden="true" />
+                 
+                        </Button>
                       </ButtonGroup>
                     </div>
-                    <span
-                      onClick={() =>
-                        this.setState({
-                          selectedMoves: [],
-                          selectedMoveIds: [],
-                          isVideoChecked: false
-                        })
-                      }
-                      className={"cursor_pointer"}
-                    >
-                      <i class="fa fa-times" aria-hidden="true" />
-                    </span>
+                    
                   </div>
                 </div>
               </div>

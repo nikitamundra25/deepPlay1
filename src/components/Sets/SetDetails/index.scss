@@ -19,9 +19,10 @@
     position: absolute;
     z-index: 9;
     left: 5px;
-    top: 0px;
+    top: 1px;
+    font-size: 20px;
     &.custom-control{&.custom-checkbox{
-      top: -13px;
+      top: -18px;
       left: 6px;
     }}
 }
