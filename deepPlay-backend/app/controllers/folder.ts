@@ -492,7 +492,11 @@ const publicUrlFolderInfo = async (
       });
     } else {
       return res.status(400).json({
-        message: "Public access link is not enabled."
+        message: {
+          message: "Public access link is not enabled.",
+          folderId: decryptedFolderId
+        },
+        success: false
       });
     }
     return res.status(200).json({

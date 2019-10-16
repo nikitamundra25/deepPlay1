@@ -166,6 +166,12 @@ class SetDetails extends React.Component {
     this.props.transferMoveRequest(data);
   };
 
+  onEditMove = id => {
+    this.props.redirectTo(
+      AppRoutes.MOVE_DETAILS.url.replace(":id", id) + `?isEdit=${true}`
+    );
+  };
+
   render() {
     const {
       setReducer,
@@ -250,6 +256,7 @@ class SetDetails extends React.Component {
                       video={movesOfSet[movesOfSet.length - 1]}
                       deleteMove={this.deleteMove}
                       allSetList={allSetList}
+                      onEditMove={this.onEditMove}
                       transferMove={this.transferMove}
                       {...this.props}
                     />

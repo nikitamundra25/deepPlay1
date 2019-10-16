@@ -126,10 +126,6 @@ class WebmView extends Component {
   handleMoveTransfer = data => {
     this.props.transferMove(data);
   };
-
-  onEditMove = id =>{
-
-  }
   
   render() {
     const { video, allSetList, modelInfoReducer } = this.props;
@@ -164,7 +160,7 @@ class WebmView extends Component {
                   </span>
                 </DropdownToggle>
                 <DropdownMenu>
-                  <DropdownItem onClick={() => this.onEditMove(video._id)}>
+                  <DropdownItem onClick={() => this.props.onEditMove(video._id)}>
                     Edit
                   </DropdownItem>
                   <DropdownItem>View Info</DropdownItem>

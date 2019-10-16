@@ -148,18 +148,29 @@ const completeVideoEditingLogic = createLogic({
       toast.error(result.messages[0]);
     } else {
       logger(result, action.payload);
-      dispatch(
-        modelOpenRequest({
-          modelDetails: {
-            isMoveSuccessModal: true
-          }
-        })
-      );
+      if (action.payload.isEdit) {
+        dispatch(
+          redirectTo({
+            path: `${AppRoutes.SET_DETAILS.url.replace(
+              ":id",
+              result.data.setId
+            )}`
+          })
+        );
+      } else {
+        dispatch(
+          modelOpenRequest({
+            modelDetails: {
+              isMoveSuccessModal: true
+            }
+          })
+        );
+      }
       dispatch(
         completeVideoEditingSuccess({
           isSavingWebM: false,
           moveUrlDetails: {
-            moveURL: result.data.data.moveURL,
+            moveURL: result.data.data.videoUrl,
             setId: result.data.setId
           }
         })
