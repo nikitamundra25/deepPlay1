@@ -19,7 +19,7 @@ class VideoView extends React.Component {
     this.state = {
       url: "",
       errors: "",
-      isPaste: false
+      isPaste: false,
     };
   }
   /**
@@ -39,6 +39,18 @@ class VideoView extends React.Component {
         }, 500);
       }
     });
+    let timeDuration = []
+    this.video.onloadeddata = () => {
+      const { duration } = this.video
+      for (let index = 0; index < duration; index = index + duration / 20) {
+        timeDuration.push(index)
+      }
+      const data = {
+        timeDuration: timeDuration,
+        videoMaxDuration: duration
+      }
+      this.props.videoDuration(data)
+    }
   }
   /**
    *

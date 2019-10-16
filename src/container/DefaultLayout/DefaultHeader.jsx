@@ -220,7 +220,7 @@ class DefaultHeader extends React.Component {
                                     ></i>
                                   </span>
                                 </InputGroupAddon>
-                                <Input placeholder="Search" onChange={this.handleChange} value={search} name={"search"} type="text" autocomplete="off" />
+                                <Input placeholder="Search" onChange={this.handleChange} value={search} name={"search"} type="text" autoComplete="off" />
                                 {
                                   search ?
                                     <AllSearchComponent
