@@ -22,7 +22,7 @@ class DefaultSidebar extends React.Component {
         : [];
 
     return (
-      <div className="dashboard-left-wrap">
+      <div className="dashboard-left-wrap cutom-scroll">
         <div className="dashboard-left">
           <ul className="list-group list-group-flush">
             {SidebarComponent.map((items, index) => {

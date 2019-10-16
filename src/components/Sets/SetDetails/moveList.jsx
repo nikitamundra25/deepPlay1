@@ -9,7 +9,7 @@ import {
   Input
 } from "reactstrap";
 import addPlusIc from "../../../assets/img/add_plus.png";
-import starIc from "../../../assets/img/star.svg";
+import starIc from "../../../assets/img/star-line.svg";
 import { AppRoutes } from "config/AppRoutes";
 import "./index.scss";
 

@@ -25,7 +25,7 @@ class AllSearchComponent extends React.Component {
       
         {
           !isSearchLoading ?
-          <div className="search-result-wrap">
+          <div className="search-result-wrap cutom-scroll">
               {
                 folderList && folderList.length ?
                   <div className="search-result-block  moves-block">
@@ -141,7 +141,7 @@ class AllSearchComponent extends React.Component {
                   null
               }
             </div> :
-               <div className="search-result-wrap loader-no-height loader-no-background">
+               <div className="search-result-wrap cutom-scroll loader-no-height loader-no-background">
             <Loader />
             </div>
         }
