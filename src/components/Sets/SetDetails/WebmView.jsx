@@ -5,7 +5,6 @@ import {
   DropdownMenu,
   DropdownItem
 } from "reactstrap";
-import { AppConfig } from "config/Appconfig";
 import { logger } from "helper/Logger";
 import InputRange from "react-input-range";
 import { SecondsToHHMMSS } from "helper/Time";

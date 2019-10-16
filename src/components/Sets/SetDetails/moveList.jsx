@@ -10,7 +10,6 @@ import {
 } from "reactstrap";
 import addPlusIc from "../../../assets/img/add_plus.png";
 import starIc from "../../../assets/img/star.svg";
-import { AppConfig } from "config/Appconfig";
 import TransferToModal from "../../Folders/FolderDetails/transferTo";
 import "./index.scss";
 
