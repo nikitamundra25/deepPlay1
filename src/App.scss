@@ -14,6 +14,15 @@ $source: "Roboto", sans-serif;
   align-items: center;
   justify-content: center;
 }
+
+// bootstrap 4 media query
+// @include media-breakpoint-up(xs) { ... }
+// @include media-breakpoint-up(sm) { ... }
+// @include media-breakpoint-up(md) { ... }
+// @include media-breakpoint-up(lg) { ... }
+// @include media-breakpoint-up(xl) { ... }
+
+
 // @import "./assets/scss/custom/variables.scss";
 @import url("https://fonts.googleapis.com/css?family=Poppins&display=swap");
 @import url("https://fonts.googleapis.com/css?family=Roboto:400,500,700&display=swap");
@@ -721,7 +730,7 @@ a {
       justify-content: space-between;
       .heading-divider {
         flex: 1;
-        border-bottom: 2px solid #898989;
+        border-bottom: 2px solid #d1d1d1;
         height: 1px;
         margin: 0px 15px;
       }
@@ -1565,7 +1574,10 @@ a {
 // custom-video-player
 .custom-video-player {
   color: $whiteColor;
+  background: $blackcolor;
   text-shadow: 0 0 2px rgba(0, 0, 0, 0.5);
+  max-width: 500px;
+  margin: 0 auto;
   font-size: 20px;
   position: relative;
   .volume-up-down {
@@ -1726,7 +1738,7 @@ a {
 }
 .get-stated-btn{
   overflow: hidden;
-  border: none;
+  // border: none;
 }
 .dashboard-recent-section{
   .set-content-wrap{
@@ -1746,3 +1758,26 @@ a {
     }
   }
 }
+
+@media (min-width: 576px) {  }
+
+@media (min-width: 768px) {  }
+
+
+@media (min-width: 992px) {  }
+
+@media (min-width: 1200px) { }
+@media (max-width: 575px) {  }
+
+@media (max-width: 767px) {  }
+
+@media (max-width: 991px) {  }
+
+@media (max-width: 1199px) { 
+  .navbar-nav .nav-link{
+    color: inherit!important;
+  }
+  .dropdown-menu.show{
+    position: absolute!important;
+  }
+ }

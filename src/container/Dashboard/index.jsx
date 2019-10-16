@@ -57,7 +57,7 @@ class Dashboard extends React.Component {
     
     return (
       <>
-        <div className="page-body ">
+        <div className="page-body dashboard-recent-section">
           {/* <div className="content-header">
             <span className="content-title">RECENT</span>
           </div> */}
@@ -195,7 +195,7 @@ class Dashboard extends React.Component {
             )}
           </Row>
         </div>
-        <div className="page-body mt-4">
+        <div className="page-body mt-4 dashboard-recent-section">
           <div className="content-header">
             <span className="content-title">RECENT FOLDERS</span>
             {recentFolders && recentFolders.length > 4 ? (

@@ -19,7 +19,11 @@
     position: absolute;
     z-index: 9;
     left: 5px;
-    top: 5px;
+    top: 0px;
+    &.custom-control{&.custom-checkbox{
+      top: -13px;
+      left: 6px;
+    }}
 }
 .input-checkbox-ic-wrap{
     position: absolute;

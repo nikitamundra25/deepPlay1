@@ -10976,13 +10976,7 @@ html:not([dir="rtl"]) .noUi-horizontal .noUi-handle {
 * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 
 */
-@media (max-width: 991.98px) {
-  .dropdown-menu.show {
-    position: static !important;
-    will-change: unset !important;
-    top: 100% !important;
-    left: 0px !important;
-    transform: unset !important; } }
+
 
 :focus {
   outline: none; }

@@ -173,13 +173,13 @@ class MoveList extends React.Component {
                       : 0}
                   </div>
                   <div class="content-title pr-2">
-                    <span className={"mr-2"}>
+                    <div className={"mr-2"}>
                       <ButtonGroup size="sm">
                         <Button>Copy</Button>
                         <Button>Transfer</Button>
                         <Button>Remove</Button>
                       </ButtonGroup>
-                    </span>
+                    </div>
                     <span
                       onClick={() =>
                         this.setState({
@@ -227,10 +227,10 @@ class MoveList extends React.Component {
                 <div className="play-list-block">
                   <div
                     className="play-sub-block"
-                    onMouseOver={() => this.handleVideoHover(index)}
-                    onMouseLeave={() => {
-                      this.handleVideoPause(index);
-                    }}
+                    // onMouseOver={() => this.handleVideoHover(index)}
+                    // onMouseLeave={() => {
+                    //   this.handleVideoPause(index);
+                    // }}
                   >
                     <div
                       onMouseOver={() => this.handleVideoPlay(index)}
