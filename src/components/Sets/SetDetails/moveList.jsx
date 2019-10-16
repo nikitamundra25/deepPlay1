@@ -134,6 +134,8 @@ class MoveList extends React.Component {
     return (
       <section className="play-list-collection set-detail-section">
         <Row>
+
+          
           <Col md="12" className={"pb-3"}>
             <div class="content-header mt-3 mb-1">
               <span class="content-title">
@@ -144,7 +146,7 @@ class MoveList extends React.Component {
                 <ButtonGroup size="sm" className="mr-2">
                   <Button
                     // onClick={() => this.OnCreateSetCopy(list)}
-                    className="active"
+                    // className="active"
                     color=" "
                   >
                     All
@@ -226,10 +228,10 @@ class MoveList extends React.Component {
                 <div className="play-list-block">
                   <div
                     className="play-sub-block"
-                    // onMouseOver={() => this.handleVideoHover(index)}
-                    // onMouseLeave={() => {
-                    //   this.handleVideoPause(index);
-                    // }}
+                    onMouseOver={() => this.handleVideoHover(index)}
+                    onMouseLeave={() => {
+                      this.handleVideoPause(index);
+                    }}
                   >
                     <div
                       onMouseOver={() => this.handleVideoPlay(index)}
