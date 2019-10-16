@@ -191,7 +191,7 @@ class MoveList extends React.Component {
                     <Input
                       placeholder="Type to filter moves"
                       type="text"
-                      autocomplete="off"
+                      autoComplete="off"
                     />
                   </InputGroup>
                 </FormGroup>
@@ -330,7 +330,7 @@ class MoveList extends React.Component {
                         muted={false}
                       >
                         <source
-                          src={`${AppConfig.IMAGE_ENDPOINT}${video.moveURL}`}
+                          src={`${video.moveURL}`}
                           type="video/webm"
                         />
                       </video>
