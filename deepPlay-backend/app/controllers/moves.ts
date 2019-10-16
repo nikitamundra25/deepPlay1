@@ -178,8 +178,9 @@ const createMove = async (req: Request, res: Response): Promise<any> => {
       videoUrl: moveUrl,
       userId: headToken.id,
     });
-
     await moveResult.save();
+    console.log("###",moveResult);
+    
     return res.status(200).json({
       message: "Created new move",
       moveId: moveResult._id,

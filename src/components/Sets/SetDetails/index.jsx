@@ -232,42 +232,12 @@ class SetDetails extends React.Component {
             <>
               <Card className="video-slider-section">
                 <div className="step-2">
-                  {movesOfSet && movesOfSet.length ? (
+                  {movesOfSet && movesOfSet.length ?
                     <WebmView
+                      movesOfSet={movesOfSet}
                       video={movesOfSet[showVideoIndex]}
-                    />
-                  ) : (
-                      <div className="create-set-section w-100 empty-folder-section">
-                        <div className="set-content-wrap empty-folder-card">
-                          <div className="set-content-block w-100 empty-folder-wrap">
-                            <CardHeader className="empty-folder-header text-center">
-                              <img src={emptySetIc} alt={"Images"} />
-                              <div className="content-header set-header">
-                                <span className="content-title">
-                                  {" "}
-                                  <h3>You haven't added any move yet!</h3>
-                                  <p>No move availabe for this set</p>
-                                </span>
-                              </div>
-                            </CardHeader>
-                            <CardBody className="">
-                              <div className="create-set-tile"></div>
-                              <div className="text-center">
-                                <Button
-                                  color=" "
-                                  type="button"
-                                  className="btn-black btn "
-                                  onClick={this.handleMoveAdd}
-                                >
-                                  <i className="fas fa-plus mr-1"></i>
-                                  Add a Move
-                              </Button>
-                              </div>
-                            </CardBody>
-                          </div>
-                        </div>
-                      </div>
-                    )}
+                    /> : null
+                  }
                 </div>
               </Card>
               <MoveList

@@ -27,19 +27,21 @@ class WebmView extends Component {
   /**
    *
    */
-  componentDidMount() {
-    // this.video = document.getElementById("webm-video");
-    // this.video.addEventListener("timeupdate", () => {
-    //   const currentVideoTime = parseFloat(this.video.currentTime).toFixed(2);
-    //   this.setState({
-    //     currentTime: currentVideoTime
-    //   });
-    // });
-    // this.video.addEventListener("ended", () => {
-    //   this.setState({
-    //     isPlaying: false
-    //   });
-    // });
+  componentDidUpdate = ({ videoModalOpen }) => {
+    if (videoModalOpen) {
+      this.video = document.getElementById("webm-video");
+      this.video.addEventListener("timeupdate", () => {
+        const currentVideoTime = parseFloat(this.video.currentTime).toFixed(2);
+        this.setState({
+          currentTime: currentVideoTime
+        });
+      });
+      this.video.addEventListener("ended", () => {
+        this.setState({
+          isPlaying: false
+        });
+      });
+    }
   }
   /**
    *
@@ -115,7 +117,7 @@ class WebmView extends Component {
     return (
       <Modal
         className="modal-dialog-centered custom-model-wrap custom-video-model"
-        isOpen={true}
+        isOpen={false}
       >
         <ModalBody>
           <div className="video-slider-text">
@@ -142,16 +144,16 @@ class WebmView extends Component {
             </div>
           </div>
           <div className="video-slider-img">
-            
+
             <div className="custom-video-player">
-            <div className="videos-arrows-wrap">
-              <div className="left-arrow-wrap">
-            <i class="fa fa-angle-left" aria-hidden="true"></i>
+              <div className="videos-arrows-wrap">
+                <div className="cursor_pointer left-arrow-wrap">
+                  <i className="fa fa-angle-left" aria-hidden="true" />
+                </div>
+                <div className="right-arrow-wrap cursor_pointer">
+                  <i className="fa fa-angle-right" aria-hidden="true" />
+                </div>
               </div>
-              <div className="right-arrow-wrap">
-            <i class="fa fa-angle-right" aria-hidden="true"></i>
-              </div>
-            </div>
               <video width={"100%"} id="webm-video" muted={isMuted}>
                 <source
                   src={`${moveURL}`}
