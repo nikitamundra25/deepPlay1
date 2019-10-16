@@ -35,6 +35,7 @@ class MoveComponent extends React.Component {
   }
 
   handleChange = e => {
+    e.preventDefault();
     const { name, value } = e.target;
     this.setState({
       errors: "",
@@ -113,6 +114,7 @@ class MoveComponent extends React.Component {
   };
 
   handlePasteEvent = e => {
+    e.preventDefault();
     if (e.target.name) {
       this.setState({
         isPaste: true
@@ -151,6 +153,9 @@ class MoveComponent extends React.Component {
 
   onSubmitForm = e => {
     e.preventDefault();
+    if (this.state.url && !this.state.errors) {
+      this.handleMoveUpload();
+    }
   };
 
   render() {
@@ -184,7 +189,7 @@ class MoveComponent extends React.Component {
                   ) : (
                     <Form
                       className="url-update-wrap"
-                      onSubmit={this.onSubmitForm}
+                      onSubmit={e => this.onSubmitForm(e)}
                     >
                       <div className="ml-3 mr-3">
                         <FormGroup className="flex-fill flex-column ">
@@ -209,9 +214,9 @@ class MoveComponent extends React.Component {
                               }
                               placeholder="Ex: https://www.youtube.com/watch?v=I5t894l5b1w"
                               type="text"
-                              onPaste={this.handlePasteEvent}
+                              onPaste={e => this.handlePasteEvent(e)}
                               name="url"
-                              onChange={this.handleChange}
+                              onChange={e => this.handleChange(e)}
                               value={url}
                             />
                             <FormFeedback>
@@ -286,11 +291,9 @@ class MoveComponent extends React.Component {
   }
 }
 
-const mapStateToProps = state => {
-  return {
-    moveReducer: state.moveReducer
-  };
-};
+const mapStateToProps = state => ({
+  moveReducer: state.moveReducer
+});
 const mapDispatchToProps = dispatch => ({
   downloadVideo: data => dispatch(downloadYoutubeVideoRequest(data))
 });
