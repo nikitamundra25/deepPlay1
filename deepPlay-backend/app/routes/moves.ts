@@ -10,7 +10,8 @@ import {
   isStarredMove,
   deleteMove,
   transferMove,
-  createMove
+  createMove,
+  filterMove
 } from "../controllers";
 import { ValidateAdminToken } from "../common";
 import { storageFile } from "../common/video";
@@ -43,5 +44,6 @@ MoveRouter.put("/starred-move", ValidateAdminToken, isStarredMove);
 MoveRouter.patch("/delete-move", ValidateAdminToken, deleteMove);
 MoveRouter.patch("/transfer-move", ValidateAdminToken, transferMove);
 MoveRouter.post("/create-move", ValidateAdminToken, createMove);
+MoveRouter.get("/filter-move", ValidateAdminToken, filterMove);
 
 export default MoveRouter;

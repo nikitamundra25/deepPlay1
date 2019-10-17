@@ -143,7 +143,6 @@ const getPublicUrlSetsDetailsLogic = createLogic({
       }
     );
     if (result.isError) {
-      console.log("ressss====gdfnhjbgdj===========", result);
       dispatch(hideLoader());
       if (localStorage.getItem("token")) {
         dispatch(
@@ -186,15 +185,13 @@ const sharedLinkSetDetailsLogic = createLogic({
       action.payload
     );
     if (result.isError) {
-      console.log("res", result);
-
       dispatch(hideLoader());
       if (localStorage.getItem("token")) {
         dispatch(
           redirectTo({
             path: AppRoutes.SET_DETAILS.url.replace(
               ":id",
-              result.data.data.setId
+              result.messages[0].setId
             )
           })
         );
@@ -226,7 +223,18 @@ const getPublicUrlMoveDetailsLogic = createLogic({
     );
     if (result.isError) {
       dispatch(hideLoader());
-      dispatch(redirectTo({ path: "/404" }));
+      if (localStorage.getItem("token")) {
+        dispatch(
+          redirectTo({
+            path: AppRoutes.SET_DETAILS.url.replace(
+              ":id",
+              result.messages[0].setId
+            )
+          })
+        );
+      } else {
+        dispatch(redirectTo({ path: "/404" }));
+      }
       done();
       return;
     } else {

@@ -20,7 +20,9 @@ export const MovesAction = {
   TRANSFER_MOVE_REQUEST: "Transfer Moves Request",
   TRANSFER_MOVE_SUCCESS: "Transfer Moves Success",
   CREATE_ANOTHER_MOVE_REQUEST: "Create Another Move Request",
-  CREATE_ANOTHER_MOVE_SUCCESS: "Create Another Move Success"
+  CREATE_ANOTHER_MOVE_SUCCESS: "Create Another Move Success",
+  SEARCH_MOVE_REQUEST: "Search Move Request",
+  SEARCH_MOVE_SUCCESS: "Search Move Success"
 };
 
 export const downloadYoutubeVideoRequest = createAction(
@@ -81,3 +83,6 @@ export const createAnotherMoveRequest = createAction(
 export const createAnotherMoveSuccess = createAction(
   MovesAction.CREATE_ANOTHER_MOVE_SUCCESS
 );
+
+export const searchMoveRequest = createAction(MovesAction.SEARCH_MOVE_REQUEST);
+export const searchMoveSuccess = createAction(MovesAction.SEARCH_MOVE_SUCCESS);

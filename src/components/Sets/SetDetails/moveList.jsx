@@ -26,7 +26,9 @@ class MoveList extends React.Component {
       selectedMoveIds: [],
       page: 1,
       moveToTransfer: "",
-      setId: ""
+      setId: "",
+      moveofSetList: this.props.movesOfSet,
+      search: ""
     };
   }
   handleVideoHoverLeave = () => {
@@ -34,6 +36,22 @@ class MoveList extends React.Component {
       isSelectVideo: false
     });
   };
+  /*
+   */
+  componentDidUpdate = prevProps => {
+    if (prevProps.searchMoveResult !== this.props.searchMoveResult) {
+      if (this.props.searchMoveResult && this.props.searchMoveResult.length) {
+        this.setState({
+          moveofSetList: this.props.searchMoveResult
+        });
+      } else {
+        this.setState({
+          moveofSetList: this.props.movesOfSet
+        });
+      }
+    }
+  };
+
   /*
    */
   handleVideoHover = index => {
@@ -144,12 +162,41 @@ class MoveList extends React.Component {
     };
     this.props.transferMove(moveData);
   };
+
+  handleShowStarred = () => {
+    const list = this.state.moveofSetList;
+    const data = list.filter(item => item.isStarred === true);
+    this.setState({
+      moveofSetList: data
+    });
+  };
+
+  handleShowAll = () => {
+    const movesList = this.props.movesOfSet;
+    this.setState({
+      moveofSetList: movesList
+    });
+  };
+
+  handleInputChange = e => {
+    const { name, value } = e.target;
+    this.setState({
+      [name]: value
+    });
+    this.props.searchMove({ search: value });
+    const { searchMoveResult } = this.props;
+    // if (searchMoveResult.length) {
+    //   this.setState({
+    //     moveofSetList: searchMoveResult
+    //   });
+    // }
+  };
+
   render() {
     const {
       show,
       setIndex,
       moveCount,
-      movesOfSet,
       modelInfoReducer,
       allSetList
     } = this.props;
@@ -162,8 +209,11 @@ class MoveList extends React.Component {
       selectedMoves,
       selectedMoveIds,
       setId,
-      moveToTransfer
+      moveToTransfer,
+      moveofSetList,
+      search
     } = this.state;
+    console.log("moveofSetList", moveofSetList);
 
     return (
       <section className="play-list-collection set-detail-section">
@@ -177,13 +227,15 @@ class MoveList extends React.Component {
               <div className="set-detail-right-section">
                 <ButtonGroup size="sm" className="mr-2">
                   <Button
-                    // onClick={() => this.OnCreateSetCopy(list)}
                     className="active"
                     color=" "
+                    onClick={this.handleShowAll}
                   >
                     All
                   </Button>
-                  <Button color=" ">Starred</Button>
+                  <Button color=" " onClick={this.handleShowStarred}>
+                    Starred
+                  </Button>
                 </ButtonGroup>
                 <FormGroup className="mb-0 header-search-wrap ">
                   <InputGroup className="">
@@ -191,6 +243,9 @@ class MoveList extends React.Component {
                       placeholder="Type to filter moves"
                       type="text"
                       autoComplete="off"
+                      value={search}
+                      name="search"
+                      onChange={this.handleInputChange}
                     />
                   </InputGroup>
                 </FormGroup>
@@ -247,7 +302,7 @@ class MoveList extends React.Component {
               </div>
             </div>
           </div>
-          {movesOfSet.map((video, index) => {
+          {moveofSetList.map((video, index) => {
             return (
               <div
                 onClick={() => this.props.handleShowVideo(index)}

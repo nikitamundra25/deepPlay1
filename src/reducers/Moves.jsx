@@ -10,7 +10,8 @@ const initialState = {
   isMoveDetailsLoading: false,
   isMoveofSetLoading: false,
   isSavingWebM: false,
-  moveUrlDetails: []
+  moveUrlDetails: [],
+  searchMoveResult: []
 };
 
 export const moveReducer = handleActions(
@@ -56,6 +57,10 @@ export const moveReducer = handleActions(
     [MovesAction.ADD_NEW_TAG_TO_LIST]: (state, { payload }) => ({
       ...state,
       tagsList: payload
+    }),
+    [MovesAction.SEARCH_MOVE_SUCCESS]: (state, { payload }) => ({
+      ...state,
+      ...payload
     })
   },
   initialState

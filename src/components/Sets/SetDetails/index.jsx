@@ -23,7 +23,8 @@ import {
   starredMovesRequest,
   getAllSetRequest,
   deleteMovesRequest,
-  transferMovesRequest
+  transferMovesRequest,
+  searchMoveRequest
 } from "../../../actions";
 import SharableLinkModal from "../../comman/shareableLink/SharableLink";
 import { AppRoutes } from "../../../config/AppRoutes";
@@ -182,7 +183,7 @@ class SetDetails extends React.Component {
     } = this.props;
     const { setDetails } = setReducer;
     const { modelDetails } = modelInfoReducer;
-    const { movesOfSet, isMoveofSetLoading } = moveReducer;
+    const { movesOfSet, isMoveofSetLoading, searchMoveResult } = moveReducer;
     const { userEncryptedInfo } = shareLinkReducer;
     const { sharableLinkModalOpen, createSetModalOpen } = modelDetails;
     const { show, setIndex, setIdPathName } = this.state;
@@ -304,9 +305,11 @@ class SetDetails extends React.Component {
                 deleteMove={this.deleteMove}
                 movesOfSet={movesOfSet}
                 allSetList={allSetList}
+                searchMoveResult={searchMoveResult}
                 handleShowVideo={this.handleShowVideo}
                 transferMove={this.transferMove}
                 handleMoveAdd={this.handleMoveAdd}
+                searchMove={data => this.props.searchMoveRequest(data)}
                 {...this.props}
               />
             </>
@@ -360,6 +363,7 @@ const mapDispatchToProps = dispatch => ({
   isStarredRequest: data => dispatch(starredMovesRequest(data)),
   deleteMoveRequest: data => dispatch(deleteMovesRequest(data)),
   transferMoveRequest: data => dispatch(transferMovesRequest(data)),
+  searchMoveRequest: data => dispatch(searchMoveRequest(data)),
   getSetList: data => {
     dispatch(getAllSetRequest(data));
   }

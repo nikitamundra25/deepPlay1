@@ -168,7 +168,7 @@ const createMove = async (req: Request, res: Response): Promise<any> => {
   try {
     const { body, currentUser } = req;
     const { moveUrl } = body;
-    
+
     let headToken: Request | any = currentUser;
     if (!headToken.id) {
       res.status(400).json({
@@ -277,7 +277,10 @@ const publicUrlMoveDetails = async (
       });
     } else {
       return res.status(400).json({
-        message: "Public access link is not enabled."
+        message: {
+          message: "Public access link is not enabled.",
+          setId: decryptedSetId
+        }
       });
     }
     return res.status(200).json({
@@ -418,7 +421,7 @@ const isStarredMove = async (req: Request, res: Response): Promise<any> => {
       }
     );
 
-    res.status(200).json({
+    return res.status(200).json({
       message: "Move has been starred successfully!"
     });
   } catch (error) {
@@ -449,7 +452,7 @@ const deleteMove = async (req: Request, res: Response): Promise<any> => {
       }
     );
 
-    res.status(200).json({
+    return res.status(200).json({
       message: "Move has been deleted successfully!"
     });
   } catch (error) {
@@ -481,7 +484,7 @@ const transferMove = async (req: Request, res: Response): Promise<any> => {
       }
     );
 
-    res.status(200).json({
+    return res.status(200).json({
       message: "Move has been transferred successfully!"
     });
   } catch (error) {
@@ -492,44 +495,53 @@ const transferMove = async (req: Request, res: Response): Promise<any> => {
   }
 };
 
-// //-----------------------Filter move details-----------------------
-// const filterMove = async (req: Request, res: Response): Promise<any> => {
-//   try {
-//     const { body } = req;
-//     const { search } = body;
-//     let condition: any = {
-//       $and: []
-//     };
-//     if (search) {
-//       condition.$and.push({
-//         $or: [
-//           {
-//             title: {
-//               $regex: new RegExp(search.trim(), "i")
-//             }
-//           },
-//           {
-//             description: {
-//               $regex: new RegExp(search.trim(), "i")
-//             }
-//           },
-//           {
-//             tags: {
-//               $regex: new RegExp(search.trim(), "i")
-//             }
-//           }
-//         ]
-//       });
-//     }
-//     const searchData: Document | any | null = MoveModel.find({ condition });
-//     console.log(">>>", searchData);
-//   } catch (error) {
-//     console.log(error);
-//     return res.status(500).send({
-//       message: error.message
-//     });
-//   }
-// };
+//-----------------------Filter move details-----------------------
+const filterMove = async (req: Request, res: Response): Promise<any> => {
+  try {
+    const { query } = req;
+    const { search } = query;
+    let searchData: Document | any | null;
+    let condition: any = {
+      $and: []
+    };
+    condition.$and.push({
+      isDeleted: false
+    });
+
+    if (search) {
+      condition.$and.push({
+        $or: [
+          {
+            title: {
+              $regex: new RegExp(search.trim(), "i")
+            }
+          },
+          {
+            description: {
+              $regex: new RegExp(search.trim(), "i")
+            }
+          },
+          {
+            tags: {
+              $regex: new RegExp(search.trim(), "i")
+            }
+          }
+        ]
+      });
+      searchData = await MoveModel.find(condition);
+    }
+
+    return res.status(200).json({
+      message: "Move has been searched successfully",
+      data: searchData
+    });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).send({
+      message: error.message
+    });
+  }
+};
 
 export {
   downloadVideo,
@@ -542,5 +554,6 @@ export {
   isStarredMove,
   deleteMove,
   transferMove,
-  createMove
+  createMove,
+  filterMove
 };

@@ -8,6 +8,7 @@ import {
   getMovesOfSetRequest,
   getMoveDetailsSuccess,
   modelOpenRequest,
+  searchMoveSuccess,
   getSetDetailsRequest
 } from "../actions";
 import { AppRoutes } from "../config/AppRoutes";
@@ -320,6 +321,34 @@ const createAnotherMoveLogic = createLogic({
   }
 });
 
+//Filter move
+const searchMoveLogic = createLogic({
+  type: MovesAction.SEARCH_MOVE_REQUEST,
+  async process({ action }, dispatch, done) {
+    let api = new ApiHelper();
+    let result = await api.FetchFromServer(
+      "move",
+      "/filter-move",
+      "GET",
+      true,
+      action.payload
+    );
+    if (result.isError) {
+      if (!toast.isActive(toastId)) {
+        toastId = toast.error(result.messages[0]);
+      }
+      done();
+      return;
+    } else {
+      dispatch(
+        searchMoveSuccess({
+          searchMoveResult: result.data.data
+        })
+      );
+      done();
+    }
+  }
+});
 export const MoveLogics = [
   downloadVideoLogic,
   getMovesOfSetLogic,
@@ -328,5 +357,6 @@ export const MoveLogics = [
   starMoveLogic,
   deleteMoveLogic,
   transferMoveLogic,
-  createAnotherMoveLogic
+  createAnotherMoveLogic,
+  searchMoveLogic
 ];

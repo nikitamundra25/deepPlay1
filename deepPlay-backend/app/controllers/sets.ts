@@ -245,6 +245,7 @@ const getRecentSetById = async (req: Request, res: Response): Promise<void> => {
           setId: setData._id,
           isDeleted: false
         });
+
         setResult.push({
           ...setData._doc,
           moveCount: moveCount
@@ -301,9 +302,18 @@ const getSetsForFolder = async (req: Request, res: Response): Promise<void> => {
           setId: setData._id,
           isDeleted: false
         });
+
+        let data: any = await MoveModel.find({
+          setId: setData._id,
+          isDeleted: false
+        })
+          .sort({ updatedAt: -1 })
+          .limit(1);
+
         setResult.push({
           ...setData._doc,
-          moveCount: moveCount
+          moveCount: moveCount,
+          recentlyAddMoveImg: data.length ? data[0].moveURL : null
         });
       }
     }
@@ -556,8 +566,10 @@ const publicAccessSetInfoById = async (
       };
     } else {
       return res.status(400).json({
-        message: "Public access link is not enabled.",
-        setId: decryptedSetId
+        message: {
+          message: "Public access link is not enabled.",
+          setId: decryptedSetId
+        }
       });
     }
     return res.status(200).json({
