@@ -269,13 +269,13 @@ class DefaultHeader extends React.Component {
                               onClick={this.handleLoginModel}
                               className="nav-link-inner--text pr-4 cusror_pointer"
                             >
-                              Signin
+                              Sign in
                           </span>
                             <span
                               onClick={this.handleSignupModel}
                               className="nav-link-inner--text pr-2 cusror_pointer"
                             >
-                              Signup
+                              Sign up
                           </span>
                           </React.Fragment>
                         </div>

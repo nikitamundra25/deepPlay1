@@ -2,6 +2,9 @@ import React from "react";
 import emptyFolderIc from "../../assets/img/empty-folder.png";
 import Loader from "../comman/Loader/Loader";
 import { AppRoutes } from "../../config/AppRoutes";
+import emptyFoldeIc from "../../assets/img/empty-folder.png";
+import emptySetIc from "../../assets/img/empty-sets.png";
+import emptyMoveIc from "../../assets/img/empty-moves.png";
 import "./index.scss";
 // core components
 class AllSearchComponent extends React.Component {
@@ -22,10 +25,10 @@ class AllSearchComponent extends React.Component {
     }
     return (
       <>
-      
+
         {
           !isSearchLoading ?
-          <div className="search-result-wrap cutom-scroll">
+            <div className="search-result-wrap cutom-scroll">
               {
                 folderList && folderList.length ?
                   <div className="search-result-block  moves-block">
@@ -62,7 +65,31 @@ class AllSearchComponent extends React.Component {
                         }
                       </div>
                     </div>
-                  </div> : null
+                  </div> : 
+                    <div className="search-result-block empty-result-block moves-block ">
+                    <div className="category-wrap">
+                      <div className="category-heading">
+                        Folders
+                    </div>
+                    </div>
+                    <div className="searched-wrap">
+                      <div className="searched-block">
+                        <div
+                          className="cursor_pointer searched-tile">
+                          <div className="searhed-img-main-wrap">
+                            <div className="searched-img-wrap">
+                              <div className="searched-img">
+                                <img alt={""} src={emptyFoldeIc} />
+                              </div>
+                            </div>
+                          </div>
+                          <div className="searched-text mt-1">
+                            No data for this keywords
+                                </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
               }
               {
                 setList && setList.length ?
@@ -100,7 +127,30 @@ class AllSearchComponent extends React.Component {
                       </div>
                     </div>
                   </div> :
-                  null
+                   <div className="search-result-block empty-result-block moves-block ">
+                   <div className="category-wrap">
+                     <div className="category-heading">
+                       Sets
+                   </div>
+                   </div>
+                   <div className="searched-wrap">
+                     <div className="searched-block">
+                       <div
+                         className="cursor_pointer searched-tile">
+                         <div className="searhed-img-main-wrap">
+                           <div className="searched-img-wrap">
+                             <div className="searched-img">
+                               <img alt={""} src={emptySetIc} />
+                             </div>
+                           </div>
+                         </div>
+                         <div className="searched-text mt-1">
+                           No data for this keywords
+                               </div>
+                       </div>
+                     </div>
+                   </div>
+                 </div>
               }
               {
                 movelist && movelist.length ?
@@ -138,11 +188,35 @@ class AllSearchComponent extends React.Component {
                       </div>
                     </div>
                   </div> :
-                  null
+                  <div className="search-result-block empty-result-block moves-block ">
+                    <div className="category-wrap">
+                      <div className="category-heading">
+                        Moves
+                    </div>
+                    </div>
+                    <div className="searched-wrap">
+                      <div className="searched-block">
+                        <div
+                          className="cursor_pointer searched-tile">
+                          <div className="searhed-img-main-wrap">
+                            <div className="searched-img-wrap">
+                              <div className="searched-img">
+                                <img alt={""} src={emptyMoveIc} />
+                              </div>
+                            </div>
+                          </div>
+                          <div className="searched-text mt-1">
+                            No data for this keywords
+                                </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
               }
             </div> :
-               <div className="search-result-wrap cutom-scroll loader-no-height loader-no-background">
-            <Loader />
+            <div className="search-result-wrap cutom-scroll loader-no-height loader-no-background">
+              <Loader />
             </div>
         }
       </>
