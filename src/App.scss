@@ -1887,22 +1887,32 @@ a {
   }
 }
 @media (max-width: 1024px) {
+  .fram-wrap .fram-block{
+    font-size: 10px;
+  }
   .play-list-tile {
     width: 33.33%;
   }
 }
 @media (max-width: 991px) {
+  .create-btn-wrap{
+    max-width: 160px;
+  }
   .nav-main-section {
     .nav-inputs-wrap {
       .search-input {
         opacity: 0;
+        transition:all 0.5s;
         position: absolute;
-        &.input-open {
-          opacity: 1;
-          position: absolute;
-          right: 100%;
-          width: 230px;
-        }
+        left: 0%;
+      }
+      .header-search-close{
+        width: 0px;
+      }
+      .header-search-open{
+        opacity: 1;
+        width: 300px;
+        left: 100%;
       }
       input {
         border-radius: 5px;
@@ -1949,6 +1959,10 @@ a {
       }
     }
   }
+  .header-input-group-text{
+    z-index: 9;
+  }
+ 
 }
 @media (max-width: 767px) {
   .play-list-tile {

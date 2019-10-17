@@ -33,7 +33,8 @@ class DefaultHeader extends React.Component {
     this.state = {
       isUserLoggedIn: false,
       path: "",
-      search: ""
+      search: "",
+      open: false
     };
   }
 
@@ -93,6 +94,12 @@ class DefaultHeader extends React.Component {
     });
   };
 
+  openSearch = () =>{
+    this.setState({
+      open : !this.state.open
+    })
+  }
+
   createFolder = data => {
     this.props.onFolderCreation(data);
   };
@@ -133,7 +140,9 @@ class DefaultHeader extends React.Component {
       createFolderModalOpen,
       createSetOpen
     } = modelDetails;
-    const { isUserLoggedIn, path, search } = this.state;
+    const { isUserLoggedIn, path, search, open } = this.state;
+    console.log("open",open);
+    
     const profiledata =
       profileInfoReducer && profileInfoReducer.profileInfo
         ? profileInfoReducer.profileInfo
@@ -215,12 +224,12 @@ class DefaultHeader extends React.Component {
                               </DropdownMenu>
                             </UncontrolledDropdown>
                           </Col>
-                          <Col className="flex-fill header-search-main">
+                          <Col className= "flex-fill header-search-main">
                             <FormGroup className="mb-0 header-search-wrap ">
-                              <InputGroup className="">
-                                <InputGroupAddon addonType="prepend">
-                                  <span className="input-group-text">
-                                    <i
+                              <InputGroup className="" >
+                                <InputGroupAddon  addonType="prepend">
+                                  <span className="input-group-text header-input-group-text" onClick = {this.openSearch} >
+                                    <i 
                                       className="fa fa-search"
                                       aria-hidden="true"
                                     ></i>
@@ -228,7 +237,7 @@ class DefaultHeader extends React.Component {
                                 </InputGroupAddon>
 
                                 {/* input-open */}
-                                <span className="search-input ">
+                                <span className= {open ? "search-input header-search-open " : "search-input header-search-close"} >
                                   <Input placeholder="Search" onChange={this.handleChange} value={search} name={"search"} type="text" autoComplete="off" />
                                 </span>
                                 {
