@@ -22,7 +22,9 @@ export const MovesAction = {
   CREATE_ANOTHER_MOVE_REQUEST: "Create Another Move Request",
   CREATE_ANOTHER_MOVE_SUCCESS: "Create Another Move Success",
   SEARCH_MOVE_REQUEST: "Search Move Request",
-  SEARCH_MOVE_SUCCESS: "Search Move Success"
+  SEARCH_MOVE_SUCCESS: "Search Move Success",
+  ADD_TAGS_REQUEST: "Add Tags Request",
+  ADD_TAGS_SUCCESS: "Add Tags Success"
 };
 
 export const downloadYoutubeVideoRequest = createAction(
@@ -86,3 +88,6 @@ export const createAnotherMoveSuccess = createAction(
 
 export const searchMoveRequest = createAction(MovesAction.SEARCH_MOVE_REQUEST);
 export const searchMoveSuccess = createAction(MovesAction.SEARCH_MOVE_SUCCESS);
+
+export const addTagsRequest = createAction(MovesAction.ADD_TAGS_REQUEST);
+export const addTagsSuccess = createAction(MovesAction.ADD_TAGS_SUCCESS);

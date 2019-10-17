@@ -35,6 +35,22 @@ class AddTagModal extends React.Component {
     };
   }
 
+  handleTagChange = (newValue, actionMeta) => {
+    //const { tagsList } = this.props.moveReducer
+    console.log(newValue);
+    if (newValue) {
+      this.setState({
+        tags: newValue
+      });
+    } else {
+      this.setState({
+        tags: []
+      });
+    }
+    console.log(`action: ${actionMeta.action}`);
+    console.groupEnd();
+  };
+
   render() {
     const { modal, handleOpen } = this.props;
     const { tags } = this.state;

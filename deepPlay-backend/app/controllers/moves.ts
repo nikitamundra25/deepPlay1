@@ -544,6 +544,37 @@ const filterMove = async (req: Request, res: Response): Promise<any> => {
   }
 };
 
+//------------------------Add Tags Single & Multiple--------------------------
+const addTagsInMove = async (req: Request, res: Response): Promise<any> => {
+  try {
+    const { body } = req;
+    const { tags, moveId } = body;
+    console.log(">>>>>>", moveId);
+    if (!moveId) {
+      res.status(400).json({
+        message: "SetId not found"
+      });
+    }
+
+    await MoveModel.updateMany(
+      { _id: { $in: moveId } },
+      {
+        $set: {
+          tags: tags
+        }
+      }
+    );
+
+    return res.status(200).json({
+      message: "Tags have been added successfully!"
+    });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).send({
+      message: error.message
+    });
+  }
+};
 export {
   downloadVideo,
   getMoveBySetId,
@@ -556,5 +587,6 @@ export {
   deleteMove,
   transferMove,
   createMove,
-  filterMove
+  filterMove,
+  addTagsInMove
 };
