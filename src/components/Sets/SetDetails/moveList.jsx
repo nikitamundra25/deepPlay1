@@ -14,6 +14,7 @@ import TransferToModal from "../../Folders/FolderDetails/transferTo";
 import InfiniteScroll from 'react-infinite-scroll-component';
 import "./index.scss";
 import Loader from "components/comman/Loader/Loader";
+import blankStar from "../../../assets/img/star-line.svg";
 
 // core components
 class MoveList extends React.Component {
@@ -285,20 +286,20 @@ class MoveList extends React.Component {
                           <Button className=" " color=" ">Add tags</Button>
                           <Button className=" " color=" ">Transfer</Button>
                           <Button className=" " color=" ">Remove</Button>
-                         
+
                         </ButtonGroup>
                         <Button color=" "
-                            className="btn-black ml-2 move-close-btn"
-                            onClick={() =>
-                              this.setState({
-                                selectedMoves: [],
-                                selectedMoveIds: [],
-                                isVideoChecked: false
-                              })
-                            }
-                          >
-                            <i class="fa fa-times" aria-hidden="true" />
-                          </Button>
+                          className="btn-black ml-2 move-close-btn"
+                          onClick={() =>
+                            this.setState({
+                              selectedMoves: [],
+                              selectedMoveIds: [],
+                              isVideoChecked: false
+                            })
+                          }
+                        >
+                          <i class="fa fa-times" aria-hidden="true" />
+                        </Button>
                       </span>
 
                     </div>
@@ -403,7 +404,7 @@ class MoveList extends React.Component {
                               {video.isStarred ? (
                                 <img src={starIc} alt={"star"} />
                               ) : (
-                                  ""
+                                  <img src={blankStar} alt={"star"} />
                                 )}
                             </div>
                             <div className={"video-effect"}
