@@ -180,11 +180,6 @@ class MoveList extends React.Component {
           }
           hasMore={totalMoves !== movesOfSet.length ? true : false}
           loader={<h4>Loading...</h4>}
-        // endMessage={
-        //   <p style={{ textAlign: 'center' }}>
-        //     <b>Yay! You have seen it all</b>
-        //   </p>
-        // }
         >
           <Row className={"m-0"}>
             <Col md="12" className={"pb-3"}>
@@ -297,7 +292,7 @@ class MoveList extends React.Component {
                                 index,
                                 video._id
                               )
-                            : () => this.props.handleVideoModal(video, index)
+                            : null
                         }
                         className={
                           isVideoChecked && selectedMoves[index]
@@ -349,13 +344,21 @@ class MoveList extends React.Component {
                               ""
                             )}
                         </div>
-                        <video
-                          width={"100%"}
-                          id={`webm-video-${index}`}
-                          muted={false}
-                        >
-                          <source src={`${video.moveURL}`} type="video/webm" />
-                        </video>
+                        <div className={"video-effect"}
+
+                          onClick={
+                            !isVideoChecked && isVideoModalOpen ?
+                              () => this.props.handleVideoModal(video, index) :
+                              null
+                          }>
+                          <video
+                            width={"100%"}
+                            id={`webm-video-${index}`}
+                            muted={false}
+                          >
+                            <source src={`${video.moveURL}`} type="video/webm" />
+                          </video>
+                        </div>
                         <div
                           className="blur-img"
                           style={{ background: "#000" }}
