@@ -12,6 +12,7 @@ import addPlusIc from "../../../assets/img/add_plus.png";
 import starIc from "../../../assets/img/star.svg";
 import TransferToModal from "../../Folders/FolderDetails/transferTo";
 import "./index.scss";
+import AddTagModal from "./addTagsModal";
 
 // core components
 class MoveList extends React.Component {
@@ -28,7 +29,8 @@ class MoveList extends React.Component {
       moveToTransfer: "",
       setId: "",
       moveofSetList: this.props.movesOfSet,
-      search: ""
+      search: "",
+      moveIdToAddTag: ""
     };
   }
   handleVideoHoverLeave = () => {
@@ -153,6 +155,19 @@ class MoveList extends React.Component {
     });
   };
 
+  openAddTagsModal = (id, setId) => {
+    const { modelInfoReducer } = this.props;
+    const { modelDetails } = modelInfoReducer;
+    this.setState({
+      setId: setId,
+      moveIdToAddTag: id
+    })
+    this.props.modelOperate({
+      modelDetails: {
+        addTagModalOpen: !modelDetails.addTagModalOpen
+      }
+    });
+  };
   handleMoveTransfer = data => {
     const { selectedMoveIds } = this.state;
     const moveData = {
@@ -199,7 +214,7 @@ class MoveList extends React.Component {
       allSetList
     } = this.props;
     const { modelDetails } = modelInfoReducer;
-    const { transferToModalOpen } = modelDetails;
+    const { transferToModalOpen, addTagModalOpen } = modelDetails;
     const {
       isVideoChecked,
       isSelectVideo,
@@ -211,7 +226,6 @@ class MoveList extends React.Component {
       moveofSetList,
       search
     } = this.state;
-    console.log("moveofSetList", moveofSetList);
 
     return (
       <section className="play-list-collection set-detail-section">
@@ -419,7 +433,14 @@ class MoveList extends React.Component {
                             >
                               {video.isStarred ? "Unstar" : "Star"}
                             </Button>
-                            <Button color=" ">Add tags</Button>
+                            <Button
+                              color=" "
+                              onClick={() =>
+                                this.openAddTagsModal(video._id, video.setId)
+                              }
+                            >
+                              Add tags
+                            </Button>
                             <Button
                               color=" "
                               onClick={() =>
@@ -453,6 +474,10 @@ class MoveList extends React.Component {
           transferMove={true}
           handleOpen={this.openTransferToModal}
           handleMove={this.handleMoveTransfer}
+        />
+        <AddTagModal 
+        modal={addTagModalOpen}
+        handleOpen={this.openAddTagsModal}
         />
       </section>
     );
