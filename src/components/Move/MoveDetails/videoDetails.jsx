@@ -70,7 +70,7 @@ class VideoDetails extends React.Component {
           </div>
           <FormGroup className="flex-fill flex-column mt-3 input-w">
             {/* add tag-input-wrap class for tagInput design  */}
-            <Label className="">Add tag and press enter for separate</Label>
+            <Label className="mt-2">Add tag and press enter for separate</Label>
             <div className="w-100 tag-input-wrap search-select-wrap">
               {/* <TagsInput
                 value={tags}
@@ -89,7 +89,7 @@ class VideoDetails extends React.Component {
           </FormGroup>
           <FormGroup className="flex-fill flex-column mt-3">
             {/* add search-select class for search select design  */}
-            <Label>select sets</Label>
+            <Label className="mt-2">Select sets</Label>
             <InputGroup>
               <div className="w-100 search-select-wrap">
                 <AsyncSelect
