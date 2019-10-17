@@ -77,7 +77,7 @@ class DefaultSidebar extends React.Component {
               {profiledata
                 ? profiledata.roleType
                   ? profiledata.roleType
-                  : "Unclassified"
+                  : ""
                 : ""}
             </div>
           </div>

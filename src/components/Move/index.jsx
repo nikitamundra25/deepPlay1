@@ -19,6 +19,7 @@ import "./index.scss";
 import { logger } from "helper/Logger";
 import { connect } from "react-redux";
 import { downloadYoutubeVideoRequest } from "../../actions";
+import { ConfirmBox } from "../../helper/SweetAleart";
 
 // core components
 class MoveComponent extends React.Component {
@@ -34,6 +35,7 @@ class MoveComponent extends React.Component {
   }
 
   handleChange = e => {
+    e.preventDefault();
     const { name, value } = e.target;
     this.setState({
       errors: "",
@@ -119,7 +121,7 @@ class MoveComponent extends React.Component {
     }
   };
 
-  handleVideoFileSelect = e => {
+  handleVideoFileSelect = async e => {
     this.setState({
       fileErr: ""
     });
@@ -127,8 +129,12 @@ class MoveComponent extends React.Component {
     if (files.length) {
       const fileType = files ? files[0].type.split("/") : "";
       if (fileType[0] !== "video") {
-        this.setState({
-          fileErr: "Unsupported file type!! We accept only video type"
+        await ConfirmBox({
+          title: "Oops...",
+          text: "Unsupported file type!! We accept only video type",
+          type: "error",
+          showCancelButton: false,
+          confirmButtonText: "Okay"
         });
       } else {
         this.setState(
@@ -141,6 +147,13 @@ class MoveComponent extends React.Component {
           }
         );
       }
+    }
+  };
+
+  onSubmitForm = e => {
+    e.preventDefault();
+    if (this.state.url && !this.state.errors) {
+      this.handleMoveUpload();
     }
   };
 
@@ -173,18 +186,23 @@ class MoveComponent extends React.Component {
                       </p>
                     </div>
                   ) : (
-                    <Form className="url-update-wrap">
+                    <Form
+                      className="url-update-wrap"
+                      onSubmit={e => this.onSubmitForm(e)}
+                    >
                       <div className="ml-3 mr-3">
                         <FormGroup className="flex-fill flex-column ">
                           <Label className="text-center d-block mt-4 mb-3">
                             Paste YouTube Video URL or Type URL Manually{" "}
                           </Label>
                         </FormGroup>
-                        <FormGroup 
-                        className={
-                          errors? `flex-fill flex-column mt-0 form-custom-error error-with-append-btn`:
-                          "flex-fill flex-column mt-0 form-custom-error"
-                          }>
+                        <FormGroup
+                          className={
+                            errors
+                              ? `flex-fill flex-column mt-0 form-custom-error error-with-append-btn`
+                              : "flex-fill flex-column mt-0 form-custom-error"
+                          }
+                        >
                           <InputGroup>
                             <Input
                               id="url"
@@ -195,9 +213,9 @@ class MoveComponent extends React.Component {
                               }
                               placeholder="Ex: https://www.youtube.com/watch?v=I5t894l5b1w"
                               type="text"
-                              onPaste={this.handlePasteEvent}
+                              onPaste={e => this.handlePasteEvent(e)}
                               name="url"
-                              onChange={this.handleChange}
+                              onChange={e => this.handleChange(e)}
                               value={url}
                             />
                             <FormFeedback>
@@ -259,14 +277,6 @@ class MoveComponent extends React.Component {
                             name="customFile"
                           />
                         </FormGroup>
-                        {fileErr ? (
-                          <p className="text-danger">{fileErr} </p>
-                        ) : (
-                          ""
-                        )}
-                        <FormFeedback className="p-3">
-                          {fileErr ? fileErr : ""}
-                        </FormFeedback>
                       </div>
                     </Form>
                   )}
@@ -280,11 +290,9 @@ class MoveComponent extends React.Component {
   }
 }
 
-const mapStateToProps = state => {
-  return {
-    moveReducer: state.moveReducer
-  };
-};
+const mapStateToProps = state => ({
+  moveReducer: state.moveReducer
+});
 const mapDispatchToProps = dispatch => ({
   downloadVideo: data => dispatch(downloadYoutubeVideoRequest(data))
 });

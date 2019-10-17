@@ -2,10 +2,7 @@ import React from "react";
 import { connect } from "react-redux";
 import {
   Card,
-  CardBody,
-  Button,
   Col,
-  CardHeader,
   DropdownToggle,
   UncontrolledDropdown,
   DropdownMenu,
@@ -21,19 +18,22 @@ import {
   getMovesOfSetRequest,
   UpdateSetRequest,
   starredMovesRequest,
-  deleteMovesRequest
+  getAllSetRequest,
+  deleteMovesRequest,
+  transferMovesRequest,
+  loadVideoDataRequest
 } from "../../../actions";
 import SharableLinkModal from "../../comman/shareableLink/SharableLink";
 import { AppRoutes } from "../../../config/AppRoutes";
 import "./index.scss";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
-import emptySetIc from "../../../assets/img/empty-sets.png";
 import { ConfirmBox } from "../../../helper/SweetAleart";
 import WebmView from "./WebmView";
 import Loader from "../../comman/Loader/Loader";
 import CreateSetComponent from "../../Sets/createSet";
 import MoveList from "./moveList";
+
 // core components
 class SetDetails extends React.Component {
   constructor(props) {
@@ -44,16 +44,23 @@ class SetDetails extends React.Component {
       show: false,
       setIndex: -1,
       isPaste: false,
-      showVideoIndex: 0
+      showVideo: {},
+      setIdPathName: "",
+      showVideoIndex: -1,
+      moveData: []
     };
   }
   componentDidMount = () => {
     const location = this.props.location;
     const pathName = location.pathname.split("/");
-    console.log("#################", pathName[3]);
-
+    const { moveReducer } = this.props
+    const { movesOfSet } = moveReducer;
     this.props.getSetDetailsRequest({ setId: pathName[3] });
-    this.props.getMovesOfSetRequest({ setId: pathName[3] });
+    this.props.getMovesOfSetRequest({ setId: pathName[3], moveData: movesOfSet });
+    this.props.getSetList({ isSetNoLimit: false });
+    this.setState({
+      setIdPathName: pathName[3]
+    });
   };
   /*
   /*  
@@ -140,11 +147,27 @@ class SetDetails extends React.Component {
     this.props.UpdateSetRequest(data);
   };
   /*
-   */
+  */
   handleShowVideo = videoIndex => {
     this.setState({
       showVideoIndex: videoIndex
     });
+  };
+  /*
+  */
+  handleVideoModal = (moveURL, index) => {
+    const { modelInfoReducer } = this.props;
+    const { modelDetails } = modelInfoReducer;
+    this.setState({
+      showVideo: moveURL,
+      showVideoIndex: index
+    }, () => {
+      this.props.modelOperate({
+        modelDetails: {
+          isVideoModalOpen: !modelDetails.isVideoModalOpen
+        }
+      });
+    })
   };
   /*
    */
@@ -156,19 +179,27 @@ class SetDetails extends React.Component {
     this.props.deleteMoveRequest(data);
   };
 
+  transferMove = data => {
+    this.props.transferMoveRequest(data);
+  };
+
   render() {
     const {
       setReducer,
       moveReducer,
       shareLinkReducer,
-      modelInfoReducer
+      modelInfoReducer,
+      allSetList,
+      modelOperate,
+      loadVideoDataRequest,
+      getMovesOfSetRequest
     } = this.props;
     const { setDetails } = setReducer;
     const { modelDetails } = modelInfoReducer;
-    const { movesOfSet, isMoveofSetLoading } = moveReducer;
+    const { movesOfSet, isMoveofSetLoading, videoData, totalMoves } = moveReducer;
     const { userEncryptedInfo } = shareLinkReducer;
-    const { sharableLinkModalOpen, createSetModalOpen } = modelDetails;
-    const { show, setIndex, showVideoIndex } = this.state;
+    const { sharableLinkModalOpen, createSetModalOpen, isVideoModalOpen } = modelDetails;
+    const { show, setIndex, setIdPathName, showVideo, showVideoIndex } = this.state;
 
     return (
       <>
@@ -230,34 +261,55 @@ class SetDetails extends React.Component {
           </div>
           {!isMoveofSetLoading ? (
             <>
+              {movesOfSet && movesOfSet.length ?
+                <WebmView
+                  movesOfSet={movesOfSet}
+                  isVideoModalOpen={isVideoModalOpen}
+                  handleVideoModal={this.handleVideoModal}
+                  setIdPathName={setIdPathName}
+                  video={movesOfSet[movesOfSet.length - 1]}
+                  deleteMove={this.deleteMove}
+                  allSetList={allSetList}
+                  transferMove={this.transferMove}
+                  showVideo={showVideo}
+                  videoData={videoData}
+                  showVideoIndex={showVideoIndex}
+                  loadVideoDataRequest={loadVideoDataRequest}
+                  {...this.props}
+                /> : null
+              }
               <Card className="video-slider-section">
                 <div className="step-2">
-                  {movesOfSet && movesOfSet.length ?
-                    <WebmView
-                      movesOfSet={movesOfSet}
-                      video={movesOfSet[showVideoIndex]}
-                    /> : null
-                  }
+                  <MoveList
+                    show={show}
+                    setIndex={setIndex}
+                    closePopOver={this.closePopOver}
+                    showPopOver={this.showPopOver}
+                    moveCount={setDetails.moveCount}
+                    isStarred={this.isStarred}
+                    deleteMove={this.deleteMove}
+                    movesOfSet={movesOfSet}
+                    handleVideoModal={this.handleVideoModal}
+                    allSetList={allSetList}
+                    setIdPathName={setIdPathName}
+                    handleShowVideo={this.handleShowVideo}
+                    transferMove={this.transferMove}
+                    handleMoveAdd={this.handleMoveAdd}
+                    modelDetails={modelDetails}
+                    totalMoves={totalMoves}
+                    modelOperate={modelOperate}
+                    getMovesOfSetRequest={getMovesOfSetRequest}
+                    {...this.props}
+                  />
                 </div>
               </Card>
-              <MoveList
-                show={show}
-                setIndex={setIndex}
-                closePopOver={this.closePopOver}
-                showPopOver={this.showPopOver}
-                moveCount={setDetails.moveCount}
-                isStarred={this.isStarred}
-                deleteMove={this.deleteMove}
-                movesOfSet={movesOfSet}
-                handleShowVideo={this.handleShowVideo}
-                {...this.props}
-              />
             </>
           ) : (
               <Col md="12">
                 <Loader />
               </Col>
-            )}
+            )
+          }
         </div>
         <SharableLinkModal
           modal={sharableLinkModalOpen}
@@ -280,6 +332,7 @@ class SetDetails extends React.Component {
 }
 
 const mapStateToProps = state => ({
+  allSetList: state.setReducer.allSetList,
   setReducer: state.setReducer,
   moveReducer: state.moveReducer,
   modelInfoReducer: state.modelInfoReducer,
@@ -300,7 +353,12 @@ const mapDispatchToProps = dispatch => ({
   getMovesOfSetRequest: data => dispatch(getMovesOfSetRequest(data)),
   UpdateSetRequest: data => dispatch(UpdateSetRequest(data)),
   isStarredRequest: data => dispatch(starredMovesRequest(data)),
-  deleteMoveRequest: data => dispatch(deleteMovesRequest(data))
+  deleteMoveRequest: data => dispatch(deleteMovesRequest(data)),
+  transferMoveRequest: data => dispatch(transferMovesRequest(data)),
+  getSetList: data => {
+    dispatch(getAllSetRequest(data));
+  },
+  loadVideoDataRequest: data => dispatch(loadVideoDataRequest(data))
 });
 export default connect(
   mapStateToProps,

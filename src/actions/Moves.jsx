@@ -18,7 +18,10 @@ export const MovesAction = {
   STARRED_MOVE_REQUEST: "Starred Moves Request",
   STARRED_MOVE_SUCCESS: "Starred Moves Success",
   TRANSFER_MOVE_REQUEST: "Transfer Moves Request",
-  TRANSFER_MOVE_SUCCESS: "Transfer Moves Success"
+  TRANSFER_MOVE_SUCCESS: "Transfer Moves Success",
+  CREATE_ANOTHER_MOVE_REQUEST: "Create Another Move Request",
+  CREATE_ANOTHER_MOVE_SUCCESS: "Create Another Move Success",
+  LOAD_VIDEO_DATA_REQUEST: "Load video data Request!"
 };
 
 export const downloadYoutubeVideoRequest = createAction(
@@ -71,4 +74,15 @@ export const transferMovesRequest = createAction(
 );
 export const transferMovesSuccess = createAction(
   MovesAction.TRANSFER_MOVE_SUCCESS
+);
+
+export const createAnotherMoveRequest = createAction(
+  MovesAction.CREATE_ANOTHER_MOVE_REQUEST
+);
+export const createAnotherMoveSuccess = createAction(
+  MovesAction.CREATE_ANOTHER_MOVE_SUCCESS
+);
+
+export const loadVideoDataRequest = createAction(
+  MovesAction.LOAD_VIDEO_DATA_REQUEST
 );
