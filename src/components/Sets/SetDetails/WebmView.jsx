@@ -211,7 +211,7 @@ class WebmView extends Component {
       videoDuration,
       isVideoLoading
     } = this.state;
-    
+
     return (
       <>
         <Modal
@@ -234,7 +234,7 @@ class WebmView extends Component {
                       </span>
                     </DropdownToggle>
                     <DropdownMenu>
-                      <DropdownItem onClick={() => this.onEditMove(videoData ? videoData._id : video._id)}>Edit</DropdownItem>
+                      <DropdownItem onClick={() => this.props.onEditMove(videoData ? videoData._id : video._id)}>Edit</DropdownItem>
                       <DropdownItem>View Info</DropdownItem>
                       <DropdownItem onClick={() =>
                         videoData ?

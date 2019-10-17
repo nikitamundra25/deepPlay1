@@ -38,9 +38,13 @@ export const moveReducer = handleActions(
     [MovesAction.GET_MOVES_OF_SET_SUCCESS]: (state, { payload }) => ({
       ...state,
       //movesOfSet: payload.movesOfSet,
-      movesOfSet: [
-        ...state.movesOfSet, ...payload.movesOfSet
-      ],
+      movesOfSet:
+        payload.isInfiniteScroll ?
+          [
+            ...state.movesOfSet, ...payload.movesOfSet
+          ] :
+          payload.movesOfSet
+      ,
 
       totalMoves: payload.totalMoves,
       isMoveofSetLoading: false

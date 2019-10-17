@@ -56,7 +56,7 @@ class SetDetails extends React.Component {
     const { moveReducer } = this.props
     const { movesOfSet } = moveReducer;
     this.props.getSetDetailsRequest({ setId: pathName[3] });
-    this.props.getMovesOfSetRequest({ setId: pathName[3], moveData: movesOfSet });
+    this.props.getMovesOfSetRequest({ setId: pathName[3], moveData: movesOfSet, page: 1, isInfiniteScroll: false });
     this.props.getSetList({ isSetNoLimit: false });
     this.setState({
       setIdPathName: pathName[3]
@@ -183,6 +183,12 @@ class SetDetails extends React.Component {
     this.props.transferMoveRequest(data);
   };
 
+  onEditMove = id => {
+    this.props.redirectTo(
+      AppRoutes.MOVE_DETAILS.url.replace(":id", id) + `?isEdit=${true}`
+    );
+  };
+
   render() {
     const {
       setReducer,
@@ -273,6 +279,7 @@ class SetDetails extends React.Component {
                   transferMove={this.transferMove}
                   showVideo={showVideo}
                   videoData={videoData}
+                  onEditMove={this.onEditMove}
                   showVideoIndex={showVideoIndex}
                   loadVideoDataRequest={loadVideoDataRequest}
                   {...this.props}

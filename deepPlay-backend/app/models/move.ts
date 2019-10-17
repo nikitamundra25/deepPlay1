@@ -14,6 +14,12 @@ const moveSchema: Mongoose.Schema = new Schema({
   videoName: {
     type: String
   },
+  sourceUrl: {
+    type: String
+  },
+  isYoutubeUrl:{
+    type: Boolean
+  },
   videoUrl: {
     type: String,
     default: null

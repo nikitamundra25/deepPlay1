@@ -123,21 +123,8 @@ class SetComponent extends React.Component {
             >
               <i className="fas fa-plus-circle icon-font"></i>
             </span>
-            <UncontrolledTooltip
-              placement="top"
-              target="set"
-            >
+            <UncontrolledTooltip placement="top" target="set">
               Create New Set
-            </UncontrolledTooltip>
-            <span
-              id="share"
-              onClick={this.handleSharableLink}
-              className="cursor_pointer ml-4"
-            >
-              <i className="fas fa-share icon-font"></i>
-            </span>
-            <UncontrolledTooltip placement="top" target="share">
-              Get Shareable Link
             </UncontrolledTooltip>
           </div>
         </div>
@@ -180,7 +167,16 @@ class SetComponent extends React.Component {
                           className="d-flex img-tile-wrap cursor_pointer"
                           onClick={() => this.handleSetDetails(setList._id)}
                         >
-                          <div
+                          <div className="cotent-img-tile">
+                            {/* <img src={setList.recentlyAddMoveImg} alt=""></img> */}
+                            <video width={"100%"} id="webm-video">
+                              <source
+                                src={`${setList.recentlyAddMoveImg}`}
+                                type="video/webm"
+                              />
+                            </video>
+                          </div>
+                          {/* <div
                             className="cotent-img-tile "
                             style={{
                               backgroundImage:
@@ -188,7 +184,7 @@ class SetComponent extends React.Component {
                                 "https://res.cloudinary.com/fleetnation/image/private/c_fit,w_1120/g_south,l_text:style_gothic2:%C2%A9%20Nikita%20Buida,o_20,y_10/g_center,l_watermark4,o_25,y_50/v1469756538/dd3acf4nzzavkv4rf2ji.jpg" +
                                 '")'
                             }}
-                          />
+                          /> */}
                         </div>
 
                         <div
@@ -243,37 +239,37 @@ class SetComponent extends React.Component {
               })
             ) : (
               <>
-              <Col>
-                <div className="create-set-section mt-2 w-100">
-                  <Card className="set-content-wrap">
-                    <div className="set-content-block w-100 empty-folder-wrap">
-                      <CardHeader className="empty-folder-header">
-                        <img src={emptySetIc} alt={"Folder"} />
-                        <div className="content-header set-header">
-                          <span className="content-title">
-                            {" "}
-                            <h3>You haven't created any set yet</h3>
-                            <p>Create a Set to Organize your Moves.</p>
-                          </span>
-                        </div>
-                      </CardHeader>
-                      <CardBody className="">
-                        <div className="create-set-tile"></div>
-                        <div className="text-center">
-                          <Button
-                            color=" "
-                            type="button"
-                            className="btn-black btn mt-3 folder-create-btn"
-                            onClick={this.handleSetModal}
-                          >
-                            <i className="fas fa-plus mr-1"></i>
-                            Create a Set
-                          </Button>
-                        </div>
-                      </CardBody>
-                    </div>
-                  </Card>
-                </div>
+                <Col>
+                  <div className="create-set-section mt-2 w-100">
+                    <Card className="set-content-wrap">
+                      <div className="set-content-block w-100 empty-folder-wrap">
+                        <CardHeader className="empty-folder-header">
+                          <img src={emptySetIc} alt={"Folder"} />
+                          <div className="content-header set-header">
+                            <span className="content-title">
+                              {" "}
+                              <h3>You haven't created any set yet</h3>
+                              <p>Create a Set to Organize your Moves.</p>
+                            </span>
+                          </div>
+                        </CardHeader>
+                        <CardBody className="">
+                          <div className="create-set-tile"></div>
+                          <div className="text-center">
+                            <Button
+                              color=" "
+                              type="button"
+                              className="btn-black btn mt-3 folder-create-btn"
+                              onClick={this.handleSetModal}
+                            >
+                              <i className="fas fa-plus mr-1"></i>
+                              Create a Set
+                            </Button>
+                          </div>
+                        </CardBody>
+                      </div>
+                    </Card>
+                  </div>
                 </Col>
               </>
             )

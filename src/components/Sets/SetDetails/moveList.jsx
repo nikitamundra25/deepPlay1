@@ -176,15 +176,15 @@ class MoveList extends React.Component {
         <InfiniteScroll
           dataLength={movesOfSet.length} //This is important field to render the next data
           next={() =>
-            this.props.getMovesOfSetRequest({ setId: setIdPathName, page: page + 1 })
+            this.props.getMovesOfSetRequest({ setId: setIdPathName, page: page + 1, isInfiniteScroll: true })
           }
-          hasMore={totalMoves !== movesOfSet.length?true:false}
+          hasMore={totalMoves !== movesOfSet.length ? true : false}
           loader={<h4>Loading...</h4>}
-          // endMessage={
-          //   <p style={{ textAlign: 'center' }}>
-          //     <b>Yay! You have seen it all</b>
-          //   </p>
-          // }
+        // endMessage={
+        //   <p style={{ textAlign: 'center' }}>
+        //     <b>Yay! You have seen it all</b>
+        //   </p>
+        // }
         >
           <Row className={"m-0"}>
             <Col md="12" className={"pb-3"}>
@@ -396,7 +396,7 @@ class MoveList extends React.Component {
                               <Button
                                 color=" "
                                 onClick={() =>
-                                  this.openTransferToModal(video._id, video.setId)
+                                  this.openTransferToModal(video._id, video.setId, page)
                                 }
                               >
                                 Transfer

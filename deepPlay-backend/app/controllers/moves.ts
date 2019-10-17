@@ -46,21 +46,11 @@ const downloadVideo = async (req: Request, res: Response): Promise<any> => {
     let videoURL: string;
     const fileName = file.filename;
     videoURL = path.join("uploads", "youtube-videos", fileName);
-    // const {
-    //   frames: framesArray,
-    //   videoMetaData,
-    //   videoName
-    // } = await getVideoFrames(fileName);
-    // delete videoMetaData.filename;
-    // const frames = framesArray.map(
-    //   (frame: string) => `${ServerURL}/uploads/youtube-videos/${frame}`
-    // );
     const moveResult: Document | any = new MoveModel({
       videoUrl: videoURL,
-      userId: headToken.id
-      // frames,
-      // videoMetaData,
-      // videoName
+      userId: headToken.id,
+      sourceUrl: videoURL,
+      isYoutubeUrl: false,
     });
     await moveResult.save();
     res.status(200).json({
@@ -124,21 +114,11 @@ const downloadYoutubeVideo = async (
             (videoStream = fs.createWriteStream(originalVideoPath))
           );
           videoStream.on("close", async function () {
-            // const {
-            //   frames: framesArray,
-            //   videoMetaData,
-            //   videoName
-            // } = await getVideoFrames(fileName);
-            // delete videoMetaData.filename;
-            // const frames = framesArray.map(
-            //   (frame: string) => `${ServerURL}/uploads/youtube-videos/${frame}`
-            // );
             const moveResult: Document | any = new MoveModel({
               videoUrl: videoURL,
-              // frames: orderBy(frames),
+              sourceUrl: body.url,
+              isYoutubeUrl: true,
               userId: headToken.id
-              // videoMetaData,
-              // videoName
             });
             await moveResult.save();
             return res.status(200).json({
@@ -531,7 +511,7 @@ const filterMove = async (req: Request, res: Response): Promise<any> => {
         ]
       });
     }
-    const searchData: Document | any | null = MoveModel.find({ condition });
+    const searchData: Document | any | null = MoveModel.find(condition);
     console.log(">>>", searchData);
   } catch (error) {
     console.log(error);

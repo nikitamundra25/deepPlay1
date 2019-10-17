@@ -1,5 +1,6 @@
 import React from "react";
 import { connect } from "react-redux";
+import { withRouter } from "react-router";
 import {
   Card,
   CardBody,
@@ -28,7 +29,9 @@ import { logger } from "helper/Logger";
 import { completeVideoEditing } from "actions/Moves";
 import closeBtn from "../../../assets/img/close-img.png";
 import MoveSuccessModal from "./moveSuccessModal";
+import qs from "query-string";
 import { AppRoutes } from "../../../config/AppRoutes";
+
 // core components
 class MoveDetails extends React.Component {
   constructor(props) {
@@ -70,7 +73,12 @@ class MoveDetails extends React.Component {
       });
     }
   };
-  componentDidUpdate = ({ modelInfoReducer }) => {
+
+  componentDidUpdate = ({ modelInfoReducer, location, moveReducer }) => {
+    const path = this.props.location.pathname;
+    const moveId = path.split("/");
+    const prevQuery = location.pathname.split("/");
+    const currQuery = this.props.location.pathname.split("/");
     const prevmodelDetails = modelInfoReducer.modelDetails;
     const prevDescriptionModal = prevmodelDetails.isDescriptionModalOpen;
     const newModelInfoReducer = this.props.modelInfoReducer;
@@ -81,6 +89,50 @@ class MoveDetails extends React.Component {
     ) {
       this.setState({
         isUpdateDescription: true
+      });
+    }
+    if (prevQuery && currQuery && prevQuery[3] && currQuery[3]) {
+      if (prevQuery[3] !== currQuery[3]) {
+        this.props.getMoveDetailsRequest({ moveId: moveId[3] });
+        // this.setState({
+        //   selectSetOptions: "",
+        //   tags: ""
+        // });
+      }
+    }
+
+    if (moveReducer.moveDetails !== this.props.moveReducer.moveDetails) {
+      const {
+        title,
+        description,
+        tags,
+        setId
+      } = this.props.moveReducer.moveDetails;
+      const { allSetList } = this.props.setReducer;
+      let selectOption;
+      if (allSetList && allSetList.length) {
+        // eslint-disable-next-line 
+        allSetList.map(data => {
+          if (setId) {
+            if (setId === data._id) {
+               (selectOption = {
+                label: data.title,
+                value: data._id
+              });
+            }
+          }
+        });
+      }
+      this.setState({
+        title,
+        description,
+        tags,
+        selectSetOptions: selectOption
+          ? selectOption
+          : {
+              label: "Type to select sets",
+              value: ""
+            }
       });
     }
   };
@@ -99,6 +151,9 @@ class MoveDetails extends React.Component {
     e.preventDefault();
     const { moveReducer } = this.props;
     const { moveDetails, isSavingWebM } = moveReducer;
+    let parsed = qs.parse(this.props.location.search);
+    console.log("parsed", parsed);
+
     logger(isSavingWebM);
     const { _id: moveId } = moveDetails;
     const { timer, title, description } = this.state;
@@ -118,7 +173,8 @@ class MoveDetails extends React.Component {
       tags,
       setId,
       title: title,
-      description: description
+      description: description,
+      isEdit: parsed.isEdit ? true : false
     });
   };
   /**
@@ -136,8 +192,6 @@ class MoveDetails extends React.Component {
   };
 
   createAnother = data => {
-    console.log("data", data);
-
     this.props.createAnotherMoveRequest({ moveUrl: data });
   };
   /**
@@ -243,7 +297,6 @@ class MoveDetails extends React.Component {
       videoDuration,
       videoMaxDuration
     } = this.state;
-    console.log("fdfd", moveUrlDetails);
 
     return (
       <>
@@ -291,6 +344,7 @@ class MoveDetails extends React.Component {
                           errors={errors}
                           handleTagChange={this.handleTagChange}
                           tags={tags}
+                          setId={moveDetails ? moveDetails.setId : null}
                           tagsList={tagsList}
                           ref={this.videoDetails}
                         />
@@ -405,4 +459,4 @@ const mapDispatchToProps = dispatch => ({
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(MoveDetails);
+)(withRouter(MoveDetails));

@@ -89,8 +89,6 @@ const getAllSetById = async (req: Request, res: Response): Promise<void> => {
     const { currentUser, query } = req;
     let headToken: Request | any = currentUser;
     const { limit, page, search, sort, status, roleType, userId } = query;
-    console.log("dfgfd", query);
-
     const pageNumber: number = ((parseInt(page) || 1) - 1) * (limit || 10);
     const limitNumber: number = parseInt(limit) || 10;
 
@@ -106,8 +104,6 @@ const getAllSetById = async (req: Request, res: Response): Promise<void> => {
 
     // dcrypt userId for shareable link in yoursets component
     if (userId) {
-      console.log(">>>>>>fg");
-
       headToken = { id: decrypt(userId) };
       console.log("<<<,headToken.id", headToken.id);
     }
@@ -190,9 +186,18 @@ const getAllSetById = async (req: Request, res: Response): Promise<void> => {
           setId: setData._id,
           isDeleted: false
         });
+
+        let data: any = await MoveModel.find({
+          setId: setData._id,
+          isDeleted: false
+        })
+          .sort({ updatedAt: -1 })
+          .limit(1);
+
         setResult.push({
           ...setData._doc,
-          moveCount: moveCount
+          moveCount: moveCount,
+          recentlyAddMoveImg: data.length ? data[0].moveURL : null
         });
       }
     }
@@ -487,7 +492,11 @@ const publicUrlsetDetails = async (
       }).count();
     } else {
       return res.status(400).json({
-        message: "Public access link is not enabled."
+        message: {
+          message: "Public access link is not enabled.",
+          folderId: decryptedFolderId
+        },
+        success: false
       });
     }
     return res.status(200).json({
@@ -546,7 +555,8 @@ const publicAccessSetInfoById = async (
       };
     } else {
       return res.status(400).json({
-        message: "Public access link is not enabled."
+        message: "Public access link is not enabled.",
+        setId: decryptedSetId
       });
     }
     return res.status(200).json({
