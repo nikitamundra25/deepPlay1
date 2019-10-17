@@ -184,12 +184,6 @@ class MoveList extends React.Component {
       [name]: value
     });
     this.props.searchMove({ search: value });
-    const { searchMoveResult } = this.props;
-    // if (searchMoveResult.length) {
-    //   this.setState({
-    //     moveofSetList: searchMoveResult
-    //   });
-    // }
   };
 
   render() {
