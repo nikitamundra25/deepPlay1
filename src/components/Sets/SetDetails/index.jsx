@@ -265,7 +265,7 @@ class SetDetails extends React.Component {
                 Get Shareable Link
               </UncontrolledTooltip>
               <UncontrolledDropdown
-                className="header-dropdown "
+                className="header-dropdown dropdown-without-tip not-header-dropdown"
                 direction="bottom"
               >
                 <DropdownToggle color={" "} caret>

@@ -284,20 +284,21 @@ class MoveList extends React.Component {
                           <Button>Copy</Button>
                           <Button>Transfer</Button>
                           <Button>Remove</Button>
+                          <Button color=" "
+                            className="btn-line-black"
+                            onClick={() =>
+                              this.setState({
+                                selectedMoves: [],
+                                selectedMoveIds: [],
+                                isVideoChecked: false
+                              })
+                            }
+                          >
+                            <i class="fa fa-times" aria-hidden="true" />
+                          </Button>
                         </ButtonGroup>
                       </span>
-                      <span
-                        onClick={() =>
-                          this.setState({
-                            selectedMoves: [],
-                            selectedMoveIds: [],
-                            isVideoChecked: false
-                          })
-                        }
-                        className={"cursor_pointer"}
-                      >
-                        <i class="fa fa-times" aria-hidden="true" />
-                      </span>
+
                     </div>
                   </div>
                 </div>

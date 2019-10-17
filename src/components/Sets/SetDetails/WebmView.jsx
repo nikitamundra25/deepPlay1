@@ -272,13 +272,15 @@ class WebmView extends Component {
                 </div>
                 {
                   !isVideoLoading ?
-                    <video width={"100%"} id="webm-video" muted={isMuted}>
+                    <video width={"100%"} id="webm-video" muted={isMuted} className="video-loading-tag">
                       <source
                         src={`${videoData && videoData.moveURL ? videoData.moveURL : moveURL}`}
                         type="video/webm"
                       />
                     </video> :
-                    <Loader />
+                    <div className="video-loader">
+                    <Loader videoLoader={true} />
+                    </div>
                 }
                 <div className={"controls"}>
                   <div className="control-background-wrap"></div>
