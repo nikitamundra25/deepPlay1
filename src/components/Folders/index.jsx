@@ -113,7 +113,7 @@ class FolderComponent extends React.Component {
       <div className="page-body">
         <div className="content-header">
           <span className="content-title">
-            <div className="main-title"> {" Your Folders"}</div>
+            <div className="main-title"> {" Folders"}</div>
             <div className="sub-title">
               Total folders {totalFolders ? totalFolders : "0"}
             </div>
