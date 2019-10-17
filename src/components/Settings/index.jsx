@@ -185,7 +185,9 @@ class SettingComponent extends Component {
     const { modelDetails } = modelInfoReducer;
     const { uploadImageModalOpen } = modelDetails;
     const splitedImage = this.state.file.split("/");
-
+    const ProfileImage = splitedImage[0] === "uploads"
+    ? `${AppConfig.API_ENDPOINT}${this.state.file}`
+    : this.state.file
     return (
       <div>
         <div className="setting-section">
@@ -195,8 +197,8 @@ class SettingComponent extends Component {
             </div>
             {!isprofileInfoLoading ? (
               <>
-                <Card className="card-wrap">
-                  <CardHeader>
+                <Card className="card-wrap ">
+                  <CardHeader className="d-flex">
                     <CardTitle className="card-heading mb-0 h5">
                       Profile
                     </CardTitle>
@@ -207,44 +209,67 @@ class SettingComponent extends Component {
                         onClick={this.onHandleEdit}
                         color=" "
                       >
-                        Edit Profile
+                        {/* <i className="profile-ic fa fa-pencil-square-o"></i> */}
+                        <span className="text-profile">Edit Profile</span>
                       </Button>
                     ) : (
-                      <ButtonGroup>
-                        <Button
-                        color=" "
-                          className="dashboard-right-content btn-black "
-                          onClick={this.onSaveData}
-                        >
-                          Update Info
+                        <ButtonGroup>
+                          <Button
+                            color=" "
+                            className="dashboard-right-content btn-black "
+                            onClick={this.onSaveData}
+                          >
+                            {/* <i className="profile-ic fa fa-pencil-square-o"></i> */}
+                            <span className="text-profile"> Update Info</span>
+
+                          </Button>
+                          <Button
+                            color=" "
+                            className="dashboard-right-content btn-line-black ml-2"
+                            onClick={this.handlecancel}
+                          >
+                            Cancel
                         </Button>
-                        <Button
-                        color=" "
-                          className="dashboard-right-content btn-line-black ml-2"
-                          onClick={this.handlecancel}
-                        >
-                          Cancel
-                        </Button>
-                      </ButtonGroup>
-                    )}
+                        </ButtonGroup>
+                      )}
                   </CardHeader>
                   <CardBody>
                     <div className="profile-wrap">
                       <div className="profile-img-tile">
                         <div className="profile-img">
                           {file ? (
-                            <img
-                              alt={"No Img Found"}
-                              src={
-                                splitedImage[0] === "uploads"
-                                  ? `${AppConfig.API_ENDPOINT}${this.state.file}`
-                                  : this.state.file
-                              }
-                              className="w-100"
-                            />
+                            // <img
+                            //   alt={"No Img Found"}
+                            //   src={
+                            //     splitedImage[0] === "uploads"
+                            //       ? `${AppConfig.API_ENDPOINT}${this.state.file}`
+                            //       : this.state.file
+                            //   }
+                            //   className="w-100"
+                            // />
+                            <div
+                                        style={{
+                                          backgroundImage:
+                                            'url("' +
+                                            ProfileImage
+                                            +
+                                            '")'
+                                        }}
+                                        className="user-back-img-wrap"
+                                      ></div>
                           ) : (
-                            <img alt="" src={profileIcon} className="w-100" />
-                          )}
+                            <div
+                            style={{
+                              backgroundImage:
+                                'url("' +
+                                profileIcon
+                                +
+                                '")'
+                            }}
+                            className="user-back-img-wrap"
+                          ></div>
+                              // <img alt="" src={profileIcon} className="w-100" />
+                            )}
                           {!isDisabled ? (
                             <span
                               className="changeProfile"
@@ -253,15 +278,15 @@ class SettingComponent extends Component {
                               Change Profile
                             </span>
                           ) : (
-                            ""
-                          )}
+                              ""
+                            )}
                         </div>
                         {imgError ? (
                           <div className="text-danger"> {imgError} </div>
                         ) : null}
                       </div>
                       <div className="profile-text-tile color-black">
-                        <div className="h5 font-weight-bold text-center mt-2 text-caputalize">
+                        <div className="h5 font-weight-bold text-center mt-2 text-capitalize">
                           {name}
                         </div>
                       </div>
@@ -435,12 +460,12 @@ class SettingComponent extends Component {
                 </Card>
               </>
             ) : (
-              <Row>
-                <Col sm={12} className="loader-col">
-                  <Loader />
-                </Col>
-              </Row>
-            )}
+                <Row>
+                  <Col sm={12} className="loader-col">
+                    <Loader />
+                  </Col>
+                </Row>
+              )}
           </div>
         </div>
         <UploadImage

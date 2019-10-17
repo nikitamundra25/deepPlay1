@@ -20,7 +20,9 @@ class DefaultSidebar extends React.Component {
       profiledata && profiledata.profileImage
         ? profiledata.profileImage.split("/")
         : [];
-
+    const ProfileImage = splitedImage[0] === "uploads"
+      ? `${AppConfig.API_ENDPOINT}${profiledata ? profiledata.profileImage : ""}`
+      : profiledata ? profiledata.profileImage : ""
     return (
       <div className="dashboard-left-wrap cutom-scroll">
         <div className="dashboard-left">
@@ -37,7 +39,7 @@ class DefaultSidebar extends React.Component {
                     >
                       {/* <i className={items.icon} /> */}
                       <img src={items.iconUrl} alt={items.iconUrl} width="20" />
-                      <span> {items.name}</span>
+                      <span className="side-bar-text"> {items.name}</span>
                     </NavLink>
                   </li>
                 </React.Fragment>
@@ -49,18 +51,38 @@ class DefaultSidebar extends React.Component {
           <div className="profile-img-tile">
             <div className={profiledata ? "user-profile-img" : "profile-img"}>
               {profiledata && profiledata.profileImage ? (
-                <img
-                  src={
-                    splitedImage[0] === "uploads"
-                      ? `${AppConfig.API_ENDPOINT}${profiledata.profileImage}`
-                      : profiledata.profileImage
-                  }
-                  className="w-100"
-                  alt={"img"}
-                />
+                    <div
+                    style={{
+                      backgroundImage:
+                        'url("' +
+                        ProfileImage
+                        +
+                        '")'
+                    }}
+                    className="user-back-img-wrap"
+                  ></div>
+               // <img
+                //   src={
+                //     splitedImage[0] === "uploads"
+                //       ? `${AppConfig.API_ENDPOINT}${profiledata.profileImage}`
+                //       : profiledata.profileImage
+                //   }
+                //   className="w-100"
+                //   alt={"img"}
+                // />
               ) : (
-                <img src={defaultProfileImage} className="w-100" alt={"img"} />
-              )}
+                  // <img src={defaultProfileImage} className="w-100" alt={"img"} />
+                  <div
+                  style={{
+                    backgroundImage:
+                      'url("' +
+                      defaultProfileImage
+                      +
+                      '")'
+                  }}
+                  className="user-back-img-wrap"
+                ></div>
+                )}
             </div>
           </div>
           <div className="profile-text-tile color-black">

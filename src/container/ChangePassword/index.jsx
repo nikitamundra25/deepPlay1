@@ -7,6 +7,7 @@ import {
   Label,
   Row,
   Col,
+  CardTitle,
   Button,
   CardHeader,
   Card,
@@ -100,7 +101,10 @@ class ChangePassword extends Component {
           <div className="set-content-block w-100">
             <CardHeader className="">
               <div className="content-header set-header flex-column">
-                <span className="content-title">CHANGE PASSWORD</span>
+              <CardTitle className="card-heading mb-0 h5">
+                      Profile
+                    </CardTitle> 
+                    <div className="heading-divider"></div>
               </div>
             </CardHeader>
             <CardBody className="">
