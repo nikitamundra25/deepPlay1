@@ -302,6 +302,7 @@ class SetDetails extends React.Component {
                 showPopOver={this.showPopOver}
                 moveCount={setDetails.moveCount}
                 isStarred={this.isStarred}
+                setIdPathName= {setIdPathName}
                 deleteMove={this.deleteMove}
                 movesOfSet={movesOfSet}
                 allSetList={allSetList}

@@ -499,13 +499,14 @@ const transferMove = async (req: Request, res: Response): Promise<any> => {
 const filterMove = async (req: Request, res: Response): Promise<any> => {
   try {
     const { query } = req;
-    const { search } = query;
+    const { search, setId } = query;
     let searchData: Document | any | null;
     let condition: any = {
       $and: []
     };
     condition.$and.push({
-      isDeleted: false
+      isDeleted: false,
+      setId: setId
     });
 
     if (search) {

@@ -183,7 +183,11 @@ class MoveList extends React.Component {
     this.setState({
       [name]: value
     });
-    this.props.searchMove({ search: value });
+    const data = {
+      search: value,
+      setId: this.props.setIdPathName
+    };
+    this.props.searchMove(data);
   };
 
   render() {
