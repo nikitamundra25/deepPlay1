@@ -53,6 +53,8 @@ h6,
   color: #000;
 }
 body {
+  word-break: break-word;
+  word-wrap: break-word;
   font-family: $source;
   color: $blackcolor;
   .cursor_pointer {
@@ -322,6 +324,7 @@ a {
     border: 2px dashed $videoAddBannerBack;
     height: 100%;
     padding: 15px;
+    min-height: 170px;
     .btn {
       font-size: 13px;
       padding: 4px 12px;
@@ -446,7 +449,7 @@ a {
       font-weight: 500;
       text-transform: capitalize;
       font-family: $source;
-      max-width: calc(100% - 116px);
+      max-width: calc(100% - 136px);
       .sub-title {
         color: #1e1e1e;
         font-size: 14px;
@@ -502,6 +505,8 @@ a {
     max-width: 100%;
     height: 90px;
     background-size: cover;
+    display: flex;
+    align-items: center;
     background-position: center center;
   }
   .bottom-content-tile {
@@ -729,7 +734,7 @@ a {
     border-left: 0.4em solid transparent;
   }
 }
-.user-back-img-wrap{
+.user-back-img-wrap {
   background-size: cover;
   background-position: center center;
   width: 100%;
@@ -766,6 +771,12 @@ a {
 }
 
 .setting-section {
+  &.password-section{
+    .card-header{
+      border-bottom: 0.0625rem solid rgba(0, 0, 0, 0.05);
+      padding: 1.25rem 1.5rem;
+    }
+  }
   .card-wrap {
     padding: 0px;
     .card-header {
@@ -908,11 +919,12 @@ a {
   max-width: 100%;
   height: 100%;
   width: 900px;
-  .video-loader{.loader-block{
-    background: #000;
-    border: none;
-    min-height: 500px;
-  }
+  .video-loader {
+    .loader-block {
+      background: #000;
+      border: none;
+      min-height: 500px;
+    }
   }
   .custom-video-player {
     text-align: center;
@@ -924,7 +936,7 @@ a {
       height: auto;
       max-height: 100%;
     }
-    .video-loading-tag{
+    .video-loading-tag {
       min-height: 500px;
     }
     .controls {
@@ -1619,15 +1631,18 @@ a {
   background-color: $textColor;
 }
 .custom-toggle {
-  input:checked + .custom-toggle-slider, input:disabled:checked .custom-toggle-slider {
+  input:checked + .custom-toggle-slider,
+  input:disabled:checked .custom-toggle-slider {
     border-color: $blackcolor;
     background: #fff;
   }
-  input + .custom-toggle-slider, input:disabled .custom-toggle-slider {
+  input + .custom-toggle-slider,
+  input:disabled .custom-toggle-slider {
     border-color: $blackcolor;
     background: #fff;
   }
-  input:checked + .custom-toggle-slider:before, input:disabled:checked .custom-toggle-slider {
+  input:checked + .custom-toggle-slider:before,
+  input:disabled:checked .custom-toggle-slider {
     background: $blackcolor;
   }
 }
@@ -1896,29 +1911,36 @@ a {
   }
 }
 @media (max-width: 1024px) {
-  .fram-wrap .fram-block{
+  .fram-wrap .fram-block {
     font-size: 10px;
   }
   .play-list-tile {
     width: 33.33%;
   }
+  .set-detail-right-section {
+    .btn-group {
+      .btn {
+        padding: 8px 15px;
+      }
+    }
+  }
 }
 @media (max-width: 991px) {
-  .create-btn-wrap{
+  .create-btn-wrap {
     max-width: 160px;
   }
   .nav-main-section {
     .nav-inputs-wrap {
       .search-input {
         opacity: 0;
-        transition:all 0.5s;
+        transition: all 0.5s;
         position: absolute;
         left: 0%;
       }
-      .header-search-close{
+      .header-search-close {
         width: 0px;
       }
-      .header-search-open{
+      .header-search-open {
         opacity: 1;
         width: 300px;
         left: 100%;
@@ -1968,10 +1990,9 @@ a {
       }
     }
   }
-  .header-input-group-text{
+  .header-input-group-text {
     z-index: 9;
   }
- 
 }
 @media (max-width: 767px) {
   .play-list-tile {

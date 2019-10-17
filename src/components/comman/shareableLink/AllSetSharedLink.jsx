@@ -78,7 +78,7 @@ class AllSetSharedLink extends React.Component {
         <Container>
           <div className="content-header mt-3 mb-3">
             <span className="content-title">
-              <div className="main-title"> {" Your Sets"}</div>
+              <div className="main-title"> {"  Sets"}</div>
               <div className="sub-title">
                 Total sets {totalSets ? totalSets : "0"}
               </div>
