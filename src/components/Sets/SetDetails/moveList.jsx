@@ -270,7 +270,7 @@ class MoveList extends React.Component {
                 </div>
               </div>
               {selectedMoveIds && selectedMoveIds.length ? (
-                <div className={"selected-moves"}>
+                <div className={"selected-moves selected-detail-page"}>
                   <div className={"d-flex justify-content-between"}>
                     <div class="content-title">
                       Selected Moves:{" "}
@@ -278,14 +278,17 @@ class MoveList extends React.Component {
                         ? selectedMoveIds.length
                         : 0}
                     </div>
-                    <div class="content-title pr-2">
-                      <span className={"mr-2"}>
+                    <div class="content-title ">
+                      <span className={"d-flex"}>
                         <ButtonGroup size="sm">
-                          <Button>Copy</Button>
-                          <Button>Transfer</Button>
-                          <Button>Remove</Button>
-                          <Button color=" "
-                            className="btn-line-black"
+                          <Button className=" " color=" ">mark star</Button>
+                          <Button className=" " color=" ">Add tags</Button>
+                          <Button className=" " color=" ">Transfer</Button>
+                          <Button className=" " color=" ">Remove</Button>
+                         
+                        </ButtonGroup>
+                        <Button color=" "
+                            className="btn-black ml-2 move-close-btn"
                             onClick={() =>
                               this.setState({
                                 selectedMoves: [],
@@ -296,7 +299,6 @@ class MoveList extends React.Component {
                           >
                             <i class="fa fa-times" aria-hidden="true" />
                           </Button>
-                        </ButtonGroup>
                       </span>
 
                     </div>
