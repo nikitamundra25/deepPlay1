@@ -309,7 +309,19 @@ const updateMoveDetailsAndTrimVideo = async (
     const { timer, moveId, title, description, tags, setId } = body;
     const result: Document | null | any = await MoveModel.findById(moveId);
     if (result) {
-      const videoFile = path.join(__dirname, "..", result.videoUrl);
+      let videoFile: String 
+      if (IsProductionMode) {
+        videoFile = path.join(
+          __dirname,
+          result.videoUrl
+        );
+      } else {
+        videoFile = path.join(
+          __basedir,
+          "..",
+          result.videoUrl
+        );
+      }
       cloudinary.v2.uploader.upload(
         videoFile,
         {
