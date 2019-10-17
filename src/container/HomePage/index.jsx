@@ -152,7 +152,6 @@ class HomePage extends React.Component {
                       </div>
 
                       <div className="play-list-text">
-                        <div className="play-list-number">25 Moves</div>
                         <div className="play-list-heading h6 ">
                           Salsa Footwork
                         </div>

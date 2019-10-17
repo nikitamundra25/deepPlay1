@@ -8,6 +8,7 @@ export interface IMove {
   sharableLink: String;
   status: Boolean;
   setId: String;
+  moveURL: String;
 }
 export interface IMoveCopy {
   title: String;

@@ -16,8 +16,7 @@
   -webkit-transition: box-shadow 0.3s ease-out, -webkit-transform 0.3s ease-out;
   transition: box-shadow 0.3s ease-out, -webkit-transform 0.3s ease-out;
   transition: transform 0.3s ease-out, box-shadow 0.3s ease-out;
-  transition: transform 0.3s ease-out, box-shadow 0.3s ease-out,
-    -webkit-transform 0.3s ease-out;
+  transition: transform 0.3s ease-out, box-shadow 0.3s ease-out, -webkit-transform 0.3s ease-out;
   width: 1rem;
 }
 .input-range__slider:active {
@@ -96,8 +95,12 @@
   position: absolute;
   right: 0;
   top: 50%;
+  border: 3px solid #ddd;
+  border-width: 1px 0px 1px 0px; 
 }
-
+.input-range__label--min, .input-range__label--max{
+  display: none;
+}
 .input-range__track--active {
   background: #3f51b5;
 }
@@ -116,6 +119,7 @@
     position: absolute;
     top: 50%;
     transform: translateY(-50%);
+    width: 100%;
   }
   .input-range {
     z-index: 1;
@@ -130,19 +134,74 @@
     }
     .input-range__track--active {
       background: #3f51b500;
-      border: 3px solid #2ad6ab;
+
       border-radius: 0px;
       top: 0%;
       transform: translateY(0%);
       cursor: grab;
-      &:active{
+      &:active {
         cursor: grabbing;
       }
     }
- 
+
     .input-range__slider-container {
       top: 50%;
       transform: translateY(-50%);
     }
   }
+}
+.fram-picker{
+  // overflow: hidden;
+  
+.input-range__track + .input-range__slider-container {
+  .input-range__label-container {
+    font-family: "Open Sans", sans-serif;
+    &::before {
+      border-top: 0.7em solid #3ab59b;
+      border-right: 0.7em solid transparent;
+      border-left: 0.7em solid transparent;
+      content: "";
+      position: absolute;
+      top: 99%;
+      left: 50%;
+      transform: translateX(-50%);
+    }
+  }
+  .input-range__label.input-range__label--value {
+    top: -65px;
+    left: -5px;
+  }
+}
+.input-range__track + .input-range__slider-container + .input-range__slider-container {
+  .input-range__label-container {
+    font-family: "Open Sans", sans-serif;
+    &::before {
+      border-bottom: 0.7em solid #3ab59b;
+      border-right: 0.7em solid transparent;
+      border-left: 0.7em solid transparent;
+      content: "";
+      position: absolute;
+      bottom: 100%;
+      left: 50%;
+      transform: translateX(-50%);
+    }
+  }
+  .input-range__label.input-range__label--value {
+    top: 43px;
+    left: -5px;
+  }
+}
+.input-range__label--value {
+  .input-range__label-container {
+    cursor:ew-resize;
+    
+    background: #3ab59b;
+    position: relative;
+    left: -50%;
+    transform: translateX(-50%);
+    padding: 11px 30px;
+    border-radius: 18px;
+    color: #fff;
+  }
+}
 }

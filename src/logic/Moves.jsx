@@ -7,7 +7,9 @@ import {
   getMovesOfSetSuccess,
   getMovesOfSetRequest,
   getMoveDetailsSuccess,
-  modelOpenRequest
+  modelOpenRequest,
+  searchMoveSuccess,
+  getSetDetailsRequest
 } from "../actions";
 import { AppRoutes } from "../config/AppRoutes";
 import { toast } from "react-toastify";
@@ -88,7 +90,9 @@ const getMovesOfSetLogic = createLogic({
       dispatch(
         getMovesOfSetSuccess({
           showLoader: false,
-          movesOfSet: result.data.movesData
+          movesOfSet: result.data.movesData,
+          totalMoves: result.data.totalMoves,
+          isInfiniteScroll: action.payload.isInfiniteScroll
         })
       );
       done();
@@ -147,16 +151,31 @@ const completeVideoEditingLogic = createLogic({
       toast.error(result.messages[0]);
     } else {
       logger(result, action.payload);
-      dispatch(
-        modelOpenRequest({
-          modelDetails: {
-            isMoveSuccessModal: true
-          }
-        })
-      );
+      if (action.payload.isEdit) {
+        dispatch(
+          redirectTo({
+            path: `${AppRoutes.SET_DETAILS.url.replace(
+              ":id",
+              result.data.setId
+            )}`
+          })
+        );
+      } else {
+        dispatch(
+          modelOpenRequest({
+            modelDetails: {
+              isMoveSuccessModal: true
+            }
+          })
+        );
+      }
       dispatch(
         completeVideoEditingSuccess({
-          isSavingWebM: false
+          isSavingWebM: false,
+          moveUrlDetails: {
+            moveURL: result.data.data.videoUrl,
+            setId: result.data.setId
+          }
         })
       );
       done();
@@ -170,7 +189,7 @@ const completeVideoEditingLogic = createLogic({
 //Star move
 const starMoveLogic = createLogic({
   type: MovesAction.STARRED_MOVE_REQUEST,
-  async process({ action, getState }, dispatch, done) {
+  async process({ action }, dispatch, done) {
     let api = new ApiHelper();
     let result = await api.FetchFromServer(
       "move",
@@ -222,11 +241,124 @@ const deleteMoveLogic = createLogic({
     }
   }
 });
+
+//Transfer move to set
+const transferMoveLogic = createLogic({
+  type: MovesAction.TRANSFER_MOVE_REQUEST,
+  async process({ action }, dispatch, done) {
+    let api = new ApiHelper();
+    let result = await api.FetchFromServer(
+      "move",
+      "/transfer-move",
+      "PATCH",
+      true,
+      undefined,
+      action.payload
+    );
+    if (result.isError) {
+      if (!toast.isActive(toastId)) {
+        toastId = toast.error(result.messages[0]);
+      }
+      done();
+      return;
+    } else {
+      if (!toast.isActive(toastId)) {
+        toastId = toast.success(result.messages[0]);
+      }
+      dispatch(
+        modelOpenRequest({
+          modelDetails: {
+            transferToModalOpen: false,
+            transferToModalOpenReq: false
+          }
+        })
+      );
+      dispatch(getMovesOfSetRequest({ setId: action.payload.previousSetId, page: 1, isInfiniteScroll: false }));
+      dispatch(getSetDetailsRequest({ setId: action.payload.previousSetId }));
+      done();
+    }
+  }
+});
+
+//-------------------Create Another Move Request----------------
+const createAnotherMoveLogic = createLogic({
+  type: MovesAction.CREATE_ANOTHER_MOVE_REQUEST,
+  async process({ action }, dispatch, done) {
+    let api = new ApiHelper();
+    let result = await api.FetchFromServer(
+      "move",
+      "/create-move",
+      "POST",
+      true,
+      undefined,
+      action.payload
+    );
+    if (result.isError) {
+      if (!toast.isActive(toastId)) {
+        toastId = toast.error(result.messages[0]);
+      }
+      done();
+      return;
+    } else {
+      if (!toast.isActive(toastId)) {
+        toastId = toast.success(result.messages[0]);
+      }
+      dispatch(
+        modelOpenRequest({
+          modelDetails: {
+            isMoveSuccessModal: false
+          }
+        })
+      );
+      dispatch(
+        redirectTo({
+          path: `${AppRoutes.MOVE_DETAILS.url.replace(
+            ":id",
+            result.data.moveId
+          )}`
+        })
+      );
+      done();
+    }
+  }
+});
+
+//Filter move
+const searchMoveLogic = createLogic({
+  type: MovesAction.SEARCH_MOVE_REQUEST,
+  async process({ action }, dispatch, done) {
+    let api = new ApiHelper();
+    let result = await api.FetchFromServer(
+      "move",
+      "/filter-move",
+      "GET",
+      true,
+      action.payload
+    );
+    if (result.isError) {
+      if (!toast.isActive(toastId)) {
+        toastId = toast.error(result.messages[0]);
+      }
+      done();
+      return;
+    } else {
+      dispatch(
+        searchMoveSuccess({
+          searchMoveResult: result.data.data
+        })
+      );
+      done();
+    }
+  }
+});
 export const MoveLogics = [
   downloadVideoLogic,
   getMovesOfSetLogic,
   getMovesDetailsByIdLogic,
   completeVideoEditingLogic,
   starMoveLogic,
-  deleteMoveLogic
+  deleteMoveLogic,
+  transferMoveLogic,
+  createAnotherMoveLogic,
+  searchMoveLogic
 ];

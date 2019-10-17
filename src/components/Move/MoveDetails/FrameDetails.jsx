@@ -1,9 +1,9 @@
 import React, { Component } from "react";
 import InputRange from "react-input-range";
 import { AppConfig } from "config/Appconfig";
-import { Input, Row, Col, FormGroup, Label,Button  } from "reactstrap";
+import { Input, Row, Col, FormGroup, Label, Button } from "reactstrap";
 import { orderBy } from "natural-orderby";
-import { SecondsToHHMMSS } from "helper/Time";
+import { SecondsToHHMMSS, SecondsToMMSS } from "helper/Time";
 import { logger } from "helper/Logger";
 
 class FrameDetails extends Component {
@@ -110,12 +110,11 @@ class FrameDetails extends Component {
    */
   renderOptions = type => {
     const options = [];
-    const { videoMetaData } = this.props;
-    const { duration } = videoMetaData || {};
-    const { seconds: maxValue } = duration || {};
+    const { videoMaxDuration } = this.props;
+    
     for (
       let index = type === "max" ? 1 : 0;
-      index <= (maxValue - (type === "max" ? 0 : 1) || 0);
+      index <= (videoMaxDuration - (type === "max" ? 0 : 1) || 0);
       index++
     ) {
       options.push(
@@ -131,29 +130,27 @@ class FrameDetails extends Component {
    *
    */
   render() {
-    const { frames, videoMetaData } = this.props;
-    const { duration } = videoMetaData || {};
-    const { seconds: maxValue } = duration || {};
+    const { videoDuration, videoMaxDuration } = this.props;
     const { time } = this.state;
     return (
-      <>
-        <div className="fram-picker mt-3 video-controls" id={"video-controls"}>
-          <div id={"left-container"}></div>
-          <div id={"right-container"}></div>
+      <div className="fram-picker">
+        <div className=" mt-5 video-controls " id={"video-controls"}>
+          {/* <div id={"left-container"}></div>
+          <div id={"right-container"}></div> */}
           <InputRange
             draggableTrack
-            maxValue={maxValue}
+            maxValue={videoMaxDuration}
             minValue={0}
-            formatLabel={value => ``}
+            formatLabel={() => `${time.min}`}
             value={time}
             onChange={this.labelValueChange}
           />
           <div className={"frame-container"}>
-            <div className="fram-wrap">
-              {orderBy(frames).map((frame, index) => {
+            <div className="fram-wrap py-4">
+              {orderBy(videoDuration).map((duration, index) => {
                 return (
-                  <div className="frem-inner" key={index}>
-                    <img src={frame} alt={`Frame ${index + 1}`} />
+                  <div className="fram-block" key={index}>
+                    <span>{SecondsToMMSS(duration)}</span>
                   </div>
                 );
               })}
@@ -205,13 +202,13 @@ class FrameDetails extends Component {
             <Button
               color={"default"}
               className={"btn-black btn url-upload-btn"}
-              onClick={(e)=>this.props.completeEditing(e)}
+              onClick={(e) => this.props.completeEditing(e)}
             >
               Finish
             </Button>
           </Col>
         </Row>
-      </>
+      </div>
     );
   }
 }

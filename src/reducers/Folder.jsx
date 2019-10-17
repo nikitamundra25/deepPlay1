@@ -23,7 +23,7 @@ export const getFolderReducer = handleActions(
       ...payload,
       isFolderLoading: false
     }),
-    [FolderAction.RECENT_FOLDER_SUCCESS]: (state, { payload }) => ({
+    [FolderAction.RECENT_FOLDER_REQUEST]: (state, { payload }) => ({
       ...state,
       isRecentFolderLoading: true
     }),

@@ -9,7 +9,9 @@ import {
   copyMove,
   isStarredMove,
   deleteMove,
-  transferMove
+  transferMove,
+  createMove,
+  filterMove
 } from "../controllers";
 import { ValidateAdminToken } from "../common";
 import { storageFile } from "../common/video";
@@ -38,8 +40,10 @@ MoveRouter.get(
 MoveRouter.get("/public-url-move-details", publicUrlMoveDetails);
 MoveRouter.post("/update", updateMoveDetailsAndTrimVideo);
 MoveRouter.put("/copy-move", copyMove);
-MoveRouter.put("/starred-move", isStarredMove);
-MoveRouter.patch("/delete-move", deleteMove);
-MoveRouter.patch("/transfer-move", transferMove);
+MoveRouter.put("/starred-move", ValidateAdminToken, isStarredMove);
+MoveRouter.patch("/delete-move", ValidateAdminToken, deleteMove);
+MoveRouter.patch("/transfer-move", ValidateAdminToken, transferMove);
+MoveRouter.post("/create-move", ValidateAdminToken, createMove);
+MoveRouter.get("/filter-move", ValidateAdminToken, filterMove);
 
 export default MoveRouter;

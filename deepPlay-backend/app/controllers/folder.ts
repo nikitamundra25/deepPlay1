@@ -70,7 +70,8 @@ const createFolder = async (req: Request, res: Response): Promise<any> => {
                 userId: headToken.id,
                 sharableLink: moveElement.sharableLink,
                 status: true,
-                setId: setId
+                setId: setId,
+                moveURL: moveElement.moveURL
               };
               const moveData: Document | any = new MoveModel(newMoveData);
               await moveData.save();
@@ -491,7 +492,11 @@ const publicUrlFolderInfo = async (
       });
     } else {
       return res.status(400).json({
-        message: "Public access link is not enabled."
+        message: {
+          message: "Public access link is not enabled.",
+          folderId: decryptedFolderId
+        },
+        success: false
       });
     }
     return res.status(200).json({

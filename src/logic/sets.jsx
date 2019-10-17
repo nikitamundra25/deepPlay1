@@ -52,7 +52,7 @@ const createSetLogic = createLogic({
       dispatch(
         modelOpenRequest({
           modelDetails: {
-            addSetModalOpen: false,
+            // addSetModalOpen: false,
             createSetOpen: false,
             createSetModalOpen: false
           }
@@ -65,20 +65,20 @@ const createSetLogic = createLogic({
         if (action.payload.addMove) {
           dispatch(redirectTo({ path: AppRoutes.MOVE.url }));
         }
-        if (action.payload.folderId) {
+        if (action.payload.folderId !== "") {
           dispatch(
             getFolderSetRequest({
               folderId: action.payload.folderId,
               limit: AppConfig.ITEMS_PER_PAGE
             })
           );
-          dispatch(
-            modelOpenRequest({
-              modelDetails: {
-                addSetModalOpen: false
-              }
-            })
-          );
+          // dispatch(
+          //   modelOpenRequest({
+          //     modelDetails: {
+          //       addSetModalOpen: false
+          //     }
+          //   })
+          // );
         }
         dispatch(getAllSetRequest({ isSetNoLimit: false }));
       } else {
@@ -307,8 +307,8 @@ const getSetDetailsLogic = createLogic({
       toast.error(result.messages[0]);
       dispatch(
         getSetDetailsSuccess({
-          showLoader: false,
-          setDetails: {}
+          showLoader: false
+          // setDetails: {}
         })
       );
       done();

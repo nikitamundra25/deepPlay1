@@ -39,6 +39,18 @@ class VideoView extends React.Component {
         }, 500);
       }
     });
+    let timeDuration = [];
+    this.video.onloadeddata = () => {
+      const { duration } = this.video;
+      for (let index = 0; index < duration; index = index + duration / 20) {
+        timeDuration.push(index);
+      }
+      const data = {
+        timeDuration: timeDuration,
+        videoMaxDuration: duration
+      };
+      this.props.videoDuration(data);
+    };
   }
   /**
    *
@@ -55,8 +67,9 @@ class VideoView extends React.Component {
    *
    */
   render() {
-    const { moveReducer, description } = this.props;
+    const { moveReducer, description, title } = this.props;
     const { moveDetails } = moveReducer;
+
     return (
       <>
         <Col md={"6"}>
@@ -67,9 +80,10 @@ class VideoView extends React.Component {
                   id="title"
                   className={"move-title"}
                   placeholder="Enter your title (optional)"
-                  onChange={(e) => this.props.handleChange(e)}
+                  onChange={e => this.props.handleChange(e)}
                   type="text"
                   name="title"
+                  value={title}
                 />
                 <InputGroupAddon
                   addonType="prepend"
@@ -82,11 +96,7 @@ class VideoView extends React.Component {
                     >
                       <i className="fas fas fa-info " />
                       <UncontrolledTooltip placement="top" target="description">
-                        {
-                          description ?
-                            "Update Description" :
-                            "Add description"
-                        }
+                        {description ? "Update Description" : "Add description"}
                       </UncontrolledTooltip>
                     </InputGroupText>
                   </div>
@@ -103,8 +113,8 @@ class VideoView extends React.Component {
               </video>
             </>
           ) : (
-              <span>No video available for trimming</span>
-            )}
+            <span>No video available for trimming</span>
+          )}
         </Col>
       </>
     );

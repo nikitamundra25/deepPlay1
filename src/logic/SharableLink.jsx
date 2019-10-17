@@ -98,17 +98,28 @@ const sharedLinkFolderDetailsLogic = createLogic({
       "folder",
       "/public-access-folder-info-by-id",
       "GET",
-      false,
+      true,
       action.payload
     );
     if (result.isError) {
       dispatch(hideLoader());
-      toast.error(result.messages[0]);
-      dispatch(redirectTo({ path: "/404" }));
+      if (localStorage.getItem("token")) {
+        dispatch(
+          redirectTo({
+            path: AppRoutes.FOLDER_DETAILS.url.replace(
+              ":id",
+              result.messages[0].folderId
+            )
+          })
+        );
+      } else {
+        dispatch(redirectTo({ path: "/404" }));
+      }
       done();
       return;
     } else {
       dispatch(hideLoader());
+      dispatch(redirectTo({ path: "/404" }));
       dispatch(sharedFolderInfoSuccess({ decryptedDetails: result.data.data }));
       done();
     }
@@ -125,7 +136,7 @@ const getPublicUrlSetsDetailsLogic = createLogic({
       "set",
       "/public-url-set-details",
       "GET",
-      false,
+      true,
       {
         ...action.payload,
         limit: AppConfig.ITEMS_PER_PAGE
@@ -133,8 +144,18 @@ const getPublicUrlSetsDetailsLogic = createLogic({
     );
     if (result.isError) {
       dispatch(hideLoader());
-      toast.error(result.messages[0]);
-      dispatch(redirectTo({ path: "/404" }));
+      if (localStorage.getItem("token")) {
+        dispatch(
+          redirectTo({
+            path: AppRoutes.FOLDER_DETAILS.url.replace(
+              ":id",
+              result.messages[0].folderId
+            )
+          })
+        );
+      } else {
+        dispatch(redirectTo({ path: "/404" }));
+      }
       done();
       return;
     } else {
@@ -160,13 +181,23 @@ const sharedLinkSetDetailsLogic = createLogic({
       "set",
       "/public-access-set-info-by-id",
       "GET",
-      false,
+      true,
       action.payload
     );
     if (result.isError) {
       dispatch(hideLoader());
-      toast.error(result.messages[0]);
-      dispatch(redirectTo({ path: "/404" }));
+      if (localStorage.getItem("token")) {
+        dispatch(
+          redirectTo({
+            path: AppRoutes.SET_DETAILS.url.replace(
+              ":id",
+              result.messages[0].setId
+            )
+          })
+        );
+      } else {
+        dispatch(redirectTo({ path: "/404" }));
+      }
       done();
       return;
     } else {
@@ -187,13 +218,23 @@ const getPublicUrlMoveDetailsLogic = createLogic({
       "move",
       "/public-url-move-details",
       "GET",
-      false,
+      true,
       action.payload
     );
     if (result.isError) {
       dispatch(hideLoader());
-      toast.error(result.messages[0]);
-      dispatch(redirectTo({ path: "/404" }));
+      if (localStorage.getItem("token")) {
+        dispatch(
+          redirectTo({
+            path: AppRoutes.SET_DETAILS.url.replace(
+              ":id",
+              result.messages[0].setId
+            )
+          })
+        );
+      } else {
+        dispatch(redirectTo({ path: "/404" }));
+      }
       done();
       return;
     } else {

@@ -7,9 +7,14 @@ const initialState = {
   movesOfSet: [],
   moveDetails: "",
   tagsList: [],
+  totalMoves: 0,
   isMoveDetailsLoading: false,
   isMoveofSetLoading: false,
-  isSavingWebM: false
+  isSavingWebM: false,
+  moveUrlDetails: [],
+  videoData: {},
+  searchMoveResult: [],
+  isMoveSearchLoading: false
 };
 
 export const moveReducer = handleActions(
@@ -30,12 +35,20 @@ export const moveReducer = handleActions(
     }),
     [MovesAction.GET_MOVES_OF_SET_REQUEST]: (state, { payload }) => ({
       ...state,
-      movesOfSet: "",
       isMoveofSetLoading: true
     }),
     [MovesAction.GET_MOVES_OF_SET_SUCCESS]: (state, { payload }) => ({
       ...state,
-      movesOfSet: payload.movesOfSet,
+      //movesOfSet: payload.movesOfSet,
+      movesOfSet:
+        payload.isInfiniteScroll ?
+          [
+            ...state.movesOfSet, ...payload.movesOfSet
+          ] :
+          payload.movesOfSet
+      ,
+
+      totalMoves: payload.totalMoves,
       isMoveofSetLoading: false
     }),
     [MovesAction.GET_MOVE_DETAILS_REQUEST]: (state, { payload }) => ({
@@ -56,6 +69,19 @@ export const moveReducer = handleActions(
       ...state,
       tagsList: payload
     }),
+    [MovesAction.LOAD_VIDEO_DATA_REQUEST]: (state, { payload }) => ({
+      ...state,
+      videoData: payload
+    }),
+    [MovesAction.SEARCH_MOVE_REQUEST]: (state, { payload }) => ({
+      ...state,
+      isMoveSearchLoading: true
+    }),
+    [MovesAction.SEARCH_MOVE_SUCCESS]: (state, { payload }) => ({
+      ...state,
+      ...payload,
+      isMoveSearchLoading: false
+    })
   },
   initialState
 );
