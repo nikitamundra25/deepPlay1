@@ -141,7 +141,7 @@ class FrameDetails extends Component {
             draggableTrack
             maxValue={videoMaxDuration}
             minValue={0}
-            formatLabel={() => `${"10"}cm`}
+            formatLabel={() => `${time.min}`}
             value={time}
             onChange={this.labelValueChange}
           />

@@ -265,7 +265,7 @@ class MoveList extends React.Component {
                 <div className="set-detail-right-section">
                   <ButtonGroup size="sm" className="mr-2">
                     <Button
-                      className={isStarred[1] === "false" ? "active" : ""}
+                      className={isStarred[0]?isStarred[1] === "false" ? "active" : "":"active"}
                       color=" "
                       onClick={this.handleShowAll}
                     >
