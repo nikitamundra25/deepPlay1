@@ -100,13 +100,13 @@ const getAllSetById = async (req: Request, res: Response): Promise<void> => {
     condition.$and.push({
       isDeleted: false
     });
-    console.log("userId", query.userId);
+
 
     // dcrypt userId for shareable link in yoursets component
-    if (userId) {
-      headToken = { id: decrypt(userId) };
-      console.log("<<<,headToken.id", headToken.id);
-    }
+    // if (userId) {
+    //   headToken = { id: decrypt(userId) };
+    //   console.log("<<<,headToken.id", headToken.id);
+    // }
     // check for search condition
     if (search) {
       condition.$and.push({
@@ -244,10 +244,18 @@ const getRecentSetById = async (req: Request, res: Response): Promise<void> => {
           setId: setData._id,
           isDeleted: false
         });
+    
+        let data: any = await MoveModel.find({
+          setId: setData._id,
+          isDeleted: false
+        })
+          .sort({ updatedAt: -1 })
+          .limit(1);
 
         setResult.push({
           ...setData._doc,
-          moveCount: moveCount
+          moveCount: moveCount,
+          recentlyAddMoveImg: data.length ? data[0].moveURL : null
         });
       }
     }

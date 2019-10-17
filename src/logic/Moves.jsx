@@ -273,7 +273,13 @@ const transferMoveLogic = createLogic({
           }
         })
       );
-      dispatch(getMovesOfSetRequest({ setId: action.payload.previousSetId, page: 1, isInfiniteScroll: false }));
+      dispatch(
+        getMovesOfSetRequest({
+          setId: action.payload.previousSetId,
+          page: 1,
+          isInfiniteScroll: false
+        })
+      );
       dispatch(getSetDetailsRequest({ setId: action.payload.previousSetId }));
       done();
     }
@@ -375,6 +381,13 @@ const addTagsLogic = createLogic({
       if (!toast.isActive(toastId)) {
         toastId = toast.success(result.messages[0]);
       }
+      dispatch(
+        modelOpenRequest({
+          modelDetails: {
+            addTagModalOpen: false
+          }
+        })
+      );
       done();
     }
   }

@@ -50,7 +50,7 @@ const downloadVideo = async (req: Request, res: Response): Promise<any> => {
       videoUrl: videoURL,
       userId: headToken.id,
       sourceUrl: videoURL,
-      isYoutubeUrl: false,
+      isYoutubeUrl: false
     });
     await moveResult.save();
     res.status(200).json({
@@ -113,7 +113,7 @@ const downloadYoutubeVideo = async (
           ytdl(body.url).pipe(
             (videoStream = fs.createWriteStream(originalVideoPath))
           );
-          videoStream.on("close", async function () {
+          videoStream.on("close", async function() {
             const moveResult: Document | any = new MoveModel({
               videoUrl: videoURL,
               sourceUrl: body.url,
@@ -179,7 +179,7 @@ const createMove = async (req: Request, res: Response): Promise<any> => {
 const getMoveBySetId = async (req: Request, res: Response): Promise<any> => {
   try {
     const { currentUser, query } = req;
-    const { page, limit } = query
+    const { page, limit } = query;
     let headToken: Request | any = currentUser;
     if (!headToken.id) {
       res.status(400).json({
@@ -188,7 +188,7 @@ const getMoveBySetId = async (req: Request, res: Response): Promise<any> => {
     }
     const pageNumber: number = ((parseInt(page) || 1) - 1) * (limit || 20);
     const limitNumber: number = parseInt(limit) || 20;
-    let movesData: Document | any
+    let movesData: Document | any;
     if (query.isStarred === "true") {
       movesData = await MoveModel.find({
         setId: query.setId,
@@ -196,20 +196,20 @@ const getMoveBySetId = async (req: Request, res: Response): Promise<any> => {
         isStarred: true
       })
         .skip(pageNumber)
-        .limit(limitNumber)
+        .limit(limitNumber);
     } else {
       movesData = await MoveModel.find({
         setId: query.setId,
         isDeleted: false
       })
         .skip(pageNumber)
-        .limit(limitNumber)
+        .limit(limitNumber);
     }
 
     const totalMoves: Document | any | null = await MoveModel.count({
       setId: query.setId,
       isDeleted: false
-    })
+    });
     return res.status(200).json({
       movesData: movesData,
       totalMoves: totalMoves
@@ -318,7 +318,7 @@ const updateMoveDetailsAndTrimVideo = async (
           resource_type: "video",
           format: "webm"
         },
-        async function (error: any, moveData: any) {
+        async function(error: any, moveData: any) {
           if (error) {
             console.log(">>>>>>>>>>>Error", error);
             return res.status(400).json({
@@ -550,10 +550,9 @@ const addTagsInMove = async (req: Request, res: Response): Promise<any> => {
   try {
     const { body } = req;
     const { tags, moveId } = body;
-    console.log(">>>>>>", moveId);
     if (!moveId) {
       res.status(400).json({
-        message: "SetId not found"
+        message: "MoveId not found"
       });
     }
 

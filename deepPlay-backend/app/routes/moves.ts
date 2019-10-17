@@ -46,6 +46,6 @@ MoveRouter.patch("/delete-move", ValidateAdminToken, deleteMove);
 MoveRouter.patch("/transfer-move", ValidateAdminToken, transferMove);
 MoveRouter.post("/create-move", ValidateAdminToken, createMove);
 MoveRouter.get("/filter-move", ValidateAdminToken, filterMove);
-MoveRouter.get("/add-tags-move", ValidateAdminToken, addTagsInMove);
+MoveRouter.put("/add-tags-move", ValidateAdminToken, addTagsInMove);
 
 export default MoveRouter;

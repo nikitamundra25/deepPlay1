@@ -1,11 +1,5 @@
 import React from "react";
-import {
-  Button,
-  Modal,
-  ModalHeader,
-  ModalBody,
-  ModalFooter,
-} from "reactstrap";
+import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from "reactstrap";
 import CreatableSelect from "react-select/creatable";
 import closeBtn from "../../../assets/img/close-img.png";
 const colourOptions = [
@@ -51,6 +45,13 @@ class AddTagModal extends React.Component {
     console.groupEnd();
   };
 
+  onhandleTags = () => {
+    const data = {
+      moveId: this.props.moveIdToAddTag,
+      tags: this.state.tags
+    };
+    this.props.addTagstoMove(data);
+  };
   render() {
     const { modal, handleOpen } = this.props;
     const { tags } = this.state;
@@ -83,7 +84,7 @@ class AddTagModal extends React.Component {
             <div className="w-100 tag-input-wrap search-select-wrap">
               <CreatableSelect
                 isMulti
-                onChange={this.props.handleTagChange}
+                onChange={this.handleTagChange}
                 value={tags}
                 options={colourOptions}
                 // options={colourOptions}
@@ -93,7 +94,7 @@ class AddTagModal extends React.Component {
           <ModalFooter>
             <Button
               type="button"
-              // onClick={this.onCreateFolder}
+              onClick={this.onhandleTags}
               color=" "
               className="btn btn-black"
             >
