@@ -188,12 +188,23 @@ const getMoveBySetId = async (req: Request, res: Response): Promise<any> => {
     }
     const pageNumber: number = ((parseInt(page) || 1) - 1) * (limit || 20);
     const limitNumber: number = parseInt(limit) || 20;
-    const movesData: Document | any = await MoveModel.find({
-      setId: query.setId,
-      isDeleted: false
-    })
-      .skip(pageNumber)
-      .limit(limitNumber)
+    let movesData: Document | any
+    if (query.isStarred === "true") {
+      movesData = await MoveModel.find({
+        setId: query.setId,
+        isDeleted: false,
+        isStarred: true
+      })
+        .skip(pageNumber)
+        .limit(limitNumber)
+    } else {
+      movesData = await MoveModel.find({
+        setId: query.setId,
+        isDeleted: false
+      })
+        .skip(pageNumber)
+        .limit(limitNumber)
+    }
 
     const totalMoves: Document | any | null = await MoveModel.count({
       setId: query.setId,
@@ -267,7 +278,10 @@ const publicUrlMoveDetails = async (
       });
     } else {
       return res.status(400).json({
-        message: "Public access link is not enabled."
+        message: {
+          message: "Public access link is not enabled.",
+          setId: decryptedSetId
+        }
       });
     }
     return res.status(200).json({
@@ -408,7 +422,7 @@ const isStarredMove = async (req: Request, res: Response): Promise<any> => {
       }
     );
 
-    res.status(200).json({
+    return res.status(200).json({
       message: "Move has been starred successfully!"
     });
   } catch (error) {
@@ -439,7 +453,7 @@ const deleteMove = async (req: Request, res: Response): Promise<any> => {
       }
     );
 
-    res.status(200).json({
+    return res.status(200).json({
       message: "Move has been deleted successfully!"
     });
   } catch (error) {
@@ -471,7 +485,7 @@ const transferMove = async (req: Request, res: Response): Promise<any> => {
       }
     );
 
-    res.status(200).json({
+    return res.status(200).json({
       message: "Move has been transferred successfully!"
     });
   } catch (error) {
@@ -485,11 +499,17 @@ const transferMove = async (req: Request, res: Response): Promise<any> => {
 //-----------------------Filter move details-----------------------
 const filterMove = async (req: Request, res: Response): Promise<any> => {
   try {
-    const { body } = req;
-    const { search } = body;
+    const { query } = req;
+    const { search, setId } = query;
+    let searchData: Document | any | null;
     let condition: any = {
       $and: []
     };
+    condition.$and.push({
+      isDeleted: false,
+      setId: setId
+    });
+
     if (search) {
       condition.$and.push({
         $or: [
@@ -510,9 +530,13 @@ const filterMove = async (req: Request, res: Response): Promise<any> => {
           }
         ]
       });
+      searchData = await MoveModel.find(condition);
     }
-    const searchData: Document | any | null = MoveModel.find(condition);
-    console.log(">>>", searchData);
+
+    return res.status(200).json({
+      message: "Move has been searched successfully",
+      data: searchData
+    });
   } catch (error) {
     console.log(error);
     return res.status(500).send({
@@ -532,5 +556,6 @@ export {
   isStarredMove,
   deleteMove,
   transferMove,
-  createMove
+  createMove,
+  filterMove
 };

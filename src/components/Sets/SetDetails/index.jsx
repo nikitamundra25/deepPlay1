@@ -21,7 +21,8 @@ import {
   getAllSetRequest,
   deleteMovesRequest,
   transferMovesRequest,
-  loadVideoDataRequest
+  loadVideoDataRequest,
+  searchMoveRequest
 } from "../../../actions";
 import SharableLinkModal from "../../comman/shareableLink/SharableLink";
 import { AppRoutes } from "../../../config/AppRoutes";
@@ -55,8 +56,15 @@ class SetDetails extends React.Component {
     const pathName = location.pathname.split("/");
     const { moveReducer } = this.props
     const { movesOfSet } = moveReducer;
+    const isStarred = location.search.split(":")
     this.props.getSetDetailsRequest({ setId: pathName[3] });
-    this.props.getMovesOfSetRequest({ setId: pathName[3], moveData: movesOfSet, page: 1, isInfiniteScroll: false });
+    this.props.getMovesOfSetRequest({
+      setId: pathName[3],
+      moveData: movesOfSet,
+      page: 1,
+      isInfiniteScroll: false,
+      isStarred: isStarred[1]
+    });
     this.props.getSetList({ isSetNoLimit: false });
     this.setState({
       setIdPathName: pathName[3]
@@ -65,6 +73,22 @@ class SetDetails extends React.Component {
   /*
   /*  
   */
+  componentDidUpdate = ({ location }) => {
+    const { location: currentLocation } = this.props;
+    const { search } = location;
+    const { search: currentSearch } = currentLocation;
+    const isStarred = currentSearch.split(":")
+    
+    if (search !== currentSearch) {
+      this.props.getMovesOfSetRequest({
+        setId: this.state.setIdPathName,
+        page: 1,
+        isInfiniteScroll: false,
+        isStarred: isStarred[1]
+      });
+    }
+
+  }
   onTogglePublicAccess = isPublic => {
     const location = this.props.location;
     const pathName = location.pathname.split("/");
@@ -202,7 +226,7 @@ class SetDetails extends React.Component {
     } = this.props;
     const { setDetails } = setReducer;
     const { modelDetails } = modelInfoReducer;
-    const { movesOfSet, isMoveofSetLoading, videoData, totalMoves } = moveReducer;
+    const { movesOfSet, isMoveofSetLoading, videoData, totalMoves, searchMoveResult, isMoveSearchLoading } = moveReducer;
     const { userEncryptedInfo } = shareLinkReducer;
     const { sharableLinkModalOpen, createSetModalOpen, isVideoModalOpen } = modelDetails;
     const { show, setIndex, setIdPathName, showVideo, showVideoIndex } = this.state;
@@ -303,9 +327,12 @@ class SetDetails extends React.Component {
                     transferMove={this.transferMove}
                     handleMoveAdd={this.handleMoveAdd}
                     modelDetails={modelDetails}
+                    searchMoveResult={searchMoveResult}
                     totalMoves={totalMoves}
                     modelOperate={modelOperate}
+                    isMoveSearchLoading={isMoveSearchLoading}
                     getMovesOfSetRequest={getMovesOfSetRequest}
+                    searchMove={data => this.props.searchMoveRequest(data)}
                     {...this.props}
                   />
                 </div>
@@ -362,6 +389,7 @@ const mapDispatchToProps = dispatch => ({
   isStarredRequest: data => dispatch(starredMovesRequest(data)),
   deleteMoveRequest: data => dispatch(deleteMovesRequest(data)),
   transferMoveRequest: data => dispatch(transferMovesRequest(data)),
+  searchMoveRequest: data => dispatch(searchMoveRequest(data)),
   getSetList: data => {
     dispatch(getAllSetRequest(data));
   },

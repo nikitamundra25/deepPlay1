@@ -12,7 +12,9 @@ const initialState = {
   isMoveofSetLoading: false,
   isSavingWebM: false,
   moveUrlDetails: [],
-  videoData: {}
+  videoData: {},
+  searchMoveResult: [],
+  isMoveSearchLoading: false
 };
 
 export const moveReducer = handleActions(
@@ -70,6 +72,15 @@ export const moveReducer = handleActions(
     [MovesAction.LOAD_VIDEO_DATA_REQUEST]: (state, { payload }) => ({
       ...state,
       videoData: payload
+    }),
+    [MovesAction.SEARCH_MOVE_REQUEST]: (state, { payload }) => ({
+      ...state,
+      isMoveSearchLoading: true
+    }),
+    [MovesAction.SEARCH_MOVE_SUCCESS]: (state, { payload }) => ({
+      ...state,
+      ...payload,
+      isMoveSearchLoading: false
     })
   },
   initialState

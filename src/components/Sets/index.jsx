@@ -163,20 +163,20 @@ class SetComponent extends React.Component {
                             {setList.moveCount} moves
                           </div>
                         </div>
-                        <div
-                          className="d-flex img-tile-wrap cursor_pointer"
-                          onClick={() => this.handleSetDetails(setList._id)}
-                        >
-                          <div className="cotent-img-tile">
-                            {/* <img src={setList.recentlyAddMoveImg} alt=""></img> */}
-                            <video width={"100%"} id="webm-video">
-                              <source
-                                src={`${setList.recentlyAddMoveImg}`}
-                                type="video/webm"
-                              />
-                            </video>
-                          </div>
-                          {/* <div
+                        {setList.recentlyAddMoveImg ? (
+                          <div
+                            className="d-flex img-tile-wrap cursor_pointer"
+                            onClick={() => this.handleSetDetails(setList._id)}
+                          >
+                            <div className="cotent-img-tile">
+                              <video width={"100%"} id="webm-video">
+                                <source
+                                  src={`${setList.recentlyAddMoveImg}`}
+                                  type="video/webm"
+                                />
+                              </video>
+                            </div>
+                            {/* <div
                             className="cotent-img-tile "
                             style={{
                               backgroundImage:
@@ -185,8 +185,8 @@ class SetComponent extends React.Component {
                                 '")'
                             }}
                           /> */}
-                        </div>
-
+                          </div>
+                        ) : null}
                         <div
                           onMouseOver={() => this.showPopOver(i, show)}
                           className="tooltip-btn-wrap right-btn-tip"
