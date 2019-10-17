@@ -21,6 +21,7 @@ export const MovesAction = {
   TRANSFER_MOVE_SUCCESS: "Transfer Moves Success",
   CREATE_ANOTHER_MOVE_REQUEST: "Create Another Move Request",
   CREATE_ANOTHER_MOVE_SUCCESS: "Create Another Move Success",
+  LOAD_VIDEO_DATA_REQUEST: "Load video data Request!",
   SEARCH_MOVE_REQUEST: "Search Move Request",
   SEARCH_MOVE_SUCCESS: "Search Move Success",
   ADD_TAGS_REQUEST: "Add Tags Request",
@@ -86,6 +87,9 @@ export const createAnotherMoveSuccess = createAction(
   MovesAction.CREATE_ANOTHER_MOVE_SUCCESS
 );
 
+export const loadVideoDataRequest = createAction(
+  MovesAction.LOAD_VIDEO_DATA_REQUEST
+);
 export const searchMoveRequest = createAction(MovesAction.SEARCH_MOVE_REQUEST);
 export const searchMoveSuccess = createAction(MovesAction.SEARCH_MOVE_SUCCESS);
 

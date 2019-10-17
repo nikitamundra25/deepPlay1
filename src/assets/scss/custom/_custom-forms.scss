@@ -152,7 +152,8 @@
                     border: $custom-control-indicator-border-width solid $custom-control-indicator-disabled-bg;
 
                     &:before {
-                        background-color: lighten($custom-control-indicator-checked-bg, 10%);
+                        background-color: #555;
+                        border: 1px solid #555;
                     }
                 }
             }

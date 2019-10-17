@@ -133,23 +133,23 @@ class FrameDetails extends Component {
     const { videoDuration, videoMaxDuration } = this.props;
     const { time } = this.state;
     return (
-      <>
-        <div className="fram-picker mt-3 video-controls" id={"video-controls"}>
-          <div id={"left-container"}></div>
-          <div id={"right-container"}></div>
+      <div className="fram-picker">
+        <div className=" mt-5 video-controls " id={"video-controls"}>
+          {/* <div id={"left-container"}></div>
+          <div id={"right-container"}></div> */}
           <InputRange
             draggableTrack
             maxValue={videoMaxDuration}
             minValue={0}
-            formatLabel={value => ``}
+            formatLabel={() => `${"10"}cm`}
             value={time}
             onChange={this.labelValueChange}
           />
           <div className={"frame-container"}>
-            <div className="fram-wrap p-4">
+            <div className="fram-wrap py-4">
               {orderBy(videoDuration).map((duration, index) => {
                 return (
-                  <div className="p-2" key={index}>
+                  <div className="fram-block" key={index}>
                     <span>{SecondsToMMSS(duration)}</span>
                   </div>
                 );
@@ -208,7 +208,7 @@ class FrameDetails extends Component {
             </Button>
           </Col>
         </Row>
-      </>
+      </div>
     );
   }
 }

@@ -90,7 +90,9 @@ const getMovesOfSetLogic = createLogic({
       dispatch(
         getMovesOfSetSuccess({
           showLoader: false,
-          movesOfSet: result.data.movesData
+          movesOfSet: result.data.movesData,
+          totalMoves: result.data.totalMoves,
+          isInfiniteScroll: action.payload.isInfiniteScroll
         })
       );
       done();
@@ -271,7 +273,7 @@ const transferMoveLogic = createLogic({
           }
         })
       );
-      dispatch(getMovesOfSetRequest({ setId: action.payload.previousSetId }));
+      dispatch(getMovesOfSetRequest({ setId: action.payload.previousSetId, page: 1, isInfiniteScroll: false }));
       dispatch(getSetDetailsRequest({ setId: action.payload.previousSetId }));
       done();
     }

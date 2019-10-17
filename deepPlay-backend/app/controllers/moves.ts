@@ -46,21 +46,11 @@ const downloadVideo = async (req: Request, res: Response): Promise<any> => {
     let videoURL: string;
     const fileName = file.filename;
     videoURL = path.join("uploads", "youtube-videos", fileName);
-    // const {
-    //   frames: framesArray,
-    //   videoMetaData,
-    //   videoName
-    // } = await getVideoFrames(fileName);
-    // delete videoMetaData.filename;
-    // const frames = framesArray.map(
-    //   (frame: string) => `${ServerURL}/uploads/youtube-videos/${frame}`
-    // );
     const moveResult: Document | any = new MoveModel({
       videoUrl: videoURL,
-      userId: headToken.id
-      // frames,
-      // videoMetaData,
-      // videoName
+      userId: headToken.id,
+      sourceUrl: videoURL,
+      isYoutubeUrl: false,
     });
     await moveResult.save();
     res.status(200).json({
@@ -123,22 +113,12 @@ const downloadYoutubeVideo = async (
           ytdl(body.url).pipe(
             (videoStream = fs.createWriteStream(originalVideoPath))
           );
-          videoStream.on("close", async function() {
-            // const {
-            //   frames: framesArray,
-            //   videoMetaData,
-            //   videoName
-            // } = await getVideoFrames(fileName);
-            // delete videoMetaData.filename;
-            // const frames = framesArray.map(
-            //   (frame: string) => `${ServerURL}/uploads/youtube-videos/${frame}`
-            // );
+          videoStream.on("close", async function () {
             const moveResult: Document | any = new MoveModel({
               videoUrl: videoURL,
-              // frames: orderBy(frames),
+              sourceUrl: body.url,
+              isYoutubeUrl: true,
               userId: headToken.id
-              // videoMetaData,
-              // videoName
             });
             await moveResult.save();
             return res.status(200).json({
@@ -180,8 +160,8 @@ const createMove = async (req: Request, res: Response): Promise<any> => {
       videoUrl: moveUrl,
       userId: headToken.id
     });
-
     await moveResult.save();
+
     return res.status(200).json({
       message: "Created new move",
       moveId: moveResult._id,
@@ -199,19 +179,40 @@ const createMove = async (req: Request, res: Response): Promise<any> => {
 const getMoveBySetId = async (req: Request, res: Response): Promise<any> => {
   try {
     const { currentUser, query } = req;
+    const { page, limit } = query
     let headToken: Request | any = currentUser;
     if (!headToken.id) {
       res.status(400).json({
         message: "User id not found"
       });
     }
-    const movesData: Document | any = await MoveModel.find({
+    const pageNumber: number = ((parseInt(page) || 1) - 1) * (limit || 20);
+    const limitNumber: number = parseInt(limit) || 20;
+    let movesData: Document | any
+    if (query.isStarred === "true") {
+      movesData = await MoveModel.find({
+        setId: query.setId,
+        isDeleted: false,
+        isStarred: true
+      })
+        .skip(pageNumber)
+        .limit(limitNumber)
+    } else {
+      movesData = await MoveModel.find({
+        setId: query.setId,
+        isDeleted: false
+      })
+        .skip(pageNumber)
+        .limit(limitNumber)
+    }
+
+    const totalMoves: Document | any | null = await MoveModel.count({
       setId: query.setId,
       isDeleted: false
-    });
-
+    })
     return res.status(200).json({
-      movesData: movesData
+      movesData: movesData,
+      totalMoves: totalMoves
     });
   } catch (error) {
     console.log(error);
@@ -317,7 +318,7 @@ const updateMoveDetailsAndTrimVideo = async (
           resource_type: "video",
           format: "webm"
         },
-        async function(error: any, moveData: any) {
+        async function (error: any, moveData: any) {
           if (error) {
             console.log(">>>>>>>>>>>Error", error);
             return res.status(400).json({
