@@ -243,7 +243,7 @@ class MoveList extends React.Component {
                 <div className="set-detail-right-section">
                   <ButtonGroup size="sm" className="mr-2">
                     <Button
-                      className={isStarred[0]?isStarred[1] === "false" ? "active" : "":"active"}
+                      className={isStarred[0] ? isStarred[1] === "false" ? "active" : "" : "active"}
                       color=" "
                       onClick={this.handleShowAll}
                     >
@@ -414,7 +414,7 @@ class MoveList extends React.Component {
                               <video
                                 width={"100%"}
                                 id={`webm-video-${index}`}
-                                muted={false}
+                                muted={true}
                               >
                                 <source src={`${video.moveURL}`} type="video/webm" />
                               </video>

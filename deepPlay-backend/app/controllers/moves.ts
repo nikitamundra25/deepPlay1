@@ -316,7 +316,8 @@ const updateMoveDetailsAndTrimVideo = async (
           start_offset: timer.min,
           end_offset: timer.max,
           resource_type: "video",
-          format: "webm"
+          format: "webm",
+          eager_async: true,
         },
         async function (error: any, moveData: any) {
           if (error) {
@@ -327,6 +328,8 @@ const updateMoveDetailsAndTrimVideo = async (
             });
           } else {
             console.log(">>>>>>>>>>>Success", result);
+            
+            fs.unlinkSync(videoFile);
             await MoveModel.updateOne(
               {
                 _id: result._id

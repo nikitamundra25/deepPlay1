@@ -5,15 +5,15 @@ import {
   DropdownMenu,
   DropdownItem,
   Modal,
-  ModalBody
+  ModalBody,
+  ModalHeader
 } from "reactstrap";
 import { logger } from "helper/Logger";
 import InputRange from "react-input-range";
 import { SecondsToHHMMSS } from "helper/Time";
 import TransferToModal from "../../Folders/FolderDetails/transferTo";
 import Loader from "../../comman/Loader/Loader"
-//import emptySetIc from "../../../assets/img/empty-sets.png";
-
+import closeBtn from "../../../assets/img/close-img.png";
 class WebmView extends Component {
   video;
   constructor(props) {
@@ -36,10 +36,7 @@ class WebmView extends Component {
   /**
    *
    */
-  componentDidUpdate = ({ isVideoModalOpen, showVideo, videoData }) => {
-    if (isVideoModalOpen !== this.props.isVideoModalOpen && showVideo !== this.props.showVideo) {
-
-    }
+  componentDidUpdate = ({ isVideoModalOpen, videoData }) => {
     if (isVideoModalOpen !== this.props.isVideoModalOpen) {
       this.props.loadVideoDataRequest(this.props.showVideo)
       this.setState({
@@ -60,16 +57,6 @@ class WebmView extends Component {
         });
       });
       this.video.load();
-      this.video.addEventListener('loadeddata', () => {
-        this.setState({
-          isVideoLoading: false
-        })
-      })
-      this.video.onloadstart = () => {
-        this.setState({
-          isVideoLoading: true
-        })
-      }
       let timeDuration = []
       this.video.onloadeddata = () => {
         const { duration } = this.video
@@ -193,12 +180,17 @@ class WebmView extends Component {
   }
 
   render() {
-    const { video, allSetList, modelInfoReducer, isVideoModalOpen, handleVideoModal, movesOfSet, videoData } = this.props;
+    const {
+      video,
+      allSetList,
+      modelInfoReducer,
+      isVideoModalOpen,
+      handleVideoModal,
+      movesOfSet,
+      videoData } = this.props;
     const { modelDetails } = modelInfoReducer;
     const { transferToModalOpenReq } = modelDetails;
-    const { moveURL, videoMetaData, title } = video;
-    const { duration } = videoMetaData || {};
-    const { seconds: videoLength } = duration || {};
+    const { moveURL, title } = video;
     const {
       isPlaying,
       currentTime,
@@ -211,7 +203,6 @@ class WebmView extends Component {
       videoDuration,
       isVideoLoading
     } = this.state;
-
     return (
       <>
         <Modal
@@ -219,6 +210,19 @@ class WebmView extends Component {
           isOpen={isVideoModalOpen}
           toggle={handleVideoModal}
         >
+          <ModalHeader>
+            <button
+              aria-label="Close"
+              className="close"
+              data-dismiss="modal"
+              type="button"
+              onClick={handleVideoModal}
+            >
+              <span aria-hidden="true">
+                <img src={closeBtn} alt="close-ic" />
+              </span>
+            </button>
+          </ModalHeader>
           <ModalBody>
             <div className="video-slider-text">
               <div className="video-slider-title"> {videoData ? videoData.title : title} </div>
@@ -279,7 +283,7 @@ class WebmView extends Component {
                       />
                     </video> :
                     <div className="video-loader">
-                    <Loader videoLoader={true} />
+                      <Loader videoLoader={true} />
                     </div>
                 }
                 <div className={"controls"}>
@@ -314,7 +318,7 @@ class WebmView extends Component {
                       </div>
                       <div className="video-time-wrap control-tile">
                         {SecondsToHHMMSS(parseInt(currentTime))} /{" "}
-                        {SecondsToHHMMSS(videoLength)}
+                        {SecondsToHHMMSS(parseInt(videoDuration.videoMaxDuration))}
                       </div>
                       <div className="volume-up-down control-tile">
                         <span onClick={this.toggleMute}>
