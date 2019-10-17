@@ -12,10 +12,12 @@ const initialAuthState = {
     addSetModalOpen: false,
     createSetOpen: false,
     transferToModalOpen: false,
+    transferToModalOpenReq: false,
     sharableLinkModalOpen: false,
     createSetModalOpen: false,
     isDescriptionModalOpen: false,
-    isMoveSuccessModal: false
+    isMoveSuccessModal: false,
+    isVideoModalOpen: false
   }
 };
 

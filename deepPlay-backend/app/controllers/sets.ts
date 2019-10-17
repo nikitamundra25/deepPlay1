@@ -47,7 +47,8 @@ const createSet = async (req: Request, res: Response): Promise<any> => {
             userId: headToken.id,
             sharableLink: moveElement.sharableLink,
             status: true,
-            setId: setId
+            setId: setId,
+            moveURL: moveElement.moveURL
           };
           const moveData: Document | any = new MoveModel(newMoveData);
           await moveData.save();
@@ -87,15 +88,7 @@ const getAllSetById = async (req: Request, res: Response): Promise<void> => {
   try {
     const { currentUser, query } = req;
     let headToken: Request | any = currentUser;
-    const {
-      limit,
-      page,
-      search,
-      sort,
-      status,
-      roleType,
-      userId,
-    } = query;
+    const { limit, page, search, sort, status, roleType, userId } = query;
     const pageNumber: number = ((parseInt(page) || 1) - 1) * (limit || 10);
     const limitNumber: number = parseInt(limit) || 10;
 
@@ -107,6 +100,7 @@ const getAllSetById = async (req: Request, res: Response): Promise<void> => {
     condition.$and.push({
       isDeleted: false
     });
+    console.log("userId", query.userId);
 
     // dcrypt userId for shareable link in yoursets component
     if (userId) {
@@ -192,9 +186,18 @@ const getAllSetById = async (req: Request, res: Response): Promise<void> => {
           setId: setData._id,
           isDeleted: false
         });
+
+        let data: any = await MoveModel.find({
+          setId: setData._id,
+          isDeleted: false
+        })
+          .sort({ updatedAt: -1 })
+          .limit(1);
+
         setResult.push({
           ...setData._doc,
-          moveCount: moveCount
+          moveCount: moveCount,
+          recentlyAddMoveImg: data.length ? data[0].moveURL : null
         });
       }
     }
@@ -241,6 +244,7 @@ const getRecentSetById = async (req: Request, res: Response): Promise<void> => {
           setId: setData._id,
           isDeleted: false
         });
+
         setResult.push({
           ...setData._doc,
           moveCount: moveCount
@@ -297,9 +301,18 @@ const getSetsForFolder = async (req: Request, res: Response): Promise<void> => {
           setId: setData._id,
           isDeleted: false
         });
+
+        let data: any = await MoveModel.find({
+          setId: setData._id,
+          isDeleted: false
+        })
+          .sort({ updatedAt: -1 })
+          .limit(1);
+
         setResult.push({
           ...setData._doc,
-          moveCount: moveCount
+          moveCount: moveCount,
+          recentlyAddMoveImg: data.length ? data[0].moveURL : null
         });
       }
     }
@@ -489,7 +502,11 @@ const publicUrlsetDetails = async (
       }).count();
     } else {
       return res.status(400).json({
-        message: "Public access link is not enabled."
+        message: {
+          message: "Public access link is not enabled.",
+          folderId: decryptedFolderId
+        },
+        success: false
       });
     }
     return res.status(200).json({
@@ -548,7 +565,10 @@ const publicAccessSetInfoById = async (
       };
     } else {
       return res.status(400).json({
-        message: "Public access link is not enabled."
+        message: {
+          message: "Public access link is not enabled.",
+          setId: decryptedSetId
+        }
       });
     }
     return res.status(200).json({

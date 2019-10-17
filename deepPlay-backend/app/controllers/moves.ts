@@ -3,7 +3,7 @@ import {
   CloudinaryAPIKey,
   CloudinaryAPISecretKey,
   CloudName,
-  IsProductionMode,
+  IsProductionMode
 } from "../config";
 import cloudinary from "cloudinary";
 import { Document } from "mongoose";
@@ -46,21 +46,11 @@ const downloadVideo = async (req: Request, res: Response): Promise<any> => {
     let videoURL: string;
     const fileName = file.filename;
     videoURL = path.join("uploads", "youtube-videos", fileName);
-    // const {
-    //   frames: framesArray,
-    //   videoMetaData,
-    //   videoName
-    // } = await getVideoFrames(fileName);
-    // delete videoMetaData.filename;
-    // const frames = framesArray.map(
-    //   (frame: string) => `${ServerURL}/uploads/youtube-videos/${frame}`
-    // );
     const moveResult: Document | any = new MoveModel({
       videoUrl: videoURL,
       userId: headToken.id,
-      // frames,
-      // videoMetaData,
-      // videoName
+      sourceUrl: videoURL,
+      isYoutubeUrl: false,
     });
     await moveResult.save();
     res.status(200).json({
@@ -120,29 +110,21 @@ const downloadYoutubeVideo = async (
       ytdl.getInfo(body.url, (err, info) => {
         if (err) throw err;
         if (info) {
-          ytdl(body.url).pipe((videoStream = fs.createWriteStream(originalVideoPath)));
+          ytdl(body.url).pipe(
+            (videoStream = fs.createWriteStream(originalVideoPath))
+          );
           videoStream.on("close", async function () {
-            // const {
-            //   frames: framesArray,
-            //   videoMetaData,
-            //   videoName
-            // } = await getVideoFrames(fileName);
-            // delete videoMetaData.filename;
-            // const frames = framesArray.map(
-            //   (frame: string) => `${ServerURL}/uploads/youtube-videos/${frame}`
-            // );
             const moveResult: Document | any = new MoveModel({
               videoUrl: videoURL,
-              // frames: orderBy(frames),
-              userId: headToken.id,
-              // videoMetaData,
-              // videoName
+              sourceUrl: body.url,
+              isYoutubeUrl: true,
+              userId: headToken.id
             });
             await moveResult.save();
             return res.status(200).json({
               message: "Video uploaded successfully!",
               videoUrl: videoURL,
-              moveData: moveResult,
+              moveData: moveResult
             });
           });
         }
@@ -176,16 +158,15 @@ const createMove = async (req: Request, res: Response): Promise<any> => {
 
     const moveResult: Document | any = new MoveModel({
       videoUrl: moveUrl,
-      userId: headToken.id,
+      userId: headToken.id
     });
-
     await moveResult.save();
+
     return res.status(200).json({
       message: "Created new move",
       moveId: moveResult._id,
       success: true
-    })
-
+    });
   } catch (error) {
     console.log(error, "kkkkk");
     res.status(500).send({
@@ -198,19 +179,40 @@ const createMove = async (req: Request, res: Response): Promise<any> => {
 const getMoveBySetId = async (req: Request, res: Response): Promise<any> => {
   try {
     const { currentUser, query } = req;
+    const { page, limit } = query
     let headToken: Request | any = currentUser;
     if (!headToken.id) {
       res.status(400).json({
         message: "User id not found"
       });
     }
-    const movesData: Document | any = await MoveModel.find({
+    const pageNumber: number = ((parseInt(page) || 1) - 1) * (limit || 20);
+    const limitNumber: number = parseInt(limit) || 20;
+    let movesData: Document | any
+    if (query.isStarred === "true") {
+      movesData = await MoveModel.find({
+        setId: query.setId,
+        isDeleted: false,
+        isStarred: true
+      })
+        .skip(pageNumber)
+        .limit(limitNumber)
+    } else {
+      movesData = await MoveModel.find({
+        setId: query.setId,
+        isDeleted: false
+      })
+        .skip(pageNumber)
+        .limit(limitNumber)
+    }
+
+    const totalMoves: Document | any | null = await MoveModel.count({
       setId: query.setId,
       isDeleted: false
-    });
-
+    })
     return res.status(200).json({
-      movesData: movesData
+      movesData: movesData,
+      totalMoves: totalMoves
     });
   } catch (error) {
     console.log(error);
@@ -276,7 +278,10 @@ const publicUrlMoveDetails = async (
       });
     } else {
       return res.status(400).json({
-        message: "Public access link is not enabled."
+        message: {
+          message: "Public access link is not enabled.",
+          setId: decryptedSetId
+        }
       });
     }
     return res.status(200).json({
@@ -305,14 +310,15 @@ const updateMoveDetailsAndTrimVideo = async (
     const result: Document | null | any = await MoveModel.findById(moveId);
     if (result) {
       const videoFile = path.join(__dirname, "..", result.videoUrl);
-      cloudinary.v2.uploader.upload(videoFile,
+      cloudinary.v2.uploader.upload(
+        videoFile,
         {
           start_offset: timer.min,
           end_offset: timer.max,
           resource_type: "video",
           format: "webm"
         },
-        async function (error, moveData) {
+        async function (error: any, moveData: any) {
           if (error) {
             console.log(">>>>>>>>>>>Error", error);
             return res.status(400).json({
@@ -330,7 +336,7 @@ const updateMoveDetailsAndTrimVideo = async (
                 title,
                 description,
                 tags,
-                setId,
+                setId
               }
             );
             return res.status(200).json({
@@ -339,7 +345,8 @@ const updateMoveDetailsAndTrimVideo = async (
               setId: setId
             });
           }
-        })
+        }
+      );
     } else {
       return res.status(400).json({
         message: "You've requested to update an unknown move."
@@ -415,7 +422,7 @@ const isStarredMove = async (req: Request, res: Response): Promise<any> => {
       }
     );
 
-    res.status(200).json({
+    return res.status(200).json({
       message: "Move has been starred successfully!"
     });
   } catch (error) {
@@ -431,8 +438,6 @@ const deleteMove = async (req: Request, res: Response): Promise<any> => {
   try {
     const { query } = req;
     const { moveId } = query;
-    console.log(">>>>>>", moveId);
-
     if (!moveId) {
       res.status(400).json({
         message: "MoveId not found"
@@ -448,7 +453,7 @@ const deleteMove = async (req: Request, res: Response): Promise<any> => {
       }
     );
 
-    res.status(200).json({
+    return res.status(200).json({
       message: "Move has been deleted successfully!"
     });
   } catch (error) {
@@ -464,6 +469,7 @@ const transferMove = async (req: Request, res: Response): Promise<any> => {
   try {
     const { body } = req;
     const { setId, moveId } = body;
+    console.log(">>>>>>", moveId);
     if (!setId) {
       res.status(400).json({
         message: "SetId not found"
@@ -479,7 +485,7 @@ const transferMove = async (req: Request, res: Response): Promise<any> => {
       }
     );
 
-    res.status(200).json({
+    return res.status(200).json({
       message: "Move has been transferred successfully!"
     });
   } catch (error) {
@@ -490,44 +496,54 @@ const transferMove = async (req: Request, res: Response): Promise<any> => {
   }
 };
 
-// //-----------------------Filter move details-----------------------
-// const filterMove = async (req: Request, res: Response): Promise<any> => {
-//   try {
-//     const { body } = req;
-//     const { search } = body;
-//     let condition: any = {
-//       $and: []
-//     };
-//     if (search) {
-//       condition.$and.push({
-//         $or: [
-//           {
-//             title: {
-//               $regex: new RegExp(search.trim(), "i")
-//             }
-//           },
-//           {
-//             description: {
-//               $regex: new RegExp(search.trim(), "i")
-//             }
-//           },
-//           {
-//             tags: {
-//               $regex: new RegExp(search.trim(), "i")
-//             }
-//           }
-//         ]
-//       });
-//     }
-//     const searchData: Document | any | null = MoveModel.find({ condition });
-//     console.log(">>>", searchData);
-//   } catch (error) {
-//     console.log(error);
-//     return res.status(500).send({
-//       message: error.message
-//     });
-//   }
-// };
+//-----------------------Filter move details-----------------------
+const filterMove = async (req: Request, res: Response): Promise<any> => {
+  try {
+    const { query } = req;
+    const { search, setId } = query;
+    let searchData: Document | any | null;
+    let condition: any = {
+      $and: []
+    };
+    condition.$and.push({
+      isDeleted: false,
+      setId: setId
+    });
+
+    if (search) {
+      condition.$and.push({
+        $or: [
+          {
+            title: {
+              $regex: new RegExp(search.trim(), "i")
+            }
+          },
+          {
+            description: {
+              $regex: new RegExp(search.trim(), "i")
+            }
+          },
+          {
+            tags: {
+              $regex: new RegExp(search.trim(), "i")
+            }
+          }
+        ]
+      });
+      searchData = await MoveModel.find(condition);
+    }
+
+    return res.status(200).json({
+      message: "Move has been searched successfully",
+      data: searchData
+    });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).send({
+      message: error.message
+    });
+  }
+};
 
 export {
   downloadVideo,
@@ -540,5 +556,6 @@ export {
   isStarredMove,
   deleteMove,
   transferMove,
-  createMove
+  createMove,
+  filterMove
 };

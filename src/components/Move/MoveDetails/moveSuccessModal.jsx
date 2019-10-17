@@ -5,22 +5,22 @@ import {
   CardHeader,
   Modal,
   ModalBody,
-  Button,
+  Button
 } from "reactstrap";
 
 // core components
 class MoveSuccessModal extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {
-    };
+    this.state = {};
   }
 
   /**
    *
    */
   render() {
-    const { isMoveSuccessModal } = this.props
+    const { isMoveSuccessModal, moveUrlDetails } = this.props;
+
     return (
       <>
         <Modal
@@ -33,7 +33,10 @@ class MoveSuccessModal extends React.Component {
                 <div className="set-content-block w-100">
                   <CardHeader className="">
                     <div className="content-header set-header flex-column">
-                      <span className="content-title"> your move has been created!</span>
+                      <span className="content-title">
+                        {" "}
+                        your move has been created!
+                      </span>
                     </div>
                   </CardHeader>
                   <CardBody className="">
@@ -42,14 +45,29 @@ class MoveSuccessModal extends React.Component {
                         <i className="fa fa-play" aria-hidden="true"></i>
                       </span>
                     </div>
-                    <p className="font-weight-bold mt-3 text-center h5">Would you like to create another Move from the same video?</p>
+                    <p className="font-weight-bold mt-3 text-center h5">
+                      Would you like to create another Move from the same video?
+                    </p>
                     <div className="text-center mt-4">
-                      <Button 
-                      onClick={this.props.handleMoveSuccessModal} 
-                      className="btn-line-black"
-                      color=" "
-                      >Yes create another</Button>
-                      <Button onClick={this.props.redirectToSetDetails} className="btn-black" color=" ">No i'am done</Button>
+                      <Button
+                        onClick={() =>
+                          // this.props.handleMoveSuccessModal(MoveDetails.moveURL)
+                          this.props.createAnother(moveUrlDetails.moveURL)
+                        }
+                        className="btn-line-black"
+                        color=" "
+                      >
+                        Yes create another
+                      </Button>
+                      <Button
+                        onClick={() =>
+                          this.props.handleSetDetails(moveUrlDetails.setId)
+                        }
+                        className="btn-black"
+                        color=" "
+                      >
+                        No i'am done
+                      </Button>
                     </div>
                   </CardBody>
                 </div>
@@ -62,4 +80,4 @@ class MoveSuccessModal extends React.Component {
   }
 }
 
-export default MoveSuccessModal
+export default MoveSuccessModal;

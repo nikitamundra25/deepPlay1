@@ -152,7 +152,7 @@ class AddSetModal extends React.Component {
                   onChange={this.handleSelect}
                   value={selectedSet}
                 >
-                  <option value="yourSet">Your Sets</option>
+                  <option value="yourSet">Folder Sets</option>
                   <option value="allSet">All Sets</option>
                 </Input>
               </FormGroup>

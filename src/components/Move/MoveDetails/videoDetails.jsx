@@ -1,40 +1,32 @@
 import React from "react";
-import {
-  Col,
-  FormGroup,
-  Label,
-  FormFeedback,
-  InputGroup
-} from "reactstrap";
-import CreatableSelect from 'react-select/creatable';
+import { Col, FormGroup, Label, FormFeedback, InputGroup } from "reactstrap";
+import CreatableSelect from "react-select/creatable";
 import "react-tagsinput/react-tagsinput.css";
 import AsyncSelect from "react-select/async";
 import "./index.scss";
 const colourOptions = [
   {
-    label:"Red",
+    label: "Red",
     value: "red"
   },
   {
-    label:"Green",
+    label: "Green",
     value: "Green"
   },
   {
-    label:"Yellow",
+    label: "Yellow",
     value: "Yellow"
   },
   {
-    label:"Blue",
+    label: "Blue",
     value: "Blue"
   }
-]
+];
 // core components
 class VideoDetails extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {
-
-    };
+    this.state = {};
   }
   getDetails = () => {
     const { tags, selectSetOptions } = this.props;
@@ -64,6 +56,8 @@ class VideoDetails extends React.Component {
         value: recentSetAdded._id
       };
     }
+    
+
     return (
       <>
         <Col md={"6"} className="trim-video-text">
@@ -76,7 +70,7 @@ class VideoDetails extends React.Component {
           </div>
           <FormGroup className="flex-fill flex-column mt-3 input-w">
             {/* add tag-input-wrap class for tagInput design  */}
-            <Label className="">Add tag and press enter for separate</Label>
+            <Label className="mt-2">Add tag and press enter for separate</Label>
             <div className="w-100 tag-input-wrap search-select-wrap">
               {/* <TagsInput
                 value={tags}
@@ -89,27 +83,29 @@ class VideoDetails extends React.Component {
                 onChange={this.props.handleTagChange}
                 value={tags}
                 options={colourOptions}
-              // options={colourOptions}
+                // options={colourOptions}
               />
             </div>
           </FormGroup>
           <FormGroup className="flex-fill flex-column mt-3">
             {/* add search-select class for search select design  */}
-            <Label>select sets</Label>
+            <Label className="mt-2">Select sets</Label>
             <InputGroup>
               <div className="w-100 search-select-wrap">
                 <AsyncSelect
                   loadOptions={this.loadSets}
                   isClearable={selectSetOptions.value ? true : false}
                   defaultOptions={defaultSetoptions}
-                  className={errors && errors.setId ? "is-invalid form-control search-input-wrap" : ""}
+                  className={
+                    errors && errors.setId
+                      ? "is-invalid form-control search-input-wrap"
+                      : ""
+                  }
                   onChange={e => this.props.handleInputChange(e)}
                   value={recentAddedSet ? recentAddedSet : selectSetOptions}
                 />
                 <FormFeedback>
-                  {
-                    errors && errors.setId ? errors.setId : null
-                  }
+                  {errors && errors.setId ? errors.setId : null}
                 </FormFeedback>
               </div>
             </InputGroup>
