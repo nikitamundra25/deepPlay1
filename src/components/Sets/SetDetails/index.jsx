@@ -22,7 +22,8 @@ import {
   deleteMovesRequest,
   transferMovesRequest,
   loadVideoDataRequest,
-  searchMoveRequest
+  searchMoveRequest,
+  addTagsRequest
 } from "../../../actions";
 import SharableLinkModal from "../../comman/shareableLink/SharableLink";
 import { AppRoutes } from "../../../config/AppRoutes";
@@ -54,9 +55,9 @@ class SetDetails extends React.Component {
   componentDidMount = () => {
     const location = this.props.location;
     const pathName = location.pathname.split("/");
-    const { moveReducer } = this.props
+    const { moveReducer } = this.props;
     const { movesOfSet } = moveReducer;
-    const isStarred = location.search.split(":")
+    const isStarred = location.search.split(":");
     this.props.getSetDetailsRequest({ setId: pathName[3] });
     this.props.getMovesOfSetRequest({
       setId: pathName[3],
@@ -77,8 +78,8 @@ class SetDetails extends React.Component {
     const { location: currentLocation } = this.props;
     const { search } = location;
     const { search: currentSearch } = currentLocation;
-    const isStarred = currentSearch.split(":")
-    
+    const isStarred = currentSearch.split(":");
+
     if (search !== currentSearch) {
       this.props.getMovesOfSetRequest({
         setId: this.state.setIdPathName,
@@ -87,8 +88,7 @@ class SetDetails extends React.Component {
         isStarred: isStarred[1]
       });
     }
-
-  }
+  };
   onTogglePublicAccess = isPublic => {
     const location = this.props.location;
     const pathName = location.pathname.split("/");
@@ -171,27 +171,30 @@ class SetDetails extends React.Component {
     this.props.UpdateSetRequest(data);
   };
   /*
-  */
+   */
   handleShowVideo = videoIndex => {
     this.setState({
       showVideoIndex: videoIndex
     });
   };
   /*
-  */
+   */
   handleVideoModal = (moveURL, index) => {
     const { modelInfoReducer } = this.props;
     const { modelDetails } = modelInfoReducer;
-    this.setState({
-      showVideo: moveURL,
-      showVideoIndex: index
-    }, () => {
-      this.props.modelOperate({
-        modelDetails: {
-          isVideoModalOpen: !modelDetails.isVideoModalOpen
-        }
-      });
-    })
+    this.setState(
+      {
+        showVideo: moveURL,
+        showVideoIndex: index
+      },
+      () => {
+        this.props.modelOperate({
+          modelDetails: {
+            isVideoModalOpen: !modelDetails.isVideoModalOpen
+          }
+        });
+      }
+    );
   };
   /*
    */
@@ -213,6 +216,10 @@ class SetDetails extends React.Component {
     );
   };
 
+  addTagstoMove = data => {
+    this.props.addTagsRequest(data);
+  };
+
   render() {
     const {
       setReducer,
@@ -226,10 +233,27 @@ class SetDetails extends React.Component {
     } = this.props;
     const { setDetails } = setReducer;
     const { modelDetails } = modelInfoReducer;
-    const { movesOfSet, isMoveofSetLoading, videoData, totalMoves, searchMoveResult, isMoveSearchLoading } = moveReducer;
+    const {
+      movesOfSet,
+      isMoveofSetLoading,
+      videoData,
+      totalMoves,
+      searchMoveResult,
+      isMoveSearchLoading
+    } = moveReducer;
     const { userEncryptedInfo } = shareLinkReducer;
-    const { sharableLinkModalOpen, createSetModalOpen, isVideoModalOpen } = modelDetails;
-    const { show, setIndex, setIdPathName, showVideo, showVideoIndex } = this.state;
+    const {
+      sharableLinkModalOpen,
+      createSetModalOpen,
+      isVideoModalOpen
+    } = modelDetails;
+    const {
+      show,
+      setIndex,
+      setIdPathName,
+      showVideo,
+      showVideoIndex
+    } = this.state;
 
     return (
       <>
@@ -291,7 +315,7 @@ class SetDetails extends React.Component {
           </div>
           {!isMoveofSetLoading ? (
             <>
-              {movesOfSet && movesOfSet.length ?
+              {movesOfSet && movesOfSet.length ? (
                 <WebmView
                   movesOfSet={movesOfSet}
                   isVideoModalOpen={isVideoModalOpen}
@@ -307,8 +331,8 @@ class SetDetails extends React.Component {
                   showVideoIndex={showVideoIndex}
                   loadVideoDataRequest={loadVideoDataRequest}
                   {...this.props}
-                /> : null
-              }
+                />
+              ) : null}
               <Card className="video-slider-section">
                 <div className="step-2">
                   <MoveList
@@ -330,6 +354,7 @@ class SetDetails extends React.Component {
                     searchMoveResult={searchMoveResult}
                     totalMoves={totalMoves}
                     modelOperate={modelOperate}
+                    addTagstoMove={this.addTagstoMove}
                     isMoveSearchLoading={isMoveSearchLoading}
                     getMovesOfSetRequest={getMovesOfSetRequest}
                     searchMove={data => this.props.searchMoveRequest(data)}
@@ -339,11 +364,10 @@ class SetDetails extends React.Component {
               </Card>
             </>
           ) : (
-              <Col md="12">
-                <Loader />
-              </Col>
-            )
-          }
+            <Col md="12">
+              <Loader />
+            </Col>
+          )}
         </div>
         <SharableLinkModal
           modal={sharableLinkModalOpen}
@@ -393,6 +417,7 @@ const mapDispatchToProps = dispatch => ({
   getSetList: data => {
     dispatch(getAllSetRequest(data));
   },
+  addTagsRequest: data => dispatch(addTagsRequest(data)),
   loadVideoDataRequest: data => dispatch(loadVideoDataRequest(data))
 });
 export default connect(

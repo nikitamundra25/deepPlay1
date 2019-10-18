@@ -273,7 +273,13 @@ const transferMoveLogic = createLogic({
           }
         })
       );
-      dispatch(getMovesOfSetRequest({ setId: action.payload.previousSetId, page: 1, isInfiniteScroll: false }));
+      dispatch(
+        getMovesOfSetRequest({
+          setId: action.payload.previousSetId,
+          page: 1,
+          isInfiniteScroll: false
+        })
+      );
       dispatch(getSetDetailsRequest({ setId: action.payload.previousSetId }));
       done();
     }
@@ -351,6 +357,42 @@ const searchMoveLogic = createLogic({
     }
   }
 });
+
+//Add Tags
+const addTagsLogic = createLogic({
+  type: MovesAction.ADD_TAGS_REQUEST,
+  async process({ action }, dispatch, done) {
+    let api = new ApiHelper();
+    let result = await api.FetchFromServer(
+      "move",
+      "/add-tags-move",
+      "PUT",
+      true,
+      undefined,
+      action.payload
+    );
+    if (result.isError) {
+      if (!toast.isActive(toastId)) {
+        toastId = toast.error(result.messages[0]);
+      }
+      done();
+      return;
+    } else {
+      if (!toast.isActive(toastId)) {
+        toastId = toast.success(result.messages[0]);
+      }
+      dispatch(
+        modelOpenRequest({
+          modelDetails: {
+            addTagModalOpen: false
+          }
+        })
+      );
+      done();
+    }
+  }
+});
+
 export const MoveLogics = [
   downloadVideoLogic,
   getMovesOfSetLogic,
@@ -360,5 +402,6 @@ export const MoveLogics = [
   deleteMoveLogic,
   transferMoveLogic,
   createAnotherMoveLogic,
-  searchMoveLogic
+  searchMoveLogic,
+  addTagsLogic
 ];
