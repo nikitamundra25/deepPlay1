@@ -60,7 +60,7 @@ class CustomControls extends React.Component {
     return (
       <>
         <Row>
-          <Col lg="3" md="6">
+          <Col lg="3" lg="6">
             {/* Checkboxes */}
             <div className="mb-3">
               <small className="text-uppercase font-weight-bold">

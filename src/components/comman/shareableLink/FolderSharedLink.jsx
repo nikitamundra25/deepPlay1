@@ -123,7 +123,7 @@ class FolderSharedLink extends React.Component {
                 setListItem.map((list, i) => {
                   return (
                     <Col
-                      md="6"
+                      lg="6"
                       key={i}
                       onClick={() => this.handleSetDetails(list._id)}
                       className={"cursor_pointer"}

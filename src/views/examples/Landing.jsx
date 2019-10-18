@@ -250,14 +250,14 @@ class Landing extends React.Component {
           <section className="section section-lg">
             <Container>
               <Row className="row-grid align-items-center">
-                <Col className="order-md-2" md="6">
+                <Col className="order-md-2" lg="6">
                   <img
                     alt="..."
                     className="img-fluid floating"
                     src={require("assets/img/theme/promo-1.png")}
                   />
                 </Col>
-                <Col className="order-md-1" md="6">
+                <Col className="order-md-1" lg="6">
                   <div className="pr-md-5">
                     <div className="icon icon-lg icon-shape icon-shape-success shadow rounded-circle mb-5">
                       <i className="ni ni-settings-gear-65" />
@@ -327,7 +327,7 @@ class Landing extends React.Component {
           <section className="section bg-secondary">
             <Container>
               <Row className="row-grid align-items-center">
-                <Col md="6">
+                <Col lg="6">
                   <Card className="bg-default shadow border-0">
                     <CardImg
                       alt="..."
@@ -362,7 +362,7 @@ class Landing extends React.Component {
                     </blockquote>
                   </Card>
                 </Col>
-                <Col md="6">
+                <Col lg="6">
                   <div className="pl-md-5">
                     <div className="icon icon-lg icon-shape icon-shape-warning shadow rounded-circle mb-5">
                       <i className="ni ni-settings" />
@@ -398,7 +398,7 @@ class Landing extends React.Component {
           <section className="section pb-0 bg-gradient-warning">
             <Container>
               <Row className="row-grid align-items-center">
-                <Col className="order-lg-2 ml-lg-auto" md="6">
+                <Col className="order-lg-2 ml-lg-auto" lg="6">
                   <div className="position-relative pl-md-5">
                     <img
                       alt="..."
@@ -512,7 +512,7 @@ class Landing extends React.Component {
                 </Col>
               </Row>
               <Row>
-                <Col className="mb-5 mb-lg-0" lg="3" md="6">
+                <Col className="mb-5 mb-lg-0" lg="3" lg="6">
                   <div className="px-4">
                     <img
                       alt="..."
@@ -554,7 +554,7 @@ class Landing extends React.Component {
                     </div>
                   </div>
                 </Col>
-                <Col className="mb-5 mb-lg-0" lg="3" md="6">
+                <Col className="mb-5 mb-lg-0" lg="3" lg="6">
                   <div className="px-4">
                     <img
                       alt="..."
@@ -598,7 +598,7 @@ class Landing extends React.Component {
                     </div>
                   </div>
                 </Col>
-                <Col className="mb-5 mb-lg-0" lg="3" md="6">
+                <Col className="mb-5 mb-lg-0" lg="3" lg="6">
                   <div className="px-4">
                     <img
                       alt="..."
@@ -640,7 +640,7 @@ class Landing extends React.Component {
                     </div>
                   </div>
                 </Col>
-                <Col className="mb-5 mb-lg-0" lg="3" md="6">
+                <Col className="mb-5 mb-lg-0" lg="3" lg="6">
                   <div className="px-4">
                     <img
                       alt="..."

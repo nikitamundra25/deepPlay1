@@ -358,7 +358,7 @@ class RecentFolderComponent extends React.Component {
               // eslint-disable-next-line
               setOfFolder.map((list, i) => {
                 return (
-                  <Col md="6" key={i}>
+                  <Col lg="6" key={i}>
                     <div
                       className="tile-wrap card"
                       onMouseLeave={() => this.closePopOver()}

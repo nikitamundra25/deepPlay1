@@ -80,7 +80,7 @@ class Dashboard extends React.Component {
                 recentSets.slice(0, 4).map((set, i) => {
                   return (
                     <Col
-                      md="6"
+                      lg="6"
                       key={i}
                       onClick={() => this.handleSetDetails(set._id)}
                       className="cursor_pointer"

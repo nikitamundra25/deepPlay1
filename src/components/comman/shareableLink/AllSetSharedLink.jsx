@@ -91,7 +91,7 @@ class AllSetSharedLink extends React.Component {
                 allSetList.map((list, i) => {
                   return (
                     <Col
-                      md="6"
+                      lg="6"
                       key={i}
                       onClick={() => this.handleSetDetails(list._id)}
                       className={"cursor_pointer"}

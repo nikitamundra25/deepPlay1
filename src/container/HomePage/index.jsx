@@ -70,7 +70,7 @@ class HomePage extends React.Component {
       <Container>
         <section className="home-video-section">
           <Row className="">
-            <Col md="6" className="d-flex flex-column justify-content-between ">
+            <Col lg="6" className="d-flex flex-column justify-content-between ">
               <div className="banner-text">
                 <h3 className="banner-heading">
                   Deconstruct Movements to Accelerate Learning
@@ -95,7 +95,7 @@ class HomePage extends React.Component {
                 </Button>
               </div>
             </Col>
-            <Col md="6">
+            <Col lg="6">
               {/* <iframe width="560" title={"Dance"} height="315" src="https://www.youtube.com/embed/nrDtcsyd-U4" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe> */}
               <div className="d-flex video-add-banner justify-content-center align-items-center">
                 <span className="play-ic-wrap">

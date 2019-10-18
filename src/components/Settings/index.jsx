@@ -294,7 +294,7 @@ class SettingComponent extends Component {
 
                     <Form className="form-wrap settingForm">
                       <Row>
-                        <Col md="6">
+                        <Col lg="6">
                           <FormGroup>
                             <Label for="firstName">First Name</Label>
                             <Input
@@ -313,7 +313,7 @@ class SettingComponent extends Component {
                             ) : null}
                           </FormGroup>
                         </Col>
-                        <Col md="6">
+                        <Col lg="6">
                           <FormGroup>
                             <Label for="lastName">Last Name</Label>
                             <Input
@@ -351,7 +351,7 @@ class SettingComponent extends Component {
                             />
                           </FormGroup>
                         </Col>
-                        {/* <Col md="6">
+                        {/* <Col lg="6">
                       <FormGroup>
                         <Label for="password">Password</Label>
                         <Input
@@ -376,7 +376,7 @@ class SettingComponent extends Component {
                     <div className="account-type-wrap">
                       <Form className="form-wrap">
                         <Row>
-                          <Col md="6">
+                          <Col lg="6">
                             <FormGroup className="custom-control custom-radio mb-3 ">
                               <Input
                                 className="custom-control-input"
@@ -395,7 +395,7 @@ class SettingComponent extends Component {
                               </Label>
                             </FormGroup>
                           </Col>
-                          <Col md="6" className="text">
+                          <Col lg="6" className="text">
                             <FormGroup className="custom-control custom-radio mb-3 ">
                               <Input
                                 className="custom-control-input"

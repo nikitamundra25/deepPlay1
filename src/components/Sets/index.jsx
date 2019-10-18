@@ -134,7 +134,7 @@ class SetComponent extends React.Component {
               // eslint-disable-next-line
               allSetList.map((setList, i) => {
                 return (
-                  <Col md="6" key={i}>
+                  <Col lg="6" key={i}>
                     <div
                       className="tile-wrap card"
                       onMouseLeave={() => this.closePopOver()}
