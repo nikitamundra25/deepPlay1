@@ -114,7 +114,7 @@ class ChangePassword extends Component {
             <CardBody className="">
               <div className="create-set-tile">
                 <Form
-                  className="url-update-wrap"
+                  className="url-update-wrap form-wrap settingForm"
                   onSubmit={this.changePassword}
                 >
                   <Row>

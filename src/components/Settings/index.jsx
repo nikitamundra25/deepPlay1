@@ -193,7 +193,7 @@ class SettingComponent extends Component {
         <div className="setting-section">
           <div className="page-body">
             <div className="content-header ">
-              <span className="content-title">SETTINGS</span>
+              <span className="content-title">Settings</span>
             </div>
             {!isprofileInfoLoading ? (
               <>

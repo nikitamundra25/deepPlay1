@@ -302,7 +302,7 @@ class MoveDetails extends React.Component {
       <>
         <div className="create-set-section step-2 ">
           <Card className="w-100">
-            <CardBody>
+            <CardBody className="p-0">
               <div>
                 <span
                   onClick={() => {
@@ -350,7 +350,9 @@ class MoveDetails extends React.Component {
                         />
                       </>
                     ) : (
+                    <div className="video-loader-wrap">
                       <Loader />
+                      </div>
                     )}
                   </Row>
                   <FrameDetails
