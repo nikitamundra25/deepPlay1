@@ -6,7 +6,6 @@ import moment from "moment";
 class ViewInfoModal extends React.Component {
   render() {
     const { modal, handleOpen, videoData, videoDimentions } = this.props;
-    console.log("videoData", videoData);
 
     return (
       <div>
