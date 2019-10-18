@@ -309,7 +309,7 @@ const updateMoveDetailsAndTrimVideo = async (
     const { timer, moveId, title, description, tags, setId } = body;
     const result: Document | null | any = await MoveModel.findById(moveId);
     if (result) {
-      let videoFile: String 
+      let videoFile: String |any 
       if (IsProductionMode) {
         videoFile = path.join(
           __dirname,
