@@ -195,6 +195,7 @@ const getMoveBySetId = async (req: Request, res: Response): Promise<any> => {
         isDeleted: false,
         isStarred: true
       })
+        .populate("setId")
         .skip(pageNumber)
         .limit(limitNumber);
     } else {
@@ -202,16 +203,20 @@ const getMoveBySetId = async (req: Request, res: Response): Promise<any> => {
         setId: query.setId,
         isDeleted: false
       })
+        .populate("setId")
         .skip(pageNumber)
         .limit(limitNumber);
     }
-
+    const moveList: Document | any | null = await MoveModel.populate(
+      movesData,
+      { path: "setId.folderId" }
+    );
     const totalMoves: Document | any | null = await MoveModel.count({
       setId: query.setId,
       isDeleted: false
     });
     return res.status(200).json({
-      movesData: movesData,
+      movesData: moveList,
       totalMoves: totalMoves
     });
   } catch (error) {
@@ -309,18 +314,11 @@ const updateMoveDetailsAndTrimVideo = async (
     const { timer, moveId, title, description, tags, setId } = body;
     const result: Document | null | any = await MoveModel.findById(moveId);
     if (result) {
-      let videoFile: String 
+      let videoFile: String;
       if (IsProductionMode) {
-        videoFile = path.join(
-          __dirname,
-          result.videoUrl
-        );
+        videoFile = path.join(__dirname, result.videoUrl);
       } else {
-        videoFile = path.join(
-          __basedir,
-          "..",
-          result.videoUrl
-        );
+        videoFile = path.join(__basedir, "..", result.videoUrl);
       }
       cloudinary.v2.uploader.upload(
         videoFile,
