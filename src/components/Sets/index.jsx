@@ -139,10 +139,15 @@ class SetComponent extends React.Component {
                       className="tile-wrap card"
                       onMouseLeave={() => this.closePopOver()}
                     >
-                      <div className="cotent-tile d-flex content-with-tip content-with-img">
+                      <div className="cotent-tile d-flex content-with-tip "
+                     
+                      >
+                           <div className="d-flex content-with-img w-100"
+                             onClick={() => this.handleSetDetails(setList._id)}
+                           >
                         <div
                           className="cotent-text-tile cursor_pointer "
-                          onClick={() => this.handleSetDetails(setList._id)}
+                         
                         >
                           <div className="content-heading-tile d-flex">
                             {" "}
@@ -186,7 +191,9 @@ class SetComponent extends React.Component {
                             }}
                           /> */}
                           </div>
+                        
                         ) : null}
+                          </div>
                         <div
                           onMouseOver={() => this.showPopOver(i, show)}
                           className="tooltip-btn-wrap right-btn-tip"

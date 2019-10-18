@@ -173,8 +173,8 @@ class SetSharedLink extends React.Component {
               <section className="play-list-collection set-detail-section">
                 <Row>
                   <Col md="12">
-                    <div class="content-header mt-3 mb-2">
-                      <span class="content-title">Moves in this set</span>
+                    <div className="content-header mt-3 mb-2">
+                      <span className="content-title">Moves in this set</span>
                       <div className="set-detail-right-section">
                         <ButtonGroup size="sm" className="mr-2">
                           <Button

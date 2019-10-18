@@ -65,7 +65,7 @@ class Dashboard extends React.Component {
             <span className="content-title ">Recent sets</span>
             {recentSets && recentSets.length > 4 ? (
               <span
-                className="dashboard-right-content cursor_pointer font-weight-bold"
+                className="dashboard-right-content cursor_pointer font-weight-bold view-all-btn"
                 onClick={() => this.handleViewAll("sets")}
               >
                 View all
@@ -197,7 +197,7 @@ class Dashboard extends React.Component {
             <span className="content-title">Recent folders</span>
             {recentFolders && recentFolders.length > 4 ? (
               <span
-                className="dashboard-right-content cursor_pointer font-weight-bold"
+                className="dashboard-right-content cursor_pointer font-weight-bold view-all-btn"
                 onClick={() => this.handleViewAll("folders")}
                 
               >

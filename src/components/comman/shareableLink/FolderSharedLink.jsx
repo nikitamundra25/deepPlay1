@@ -129,7 +129,8 @@ class FolderSharedLink extends React.Component {
                       className={"cursor_pointer"}
                     >
                       <div className="tile-wrap card">
-                        <div className="cotent-tile d-flex content-with-img">
+                        <div className="cotent-tile ">
+                        <div className="d-flex content-with-img w-100">
                           <div className="cotent-text-tile">
                             <div className="content-heading-tile">
                               <span>{list.title}</span>
@@ -153,6 +154,7 @@ class FolderSharedLink extends React.Component {
                                 '")'
                             }}
                           ></div>
+                          </div>
                         </div>
                       </div>
                     </Col>

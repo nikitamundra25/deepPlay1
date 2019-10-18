@@ -28,7 +28,7 @@ class AllSearchComponent extends React.Component {
 
         {
           !isSearchLoading ?
-            <div className="search-result-wrap cutom-scroll">
+            <div className="search-result-wrap cutom-scroll temprari-static-search">
               {
                 folderList && folderList.length ?
                   <div className="search-result-block  moves-block">
@@ -113,7 +113,7 @@ class AllSearchComponent extends React.Component {
                                 <div className="searhed-img-main-wrap">
                                   <div className="searched-img-wrap">
                                     <div className="searched-img">
-                                      <img src={"https://a10.gaanacdn.com/gn_img/albums/P7m3GNKqxo/7m3GjN47Kq/size_m.jpg"} alt={"folder"} />
+                                      <img src={emptySetIc} alt={"folder"} />
                                     </div>
                                   </div>
                                 </div>

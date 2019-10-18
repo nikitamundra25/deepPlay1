@@ -263,7 +263,7 @@ class WebmView extends Component {
                   >
                     <DropdownToggle color={" "}>
                       <span id="edit" className="cursor_pointer ml-4">
-                        <i class="fa fa-ellipsis-v" aria-hidden="true"></i>
+                        <i className="fa fa-ellipsis-v" aria-hidden="true"></i>
                       </span>
                     </DropdownToggle>
                     <DropdownMenu>
@@ -374,10 +374,10 @@ class WebmView extends Component {
                       <div className="volume-up-down control-tile">
                         <span onClick={this.toggleMute}>
                           {isMuted ? (
-                            <i class="fas fa-volume-mute"></i>
+                            <i className="fas fa-volume-mute"></i>
                           ) : audioSpeed ? (
                             audioSpeed > 0.6 ? (
-                              <i class="fas fa-volume-up"></i>
+                              <i className="fas fa-volume-up"></i>
                             ) : (
                                 <i class="fas fa-volume-down"></i>
                               )
