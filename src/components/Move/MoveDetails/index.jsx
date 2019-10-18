@@ -115,7 +115,7 @@ class MoveDetails extends React.Component {
         allSetList.map(data => {
           if (setId) {
             if (setId === data._id) {
-               (selectOption = {
+              (selectOption = {
                 label: data.title,
                 value: data._id
               });
@@ -130,9 +130,9 @@ class MoveDetails extends React.Component {
         selectSetOptions: selectOption
           ? selectOption
           : {
-              label: "Type to select sets",
-              value: ""
-            }
+            label: "Type to select sets",
+            value: ""
+          }
       });
     }
   };
@@ -286,6 +286,7 @@ class MoveDetails extends React.Component {
     const { modelDetails } = modelInfoReducer;
     const { isDescriptionModalOpen, isMoveSuccessModal } = modelDetails;
     const { moveDetails, isSavingWebM, tagsList, moveUrlDetails } = moveReducer;
+    const { frames, videoMetaData } = moveDetails || {};
     const {
       timer,
       title,
@@ -317,52 +318,54 @@ class MoveDetails extends React.Component {
               {isSavingWebM ? (
                 <Loader />
               ) : (
-                <>
-                  <Row className={"mt-3"}>
-                    {moveDetails && moveDetails.videoUrl ? (
-                      <>
-                        <VideoView
-                          moveReducer={moveReducer}
-                          handleChange={this.handleChange}
-                          handleDesriptionModal={this.handleDesriptionModal}
-                          description={description}
-                          timer={timer}
-                          title={title}
-                          videoDuration={data =>
-                            this.setState({
-                              videoDuration: data.timeDuration,
-                              videoMaxDuration: data.videoMaxDuration
-                            })
-                          }
-                        />
-                        <VideoDetails
-                          setReducer={setReducer}
-                          isDescriptionModalOpen={isDescriptionModalOpen}
-                          selectSetOptions={selectSetOptions}
-                          handleChange={this.handleChange}
-                          handleInputChange={this.handleInputChange}
-                          errors={errors}
-                          handleTagChange={this.handleTagChange}
-                          tags={tags}
-                          setId={moveDetails ? moveDetails.setId : null}
-                          tagsList={tagsList}
-                          ref={this.videoDetails}
-                        />
-                      </>
-                    ) : (
-                    <div className="video-loader-wrap">
-                      <Loader />
-                      </div>
-                    )}
-                  </Row>
-                  <FrameDetails
-                    videoDuration={videoDuration || []}
-                    videoMaxDuration={videoMaxDuration || 0}
-                    onTimerChange={this.onTimerChange}
-                    completeEditing={this.completeEditing}
-                  />
-                </>
-              )}
+                  <>
+                    <Row className={"mt-3"}>
+                      {moveDetails && moveDetails.videoUrl ? (
+                        <>
+                          <VideoView
+                            moveReducer={moveReducer}
+                            handleChange={this.handleChange}
+                            handleDesriptionModal={this.handleDesriptionModal}
+                            description={description}
+                            timer={timer}
+                            title={title}
+                            videoDuration={data =>
+                              this.setState({
+                                videoDuration: data.timeDuration,
+                                videoMaxDuration: data.videoMaxDuration
+                              })
+                            }
+                          />
+                          <VideoDetails
+                            setReducer={setReducer}
+                            isDescriptionModalOpen={isDescriptionModalOpen}
+                            selectSetOptions={selectSetOptions}
+                            handleChange={this.handleChange}
+                            handleInputChange={this.handleInputChange}
+                            errors={errors}
+                            handleTagChange={this.handleTagChange}
+                            tags={tags}
+                            setId={moveDetails ? moveDetails.setId : null}
+                            tagsList={tagsList}
+                            ref={this.videoDetails}
+                          />
+                        </>
+                      ) : (
+                          <div className="video-loader-wrap">
+                            <Loader />
+                          </div>
+                        )}
+                    </Row>
+                    <FrameDetails
+                      videoDuration={videoDuration || []}
+                      videoMaxDuration={videoMaxDuration || 0}
+                      frames={frames || []}
+                      videoMetaData={videoMetaData || {}}
+                      onTimerChange={this.onTimerChange}
+                      completeEditing={this.completeEditing}
+                    />
+                  </>
+                )}
             </CardBody>
           </Card>
         </div>

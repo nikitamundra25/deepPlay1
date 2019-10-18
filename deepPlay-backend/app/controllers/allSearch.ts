@@ -27,8 +27,6 @@ const allSearchModule = async (req: Request, res: Response): Promise<any> => {
       },
       (err: string, hits: Object | any) => {
         if (err) throw err;
-        console.log("FFFFFFFFFFFFFFFFFF", hits);
-
         return res.status(200).json({
           data: hits.hits,
           message: "This is algolia search data"

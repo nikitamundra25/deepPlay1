@@ -188,7 +188,7 @@ class MoveList extends React.Component {
   handleShowStarred = () => {
     const { location } = this.props;
     const { pathname } = location;
-    this.props.redirectTo(`${pathname}?isStarred:true`);
+    this.props.redirectTo(`${pathname}?isStarred=true`);
   };
 
   handleShowAll = () => {
@@ -198,7 +198,7 @@ class MoveList extends React.Component {
     this.setState({
       moveofSetList: movesList
     });
-    this.props.redirectTo(`${pathname}?isStared:false`);
+    this.props.redirectTo(`${pathname}?isStared=false`);
   };
 
   handleInputChange = e => {
@@ -241,7 +241,7 @@ class MoveList extends React.Component {
       moveIdToAddTag
     } = this.state;
     const location = this.props.location;
-    const isStarred = location.search.split(":")
+    const isStarred = location.search.split("=")
     return (
       <section className="play-list-collection set-detail-section">
         <InfiniteScroll
@@ -332,7 +332,8 @@ class MoveList extends React.Component {
                             this.setState({
                               selectedMoves: [],
                               selectedMoveIds: [],
-                              isVideoChecked: false
+                              isVideoChecked: false,
+                              isVideoModalOpen: true
                             })
                           }
                         >

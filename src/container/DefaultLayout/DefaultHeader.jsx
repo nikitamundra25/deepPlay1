@@ -94,9 +94,9 @@ class DefaultHeader extends React.Component {
     });
   };
 
-  openSearch = () =>{
+  openSearch = () => {
     this.setState({
-      open : !this.state.open
+      open: !this.state.open
     })
   }
 
@@ -141,8 +141,6 @@ class DefaultHeader extends React.Component {
       createSetOpen
     } = modelDetails;
     const { isUserLoggedIn, path, search, open } = this.state;
-    console.log("open",open);
-    
     const profiledata =
       profileInfoReducer && profileInfoReducer.profileInfo
         ? profileInfoReducer.profileInfo
@@ -224,12 +222,12 @@ class DefaultHeader extends React.Component {
                               </DropdownMenu>
                             </UncontrolledDropdown>
                           </Col>
-                          <Col className= "flex-fill header-search-main">
+                          <Col className="flex-fill header-search-main">
                             <FormGroup className="mb-0 header-search-wrap ">
                               <InputGroup className="" >
-                                <InputGroupAddon  addonType="prepend">
-                                  <span className="input-group-text header-input-group-text" onClick = {this.openSearch} >
-                                    <i 
+                                <InputGroupAddon addonType="prepend">
+                                  <span className="input-group-text header-input-group-text" onClick={this.openSearch} >
+                                    <i
                                       className="fa fa-search"
                                       aria-hidden="true"
                                     ></i>
@@ -237,7 +235,7 @@ class DefaultHeader extends React.Component {
                                 </InputGroupAddon>
 
                                 {/* input-open */}
-                                <span className= {open ? "search-input header-search-open " : "search-input header-search-close"} >
+                                <span className={open ? "search-input header-search-open " : "search-input header-search-close"} >
                                   <Input placeholder="Search" onChange={this.handleChange} value={search} name={"search"} type="text" autoComplete="off" />
                                 </span>
                                 {
@@ -248,6 +246,7 @@ class DefaultHeader extends React.Component {
                                       handleSearchEmpty={() => this.setState({
                                         search: ""
                                       })}
+                                      profiledata={profiledata}
                                       {...this.props}
                                     /> :
                                     null
@@ -320,15 +319,15 @@ class DefaultHeader extends React.Component {
                                         //   alt={"img"}
                                         // />
                                         <div
-                                        style={{
-                                          backgroundImage:
-                                            'url("' +
-                                            profileImageIc
-                                            +
-                                            '")'
-                                        }}
-                                        className="user-back-img-wrap"
-                                      ></div>
+                                          style={{
+                                            backgroundImage:
+                                              'url("' +
+                                              profileImageIc
+                                              +
+                                              '")'
+                                          }}
+                                          className="user-back-img-wrap"
+                                        ></div>
                                       )}
                                   </div>
                                   <div className="user-text">
