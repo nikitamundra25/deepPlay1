@@ -60,7 +60,7 @@ class VideoDetails extends React.Component {
 
     return (
       <>
-        <Col md={"6"} className="trim-video-text">
+        <Col lg={"6"} className="trim-video-text">
           <div>
             <div className={"font-weight-bold h4"}>Trim your video</div>
             <span>

@@ -110,7 +110,7 @@ class SetComponent extends React.Component {
       <div className="set-main-section">
         <div className="content-header">
           <span className="content-title">
-            <div className="main-title"> {" Your Sets"}</div>
+            <div className="main-title"> {" Sets"}</div>
             <div className="sub-title">
               Total sets {totalSets ? totalSets : "0"}
             </div>

@@ -72,7 +72,7 @@ class VideoView extends React.Component {
 
     return (
       <>
-        <Col md={"6"}>
+        <Col lg={"6"}>
           <FormGroup className="flex-fill flex-column video-title-wrap">
             <div className=" w-100">
               <InputGroup className={"move-title-wrap"}>

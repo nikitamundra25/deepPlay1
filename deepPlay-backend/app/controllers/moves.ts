@@ -314,7 +314,7 @@ const updateMoveDetailsAndTrimVideo = async (
     const { timer, moveId, title, description, tags, setId } = body;
     const result: Document | null | any = await MoveModel.findById(moveId);
     if (result) {
-      let videoFile: String;
+      let videoFile: String |any 
       if (IsProductionMode) {
         videoFile = path.join(__dirname, result.videoUrl);
       } else {
@@ -326,7 +326,8 @@ const updateMoveDetailsAndTrimVideo = async (
           start_offset: timer.min,
           end_offset: timer.max,
           resource_type: "video",
-          format: "webm"
+          format: "webm",
+          eager_async: true,
         },
         async function(error: any, moveData: any) {
           if (error) {
@@ -337,6 +338,8 @@ const updateMoveDetailsAndTrimVideo = async (
             });
           } else {
             console.log(">>>>>>>>>>>Success", result);
+            
+            fs.unlinkSync(videoFile);
             await MoveModel.updateOne(
               {
                 _id: result._id

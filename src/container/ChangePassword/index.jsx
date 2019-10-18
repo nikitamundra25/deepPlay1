@@ -96,21 +96,25 @@ class ChangePassword extends Component {
     const { isChangePasswordSuccess } = loginReducer;
 
     return (
-      <div className="create-set-section step-2 ">
-        <Card className="set-content-wrap">
-          <div className="set-content-block w-100">
+      <div className="create-set-section step-2 setting-section password-section">
+          <div className="page-body w-100">
+            <div className="content-header ">
+              <span className="content-title">Change password</span>
+            </div>
+        <Card className="set-content-wrap card-wrap ">
+          <div className="set-content-block w-100 h-100">
             <CardHeader className="">
-              <div className="content-header set-header flex-column">
+           
               <CardTitle className="card-heading mb-0 h5">
-                      Profile
+                      Password
                     </CardTitle> 
                     <div className="heading-divider"></div>
-              </div>
+              
             </CardHeader>
             <CardBody className="">
               <div className="create-set-tile">
                 <Form
-                  className="url-update-wrap"
+                  className="url-update-wrap form-wrap settingForm"
                   onSubmit={this.changePassword}
                 >
                   <Row>
@@ -195,6 +199,7 @@ class ChangePassword extends Component {
             </CardBody>
           </div>
         </Card>
+      </div>
       </div>
     );
   }
