@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Button, Col, Container, Card, Row } from 'reactstrap';
 import "./index.scss";
-import imgNotfound from "../../assets/img/404.svg"
+import imgNotfound from "../../assets/img/404.svg";
 class Page404Component extends Component {
   render() {
     const token = localStorage.getItem("token");

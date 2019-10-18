@@ -153,7 +153,6 @@ class CreateSetComponent extends React.Component {
               onClick={this.onCreateSet}
               color=" "
               className="btn btn-black"
-              disabled={!title}
             >
               {setDetails ? "Update Set" : "Create Set"}
             </Button>
@@ -163,7 +162,6 @@ class CreateSetComponent extends React.Component {
                 onClick={() => this.onCreateSet("addMove")}
                 color=" "
                 className="btn btn-black"
-                disabled={!title}
               >
                 Add a Move
               </Button>

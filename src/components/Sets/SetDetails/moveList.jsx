@@ -14,6 +14,8 @@ import TransferToModal from "../../Folders/FolderDetails/transferTo";
 import InfiniteScroll from 'react-infinite-scroll-component';
 import "./index.scss";
 import Loader from "components/comman/Loader/Loader";
+import blankStar from "../../../assets/img/star-line.svg";
+import AddTagModal from "./addTagsModal";
 
 // core components
 class MoveList extends React.Component {
@@ -31,7 +33,8 @@ class MoveList extends React.Component {
       isVideoModalOpen: true,
       setId: "",
       moveofSetList: this.props.movesOfSet,
-      search: ""
+      search: "",
+      moveIdToAddTag: ""
     };
   }
   handleVideoHoverLeave = () => {
@@ -145,14 +148,29 @@ class MoveList extends React.Component {
 
   openTransferToModal = (id, setId) => {
     const { modelInfoReducer } = this.props;
+    const { selectedMoveIds } = this.state;
     const { modelDetails } = modelInfoReducer;
     this.setState({
-      moveToTransfer: id,
-      setId: setId
+      moveToTransfer: selectedMoveIds.length ? selectedMoveIds : id,
+      setId: setId ? setId : this.props.setIdPathName
     });
     this.props.modelOperate({
       modelDetails: {
         transferToModalOpen: !modelDetails.transferToModalOpen
+      }
+    });
+  };
+
+  openAddTagsModal = id => {
+    const { modelInfoReducer } = this.props;
+    const { selectedMoveIds } = this.state;
+    const { modelDetails } = modelInfoReducer;
+    this.setState({
+      moveIdToAddTag: selectedMoveIds.length ? selectedMoveIds : id
+    });
+    this.props.modelOperate({
+      modelDetails: {
+        addTagModalOpen: !modelDetails.addTagModalOpen
       }
     });
   };
@@ -207,7 +225,7 @@ class MoveList extends React.Component {
       totalMoves
     } = this.props;
     const { modelDetails } = modelInfoReducer;
-    const { transferToModalOpen } = modelDetails;
+    const { transferToModalOpen, addTagModalOpen } = modelDetails;
     const {
       isVideoChecked,
       isSelectVideo,
@@ -219,7 +237,8 @@ class MoveList extends React.Component {
       isVideoModalOpen,
       page,
       moveofSetList,
-      search
+      search,
+      moveIdToAddTag
     } = this.state;
     const location = this.props.location;
     const isStarred = location.search.split(":")
@@ -243,7 +262,7 @@ class MoveList extends React.Component {
                 <div className="set-detail-right-section">
                   <ButtonGroup size="sm" className="mr-2">
                     <Button
-                      className={isStarred[0]?isStarred[1] === "false" ? "active" : "":"active"}
+                      className={isStarred[0] ? isStarred[1] === "false" ? "active" : "" : "active"}
                       color=" "
                       onClick={this.handleShowAll}
                     >
@@ -281,24 +300,44 @@ class MoveList extends React.Component {
                     <div class="content-title ">
                       <span className={"d-flex"}>
                         <ButtonGroup size="sm">
-                          <Button className=" " color=" ">mark star</Button>
-                          <Button className=" " color=" ">Add tags</Button>
-                          <Button className=" " color=" ">Transfer</Button>
-                          <Button className=" " color=" ">Remove</Button>
-                         
+                          <Button
+                            onClick={() => this.handleStarred()}
+                            className=" "
+                            color=" ">
+                            Mark star
+                          </Button>
+                          <Button
+                            onClick={() => this.openAddTagsModal()}
+                            className=" "
+                            color=" ">
+                            Add tags
+                            </Button>
+                          <Button
+                            onClick={() => this.openTransferToModal()}
+                            className=" "
+                            color=" ">
+                            Transfer
+                          </Button>
+                          <Button
+                            onClick={() => this.handleMoveDelete()}
+                            className=" "
+                            color=" ">
+                            Remove
+                          </Button>
+
                         </ButtonGroup>
                         <Button color=" "
-                            className="btn-black ml-2 move-close-btn"
-                            onClick={() =>
-                              this.setState({
-                                selectedMoves: [],
-                                selectedMoveIds: [],
-                                isVideoChecked: false
-                              })
-                            }
-                          >
-                            <i class="fa fa-times" aria-hidden="true" />
-                          </Button>
+                          className="btn-black ml-2 move-close-btn"
+                          onClick={() =>
+                            this.setState({
+                              selectedMoves: [],
+                              selectedMoveIds: [],
+                              isVideoChecked: false
+                            })
+                          }
+                        >
+                          <i class="fa fa-times" aria-hidden="true" />
+                        </Button>
                       </span>
 
                     </div>
@@ -403,7 +442,7 @@ class MoveList extends React.Component {
                               {video.isStarred ? (
                                 <img src={starIc} alt={"star"} />
                               ) : (
-                                  ""
+                                  <img src={blankStar} alt={"star"} />
                                 )}
                             </div>
                             <div className={"video-effect"}
@@ -416,7 +455,7 @@ class MoveList extends React.Component {
                               <video
                                 width={"100%"}
                                 id={`webm-video-${index}`}
-                                muted={false}
+                                muted={true}
                               >
                                 <source src={`${video.moveURL}`} type="video/webm" />
                               </video>
@@ -455,9 +494,15 @@ class MoveList extends React.Component {
                                       this.handleStarred(video._id, video.isStarred)
                                     }
                                   >
-                                    {video.isStarred ? "Unstar" : "Star"}
+                                    {video.isStarred ? "Unstar" : "Mark star"}
                                   </Button>
-                                  <Button color=" ">Add tags</Button>
+                                  <Button
+                                    onClick={() =>
+                                      this.openAddTagsModal(video._id)
+                                    }
+                                    color=" ">
+                                    Add tags
+                                  </Button>
                                   <Button
                                     color=" "
                                     onClick={() =>
@@ -495,6 +540,12 @@ class MoveList extends React.Component {
             transferMove={true}
             handleOpen={this.openTransferToModal}
             handleMove={this.handleMoveTransfer}
+          />
+          <AddTagModal
+            modal={addTagModalOpen}
+            handleOpen={this.openAddTagsModal}
+            moveIdToAddTag={moveIdToAddTag}
+            addTagstoMove={data => this.props.addTagstoMove(data)}
           />
         </InfiniteScroll>
       </section >

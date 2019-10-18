@@ -50,7 +50,7 @@ const downloadVideo = async (req: Request, res: Response): Promise<any> => {
       videoUrl: videoURL,
       userId: headToken.id,
       sourceUrl: videoURL,
-      isYoutubeUrl: false,
+      isYoutubeUrl: false
     });
     await moveResult.save();
     res.status(200).json({
@@ -113,7 +113,7 @@ const downloadYoutubeVideo = async (
           ytdl(body.url).pipe(
             (videoStream = fs.createWriteStream(originalVideoPath))
           );
-          videoStream.on("close", async function () {
+          videoStream.on("close", async function() {
             const moveResult: Document | any = new MoveModel({
               videoUrl: videoURL,
               sourceUrl: body.url,
@@ -179,7 +179,7 @@ const createMove = async (req: Request, res: Response): Promise<any> => {
 const getMoveBySetId = async (req: Request, res: Response): Promise<any> => {
   try {
     const { currentUser, query } = req;
-    const { page, limit } = query
+    const { page, limit } = query;
     let headToken: Request | any = currentUser;
     if (!headToken.id) {
       res.status(400).json({
@@ -188,30 +188,35 @@ const getMoveBySetId = async (req: Request, res: Response): Promise<any> => {
     }
     const pageNumber: number = ((parseInt(page) || 1) - 1) * (limit || 20);
     const limitNumber: number = parseInt(limit) || 20;
-    let movesData: Document | any
+    let movesData: Document | any;
     if (query.isStarred === "true") {
       movesData = await MoveModel.find({
         setId: query.setId,
         isDeleted: false,
         isStarred: true
       })
+        .populate("setId")
         .skip(pageNumber)
-        .limit(limitNumber)
+        .limit(limitNumber);
     } else {
       movesData = await MoveModel.find({
         setId: query.setId,
         isDeleted: false
       })
+        .populate("setId")
         .skip(pageNumber)
-        .limit(limitNumber)
+        .limit(limitNumber);
     }
-
+    const moveList: Document | any | null = await MoveModel.populate(
+      movesData,
+      { path: "setId.folderId" }
+    );
     const totalMoves: Document | any | null = await MoveModel.count({
       setId: query.setId,
       isDeleted: false
-    })
+    });
     return res.status(200).json({
-      movesData: movesData,
+      movesData: moveList,
       totalMoves: totalMoves
     });
   } catch (error) {
@@ -309,18 +314,11 @@ const updateMoveDetailsAndTrimVideo = async (
     const { timer, moveId, title, description, tags, setId } = body;
     const result: Document | null | any = await MoveModel.findById(moveId);
     if (result) {
-      let videoFile: String 
+      let videoFile: String |any 
       if (IsProductionMode) {
-        videoFile = path.join(
-          __dirname,
-          result.videoUrl
-        );
+        videoFile = path.join(__dirname, result.videoUrl);
       } else {
-        videoFile = path.join(
-          __basedir,
-          "..",
-          result.videoUrl
-        );
+        videoFile = path.join(__basedir, "..", result.videoUrl);
       }
       cloudinary.v2.uploader.upload(
         videoFile,
@@ -328,9 +326,10 @@ const updateMoveDetailsAndTrimVideo = async (
           start_offset: timer.min,
           end_offset: timer.max,
           resource_type: "video",
-          format: "webm"
+          format: "webm",
+          eager_async: true,
         },
-        async function (error: any, moveData: any) {
+        async function(error: any, moveData: any) {
           if (error) {
             console.log(">>>>>>>>>>>Error", error);
             return res.status(400).json({
@@ -339,6 +338,8 @@ const updateMoveDetailsAndTrimVideo = async (
             });
           } else {
             console.log(">>>>>>>>>>>Success", result);
+            
+            fs.unlinkSync(videoFile);
             await MoveModel.updateOne(
               {
                 _id: result._id
@@ -557,6 +558,36 @@ const filterMove = async (req: Request, res: Response): Promise<any> => {
   }
 };
 
+//------------------------Add Tags Single & Multiple--------------------------
+const addTagsInMove = async (req: Request, res: Response): Promise<any> => {
+  try {
+    const { body } = req;
+    const { tags, moveId } = body;
+    if (!moveId) {
+      res.status(400).json({
+        message: "MoveId not found"
+      });
+    }
+
+    await MoveModel.updateMany(
+      { _id: { $in: moveId } },
+      {
+        $set: {
+          tags: tags
+        }
+      }
+    );
+
+    return res.status(200).json({
+      message: "Tags have been added successfully!"
+    });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).send({
+      message: error.message
+    });
+  }
+};
 export {
   downloadVideo,
   getMoveBySetId,
@@ -569,5 +600,6 @@ export {
   deleteMove,
   transferMove,
   createMove,
-  filterMove
+  filterMove,
+  addTagsInMove
 };

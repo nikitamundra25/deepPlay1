@@ -150,7 +150,6 @@ class FolderModal extends React.Component {
               onClick={this.onCreateFolder}
               color=" "
               className="btn btn-black"
-              disabled={!title}
             >
               {folderDetails ? "Update Folder" : "Create Folder"}
             </Button>
