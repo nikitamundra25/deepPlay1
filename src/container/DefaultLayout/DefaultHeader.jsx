@@ -26,6 +26,7 @@ import logoutIcon from "../../assets/img/icons/logout.svg";
 import { AppConfig } from "../../config/Appconfig";
 import AllSearchComponent from "../../components/AllSearch";
 import CreateSetComponent from "../../components/Sets/createSet";
+import searchArrow from "../../assets/img/back-search.png";
 
 class DefaultHeader extends React.Component {
   constructor(props) {
@@ -157,7 +158,7 @@ class DefaultHeader extends React.Component {
       : profiledata ? profiledata.profileImage : ""
     return (
       <>
-        <header className="header-global theme-header ">
+        <header className="header-global theme-header dashboard-header" >
           <div className="theme-container">
             {/* <Navbar
               className="navbar-main d-flex justify-content-center"
@@ -178,7 +179,7 @@ class DefaultHeader extends React.Component {
                     id="navbar-main"
                   >
                     <div className="header-bar-ic">
-                      <i class="fa fa-bars" aria-hidden="true"></i>
+                      <i className="fa fa-bars" aria-hidden="true"></i>
                     </div>
                     <NavbarBrand className="mr-lg-5" to="/" tag={Link}>
                       <h3 className="mb-0 header-title">Deep Play</h3>
@@ -236,8 +237,19 @@ class DefaultHeader extends React.Component {
                                   </span>
                                 </InputGroupAddon>
 
-                                {/* input-open */}
+                                <div
+                                className={open ? "black-search-layer" : "d-none"}
+                                onClick = {this.openSearch} 
+                                >
+                                </div>
+                                
                                 <span className= {open ? "search-input header-search-open " : "search-input header-search-close"} >
+                                  <span 
+                                 onClick = {this.openSearch} 
+                                 className="search-arrow-wrap"
+                                  >
+                                  <img src={searchArrow} className="w-100" />
+                                  </span>
                                   <Input placeholder="Search" onChange={this.handleChange} value={search} name={"search"} type="text" autoComplete="off" />
                                 </span>
                                 {

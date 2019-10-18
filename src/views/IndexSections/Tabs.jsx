@@ -48,7 +48,7 @@ class TabsSection extends React.Component {
       <>
         <h3 className="h4 text-success font-weight-bold mb-4">Tabs</h3>
         <Row className="justify-content-center">
-          <Col lg="6">
+          <Col md="6">
             {/* Tabs with icons */}
             <div className="mb-3">
               <small className="text-uppercase font-weight-bold">
@@ -144,7 +144,7 @@ class TabsSection extends React.Component {
               </CardBody>
             </Card>
           </Col>
-          <Col className="mt-5 mt-lg-0" lg="6">
+          <Col className="mt-5 mt-lg-0" md="6">
             {/* Menu */}
             <div className="mb-3">
               <small className="text-uppercase font-weight-bold">

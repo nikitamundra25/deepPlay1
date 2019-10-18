@@ -57,7 +57,7 @@ class MoveSuccessModal extends React.Component {
                         className="btn-line-black"
                         color=" "
                       >
-                        Yes create another
+                       Yes, Create another
                       </Button>
                       <Button
                         onClick={() =>
@@ -66,7 +66,7 @@ class MoveSuccessModal extends React.Component {
                         className="btn-black"
                         color=" "
                       >
-                        No i'am done
+                        No i'm done
                       </Button>
                     </div>
                   </CardBody>

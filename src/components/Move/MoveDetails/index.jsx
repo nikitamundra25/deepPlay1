@@ -351,7 +351,7 @@ class MoveDetails extends React.Component {
                       </>
                     ) : (
                     <div className="video-loader-wrap">
-                      <Loader />
+                      <Loader innerLoader={true} />
                       </div>
                     )}
                   </Row>

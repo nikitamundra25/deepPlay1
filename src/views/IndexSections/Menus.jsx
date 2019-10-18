@@ -44,7 +44,7 @@ class Menus extends React.Component {
             {/* Menu */}
             <h3 className="h4 text-success font-weight-bold mb-4">Menu</h3>
             <Row>
-              <Col lg="6">
+              <Col md="6">
                 <div className="mb-3">
                   <small className="text-uppercase font-weight-bold">
                     With text
@@ -133,7 +133,7 @@ class Menus extends React.Component {
                   </Container>
                 </Navbar>
               </Col>
-              <Col className="mt-4 mt-lg-0" lg="6">
+              <Col className="mt-4 mt-lg-0" md="6">
                 <div className="mb-3">
                   <small className="text-uppercase font-weight-bold">
                     With icons

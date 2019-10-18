@@ -9,12 +9,12 @@ class DefaultFooter extends React.Component {
         <footer className="footer" style={{ clear: "both" }}>
           <Container>
             <Row className=" align-items-center justify-content-md-between">
-              <Col lg="6">
+              <Col md="6">
                 <div className=" copyright">
                   © {new Date().getFullYear()} <b>DEEP PLAY</b>
                 </div>
               </Col>
-              <Col lg="6">
+              <Col md="6">
                 <Nav className=" nav-footer justify-content-end">
                   <NavItem>
                     <NavLink href="/" target="_blank">

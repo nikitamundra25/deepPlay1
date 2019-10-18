@@ -55,7 +55,7 @@ class Login extends React.Component {
           </div>
           <Container className="py-md">
             <Row className="row-grid justify-content-between align-items-center">
-              <Col lg="6">
+              <Col md="6">
                 <h3 className="display-3 text-white">
                   A beautiful Design System{" "}
                   <span className="text-white">completed with examples</span>
