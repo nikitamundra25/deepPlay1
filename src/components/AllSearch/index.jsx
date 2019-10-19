@@ -16,7 +16,7 @@ class AllSearchComponent extends React.Component {
   }
 
   render() {
-    const { searchData, isSearchLoading } = this.props
+    const { searchData, isSearchLoading, profiledata } = this.props
     let folderList, setList, movelist
     if (searchData && searchData.length) {
       folderList = searchData.filter(item => item.searchType === "folder")
@@ -28,7 +28,7 @@ class AllSearchComponent extends React.Component {
 
         {
           !isSearchLoading ?
-            <div className="search-result-wrap cutom-scroll">
+            <div className="search-result-wrap cutom-scroll temprari-static-search">
               {
                 folderList && folderList.length ?
                   <div className="search-result-block  moves-block">
@@ -65,8 +65,8 @@ class AllSearchComponent extends React.Component {
                         }
                       </div>
                     </div>
-                  </div> : 
-                    <div className="search-result-block empty-result-block moves-block ">
+                  </div> :
+                  <div className="search-result-block empty-result-block moves-block ">
                     <div className="category-wrap">
                       <div className="category-heading">
                         Folders
@@ -113,7 +113,7 @@ class AllSearchComponent extends React.Component {
                                 <div className="searhed-img-main-wrap">
                                   <div className="searched-img-wrap">
                                     <div className="searched-img">
-                                      <img src={"https://a10.gaanacdn.com/gn_img/albums/P7m3GNKqxo/7m3GjN47Kq/size_m.jpg"} alt={"folder"} />
+                                      <img src={emptySetIc} alt={"folder"} />
                                     </div>
                                   </div>
                                 </div>
@@ -127,30 +127,30 @@ class AllSearchComponent extends React.Component {
                       </div>
                     </div>
                   </div> :
-                   <div className="search-result-block empty-result-block moves-block ">
-                   <div className="category-wrap">
-                     <div className="category-heading">
-                       Sets
+                  <div className="search-result-block empty-result-block moves-block ">
+                    <div className="category-wrap">
+                      <div className="category-heading">
+                        Sets
                    </div>
-                   </div>
-                   <div className="searched-wrap">
-                     <div className="searched-block">
-                       <div
-                         className="cursor_pointer searched-tile">
-                         <div className="searhed-img-main-wrap">
-                           <div className="searched-img-wrap">
-                             <div className="searched-img">
-                               <img alt={""} src={emptySetIc} />
-                             </div>
-                           </div>
-                         </div>
-                         <div className="searched-text mt-1">
-                           No data for this keywords
+                    </div>
+                    <div className="searched-wrap">
+                      <div className="searched-block">
+                        <div
+                          className="cursor_pointer searched-tile">
+                          <div className="searhed-img-main-wrap">
+                            <div className="searched-img-wrap">
+                              <div className="searched-img">
+                                <img alt={""} src={emptySetIc} />
+                              </div>
+                            </div>
+                          </div>
+                          <div className="searched-text mt-1">
+                            No data for this keywords
                                </div>
-                       </div>
-                     </div>
-                   </div>
-                 </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
               }
               {
                 movelist && movelist.length ?

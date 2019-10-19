@@ -26,6 +26,7 @@ import logoutIcon from "../../assets/img/icons/logout.svg";
 import { AppConfig } from "../../config/Appconfig";
 import AllSearchComponent from "../../components/AllSearch";
 import CreateSetComponent from "../../components/Sets/createSet";
+import searchArrow from "../../assets/img/back-search.png";
 
 class DefaultHeader extends React.Component {
   constructor(props) {
@@ -141,8 +142,6 @@ class DefaultHeader extends React.Component {
       createSetOpen
     } = modelDetails;
     const { isUserLoggedIn, path, search, open } = this.state;
-    console.log("open", open);
-
     const profiledata =
       profileInfoReducer && profileInfoReducer.profileInfo
         ? profileInfoReducer.profileInfo
@@ -162,7 +161,7 @@ class DefaultHeader extends React.Component {
         : "";
     return (
       <>
-        <header className="header-global theme-header ">
+        <header className="header-global theme-header dashboard-header">
           <div className="theme-container">
             {/* <Navbar
               className="navbar-main d-flex justify-content-center"
@@ -247,7 +246,13 @@ class DefaultHeader extends React.Component {
                                 </span>
                               </InputGroupAddon>
 
-                              {/* input-open */}
+                              <div
+                                className={
+                                  open ? "black-search-layer" : "d-none"
+                                }
+                                onClick={this.openSearch}
+                              ></div>
+
                               <span
                                 className={
                                   open
@@ -255,6 +260,12 @@ class DefaultHeader extends React.Component {
                                     : "search-input header-search-close"
                                 }
                               >
+                                <span
+                                  onClick={this.openSearch}
+                                  className="search-arrow-wrap"
+                                >
+                                  <img src={searchArrow} className="w-100" />
+                                </span>
                                 <Input
                                   placeholder="Search"
                                   onChange={this.handleChange}
@@ -273,6 +284,7 @@ class DefaultHeader extends React.Component {
                                       search: ""
                                     })
                                   }
+                                  profiledata={profiledata}
                                   {...this.props}
                                 />
                               ) : null}

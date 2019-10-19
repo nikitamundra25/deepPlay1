@@ -59,9 +59,8 @@ class SetDetails extends React.Component {
   componentDidMount = () => {
     const location = this.props.location;
     const pathName = location.pathname.split("/");
-    // const { moveReducer } = this.props;
-    // const { movesOfSet } = moveReducer;
-    const isStarred = location.search.split(":");
+    const isStarred = location.search.split("=");
+    console.log("#########", isStarred);
     this.props.getSetDetailsRequest({ setId: pathName[3] });
     this.props.getMovesOfSetRequest({
       setId: pathName[3],
@@ -81,8 +80,7 @@ class SetDetails extends React.Component {
     const { location: currentLocation } = this.props;
     const { search } = location;
     const { search: currentSearch } = currentLocation;
-    const isStarred = currentSearch.split(":");
-
+    const isStarred = currentSearch.split("=");
     if (search !== currentSearch) {
       this.props.getMovesOfSetRequest({
         setId: this.state.setIdPathName,

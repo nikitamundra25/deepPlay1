@@ -29,13 +29,13 @@ class WebmView extends Component {
       isMuted: false,
       playBackSpeed: 1,
       moveToTransfer: "",
-      moveIdToAddTags: "",
       setId: "",
       videoData: {},
       videoIndex: -1,
       isVideoLoading: false,
       videoDuration: {},
-      videoDimentions: {}
+      videoDimentions: {},
+      moveIdToAddTags: ""
     };
   }
   /**
@@ -133,6 +133,16 @@ class WebmView extends Component {
   /**
    *
    */
+  handleVideoFullScreen = () => {
+    if (this.video.mozRequestFullScreen) {
+      this.video.mozRequestFullScreen();
+    } else if (this.video.webkitRequestFullScreen) {
+      this.video.webkitRequestFullScreen();
+    }
+  };
+  /**
+   *
+   */
   handleSpeed = speed => {
     this.video.playbackRate = speed;
     this.setState({
@@ -217,7 +227,6 @@ class WebmView extends Component {
       }
     });
   };
-
   render() {
     const {
       video,
@@ -226,8 +235,8 @@ class WebmView extends Component {
       isVideoModalOpen,
       handleVideoModal,
       movesOfSet,
-      videoData,
-      isShareable
+      isShareable,
+      videoData
     } = this.props;
     const { modelDetails } = modelInfoReducer;
     const {
@@ -250,7 +259,6 @@ class WebmView extends Component {
       videoDimentions,
       moveIdToAddTags
     } = this.state;
-
     return (
       <>
         <Modal
@@ -286,7 +294,10 @@ class WebmView extends Component {
                     >
                       <DropdownToggle color={" "}>
                         <span id="edit" className="cursor_pointer ml-4">
-                          <i class="fa fa-ellipsis-v" aria-hidden="true"></i>
+                          <i
+                            className="fa fa-ellipsis-v"
+                            aria-hidden="true"
+                          ></i>
                         </span>
                       </DropdownToggle>
                       <DropdownMenu>
@@ -318,7 +329,7 @@ class WebmView extends Component {
                         >
                           Add Tags
                         </DropdownItem>
-                        <DropdownItem onClick={() => this.openViewInfoModal}>
+                        <DropdownItem onClick={this.openViewInfoModal}>
                           View Info
                         </DropdownItem>
                         <DropdownItem
@@ -428,10 +439,10 @@ class WebmView extends Component {
                       <div className="volume-up-down control-tile">
                         <span onClick={this.toggleMute}>
                           {isMuted ? (
-                            <i class="fas fa-volume-mute"></i>
+                            <i className="fas fa-volume-mute"></i>
                           ) : audioSpeed ? (
                             audioSpeed > 0.6 ? (
-                              <i class="fas fa-volume-up"></i>
+                              <i className="fas fa-volume-up"></i>
                             ) : (
                               <i class="fas fa-volume-down"></i>
                             )
@@ -465,7 +476,7 @@ class WebmView extends Component {
                           <DropdownToggle color={" "}>
                             <span
                               id="playback-speed"
-                              className="cursor_pointer ml-4"
+                              className="cursor_pointer ml-2 text-white"
                             >
                               {playBackSpeed !== 1 ? `${playBackSpeed}x` : null}{" "}
                               <i
@@ -503,7 +514,14 @@ class WebmView extends Component {
                         </UncontrolledDropdown>
                       </div>
                     </div>
-                    <div className="control-left-block"></div>
+                    <div className="control-right-block">
+                      <span
+                        onClick={() => this.handleVideoFullScreen()}
+                        className="control-tile cursor_pointer"
+                      >
+                        <i className="fas fa-expand" />
+                      </span>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -536,5 +554,4 @@ class WebmView extends Component {
     );
   }
 }
-
 export default WebmView;

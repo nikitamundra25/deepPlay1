@@ -188,7 +188,7 @@ class MoveList extends React.Component {
   handleShowStarred = () => {
     const { location } = this.props;
     const { pathname } = location;
-    this.props.redirectTo(`${pathname}?isStarred:true`);
+    this.props.redirectTo(`${pathname}?isStarred=true`);
   };
 
   handleShowAll = () => {
@@ -198,7 +198,7 @@ class MoveList extends React.Component {
     this.setState({
       moveofSetList: movesList
     });
-    this.props.redirectTo(`${pathname}?isStared:false`);
+    this.props.redirectTo(`${pathname}?isStared=false`);
   };
 
   handleInputChange = e => {
@@ -241,7 +241,7 @@ class MoveList extends React.Component {
       moveIdToAddTag
     } = this.state;
     const location = this.props.location;
-    const isStarred = location.search.split(":");
+    const isStarred = location.search.split("=");
     return (
       <section className="play-list-collection set-detail-section">
         <InfiniteScroll
@@ -258,7 +258,7 @@ class MoveList extends React.Component {
         >
           <Row className={"m-0"}>
             <Col md="12" className={"pb-3"}>
-              <div class="content-header mt-3 mb-1">
+              <div className="content-header mt-3 mb-1">
                 <span className="content-title">
                   Moves in this set ({moveCount || 0})
                 </span>
@@ -303,13 +303,13 @@ class MoveList extends React.Component {
               {selectedMoveIds && selectedMoveIds.length ? (
                 <div className={"selected-moves selected-detail-page"}>
                   <div className={"d-flex justify-content-between"}>
-                    <div class="content-title">
+                    <div className="content-title">
                       Selected Moves:{" "}
                       {selectedMoveIds && selectedMoveIds.length
                         ? selectedMoveIds.length
                         : 0}
                     </div>
-                    <div class="content-title ">
+                    <div className="content-title ">
                       <span className={"d-flex"}>
                         <ButtonGroup size="sm">
                           <Button
@@ -348,11 +348,12 @@ class MoveList extends React.Component {
                             this.setState({
                               selectedMoves: [],
                               selectedMoveIds: [],
-                              isVideoChecked: false
+                              isVideoChecked: false,
+                              isVideoModalOpen: true
                             })
                           }
                         >
-                          <i class="fa fa-times" aria-hidden="true" />
+                          <i className="fa fa-times" aria-hidden="true" />
                         </Button>
                       </span>
                     </div>

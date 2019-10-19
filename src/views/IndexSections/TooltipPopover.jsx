@@ -36,7 +36,7 @@ class TooltipPopover extends React.Component {
           Tooltips &amp; Popovers
         </h3>
         <Row>
-          <Col lg="6">
+          <Col md="6">
             <small className="d-block text-uppercase font-weight-bold mb-3">
               Tooltips
             </small>
@@ -105,7 +105,7 @@ class TooltipPopover extends React.Component {
               Tooltip on right
             </UncontrolledTooltip>
           </Col>
-          <Col className="mt-4 mt-lg-0" lg="6">
+          <Col className="mt-4 mt-lg-0" md="6">
             <small className="d-block text-uppercase font-weight-bold mb-3">
               Popovers
             </small>

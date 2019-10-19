@@ -129,33 +129,35 @@ class FolderSharedLink extends React.Component {
                       className={"cursor_pointer"}
                     >
                       <div className="tile-wrap card">
-                        <div className="cotent-tile d-flex content-with-img">
-                          <div className="cotent-text-tile">
-                            <div className="content-heading-tile">
-                              <span>{list.title}</span>
-                            </div>
-                            <div className="content-heading-tile">
-                              {" "}
-                              {list.description}
-                            </div>
+                        <div className="cotent-tile ">
+                          <div className="d-flex content-with-img w-100">
+                            <div className="cotent-text-tile">
+                              <div className="content-heading-tile">
+                                <span>{list.title}</span>
+                              </div>
+                              <div className="content-heading-tile">
+                                {" "}
+                                {list.description}
+                              </div>
 
-                            <div className="content-number-tile">
-                              {" "}
-                              {list.moveCount} items
-                            </div>
-                          </div>
-                          {list.recentlyAddMoveImg ? (
-                            <div className="d-flex img-tile-wrap cursor_pointer">
-                              <div className="cotent-img-tile">
-                                <video width={"100%"} id="webm-video">
-                                  <source
-                                    src={`${list.recentlyAddMoveImg}`}
-                                    type="video/webm"
-                                  />
-                                </video>
+                              <div className="content-number-tile">
+                                {" "}
+                                {list.moveCount} items
                               </div>
                             </div>
-                          ) : null}
+                            {list.recentlyAddMoveImg ? (
+                              <div className="d-flex img-tile-wrap cursor_pointer">
+                                <div className="cotent-img-tile">
+                                  <video width={"100%"} id="webm-video">
+                                    <source
+                                      src={`${list.recentlyAddMoveImg}`}
+                                      type="video/webm"
+                                    />
+                                  </video>
+                                </div>
+                              </div>
+                            ) : null}
+                          </div>
                         </div>
                       </div>
                     </Col>
