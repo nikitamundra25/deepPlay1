@@ -264,7 +264,11 @@ class DefaultHeader extends React.Component {
                                   onClick={this.openSearch}
                                   className="search-arrow-wrap"
                                 >
-                                  <img src={searchArrow} className="w-100" />
+                                  <img
+                                    src={searchArrow}
+                                    alt=""
+                                    className="w-100"
+                                  />
                                 </span>
                                 <Input
                                   placeholder="Search"

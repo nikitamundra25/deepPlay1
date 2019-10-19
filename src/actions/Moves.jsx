@@ -25,7 +25,9 @@ export const MovesAction = {
   SEARCH_MOVE_REQUEST: "Search Move Request",
   SEARCH_MOVE_SUCCESS: "Search Move Success",
   ADD_TAGS_REQUEST: "Add Tags Request",
-  ADD_TAGS_SUCCESS: "Add Tags Success"
+  ADD_TAGS_SUCCESS: "Add Tags Success",
+  UPDATE_SORT_INDEX_REQUEST: "Update Sort Index Request",
+  UPDATE_SORT_INDEX_SUCCESS: "Update Sort Index Success"
 };
 
 export const downloadYoutubeVideoRequest = createAction(
@@ -95,3 +97,10 @@ export const searchMoveSuccess = createAction(MovesAction.SEARCH_MOVE_SUCCESS);
 
 export const addTagsRequest = createAction(MovesAction.ADD_TAGS_REQUEST);
 export const addTagsSuccess = createAction(MovesAction.ADD_TAGS_SUCCESS);
+
+export const updateSortIndexRequest = createAction(
+  MovesAction.UPDATE_SORT_INDEX_REQUEST
+);
+export const updateSortIndexSuccess = createAction(
+  MovesAction.UPDATE_SORT_INDEX_SUCCESS
+);

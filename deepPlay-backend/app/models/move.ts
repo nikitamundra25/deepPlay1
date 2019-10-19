@@ -17,7 +17,7 @@ const moveSchema: Mongoose.Schema = new Schema({
   sourceUrl: {
     type: String
   },
-  isYoutubeUrl:{
+  isYoutubeUrl: {
     type: Boolean
   },
   videoUrl: {
@@ -41,6 +41,10 @@ const moveSchema: Mongoose.Schema = new Schema({
   isCopy: {
     type: Boolean,
     default: false
+  },
+  sortIndex: {
+    type: Number,
+    default: 0
   },
   isStarred: {
     type: Boolean,

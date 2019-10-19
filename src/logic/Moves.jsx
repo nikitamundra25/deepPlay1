@@ -9,7 +9,8 @@ import {
   getMoveDetailsSuccess,
   modelOpenRequest,
   searchMoveSuccess,
-  getSetDetailsRequest
+  getSetDetailsRequest,
+  updateSortIndexSuccess
 } from "../actions";
 import { AppRoutes } from "../config/AppRoutes";
 import { toast } from "react-toastify";
@@ -395,6 +396,37 @@ const addTagsLogic = createLogic({
   }
 });
 
+//Update sort index
+const updateSortIndexLogic = createLogic({
+  type: MovesAction.UPDATE_SORT_INDEX_REQUEST,
+  async process({ action }, dispatch, done) {
+    let api = new ApiHelper();
+    let result = await api.FetchFromServer(
+      "move",
+      "/sort-index-update",
+      "PUT",
+      true,
+      undefined,
+      action.payload
+    );
+    if (result.isError) {
+      if (!toast.isActive(toastId)) {
+        toastId = toast.error(result.messages[0]);
+      }
+      done();
+      return;
+    } else {
+      // dispatch(getMovesOfSetRequest({ setId: action.payload.setId }));
+      // dispatch(
+      //   updateSortIndexSuccess({
+      //     movesOfSet: result.data.data
+      //   })
+      // );
+      done();
+    }
+  }
+});
+
 export const MoveLogics = [
   downloadVideoLogic,
   getMovesOfSetLogic,
@@ -405,5 +437,6 @@ export const MoveLogics = [
   transferMoveLogic,
   createAnotherMoveLogic,
   searchMoveLogic,
-  addTagsLogic
+  addTagsLogic,
+  updateSortIndexLogic
 ];

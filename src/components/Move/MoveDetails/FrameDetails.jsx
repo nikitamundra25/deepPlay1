@@ -3,7 +3,7 @@ import InputRange from "react-input-range";
 import { AppConfig } from "config/Appconfig";
 import { Input, Row, Col, FormGroup, Label, Button } from "reactstrap";
 import { orderBy } from "natural-orderby";
-import { SecondsToHHMMSS, SecondsToMMSS } from "helper/Time";
+import { SecondsToHHMMSS } from "helper/Time";
 import { logger } from "helper/Logger";
 
 class FrameDetails extends Component {
@@ -131,7 +131,7 @@ class FrameDetails extends Component {
    *
    */
   render() {
-    const { videoDuration, videoMaxDuration, frames, videoMetaData } = this.props;
+    const { frames, videoMetaData } = this.props;
     const { duration } = videoMetaData || {};
     const { seconds: maxValue } = duration || {};
     const { time } = this.state;
@@ -201,11 +201,14 @@ class FrameDetails extends Component {
               </Col>
             </Row>
           </Col>
-          <Col md={"6"} className="text-right d-flex align-items-end justify-content-end">
+          <Col
+            md={"6"}
+            className="text-right d-flex align-items-end justify-content-end"
+          >
             <Button
               color={"default"}
               className={"btn-black btn url-upload-btn"}
-              onClick={(e) => this.props.completeEditing(e)}
+              onClick={e => this.props.completeEditing(e)}
             >
               Finish
             </Button>

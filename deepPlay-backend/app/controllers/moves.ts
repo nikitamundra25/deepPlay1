@@ -16,7 +16,7 @@ import ffmpeg from "ffmpeg";
 import { decrypt } from "../common";
 import { IMoveCopy } from "../interfaces";
 import moment from "moment";
-import { s3BucketUpload } from "../common/awsBucket"
+import { s3BucketUpload } from "../common/awsBucket";
 const __basedir = path.join(__dirname, "../public");
 
 cloudinary.config({
@@ -128,8 +128,7 @@ const downloadYoutubeVideo = async (
           ytdl(body.url).pipe(
             (videoStream = fs.createWriteStream(originalVideoPath))
           );
-          videoStream.on("close", async function () {
-
+          videoStream.on("close", async function() {
             const {
               frames: framesArray,
               videoMetaData,
@@ -176,14 +175,9 @@ const downloadYoutubeVideo = async (
  *
  */
 const getVideoFrames = async (videoName: string): Promise<any> => {
-  let videoURL: string
+  let videoURL: string;
   if (IsProductionMode) {
-    videoURL = path.join(
-      __dirname,
-      "uploads",
-      "youtube-videos",
-      videoName
-    );
+    videoURL = path.join(__dirname, "uploads", "youtube-videos", videoName);
   } else {
     videoURL = path.join(
       __dirname,
@@ -276,7 +270,8 @@ const getMoveBySetId = async (req: Request, res: Response): Promise<any> => {
       })
         .populate("setId")
         .skip(pageNumber)
-        .limit(limitNumber);
+        .limit(limitNumber)
+        .sort({ sortIndex: 1 });
     } else {
       movesData = await MoveModel.find({
         setId: query.setId,
@@ -284,7 +279,8 @@ const getMoveBySetId = async (req: Request, res: Response): Promise<any> => {
       })
         .populate("setId")
         .skip(pageNumber)
-        .limit(limitNumber);
+        .limit(limitNumber)
+        .sort({ sortIndex: 1 });
     }
     const moveList: Document | any | null = await MoveModel.populate(
       movesData,
@@ -393,7 +389,7 @@ const updateMoveDetailsAndTrimVideo = async (
     const { timer, moveId, title, description, tags, setId } = body;
     const result: Document | null | any = await MoveModel.findById(moveId);
     if (result) {
-      let videoFile: String | any
+      let videoFile: String | any;
       if (IsProductionMode) {
         videoFile = path.join(__dirname, result.videoUrl);
       } else {
@@ -442,8 +438,8 @@ const updateMoveDetailsAndTrimVideo = async (
 
       const fileName = `${
         result.videoUrl.split(".")[0]
-        }_clip_${moment().unix()}.webm`;
-      let videoFileMain: String | any
+      }_clip_${moment().unix()}.webm`;
+      let videoFileMain: String | any;
       if (IsProductionMode) {
         videoFileMain = path.join(__dirname, `${fileName}`);
       } else {
@@ -463,7 +459,11 @@ const updateMoveDetailsAndTrimVideo = async (
                 "We are having an issue while creating webm for you. Please try again."
             });
           }
-          const s3VideoUrl = await s3BucketUpload(videoFileMain, "deep-play.webm", "moves")
+          const s3VideoUrl = await s3BucketUpload(
+            videoFileMain,
+            "deep-play.webm",
+            "moves"
+          );
           if (s3VideoUrl) {
             fs.unlinkSync(videoFileMain);
           }
@@ -720,6 +720,62 @@ const addTagsInMove = async (req: Request, res: Response): Promise<any> => {
     });
   }
 };
+
+//-----------------------Move index update----------------
+const updateMoveIndex = async (req: Request, res: Response): Promise<any> => {
+  try {
+    const { body } = req;
+    const { setId, sortIndex, moveId, sourceIndex } = body;
+    let num = sortIndex;
+    let num1 = sortIndex;
+
+    await MoveModel.updateOne(
+      { setId: setId, _id: moveId },
+      { $set: { sortIndex: sortIndex } }
+    );
+
+    let result = await MoveModel.find({
+      _id: { $ne: moveId },
+      setId: setId,
+      isDeleted: false,
+      sortIndex: { $gt: sortIndex }
+    }).sort({ sortIndex: 1 });
+
+    let result1 = await MoveModel.find({
+      _id: { $ne: moveId },
+      setId: setId,
+      isDeleted: false,
+      sortIndex: { $lt: sortIndex }
+    }).sort({ sortIndex: -1 });
+
+    if (result && result.length) {
+      for (let index = 0; index < result.length; index++) {
+        await MoveModel.updateOne(
+          { setId: setId, _id: result[index]._id },
+          { $set: { sortIndex: ++num } }
+        );
+      }
+    }
+
+    if (result1 && result1.length) {
+      for (let index = 0; index < result1.length; index++) {
+        await MoveModel.updateOne(
+          { setId: setId, _id: result1[index]._id },
+          { $set: { sortIndex: --num1 } }
+        );
+      }
+    }
+
+    return res.status(200).json({
+      message: "SortIndex have been updated successfully!",
+    });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).send({
+      message: error.message
+    });
+  }
+};
 export {
   downloadVideo,
   getMoveBySetId,
@@ -733,5 +789,6 @@ export {
   transferMove,
   createMove,
   filterMove,
-  addTagsInMove
+  addTagsInMove,
+  updateMoveIndex
 };

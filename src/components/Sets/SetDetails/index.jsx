@@ -25,7 +25,8 @@ import {
   searchMoveRequest,
   addTagsRequest,
   getAllFolderRequest,
-  ManageSetRequest
+  ManageSetRequest,
+  updateSortIndexRequest
 } from "../../../actions";
 import SharableLinkModal from "../../comman/shareableLink/SharableLink";
 import { AppRoutes } from "../../../config/AppRoutes";
@@ -262,7 +263,8 @@ class SetDetails extends React.Component {
       modelOperate,
       loadVideoDataRequest,
       getMovesOfSetRequest,
-      getAllFolders
+      getAllFolders,
+      updateSortIndexRequest
     } = this.props;
     const { setDetails } = setReducer;
     const { modelDetails } = modelInfoReducer;
@@ -405,6 +407,7 @@ class SetDetails extends React.Component {
                     addTagstoMove={this.addTagstoMove}
                     isMoveSearchLoading={isMoveSearchLoading}
                     getMovesOfSetRequest={getMovesOfSetRequest}
+                    updateSortIndexRequest={updateSortIndexRequest}
                     searchMove={data => this.props.searchMoveRequest(data)}
                     {...this.props}
                   />
@@ -482,6 +485,9 @@ const mapDispatchToProps = dispatch => ({
   },
   manageSets: data => {
     dispatch(ManageSetRequest(data));
+  },
+  updateSortIndexRequest: data => {
+    dispatch(updateSortIndexRequest(data));
   }
 });
 export default connect(
