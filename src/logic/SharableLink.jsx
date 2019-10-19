@@ -119,7 +119,6 @@ const sharedLinkFolderDetailsLogic = createLogic({
       return;
     } else {
       dispatch(hideLoader());
-      dispatch(redirectTo({ path: "/404" }));
       dispatch(sharedFolderInfoSuccess({ decryptedDetails: result.data.data }));
       done();
     }

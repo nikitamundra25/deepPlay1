@@ -12,9 +12,10 @@ import { logger } from "helper/Logger";
 import InputRange from "react-input-range";
 import { SecondsToHHMMSS } from "helper/Time";
 import TransferToModal from "../../Folders/FolderDetails/transferTo";
-import Loader from "../../comman/Loader/Loader"
+import Loader from "../../comman/Loader/Loader";
 import closeBtn from "../../../assets/img/close-img.png";
 import ViewInfoModal from "./viewInfoModal";
+import AddTagModal from "./addTagsModal";
 
 class WebmView extends Component {
   video;
@@ -28,6 +29,7 @@ class WebmView extends Component {
       isMuted: false,
       playBackSpeed: 1,
       moveToTransfer: "",
+      moveIdToAddTags: "",
       setId: "",
       videoData: {},
       videoIndex: -1,
@@ -60,7 +62,7 @@ class WebmView extends Component {
         });
       });
       this.video.load();
-      let timeDuration = []
+      let timeDuration = [];
       this.video.onloadeddata = () => {
         const { duration, videoHeight, videoWidth } = this.video;
         for (let index = 0; index < duration; index = index + duration / 20) {
@@ -194,6 +196,28 @@ class WebmView extends Component {
     });
   };
 
+  handleStarred = (id, isStarred) => {
+    const data = {
+      moveId: id,
+      isStarred: isStarred ? false : true,
+      setId: this.props.setIdPathName
+    };
+    this.props.isStarred(data);
+  };
+
+  openAddTagsModal = id => {
+    const { modelInfoReducer } = this.props;
+    const { modelDetails } = modelInfoReducer;
+    this.setState({
+      moveIdToAddTags: id
+    });
+    this.props.modelOperate({
+      modelDetails: {
+        addTagModalOpenReq: !modelDetails.addTagModalOpenReq
+      }
+    });
+  };
+
   render() {
     const {
       video,
@@ -202,9 +226,15 @@ class WebmView extends Component {
       isVideoModalOpen,
       handleVideoModal,
       movesOfSet,
-      videoData } = this.props;
+      videoData,
+      isShareable
+    } = this.props;
     const { modelDetails } = modelInfoReducer;
-    const { transferToModalOpenReq, viewInfoModalOpen } = modelDetails;
+    const {
+      transferToModalOpenReq,
+      viewInfoModalOpen,
+      addTagModalOpenReq
+    } = modelDetails;
     const { moveURL, title } = video;
     const {
       isPlaying,
@@ -217,8 +247,10 @@ class WebmView extends Component {
       videoIndex,
       videoDuration,
       isVideoLoading,
-      videoDimentions
+      videoDimentions,
+      moveIdToAddTags
     } = this.state;
+
     return (
       <>
         <Modal
@@ -245,55 +277,76 @@ class WebmView extends Component {
                 {" "}
                 {videoData ? videoData.title : title}{" "}
               </div>
-              <div className="video-slider-dropDown">
-                <div>
-                  <UncontrolledDropdown
-                    className="header-dropdown  custom-dropdown"
-                    direction="left"
-                  >
-                    <DropdownToggle color={" "}>
-                      <span id="edit" className="cursor_pointer ml-4">
-                        <i class="fa fa-ellipsis-v" aria-hidden="true"></i>
-                      </span>
-                    </DropdownToggle>
-                    <DropdownMenu>
-                      <DropdownItem
-                        onClick={() =>
-                          this.props.onEditMove(
-                            videoData ? videoData._id : video._id
-                          )
-                        }
-                      >
-                        Edit
-                      </DropdownItem>
-                      <DropdownItem onClick={this.openViewInfoModal}>
-                        View Info
-                      </DropdownItem>
-                      <DropdownItem
-                        onClick={() =>
-                          videoData
-                            ? this.openTransferToModal(
-                                videoData._id,
-                                videoData.setId
-                              )
-                            : this.openTransferToModal(video._id, video.setId)
-                        }
-                      >
-                        Tranfer
-                      </DropdownItem>
-                      <DropdownItem
-                        onClick={() =>
-                          videoData
-                            ? this.handleMoveDelete(videoData._id)
-                            : this.handleMoveDelete(video._id)
-                        }
-                      >
-                        Delete
-                      </DropdownItem>
-                    </DropdownMenu>
-                  </UncontrolledDropdown>
+              {!isShareable ? (
+                <div className="video-slider-dropDown">
+                  <div>
+                    <UncontrolledDropdown
+                      className="header-dropdown  custom-dropdown"
+                      direction="left"
+                    >
+                      <DropdownToggle color={" "}>
+                        <span id="edit" className="cursor_pointer ml-4">
+                          <i class="fa fa-ellipsis-v" aria-hidden="true"></i>
+                        </span>
+                      </DropdownToggle>
+                      <DropdownMenu>
+                        <DropdownItem
+                          onClick={() =>
+                            this.props.onEditMove(
+                              videoData ? videoData._id : video._id
+                            )
+                          }
+                        >
+                          Edit
+                        </DropdownItem>
+                        <DropdownItem
+                          onClick={() =>
+                            this.handleStarred(
+                              videoData._id,
+                              videoData.isStarred
+                            )
+                          }
+                        >
+                          Mark Star
+                        </DropdownItem>
+                        <DropdownItem
+                          onClick={() =>
+                            videoData
+                              ? this.openAddTagsModal(videoData._id)
+                              : this.openAddTagsModal(video._id)
+                          }
+                        >
+                          Add Tags
+                        </DropdownItem>
+                        <DropdownItem onClick={() => this.openViewInfoModal}>
+                          View Info
+                        </DropdownItem>
+                        <DropdownItem
+                          onClick={() =>
+                            videoData
+                              ? this.openTransferToModal(
+                                  videoData._id,
+                                  videoData.setId
+                                )
+                              : this.openTransferToModal(video._id, video.setId)
+                          }
+                        >
+                          Tranfer
+                        </DropdownItem>
+                        <DropdownItem
+                          onClick={() =>
+                            videoData
+                              ? this.handleMoveDelete(videoData._id)
+                              : this.handleMoveDelete(video._id)
+                          }
+                        >
+                          Delete
+                        </DropdownItem>
+                      </DropdownMenu>
+                    </UncontrolledDropdown>
+                  </div>
                 </div>
-              </div>
+              ) : null}
             </div>
             <div className="video-slider-img">
               <div className="custom-video-player">
@@ -315,18 +368,27 @@ class WebmView extends Component {
                     </div>
                   ) : null}
                 </div>
-                {
-                  !isVideoLoading ?
-                    <video width={"100%"} id="webm-video" muted={isMuted} className="video-loading-tag">
-                      <source
-                        src={`${videoData && videoData.moveURL ? videoData.moveURL : moveURL}`}
-                        type="video/webm"
-                      />
-                    </video> :
-                    <div className="video-loader">
-                      <Loader videoLoader={true} />
-                    </div>
-                }
+                {!isVideoLoading ? (
+                  <video
+                    width={"100%"}
+                    id="webm-video"
+                    muted={isMuted}
+                    className="video-loading-tag"
+                  >
+                    <source
+                      src={`${
+                        videoData && videoData.moveURL
+                          ? videoData.moveURL
+                          : moveURL
+                      }`}
+                      type="video/webm"
+                    />
+                  </video>
+                ) : (
+                  <div className="video-loader">
+                    <Loader videoLoader={true} />
+                  </div>
+                )}
                 <div className={"controls"}>
                   <div className="control-background-wrap"></div>
                   <InputRange
@@ -359,7 +421,9 @@ class WebmView extends Component {
                       </div>
                       <div className="video-time-wrap control-tile">
                         {SecondsToHHMMSS(parseInt(currentTime))} /{" "}
-                        {SecondsToHHMMSS(parseInt(videoDuration.videoMaxDuration))}
+                        {SecondsToHHMMSS(
+                          parseInt(videoDuration.videoMaxDuration)
+                        )}
                       </div>
                       <div className="volume-up-down control-tile">
                         <span onClick={this.toggleMute}>
@@ -455,6 +519,12 @@ class WebmView extends Component {
           transferMove={true}
           handleOpen={this.openTransferToModal}
           handleMove={this.handleMoveTransfer}
+        />
+        <AddTagModal
+          modal={addTagModalOpenReq}
+          handleOpen={this.openAddTagsModal}
+          moveIdToAddTag={moveIdToAddTags ? moveIdToAddTags : video._id}
+          addTagstoMove={data => this.props.addTagstoMove(data)}
         />
         <ViewInfoModal
           modal={viewInfoModalOpen}

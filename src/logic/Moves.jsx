@@ -237,6 +237,7 @@ const deleteMoveLogic = createLogic({
         toastId = toast.success(result.messages[0]);
       }
       dispatch(getMovesOfSetRequest({ setId: action.payload.setId }));
+      dispatch(getSetDetailsRequest({ setId: action.payload.setId }));
       done();
     }
   }
@@ -384,7 +385,8 @@ const addTagsLogic = createLogic({
       dispatch(
         modelOpenRequest({
           modelDetails: {
-            addTagModalOpen: false
+            addTagModalOpen: false,
+            addTagModalOpenReq: false
           }
         })
       );

@@ -81,7 +81,7 @@ class TransferToModal extends React.Component {
     const { selectFolderOptions } = this.state;
     const defaultFolderList = [];
     let list = [];
-    if (AllFolders.length) {
+    if (AllFolders && AllFolders.length) {
       // eslint-disable-next-line
       AllFolders.map(item => {
         if (item._id !== folderId) {
@@ -133,6 +133,11 @@ class TransferToModal extends React.Component {
               <AsyncSelect
                 isClearable={selectFolderOptions.value ? true : false}
                 defaultOptions={defaultFolderList}
+                noOptionsMessage={() =>
+                  this.props.transferMove
+                    ? "No set available"
+                    : "No folder available"
+                }
                 placeholder={
                   this.props.transferMove
                     ? "Select set from list"

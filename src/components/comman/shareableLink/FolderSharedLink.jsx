@@ -86,7 +86,7 @@ class FolderSharedLink extends React.Component {
 
     return (
       <div className={"dashboard-full-section without-sidebar"}>
-        <div className="p-3">
+        {/* <div className="p-3">
           <span
             onClick={() => {
               window.history.back();
@@ -96,7 +96,7 @@ class FolderSharedLink extends React.Component {
             {" "}
             <i className="fas fa-long-arrow-alt-left" /> Back
           </span>
-        </div>
+        </div> */}
         <Container>
           {/* <div className="text-center h3">
             <b> Folder Details</b>
@@ -144,15 +144,18 @@ class FolderSharedLink extends React.Component {
                               {list.moveCount} items
                             </div>
                           </div>
-                          <div
-                            className="cotent-img-tile"
-                            style={{
-                              backgroundImage:
-                                'url("' +
-                                "https://res.cloudinary.com/fleetnation/image/private/c_fit,w_1120/g_south,l_text:style_gothic2:%C2%A9%20Nikita%20Buida,o_20,y_10/g_center,l_watermark4,o_25,y_50/v1469756538/dd3acf4nzzavkv4rf2ji.jpg" +
-                                '")'
-                            }}
-                          ></div>
+                          {list.recentlyAddMoveImg ? (
+                            <div className="d-flex img-tile-wrap cursor_pointer">
+                              <div className="cotent-img-tile">
+                                <video width={"100%"} id="webm-video">
+                                  <source
+                                    src={`${list.recentlyAddMoveImg}`}
+                                    type="video/webm"
+                                  />
+                                </video>
+                              </div>
+                            </div>
+                          ) : null}
                         </div>
                       </div>
                     </Col>
@@ -160,23 +163,23 @@ class FolderSharedLink extends React.Component {
                 })
               ) : (
                 <>
-                <Col>
-                  <div className="create-set-section w-100 empty-folder-section">
-                    <Card className="set-content-wrap empty-folder-card">
-                      <div className="set-content-block w-100 empty-folder-wrap">
-                        <CardHeader className="empty-folder-header ">
-                          <img src={emptyFolderIc} alt={"Images"} />
-                          <div className="content-header set-header">
-                            <span className="content-title">
-                              {" "}
-                              <h3>This folder has no Sets yet</h3>
-                              {/* <p>Organize your Sets for you or your students</p> */}
-                            </span>
-                          </div>
-                        </CardHeader>
-                      </div>
-                    </Card>
-                  </div>
+                  <Col>
+                    <div className="create-set-section w-100 empty-folder-section">
+                      <Card className="set-content-wrap empty-folder-card">
+                        <div className="set-content-block w-100 empty-folder-wrap">
+                          <CardHeader className="empty-folder-header ">
+                            <img src={emptyFolderIc} alt={"Images"} />
+                            <div className="content-header set-header">
+                              <span className="content-title">
+                                {" "}
+                                <h3>This folder has no Sets yet</h3>
+                                {/* <p>Organize your Sets for you or your students</p> */}
+                              </span>
+                            </div>
+                          </CardHeader>
+                        </div>
+                      </Card>
+                    </div>
                   </Col>
                 </>
               )

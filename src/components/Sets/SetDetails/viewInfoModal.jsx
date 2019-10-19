@@ -37,11 +37,13 @@ class ViewInfoModal extends React.Component {
                 <span className="content-title justify-content-between">
                   <div className="">
                     {" "}
-                    {videoData.title ? videoData.title : null}{" "}
+                    {videoData.title ? `Title: ${videoData.title}` : null}{" "}
                   </div>
                   <div className="">
                     {" "}
-                    {videoData.description ? videoData.description : null}{" "}
+                    {videoData.description
+                      ? `Description: ${videoData.description}`
+                      : null}{" "}
                   </div>
                 </span>
                 <span>
@@ -51,11 +53,10 @@ class ViewInfoModal extends React.Component {
                   </a>
                 </span>
                 <span>
-                  Folder:{" "}
                   {videoData.setId &&
                   videoData.setId.folderId &&
                   videoData.setId.folderId.title
-                    ? videoData.setId.folderId.title
+                    ? `Folder: ${videoData.setId.folderId.title}`
                     : ""}
                 </span>
                 <span>
@@ -67,7 +68,7 @@ class ViewInfoModal extends React.Component {
                 <span>
                   Uploaded:{" "}
                   {moment(
-                    videoData.updatedAt ? videoData.updatedAt : null
+                    videoData.createdAt ? videoData.createdAt : null
                   ).format("l")}{" "}
                 </span>
               </div>
