@@ -282,7 +282,7 @@ class SetComponent extends React.Component {
             )
           ) : (
             <Col sm={12} className="loader-col">
-              <Loader />
+              <Loader innerLoader={true} />
             </Col>
           )}
         </Row>

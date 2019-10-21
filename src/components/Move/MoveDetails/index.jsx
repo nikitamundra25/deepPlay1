@@ -5,6 +5,7 @@ import {
   Card,
   CardBody,
   Row,
+  Col,
   Modal,
   ModalHeader,
   ModalBody,
@@ -351,9 +352,9 @@ class MoveDetails extends React.Component {
                           />
                         </>
                       ) : (
-                          <div className="video-loader-wrap">
+                          <Col sm={12} className="loader-col video-loader-wrap">
                             <Loader innerLoader={true} />
-                          </div>
+                          </Col>
                         )}
                     </Row>
                     <FrameDetails

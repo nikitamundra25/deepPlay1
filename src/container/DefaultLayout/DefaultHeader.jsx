@@ -257,6 +257,7 @@ class DefaultHeader extends React.Component {
                                     <AllSearchComponent
                                       searchData={searchData}
                                       isSearchLoading={isSearchLoading}
+                                      searhClose={this.openSearch}
                                       handleSearchEmpty={() => this.setState({
                                         search: ""
                                       })}

@@ -5,6 +5,7 @@ import { AppRoutes } from "../../config/AppRoutes";
 import emptyFoldeIc from "../../assets/img/empty-folder.png";
 import emptySetIc from "../../assets/img/empty-sets.png";
 import emptyMoveIc from "../../assets/img/empty-moves.png";
+import { Link } from "react-router-dom";
 import "./index.scss";
 // core components
 class AllSearchComponent extends React.Component {
@@ -16,6 +17,7 @@ class AllSearchComponent extends React.Component {
   }
 
   render() {
+    console.log("props", this.props)
     const { searchData, isSearchLoading, profiledata } = this.props
     let folderList, setList, movelist
     if (searchData && searchData.length) {
@@ -36,7 +38,9 @@ class AllSearchComponent extends React.Component {
                       <div className="category-heading">
                         Folders
                       </div>
-                      <div className="view-all-wrap font-weight-bold">View All</div>
+                      <Link to="/folder" onClick={this.props.searhClose} className="view-all-wrap font-weight-bold">
+                        View All
+                      </Link>
                     </div>
                     <div className="folder-searched-wrap searched-wrap">
                       <div className="searched-block">
@@ -99,7 +103,9 @@ class AllSearchComponent extends React.Component {
                       <div className="category-heading">
                         Sets
                       </div>
-                      <div className="view-all-wrap font-weight-bold">View All</div>
+                      <Link to="/set" onClick={this.props.searhClose} className="view-all-wrap font-weight-bold">
+                        View All
+                      </Link>
                     </div>
                     <div className="searched-wrap">
                       <div className="searched-block">
@@ -161,7 +167,10 @@ class AllSearchComponent extends React.Component {
                       <div className="category-heading">
                         Moves
                       </div>
-                      <div className="view-all-wrap font-weight-bold">View All</div>
+                      {/* move page url need to set  */}
+                      <Link to="/set" onClick={this.props.searhClose} className="view-all-wrap font-weight-bold">
+                        View All
+                      </Link>
                     </div>
                     <div className="searched-wrap">
                       <div className="searched-block">
