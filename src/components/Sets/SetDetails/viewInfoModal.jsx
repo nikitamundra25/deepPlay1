@@ -46,7 +46,7 @@ class ViewInfoModal extends React.Component {
                   </div>
                 </span>
                 <span>
-                  Source URL:{" "}
+                 <span className=""> Source URL:</span>{" "}
                   <a href={videoData.sourceUrl ? videoData.sourceUrl : null}>
                     {videoData.sourceUrl ? videoData.sourceUrl : null}{" "}
                   </a>

@@ -97,7 +97,8 @@ class DefaultHeader extends React.Component {
 
   openSearch = () =>{
     this.setState({
-      open : !this.state.open
+      open : !this.state.open,
+      search:""
     })
   }
 
@@ -142,7 +143,6 @@ class DefaultHeader extends React.Component {
       createSetOpen
     } = modelDetails;
     const { isUserLoggedIn, path, search, open } = this.state;
-    console.log("open",open);
     
     const profiledata =
       profileInfoReducer && profileInfoReducer.profileInfo
@@ -250,10 +250,10 @@ class DefaultHeader extends React.Component {
                                   >
                                   <img src={searchArrow} className="w-100" />
                                   </span>
-                                  <Input placeholder="Search" onChange={this.handleChange} value={search} name={"search"} type="text" autoComplete="off" />
+                                  <Input placeholder="Search for set, folder, Move and More" onChange={this.handleChange} value={search} name={"search"} type="text" autoComplete="off" />
                                 </span>
                                 {
-                                  search ?
+                                  search   ?
                                     <AllSearchComponent
                                       searchData={searchData}
                                       isSearchLoading={isSearchLoading}

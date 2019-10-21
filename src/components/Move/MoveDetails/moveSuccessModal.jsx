@@ -33,7 +33,7 @@ class MoveSuccessModal extends React.Component {
                 <div className="set-content-block w-100">
                   <CardHeader className="">
                     <div className="content-header set-header flex-column">
-                      <span className="content-title">
+                      <span className="content-title custom-head-title">
                         {" "}
                         your move has been created!
                       </span>

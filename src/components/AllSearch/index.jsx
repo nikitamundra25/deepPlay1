@@ -36,6 +36,7 @@ class AllSearchComponent extends React.Component {
                       <div className="category-heading">
                         Folders
                       </div>
+                      <div className="view-all-wrap font-weight-bold">View All</div>
                     </div>
                     <div className="folder-searched-wrap searched-wrap">
                       <div className="searched-block">
@@ -98,6 +99,7 @@ class AllSearchComponent extends React.Component {
                       <div className="category-heading">
                         Sets
                       </div>
+                      <div className="view-all-wrap font-weight-bold">View All</div>
                     </div>
                     <div className="searched-wrap">
                       <div className="searched-block">
@@ -159,6 +161,7 @@ class AllSearchComponent extends React.Component {
                       <div className="category-heading">
                         Moves
                       </div>
+                      <div className="view-all-wrap font-weight-bold">View All</div>
                     </div>
                     <div className="searched-wrap">
                       <div className="searched-block">
