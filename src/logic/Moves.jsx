@@ -400,6 +400,17 @@ const addTagsLogic = createLogic({
 const updateSortIndexLogic = createLogic({
   type: MovesAction.UPDATE_SORT_INDEX_REQUEST,
   async process({ action }, dispatch, done) {
+    // const { sourceIndex, sortIndex } = action.payload;
+    // const { movesOfSet } = getState().moveReducer;
+    // movesOfSet.splice(sourceIndex, 1);
+    // movesOfSet.splice(sortIndex, 0, movesOfSet[sourceIndex]);
+    // console.log("movesOfSet", movesOfSet);
+
+    // dispatch(
+    //   updateSortIndexSuccess({
+    //     movesOfSet: movesOfSet
+    //   })
+    // );
     let api = new ApiHelper();
     let result = await api.FetchFromServer(
       "move",
@@ -408,6 +419,7 @@ const updateSortIndexLogic = createLogic({
       true,
       undefined,
       action.payload
+      // { ...action.payload, movesOfSet: movesOfSet }
     );
     if (result.isError) {
       if (!toast.isActive(toastId)) {

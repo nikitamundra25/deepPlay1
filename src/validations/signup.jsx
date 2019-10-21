@@ -61,8 +61,8 @@ export const CreateFolderValidations = {
     [ValidationTypes.MINLENGTH]: 2
   },
   description: {
-    [ValidationTypes.MAXLENGTH]: 250,
-  },
+    [ValidationTypes.MAXLENGTH]: 250
+  }
 };
 export const CreateFolderValidationsMessaages = {
   title: {
@@ -71,6 +71,7 @@ export const CreateFolderValidationsMessaages = {
     [ValidationTypes.MAXLENGTH]: "Title cannot have more that 50 characters"
   },
   description: {
-    [ValidationTypes.MAXLENGTH]: "Description cannot have more that 250 characters"
-  },
+    [ValidationTypes.MAXLENGTH]:
+      "Description cannot have more that 250 characters"
+  }
 };
