@@ -257,7 +257,7 @@ class SignupComponent extends React.Component {
                         // invalid={errors.firstName}
                       />
                       <FormFeedback>
-                        {errors.firstName && !firstName
+                        {errors.firstName || !firstName
                           ? errors.firstName
                           : null}
                       </FormFeedback>
@@ -279,7 +279,7 @@ class SignupComponent extends React.Component {
                         type="text"
                       />
                       <FormFeedback>
-                        {errors.lastName && !lastName ? errors.lastName : null}
+                        {errors.lastName || !lastName ? errors.lastName : null}
                       </FormFeedback>
                     </InputGroup>
                   </FormGroup>

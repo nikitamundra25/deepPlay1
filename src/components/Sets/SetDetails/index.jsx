@@ -54,7 +54,8 @@ class SetDetails extends React.Component {
       showVideoIndex: -1,
       moveData: [],
       setToTransfer: "",
-      folderId: ""
+      folderId: "",
+      moveListItem: []
     };
   }
   componentDidMount = () => {
@@ -77,7 +78,7 @@ class SetDetails extends React.Component {
   /*
   /*  
   */
-  componentDidUpdate = ({ location }) => {
+  componentDidUpdate = ({ location, moveReducer }) => {
     const { location: currentLocation } = this.props;
     const { search } = location;
     const { search: currentSearch } = currentLocation;
@@ -88,6 +89,11 @@ class SetDetails extends React.Component {
         page: 1,
         isInfiniteScroll: false,
         isStarred: isStarred[1]
+      });
+    }
+    if (moveReducer.movesOfSet !== this.props.moveReducer.movesOfSet) {
+      this.setState({
+        moveListItem: this.props.moveReducer.movesOfSet
       });
     }
   };
@@ -290,8 +296,10 @@ class SetDetails extends React.Component {
       showVideo,
       showVideoIndex,
       setToTransfer,
-      folderId
+      folderId,
+      moveListItem
     } = this.state;
+
 
     return (
       <>
@@ -393,7 +401,7 @@ class SetDetails extends React.Component {
                     moveCount={setDetails.moveCount}
                     isStarred={this.isStarred}
                     deleteMove={this.deleteMove}
-                    movesOfSet={movesOfSet}
+                    movesOfSet={moveListItem}
                     handleVideoModal={this.handleVideoModal}
                     allSetList={allSetList}
                     setIdPathName={setIdPathName}

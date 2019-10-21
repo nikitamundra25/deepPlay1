@@ -67,6 +67,11 @@ class MoveList extends React.Component {
         });
       }
     }
+    if (prevProps.movesOfSet !== this.props.movesOfSet) {
+      this.setState({
+        moveofSetList: this.props.movesOfSet
+      });
+    }
   };
 
   /*
@@ -260,7 +265,8 @@ class MoveList extends React.Component {
       setId: this.props.setIdPathName,
       moveId: draggableId,
       sortIndex: destination.index,
-      sourceIndex: source.index
+      sourceIndex: source.index,
+      movesOfSet: items
     };
     this.props.updateSortIndexRequest(data);
   };
@@ -294,7 +300,6 @@ class MoveList extends React.Component {
     } = this.state;
     const location = this.props.location;
     const isStarred = location.search.split("=");
-    console.log(">>>>>>>>>>>", moveofSetList);
 
     return (
       <section className="play-list-collection set-detail-section">

@@ -1,4 +1,4 @@
-import { Request, Response } from "express";
+import { Request, Response, response } from "express";
 import {
   CloudinaryAPIKey,
   CloudinaryAPISecretKey,
@@ -725,50 +725,69 @@ const addTagsInMove = async (req: Request, res: Response): Promise<any> => {
 const updateMoveIndex = async (req: Request, res: Response): Promise<any> => {
   try {
     const { body } = req;
-    const { setId, sortIndex, moveId, sourceIndex } = body;
+    const { setId, sortIndex, moveId, movesOfSet } = body;
 
     let num: number = parseInt(sortIndex);
     let num1: number = parseInt(sortIndex);
 
-    await MoveModel.updateOne(
-      { setId: setId, _id: moveId },
-      { $set: { sortIndex: sortIndex } }
-    );
-
-    let result = await MoveModel.find({
-      _id: { $ne: moveId },
-      setId: setId,
-      isDeleted: false,
-      sortIndex: { $gte: sortIndex }
-    }).sort({ sortIndex: 1 });
-
-    let result_data = await MoveModel.find({
-      _id: { $ne: moveId },
-      setId: setId,
-      isDeleted: false,
-      sortIndex: { $lt: sortIndex }
-    }).sort({ sortIndex: -1 });
-
-    if (result && result.length) {
-      for (let index = 0; index < result.length; index++) {
-        await MoveModel.updateOne(
-          { setId: setId, _id: result[index]._id },
-          { $set: { sortIndex: ++num } }
-        );
-      }
+    for (let index = 0; index < movesOfSet.length; index++) {
+      await MoveModel.updateOne(
+        { setId: setId, _id: movesOfSet[index]._id },
+        { $set: { sortIndex: index } }
+      );
     }
 
-    if (result_data && result_data.length) {
-      for (let index = 0; index < result_data.length; index++) {
-        await MoveModel.updateOne(
-          { setId: setId, _id: result_data[index]._id },
-          { $set: { sortIndex: --num1 } }
-        );
-      }
-    }
+    // await MoveModel.updateOne(
+    //   { setId: setId, _id: moveId },
+    //   { $set: { sortIndex: sortIndex } }
+    // );
+
+    // let result = await MoveModel.find({
+    //   _id: { $ne: moveId },
+    //   setId: setId,
+    //   isDeleted: false,
+    //   sortIndex: { $gte: sortIndex }
+    // }).sort({ sortIndex: 1 });
+
+    // let result_data = await MoveModel.find({
+    //   _id: { $ne: moveId },
+    //   setId: setId,
+    //   isDeleted: false,
+    //   sortIndex: { $lt: sortIndex }
+    // }).sort({ sortIndex: -1 });
+
+    // if (result && result.length) {
+    //   for (let index = 0; index < result.length; index++) {
+    //     if (result[index]._id !== moveId) {
+    //       await MoveModel.updateOne(
+    //         { setId: setId, _id: result[index]._id },
+    //         { $set: { sortIndex: ++num } }
+    //       );
+    //     }
+    //   }
+    // }
+
+    // if (result_data && result_data.length) {
+    //   for (let index = 0; index < result_data.length; index++) {
+    //     if (result_data[index]._id !== moveId) {
+    //       await MoveModel.updateOne(
+    //         { setId: setId, _id: result_data[index]._id },
+    //         { $set: { sortIndex: --num1 } }
+    //       );
+    //     }
+    //   }
+    // }
+
+    const resp: Document | any | null = await MoveModel.find({
+      setId: setId,
+      isDeleted: false
+    }).sort({
+      sortIndex: 1
+    });
 
     return res.status(200).json({
-      message: "SortIndex have been updated successfully!"
+      message: "SortIndex have been updated successfully!",
+       data: resp
     });
   } catch (error) {
     console.log(error);
