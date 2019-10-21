@@ -131,20 +131,27 @@ class FrameDetails extends Component {
    *
    */
   render() {
-    const { videoDuration, videoMaxDuration, frames, videoMetaData } = this.props;
+    const { frames, videoMetaData } = this.props;
     const { duration } = videoMetaData || {};
     const { seconds: maxValue } = duration || {};
     const { time } = this.state;
     return (
       <div className="fram-picker">
         <div className=" mt-5 video-controls " id={"video-controls"}>
-          {/* <div id={"left-container"}></div>
-          <div id={"right-container"}></div> */}
+          <div id={"left-container"}></div>
+          <div id={"right-container"}></div>
           <InputRange
             draggableTrack
             maxValue={maxValue}
             minValue={0}
-            formatLabel={() => `${time.min}`}
+            formatLabel={(val, type) => {
+              console.log("fasdfasd", type, type === "min");
+              return type === "min"
+                ? `${SecondsToMMSS(time.min)}`
+                : type === "max"
+                ? `${SecondsToMMSS(time.max)}`
+                : null;
+            }}
             value={time}
             onChange={this.labelValueChange}
           />
@@ -201,11 +208,14 @@ class FrameDetails extends Component {
               </Col>
             </Row>
           </Col>
-          <Col md={"6"} className="text-right d-flex align-items-end justify-content-end">
+          <Col
+            md={"6"}
+            className="text-right d-flex align-items-end justify-content-end"
+          >
             <Button
               color={"default"}
               className={"btn-black btn url-upload-btn"}
-              onClick={(e) => this.props.completeEditing(e)}
+              onClick={e => this.props.completeEditing(e)}
             >
               Finish
             </Button>
