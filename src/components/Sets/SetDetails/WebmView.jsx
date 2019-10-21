@@ -131,6 +131,16 @@ class WebmView extends Component {
   /**
    *
    */
+  handleVideoFullScreen = () => {
+    if (this.video.mozRequestFullScreen) {
+      this.video.mozRequestFullScreen();
+    } else if (this.video.webkitRequestFullScreen) {
+      this.video.webkitRequestFullScreen();
+    }
+  }
+  /**
+   *
+   */
   handleSpeed = speed => {
     this.video.playbackRate = speed;
     this.setState({
@@ -273,9 +283,9 @@ class WebmView extends Component {
                         onClick={() =>
                           videoData
                             ? this.openTransferToModal(
-                                videoData._id,
-                                videoData.setId
-                              )
+                              videoData._id,
+                              videoData.setId
+                            )
                             : this.openTransferToModal(video._id, video.setId)
                         }
                       >
@@ -349,13 +359,13 @@ class WebmView extends Component {
                             <i className={"fa fa-pause"}></i>
                           </span>
                         ) : (
-                          <span
-                            onClick={this.playVideo}
-                            className={"cursor_pointer"}
-                          >
-                            <i className={"fa fa-play"}></i>
-                          </span>
-                        )}
+                            <span
+                              onClick={this.playVideo}
+                              className={"cursor_pointer"}
+                            >
+                              <i className={"fa fa-play"}></i>
+                            </span>
+                          )}
                       </div>
                       <div className="video-time-wrap control-tile">
                         {SecondsToHHMMSS(parseInt(currentTime))} /{" "}
@@ -369,11 +379,11 @@ class WebmView extends Component {
                             audioSpeed > 0.6 ? (
                               <i className="fas fa-volume-up"></i>
                             ) : (
-                              <i className="fas fa-volume-down"></i>
-                            )
+                                <i class="fas fa-volume-down"></i>
+                              )
                           ) : (
-                            <i className="fas fa-volume-mute"></i>
-                          )}
+                                <i class="fas fa-volume-mute"></i>
+                              )}
                         </span>
                       </div>
                       <div className="volume-range cursor_pointer control-tile">
@@ -396,12 +406,12 @@ class WebmView extends Component {
                       <div className="speed-wrap control-tile">
                         <UncontrolledDropdown
                           className="header-dropdown custom-dropdown"
-                          // direction="auto"
+                        // direction="auto"
                         >
                           <DropdownToggle color={" "}>
                             <span
                               id="playback-speed"
-                              className="cursor_pointer ml-4"
+                              className="cursor_pointer ml-2 text-white"
                             >
                               {playBackSpeed !== 1 ? `${playBackSpeed}x` : null}{" "}
                               <i
@@ -439,7 +449,11 @@ class WebmView extends Component {
                         </UncontrolledDropdown>
                       </div>
                     </div>
-                    <div className="control-left-block"></div>
+                    <div className="control-right-block">
+                      <span onClick={() => this.handleVideoFullScreen()} className="control-tile cursor_pointer">
+                        <i className="fas fa-expand" />
+                      </span>
+                    </div>
                   </div>
                 </div>
               </div>

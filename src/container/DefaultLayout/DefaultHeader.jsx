@@ -95,7 +95,7 @@ class DefaultHeader extends React.Component {
     });
   };
 
-  openSearch = () =>{
+  openSearch = () => {
     this.setState({
       open : !this.state.open,
       search:""
@@ -225,12 +225,12 @@ class DefaultHeader extends React.Component {
                               </DropdownMenu>
                             </UncontrolledDropdown>
                           </Col>
-                          <Col className= "flex-fill header-search-main">
+                          <Col className="flex-fill header-search-main">
                             <FormGroup className="mb-0 header-search-wrap ">
                               <InputGroup className="" >
-                                <InputGroupAddon  addonType="prepend">
-                                  <span className="input-group-text header-input-group-text" onClick = {this.openSearch} >
-                                    <i 
+                                <InputGroupAddon addonType="prepend">
+                                  <span className="input-group-text header-input-group-text" onClick={this.openSearch} >
+                                    <i
                                       className="fa fa-search"
                                       aria-hidden="true"
                                     ></i>
@@ -260,6 +260,7 @@ class DefaultHeader extends React.Component {
                                       handleSearchEmpty={() => this.setState({
                                         search: ""
                                       })}
+                                      profiledata={profiledata}
                                       {...this.props}
                                     /> :
                                     null
@@ -332,15 +333,15 @@ class DefaultHeader extends React.Component {
                                         //   alt={"img"}
                                         // />
                                         <div
-                                        style={{
-                                          backgroundImage:
-                                            'url("' +
-                                            profileImageIc
-                                            +
-                                            '")'
-                                        }}
-                                        className="user-back-img-wrap"
-                                      ></div>
+                                          style={{
+                                            backgroundImage:
+                                              'url("' +
+                                              profileImageIc
+                                              +
+                                              '")'
+                                          }}
+                                          className="user-back-img-wrap"
+                                        ></div>
                                       )}
                                   </div>
                                   <div className="user-text">

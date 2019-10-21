@@ -110,11 +110,12 @@ class FrameDetails extends Component {
    */
   renderOptions = type => {
     const options = [];
-    const { videoMaxDuration } = this.props;
-    
+    const { videoMetaData } = this.props;
+    const { duration } = videoMetaData || {};
+    const { seconds: maxValue } = duration || {};
     for (
       let index = type === "max" ? 1 : 0;
-      index <= (videoMaxDuration - (type === "max" ? 0 : 1) || 0);
+      index <= (maxValue - (type === "max" ? 0 : 1) || 0);
       index++
     ) {
       options.push(
@@ -130,7 +131,9 @@ class FrameDetails extends Component {
    *
    */
   render() {
-    const { videoDuration, videoMaxDuration } = this.props;
+    const { videoDuration, videoMaxDuration, frames, videoMetaData } = this.props;
+    const { duration } = videoMetaData || {};
+    const { seconds: maxValue } = duration || {};
     const { time } = this.state;
     return (
       <div className="fram-picker">
@@ -139,7 +142,7 @@ class FrameDetails extends Component {
           <div id={"right-container"}></div> */}
           <InputRange
             draggableTrack
-            maxValue={videoMaxDuration}
+            maxValue={maxValue}
             minValue={0}
             formatLabel={() => `${time.min}`}
             value={time}
@@ -147,10 +150,10 @@ class FrameDetails extends Component {
           />
           <div className={"frame-container"}>
             <div className="fram-wrap py-4">
-              {orderBy(videoDuration).map((duration, index) => {
+              {orderBy(frames).map((frame, index) => {
                 return (
-                  <div className="fram-block" key={index}>
-                    <span>{SecondsToMMSS(duration)}</span>
+                  <div className="frem-inner" key={index}>
+                    <img src={frame} alt={`Frame ${index + 1}`} />
                   </div>
                 );
               })}
