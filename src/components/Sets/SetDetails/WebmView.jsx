@@ -289,7 +289,7 @@ class WebmView extends Component {
                 <div className="video-slider-dropDown">
                   <div>
                     <UncontrolledDropdown
-                      className="header-dropdown  custom-dropdown"
+                      className="header-dropdown custom-dropdown dropdown-with-tip"
                       direction="left"
                     >
                       <DropdownToggle color={" "}>

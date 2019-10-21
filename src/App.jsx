@@ -36,7 +36,7 @@ class App extends Component {
     return (
       <Provider store={store}>
         <Router history={history}>
-          <React.Suspense fallback={<Loader />}>
+          <React.Suspense fallback={<Loader fullLoader={true} />}>
             <AppRoutes />
           </React.Suspense>
         </Router>

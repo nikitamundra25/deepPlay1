@@ -22,13 +22,13 @@
         }
         height: calc(100% - 15px);
     }
-    &.full-loader{
-        .loader-block{
-            border: none;
-            margin: 0px auto;
-        }   
-    }
+
 }
-  
+.full-loader{
+    .loader-block{
+        border: none;
+        margin: 0px;
+    }   
+}
    
    

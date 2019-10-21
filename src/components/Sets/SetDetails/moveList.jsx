@@ -313,7 +313,7 @@ class MoveList extends React.Component {
           <Row className={"m-0"}>
             <Col md="12" className={"pb-3"}>
               <div className="content-header mt-3 mb-1">
-                <span className="content-title">
+                <span className="content-title ">
                   Moves in this set ({moveCount || 0})
                 </span>
 
@@ -415,14 +415,17 @@ class MoveList extends React.Component {
                 </div>
               ) : null}
             </Col>
-            <div className="play-list-tile">
-              <div className="play-list-block  d-flex h-100 ">
+<div className="video-thumbnail-block">
+            <div className="play-list-tile create-now-wrap">
+              <div className="play-list-block  d-flex h-100 cursor_pointer"
+              onClick={this.props.handleMoveAdd}
+              >
                 <div className="add-play-list-block d-flex w-100 justify-content-center align-items-center text-center flex-column">
                   <div className="h5 font-dark-bold add-img">
                     <img src={addPlusIc} alt="" />
                   </div>
                   <Button
-                    onClick={this.props.handleMoveAdd}
+                    
                     color={" "}
                     className="fill-btn btn mt-4"
                   >
@@ -441,8 +444,8 @@ class MoveList extends React.Component {
                 {provided => (
                   <>  
                  
-                    <div ref={provided.innerRef} className="d-flex">
-                    <div className="" ></div>
+                    <div ref={provided.innerRef} className="video-thumbnail-sub-block">
+                    <div className="play-list-tile empty-tile" ></div>
                       {!isMoveSearchLoading ? (
                         moveofSetList.map((video, index) => {
                           return (
@@ -699,8 +702,8 @@ class MoveList extends React.Component {
                 )}
               </Droppable>
             </DragDropContext>
-
-            {}
+            </div>
+          
           </Row>
           <TransferToModal
             modal={transferToModalOpen}

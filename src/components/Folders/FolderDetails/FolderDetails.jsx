@@ -330,8 +330,8 @@ class RecentFolderComponent extends React.Component {
               Get Shareable Link
             </UncontrolledTooltip>
             <UncontrolledDropdown className="header-dropdown  ">
-              <DropdownToggle color={" "}>
-                <span id="edit" className="cursor_pointer ml-4">
+              <DropdownToggle color={" "} className="mr-0">
+                <span id="edit" className="cursor_pointer ml-4 mr-0">
                   <i className="fas fa-sliders-h icon-font"></i>
                 </span>
               </DropdownToggle>

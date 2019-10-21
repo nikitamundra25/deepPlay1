@@ -167,7 +167,7 @@ class FolderSharedLink extends React.Component {
                 <>
                   <Col>
                     <div className="create-set-section w-100 empty-folder-section">
-                      <Card className="set-content-wrap empty-folder-card">
+                      <Card className="set-content-wrap empty-folder-card mb-4">
                         <div className="set-content-block w-100 empty-folder-wrap">
                           <CardHeader className="empty-folder-header ">
                             <img src={emptyFolderIc} alt={"Images"} />
