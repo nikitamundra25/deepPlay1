@@ -416,12 +416,11 @@ const updateSortIndexLogic = createLogic({
       done();
       return;
     } else {
-      // dispatch(getMovesOfSetRequest({ setId: action.payload.setId }));
-      // dispatch(
-      //   updateSortIndexSuccess({
-      //     movesOfSet: result.data.data
-      //   })
-      // );
+      dispatch(
+        updateSortIndexSuccess({
+          movesOfSet: result.data.data
+        })
+      );
       done();
     }
   }

@@ -40,14 +40,9 @@ export const moveReducer = handleActions(
     [MovesAction.GET_MOVES_OF_SET_SUCCESS]: (state, { payload }) => ({
       ...state,
       //movesOfSet: payload.movesOfSet,
-      movesOfSet:
-        payload.isInfiniteScroll ?
-          [
-            ...state.movesOfSet, ...payload.movesOfSet
-          ] :
-          payload.movesOfSet
-      ,
-
+      movesOfSet: payload.isInfiniteScroll
+        ? [...state.movesOfSet, ...payload.movesOfSet]
+        : payload.movesOfSet,
       totalMoves: payload.totalMoves,
       isMoveofSetLoading: false
     }),
@@ -81,6 +76,10 @@ export const moveReducer = handleActions(
       ...state,
       ...payload,
       isMoveSearchLoading: false
+    }),
+    [MovesAction.UPDATE_SORT_INDEX_SUCCESS]: (state, { payload }) => ({
+      ...state,
+      ...payload
     })
   },
   initialState

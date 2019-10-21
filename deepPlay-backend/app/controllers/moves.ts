@@ -726,6 +726,7 @@ const updateMoveIndex = async (req: Request, res: Response): Promise<any> => {
   try {
     const { body } = req;
     const { setId, sortIndex, moveId, sourceIndex } = body;
+
     let num = sortIndex;
     let num1 = sortIndex;
 
@@ -738,7 +739,7 @@ const updateMoveIndex = async (req: Request, res: Response): Promise<any> => {
       _id: { $ne: moveId },
       setId: setId,
       isDeleted: false,
-      sortIndex: { $gt: sortIndex }
+      sortIndex: { $gte: sortIndex }
     }).sort({ sortIndex: 1 });
 
     let result1 = await MoveModel.find({
@@ -767,7 +768,7 @@ const updateMoveIndex = async (req: Request, res: Response): Promise<any> => {
     }
 
     return res.status(200).json({
-      message: "SortIndex have been updated successfully!",
+      message: "SortIndex have been updated successfully!"
     });
   } catch (error) {
     console.log(error);
