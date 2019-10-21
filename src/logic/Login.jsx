@@ -11,6 +11,7 @@ import {
   forgotPasswordSuccess,
   changePasswordSuccess,
   changePasswordAction,
+  forgotPasswordFailed,
   changePasswordFailed
 } from "../actions";
 //import { logger } from "helper/Logger";
@@ -125,6 +126,7 @@ const forgetPasswordLogic = createLogic({
     );
     if (result.isError) {
       toast.error(result.messages[0]);
+      dispatch(forgotPasswordFailed());
       done();
       return;
     } else {
@@ -247,7 +249,7 @@ const changePasswordLogic = createLogic({
             result.messages
         );
       }
-      dispatch(changePasswordFailed())
+      dispatch(changePasswordFailed());
       done();
       return;
     } else {

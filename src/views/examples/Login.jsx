@@ -73,6 +73,7 @@ class Login extends React.Component {
                           className="btn-neutral btn-icon"
                           color="default"
                           href="#pablo"
+                          color=" "
                           onClick={e => e.preventDefault()}
                         >
                           <span className="btn-inner--icon mr-1">

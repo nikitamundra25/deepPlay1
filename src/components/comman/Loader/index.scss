@@ -1,4 +1,8 @@
-
+.loader-wrap{
+    width: 100%;
+    position: relative;
+    min-height: 450px;
+}
     .loader-block{
         position: absolute;
     z-index: 8;

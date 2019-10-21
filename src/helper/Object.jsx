@@ -16,7 +16,7 @@ export const isEqual = function(value, other) {
   if (valueLen !== otherLen) return false;
 
   // Compare two items
-  var compare = function(item1, item2) {
+   var compare = function(item1, item2) {
     // Get the object type
     var itemType = Object.prototype.toString.call(item1);
 

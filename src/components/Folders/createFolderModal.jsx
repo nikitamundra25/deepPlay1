@@ -7,9 +7,15 @@ import {
   Label,
   ModalHeader,
   ModalBody,
-  ModalFooter
+  ModalFooter,
+  FormFeedback
 } from "reactstrap";
 import closeBtn from "../../assets/img/close-img.png";
+import {
+  CreateFolderValidations,
+  CreateFolderValidationsMessaages
+} from "../../validations";
+import Validator from "js-object-validation";
 
 // core components
 class FolderModal extends React.Component {
@@ -17,7 +23,8 @@ class FolderModal extends React.Component {
     super(props);
     this.state = {
       title: "",
-      description: ""
+      description: "",
+      errors: {}
     };
   }
 
@@ -34,7 +41,11 @@ class FolderModal extends React.Component {
   handleChange = e => {
     const { name, value } = e.target;
     this.setState({
-      [name]: value
+      [name]: value,
+      errors: {
+        ...this.state.errors,
+        [name]: null
+      }
     });
   };
 
@@ -49,6 +60,17 @@ class FolderModal extends React.Component {
   };
 
   onCreateFolder = () => {
+    const { isValid, errors } = Validator(
+      this.state,
+      CreateFolderValidations,
+      CreateFolderValidationsMessaages
+    );
+    if (!isValid) {
+      this.setState({
+        errors
+      });
+      return;
+    }
     const { folderDetails } = this.props;
     const data = {
       id: folderDetails ? folderDetails._id : "",
@@ -61,13 +83,15 @@ class FolderModal extends React.Component {
 
   render() {
     const { modal, handleOpen, folderDetails } = this.props;
-    const { title, description } = this.state;
+    const { title, description, errors } = this.state;
+
     return (
       <div>
         <Modal
           className="modal-dialog-centered custom-model-wrap"
           isOpen={modal}
           toggle={handleOpen}
+          backdrop={"static"}
         >
           <ModalHeader>
             <span className="custom-title" id="exampleModalLabel">
@@ -88,16 +112,18 @@ class FolderModal extends React.Component {
           <ModalBody>
             <FormGroup>
               <Label for="title" className="font-weight-bold text-center">
-                TITLE
+                TITLE <span className="text-danger">*</span>
               </Label>
               <Input
                 id="title"
                 type="text"
                 placeholder="Enter a title"
                 name="title"
+                className={errors.title ? "is-invalid" : ""}
                 onChange={this.handleChange}
                 value={title}
               />
+              <FormFeedback>{errors.title ? errors.title : null}</FormFeedback>
             </FormGroup>
             <FormGroup>
               <Label for="description" className="font-weight-bold text-center">
@@ -108,9 +134,14 @@ class FolderModal extends React.Component {
                 type="textarea"
                 placeholder="Enter a description (optional)"
                 name="description"
+                className={errors.description ? "is-invalid" : ""}
                 onChange={this.handleChange}
                 value={description}
+                rows={3}
               />
+              <FormFeedback>
+                {errors.description ? errors.description : null}
+              </FormFeedback>
             </FormGroup>
           </ModalBody>
           <ModalFooter>

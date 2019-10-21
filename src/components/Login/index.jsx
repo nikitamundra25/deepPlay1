@@ -131,7 +131,7 @@ class LoginComponent extends React.Component {
           className="modal-dialog-centered auth-user-model"
           isOpen={openLoginModel}
           toggle={handleLoginModel}
-          backdrop={"static"}
+          // backdrop={"static"}
           size={"sm"}
         >
           <ModalHeader toggle={handleLoginModel}></ModalHeader>
@@ -216,7 +216,7 @@ class LoginComponent extends React.Component {
                   </FormGroup>
                   <div
                     className={
-                      "text-center cursor_pointer forgot-password-bottom-wrap"
+                      "text-right cursor_pointer forgot-password-bottom-wrap"
                     }
                   >
                     <span onClick={this.props.handleForgotPasswordModel}>
@@ -225,7 +225,7 @@ class LoginComponent extends React.Component {
                   </div>
                   <div className="text-center auth-btn-wrap">
                     <Button
-                      className="my-4 btn-black btn-block"
+                      className="mt-3 mb-2  btn-black btn-block"
                       type="submit"
                       color={" "}
                       disabled={isLoginRequest ? true : false}
@@ -234,7 +234,7 @@ class LoginComponent extends React.Component {
                     </Button>
 
                     <Button
-                      className="my-4 btn-black btn-line-black btn-block"
+                      className="mb-4 btn-black btn-line-black btn-block"
                       color=" "
                       onClick={() => this.props.handleSignupModal()}
                       type="button"

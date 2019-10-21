@@ -7,7 +7,8 @@ import {
   showLoader,
   hideLoader,
   modelOpenRequest,
-  uploadImageFailed
+  uploadImageFailed,
+  updateProfileSuccess
 } from "../actions";
 import { AppRoutes } from "../config/AppRoutes";
 import { toast } from "react-toastify";
@@ -52,7 +53,7 @@ const profileInfoLogic = createLogic({
 //update user info
 const UpdateUserDataLogic = createLogic({
   type: ProfileAction.UPDATEPROFILEINFO_REQUEST,
-  async process({ action }, dispatch, done) {
+  async process({ action, getState }, dispatch, done) {
     let api = new ApiHelper();
     let result = await api.FetchFromServer(
       "user",
@@ -69,10 +70,20 @@ const UpdateUserDataLogic = createLogic({
       done();
       return;
     } else {
+      let temp = getState().profileInfoReducer.profileInfo;
       if (!action.payload.accountType) {
+        temp = {
+          ...temp,
+          firstName: action.payload.firstName,
+          lastName: action.payload.lastName
+        };
+        dispatch(updateProfileSuccess({ profileInfo: temp }));
         if (!toast.isActive(toastId)) {
           toastId = toast.success(result.messages[0]);
         }
+      } else {
+        temp = { ...temp, roleType: action.payload.roleType };
+        dispatch(updateProfileSuccess({ profileInfo: temp }));
       }
       done();
     }

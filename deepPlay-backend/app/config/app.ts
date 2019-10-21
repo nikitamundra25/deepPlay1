@@ -9,8 +9,8 @@ export const CloudinaryAPISecretKey = IsProductionMode
   ? "LR2WYnnszbwc8Ie2DyOCcIdLfIc"
   : "LR2WYnnszbwc8Ie2DyOCcIdLfIc";
 export const CloudName = IsProductionMode ? "rishabhbula" : "rishabhbula";
-export const algoliaAppId = "0RMKRXX9E0";
-export const algoliaAPIKey = "72e9502244d283d58ceda3c80fe15422";
+export const algoliaAppId = IsProductionMode ? "K1EILBWXQT": "K1EILBWXQT";
+export const algoliaAPIKey = IsProductionMode ?"fefd78064914ebbb819df9c15948086b": "fefd78064914ebbb819df9c15948086b";
 export const ServerURL = !IsProductionMode
-  ? "//192.168.2.133:8000"
-  : "//3.19.246.229";
+  ? "http://localhost:8000"
+  : "http://3.19.246.229";

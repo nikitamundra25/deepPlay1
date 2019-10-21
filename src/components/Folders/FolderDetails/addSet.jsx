@@ -8,8 +8,9 @@ import {
   FormGroup,
   Input
 } from "reactstrap";
-import { AppRoutes } from "../../../config/AppRoutes";
+//import { AppRoutes } from "../../../config/AppRoutes";
 import closeIcon from "../../../assets/img/close-img.png";
+import CreateSetComponent from "../../Sets/createSet";
 import "./index.scss";
 
 // core components
@@ -24,32 +25,39 @@ class AddSetModal extends React.Component {
 
   componentDidUpdate(prevProps) {
     if (prevProps.getAllSet !== this.props.getAllSet) {
+      const { selectedSet } = this.state;
       let setList = this.props.getAllSet;
-      const setItem = setList.filter(item =>
-        item && item.folderId ? item.folderId._id === this.props.folderId : null
-      );
+      let setItem = [];
+
+      if (selectedSet === "yourSet") {
+        setItem = setList.filter(item =>
+          item && item.folderId
+            ? item.folderId._id === this.props.folderId
+            : null
+        );
+      } else {
+        if (setList && setList.length) {
+          setList.map(item => {
+            if (
+              (item &&
+                item.folderId &&
+                item.folderId._id === this.props.folderId) ||
+              item.folderId === null
+            ) {
+              setItem.push(item);
+            }
+            return true;
+          });
+        }
+      }
       this.setState({
         setList: setItem
       });
     }
   }
 
-  handleOpen = () => {
-    const { modelInfoReducer } = this.props;
-    const { modelDetails } = modelInfoReducer;
-    this.props.modelOperate({
-      modelDetails: {
-        addSetModalOpen: !modelDetails.addSetModalOpen
-      }
-    });
-  };
-
   OnhandleSets = (id, name) => {
     this.props.handleSets(id, name);
-  };
-
-  handleAddNewSet = folderId => {
-    this.props.redirectTo(AppRoutes.CREATE_SET.url + `?folderId=${folderId}`);
   };
 
   handleSelect = e => {
@@ -82,9 +90,25 @@ class AddSetModal extends React.Component {
     });
   };
 
+  handleSetModal = () => {
+    const { modelInfoReducer } = this.props;
+    const { modelDetails } = modelInfoReducer;
+    this.props.modelOperate({
+      modelDetails: {
+        createSetModalOpen: !modelDetails.createSetModalOpen
+      }
+    });
+  };
+
+  addNewSet = data => {
+    this.props.addNewSet(data);
+  };
+
   render() {
-    const { modal, folderId, handleOpen } = this.props;
+    const { modal, folderId, handleOpen, modelInfoReducer } = this.props;
     const { setList, selectedSet } = this.state;
+    const { modelDetails } = modelInfoReducer;
+    const { createSetModalOpen } = modelDetails;
 
     return (
       <div>
@@ -113,7 +137,7 @@ class AddSetModal extends React.Component {
             <div className="wrap-folder">
               <div className="tile-wrap card mb-3 d-block">
                 <span
-                  onClick={() => this.handleAddNewSet(folderId)}
+                  onClick={() => this.handleSetModal()}
                   className={"cursor_pointer create-btn font-14 text-uppercase"}
                 >
                   + Create New Set
@@ -128,7 +152,7 @@ class AddSetModal extends React.Component {
                   onChange={this.handleSelect}
                   value={selectedSet}
                 >
-                  <option value="yourSet">Your Sets</option>
+                  <option value="yourSet">Folder Sets</option>
                   <option value="allSet">All Sets</option>
                 </Input>
               </FormGroup>
@@ -180,6 +204,12 @@ class AddSetModal extends React.Component {
             </div>
           </ModalBody>
         </Modal>
+        <CreateSetComponent
+          modal={createSetModalOpen}
+          handleOpen={this.handleSetModal}
+          folderId={folderId}
+          createSet={this.addNewSet}
+        />
       </div>
     );
   }

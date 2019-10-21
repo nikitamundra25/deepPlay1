@@ -5,7 +5,11 @@ import {
   MovesAction,
   downloadYoutubeVideoSuccess,
   getMovesOfSetSuccess,
-  getMoveDetailsSuccess
+  getMovesOfSetRequest,
+  getMoveDetailsSuccess,
+  modelOpenRequest,
+  searchMoveSuccess,
+  getSetDetailsRequest
 } from "../actions";
 import { AppRoutes } from "../config/AppRoutes";
 import { toast } from "react-toastify";
@@ -86,7 +90,9 @@ const getMovesOfSetLogic = createLogic({
       dispatch(
         getMovesOfSetSuccess({
           showLoader: false,
-          movesOfSet: result.data.movesData
+          movesOfSet: result.data.movesData,
+          totalMoves: result.data.totalMoves,
+          isInfiniteScroll: action.payload.isInfiniteScroll
         })
       );
       done();
@@ -141,21 +147,218 @@ const completeVideoEditingLogic = createLogic({
       undefined,
       action.payload
     );
-    logger(result, action.payload);
-    dispatch(
-      completeVideoEditingSuccess({
-        isSavingWebM: false
-      })
-    );
-    done();
+    if (result.isError) {
+      toast.error(result.messages[0]);
+    } else {
+      logger(result, action.payload);
+      if (action.payload.isEdit) {
+        dispatch(
+          redirectTo({
+            path: `${AppRoutes.SET_DETAILS.url.replace(
+              ":id",
+              result.data.setId
+            )}`
+          })
+        );
+      } else {
+        dispatch(
+          modelOpenRequest({
+            modelDetails: {
+              isMoveSuccessModal: true
+            }
+          })
+        );
+      }
+      dispatch(
+        completeVideoEditingSuccess({
+          isSavingWebM: false,
+          moveUrlDetails: {
+            moveURL: result.data.data.videoUrl,
+            setId: result.data.setId
+          }
+        })
+      );
+      done();
+    }
   }
 });
 /**
  *
  */
+
+//Star move
+const starMoveLogic = createLogic({
+  type: MovesAction.STARRED_MOVE_REQUEST,
+  async process({ action }, dispatch, done) {
+    let api = new ApiHelper();
+    let result = await api.FetchFromServer(
+      "move",
+      "/starred-move",
+      "PUT",
+      true,
+      action.payload
+    );
+    if (result.isError) {
+      if (!toast.isActive(toastId)) {
+        toastId = toast.error(result.messages[0]);
+      }
+      done();
+      return;
+    } else {
+      if (!toast.isActive(toastId)) {
+        toastId = toast.success(result.messages[0]);
+      }
+      dispatch(getMovesOfSetRequest({ setId: action.payload.setId }));
+      done();
+    }
+  }
+});
+
+//Delete move
+const deleteMoveLogic = createLogic({
+  type: MovesAction.DELETE_MOVES_REQUEST,
+  async process({ action }, dispatch, done) {
+    let api = new ApiHelper();
+    let result = await api.FetchFromServer(
+      "move",
+      "/delete-move",
+      "PATCH",
+      true,
+      action.payload
+    );
+    if (result.isError) {
+      if (!toast.isActive(toastId)) {
+        toastId = toast.error(result.messages[0]);
+      }
+      done();
+      return;
+    } else {
+      if (!toast.isActive(toastId)) {
+        toastId = toast.success(result.messages[0]);
+      }
+      dispatch(getMovesOfSetRequest({ setId: action.payload.setId }));
+      done();
+    }
+  }
+});
+
+//Transfer move to set
+const transferMoveLogic = createLogic({
+  type: MovesAction.TRANSFER_MOVE_REQUEST,
+  async process({ action }, dispatch, done) {
+    let api = new ApiHelper();
+    let result = await api.FetchFromServer(
+      "move",
+      "/transfer-move",
+      "PATCH",
+      true,
+      undefined,
+      action.payload
+    );
+    if (result.isError) {
+      if (!toast.isActive(toastId)) {
+        toastId = toast.error(result.messages[0]);
+      }
+      done();
+      return;
+    } else {
+      if (!toast.isActive(toastId)) {
+        toastId = toast.success(result.messages[0]);
+      }
+      dispatch(
+        modelOpenRequest({
+          modelDetails: {
+            transferToModalOpen: false,
+            transferToModalOpenReq: false
+          }
+        })
+      );
+      dispatch(getMovesOfSetRequest({ setId: action.payload.previousSetId, page: 1, isInfiniteScroll: false }));
+      dispatch(getSetDetailsRequest({ setId: action.payload.previousSetId }));
+      done();
+    }
+  }
+});
+
+//-------------------Create Another Move Request----------------
+const createAnotherMoveLogic = createLogic({
+  type: MovesAction.CREATE_ANOTHER_MOVE_REQUEST,
+  async process({ action }, dispatch, done) {
+    let api = new ApiHelper();
+    let result = await api.FetchFromServer(
+      "move",
+      "/create-move",
+      "POST",
+      true,
+      undefined,
+      action.payload
+    );
+    if (result.isError) {
+      if (!toast.isActive(toastId)) {
+        toastId = toast.error(result.messages[0]);
+      }
+      done();
+      return;
+    } else {
+      if (!toast.isActive(toastId)) {
+        toastId = toast.success(result.messages[0]);
+      }
+      dispatch(
+        modelOpenRequest({
+          modelDetails: {
+            isMoveSuccessModal: false
+          }
+        })
+      );
+      dispatch(
+        redirectTo({
+          path: `${AppRoutes.MOVE_DETAILS.url.replace(
+            ":id",
+            result.data.moveId
+          )}`
+        })
+      );
+      done();
+    }
+  }
+});
+
+//Filter move
+const searchMoveLogic = createLogic({
+  type: MovesAction.SEARCH_MOVE_REQUEST,
+  async process({ action }, dispatch, done) {
+    let api = new ApiHelper();
+    let result = await api.FetchFromServer(
+      "move",
+      "/filter-move",
+      "GET",
+      true,
+      action.payload
+    );
+    if (result.isError) {
+      if (!toast.isActive(toastId)) {
+        toastId = toast.error(result.messages[0]);
+      }
+      done();
+      return;
+    } else {
+      dispatch(
+        searchMoveSuccess({
+          searchMoveResult: result.data.data
+        })
+      );
+      done();
+    }
+  }
+});
 export const MoveLogics = [
   downloadVideoLogic,
   getMovesOfSetLogic,
   getMovesDetailsByIdLogic,
-  completeVideoEditingLogic
+  completeVideoEditingLogic,
+  starMoveLogic,
+  deleteMoveLogic,
+  transferMoveLogic,
+  createAnotherMoveLogic,
+  searchMoveLogic
 ];

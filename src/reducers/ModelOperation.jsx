@@ -10,8 +10,14 @@ const initialAuthState = {
     createFolderModalOpen: false,
     createFolderOpen: false,
     addSetModalOpen: false,
+    createSetOpen: false,
     transferToModalOpen: false,
-    sharableLinkModalOpen: false
+    transferToModalOpenReq: false,
+    sharableLinkModalOpen: false,
+    createSetModalOpen: false,
+    isDescriptionModalOpen: false,
+    isMoveSuccessModal: false,
+    isVideoModalOpen: false
   }
 };
 

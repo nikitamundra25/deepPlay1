@@ -36,12 +36,12 @@ const login = async (req: Request, res: Response): Promise<any> => {
     if (result.password) {
       if (!comparePassword(password, result.password)) {
         return res.status(400).json({
-          message: "Password didn't match."
+          message: "Incorrect password."
         });
       }
     } else {
       return res.status(400).json({
-        message: "Password didn't match."
+        message: "Incorrect password."
       });
     }
 
@@ -146,7 +146,7 @@ const signup = async (req: Request, res: Response): Promise<any> => {
         isDeleted: false,
         updatedAt: new Date(),
         verifyToken: "",
-        roleType: body.roleType || "isUnclassified",
+        roleType: body.roleType || "Unclassified",
         status: true
       };
       const userResult: Document | any = new UserModel(userData);

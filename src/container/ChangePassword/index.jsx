@@ -7,10 +7,12 @@ import {
   Label,
   Row,
   Col,
+  CardTitle,
   Button,
   CardHeader,
   Card,
-  CardBody
+  CardBody,
+  FormFeedback
 } from "reactstrap";
 import {
   ChangePasswordValidations,
@@ -29,6 +31,19 @@ class ChangePassword extends Component {
       confirmPassword: "",
       errors: {}
     };
+  }
+
+  componentDidUpdate = ({ loginReducer }) => {
+    const previsousState = loginReducer.isChangePasswordDone
+    const currentState = this.props.loginReducer.isChangePasswordDone;
+    if (previsousState !== currentState) {
+      this.setState({
+        oldPassword: "",
+        newPassword: "",
+        confirmPassword: "",
+        errors: {}
+      })
+    }
   }
 
   handleChange = e => {
@@ -86,7 +101,10 @@ class ChangePassword extends Component {
           <div className="set-content-block w-100">
             <CardHeader className="">
               <div className="content-header set-header flex-column">
-                <span className="content-title">CHANGE PASSWORD</span>
+              <CardTitle className="card-heading mb-0 h5">
+                      Profile
+                    </CardTitle> 
+                    <div className="heading-divider"></div>
               </div>
             </CardHeader>
             <CardBody className="">
@@ -105,12 +123,13 @@ class ChangePassword extends Component {
                           value={oldPassword}
                           name="oldPassword"
                           onChange={this.handleChange}
+                          className={errors.oldPassword ? "is-invalid" : ""}
                           placeholder="Old Password"
                           type="password"
                         />
-                        {errors.oldPassword ? (
-                          <p className="text-danger"> {errors.oldPassword}</p>
-                        ) : null}
+                        <FormFeedback>
+                          {errors.oldPassword ? errors.oldPassword : null}
+                        </FormFeedback>
                       </FormGroup>
                     </Col>
                   </Row>
@@ -124,13 +143,14 @@ class ChangePassword extends Component {
                           id="newPassword"
                           placeholder="New Password"
                           type="password"
+                          className={errors.newPassword ? "is-invalid" : ""}
                           onChange={this.handleChange}
                           value={newPassword}
                           name="newPassword"
                         />
-                        {errors.newPassword ? (
-                          <p className="text-danger"> {errors.newPassword}</p>
-                        ) : null}
+                        <FormFeedback>
+                          {errors.newPassword ? errors.newPassword : null}
+                        </FormFeedback>
                       </FormGroup>
                     </Col>
                   </Row>
@@ -145,23 +165,23 @@ class ChangePassword extends Component {
                           id="confirmPassword"
                           placeholder="Confirm Password"
                           type="password"
+                          className={errors.confirmPassword ? "is-invalid" : ""}
                           onChange={this.handleChange}
                           value={confirmPassword}
                           name="confirmPassword"
                         />
-                        {errors.confirmPassword ? (
-                          <p className="text-danger">
-                            {" "}
-                            {errors.confirmPassword}
-                          </p>
-                        ) : null}
+                        <FormFeedback>
+                          {errors.confirmPassword
+                            ? errors.confirmPassword
+                            : null}
+                        </FormFeedback>
                       </FormGroup>
                     </Col>
                   </Row>
                   <div className="text-center">
                     <Button
                       className="btn-black btn mt-3"
-                      color=""
+                      color=" "
                       type="submit"
                       disabled={isChangePasswordSuccess ? true : false}
                     >

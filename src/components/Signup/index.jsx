@@ -109,9 +109,9 @@ class SignupComponent extends React.Component {
   /* 
   */
   handleChange = e => {
-    this.setState({
-      errors: ""
-    });
+    // this.setState({
+    //   errors: ""
+    // });
     const { name, value, checked } = e.target;
     if (name === "roleType") {
       this.setState({
@@ -131,7 +131,11 @@ class SignupComponent extends React.Component {
       }
     }
     this.setState({
-      [name]: value.trim()
+      [name]: value.trim(),
+      errors: {
+        ...this.state.errors,
+        [name]: null
+      }
     });
   };
   /*
@@ -153,7 +157,7 @@ class SignupComponent extends React.Component {
       firstName,
       lastName,
       confirmPassword,
-      roleType: roleType ? "I am a teacher" : "Unclassified"
+      roleType: roleType ? "teacher" : "Unclassified"
     };
     let { isValid, errors } = Validator(
       data,
@@ -193,7 +197,7 @@ class SignupComponent extends React.Component {
     return (
       <>
         <Modal
-          className="modal-dialog-centered auth-user-model"
+          className="modal-dialog-centered auth-user-model sign-up-model"
           isOpen={openSignupModel}
           toggle={handleSignupModel}
           // backdrop={"static"}
@@ -201,7 +205,7 @@ class SignupComponent extends React.Component {
         >
           <ModalHeader toggle={handleSignupModel} />
           <ModalBody className="modal-body p-0">
-            <Card className="bg-secondaryborder-0">
+            <Card className="bg-secondaryborder-0 pb-0 sign">
               <CardHeader>
                 <div className=" login-heading text-center  mb-3">
                   Sign up with
@@ -233,7 +237,7 @@ class SignupComponent extends React.Component {
 
               <CardBody className="px-lg-5">
                 <div className="text-center login-heading mb-4 auth-subheading">
-                  Or sign up and generate your credentials
+                  Sign up with email
                 </div>
                 <Form role="form" onSubmit={this.handleSignupRequest}>
                   <FormGroup>
@@ -377,7 +381,7 @@ class SignupComponent extends React.Component {
 
                   <div className="text-center auth-btn-wrap">
                     <Button
-                      className="mb-4 btn-black btn-block"
+                      className="mb-2 btn-black btn-block"
                       color=" "
                       type="submit"
                       disabled={isSignupLoading ? true : false}
@@ -385,12 +389,12 @@ class SignupComponent extends React.Component {
                       {isSignupLoading ? "Please wait..." : "Create account"}
                     </Button>
                     <Button
-                      className="my-4 btn-black btn-line-black btn-block"
+                      className="mb-4 btn-black btn-line-black btn-block"
                       color=" "
                       onClick={this.props.handleLoginModal}
                       type="button"
                     >
-                      Already have an account? Sign in
+                      Already have an account? Login
                     </Button>
                   </div>
                 </Form>

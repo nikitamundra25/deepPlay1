@@ -35,6 +35,7 @@ class SettingComponent extends Component {
       roleType: false,
       imgError: "",
       file: "",
+      name: "",
       modal: false,
       errors: {}
     };
@@ -48,6 +49,7 @@ class SettingComponent extends Component {
         roleType
       } = this.props.profileInfoReducer;
       this.setState({
+        name: firstName + " " + lastName,
         firstName,
         lastName,
         file: profileImage,
@@ -87,6 +89,7 @@ class SettingComponent extends Component {
       });
     }
   };
+
   onSaveData = () => {
     const { firstName, lastName, roleType } = this.state;
     const data = {
@@ -153,6 +156,15 @@ class SettingComponent extends Component {
     this.props.uploadImage(data);
   };
 
+  handlecancel = () => {
+    const { firstName, lastName } = this.props.profileInfoReducer;
+    this.setState({
+      firstName,
+      lastName,
+      isDisabled: !this.state.isDisabled
+    });
+  };
+
   render() {
     const {
       profileInfoReducer,
@@ -167,22 +179,26 @@ class SettingComponent extends Component {
       roleType,
       file,
       errors,
-      imgError
+      imgError,
+      name
     } = this.state;
     const { modelDetails } = modelInfoReducer;
     const { uploadImageModalOpen } = modelDetails;
-    const splitedImage = this.state.file.split("/")
+    const splitedImage = this.state.file.split("/");
+    const ProfileImage = splitedImage[0] === "uploads"
+    ? `${AppConfig.API_ENDPOINT}${this.state.file}`
+    : this.state.file
     return (
       <div>
         <div className="setting-section">
           <div className="page-body">
-            <div className="content-header mb-3">
+            <div className="content-header ">
               <span className="content-title">SETTINGS</span>
             </div>
             {!isprofileInfoLoading ? (
               <>
-                <Card className="card-wrap">
-                  <CardHeader clas>
+                <Card className="card-wrap ">
+                  <CardHeader className="d-flex">
                     <CardTitle className="card-heading mb-0 h5">
                       Profile
                     </CardTitle>
@@ -191,26 +207,28 @@ class SettingComponent extends Component {
                       <Button
                         className="dashboard-right-content btn-line-black"
                         onClick={this.onHandleEdit}
+                        color=" "
                       >
-                        Edit Profile
+                        {/* <i className="profile-ic fa fa-pencil-square-o"></i> */}
+                        <span className="text-profile">Edit Profile</span>
                       </Button>
                     ) : (
                         <ButtonGroup>
                           <Button
-                            className="dashboard-right-content btn-line-black "
+                            color=" "
+                            className="dashboard-right-content btn-black "
                             onClick={this.onSaveData}
                           >
-                            Update Info
-                        </Button>
+                            {/* <i className="profile-ic fa fa-pencil-square-o"></i> */}
+                            <span className="text-profile"> Update Info</span>
+
+                          </Button>
                           <Button
+                            color=" "
                             className="dashboard-right-content btn-line-black ml-2"
-                            onClick={() => {
-                              this.setState({
-                                isDisabled: !this.state.isDisabled
-                              });
-                            }}
+                            onClick={this.handlecancel}
                           >
-                            Cancle
+                            Cancel
                         </Button>
                         </ButtonGroup>
                       )}
@@ -220,13 +238,37 @@ class SettingComponent extends Component {
                       <div className="profile-img-tile">
                         <div className="profile-img">
                           {file ? (
-                            <img
-                              alt={"No Img Found"}
-                              src={splitedImage[0] === "uploads" ? `${AppConfig.API_ENDPOINT}${this.state.file}` : this.state.file}
-                              className="w-100"
-                            />
+                            // <img
+                            //   alt={"No Img Found"}
+                            //   src={
+                            //     splitedImage[0] === "uploads"
+                            //       ? `${AppConfig.API_ENDPOINT}${this.state.file}`
+                            //       : this.state.file
+                            //   }
+                            //   className="w-100"
+                            // />
+                            <div
+                                        style={{
+                                          backgroundImage:
+                                            'url("' +
+                                            ProfileImage
+                                            +
+                                            '")'
+                                        }}
+                                        className="user-back-img-wrap"
+                                      ></div>
                           ) : (
-                              <img alt="" src={profileIcon} className="w-100" />
+                            <div
+                            style={{
+                              backgroundImage:
+                                'url("' +
+                                profileIcon
+                                +
+                                '")'
+                            }}
+                            className="user-back-img-wrap"
+                          ></div>
+                              // <img alt="" src={profileIcon} className="w-100" />
                             )}
                           {!isDisabled ? (
                             <span
@@ -244,8 +286,8 @@ class SettingComponent extends Component {
                         ) : null}
                       </div>
                       <div className="profile-text-tile color-black">
-                        <div className="h5 font-weight-bold text-center mt-2">
-                          {firstName + " " + lastName}
+                        <div className="h5 font-weight-bold text-center mt-2 text-capitalize">
+                          {name}
                         </div>
                       </div>
                     </div>
@@ -326,13 +368,13 @@ class SettingComponent extends Component {
                 <Card className="card-wrap mt-4">
                   <CardHeader>
                     <CardTitle className="card-heading mb-0 h5">
-                      Account Type
+                      Account type
                     </CardTitle>
                     <div className="heading-divider mr-0"></div>
                   </CardHeader>
                   <CardBody>
                     <div className="account-type-wrap">
-                      <Form className="form-wrap ">
+                      <Form className="form-wrap">
                         <Row>
                           <Col md="6">
                             <FormGroup className="custom-control custom-radio mb-3 ">
@@ -384,7 +426,7 @@ class SettingComponent extends Component {
                 <Card className="card-wrap mt-4">
                   <CardHeader>
                     <CardTitle className="card-heading mb-0 h5 text-danger">
-                      DELETE ACCOUNT
+                      Delete account
                     </CardTitle>
                     <div className="heading-divider mr-0"></div>
                   </CardHeader>
@@ -418,11 +460,11 @@ class SettingComponent extends Component {
                 </Card>
               </>
             ) : (
-                <div>
+                <Row>
                   <Col sm={12} className="loader-col">
                     <Loader />
                   </Col>
-                </div>
+                </Row>
               )}
           </div>
         </div>

@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
-import { SetModel, MoveModel } from "../models";
+import { SetModel, MoveModel, FolderModel } from "../models";
 import Mongoose, { Document } from "mongoose";
-import { ISet, IUpdateSet } from "../interfaces";
+import { ISet, IUpdateSet, IMove } from "../interfaces";
 import { algoliaAppId, algoliaAPIKey } from "../config/app";
 //import * as algoliasearch from 'algoliasearch'; // When using TypeScript
 const algoliasearch = require("algoliasearch");
@@ -23,16 +23,44 @@ const createSet = async (req: Request, res: Response): Promise<any> => {
       folderId: body.folderId ? body.folderId : null,
       sharableLink: body.sharableLink ? body.sharableLink : "",
       isPublic: body.isPublic ? body.isPublic : true,
-      isDeleted: body.isDeleted ? body.isDeleted : false
+      isDeleted: body.isDeleted ? body.isDeleted : false,
+      isCopy: body.isCopy ? true : false
     };
     const setResult: Document | any = new SetModel(setData);
     await setResult.save();
+
+    const setId: String = setResult._id;
+    if (body.isCopy) {
+      const moveResult: Document | any | null = await MoveModel.find({
+        setId: body.copyOfSetId,
+        isDeleted: false
+      });
+      if (moveResult && moveResult.length) {
+        for (let index = 0; index < moveResult.length; index++) {
+          const moveElement = moveResult[index];
+          const newMoveData: IMove = {
+            title: moveElement.title,
+            description: moveElement.description,
+            videoUrl: moveElement.videoUrl,
+            tags: moveElement.tags,
+            isPublic: moveElement.isPublic ? moveElement.isPublic : false,
+            userId: headToken.id,
+            sharableLink: moveElement.sharableLink,
+            status: true,
+            setId: setId,
+            moveURL: moveElement.moveURL
+          };
+          const moveData: Document | any = new MoveModel(newMoveData);
+          await moveData.save();
+        }
+      }
+    }
 
     let setDataForAlgolia: Document | any;
     /* Add items to algolia */
     setDataForAlgolia = {
       ...setResult._doc,
-      title: "sets"
+      searchType: "sets"
     };
     index.addObjects([setDataForAlgolia], (err: string, content: string) => {
       if (err) {
@@ -60,9 +88,10 @@ const getAllSetById = async (req: Request, res: Response): Promise<void> => {
   try {
     const { currentUser, query } = req;
     let headToken: Request | any = currentUser;
-    const { limit, page, search, sort, status, roleType } = query;
+    const { limit, page, search, sort, status, roleType, userId } = query;
     const pageNumber: number = ((parseInt(page) || 1) - 1) * (limit || 10);
     const limitNumber: number = parseInt(limit) || 10;
+
     // define condition
     let condition: any = {
       $and: []
@@ -71,6 +100,13 @@ const getAllSetById = async (req: Request, res: Response): Promise<void> => {
     condition.$and.push({
       isDeleted: false
     });
+    console.log("userId", query.userId);
+
+    // dcrypt userId for shareable link in yoursets component
+    if (userId) {
+      headToken = { id: decrypt(userId) };
+      console.log("<<<,headToken.id", headToken.id);
+    }
     // check for search condition
     if (search) {
       condition.$and.push({
@@ -127,19 +163,10 @@ const getAllSetById = async (req: Request, res: Response): Promise<void> => {
         message: "User id not found"
       });
     }
-    index.search({ query: "Sal" }, (err: any, hits: any = {}) => {
-      if (err) {
-        console.log(err);
-        console.log(err.debugData);
-        return;
-      }
-
-      console.log("@@@@@@@@@@@@@@@@@", hits);
-    });
-
-    let result: Document | any,
+    let result: Document | any | null,
       moveCount: Document | any,
       setResult: any = [];
+
     result = await SetModel.find(condition)
       .sort(sortOption)
       .skip(pageNumber)
@@ -151,14 +178,7 @@ const getAllSetById = async (req: Request, res: Response): Promise<void> => {
         }
       });
     // get count for the conditions
-    const setCount: any[] = await SetModel.aggregate([
-      {
-        $match: { ...condition }
-      },
-      {
-        $count: "count"
-      }
-    ]);
+    const setCount: number | any[] = await SetModel.countDocuments(condition);
     if (result && result.length) {
       for (let index = 0; index < result.length; index++) {
         const setData = result[index];
@@ -166,15 +186,25 @@ const getAllSetById = async (req: Request, res: Response): Promise<void> => {
           setId: setData._id,
           isDeleted: false
         });
+
+        let data: any = await MoveModel.find({
+          setId: setData._id,
+          isDeleted: false
+        })
+          .sort({ updatedAt: -1 })
+          .limit(1);
+
         setResult.push({
           ...setData._doc,
-          moveCount: moveCount
+          moveCount: moveCount,
+          recentlyAddMoveImg: data.length ? data[0].moveURL : null
         });
       }
     }
+
     res.status(200).json({
       result: setResult,
-      totalSets: setCount[0] ? setCount[0].count : 0,
+      totalSets: setCount ? setCount : 0,
       message: "Sets have been fetched successfully"
     });
   } catch (error) {
@@ -196,6 +226,9 @@ const getRecentSetById = async (req: Request, res: Response): Promise<void> => {
         message: "User id not found"
       });
     }
+    let moveCount: Document | any,
+      setResult: any = [];
+
     const result: Document | any = await SetModel.find({
       userId: headToken.id,
       isDeleted: false
@@ -203,8 +236,24 @@ const getRecentSetById = async (req: Request, res: Response): Promise<void> => {
       .sort({ isRecentTime: -1 })
       .limit(limit);
 
+    // get move count
+    if (result && result.length) {
+      for (let index = 0; index < result.length; index++) {
+        const setData = result[index];
+        moveCount = await MoveModel.count({
+          setId: setData._id,
+          isDeleted: false
+        });
+
+        setResult.push({
+          ...setData._doc,
+          moveCount: moveCount
+        });
+      }
+    }
+
     res.status(200).json({
-      data: result,
+      data: setResult,
       message: "Sets have been fetched successfully"
     });
   } catch (error) {
@@ -252,9 +301,18 @@ const getSetsForFolder = async (req: Request, res: Response): Promise<void> => {
           setId: setData._id,
           isDeleted: false
         });
+
+        let data: any = await MoveModel.find({
+          setId: setData._id,
+          isDeleted: false
+        })
+          .sort({ updatedAt: -1 })
+          .limit(1);
+
         setResult.push({
           ...setData._doc,
-          moveCount: moveCount
+          moveCount: moveCount,
+          recentlyAddMoveImg: data.length ? data[0].moveURL : null
         });
       }
     }
@@ -323,6 +381,15 @@ const deleteSet = async (req: Request, res: Response): Promise<void> => {
       $set: { isDeleted: true }
     });
 
+    await MoveModel.updateMany(
+      { setId: { $in: body.id } },
+      {
+        $set: {
+          isDeleted: true
+        }
+      }
+    );
+
     res.status(200).json({
       data: result[0],
       message: "Sets has been deleted successfully"
@@ -388,22 +455,64 @@ const publicUrlsetDetails = async (
 ): Promise<any> => {
   try {
     const { query } = req;
-    const { folderId, isPublic } = query;
+    const { folderId, isPublic, limit, page } = query;
     const decryptedFolderId = decrypt(folderId);
-    let result: Document | any | null;
-    if (isPublic === "true") {
+    const pageNumber: number = ((parseInt(page) || 1) - 1) * (limit || 10);
+    const limitNumber: number = parseInt(limit) || 10;
+    let result: Document | any | null,
+      moveCount: Document | any,
+      setResult: any = [],
+      count: Document | any;
+
+    let temp: Document | any | null = await FolderModel.findOne({
+      _id: decryptedFolderId
+    });
+
+    if (temp.isPublic) {
       result = await SetModel.find({
         folderId: decryptedFolderId,
         isDeleted: false
-      });
+      })
+        .populate({
+          path: "folderId",
+          match: {
+            isDeleted: false
+          }
+        })
+        .skip(pageNumber)
+        .limit(limitNumber);
+
+      //Count of moves in folder
+      if (result && result.length) {
+        for (let index = 0; index < result.length; index++) {
+          const setData = result[index];
+          moveCount = await MoveModel.count({
+            setId: setData._id,
+            isDeleted: false
+          });
+          setResult.push({
+            ...setData._doc,
+            moveCount: moveCount
+          });
+        }
+      }
+      count = await SetModel.find({
+        folderId: decryptedFolderId,
+        isDeleted: false
+      }).count();
     } else {
       return res.status(400).json({
-        message: "Public access link is not enabled."
+        message: {
+          message: "Public access link is not enabled.",
+          folderId: decryptedFolderId
+        },
+        success: false
       });
     }
     return res.status(200).json({
       responsecode: 200,
-      data: result,
+      data: setResult,
+      totalSets: count,
       success: true
     });
   } catch (error) {
@@ -421,24 +530,50 @@ const publicAccessSetInfoById = async (
 ): Promise<any> => {
   try {
     const { query } = req;
-    const { userId, setId, isPublic } = query;
+    const { userId, setId, isPublic, fromFolder } = query;
     const decryptedUserId = decrypt(userId);
     const decryptedSetId = decrypt(setId);
     let result: Document | any | null;
-    if (isPublic === "true") {
+    let temp: Document | any | null,
+      moveCount: Document | any,
+      setResult: any = [];
+    if (fromFolder) {
+      temp = {
+        isPublic: true
+      };
+    } else {
+      temp = await SetModel.findOne({
+        _id: decryptedSetId
+      });
+    }
+
+    if (temp.isPublic) {
       result = await SetModel.findOne({
         userId: decryptedUserId,
-        _id: decryptedSetId,
+        _id: Mongoose.Types.ObjectId(decryptedSetId),
+        isDeleted: false
+      }).populate("folderId");
+
+      const moveCount: Document | any = await MoveModel.count({
+        setId: result._id,
         isDeleted: false
       });
+
+      setResult = {
+        ...result._doc,
+        moveCount: moveCount
+      };
     } else {
       return res.status(400).json({
-        message: "Public access link is not enabled."
+        message: {
+          message: "Public access link is not enabled.",
+          setId: decryptedSetId
+        }
       });
     }
     return res.status(200).json({
       responsecode: 200,
-      data: result,
+      data: setResult,
       success: true
     });
   } catch (error) {
@@ -448,7 +583,7 @@ const publicAccessSetInfoById = async (
     });
   }
 };
-//------------------Update Folder Details-------------------------------
+//------------------Update Set Details-------------------------------
 const updateSet = async (req: Request, res: Response): Promise<any> => {
   try {
     const { body } = req;
@@ -458,7 +593,7 @@ const updateSet = async (req: Request, res: Response): Promise<any> => {
       description
     };
     await SetModel.findByIdAndUpdate(setId, {
-      $set: updateSet
+      $set: { ...updateSet, updatedAt: Date.now() }
     });
     return res.status(200).json({
       message: "Set details updated successfully."

@@ -39,6 +39,7 @@ const editUserInfo = async (req: Request, res: Response): Promise<any> => {
   try {
     const { body, currentUser } = req;
     const headToken: Request | any = currentUser;
+    let result: Document | any | null;
     const { firstName, lastName, roleType } = body;
     let dataToUpdate: IDataToUpdate = {
       firstName,
@@ -53,11 +54,13 @@ const editUserInfo = async (req: Request, res: Response): Promise<any> => {
     };
 
     if (checkProperties) {
-      await UserModel.findByIdAndUpdate(headToken.id, {
+      result = await UserModel.findByIdAndUpdate(headToken.id, {
         $set: dataToUpdate
       });
     }
+
     return res.status(200).json({
+      data: result,
       message: "Profile details udpated successfully."
     });
   } catch (error) {
@@ -80,7 +83,13 @@ const imageUpload = async (req: Request, res: Response) => {
   try {
     let { body, currentUser: tempCurrentUser } = req;
     const currentUser = tempCurrentUser || { id: "" };
-    if (body.imageData !== undefined || body.imageData !== "") {
+    if (
+      body.imageData !== undefined &&
+      body.imageData !== "" &&
+      body.imageData
+    ) {
+      console.log("inside jaa rha");
+
       const base64Image = body.imageData.replace(
         /^data:image\/\w+;base64,/,
         ""
@@ -94,7 +103,7 @@ const imageUpload = async (req: Request, res: Response) => {
         "profile_img.",
         type || "png"
       ].join("");
-      let originalImagePath: string = ""
+      let originalImagePath: string = "";
       if (IsProductionMode) {
         originalImagePath = path.join(
           __dirname,
@@ -110,8 +119,8 @@ const imageUpload = async (req: Request, res: Response) => {
           fileName
         );
       }
-      fs.writeFileSync(originalImagePath, buf)
-      var thumbnailImagePath: string = ""
+      fs.writeFileSync(originalImagePath, buf);
+      var thumbnailImagePath: string = "";
       if (IsProductionMode) {
         thumbnailImagePath = path.join(
           __dirname,
@@ -127,7 +136,7 @@ const imageUpload = async (req: Request, res: Response) => {
           fileName
         );
       }
-      fs.writeFileSync(thumbnailImagePath, buf)
+      fs.writeFileSync(thumbnailImagePath, buf);
       const thumbnailImg: string = path.join(
         "uploads",
         "images-thumbnail",
@@ -155,6 +164,17 @@ const imageUpload = async (req: Request, res: Response) => {
           success: false
         });
       }
+    } else {
+      await UserModel.findByIdAndUpdate(currentUser.id, {
+        profileImage: ""
+      });
+      return res.status(200).json({
+        responseCode: 200,
+        message: "Profile image updated successfully",
+        success: true,
+        profileImage: "",
+        profileThumbnail: ""
+      });
     }
   } catch (error) {
     console.log("**************This is image upload error", error);
@@ -264,12 +284,12 @@ const getAllUser = async (req: Request, res: Response): Promise<any> => {
         $sort: sortOption
       },
       {
-        $skip: (pageNumber)
+        $skip: pageNumber
       },
       {
-        $limit: (limitNumber)
-      },
-    ])
+        $limit: limitNumber
+      }
+    ]);
     // get count for the conditions
     const userCount: any[] = await UserModel.aggregate([
       { $addFields: { name: { $concat: ["$firstName", " ", "$lastName"] } } },
@@ -308,7 +328,9 @@ const updateUserStatus = async (req: Request, res: Response): Promise<any> => {
       }
     );
     for (let x = 0; x < users.length; x++) {
-      let result: Document | null | any = await UserModel.findOne({ _id: users[x] }).select("firstName lastName email status");
+      let result: Document | null | any = await UserModel.findOne({
+        _id: users[x]
+      }).select("firstName lastName email status");
       if (result === null) {
         return res.status(400).json({
           message: "Email not found."
@@ -317,7 +339,7 @@ const updateUserStatus = async (req: Request, res: Response): Promise<any> => {
       const emailVar = new Email(req);
       await emailVar.setTemplate(AvailiableTemplates.STATUS_CHANGE, {
         resetPageUrl: req.headers.host,
-        status: result.status === true ? 'activated' : 'inactivated',
+        status: result.status === true ? "activated" : "inactivated",
         fullName: result.firstName + " " + result.lastName
       });
       await emailVar.sendEmail(result.email);
@@ -356,7 +378,9 @@ const updateUserDetails = async (req: Request, res: Response): Promise<any> => {
       ...$data,
       updatedAt: Date.now()
     };
-    let result: Document | any | null = await UserModel.findOne({ _id: userId });
+    let result: Document | any | null = await UserModel.findOne({
+      _id: userId
+    });
     if (result.email !== $data.email) {
       sendMail = true;
       old_email = result.email;
@@ -400,7 +424,9 @@ const deleteUser = async (req: Request, res: Response): Promise<any> => {
       isDeleted: true
     };
     await UserModel.findByIdAndUpdate(userId, inserList);
-    let result: Document | null | any = await UserModel.findOne({ _id: userId }).select("firstName lastName email status");
+    let result: Document | null | any = await UserModel.findOne({
+      _id: userId
+    }).select("firstName lastName email status");
     if (result === null) {
       return res.status(400).json({
         message: "Email not found."
@@ -409,7 +435,7 @@ const deleteUser = async (req: Request, res: Response): Promise<any> => {
     const emailVar = new Email(req);
     await emailVar.setTemplate(AvailiableTemplates.STATUS_CHANGE, {
       resetPageUrl: req.headers.host,
-      status: 'deleted',
+      status: "deleted",
       fullName: result.firstName + " " + result.lastName
     });
     await emailVar.sendEmail(result.email);
@@ -424,8 +450,8 @@ const deleteUser = async (req: Request, res: Response): Promise<any> => {
   }
 };
 /**
-* Update user password
-*/
+ * Update user password
+ */
 const updateUserPassword = async (
   req: Request,
   res: Response

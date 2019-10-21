@@ -9,6 +9,7 @@ import {
   ManageSetRequest,
   deleteSetRequest,
   getAllFolderRequest,
+  shareableLinkRequest,
   updateRecentTimeRequest,
   redirectTo
 } from "../../actions";
@@ -17,7 +18,7 @@ import { createFolderRequest } from "actions/Folder";
 import { ConfirmBox } from "../../helper/SweetAleart";
 import TransferToModal from "../../components/Folders/FolderDetails/transferTo";
 import qs from "query-string";
-import { isEqual } from "../..//helper/Object";
+import { isEqual } from "../../helper/Object";
 import { AppRoutes } from "../../config/AppRoutes";
 
 // core components
@@ -39,7 +40,11 @@ class Set extends React.Component {
     const prevQuery = qs.parse(location.search);
     const currQuery = qs.parse(this.props.location.search);
     if (!isEqual(prevQuery, currQuery)) {
-      this.props.getSetList({ ...currQuery, page: currQuery.page || 1 });
+      this.props.getSetList({
+        ...currQuery,
+        page: currQuery.page || 1,
+        isSetNoLimit: false
+      });
     }
   }
 
@@ -87,14 +92,15 @@ class Set extends React.Component {
       description: list.description,
       isDeleted: list.isDeleted,
       isPublic: list.isPublic,
-      folderId: list.folderId,
+      folderId: list.folderId ? list.folderId : "",
       sharableLink: list.sharableLink,
       status: list.status,
       userId: list.userId,
+      copyOfSetId: list._id,
       isCopy: true
     };
     const { value } = await ConfirmBox({
-      text: "You want to copy this set!! "
+      text: "You want to copy this set! "
     });
     if (value) {
       this.props.onSetsCreation(data);
@@ -103,10 +109,13 @@ class Set extends React.Component {
 
   onHandleDelete = async id => {
     const { value } = await ConfirmBox({
-      text: "You want to delete this folder.!! "
+      text: "You want to delete this set!"
     });
     if (value) {
-      this.props.onDeleteSets(id);
+      const data = {
+        id
+      };
+      this.props.onDeleteSets(data);
     }
   };
 
@@ -134,7 +143,7 @@ class Set extends React.Component {
       previousFolderid: ""
     };
     const { value } = await ConfirmBox({
-      text: "You want to transfer this set!! "
+      text: "You want to transfer this set!"
     });
     if (value) {
       this.props.manageSets(payload);
@@ -146,9 +155,11 @@ class Set extends React.Component {
       modelOperate,
       modelInfoReducer,
       setReducer,
-      getAllFolders
+      getAllFolders,
+      shareLinkReducer
     } = this.props;
     const { modelDetails } = modelInfoReducer;
+    const { userEncryptedInfo } = shareLinkReducer;
     const { transferToModalOpen } = modelDetails;
     const { folderId, setToTransfer } = this.state;
 
@@ -163,10 +174,14 @@ class Set extends React.Component {
             setReducer={setReducer}
             OnCreateSetCopy={this.OnCreateSetCopy}
             onRemoveSets={this.onHandleDelete}
+            modelInfoReducer={modelInfoReducer}
             handleRecentTime={this.handleRecentTime}
             openTransferToModal={this.openTransferToModal}
+            onSetsCreation={data => this.props.onSetsCreation(data)}
             allFolders={this.props.allFolders}
+            shareableLink={data => this.props.shareableLink(data)}
             onPageChange={this.onPageChange}
+            userEncryptedInfo={userEncryptedInfo}
             {...this.props}
           />
         )}
@@ -194,7 +209,8 @@ const mapStateToProps = state => {
   return {
     modelInfoReducer: state.modelInfoReducer,
     setReducer: state.setReducer,
-    getAllFolders: state.getFolderReducer.getAllFolders
+    getAllFolders: state.getFolderReducer.getAllFolders,
+    shareLinkReducer: state.shareLinkReducer
   };
 };
 const mapDispatchToProps = dispatch => {
@@ -223,7 +239,10 @@ const mapDispatchToProps = dispatch => {
     onGoPage: data => {
       dispatch(redirectTo({ path: data }));
     },
-    modelOperate: data => dispatch(modelOpenRequest(data))
+    modelOperate: data => dispatch(modelOpenRequest(data)),
+    shareableLink: data => {
+      dispatch(shareableLinkRequest(data));
+    }
   };
 };
 export default connect(

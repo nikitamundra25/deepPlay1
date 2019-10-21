@@ -19,6 +19,7 @@ import "./index.scss";
 import { logger } from "helper/Logger";
 import { connect } from "react-redux";
 import { downloadYoutubeVideoRequest } from "../../actions";
+import { ConfirmBox } from "../../helper/SweetAleart";
 
 // core components
 class MoveComponent extends React.Component {
@@ -28,11 +29,13 @@ class MoveComponent extends React.Component {
       url: "",
       errors: "",
       isYouTubeUrl: false,
-      isPaste: false
+      isPaste: false,
+      fileErr: ""
     };
   }
 
   handleChange = e => {
+    e.preventDefault();
     const { name, value } = e.target;
     this.setState({
       errors: "",
@@ -82,10 +85,13 @@ class MoveComponent extends React.Component {
     return result;
   };
 
-  handleMoveUpload = () => {
-    this.setState({
-      errors: {}
-    });
+  handleMoveUpload = e => {
+    if (!this.state.isPaste) {
+      e.preventDefault();
+    }
+    // this.setState({
+    //   errors: {}
+    // });
     try {
       if (!this.state.url) {
         this.setState({
@@ -93,16 +99,15 @@ class MoveComponent extends React.Component {
             notUrl: "Enter youtube video link"
           }
         });
-        if (this.state.errors) {
-          return;
-        }
         return;
       }
-      const payload = {
-        url: this.state.url,
-        isYoutubeUrl: this.state.isYouTubeUrl
-      };
-      this.props.downloadVideo(payload);
+      if (!this.state.errors) {
+        const payload = {
+          url: this.state.url,
+          isYoutubeUrl: this.state.isYouTubeUrl
+        };
+        this.props.downloadVideo(payload);
+      }
     } catch (error) {
       logger(error);
     }
@@ -116,32 +121,56 @@ class MoveComponent extends React.Component {
     }
   };
 
-  handleVideoFileSelect = e => {
+  handleVideoFileSelect = async e => {
+    this.setState({
+      fileErr: ""
+    });
     let files = e.target.files;
-    this.setState(
-      {
-        url: files[0].name,
-        errors: ""
-      },
-      () => {
-        this.props.downloadVideo({ url: files[0], isYoutubeUrl: false });
+    if (files.length) {
+      const fileType = files ? files[0].type.split("/") : "";
+      if (fileType[0] !== "video") {
+        await ConfirmBox({
+          title: "Oops...",
+          text: "Unsupported file type!! We accept only video type",
+          type: "error",
+          showCancelButton: false,
+          confirmButtonText: "Okay"
+        });
+      } else {
+        this.setState(
+          {
+            url: files[0].name,
+            errors: ""
+          },
+          () => {
+            this.props.downloadVideo({ url: files[0], isYoutubeUrl: false });
+          }
+        );
       }
-    );
+    }
+  };
+
+  onSubmitForm = e => {
+    e.preventDefault();
+    if (this.state.url && !this.state.errors) {
+      this.handleMoveUpload();
+    }
   };
 
   render() {
-    const { errors, url } = this.state;
+    const { errors, url, fileErr } = this.state;
     const { moveReducer } = this.props;
     const { isVideoDownloading } = moveReducer;
+
     return (
       <>
-        <div className="create-set-section step-2 ">
+        <div className="create-set-section step-2 create-move-section">
           <Card className="set-content-wrap create-a-move p-0">
             <div className="set-content-block w-100">
               <CardHeader className="border-bottom pt-4 pb-2">
                 <div className="content-header set-header flex-column">
                   <span className="content-title creat-set-title">
-                    {isVideoDownloading ? "Preparing WebM" : "Creat a move"}
+                    {isVideoDownloading ? "Preparing WebM" : "Create a move"}
                   </span>
                 </div>
               </CardHeader>
@@ -157,36 +186,49 @@ class MoveComponent extends React.Component {
                       </p>
                     </div>
                   ) : (
-                    <Form className="url-update-wrap">
+                    <Form
+                      className="url-update-wrap"
+                      onSubmit={e => this.onSubmitForm(e)}
+                    >
                       <div className="ml-3 mr-3">
                         <FormGroup className="flex-fill flex-column ">
                           <Label className="text-center d-block mt-4 mb-3">
                             Paste YouTube Video URL or Type URL Manually{" "}
                           </Label>
                         </FormGroup>
-                        <FormGroup className="flex-fill flex-column mt-0 ">
+                        <FormGroup
+                          className={
+                            errors
+                              ? `flex-fill flex-column mt-0 form-custom-error error-with-append-btn`
+                              : "flex-fill flex-column mt-0 form-custom-error"
+                          }
+                        >
                           <InputGroup>
                             <Input
                               id="url"
                               className={
                                 errors
-                                  ? "capitalize pl-2 boder-1-invalid is-invalid "
-                                  : "capitalize pl-2 boder-1 "
+                                  ? " pl-2 boder-1-invalid is-invalid "
+                                  : " pl-2 boder-1 "
                               }
                               placeholder="Ex: https://www.youtube.com/watch?v=I5t894l5b1w"
                               type="text"
-                              onPaste={this.handlePasteEvent}
+                              onPaste={e => this.handlePasteEvent(e)}
                               name="url"
-                              onChange={this.handleChange}
+                              onChange={e => this.handleChange(e)}
                               value={url}
                             />
+                            <FormFeedback>
+                              {errors.validUrl && url ? errors.validUrl : null}
+                              {errors.notUrl ? errors.notUrl : null}
+                            </FormFeedback>
                             <InputGroupAddon
                               addonType="append"
                               id="upload-title"
                             >
                               <InputGroupText>
                                 <i
-                                  class="fa fa-exclamation-circle display-5"
+                                  className="fa fa-exclamation-circle display-5"
                                   aria-hidden="true"
                                 ></i>
                               </InputGroupText>
@@ -198,13 +240,13 @@ class MoveComponent extends React.Component {
                               Paste YouTube Video URL or Type URL Manually
                             </UncontrolledTooltip>
                           </InputGroup>
-                          <FormFeedback>
+                          {/* <FormFeedback>
                             {errors.notUrl
                               ? errors.notUrl
                               : errors.validUrl && url
                               ? errors.validUrl
                               : null}
-                          </FormFeedback>
+                          </FormFeedback> */}
                         </FormGroup>
                       </div>
                       <div className="divider-or mt-5 mb-5">
@@ -228,8 +270,9 @@ class MoveComponent extends React.Component {
                           <CustomInput
                             onChange={this.handleVideoFileSelect}
                             type="file"
+                            accept="video/mp4,video/x-m4v,video/*"
                             disabled={false}
-                            className={"d-none"}
+                            className={fileErr ? "is-invalid d-none" : "d-none"}
                             id="videoUpload"
                             name="customFile"
                           />
@@ -247,11 +290,9 @@ class MoveComponent extends React.Component {
   }
 }
 
-const mapStateToProps = state => {
-  return {
-    moveReducer: state.moveReducer
-  };
-};
+const mapStateToProps = state => ({
+  moveReducer: state.moveReducer
+});
 const mapDispatchToProps = dispatch => ({
   downloadVideo: data => dispatch(downloadYoutubeVideoRequest(data))
 });

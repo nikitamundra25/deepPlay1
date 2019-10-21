@@ -14,6 +14,12 @@ const moveSchema: Mongoose.Schema = new Schema({
   videoName: {
     type: String
   },
+  sourceUrl: {
+    type: String
+  },
+  isYoutubeUrl:{
+    type: Boolean
+  },
   videoUrl: {
     type: String,
     default: null
@@ -22,7 +28,7 @@ const moveSchema: Mongoose.Schema = new Schema({
     type: String
   },
   tags: {
-    type: [String],
+    type: [Object],
     default: []
   },
   isPublic: {
@@ -31,6 +37,14 @@ const moveSchema: Mongoose.Schema = new Schema({
   },
   sharableLink: {
     type: String
+  },
+  isCopy: {
+    type: Boolean,
+    default: false
+  },
+  isStarred: {
+    type: Boolean,
+    default: false
   },
   setId: {
     type: Schema.Types.ObjectId,

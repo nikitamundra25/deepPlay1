@@ -60,16 +60,20 @@ class RecentFolderComponent extends React.Component {
     const lSearch = location.search;
     const { page } = qs.parse(lSearch);
     const pathName = location.pathname.split("/");
-    this.props.folderDetail({ id: pathName[2] });
-    this.props.getSetsList({ folderId: pathName[2] });
+    this.props.folderDetail({ id: pathName[3] });
+    this.props.getSetsList({ folderId: pathName[3] });
     this.props.getAllSetRequest({ isSetNoLimit: true });
     this.setState({
-      folderId: pathName[2],
+      folderId: pathName[3],
       page: parseInt(page) || 1
     });
   }
 
   componentDidUpdate(prevProps) {
+    const oldLocation = prevProps.location;
+    const oldPathname = oldLocation.pathname.split("/");
+    const newLocation = this.props.location;
+    const newPathname = newLocation.pathname.split("/");
     if (
       prevProps.setReducer &&
       prevProps.setReducer.setListinFolder !==
@@ -78,6 +82,13 @@ class RecentFolderComponent extends React.Component {
       const setList = this.props.setReducer.setListinFolder;
       this.setState({
         setListItem: setList
+      });
+    }
+    if (oldPathname[3] !== newPathname[3]) {
+      this.props.folderDetail({ id: newPathname[3] });
+      this.props.getSetsList({ folderId: newPathname[3] });
+      this.setState({
+        folderId: newPathname[3]
       });
     }
   }
@@ -90,10 +101,6 @@ class RecentFolderComponent extends React.Component {
         addSetModalOpen: !modelDetails.addSetModalOpen
       }
     });
-    // this.props.getSetsList({
-    //   folderId: this.state.folderId,
-    //   showAll: true
-    // });
     this.setState({
       showAll: true
     });
@@ -121,8 +128,8 @@ class RecentFolderComponent extends React.Component {
     data = {
       isFolderAdd: name !== "add" ? true : false,
       setId: id,
-      folderId: pathName[2],
-      previousFolderId: pathName[2]
+      folderId: pathName[3],
+      previousFolderId: pathName[3]
     };
     this.props.manageSets(data);
   };
@@ -135,11 +142,11 @@ class RecentFolderComponent extends React.Component {
     data = {
       isFolderAdd: name === "add" ? true : false,
       setId: id,
-      folderId: pathName[2],
-      previousFolderId: pathName[2]
+      folderId: pathName[3],
+      previousFolderId: pathName[3]
     };
     const { value } = await ConfirmBox({
-      text: "You want to remove Set from this folder."
+      text: "You want to remove Set from this folder!"
     });
     if (value) {
       this.props.manageSets(data);
@@ -148,7 +155,7 @@ class RecentFolderComponent extends React.Component {
 
   handleFolder = async data => {
     const { value } = await ConfirmBox({
-      text: "You want to transfer this set"
+      text: "You want to transfer this set!"
     });
     if (value) {
       this.props.manageSets(data);
@@ -157,7 +164,7 @@ class RecentFolderComponent extends React.Component {
 
   handleDeleteFolder = async id => {
     const { value } = await ConfirmBox({
-      text: "You want to delete this folder."
+      text: "You want to delete this folder!"
     });
     if (value) {
       this.props.deleteFolder(id);
@@ -177,7 +184,7 @@ class RecentFolderComponent extends React.Component {
       isCopy: true
     };
     const { value } = await ConfirmBox({
-      text: "You want to copy this set!! "
+      text: "You want to copy this set!"
     });
     if (value) {
       this.props.onSetsCreation(data);
@@ -211,6 +218,10 @@ class RecentFolderComponent extends React.Component {
       show: false,
       setIndex: -1
     });
+  };
+
+  addSets = data => {
+    this.props.onSetsCreation(data);
   };
 
   onTogglePublicAccess = isPublic => {
@@ -293,6 +304,9 @@ class RecentFolderComponent extends React.Component {
             <div className="sub-title">
               {folderDetails ? folderDetails.description : ""}
             </div>
+            <div className="sub-title">
+              Total sets: {totalSetsInFolder ? totalSetsInFolder : 0}
+            </div>
           </span>
           <div>
             <span
@@ -302,7 +316,7 @@ class RecentFolderComponent extends React.Component {
             >
               <i className="fas fa-plus-circle icon-font"></i>
             </span>
-            <UncontrolledTooltip placement="bottom" target="move">
+            <UncontrolledTooltip placement="top" target="move">
               Add Sets
             </UncontrolledTooltip>
             <span
@@ -312,6 +326,9 @@ class RecentFolderComponent extends React.Component {
             >
               <i className="fas fa-share icon-font"></i>
             </span>
+            <UncontrolledTooltip placement="top" target="share">
+              Get Shareable Link
+            </UncontrolledTooltip>
             <UncontrolledDropdown className="header-dropdown  ">
               <DropdownToggle color={" "}>
                 <span id="edit" className="cursor_pointer ml-4">
@@ -330,13 +347,12 @@ class RecentFolderComponent extends React.Component {
               </DropdownMenu>
             </UncontrolledDropdown>
 
-            <UncontrolledTooltip placement="bottom" target="edit">
+            <UncontrolledTooltip placement="top" target="edit">
               Edit & Delete
             </UncontrolledTooltip>
           </div>
         </div>{" "}
         <Row className="set-wrap">
-          <Col>
           {!isFolderSetLoading ? (
             setOfFolder && setOfFolder.length ? (
               // eslint-disable-next-line
@@ -347,7 +363,7 @@ class RecentFolderComponent extends React.Component {
                       className="tile-wrap card"
                       onMouseLeave={() => this.closePopOver()}
                     >
-                      <div className="cotent-tile d-flex content-with-tip">
+                      <div className="cotent-tile d-flex content-with-tip content-with-img">
                         <div
                           className="cotent-text-tile cursor_pointer text-capitalize"
                           onClick={() => this.handleSetDetails(list._id)}
@@ -358,7 +374,11 @@ class RecentFolderComponent extends React.Component {
                               // onClick={() => this.handleSetDetails(list._id)}
                               className={"text-capitalize"}
                             >
-                              <span>{list.title} </span>
+                              <span>
+                                {list.isCopy
+                                  ? `Copy of ${list.title}`
+                                  : list.title}{" "}
+                              </span>
                             </span>
                           </div>
                           <span className={"text-capitalize"}>
@@ -369,20 +389,21 @@ class RecentFolderComponent extends React.Component {
                             {list.moveCount ? list.moveCount : 0} items
                           </div>
                         </div>
-                        <div
-                          className="d-flex img-tile-wrap cursor_pointer"
-                          onClick={() => this.handleSetDetails(list._id)}
-                        >
+                        {list.recentlyAddMoveImg ? (
                           <div
-                            className="cotent-img-tile"
-                            style={{
-                              backgroundImage:
-                                'url("' +
-                                "https://res.cloudinary.com/fleetnation/image/private/c_fit,w_1120/g_south,l_text:style_gothic2:%C2%A9%20Nikita%20Buida,o_20,y_10/g_center,l_watermark4,o_25,y_50/v1469756538/dd3acf4nzzavkv4rf2ji.jpg" +
-                                '")'
-                            }}
-                          />
-                        </div>
+                            className="d-flex img-tile-wrap cursor_pointer"
+                            onClick={() => this.handleSetDetails(list._id)}
+                          >
+                            <div className="cotent-img-tile">
+                              <video width={"100%"} id="webm-video">
+                                <source
+                                  src={`${list.recentlyAddMoveImg}`}
+                                  type="video/webm"
+                                />
+                              </video>
+                            </div>
+                          </div>
+                        ) : null}
                         <div
                           onMouseOver={() => this.showPopOver(i, show)}
                           className={"tooltip-btn-wrap right-btn-tip"}
@@ -395,6 +416,7 @@ class RecentFolderComponent extends React.Component {
                             <ButtonGroup size="sm">
                               <Button
                                 onClick={() => this.OnCreateSetCopy(list)}
+                                color=" "
                               >
                                 Copy
                               </Button>
@@ -402,6 +424,7 @@ class RecentFolderComponent extends React.Component {
                                 onClick={() =>
                                   this.openTransferToModal(list._id)
                                 }
+                                color=" "
                               >
                                 Transfer
                               </Button>
@@ -409,6 +432,7 @@ class RecentFolderComponent extends React.Component {
                                 onClick={() =>
                                   this.onRemoveSets(list._id, "remove")
                                 }
+                                color=" "
                               >
                                 Remove
                               </Button>
@@ -422,36 +446,38 @@ class RecentFolderComponent extends React.Component {
               })
             ) : (
               <>
-                <div className="create-set-section mt-2 w-100 empty-folder-section">
-                  <Card className="set-content-wrap empty-folder-card">
-                    <div className="set-content-block w-100 empty-folder-wrap">
-                      <CardHeader className="empty-folder-header">
-                        <img src={emptySetIc} alt={"Images"} />
-                        <div className="content-header set-header">
-                          <span className="content-title">
-                            {" "}
-                            <h3>This folder has no Sets yet</h3>
-                            <p>Organize your Sets for you or your students</p>
-                          </span>
-                        </div>
-                      </CardHeader>
-                      <CardBody className="">
-                        <div className="create-set-tile"></div>
-                        <div className="text-center">
-                          <Button
-                            color=" "
-                            type="button"
-                            className="btn-black btn "
-                            onClick={this.openAddSetModel}
-                          >
-                            <i className="fas fa-plus mr-1"></i>
-                            Add a Set
-                          </Button>
-                        </div>
-                      </CardBody>
-                    </div>
-                  </Card>
-                </div>
+                <Col>
+                  <div className="create-set-section mt-2 w-100 empty-folder-section">
+                    <Card className="set-content-wrap empty-folder-card">
+                      <div className="set-content-block w-100 empty-folder-wrap">
+                        <CardHeader className="empty-folder-header">
+                          <img src={emptySetIc} alt={"Images"} />
+                          <div className="content-header set-header">
+                            <span className="content-title">
+                              {" "}
+                              <h3>This folder has no Sets yet</h3>
+                              <p>Organize your Sets for you or your students</p>
+                            </span>
+                          </div>
+                        </CardHeader>
+                        <CardBody className="">
+                          <div className="create-set-tile"></div>
+                          <div className="text-center">
+                            <Button
+                              color=" "
+                              type="button"
+                              className="btn-black btn "
+                              onClick={this.openAddSetModel}
+                            >
+                              <i className="fas fa-plus mr-1"></i>
+                              Add a Set
+                            </Button>
+                          </div>
+                        </CardBody>
+                      </div>
+                    </Card>
+                  </div>
+                </Col>
               </>
             )
           ) : (
@@ -459,13 +485,13 @@ class RecentFolderComponent extends React.Component {
               <Loader />
             </Col>
           )}
-          </Col>
         </Row>
         <AddSetModal
           handleOpen={this.openAddSetModel}
           modal={addSetModalOpen}
           getAllSet={allSetList}
           folderId={folderId}
+          addNewSet={this.addSets}
           handleSets={this.handleSets}
           {...this.props}
         />

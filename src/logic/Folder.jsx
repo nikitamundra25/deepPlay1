@@ -15,6 +15,7 @@ import {
 } from "../actions";
 import { toast } from "react-toastify";
 import { AppConfig } from "../config/Appconfig";
+import { AppRoutes } from "../config/AppRoutes";
 let toastId = null;
 
 //  Create folder
@@ -53,8 +54,16 @@ const createFolderLogic = createLogic({
           toastId = toast.success(result.messages[0]);
         }
         dispatch(
-          redirectTo({ path: `/folder-details/${result.data.Result._id}` })
+          redirectTo({
+            path: AppRoutes.FOLDER_DETAILS.url.replace(
+              ":id",
+              result.data.Result._id
+            )
+          })
         );
+        // dispatch(
+        //   redirectTo({ path: `/folder/details/${result.data.Result._id}` })
+        // );
       } else {
         if (!toast.isActive(toastId)) {
           toastId = toast.success("Folder Copy has been created successfully");
@@ -166,7 +175,7 @@ const deleteFolderLogic = createLogic({
       if (!toast.isActive(toastId)) {
         toastId = toast.success(result.messages[0]);
       }
-      dispatch(redirectTo({ path: "/folder" }));
+      dispatch(redirectTo({ path: AppRoutes.FOLDERS.url }));
       dispatch(getAllFolderRequest());
       done();
     }
@@ -258,8 +267,8 @@ const UpdateFolderLogic = createLogic({
         })
       );
       dispatch(folderDetailRequest({ id: action.payload.id }));
-      if (!toast.isActive(this.toastId)) {
-        this.toastId = toast.success(result.messages[0]);
+      if (!toast.isActive(toastId)) {
+        toastId = toast.success(result.messages[0]);
       }
       done();
     }
