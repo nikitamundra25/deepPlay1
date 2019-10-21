@@ -727,8 +727,8 @@ const updateMoveIndex = async (req: Request, res: Response): Promise<any> => {
     const { body } = req;
     const { setId, sortIndex, moveId, sourceIndex } = body;
 
-    let num = sortIndex;
-    let num1 = sortIndex;
+    let num: number = parseInt(sortIndex);
+    let num1: number = parseInt(sortIndex);
 
     await MoveModel.updateOne(
       { setId: setId, _id: moveId },
@@ -742,7 +742,7 @@ const updateMoveIndex = async (req: Request, res: Response): Promise<any> => {
       sortIndex: { $gte: sortIndex }
     }).sort({ sortIndex: 1 });
 
-    let result1 = await MoveModel.find({
+    let result_data = await MoveModel.find({
       _id: { $ne: moveId },
       setId: setId,
       isDeleted: false,
@@ -758,10 +758,10 @@ const updateMoveIndex = async (req: Request, res: Response): Promise<any> => {
       }
     }
 
-    if (result1 && result1.length) {
-      for (let index = 0; index < result1.length; index++) {
+    if (result_data && result_data.length) {
+      for (let index = 0; index < result_data.length; index++) {
         await MoveModel.updateOne(
-          { setId: setId, _id: result1[index]._id },
+          { setId: setId, _id: result_data[index]._id },
           { $set: { sortIndex: --num1 } }
         );
       }

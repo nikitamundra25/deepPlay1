@@ -262,9 +262,7 @@ class MoveList extends React.Component {
       sortIndex: destination.index,
       sourceIndex: source.index
     };
-    this.props.updateSortIndexRequest({
-      data
-    });
+    this.props.updateSortIndexRequest(data);
   };
 
   render() {
