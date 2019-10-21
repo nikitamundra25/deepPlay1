@@ -11,12 +11,38 @@ import {
 // import Login from "../Auth/Login"
 // import ForgotPassword from "../Auth/ForgotPassword";
 // import { UncontrolledDropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap';
-const homePageImage = [
-  "https://images.pexels.com/photos/67636/rose-blue-flower-rose-blooms-67636.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500",
-  "https://p.bigstockphoto.com/GeFvQkBbSLaMdpKXF1Zv_bigstock-Aerial-View-Of-Blue-Lakes-And--227291596.jpg",
-  "https://images.pexels.com/photos/462118/pexels-photo-462118.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500",
-  "https://helpx.adobe.com/content/dam/help/en/stock/how-to/visual-reverse-image-search/jcr_content/main-pars/image/visual-reverse-image-search-v2_intro.jpg",
-  "https://i.pinimg.com/originals/26/94/93/269493fbeb10e31ad3867248e3f68b94.jpg"
+
+const image = [
+  {
+    id: 1,
+    title: "Rumba",
+    image:
+      "https://images.pexels.com/photos/67636/rose-blue-flower-rose-blooms-67636.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500"
+  },
+  {
+    id: 2,
+    title: "Zumba",
+    image:
+      "https://p.bigstockphoto.com/GeFvQkBbSLaMdpKXF1Zv_bigstock-Aerial-View-Of-Blue-Lakes-And--227291596.jpg"
+  },
+  {
+    id: 3,
+    title: "Tango",
+    image:
+      "https://i.pinimg.com/originals/26/94/93/269493fbeb10e31ad3867248e3f68b94.jpg"
+  },
+  {
+    id: 4,
+    title: "SalsaFootwork",
+    image:
+      "https://images.pexels.com/photos/462118/pexels-photo-462118.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500"
+  },
+  {
+    id: 5,
+    title: "Flamenco",
+    image:
+      "https://helpx.adobe.com/content/dam/help/en/stock/how-to/visual-reverse-image-search/jcr_content/main-pars/image/visual-reverse-image-search-v2_intro.jpg"
+  }
 ];
 // core components
 class HomePage extends React.Component {
@@ -133,7 +159,7 @@ class HomePage extends React.Component {
                 </div>
               </div>
             </Col>
-            {homePageImage.map((images, index) => {
+            {image.map((images, index) => {
               return (
                 <Col md="4" key={index}>
                   <div className="play-list-block ">
@@ -144,16 +170,18 @@ class HomePage extends React.Component {
                       }
                     >
                       <div className="play-list-img blur-img-wrap">
-                        <img src={images} alt={""} />
+                        <img src={images.image} alt={""} />
                         <div
                           className="blur-img"
-                          style={{ backgroundImage: 'url("' + images + '")' }}
+                          style={{
+                            backgroundImage: 'url("' + images.image + '")'
+                          }}
                         ></div>
                       </div>
 
                       <div className="play-list-text">
                         <div className="play-list-heading h6 ">
-                          Salsa Footwork
+                          {images.title}
                         </div>
                       </div>
                     </div>

@@ -9,7 +9,8 @@ import {
   getMoveDetailsSuccess,
   modelOpenRequest,
   searchMoveSuccess,
-  getSetDetailsRequest
+  getSetDetailsRequest,
+  updateSortIndexSuccess
 } from "../actions";
 import { AppRoutes } from "../config/AppRoutes";
 import { toast } from "react-toastify";
@@ -237,6 +238,7 @@ const deleteMoveLogic = createLogic({
         toastId = toast.success(result.messages[0]);
       }
       dispatch(getMovesOfSetRequest({ setId: action.payload.setId }));
+      dispatch(getSetDetailsRequest({ setId: action.payload.setId }));
       done();
     }
   }
@@ -384,8 +386,39 @@ const addTagsLogic = createLogic({
       dispatch(
         modelOpenRequest({
           modelDetails: {
-            addTagModalOpen: false
+            addTagModalOpen: false,
+            addTagModalOpenReq: false
           }
+        })
+      );
+      done();
+    }
+  }
+});
+
+//Update sort index
+const updateSortIndexLogic = createLogic({
+  type: MovesAction.UPDATE_SORT_INDEX_REQUEST,
+  async process({ action }, dispatch, done) {
+    let api = new ApiHelper();
+    let result = await api.FetchFromServer(
+      "move",
+      "/sort-index-update",
+      "PUT",
+      true,
+      undefined,
+      action.payload
+    );
+    if (result.isError) {
+      if (!toast.isActive(toastId)) {
+        toastId = toast.error(result.messages[0]);
+      }
+      done();
+      return;
+    } else {
+      dispatch(
+        updateSortIndexSuccess({
+          movesOfSet: result.data.data
         })
       );
       done();
@@ -403,5 +436,6 @@ export const MoveLogics = [
   transferMoveLogic,
   createAnotherMoveLogic,
   searchMoveLogic,
-  addTagsLogic
+  addTagsLogic,
+  updateSortIndexLogic
 ];

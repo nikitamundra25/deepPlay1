@@ -101,7 +101,6 @@ const getAllSetById = async (req: Request, res: Response): Promise<void> => {
       isDeleted: false
     });
 
-
     // dcrypt userId for shareable link in yoursets component
     // if (userId) {
     //   headToken = { id: decrypt(userId) };
@@ -244,7 +243,7 @@ const getRecentSetById = async (req: Request, res: Response): Promise<void> => {
           setId: setData._id,
           isDeleted: false
         });
-    
+
         let data: any = await MoveModel.find({
           setId: setData._id,
           isDeleted: false
@@ -498,9 +497,18 @@ const publicUrlsetDetails = async (
             setId: setData._id,
             isDeleted: false
           });
+
+          let data: any = await MoveModel.find({
+            setId: setData._id,
+            isDeleted: false
+          })
+            .sort({ updatedAt: -1 })
+            .limit(1);
+
           setResult.push({
             ...setData._doc,
-            moveCount: moveCount
+            moveCount: moveCount,
+            recentlyAddMoveImg: data.length ? data[0].moveURL : null
           });
         }
       }

@@ -274,7 +274,7 @@ class MoveComponent extends React.Component {
                           <CustomInput
                             onChange={this.handleVideoFileSelect}
                             type="file"
-                            accept="video/mp4,video/x-m4v,video/*"
+                            accept="video/mp4,video/x-m4v,video/*,video/ogg"
                             disabled={false}
                             className={fileErr ? "is-invalid d-none" : "d-none"}
                             id="videoUpload"

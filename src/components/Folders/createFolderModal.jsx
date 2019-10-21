@@ -81,6 +81,15 @@ class FolderModal extends React.Component {
     this.props.createFolder(data);
   };
 
+  handleClose = () => {
+    this.setState({
+      errors: "",
+      title: "",
+      description: ""
+    });
+    this.props.handleOpen();
+  };
+
   render() {
     const { modal, handleOpen, folderDetails } = this.props;
     const { title, description, errors } = this.state;
@@ -102,7 +111,7 @@ class FolderModal extends React.Component {
               className="close"
               data-dismiss="modal"
               type="button"
-              onClick={handleOpen}
+              onClick={this.handleClose}
             >
               <span aria-hidden="true">
                 <img src={closeBtn} alt="close-ic" />

@@ -3,6 +3,7 @@ import { connect } from "react-redux";
 import {
   Card,
   Col,
+  Row,
   DropdownToggle,
   UncontrolledDropdown,
   DropdownMenu,
@@ -23,7 +24,10 @@ import {
   transferMovesRequest,
   loadVideoDataRequest,
   searchMoveRequest,
-  addTagsRequest
+  addTagsRequest,
+  getAllFolderRequest,
+  ManageSetRequest,
+  updateSortIndexRequest
 } from "../../../actions";
 import SharableLinkModal from "../../comman/shareableLink/SharableLink";
 import { AppRoutes } from "../../../config/AppRoutes";
@@ -35,7 +39,7 @@ import WebmView from "./WebmView";
 import Loader from "../../comman/Loader/Loader";
 import CreateSetComponent from "../../Sets/createSet";
 import MoveList from "./moveList";
-
+import TransferToModal from "../../Folders/FolderDetails/transferTo";
 // core components
 class SetDetails extends React.Component {
   constructor(props) {
@@ -49,21 +53,19 @@ class SetDetails extends React.Component {
       showVideo: {},
       setIdPathName: "",
       showVideoIndex: -1,
-      moveData: []
+      moveData: [],
+      setToTransfer: "",
+      folderId: ""
     };
   }
   componentDidMount = () => {
     const location = this.props.location;
     const pathName = location.pathname.split("/");
-    const { moveReducer } = this.props;
-    const { movesOfSet } = moveReducer;
     const isStarred = location.search.split("=");
-    console.log("#########",isStarred);
-    
+    console.log("#########", isStarred);
     this.props.getSetDetailsRequest({ setId: pathName[3] });
     this.props.getMovesOfSetRequest({
       setId: pathName[3],
-      moveData: movesOfSet,
       page: 1,
       isInfiniteScroll: false,
       isStarred: isStarred[1]
@@ -150,6 +152,21 @@ class SetDetails extends React.Component {
       }
     });
   };
+
+  openTransferToModal = (id, folderId) => {
+    this.props.allFolders();
+    const { modelInfoReducer } = this.props;
+    const { modelDetails } = modelInfoReducer;
+    this.setState({
+      setToTransfer: id,
+      folderId: folderId
+    });
+    this.props.modelOperate({
+      modelDetails: {
+        transferToModalOpenReq: !modelDetails.transferToModalOpenReq
+      }
+    });
+  };
   /*
    */
   showPopOver = index => {
@@ -221,6 +238,22 @@ class SetDetails extends React.Component {
     this.props.addTagsRequest(data);
   };
 
+  // Transfer sets to particular folder
+  folderToTransfer = async data => {
+    const payload = {
+      setId: data.setId,
+      folderId: data.folderId,
+      isFolderAdd: data.isFolderAdd,
+      previousFolderid: ""
+    };
+    const { value } = await ConfirmBox({
+      text: "You want to transfer this set!"
+    });
+    if (value) {
+      this.props.manageSets(payload);
+    }
+  };
+
   render() {
     const {
       setReducer,
@@ -230,7 +263,9 @@ class SetDetails extends React.Component {
       allSetList,
       modelOperate,
       loadVideoDataRequest,
-      getMovesOfSetRequest
+      getMovesOfSetRequest,
+      getAllFolders,
+      updateSortIndexRequest
     } = this.props;
     const { setDetails } = setReducer;
     const { modelDetails } = modelInfoReducer;
@@ -246,14 +281,17 @@ class SetDetails extends React.Component {
     const {
       sharableLinkModalOpen,
       createSetModalOpen,
-      isVideoModalOpen
+      isVideoModalOpen,
+      transferToModalOpenReq
     } = modelDetails;
     const {
       show,
       setIndex,
       setIdPathName,
       showVideo,
-      showVideoIndex
+      showVideoIndex,
+      setToTransfer,
+      folderId
     } = this.state;
 
     return (
@@ -300,12 +338,22 @@ class SetDetails extends React.Component {
                 </DropdownToggle>
                 <DropdownMenu>
                   <DropdownItem onClick={() => this.handleSetModal()}>
-                    Edit
+                    Edit Set
+                  </DropdownItem>
+                  <DropdownItem
+                    onClick={() =>
+                      this.openTransferToModal(
+                        setDetails._id,
+                        setDetails.folderId
+                      )
+                    }
+                  >
+                    Add to Folder
                   </DropdownItem>
                   <DropdownItem
                     onClick={() => this.handleDeleteSet(setDetails._id)}
                   >
-                    Delete
+                    Delete Set
                   </DropdownItem>
                 </DropdownMenu>
               </UncontrolledDropdown>
@@ -331,6 +379,8 @@ class SetDetails extends React.Component {
                   onEditMove={this.onEditMove}
                   showVideoIndex={showVideoIndex}
                   loadVideoDataRequest={loadVideoDataRequest}
+                  addTagstoMove={this.addTagstoMove}
+                  isStarred={this.isStarred}
                   {...this.props}
                 />
               ) : null}
@@ -358,6 +408,7 @@ class SetDetails extends React.Component {
                     addTagstoMove={this.addTagstoMove}
                     isMoveSearchLoading={isMoveSearchLoading}
                     getMovesOfSetRequest={getMovesOfSetRequest}
+                    updateSortIndexRequest={updateSortIndexRequest}
                     searchMove={data => this.props.searchMoveRequest(data)}
                     {...this.props}
                   />
@@ -365,16 +416,18 @@ class SetDetails extends React.Component {
               </Card>
             </>
           ) : (
-              <Col md="12">
-                <Loader />
-              </Col>
-            )}
+            <Row>
+            <Col md="12">
+              <Loader />
+            </Col>
+            </Row>
+          )}
         </div>
         <SharableLinkModal
           modal={sharableLinkModalOpen}
           handleOpen={this.handleSharableLink}
           onTogglePublicAccess={this.onTogglePublicAccess}
-          isPublic={setDetails ? setDetails.isPublic : ""}
+          isPublic={setDetails ? setDetails.isPublic : false}
           userEncryptedInfo={userEncryptedInfo ? userEncryptedInfo : ""}
           shareComponent="Sets"
         />
@@ -384,6 +437,15 @@ class SetDetails extends React.Component {
           createSet={this.updateSet}
           editSet="true"
           setDetails={setDetails ? setDetails : null}
+        />
+        <TransferToModal
+          modal={transferToModalOpenReq}
+          AllFolders={getAllFolders}
+          setToTransfer={setToTransfer}
+          handleFolderModel={this.handleFolderModel}
+          folderId={folderId}
+          handleOpen={this.openTransferToModal}
+          handleFolder={this.folderToTransfer}
         />
       </>
     );
@@ -395,7 +457,8 @@ const mapStateToProps = state => ({
   setReducer: state.setReducer,
   moveReducer: state.moveReducer,
   modelInfoReducer: state.modelInfoReducer,
-  shareLinkReducer: state.shareLinkReducer
+  shareLinkReducer: state.shareLinkReducer,
+  getAllFolders: state.getFolderReducer.getAllFolders
 });
 const mapDispatchToProps = dispatch => ({
   modelOperate: data => dispatch(modelOpenRequest(data)),
@@ -419,7 +482,16 @@ const mapDispatchToProps = dispatch => ({
     dispatch(getAllSetRequest(data));
   },
   addTagsRequest: data => dispatch(addTagsRequest(data)),
-  loadVideoDataRequest: data => dispatch(loadVideoDataRequest(data))
+  loadVideoDataRequest: data => dispatch(loadVideoDataRequest(data)),
+  allFolders: () => {
+    dispatch(getAllFolderRequest());
+  },
+  manageSets: data => {
+    dispatch(ManageSetRequest(data));
+  },
+  updateSortIndexRequest: data => {
+    dispatch(updateSortIndexRequest(data));
+  }
 });
 export default connect(
   mapStateToProps,
