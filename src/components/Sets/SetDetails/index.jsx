@@ -63,7 +63,6 @@ class SetDetails extends React.Component {
     const location = this.props.location;
     const pathName = location.pathname.split("/");
     const isStarred = location.search.split("=");
-    console.log("#########", isStarred);
     this.props.getSetDetailsRequest({ setId: pathName[3] });
     this.props.getMovesOfSetRequest({
       setId: pathName[3],
@@ -337,7 +336,6 @@ class SetDetails extends React.Component {
               </UncontrolledTooltip>
               <UncontrolledDropdown
                 className="header-dropdown dropdown-without-tip not-header-dropdown"
-                direction="bottom"
               >
                 <DropdownToggle color={" "} className="mr-0">
                   <span id="edit" className="cursor_pointer ml-4 ">

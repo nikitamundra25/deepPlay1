@@ -14,7 +14,7 @@ import "slick-carousel/slick/slick-theme.css";
 import qs from "query-string";
 import Loader from "../Loader/Loader";
 import WebmView from "../../Sets/SetDetails/WebmView";
-import InfiniteScroll from "react-infinite-scroll-component";
+//import InfiniteScroll from "react-infinite-scroll-component";
 
 // core components
 class SetSharedLink extends React.Component {
@@ -102,7 +102,7 @@ class SetSharedLink extends React.Component {
     const { modelDetails } = modelInfoReducer;
     const { isVideoModalOpen } = modelDetails;
     const { videoData } = moveReducer;
-    const { moveListItem, showVideo, showVideoIndex, page } = this.state;
+    const { moveListItem, showVideo, showVideoIndex,  } = this.state;
     const { decryptedSetDetails, isMoveDetailsLoading } = shareLinkReducer;
     let parsed = qs.parse(this.props.location.search);
     return (

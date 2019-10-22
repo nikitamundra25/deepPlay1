@@ -236,7 +236,9 @@ class MoveList extends React.Component {
       search: value,
       setId: this.props.setIdPathName
     };
-    this.props.searchMove(data);
+    setTimeout(() => {
+      this.props.searchMove(data);
+    }, 400);
   };
 
   //Drag & drop move items
@@ -441,7 +443,7 @@ class MoveList extends React.Component {
                 <Droppable
                   droppableId="droppable"
                   type="droppableItem"
-                  direction="vertical"
+                  direction="auto"
                 >
                   {provided => (
                     <>
