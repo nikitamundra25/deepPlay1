@@ -3,7 +3,7 @@ import InputRange from "react-input-range";
 import { AppConfig } from "config/Appconfig";
 import { Input, Row, Col, FormGroup, Label, Button } from "reactstrap";
 import { orderBy } from "natural-orderby";
-import { SecondsToHHMMSS } from "helper/Time";
+import { SecondsToHHMMSS, SecondsToMMSS } from "helper/Time";
 import { logger } from "helper/Logger";
 
 class FrameDetails extends Component {
