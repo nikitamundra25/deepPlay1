@@ -74,7 +74,7 @@ class VideoView extends React.Component {
    *
    */
   render() {
-    const { moveReducer, description, title } = this.props;
+    const { moveReducer, description, title, isEdit } = this.props;
     const { moveDetails } = moveReducer;
 
     return (
@@ -113,15 +113,23 @@ class VideoView extends React.Component {
           </FormGroup>
           {moveDetails && moveDetails.videoUrl ? (
             <>
-              <video width={"100%"} autoPlay loop id={"video-trimmer"} muted>
-                <source
-                  src={`${AppConfig.API_ENDPOINT}${moveDetails.videoUrl}`}
-                />
-              </video>
+              {
+                !isEdit ?
+                  <video width={"100%"} autoPlay loop id={"video-trimmer"} muted>
+                    <source
+                      src={`${AppConfig.API_ENDPOINT}${moveDetails.videoUrl}`}
+                    />
+                  </video> :
+                  <video width={"100%"} autoPlay loop id={"video-trimmer"} muted>
+                    <source
+                      src={`${moveDetails.moveURL}`}
+                    />
+                  </video>
+              }
             </>
           ) : (
-            <span>No video available for trimming</span>
-          )}
+              <span>No video available for trimming</span>
+            )}
         </Col>
       </>
     );

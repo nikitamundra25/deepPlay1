@@ -233,15 +233,32 @@ const createMove = async (req: Request, res: Response): Promise<any> => {
       });
     }
 
+    let fileName: string | null
+    fileName = moveUrl.split("/")
+    const {
+      frames: framesArray,
+      videoMetaData,
+      videoName
+    } = await getVideoFrames(fileName[2]);
+    delete videoMetaData.filename;
+    const frames = framesArray.map(
+      (frame: string) => `${ServerURL}/uploads/youtube-videos/${frame}`
+    );
     const moveResult: Document | any = new MoveModel({
       videoUrl: moveUrl,
-      userId: headToken.id
+      userId: headToken.id,
+      sourceUrl: moveUrl,
+      isYoutubeUrl: false
     });
     await moveResult.save();
-
     return res.status(200).json({
       message: "Created new move",
       moveId: moveResult._id,
+      videoUrl: moveUrl,
+      moveData: moveResult,
+      frames,
+      videoMetaData,
+      videoName,
       success: true
     });
   } catch (error) {
@@ -358,8 +375,8 @@ const publicUrlMoveDetails = async (
       result = await MoveModel.find({
         setId: decryptedSetId
       })
-        // .skip(pageNumber)
-        // .limit(limitNumber);
+      // .skip(pageNumber)
+      // .limit(limitNumber);
     } else {
       return res.status(400).json({
         message: {
@@ -442,11 +459,16 @@ const updateMoveDetailsAndTrimVideo = async (
       const fileName = `${
         result.videoUrl.split(".")[0]
         }_clip_${moment().unix()}.webm`;
-      let videoFileMain: String | any;
+      let videoFileMain: String | any, videoOriginalFile: String | any
       if (IsProductionMode) {
         videoFileMain = path.join(__dirname, `${fileName}`);
       } else {
         videoFileMain = path.join(__dirname, "..", `${fileName}`);
+      }
+      if (IsProductionMode) {
+        videoOriginalFile = path.join(__dirname, `${result.videoUrl}`);
+      } else {
+        videoOriginalFile = path.join(__dirname, "..", `${result.videoUrl}`);
       }
       const video = await new ffmpeg(videoFile);
       const duration = timer.max - timer.min - 1;
@@ -467,9 +489,6 @@ const updateMoveDetailsAndTrimVideo = async (
             "deep-play.webm",
             "moves"
           );
-          if (s3VideoUrl) {
-            fs.unlinkSync(videoFileMain);
-          }
           let moveDataForAlgolia: Document | any;
           /* Add items to algolia */
           moveDataForAlgolia = {
@@ -517,7 +536,9 @@ const updateMoveDetailsAndTrimVideo = async (
           return res.status(200).json({
             responsecode: 200,
             data: result,
-            setId: setId
+            setId: setId,
+            videoOriginalFile: videoOriginalFile,
+            videoFileMain: videoFileMain
           });
         });
     } else {
@@ -824,6 +845,24 @@ const updateMoveIndex = async (req: Request, res: Response): Promise<any> => {
     });
   }
 };
+
+/* Remove video from local server */
+const removeVideolocalServer = (req: Request, res: Response) => {
+  const { body } = req;
+  const { videoOriginalFile, videoFileMain } = body;
+  if (videoOriginalFile && videoFileMain) {
+    fs.unlinkSync(videoOriginalFile);
+    fs.unlinkSync(videoFileMain);
+    return res.status(200).json({
+      success: true
+    })
+  }else{
+    return res.status(400).json({
+      message: "Video url not provided",
+      success: false
+    })
+  }
+}
 export {
   downloadVideo,
   getMoveBySetId,
@@ -838,5 +877,6 @@ export {
   createMove,
   filterMove,
   addTagsInMove,
-  updateMoveIndex
+  updateMoveIndex,
+  removeVideolocalServer
 };

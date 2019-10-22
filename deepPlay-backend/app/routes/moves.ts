@@ -13,7 +13,8 @@ import {
   createMove,
   filterMove,
   addTagsInMove,
-  updateMoveIndex
+  updateMoveIndex,
+  removeVideolocalServer
 } from "../controllers";
 import { ValidateAdminToken } from "../common";
 import { storageFile } from "../common/video";
@@ -49,5 +50,6 @@ MoveRouter.post("/create-move", ValidateAdminToken, createMove);
 MoveRouter.get("/filter-move", ValidateAdminToken, filterMove);
 MoveRouter.put("/add-tags-move", ValidateAdminToken, addTagsInMove);
 MoveRouter.put("/sort-index-update", ValidateAdminToken, updateMoveIndex);
+MoveRouter.post("/remove-local-video", ValidateAdminToken, removeVideolocalServer);
 
 export default MoveRouter;

@@ -21,7 +21,8 @@ import {
   getAllSetRequest,
   modelOpenRequest,
   addNewTagToList,
-  createAnotherMoveRequest
+  createAnotherMoveRequest,
+  removeVideoLocalServerRequest,
 } from "../../../actions";
 import "./index.scss";
 import Loader from "components/comman/Loader/Loader";
@@ -54,7 +55,8 @@ class MoveDetails extends React.Component {
         min: 0,
         max: 15
       },
-      videoMaxDuration: 0
+      videoMaxDuration: 0,
+      isEdit: false
     };
     this.videoDetails = React.createRef();
   }
@@ -73,6 +75,10 @@ class MoveDetails extends React.Component {
         }
       });
     }
+    let parsed = qs.parse(this.props.location.search);
+    this.setState({
+      isEdit: parsed.isEdit
+    })
   };
 
   componentDidUpdate = ({ modelInfoReducer, location, moveReducer }) => {
@@ -131,9 +137,9 @@ class MoveDetails extends React.Component {
         selectSetOptions: selectOption
           ? selectOption
           : {
-              label: "Type to select sets",
-              value: ""
-            }
+            label: "Type to select sets",
+            value: ""
+          }
       });
     }
   };
@@ -279,7 +285,9 @@ class MoveDetails extends React.Component {
   };
 
   handleSetDetails = id => {
-    this.props.redirectTo(AppRoutes.SET_DETAILS.url.replace(":id", id));
+    const { moveReducer } = this.props
+    const { moveUrlDetails } = moveReducer
+    this.props.removeVideoLocalServerRequest({ videoOriginalFile: moveUrlDetails.videoOriginalFile, videoFileMain: moveUrlDetails.videoFileMain, setId: id })
   };
   /**
    *
@@ -299,7 +307,8 @@ class MoveDetails extends React.Component {
       selectSetOptions,
       isUpdateDescription,
       videoDuration,
-      videoMaxDuration
+      videoMaxDuration,
+      isEdit
     } = this.state;
 
     return (
@@ -321,54 +330,55 @@ class MoveDetails extends React.Component {
               {isSavingWebM ? (
                 <Loader />
               ) : (
-                <>
-                  <Row className={"mt-3"}>
-                    {moveDetails && moveDetails.videoUrl ? (
-                      <>
-                        <VideoView
-                          moveReducer={moveReducer}
-                          handleChange={this.handleChange}
-                          handleDesriptionModal={this.handleDesriptionModal}
-                          description={description}
-                          timer={timer}
-                          title={title}
-                          videoDuration={data =>
-                            this.setState({
-                              videoDuration: data.timeDuration,
-                              videoMaxDuration: data.videoMaxDuration
-                            })
-                          }
-                        />
-                        <VideoDetails
-                          setReducer={setReducer}
-                          isDescriptionModalOpen={isDescriptionModalOpen}
-                          selectSetOptions={selectSetOptions}
-                          handleChange={this.handleChange}
-                          handleInputChange={this.handleInputChange}
-                          errors={errors}
-                          handleTagChange={this.handleTagChange}
-                          tags={tags}
-                          setId={moveDetails ? moveDetails.setId : null}
-                          tagsList={tagsList}
-                          ref={this.videoDetails}
-                        />
-                      </>
-                    ) : (
-                      <Col sm={12} className="loader-col video-loader-wrap">
-                        <Loader fullLoader={true} />
-                      </Col>
-                    )}
-                  </Row>
-                  <FrameDetails
-                    videoDuration={videoDuration || []}
-                    videoMaxDuration={videoMaxDuration || 0}
-                    frames={frames || []}
-                    videoMetaData={videoMetaData || {}}
-                    onTimerChange={this.onTimerChange}
-                    completeEditing={this.completeEditing}
-                  />
-                </>
-              )}
+                  <>
+                    <Row className={"mt-3"}>
+                      {moveDetails && moveDetails.videoUrl ? (
+                        <>
+                          <VideoView
+                            moveReducer={moveReducer}
+                            handleChange={this.handleChange}
+                            handleDesriptionModal={this.handleDesriptionModal}
+                            description={description}
+                            timer={timer}
+                            title={title}
+                            isEdit={isEdit}
+                            videoDuration={data =>
+                              this.setState({
+                                videoDuration: data.timeDuration,
+                                videoMaxDuration: data.videoMaxDuration
+                              })
+                            }
+                          />
+                          <VideoDetails
+                            setReducer={setReducer}
+                            isDescriptionModalOpen={isDescriptionModalOpen}
+                            selectSetOptions={selectSetOptions}
+                            handleChange={this.handleChange}
+                            handleInputChange={this.handleInputChange}
+                            errors={errors}
+                            handleTagChange={this.handleTagChange}
+                            tags={tags}
+                            setId={moveDetails ? moveDetails.setId : null}
+                            tagsList={tagsList}
+                            ref={this.videoDetails}
+                          />
+                        </>
+                      ) : (
+                          <Col sm={12} className="loader-col video-loader-wrap">
+                            <Loader fullLoader={true} />
+                          </Col>
+                        )}
+                    </Row>
+                    <FrameDetails
+                      videoDuration={videoDuration || []}
+                      videoMaxDuration={videoMaxDuration || 0}
+                      frames={frames || []}
+                      videoMetaData={videoMetaData || {}}
+                      onTimerChange={this.onTimerChange}
+                      completeEditing={this.completeEditing}
+                    />
+                  </>
+                )}
             </CardBody>
           </Card>
         </div>
@@ -462,7 +472,8 @@ const mapDispatchToProps = dispatch => ({
   completeVideoEditing: data => dispatch(completeVideoEditing(data)),
   modelOperate: data => dispatch(modelOpenRequest(data)),
   addNewTagToList: data => dispatch(addNewTagToList(data)),
-  createAnotherMoveRequest: data => dispatch(createAnotherMoveRequest(data))
+  createAnotherMoveRequest: data => dispatch(createAnotherMoveRequest(data)),
+  removeVideoLocalServerRequest: data => dispatch(removeVideoLocalServerRequest(data))
 });
 export default connect(
   mapStateToProps,
