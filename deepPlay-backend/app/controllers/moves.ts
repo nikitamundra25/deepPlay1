@@ -17,6 +17,10 @@ import { decrypt } from "../common";
 import { IMoveCopy } from "../interfaces";
 import moment from "moment";
 import { s3BucketUpload } from "../common/awsBucket";
+import { algoliaAppId, algoliaAPIKey } from "../config/app";
+const algoliasearch = require("algoliasearch");
+const client = algoliasearch(algoliaAppId, algoliaAPIKey);
+const index = client.initIndex("deep_play_data");
 const __basedir = path.join(__dirname, "../public");
 
 cloudinary.config({
@@ -128,7 +132,7 @@ const downloadYoutubeVideo = async (
           ytdl(body.url).pipe(
             (videoStream = fs.createWriteStream(originalVideoPath))
           );
-          videoStream.on("close", async function() {
+          videoStream.on("close", async function () {
             const {
               frames: framesArray,
               videoMetaData,
@@ -437,7 +441,7 @@ const updateMoveDetailsAndTrimVideo = async (
 
       const fileName = `${
         result.videoUrl.split(".")[0]
-      }_clip_${moment().unix()}.webm`;
+        }_clip_${moment().unix()}.webm`;
       let videoFileMain: String | any;
       if (IsProductionMode) {
         videoFileMain = path.join(__dirname, `${fileName}`);
@@ -466,6 +470,31 @@ const updateMoveDetailsAndTrimVideo = async (
           if (s3VideoUrl) {
             fs.unlinkSync(videoFileMain);
           }
+          let moveDataForAlgolia: Document | any;
+          /* Add items to algolia */
+          moveDataForAlgolia = {
+            _id: result._id,
+            moveURL: s3VideoUrl,
+            title,
+            description,
+            tags,
+            setId,
+            userId: result.userId,
+            isDeleted: result.isDeleted,
+            videoMetaData: {
+              ...result.videoMetaData,
+              duration: {
+                ...result.videoMetaData.duration,
+                seconds: duration
+              }
+            },
+            searchType: "move"
+          };
+          index.addObjects([moveDataForAlgolia], (err: string, content: string) => {
+            if (err)
+              throw err
+          });
+          /*  */
           await MoveModel.updateOne(
             {
               _id: result._id

@@ -63,15 +63,12 @@ const createSet = async (req: Request, res: Response): Promise<any> => {
       searchType: "sets"
     };
     index.addObjects([setDataForAlgolia], (err: string, content: string) => {
-      if (err) {
-        console.error(err);
-      } else {
-        console.log("##################", content);
-      }
+      if (err)
+        throw err
     });
     /*  */
 
-    res.status(200).json({
+    return res.status(200).json({
       setResult: setResult,
       message: "Set created successfully"
     });

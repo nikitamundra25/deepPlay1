@@ -17,12 +17,13 @@ class AllSearchComponent extends React.Component {
   }
 
   render() {
-    const { searchData, isSearchLoading } = this.props;
+    const { searchData, isSearchLoading, profiledata } = this.props;
     let folderList, setList, movelist;
     if (searchData && searchData.length) {
-      folderList = searchData.filter(item => item.searchType === "folder");
-      setList = searchData.filter(item => item.searchType === "sets");
-      movelist = searchData.filter(item => item.searchType === "move");
+      folderList = searchData.filter(item => item.searchType === "folder" && item.userId === profiledata._id && item.isDeleted === false);
+      setList = searchData.filter(item => item.searchType === "sets"
+        && item.userId === profiledata._id && item.isDeleted === false);
+      movelist = searchData.filter(item => item.searchType === "move" && item.userId === profiledata._id && item.isDeleted === false);
     }
     return (
       <>
@@ -33,134 +34,134 @@ class AllSearchComponent extends React.Component {
                 <div className="category-wrap">
                   <div className="category-heading">Folders</div>
                   <Link to="/folder" onClick={this.props.searhClose} className="view-all-wrap font-weight-bold">
-                        View All
+                    View All
                       </Link>
                 </div>
                 <div className="folder-searched-wrap searched-wrap">
                   <div className="searched-block">
                     {folderList && folderList.length
                       ? folderList.map((folderData, index) => {
-                          return (
-                            <div
-                              key={index}
-                              onClick={() => {
-                                this.props.redirectTo(
-                                  AppRoutes.FOLDER_DETAILS.url.replace(
-                                    ":id",
-                                    folderData._id
-                                  )
-                                );
-                                this.props.handleSearchEmpty();
-                              }}
-                              className="cursor_pointer searched-tile"
-                            >
-                              <div className="searhed-img-main-wrap">
-                                <div className="searched-img-wrap">
-                                  <div className="searched-img">
-                                    <img src={emptyFolderIc} alt={"folder"} />
-                                  </div>
+                        return (
+                          <div
+                            key={index}
+                            onClick={() => {
+                              this.props.redirectTo(
+                                AppRoutes.FOLDER_DETAILS.url.replace(
+                                  ":id",
+                                  folderData._id
+                                )
+                              );
+                              this.props.handleSearchEmpty();
+                            }}
+                            className="cursor_pointer searched-tile"
+                          >
+                            <div className="searhed-img-main-wrap">
+                              <div className="searched-img-wrap">
+                                <div className="searched-img">
+                                  <img src={emptyFolderIc} alt={"folder"} />
                                 </div>
                               </div>
-                              <div className="searched-text">
-                                {folderData.title}
-                              </div>
                             </div>
-                          );
-                        })
+                            <div className="searched-text">
+                              {folderData.title}
+                            </div>
+                          </div>
+                        );
+                      })
                       : null}
                   </div>
                 </div>
               </div>
             ) : (
-              <div className="search-result-block empty-result-block moves-block ">
-                <div className="category-wrap">
-                  <div className="category-heading">Folders</div>
-                </div>
-                <div className="searched-wrap">
-                  <div className="searched-block">
-                    <div className="cursor_pointer searched-tile">
-                      <div className="searhed-img-main-wrap">
-                        <div className="searched-img-wrap">
-                          <div className="searched-img">
-                            <img alt={""} src={emptyFoldeIc} />
+                <div className="search-result-block empty-result-block moves-block ">
+                  <div className="category-wrap">
+                    <div className="category-heading">Folders</div>
+                  </div>
+                  <div className="searched-wrap">
+                    <div className="searched-block">
+                      <div className="cursor_pointer searched-tile">
+                        <div className="searhed-img-main-wrap">
+                          <div className="searched-img-wrap">
+                            <div className="searched-img">
+                              <img alt={""} src={emptyFoldeIc} />
+                            </div>
                           </div>
                         </div>
+                        <div className="searched-text mt-1">
+                          No data for this keywords
                       </div>
-                      <div className="searched-text mt-1">
-                        No data for this keywords
+
                       </div>
-                    
                     </div>
                   </div>
                 </div>
-              </div>
-            )}
+              )}
             {setList && setList.length ? (
               <div className="search-result-block  moves-block">
                 <div className="category-wrap">
                   <div className="category-heading">Sets</div>
                   <Link to="/set" onClick={this.props.searhClose} className="view-all-wrap font-weight-bold">
-                        View All
-                      </Link> 
+                    View All
+                      </Link>
                 </div>
                 <div className="searched-wrap">
                   <div className="searched-block">
                     {setList && setList.length
                       ? setList.map((setData, index) => {
-                          return (
-                            <div
-                              key={index}
-                              onClick={() => {
-                                this.props.redirectTo(
-                                  AppRoutes.SET_DETAILS.url.replace(
-                                    ":id",
-                                    setData._id
-                                  )
-                                );
-                                this.props.handleSearchEmpty();
-                              }}
-                              className="cursor_pointer searched-tile"
-                            >
-                              <div className="searhed-img-main-wrap">
-                                <div className="searched-img-wrap">
-                                  <div className="searched-img">
-                                    <img src={emptySetIc} alt={"folder"} />
-                                  </div>
+                        return (
+                          <div
+                            key={index}
+                            onClick={() => {
+                              this.props.redirectTo(
+                                AppRoutes.SET_DETAILS.url.replace(
+                                  ":id",
+                                  setData._id
+                                )
+                              );
+                              this.props.handleSearchEmpty();
+                            }}
+                            className="cursor_pointer searched-tile"
+                          >
+                            <div className="searhed-img-main-wrap">
+                              <div className="searched-img-wrap">
+                                <div className="searched-img">
+                                  <img src={emptySetIc} alt={"folder"} />
                                 </div>
                               </div>
-                              <div className="searched-text">
-                                {setData.title}
-                              </div>
                             </div>
-                          );
-                        })
+                            <div className="searched-text">
+                              {setData.title}
+                            </div>
+                          </div>
+                        );
+                      })
                       : null}
                   </div>
                 </div>
               </div>
             ) : (
-              <div className="search-result-block empty-result-block moves-block ">
-                <div className="category-wrap">
-                  <div className="category-heading">Sets</div>
-                </div>
-                <div className="searched-wrap">
-                  <div className="searched-block">
-                    <div className="cursor_pointer searched-tile">
-                      <div className="searhed-img-main-wrap">
-                        <div className="searched-img-wrap">
-                          <div className="searched-img">
-                            <img alt={""} src={emptySetIc} />
+                <div className="search-result-block empty-result-block moves-block ">
+                  <div className="category-wrap">
+                    <div className="category-heading">Sets</div>
+                  </div>
+                  <div className="searched-wrap">
+                    <div className="searched-block">
+                      <div className="cursor_pointer searched-tile">
+                        <div className="searhed-img-main-wrap">
+                          <div className="searched-img-wrap">
+                            <div className="searched-img">
+                              <img alt={""} src={emptySetIc} />
+                            </div>
                           </div>
                         </div>
+                        <div className="searched-text mt-1">
+                          No data for this keywords
                       </div>
-                      <div className="searched-text mt-1">
-                        No data for this keywords
                       </div>
                     </div>
                   </div>
                 </div>
-              </div>
-            )}
+              )}
             {movelist && movelist.length ? (
               <div className="search-result-block moves-block">
                 <div className="category-wrap">
@@ -201,34 +202,34 @@ class AllSearchComponent extends React.Component {
                 </div>
               </div>
             ) : (
-              <div className="search-result-block empty-result-block moves-block ">
-                <div className="category-wrap">
-                  <div className="category-heading">Moves</div>
-                </div>
-                <div className="searched-wrap">
-                  <div className="searched-block">
-                    <div className="cursor_pointer searched-tile">
-                      <div className="searhed-img-main-wrap">
-                        <div className="searched-img-wrap">
-                          <div className="searched-img">
-                            <img alt={""} src={emptyMoveIc} />
+                <div className="search-result-block empty-result-block moves-block ">
+                  <div className="category-wrap">
+                    <div className="category-heading">Moves</div>
+                  </div>
+                  <div className="searched-wrap">
+                    <div className="searched-block">
+                      <div className="cursor_pointer searched-tile">
+                        <div className="searhed-img-main-wrap">
+                          <div className="searched-img-wrap">
+                            <div className="searched-img">
+                              <img alt={""} src={emptyMoveIc} />
+                            </div>
                           </div>
                         </div>
+                        <div className="searched-text mt-1">
+                          No data for this keywords
                       </div>
-                      <div className="searched-text mt-1">
-                        No data for this keywords
                       </div>
                     </div>
                   </div>
                 </div>
-              </div>
-            )}
+              )}
           </div>
         ) : (
-          <div className="search-result-wrap cutom-scroll loader-no-height loader-no-background">
-            <Loader />
-          </div>
-        )}
+            <div className="search-result-wrap cutom-scroll loader-no-height loader-no-background">
+              <Loader />
+            </div>
+          )}
       </>
     );
   }
