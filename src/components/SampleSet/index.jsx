@@ -4,33 +4,33 @@ import { Container, Row, Col } from "reactstrap";
 const image = [
   {
     id: 1,
-    title: "Rumba",
+    title: "Ballet,Russia",
     image:
-      "https://images.pexels.com/photos/67636/rose-blue-flower-rose-blooms-67636.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500"
+      "https://www.worldatlas.com/r/w728-h425-c728x425/upload/f5/4c/99/sleeping-beauty-royal-ballet-2008.jpg"
   },
   {
     id: 2,
-    title: "Zumba",
+    title: "Belly Dance",
     image:
-      "https://p.bigstockphoto.com/GeFvQkBbSLaMdpKXF1Zv_bigstock-Aerial-View-Of-Blue-Lakes-And--227291596.jpg"
+      "https://www.worldatlas.com/r/w728-h425-c728x425/upload/1a/f8/01/640px-fatchance-bellydance-01-dsc-0061.jpg"
   },
   {
     id: 3,
-    title: "Tango",
+    title: "Kabuki",
     image:
-      "https://i.pinimg.com/originals/26/94/93/269493fbeb10e31ad3867248e3f68b94.jpg"
+      "https://i.pinimg.com/originals/48/88/eb/4888eb8b7d3ad0f05f77c4b6cd3d1edc.jpg"
   },
   {
     id: 4,
-    title: "SalsaFootwork",
+    title: "Samba",
     image:
-      "https://images.pexels.com/photos/462118/pexels-photo-462118.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500"
+      "https://img-vimbly-com-images.imgix.net/full_photos/samba-7.jpg?auto=compress&fit=crop&h=490&ixlib=php-1.2.1&w=730"
   },
   {
     id: 5,
-    title: "Flamenco",
+    title: "Break Dance",
     image:
-      "https://helpx.adobe.com/content/dam/help/en/stock/how-to/visual-reverse-image-search/jcr_content/main-pars/image/visual-reverse-image-search-v2_intro.jpg"
+      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQd27DaYsIAL-tCc0RcG6tXfikbGBd5fjwClNEERODIraaxYZ1T_A"
   }
 ];
 
