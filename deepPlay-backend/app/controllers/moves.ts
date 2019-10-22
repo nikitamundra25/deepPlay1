@@ -718,7 +718,7 @@ const filterMove = async (req: Request, res: Response): Promise<any> => {
             }
           },
           {
-            tags: {
+            "tags.label": {
               $regex: new RegExp(search.trim(), "i")
             }
           }

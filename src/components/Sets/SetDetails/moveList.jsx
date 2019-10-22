@@ -616,6 +616,7 @@ class MoveList extends React.Component {
                                                 <div className="text-capitalize play-list-heading h6 m-0">
                                                   {video.title || "unnamed"}
                                                 </div>
+                                                
                                                 <div
                                                   onMouseOver={() =>
                                                     this.props.showPopOver(

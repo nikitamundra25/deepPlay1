@@ -281,7 +281,7 @@ class WebmView extends Component {
           </ModalHeader>
           <ModalBody>
             <div className="video-slider-text">
-              <div className="video-slider-title">
+              <div className="video-slider-title font-weight-bold">
                 {" "}
                 {videoData ? videoData.title : title}{" "}
               </div>
@@ -359,7 +359,7 @@ class WebmView extends Component {
                 </div>
               ) : null}
             </div>
-            <div className="video-slider-img">
+            <div className="video-slider-img pb-3">
               <div className="custom-video-player">
                 <div className="videos-arrows-wrap">
                   {videoIndex > 0 ? (
