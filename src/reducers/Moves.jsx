@@ -14,7 +14,8 @@ const initialState = {
   moveUrlDetails: [],
   videoData: {},
   searchMoveResult: [],
-  isMoveSearchLoading: false
+  isMoveSearchLoading: false,
+  isCreatingAnotherMove: false
 };
 
 export const moveReducer = handleActions(
@@ -80,6 +81,14 @@ export const moveReducer = handleActions(
     [MovesAction.UPDATE_SORT_INDEX_SUCCESS]: (state, { payload }) => ({
       ...state,
       ...payload
+    }),
+    [MovesAction.CREATE_ANOTHER_MOVE_REQUEST]: (state, { payload }) => ({
+      ...state,
+      isCreatingAnotherMove: true
+    }),
+    [MovesAction.CREATE_ANOTHER_MOVE_SUCCESS]: (state, { payload }) => ({
+      ...state,
+      isCreatingAnotherMove: false
     })
   },
   initialState

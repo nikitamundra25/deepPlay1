@@ -357,9 +357,9 @@ const publicUrlMoveDetails = async (
     if (temp.isPublic) {
       result = await MoveModel.find({
         setId: decryptedSetId
-      });
-      // .skip(pageNumber)
-      // .limit(limitNumber);
+      })
+        // .skip(pageNumber)
+        // .limit(limitNumber);
     } else {
       return res.status(400).json({
         message: {

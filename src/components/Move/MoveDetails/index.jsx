@@ -193,6 +193,7 @@ class MoveDetails extends React.Component {
   };
 
   createAnother = data => {
+    this.handleMoveSuccessModal();
     this.props.createAnotherMoveRequest({ moveUrl: data });
   };
   /**

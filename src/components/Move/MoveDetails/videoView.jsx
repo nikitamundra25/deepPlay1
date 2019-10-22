@@ -55,12 +55,19 @@ class VideoView extends React.Component {
   /**
    *
    */
-  componentDidUpdate({ timer: oldTimer }) {
+  componentDidUpdate({ timer: oldTimer, moveReducer }) {
+    const prevMoveData = moveReducer.isCreatingAnotherMove;
+    const newMoveData = this.props.moveReducer
+      ? this.props.moveReducer.isCreatingAnotherMove
+      : null;
     const { timer } = this.props;
     const { max: oldMax, min: oldMin } = oldTimer || {};
     const { max, min } = timer || {};
     if (this.video && (min !== oldMin || max !== oldMax)) {
       this.video.currentTime = min;
+    }
+    if (prevMoveData !== newMoveData) {
+      this.video.load();
     }
   }
   /**

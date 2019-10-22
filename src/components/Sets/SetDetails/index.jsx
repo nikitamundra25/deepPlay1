@@ -234,6 +234,13 @@ class SetDetails extends React.Component {
   };
 
   onEditMove = id => {
+    const { modelInfoReducer } = this.props;
+    const { modelDetails } = modelInfoReducer;
+    this.props.modelOperate({
+      modelDetails: {
+        isVideoModalOpen: !modelDetails.isVideoModalOpen
+      }
+    });
     this.props.redirectTo(
       AppRoutes.MOVE_DETAILS.url.replace(":id", id) + `?isEdit=${true}`
     );
@@ -300,7 +307,6 @@ class SetDetails extends React.Component {
       moveListItem
     } = this.state;
 
-
     return (
       <>
         <div className="set-main-section">
@@ -334,9 +340,7 @@ class SetDetails extends React.Component {
               <UncontrolledTooltip placement="top" target="share">
                 Get Shareable Link
               </UncontrolledTooltip>
-              <UncontrolledDropdown
-                className="header-dropdown dropdown-without-tip not-header-dropdown"
-              >
+              <UncontrolledDropdown className="header-dropdown dropdown-without-tip not-header-dropdown">
                 <DropdownToggle color={" "} className="mr-0">
                   <span id="edit" className="cursor_pointer ml-4 ">
                     <i className="fas fa-sliders-h icon-font"></i>
@@ -423,9 +427,9 @@ class SetDetails extends React.Component {
             </>
           ) : (
             <Row>
-            <Col md="12">
-              <Loader />
-            </Col>
+              <Col md="12">
+                <Loader />
+              </Col>
             </Row>
           )}
         </div>

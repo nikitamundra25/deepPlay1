@@ -94,9 +94,9 @@ class DefaultSidebar extends React.Component {
             </div>
             <div className={"text-center"}>
               {profiledata
-                ? profiledata.roleType
+                ? profiledata.roleType !== "Unclassified"
                   ? profiledata.roleType
-                  : ""
+                  : null
                 : ""}
             </div>
           </div>

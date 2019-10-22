@@ -10,7 +10,8 @@ import {
   modelOpenRequest,
   searchMoveSuccess,
   getSetDetailsRequest,
-  updateSortIndexSuccess
+  updateSortIndexSuccess,
+  createAnotherMoveSuccess
 } from "../actions";
 import { AppRoutes } from "../config/AppRoutes";
 import { toast } from "react-toastify";
@@ -326,6 +327,7 @@ const createAnotherMoveLogic = createLogic({
           )}`
         })
       );
+      dispatch(createAnotherMoveSuccess());
       done();
     }
   }
