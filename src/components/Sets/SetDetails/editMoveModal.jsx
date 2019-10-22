@@ -10,11 +10,6 @@ import {
   ModalFooter,
   FormFeedback
 } from "reactstrap";
-import {
-  CreateFolderValidations,
-  CreateFolderValidationsMessaages
-} from "../../../validations";
-import Validator from "js-object-validation";
 import "./index.scss";
 import closeBtn from "../../../assets/img/close-img.png";
 import CreatableSelect from "react-select/creatable";
@@ -94,10 +89,6 @@ class EditMoveModal extends React.Component {
   handleEditMove = async e => {
     e.preventDefault();
     const { title, description, tags } = this.state;
-    const errorCheckData = {
-      title,
-      description
-    };
     try {
       if (!title) {
         this.setState({
@@ -115,7 +106,6 @@ class EditMoveModal extends React.Component {
         tags: tags,
         setId: videoData.setId._id
       };
-      console.log(">>>>>>>.", data);
       await this.props.editMove(data);
     } catch (error) {
       logger(error);
@@ -129,7 +119,7 @@ class EditMoveModal extends React.Component {
   };
 
   render() {
-    const { modal, handleOpen, videoData } = this.props;
+    const { modal, handleOpen } = this.props;
     const { title, description, errors, tags } = this.state;
 
     return (
