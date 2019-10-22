@@ -1856,10 +1856,10 @@ a {
 .content-with-img {
   align-items: flex-start;
   .cotent-text-tile {
-    width: calc(100% - 100px);
+    width: calc(100% - 150px);
   }
   .img-tile-wrap {
-    width: 100px;
+    width: 150px;
   }
 }
 .form-control.search-input-wrap {
@@ -2009,6 +2009,15 @@ a {
   }
 }
 @media (max-width: 1024px) {
+  .content-with-img {
+    align-items: flex-start;
+    .cotent-text-tile {
+      width: calc(100% - 100px);
+    }
+    .img-tile-wrap {
+      width: 100px;
+    }
+  }
   .custom-video-model {
     width: 600px;
   }

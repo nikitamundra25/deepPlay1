@@ -421,7 +421,18 @@ class MoveList extends React.Component {
               ) : null}
             </Col>
 <div className="video-thumbnail-block">
-            <div className="play-list-tile create-now-wrap">
+           
+            <DragDropContext onDragEnd={this.onDragEnd}>
+              <Droppable
+                droppableId="droppable"
+                type="droppableItem"
+                direction="vertical"
+              >
+                {provided => (
+                  <>  
+                 
+                    <div ref={provided.innerRef} className="video-thumbnail-sub-block">
+                    <div className="play-list-tile ">
               <div className="play-list-block  d-flex h-100 cursor_pointer"
               onClick={this.props.handleMoveAdd}
               >
@@ -440,17 +451,6 @@ class MoveList extends React.Component {
                 </div>
               </div>
             </div>
-            <DragDropContext onDragEnd={this.onDragEnd}>
-              <Droppable
-                droppableId="droppable"
-                type="droppableItem"
-                direction="vertical"
-              >
-                {provided => (
-                  <>  
-                 
-                    <div ref={provided.innerRef} className="video-thumbnail-sub-block">
-                    <div className="play-list-tile empty-tile" ></div>
                       {!isMoveSearchLoading ? (
                         moveofSetList.map((video, index) => {
                           return (
