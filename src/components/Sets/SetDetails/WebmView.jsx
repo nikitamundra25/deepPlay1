@@ -16,6 +16,7 @@ import Loader from "../../comman/Loader/Loader";
 import closeBtn from "../../../assets/img/close-img.png";
 import ViewInfoModal from "./viewInfoModal";
 import AddTagModal from "./addTagsModal";
+import EditMoveModal from "./editMoveModal";
 
 class WebmView extends Component {
   video;
@@ -35,7 +36,8 @@ class WebmView extends Component {
       isVideoLoading: false,
       videoDuration: {},
       videoDimentions: {},
-      moveIdToAddTags: ""
+      moveIdToAddTags: "",
+      moveIdToEdit: ""
     };
   }
   /**
@@ -227,6 +229,20 @@ class WebmView extends Component {
       }
     });
   };
+
+  editMoveModalOpen = id => {
+    const { modelInfoReducer } = this.props;
+    const { modelDetails } = modelInfoReducer;
+    this.setState({
+      moveIdToEdit: id
+    });
+    this.props.modelOperate({
+      modelDetails: {
+        editMoveModalOpen: !modelDetails.editMoveModalOpen
+      }
+    });
+  };
+
   render() {
     const {
       video,
@@ -242,7 +258,8 @@ class WebmView extends Component {
     const {
       transferToModalOpenReq,
       viewInfoModalOpen,
-      addTagModalOpenReq
+      addTagModalOpenReq,
+      editMoveModalOpen
     } = modelDetails;
     const { moveURL, title } = video;
     const {
@@ -257,8 +274,10 @@ class WebmView extends Component {
       videoDuration,
       isVideoLoading,
       videoDimentions,
-      moveIdToAddTags
+      moveIdToAddTags,
+      moveIdToEdit
     } = this.state;
+
     return (
       <>
         <Modal
@@ -303,10 +322,15 @@ class WebmView extends Component {
                       <DropdownMenu>
                         <DropdownItem
                           onClick={() =>
-                            this.props.onEditMove(
+                            this.editMoveModalOpen(
                               videoData ? videoData._id : video._id
                             )
                           }
+                          // onClick={() =>
+                          //   this.props.onEditMove(
+                          //     videoData ? videoData._id : video._id
+                          //   )
+                          // }
                         >
                           Edit
                         </DropdownItem>
@@ -549,6 +573,13 @@ class WebmView extends Component {
           handleOpen={this.openViewInfoModal}
           videoData={videoData}
           videoDimentions={videoDimentions}
+        />
+        <EditMoveModal
+          modal={editMoveModalOpen}
+          handleOpen={this.editMoveModalOpen}
+          videoData={videoData}
+          moveIdToEdit={moveIdToEdit}
+          editMove={data => this.props.editMove(data)}
         />
       </>
     );

@@ -26,3 +26,8 @@ export interface IMoveCopy {
   setId: String;
   isCopy: Boolean;
 }
+export interface IUpdateMove {
+  title: String;
+  description: String;
+  tags: any;
+}

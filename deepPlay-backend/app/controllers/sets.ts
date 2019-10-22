@@ -63,8 +63,7 @@ const createSet = async (req: Request, res: Response): Promise<any> => {
       searchType: "sets"
     };
     index.addObjects([setDataForAlgolia], (err: string, content: string) => {
-      if (err)
-        throw err
+      if (err) throw err;
     });
     /*  */
 
@@ -425,25 +424,33 @@ const getSetDetailsById = async (
         message: "User id not found"
       });
     }
+
     const result: Document | any = await SetModel.findOne({
       userId: headToken.id,
       _id: Mongoose.Types.ObjectId(setId),
       isDeleted: false
     }).populate("folderId");
 
-    const moveCount: Document | any = await MoveModel.count({
-      setId: result._id,
-      isDeleted: false
-    });
+    let moveCount: Document | any;
+    if (result) {
+      moveCount = await MoveModel.count({
+        setId: Mongoose.Types.ObjectId(result._id),
+        isDeleted: false
+      });
+      const SetResult: any = {
+        ...result._doc,
+        moveCount: moveCount
+      };
 
-    const SetResult: any = {
-      ...result._doc,
-      moveCount: moveCount
-    };
-
-    res.status(200).json({
-      data: SetResult
-    });
+      res.status(200).json({
+        data: SetResult
+      });
+    } else {
+      res.status(400).json({
+        message: "Set details not found.",
+        success: false
+      });
+    }
   } catch (error) {
     console.log(error);
     res.status(500).send({
