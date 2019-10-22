@@ -329,9 +329,11 @@ const createAnotherMoveLogic = createLogic({
           )}`
         })
       );
-      dispatch(createAnotherMoveSuccess({
-        moveDetails: result.data
-      }));
+      dispatch(
+        createAnotherMoveSuccess({
+          moveDetails: result.data
+        })
+      );
       done();
     }
   }
@@ -474,7 +476,7 @@ const removeVideoLocalServerLogic = createLogic({
       dispatch(
         modelOpenRequest({
           modelDetails: {
-            isMoveSuccessModal: false,
+            isMoveSuccessModal: false
           }
         })
       );
@@ -483,7 +485,42 @@ const removeVideoLocalServerLogic = createLogic({
   }
 });
 
-
+//Edit moves
+const editMoveLogic = createLogic({
+  type: MovesAction.UPDATE_MOVE_REQUEST,
+  async process({ action }, dispatch, done) {
+    let api = new ApiHelper();
+    let result = await api.FetchFromServer(
+      "move",
+      "/update-move",
+      "PUT",
+      true,
+      undefined,
+      action.payload
+    );
+    if (result.isError) {
+      if (!toast.isActive(toastId)) {
+        toastId = toast.error(result.messages[0]);
+      }
+      done();
+      return;
+    } else {
+      if (!toast.isActive(toastId)) {
+        toastId = toast.success(result.messages[0]);
+      }
+      dispatch(
+        modelOpenRequest({
+          modelDetails: {
+            editMoveModalOpen: false,
+            isVideoModalOpen: false
+          }
+        })
+      );
+      dispatch(getMovesOfSetRequest({ setId: action.payload.setId }));
+      done();
+    }
+  }
+});
 export const MoveLogics = [
   downloadVideoLogic,
   getMovesOfSetLogic,
@@ -496,5 +533,6 @@ export const MoveLogics = [
   searchMoveLogic,
   addTagsLogic,
   updateSortIndexLogic,
-  removeVideoLocalServerLogic
+  removeVideoLocalServerLogic,
+  editMoveLogic
 ];

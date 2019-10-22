@@ -14,7 +14,7 @@ import fs from "fs";
 import path from "path";
 import ffmpeg from "ffmpeg";
 import { decrypt } from "../common";
-import { IMoveCopy } from "../interfaces";
+import { IMoveCopy, IUpdateMove } from "../interfaces";
 import moment from "moment";
 import { s3BucketUpload } from "../common/awsBucket";
 import { algoliaAppId, algoliaAPIKey } from "../config/app";
@@ -132,7 +132,7 @@ const downloadYoutubeVideo = async (
           ytdl(body.url).pipe(
             (videoStream = fs.createWriteStream(originalVideoPath))
           );
-          videoStream.on("close", async function () {
+          videoStream.on("close", async function() {
             const {
               frames: framesArray,
               videoMetaData,
@@ -233,8 +233,8 @@ const createMove = async (req: Request, res: Response): Promise<any> => {
       });
     }
 
-    let fileName: string | null
-    fileName = moveUrl.split("/")
+    let fileName: string | null;
+    fileName = moveUrl.split("/");
     const {
       frames: framesArray,
       videoMetaData,
@@ -374,7 +374,7 @@ const publicUrlMoveDetails = async (
     if (temp.isPublic) {
       result = await MoveModel.find({
         setId: decryptedSetId
-      })
+      });
       // .skip(pageNumber)
       // .limit(limitNumber);
     } else {
@@ -458,8 +458,8 @@ const updateMoveDetailsAndTrimVideo = async (
 
       const fileName = `${
         result.videoUrl.split(".")[0]
-        }_clip_${moment().unix()}.webm`;
-      let videoFileMain: String | any, videoOriginalFile: String | any
+      }_clip_${moment().unix()}.webm`;
+      let videoFileMain: String | any, videoOriginalFile: String | any;
       if (IsProductionMode) {
         videoFileMain = path.join(__dirname, `${fileName}`);
       } else {
@@ -509,10 +509,12 @@ const updateMoveDetailsAndTrimVideo = async (
             },
             searchType: "move"
           };
-          index.addObjects([moveDataForAlgolia], (err: string, content: string) => {
-            if (err)
-              throw err
-          });
+          index.addObjects(
+            [moveDataForAlgolia],
+            (err: string, content: string) => {
+              if (err) throw err;
+            }
+          );
           /*  */
           await MoveModel.updateOne(
             {
@@ -855,14 +857,44 @@ const removeVideolocalServer = (req: Request, res: Response) => {
     fs.unlinkSync(videoFileMain);
     return res.status(200).json({
       success: true
-    })
-  }else{
+    });
+  } else {
     return res.status(400).json({
       message: "Video url not provided",
       success: false
-    })
+    });
   }
-}
+};
+
+//------------------Update Move Details-------------------------------
+const updateMove = async (req: Request, res: Response): Promise<any> => {
+  try {
+    const { body } = req;
+    const { title, description, tags, moveId } = body;
+    let updateMove: IUpdateMove = {
+      title,
+      description,
+      tags
+    };
+
+    if (!moveId) {
+      res.status(400).json({
+        message: "MoveId not found"
+      });
+    }
+    await MoveModel.findByIdAndUpdate(moveId, {
+      $set: { ...updateMove, updatedAt: Date.now() }
+    });
+    return res.status(200).json({
+      message: "Move details updated successfully."
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).send({
+      message: error.message
+    });
+  }
+};
 export {
   downloadVideo,
   getMoveBySetId,
@@ -878,5 +910,6 @@ export {
   filterMove,
   addTagsInMove,
   updateMoveIndex,
-  removeVideolocalServer
+  removeVideolocalServer,
+  updateMove
 };

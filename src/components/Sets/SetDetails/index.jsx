@@ -27,7 +27,8 @@ import {
   addTagsRequest,
   getAllFolderRequest,
   ManageSetRequest,
-  updateSortIndexRequest
+  updateSortIndexRequest,
+  updateMoveRequest
 } from "../../../actions";
 import SharableLinkModal from "../../comman/shareableLink/SharableLink";
 import { AppRoutes } from "../../../config/AppRoutes";
@@ -391,6 +392,7 @@ class SetDetails extends React.Component {
                   loadVideoDataRequest={loadVideoDataRequest}
                   addTagstoMove={this.addTagstoMove}
                   isStarred={this.isStarred}
+                  editMove={data => this.props.updateMoveRequest(data)}
                   {...this.props}
                 />
               ) : null}
@@ -401,7 +403,7 @@ class SetDetails extends React.Component {
                     setIndex={setIndex}
                     closePopOver={this.closePopOver}
                     showPopOver={this.showPopOver}
-                    moveCount={setDetails.moveCount}
+                    moveCount={setDetails ? setDetails.moveCount : 0}
                     isStarred={this.isStarred}
                     deleteMove={this.deleteMove}
                     movesOfSet={moveListItem}
@@ -501,6 +503,9 @@ const mapDispatchToProps = dispatch => ({
   },
   updateSortIndexRequest: data => {
     dispatch(updateSortIndexRequest(data));
+  },
+  updateMoveRequest: data => {
+    dispatch(updateMoveRequest(data));
   }
 });
 export default connect(

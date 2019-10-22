@@ -18,7 +18,7 @@ import qs from "query-string";
 import { AppConfig } from "../../config/Appconfig";
 import SharableLinkModal from "components/comman/shareableLink/SharableLink";
 import CreateSetComponent from "../Sets/createSet";
-
+import emptyImg from "../../assets/img/empty-img.svg";
 // core components
 class SetComponent extends React.Component {
   constructor(props) {
@@ -139,47 +139,53 @@ class SetComponent extends React.Component {
                       className="tile-wrap card"
                       onMouseLeave={() => this.closePopOver()}
                     >
-                      <div className="cotent-tile d-flex content-with-tip "
-                     
-                      >
-                           <div className="d-flex content-with-img w-100"
-                             onClick={() => this.handleSetDetails(setList._id)}
-                           >
+                      <div className="cotent-tile d-flex content-with-tip ">
                         <div
-                          className="cotent-text-tile cursor_pointer "
-                         
+                          className="d-flex content-with-img w-100"
+                          onClick={() => this.handleSetDetails(setList._id)}
                         >
-                          <div className="content-heading-tile d-flex">
-                            {" "}
-                            <span
-                              // onClick={() => this.handleSetDetails(setList._id)}
-                              className={" text-capitalize"}
-                            >
-                              <span>
-                                {setList.isCopy
-                                  ? `Copy of ${setList.title}`
-                                  : setList.title}
+                          <div className="cotent-text-tile cursor_pointer ">
+                            <div className="content-heading-tile d-flex">
+                              {" "}
+                              <span
+                                // onClick={() => this.handleSetDetails(setList._id)}
+                                className={" text-capitalize"}
+                              >
+                                <span>
+                                  {setList.isCopy
+                                    ? `Copy of ${setList.title}`
+                                    : setList.title}
+                                </span>
                               </span>
-                            </span>
+                            </div>
+                            {setList.description ? setList.description : ""}
+                            <div className="content-number-tile">
+                              {" "}
+                              {setList.moveCount} moves
+                            </div>
                           </div>
-                          {setList.description ? setList.description : ""}
-                          <div className="content-number-tile">
-                            {" "}
-                            {setList.moveCount} moves
-                          </div>
-                        </div>
-                        {setList.recentlyAddMoveImg ? (
                           <div
                             className="d-flex img-tile-wrap cursor_pointer"
                             onClick={() => this.handleSetDetails(setList._id)}
                           >
                             <div className="cotent-img-tile">
-                              <video width={"100%"} id="webm-video">
-                                <source
-                                  src={`${setList.recentlyAddMoveImg}`}
-                                  type="video/webm"
-                                />
-                              </video>
+                              {setList.recentlyAddMoveImg ? (
+                                <video width={"100%"} id="webm-video">
+                                  <source
+                                    src={`${setList.recentlyAddMoveImg}`}
+                                    type="video/webm"
+                                  />
+                                </video>
+                              ) : (
+                                <div className={""}>
+                                  <img
+                                    src={emptyImg}
+                                    alt=""
+                                    width="60"
+                                    height="60"
+                                  />
+                                </div>
+                              )}
                             </div>
                             {/* <div
                             className="cotent-img-tile "
@@ -191,9 +197,7 @@ class SetComponent extends React.Component {
                             }}
                           /> */}
                           </div>
-                        
-                        ) : null}
-                          </div>
+                        </div>
                         <div
                           onMouseOver={() => this.showPopOver(i, show)}
                           className="tooltip-btn-wrap right-btn-tip"
