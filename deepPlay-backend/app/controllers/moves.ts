@@ -333,10 +333,12 @@ const publicUrlMoveDetails = async (
 ): Promise<any> => {
   try {
     const { query } = req;
-    const { setId, isPublic, fromFolder } = query;
+    const { setId, isPublic, fromFolder, page, limit } = query;
     const decryptedSetId = decrypt(setId);
     let result: Document | any | null;
     let temp: Document | any | null, movesData: Document | any;
+    // const pageNumber: number = ((parseInt(page) || 1) - 1) * (limit || 20);
+    // const limitNumber: number = parseInt(limit) || 20;
 
     if (fromFolder) {
       temp = {
@@ -352,10 +354,8 @@ const publicUrlMoveDetails = async (
       result = await MoveModel.find({
         setId: decryptedSetId
       });
-
-      movesData = await MoveModel.find({
-        setId: decryptedSetId
-      });
+      // .skip(pageNumber)
+      // .limit(limitNumber);
     } else {
       return res.status(400).json({
         message: {
@@ -367,7 +367,6 @@ const publicUrlMoveDetails = async (
     return res.status(200).json({
       responsecode: 200,
       data: result,
-      movesData: movesData,
       success: true
     });
   } catch (error) {
@@ -787,7 +786,7 @@ const updateMoveIndex = async (req: Request, res: Response): Promise<any> => {
 
     return res.status(200).json({
       message: "SortIndex have been updated successfully!",
-       data: resp
+      data: resp
     });
   } catch (error) {
     console.log(error);

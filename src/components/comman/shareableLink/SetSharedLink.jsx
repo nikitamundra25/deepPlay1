@@ -14,6 +14,7 @@ import "slick-carousel/slick/slick-theme.css";
 import qs from "query-string";
 import Loader from "../Loader/Loader";
 import WebmView from "../../Sets/SetDetails/WebmView";
+import InfiniteScroll from "react-infinite-scroll-component";
 
 // core components
 class SetSharedLink extends React.Component {
@@ -101,7 +102,7 @@ class SetSharedLink extends React.Component {
     const { modelDetails } = modelInfoReducer;
     const { isVideoModalOpen } = modelDetails;
     const { videoData } = moveReducer;
-    const { moveListItem, showVideo, showVideoIndex } = this.state;
+    const { moveListItem, showVideo, showVideoIndex, page } = this.state;
     const { decryptedSetDetails, isMoveDetailsLoading } = shareLinkReducer;
     let parsed = qs.parse(this.props.location.search);
     return (
@@ -150,6 +151,22 @@ class SetSharedLink extends React.Component {
               ) : null}
 
               <section className="play-list-collection set-detail-section">
+                {/* <InfiniteScroll
+                  dataLength={moveListItem.length} //This is important field to render the next data
+                  next={() =>
+                    this.props.publicUrlSetDetails({
+                      setId: parsed.setId,
+                      page: page + 1,
+                      isInfiniteScroll: true
+                    })
+                  }
+                  hasMore={
+                    decryptedSetDetails.moveCount !== moveListItem.length
+                      ? true
+                      : false
+                  }
+                  loader={<h4>Loading...</h4>}
+                > */}
                 <Row>
                   <Col md="12">
                     <div class="content-header mt-3 mb-2">
@@ -217,50 +234,8 @@ class SetSharedLink extends React.Component {
                       </div>
                     );
                   })}
-
-                  {/* {moveListItem.map((video, index) => {
-                    return (
-                      <div
-                        onClick={() => this.handleShowVideo(index)}
-                        className="play-list-tile cursor_pointer"
-                        key={index}
-                      >
-                        <div className="play-list-block">
-                          <div
-                            className="play-sub-block"
-                            onMouseLeave={() => this.handleVideoPause(index)}
-                          >
-                            <div
-                              onMouseOver={() => this.handleVideoPlay(index)}
-                              className="play-list-img blur-img-wrap checked-wrap"
-                            >
-                              <video
-                                width={"100%"}
-                                id={`webm-video-${index}`}
-                                muted={false}
-                              >
-                                <source
-                                  src={`${AppConfig.IMAGE_ENDPOINT}${video.moveURL}`}
-                                  type="video/webm"
-                                />
-                              </video>
-                              <div
-                                className="blur-img"
-                                style={{ background: "#000" }}
-                              />
-                            </div>
-
-                            <div className="play-list-text">
-                              <div className="text-capitalize play-list-heading h6 m-0">
-                                {video.title || "unnamed"}
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    );
-                  })} */}
                 </Row>
+                {/* </InfiniteScroll> */}
               </section>
             </>
           ) : (
