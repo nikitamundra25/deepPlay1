@@ -5,7 +5,8 @@ import {
   sharedFolderInfoRequest,
   publicUrlSetDetailsRequest,
   shareableLinkRequest,
-  redirectTo
+  redirectTo,
+  encryptSetRequest
 } from "../../../actions";
 import emptyFolderIc from "../../../assets/img/empty-folder.png";
 import qs from "query-string";
@@ -66,10 +67,9 @@ class FolderSharedLink extends React.Component {
 
   handleSetDetails = id => {
     let parsed = qs.parse(this.props.location.search);
-    this.props.shareableLink({
+    this.props.encryptSetRequest({
       setId: id,
-      linkOf: "set",
-      publicAccess: "set",
+      userId: parsed.userId,
       isPublic: parsed.isPublic,
       fromFolder: true
     });
@@ -223,6 +223,9 @@ const mapDispatchToProps = dispatch => ({
   },
   onGoPage: data => {
     dispatch(redirectTo({ path: data }));
+  },
+  encryptSetRequest: data => {
+    dispatch(encryptSetRequest(data));
   }
 });
 

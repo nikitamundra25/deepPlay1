@@ -61,3 +61,10 @@ export const publicUrlMoveDetailsRequest = createAction(
 export const publicUrlMoveDetailsSuccess = createAction(
   SharableLinkAction.PUBLIC_URL_MOVE_DETAILS_SUCCESS
 );
+
+export const encryptSetRequest = createAction(
+  SharableLinkAction.SHAREABLE_LINK_ENCRYPT_SET_REQUEST
+);
+export const encryptSetSuccess = createAction(
+  SharableLinkAction.SHAREABLE_LINK_ENCRYPT_SET_SUCCESS
+);
