@@ -178,7 +178,8 @@ const completeVideoEditingLogic = createLogic({
             moveURL: result.data.data.videoUrl,
             setId: result.data.setId,
             videoOriginalFile: result.data.videoOriginalFile,
-            videoFileMain: result.data.videoFileMain
+            videoFileMain: result.data.videoFileMain,
+            s3VideoUrl: result.data.s3VideoUrl
           }
         })
       );
