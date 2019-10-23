@@ -66,6 +66,9 @@ const downloadVideo = async (req: Request, res: Response): Promise<any> => {
       videoUrl: videoURL,
       userId: headToken.id,
       sourceUrl: videoURL,
+      frames: frames,
+      videoMetaData,
+      videoName,
       isYoutubeUrl: false
     });
     await moveResult.save();
@@ -132,7 +135,7 @@ const downloadYoutubeVideo = async (
           ytdl(body.url).pipe(
             (videoStream = fs.createWriteStream(originalVideoPath))
           );
-          videoStream.on("close", async function() {
+          videoStream.on("close", async function () {
             const {
               frames: framesArray,
               videoMetaData,
@@ -248,6 +251,9 @@ const createMove = async (req: Request, res: Response): Promise<any> => {
       videoUrl: moveUrl,
       userId: headToken.id,
       sourceUrl: moveUrl,
+      frames: frames,
+      videoMetaData,
+      videoName,
       isYoutubeUrl: false
     });
     await moveResult.save();
@@ -458,7 +464,7 @@ const updateMoveDetailsAndTrimVideo = async (
 
       const fileName = `${
         result.videoUrl.split(".")[0]
-      }_clip_${moment().unix()}.webm`;
+        }_clip_${moment().unix()}.webm`;
       let videoFileMain: String | any, videoOriginalFile: String | any;
       if (IsProductionMode) {
         videoFileMain = path.join(__dirname, `${fileName}`);
@@ -720,7 +726,7 @@ const filterMove = async (req: Request, res: Response): Promise<any> => {
             }
           },
           {
-            tags: {
+            "tags.label": {
               $regex: new RegExp(search.trim(), "i")
             }
           }

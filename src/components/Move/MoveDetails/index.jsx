@@ -298,6 +298,8 @@ class MoveDetails extends React.Component {
     const { isDescriptionModalOpen, isMoveSuccessModal } = modelDetails;
     const { moveDetails, isSavingWebM, tagsList, moveUrlDetails } = moveReducer;
     const { frames, videoMetaData } = moveDetails || {};
+    console.log("###################",frames);
+    
     const {
       timer,
       title,

@@ -88,7 +88,7 @@ class AllSearchComponent extends React.Component {
                           </div>
                         </div>
                         <div className="searched-text mt-1">
-                          No data for this keywords
+                          No folder for this keywords
                       </div>
 
                       </div>
@@ -155,7 +155,7 @@ class AllSearchComponent extends React.Component {
                           </div>
                         </div>
                         <div className="searched-text mt-1">
-                          No data for this keywords
+                          No set for this keywords
                       </div>
                       </div>
                     </div>
@@ -217,7 +217,7 @@ class AllSearchComponent extends React.Component {
                           </div>
                         </div>
                         <div className="searched-text mt-1">
-                          No data for this keywords
+                          No move for this keywords
                       </div>
                       </div>
                     </div>
