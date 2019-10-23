@@ -14,9 +14,12 @@ export const SharableLinkAction = {
 
   GET_PUBLIC_URL_FOR_SET_REQUEST: "Get Public Url For Set Request",
   GET_PUBLIC_URL_FOR_SET_SUCCESS: "Get Public Url For Set Success",
-  
+
   PUBLIC_URL_MOVE_DETAILS_REQUEST: "Get Public Url Move Details Request",
-  PUBLIC_URL_MOVE_DETAILS_SUCCESS: "Get Public Url Move Details Success"
+  PUBLIC_URL_MOVE_DETAILS_SUCCESS: "Get Public Url Move Details Success",
+
+  SHAREABLE_LINK_ENCRYPT_SET_REQUEST: "Get encrypt setId Request",
+  SHAREABLE_LINK_ENCRYPT_SET_SUCCESS: "Get encrypt setId Success"
 };
 export const publicAccessRequest = createAction(
   SharableLinkAction.PUBLIC_ACCESS_REQUEST

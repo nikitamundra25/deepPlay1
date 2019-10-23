@@ -44,7 +44,6 @@ class LoginComponent extends React.Component {
 
   handleChange = e => {
     const { name, value } = e.target;
-
     if (name === "email") {
       this.setState({
         [name]: value.trim()
