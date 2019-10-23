@@ -118,6 +118,12 @@ class SignupComponent extends React.Component {
         roleType: checked
       });
     }
+    if (name === "firstName" || name === "lastName") {
+      this.setState({
+        [name]: value.replace(/[^\w\s]|[0-9]/gi, "").trim()
+      });
+      return;
+    }
     if (name === "password") {
       let res = value.match(/^(?:[0-9]+[a-z]|[a-z]+[0-9])[a-z0-9]*$/i);
       if (res) {
