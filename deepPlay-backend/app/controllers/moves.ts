@@ -546,7 +546,8 @@ const updateMoveDetailsAndTrimVideo = async (
             data: result,
             setId: setId,
             videoOriginalFile: videoOriginalFile,
-            videoFileMain: videoFileMain
+            videoFileMain: videoFileMain,
+            s3VideoUrl: s3VideoUrl
           });
         });
     } else {

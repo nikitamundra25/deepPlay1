@@ -121,11 +121,21 @@ class HomePage extends React.Component {
             </Col>
             <Col md="6">
               {/* <iframe width="560" title={"Dance"} height="315" src="https://www.youtube.com/embed/nrDtcsyd-U4" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe> */}
-              <div className="d-flex video-add-banner justify-content-center align-items-center">
+              
+              {/* no videos */}
+              {/* <div className="d-flex video-add-banner justify-content-center align-items-center">
                 <span className="play-ic-wrap">
                   <i className="fa fa-play" aria-hidden="true"></i>
                 </span>
-              </div>
+              </div> */}
+
+                {/* videos */}
+                <div className="videos-wrap d-flex justify-content-center align-items-center">
+                <video width="100%" id="webm-video-0" controls>
+                  <source src="https://s3.amazonaws.com/hope.bucket/moves/1571752097935_deep-play.webm" type="video/webm" />
+                  </video> 
+                </div>
+              
             </Col>
           </Row>
         </section>

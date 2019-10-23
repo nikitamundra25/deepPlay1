@@ -116,7 +116,7 @@ class DefaultHeader extends React.Component {
     });
     if (value === "") {
       return
-    }else{
+    } else {
       setTimeout(() => {
         this.props.allSearchRequest({ search: value });
       }, 500);
@@ -146,8 +146,8 @@ class DefaultHeader extends React.Component {
       createFolderModalOpen,
       createSetOpen
     } = modelDetails;
-    const { isUserLoggedIn, path, search, open } = this.state;
-
+    const {path, search, open } = this.state;
+    const { isLoginSuccess } = loginReducer
     const profiledata =
       profileInfoReducer && profileInfoReducer.profileInfo
         ? profileInfoReducer.profileInfo
@@ -193,7 +193,7 @@ class DefaultHeader extends React.Component {
                     <NavbarBrand className="mr-lg-5" to="/" tag={Link}>
                       <h3 className="mb-0 header-title">Deep Play</h3>
                     </NavbarBrand>
-                    {isLoggedIn ? (
+                    {(isLoggedIn || isLoginSuccess) ? (
                       <Nav className="navbar-nav align-items-center nav-main-section flex-fill creat-option">
                         <div className="nav-inputs-wrap d-flex">
                           <Col className="create-btn-wrap">
@@ -266,9 +266,6 @@ class DefaultHeader extends React.Component {
                                       : "search-input header-search-close"
                                   }
                                 >
-
-
-
                                   <span
                                     onClick={this.openSearch}
                                     className="search-arrow-wrap"
@@ -313,7 +310,7 @@ class DefaultHeader extends React.Component {
                       className="navbar-nav align-items-center nav-main-section user-section"
                       navbar
                     >
-                      {!isUserLoggedIn ? (
+                      {!(isLoggedIn || isLoginSuccess) ? (
                         <div className="nav-main-section">
                           <React.Fragment>
                             <span
