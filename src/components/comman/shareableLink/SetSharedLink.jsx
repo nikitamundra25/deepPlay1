@@ -1,6 +1,6 @@
 import React from "react";
 import { connect } from "react-redux";
-import { Container, Col, Row } from "reactstrap";
+import { Container, Col, Row, Card, CardHeader } from "reactstrap";
 import {
   sharedSetInfoRequest,
   publicUrlMoveDetailsRequest,
@@ -14,6 +14,8 @@ import "slick-carousel/slick/slick-theme.css";
 import qs from "query-string";
 import Loader from "../Loader/Loader";
 import WebmView from "../../Sets/SetDetails/WebmView";
+import emptySetIc from "../../../assets/img/empty-sets.png";
+
 //import InfiniteScroll from "react-infinite-scroll-component";
 
 // core components
@@ -102,7 +104,7 @@ class SetSharedLink extends React.Component {
     const { modelDetails } = modelInfoReducer;
     const { isVideoModalOpen } = modelDetails;
     const { videoData } = moveReducer;
-    const { moveListItem, showVideo, showVideoIndex,  } = this.state;
+    const { moveListItem, showVideo, showVideoIndex } = this.state;
     const { decryptedSetDetails, isMoveDetailsLoading } = shareLinkReducer;
     let parsed = qs.parse(this.props.location.search);
     return (
@@ -176,64 +178,81 @@ class SetSharedLink extends React.Component {
                       </span>
                     </div>
                   </Col>
-
-                  {moveListItem.map((video, index) => {
-                    return (
-                      <div
-                        onClick={() => this.handleShowVideo(index)}
-                        onMouseLeave={() => {
-                          this.handleVideoHoverLeave();
-                        }}
-                        className="play-list-tile cursor_pointer"
-                        key={index}
-                      >
+                  {moveListItem.length ? (
+                    moveListItem.map((video, index) => {
+                      return (
                         <div
-                          className="play-list-block"
-                          onMouseOver={() => this.handleVideoHover(index)}
+                          onClick={() => this.handleShowVideo(index)}
                           onMouseLeave={() => {
-                            this.handleVideoPause(index);
+                            this.handleVideoHoverLeave();
                           }}
+                          className="play-list-tile cursor_pointer"
+                          key={index}
                         >
                           <div
-                            className="play-sub-block"
-                            onMouseLeave={() => this.handleVideoPause(index)}
+                            className="play-list-block"
+                            onMouseOver={() => this.handleVideoHover(index)}
+                            onMouseLeave={() => {
+                              this.handleVideoPause(index);
+                            }}
                           >
                             <div
-                              onMouseOver={() => this.handleVideoPlay(index)}
-                              className="play-list-img blur-img-wrap checked-wrap"
-                              onClick={
-                                !isVideoModalOpen
-                                  ? () => this.handleVideoModal(video, index)
-                                  : null
-                              }
+                              className="play-sub-block"
+                              onMouseLeave={() => this.handleVideoPause(index)}
                             >
-                              <video
-                                width={"100%"}
-                                id={`webm-video-${index}`}
-                                muted={true}
-                              >
-                                <source
-                                  src={`${video.moveURL}`}
-                                  type="video/webm"
-                                />
-                              </video>
-
                               <div
-                                className="blur-img"
-                                style={{ background: "#000" }}
-                              />
-                            </div>
+                                onMouseOver={() => this.handleVideoPlay(index)}
+                                className="play-list-img blur-img-wrap checked-wrap"
+                                onClick={
+                                  !isVideoModalOpen
+                                    ? () => this.handleVideoModal(video, index)
+                                    : null
+                                }
+                              >
+                                <video
+                                  width={"100%"}
+                                  id={`webm-video-${index}`}
+                                  muted={true}
+                                >
+                                  <source
+                                    src={`${video.moveURL}`}
+                                    type="video/webm"
+                                  />
+                                </video>
 
-                            <div className="play-list-text">
-                              <div className="text-capitalize play-list-heading h6 m-0">
-                                {video.title || "unnamed"}
+                                <div
+                                  className="blur-img"
+                                  style={{ background: "#000" }}
+                                />
+                              </div>
+
+                              <div className="play-list-text">
+                                <div className="text-capitalize play-list-heading h6 m-0">
+                                  {video.title || "unnamed"}
+                                </div>
                               </div>
                             </div>
                           </div>
                         </div>
-                      </div>
-                    );
-                  })}
+                      );
+                    })
+                  ) : (
+                    <div className="create-set-section w-100 empty-folder-section sjp">
+                      <Card className="set-content-wrap empty-folder-card">
+                        <div className="set-content-block w-100 empty-folder-wrap">
+                          <CardHeader className="empty-folder-header">
+                            <img src={emptySetIc} alt={"Folder"} />
+                            <div className="content-header set-header">
+                              <span className="content-title">
+                                {" "}
+                                <h3>No moves available for this set.</h3>
+                              </span>
+                            </div>
+                          </CardHeader>
+                        </div>
+                      </Card>
+                    </div>
+                  )}
                 </Row>
                 {/* </InfiniteScroll> */}
               </section>
