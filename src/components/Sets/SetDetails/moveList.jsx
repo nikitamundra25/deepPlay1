@@ -366,7 +366,7 @@ class MoveList extends React.Component {
               </div>
               {selectedMoveIds && selectedMoveIds.length ? (
                 <div className={"selected-moves selected-detail-page"}>
-                  <div className={"d-flex justify-content-between"}>
+                  <div className={"d-flex justify-content-between align-items-center"}>
                     <div className="content-title">
                       Selected Moves:{" "}
                       {selectedMoveIds && selectedMoveIds.length

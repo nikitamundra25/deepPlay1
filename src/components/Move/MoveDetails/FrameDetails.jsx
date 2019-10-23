@@ -33,10 +33,12 @@ class FrameDetails extends Component {
             for (let k = 0; k < child.childNodes.length; k++) {
               const newChild = child.childNodes[k];
               if (newChild.classList.contains("input-range__track")) {
-                const leftContainer = document.getElementById("left-container");
+                const leftContainer = document.getElementById("left-container");               
                 const rightContainer = document.getElementById(
                   "right-container"
                 );
+                const leftCount = document.getElementsByClassName("input-range__label--min");
+                const rightCount = document.getElementsByClassName("input-range__label--max");
                 // get width for left and right container
                 const leftWidth = newChild.childNodes[1].style.left;
                 const rightWidth = newChild.childNodes[2].style.left;
@@ -47,6 +49,8 @@ class FrameDetails extends Component {
                 leftContainer.style.left = 0;
                 rightContainer.style.width = `${actualRightWidth}%`;
                 rightContainer.style.left = rightWidth;
+                leftCount[0].style.left = leftWidth;
+                rightCount[0].style.left = rightWidth;
                 logger(leftWidth, actualRightWidth, siderWidth);
               }
             }

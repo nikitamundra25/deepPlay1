@@ -1760,24 +1760,7 @@ a {
   }
 }
 
-.fram-wrap {
-  display: flex;
-  justify-content: space-between;
-  .fram-block {
-    font-size: 12px;
-    padding: 2px;
-  }
-  .frem-inner {
-    height: 50px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex: 1;
-    img {
-      width: 100%;
-    }
-  }
-}
+
 // custom-video-player
 .custom-video-player {
   color: $whiteColor;
@@ -2140,9 +2123,7 @@ a {
       }
     }
   }
-  .fram-wrap .fram-block {
-    font-size: 10px;
-  }
+
   .play-list-tile {
     width: 50%;
   }
