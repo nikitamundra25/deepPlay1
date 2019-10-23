@@ -63,15 +63,11 @@ const createSet = async (req: Request, res: Response): Promise<any> => {
       searchType: "sets"
     };
     index.addObjects([setDataForAlgolia], (err: string, content: string) => {
-      if (err) {
-        console.error(err);
-      } else {
-        console.log("##################", content);
-      }
+      if (err) throw err;
     });
     /*  */
 
-    res.status(200).json({
+    return res.status(200).json({
       setResult: setResult,
       message: "Set created successfully"
     });
@@ -100,13 +96,12 @@ const getAllSetById = async (req: Request, res: Response): Promise<void> => {
     condition.$and.push({
       isDeleted: false
     });
-    console.log("userId", query.userId);
 
     // dcrypt userId for shareable link in yoursets component
-    if (userId) {
-      headToken = { id: decrypt(userId) };
-      console.log("<<<,headToken.id", headToken.id);
-    }
+    // if (userId) {
+    //   headToken = { id: decrypt(userId) };
+    //   console.log("<<<,headToken.id", headToken.id);
+    // }
     // check for search condition
     if (search) {
       condition.$and.push({
@@ -245,9 +240,17 @@ const getRecentSetById = async (req: Request, res: Response): Promise<void> => {
           isDeleted: false
         });
 
+        let data: any = await MoveModel.find({
+          setId: setData._id,
+          isDeleted: false
+        })
+          .sort({ updatedAt: -1 })
+          .limit(1);
+
         setResult.push({
           ...setData._doc,
-          moveCount: moveCount
+          moveCount: moveCount,
+          recentlyAddMoveImg: data.length ? data[0].moveURL : null
         });
       }
     }
@@ -421,25 +424,33 @@ const getSetDetailsById = async (
         message: "User id not found"
       });
     }
+
     const result: Document | any = await SetModel.findOne({
       userId: headToken.id,
       _id: Mongoose.Types.ObjectId(setId),
       isDeleted: false
     }).populate("folderId");
 
-    const moveCount: Document | any = await MoveModel.count({
-      setId: result._id,
-      isDeleted: false
-    });
+    let moveCount: Document | any;
+    if (result) {
+      moveCount = await MoveModel.count({
+        setId: Mongoose.Types.ObjectId(result._id),
+        isDeleted: false
+      });
+      const SetResult: any = {
+        ...result._doc,
+        moveCount: moveCount
+      };
 
-    const SetResult: any = {
-      ...result._doc,
-      moveCount: moveCount
-    };
-
-    res.status(200).json({
-      data: SetResult
-    });
+      res.status(200).json({
+        data: SetResult
+      });
+    } else {
+      res.status(400).json({
+        message: "Set details not found.",
+        success: false
+      });
+    }
   } catch (error) {
     console.log(error);
     res.status(500).send({
@@ -490,9 +501,18 @@ const publicUrlsetDetails = async (
             setId: setData._id,
             isDeleted: false
           });
+
+          let data: any = await MoveModel.find({
+            setId: setData._id,
+            isDeleted: false
+          })
+            .sort({ updatedAt: -1 })
+            .limit(1);
+
           setResult.push({
             ...setData._doc,
-            moveCount: moveCount
+            moveCount: moveCount,
+            recentlyAddMoveImg: data.length ? data[0].moveURL : null
           });
         }
       }

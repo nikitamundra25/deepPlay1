@@ -14,7 +14,10 @@ const initialState = {
   moveUrlDetails: [],
   videoData: {},
   searchMoveResult: [],
-  isMoveSearchLoading: false
+  isMoveSearchLoading: false,
+  isCreatingAnotherMove: false,
+  videoOriginalFile: "",
+  videoFileMain: ""
 };
 
 export const moveReducer = handleActions(
@@ -40,14 +43,9 @@ export const moveReducer = handleActions(
     [MovesAction.GET_MOVES_OF_SET_SUCCESS]: (state, { payload }) => ({
       ...state,
       //movesOfSet: payload.movesOfSet,
-      movesOfSet:
-        payload.isInfiniteScroll ?
-          [
-            ...state.movesOfSet, ...payload.movesOfSet
-          ] :
-          payload.movesOfSet
-      ,
-
+      movesOfSet: payload.isInfiniteScroll
+        ? [...state.movesOfSet, ...payload.movesOfSet]
+        : payload.movesOfSet,
       totalMoves: payload.totalMoves,
       isMoveofSetLoading: false
     }),
@@ -63,7 +61,9 @@ export const moveReducer = handleActions(
     }),
     [MovesAction.UPDATE_VIDEO_SETTINGS_SUCCESS]: (state, { payload }) => ({
       ...state,
-      ...payload
+      ...payload,
+      videoOriginalFile: payload.videoOriginalFile,
+      videoFileMain: payload.videoFileMain
     }),
     [MovesAction.ADD_NEW_TAG_TO_LIST]: (state, { payload }) => ({
       ...state,
@@ -81,7 +81,20 @@ export const moveReducer = handleActions(
       ...state,
       ...payload,
       isMoveSearchLoading: false
-    })
+    }),
+    [MovesAction.UPDATE_SORT_INDEX_SUCCESS]: (state, { payload }) => ({
+      ...state,
+      ...payload
+    }),
+    [MovesAction.CREATE_ANOTHER_MOVE_REQUEST]: (state, { payload }) => ({
+      ...state,
+      isCreatingAnotherMove: true
+    }),
+    [MovesAction.CREATE_ANOTHER_MOVE_SUCCESS]: (state, { payload }) => ({
+      ...state,
+      ...payload,
+      isCreatingAnotherMove: false,
+    }),
   },
   initialState
 );

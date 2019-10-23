@@ -44,9 +44,15 @@ class LoginComponent extends React.Component {
 
   handleChange = e => {
     const { name, value } = e.target;
-    this.setState({
-      [name]: value
-    });
+    if (name === "email") {
+      this.setState({
+        [name]: value.trim()
+      });
+    } else {
+      this.setState({
+        [name]: value
+      });
+    }
   };
   /*
   /* 
@@ -183,7 +189,7 @@ class LoginComponent extends React.Component {
                         onChange={this.handleChange}
                         name={"email"}
                         value={email}
-                        type="email"
+                        type="text"
                         // title="Please Provide A Valid Email Address !"
                         // oninvalid={() =>
                         //   this.setCustomValidity("Enter User Name Here")

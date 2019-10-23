@@ -18,6 +18,7 @@ import {
 import emptyFolderIc from "../../assets/img/empty-folder.png";
 import emptySetIc from "../../assets/img/empty-sets.png";
 import Loader from "../../components/comman/Loader/Loader";
+import emptyImg from "../../assets/img/empty-img.svg";
 // import defaultProfileImage from "../../assets/img/profile-ic.png";
 // import { AppConfig } from "../../config/Appconfig";
 
@@ -62,10 +63,10 @@ class Dashboard extends React.Component {
             <span className="content-title">RECENT</span>
           </div> */}
           <div className="content-header">
-            <span className="content-title ">RECENT SETS</span>
+            <span className="content-title ">Recent sets</span>
             {recentSets && recentSets.length > 4 ? (
               <span
-                className="dashboard-right-content cursor_pointer"
+                className="dashboard-right-content cursor_pointer font-weight-bold view-all-btn"
                 onClick={() => this.handleViewAll("sets")}
               >
                 View all
@@ -113,15 +114,25 @@ class Dashboard extends React.Component {
                             className="d-flex img-tile-wrap cursor_pointer"
                             onClick={() => this.handleSetDetails(set._id)}
                           >
-                            <div
-                              className="cotent-img-tile "
-                              style={{
-                                backgroundImage:
-                                  'url("' +
-                                  "https://res.cloudinary.com/fleetnation/image/private/c_fit,w_1120/g_south,l_text:style_gothic2:%C2%A9%20Nikita%20Buida,o_20,y_10/g_center,l_watermark4,o_25,y_50/v1469756538/dd3acf4nzzavkv4rf2ji.jpg" +
-                                  '")'
-                              }}
-                            />
+                            <div className="cotent-img-tile">
+                              {set.recentlyAddMoveImg ? (
+                                <video width={"100%"} id="webm-video">
+                                  <source
+                                    src={`${set.recentlyAddMoveImg}`}
+                                    type="video/webm"
+                                  />
+                                </video>
+                              ) : (
+                                <div className={""}>
+                                  <img
+                                    src={emptyImg}
+                                    alt=""
+                                    width="60"
+                                    height="60"
+                                  />
+                                </div>
+                              )}
+                            </div>
                           </div>
                         </div>
                         {/* <div className="bottom-content-tile">
@@ -195,10 +206,10 @@ class Dashboard extends React.Component {
         </div>
         <div className="page-body mt-4 dashboard-recent-section">
           <div className="content-header">
-            <span className="content-title">RECENT FOLDERS</span>
+            <span className="content-title">Recent folders</span>
             {recentFolders && recentFolders.length > 4 ? (
               <span
-                className="dashboard-right-content cursor_pointer"
+                className="dashboard-right-content cursor_pointer font-weight-bold view-all-btn"
                 onClick={() => this.handleViewAll("folders")}
               >
                 View all

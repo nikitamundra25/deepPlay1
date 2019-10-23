@@ -15,6 +15,7 @@ import {
   Form,
   Progress
 } from "reactstrap";
+import { Link } from "react-router-dom";
 import "./index.scss";
 import { logger } from "helper/Logger";
 import { connect } from "react-redux";
@@ -168,7 +169,10 @@ class MoveComponent extends React.Component {
           <Card className="set-content-wrap create-a-move p-0">
             <div className="set-content-block w-100">
               <CardHeader className="border-bottom pt-4 pb-2">
-                <div className="content-header set-header flex-column">
+                <div className="content-header set-header d-flex ">
+                  <Link to="/dashboard">
+                <span className="cursor_pointer back-arrow create-move-back"> <i className="fas fa-long-arrow-alt-left"></i> Back</span>
+                </Link>
                   <span className="content-title creat-set-title">
                     {isVideoDownloading ? "Preparing WebM" : "Create a move"}
                   </span>
@@ -270,7 +274,7 @@ class MoveComponent extends React.Component {
                           <CustomInput
                             onChange={this.handleVideoFileSelect}
                             type="file"
-                            accept="video/mp4,video/x-m4v,video/*"
+                            accept="video/mp4,video/x-m4v,video/*,video/ogg"
                             disabled={false}
                             className={fileErr ? "is-invalid d-none" : "d-none"}
                             id="videoUpload"

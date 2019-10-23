@@ -122,6 +122,15 @@ const DeleteUserAccountLogic = createLogic({
 const uploadImageLogic = createLogic({
   type: ProfileAction.UPLOAD_IMAGE_REQUEST,
   async process({ action }, dispatch, done) {
+    // const config = {
+    //   onUploadProgress: function(progressEvent) {
+    //     var percentCompleted = Math.round(
+    //       (progressEvent.loaded * 100) / progressEvent.total
+    //     );
+    //     console.log("nikkkkkkkkkkkkuuuuuuu", percentCompleted);
+    //   }
+    // };
+
     let api = new ApiHelper();
     let result = await api.FetchFromServer(
       "user",

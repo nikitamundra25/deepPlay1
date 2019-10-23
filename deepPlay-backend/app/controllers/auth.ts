@@ -23,8 +23,9 @@ const login = async (req: Request, res: Response): Promise<any> => {
   try {
     const { body } = req;
     const { email, password } = body;
+    const Email: string = email.toLowerCase()
     const result: Document | null | any = await UserModel.findOne({
-      email,
+      email: Email,
       isDeleted: false
     }).select("firstName lastName email password");
     if (result === null) {
@@ -136,7 +137,7 @@ const signup = async (req: Request, res: Response): Promise<any> => {
       const userData: IUser = {
         firstName: body.firstName,
         lastName: body.lastName,
-        email: body.email,
+        email: body.email.toLowerCase(),
         password: body.password,
         salt: "",
         loggedInIp: "",
@@ -386,7 +387,7 @@ const userResetpassword = async (req: Request, res: Response): Promise<any> => {
     if (!userData.verifyToken) {
       return res.status(400).json({
         responsecode: 400,
-        message: "Your session has been expired.",
+        message: "Your password reset link has been expired.",
         success: false
       });
     }

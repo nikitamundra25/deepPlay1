@@ -2,6 +2,10 @@ import React from "react";
 import emptyFolderIc from "../../assets/img/empty-folder.png";
 import Loader from "../comman/Loader/Loader";
 import { AppRoutes } from "../../config/AppRoutes";
+import emptyFoldeIc from "../../assets/img/empty-folder.png";
+import emptySetIc from "../../assets/img/empty-sets.png";
+import emptyMoveIc from "../../assets/img/empty-moves.png";
+import { Link } from "react-router-dom";
 import "./index.scss";
 // core components
 class AllSearchComponent extends React.Component {
@@ -13,138 +17,219 @@ class AllSearchComponent extends React.Component {
   }
 
   render() {
-    const { searchData, isSearchLoading } = this.props
-    let folderList, setList, movelist
+    const { searchData, isSearchLoading, profiledata } = this.props;
+    let folderList, setList, movelist;
     if (searchData && searchData.length) {
-      folderList = searchData.filter(item => item.searchType === "folder")
-      setList = searchData.filter(item => item.searchType === "sets")
-      movelist = searchData.filter(item => item.searchType === "move")
+      folderList = searchData.filter(item => item.searchType === "folder" && item.userId === profiledata._id && item.isDeleted === false);
+      setList = searchData.filter(item => item.searchType === "sets"
+        && item.userId === profiledata._id && item.isDeleted === false);
+      movelist = searchData.filter(item => item.searchType === "move" && item.userId === profiledata._id && item.isDeleted === false);
     }
     return (
       <>
-      
-        {
-          !isSearchLoading ?
-          <div className="search-result-wrap cutom-scroll">
-              {
-                folderList && folderList.length ?
-                  <div className="search-result-block  moves-block">
-                    <div className="category-wrap">
-                      <div className="category-heading">
-                        Folders
-                      </div>
-                    </div>
-                    <div className="folder-searched-wrap searched-wrap">
-                      <div className="searched-block">
-                        {
-                          folderList && folderList.length ? folderList.map((folderData, index) => {
-                            return (
-                              <div key={index} onClick={() => {
-                                this.props.redirectTo(
-                                  AppRoutes.FOLDER_DETAILS.url.replace(":id", folderData._id)
-                                );
-                                this.props.handleSearchEmpty()
-                              }
-                              } className="cursor_pointer searched-tile">
-                                <div className="searhed-img-main-wrap">
-                                  <div className="searched-img-wrap">
-                                    <div className="searched-img">
-                                      <img src={emptyFolderIc} alt={"folder"} />
-                                    </div>
-                                  </div>
-                                </div>
-                                <div className="searched-text">
-                                  {folderData.title}
-                                </div>
-                              </div>
-                            )
-                          }) : null
-                        }
-                      </div>
-                    </div>
-                  </div> : null
-              }
-              {
-                setList && setList.length ?
-                  <div className="search-result-block  moves-block">
-                    <div className="category-wrap">
-                      <div className="category-heading">
-                        Sets
-                      </div>
-                    </div>
-                    <div className="searched-wrap">
-                      <div className="searched-block">
-                        {
-                          setList && setList.length ? setList.map((setData, index) => {
-                            return (
-                              <div key={index} onClick={() => {
-                                this.props.redirectTo(
-                                  AppRoutes.SET_DETAILS.url.replace(":id", setData._id)
-                                );
-                                this.props.handleSearchEmpty()
-                              }} className="cursor_pointer searched-tile">
-                                <div className="searhed-img-main-wrap">
-                                  <div className="searched-img-wrap">
-                                    <div className="searched-img">
-                                      <img src={"https://a10.gaanacdn.com/gn_img/albums/P7m3GNKqxo/7m3GjN47Kq/size_m.jpg"} alt={"folder"} />
-                                    </div>
-                                  </div>
-                                </div>
-                                <div className="searched-text">
-                                  {setData.title}
+        {!isSearchLoading ? (
+          <div className="search-result-wrap cutom-scroll temprari-static-search">
+            {folderList && folderList.length ? (
+              <div className="search-result-block  moves-block">
+                <div className="category-wrap">
+                  <div className="category-heading">Folders</div>
+                  <Link to="/folder" onClick={this.props.searhClose} className="view-all-wrap font-weight-bold">
+                    View All
+                      </Link>
+                </div>
+                <div className="folder-searched-wrap searched-wrap">
+                  <div className="searched-block">
+                    {folderList && folderList.length
+                      ? folderList.map((folderData, index) => {
+                        return (
+                          <div
+                            key={index}
+                            onClick={() => {
+                              this.props.redirectTo(
+                                AppRoutes.FOLDER_DETAILS.url.replace(
+                                  ":id",
+                                  folderData._id
+                                )
+                              );
+                              this.props.handleSearchEmpty();
+                            }}
+                            className="cursor_pointer searched-tile"
+                          >
+                            <div className="searhed-img-main-wrap">
+                              <div className="searched-img-wrap">
+                                <div className="searched-img">
+                                  <img src={emptyFolderIc} alt={"folder"} />
                                 </div>
                               </div>
-                            )
-                          }) : null
-                        }
+                            </div>
+                            <div className="searched-text">
+                              {folderData.title}
+                            </div>
+                          </div>
+                        );
+                      })
+                      : null}
+                  </div>
+                </div>
+              </div>
+            ) : (
+                <div className="search-result-block empty-result-block moves-block ">
+                  <div className="category-wrap">
+                    <div className="category-heading">Folders</div>
+                  </div>
+                  <div className="searched-wrap">
+                    <div className="searched-block">
+                      <div className="cursor_pointer searched-tile">
+                        <div className="searhed-img-main-wrap">
+                          <div className="searched-img-wrap">
+                            <div className="searched-img">
+                              <img alt={""} src={emptyFoldeIc} />
+                            </div>
+                          </div>
+                        </div>
+                        <div className="searched-text mt-1">
+                          No folder for this keywords
+                      </div>
+
                       </div>
                     </div>
-                  </div> :
-                  null
-              }
-              {
-                movelist && movelist.length ?
-                  <div className="search-result-block moves-block">
-                    <div className="category-wrap">
-                      <div className="category-heading">
-                        Moves
-                      </div>
-                    </div>
-                    <div className="searched-wrap">
-                      <div className="searched-block">
-                        {
-                          movelist.map((moveData, index) => {
-                            return (
-                              <div key={index} onClick={() => {
-                                this.props.redirectTo(
-                                  AppRoutes.MOVE_DETAILS.url.replace(":id", moveData._id)
-                                );
-                                this.props.handleSearchEmpty()
-                              }} className="cursor_pointer searched-tile">
-                                <div className="searhed-img-main-wrap">
-                                  <div className="searched-img-wrap">
-                                    <div className="searched-img">
-                                      <img alt={""} src="https://a10.gaanacdn.com/gn_img/albums/P7m3GNKqxo/7m3GjN47Kq/size_m.jpg" />
-                                    </div>
-                                  </div>
-                                </div>
-                                <div className="searched-text">
-                                  {moveData.title}
+                  </div>
+                </div>
+              )}
+            {setList && setList.length ? (
+              <div className="search-result-block  moves-block">
+                <div className="category-wrap">
+                  <div className="category-heading">Sets</div>
+                  <Link to="/set" onClick={this.props.searhClose} className="view-all-wrap font-weight-bold">
+                    View All
+                      </Link>
+                </div>
+                <div className="searched-wrap">
+                  <div className="searched-block">
+                    {setList && setList.length
+                      ? setList.map((setData, index) => {
+                        return (
+                          <div
+                            key={index}
+                            onClick={() => {
+                              this.props.redirectTo(
+                                AppRoutes.SET_DETAILS.url.replace(
+                                  ":id",
+                                  setData._id
+                                )
+                              );
+                              this.props.handleSearchEmpty();
+                            }}
+                            className="cursor_pointer searched-tile"
+                          >
+                            <div className="searhed-img-main-wrap">
+                              <div className="searched-img-wrap">
+                                <div className="searched-img">
+                                  <img src={emptySetIc} alt={"folder"} />
                                 </div>
                               </div>
-                            )
-                          })
-                        }
+                            </div>
+                            <div className="searched-text">
+                              {setData.title}
+                            </div>
+                          </div>
+                        );
+                      })
+                      : null}
+                  </div>
+                </div>
+              </div>
+            ) : (
+                <div className="search-result-block empty-result-block moves-block ">
+                  <div className="category-wrap">
+                    <div className="category-heading">Sets</div>
+                  </div>
+                  <div className="searched-wrap">
+                    <div className="searched-block">
+                      <div className="cursor_pointer searched-tile">
+                        <div className="searhed-img-main-wrap">
+                          <div className="searched-img-wrap">
+                            <div className="searched-img">
+                              <img alt={""} src={emptySetIc} />
+                            </div>
+                          </div>
+                        </div>
+                        <div className="searched-text mt-1">
+                          No set for this keywords
+                      </div>
                       </div>
                     </div>
-                  </div> :
-                  null
-              }
-            </div> :
-               <div className="search-result-wrap cutom-scroll loader-no-height loader-no-background">
-            <Loader />
+                  </div>
+                </div>
+              )}
+            {movelist && movelist.length ? (
+              <div className="search-result-block moves-block">
+                <div className="category-wrap">
+                  <div className="category-heading">Moves</div>
+                </div>
+                <div className="searched-wrap">
+                  <div className="searched-block">
+                    {movelist.map((moveData, index) => {
+                      return (
+                        <div
+                          key={index}
+                          onClick={() => {
+                            this.props.redirectTo(
+                              AppRoutes.MOVE_DETAILS.url.replace(
+                                ":id",
+                                moveData._id
+                              )
+                            );
+                            this.props.handleSearchEmpty();
+                          }}
+                          className="cursor_pointer searched-tile"
+                        >
+                          <div className="searhed-img-main-wrap">
+                            <div className="searched-img-wrap">
+                              <div className="searched-img">
+                                <img
+                                  alt={""}
+                                  src="https://a10.gaanacdn.com/gn_img/albums/P7m3GNKqxo/7m3GjN47Kq/size_m.jpg"
+                                />
+                              </div>
+                            </div>
+                          </div>
+                          <div className="searched-text">{moveData.title}</div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+              </div>
+            ) : (
+                <div className="search-result-block empty-result-block moves-block ">
+                  <div className="category-wrap">
+                    <div className="category-heading">Moves</div>
+                  </div>
+                  <div className="searched-wrap">
+                    <div className="searched-block">
+                      <div className="cursor_pointer searched-tile">
+                        <div className="searhed-img-main-wrap">
+                          <div className="searched-img-wrap">
+                            <div className="searched-img">
+                              <img alt={""} src={emptyMoveIc} />
+                            </div>
+                          </div>
+                        </div>
+                        <div className="searched-text mt-1">
+                          No move for this keywords
+                      </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              )}
+          </div>
+        ) : (
+            <div className="search-result-wrap cutom-scroll loader-no-height loader-no-background">
+              <Loader />
             </div>
-        }
+          )}
       </>
     );
   }

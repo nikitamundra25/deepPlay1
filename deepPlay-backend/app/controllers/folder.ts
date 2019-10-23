@@ -467,6 +467,36 @@ const sharableLink = async (req: Request, res: Response): Promise<any> => {
   }
 };
 
+//-------------------Encrpt setId when user click on folder to set--------------------
+const encryptSetIdShareLink = async (
+  req: Request,
+  res: Response
+): Promise<any> => {
+  try {
+    const { query } = req;
+    const { userId, setId } = query;
+
+    let encryptedSetId: String;
+    let data: Document | any;
+    encryptedSetId = encrypt(setId);
+    data = {
+      encryptedUserId: userId,
+      encryptedSetId: encryptedSetId
+    };
+
+    return res.status(200).json({
+      responsecode: 200,
+      data: data,
+      success: true
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).send({
+      message: error.message
+    });
+  }
+};
+
 //-----Decrypt userId & folderId to get folderDetails for shared link-----------------
 const publicUrlFolderInfo = async (
   req: Request,
@@ -579,5 +609,6 @@ export {
   sharableLink,
   publicUrlFolderInfo,
   updateFolder,
-  updateFolderStatus
+  updateFolderStatus,
+  encryptSetIdShareLink
 };

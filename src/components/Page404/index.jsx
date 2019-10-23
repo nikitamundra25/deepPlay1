@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import { Button, Col, Container, Card, Row } from 'reactstrap';
+import { Link } from "react-router-dom";
 import "./index.scss";
-import imgNotfound from "../../assets/img/404.svg"
+import imgNotfound from "../../assets/img/404.svg";
 class Page404Component extends Component {
   render() {
     const token = localStorage.getItem("token");
@@ -36,8 +37,8 @@ class Page404Component extends Component {
                 </p>
               </div>
               <div className="text-left">
-                <Button
-                  color={" "}
+                <Link to={"/"}>
+                  <Button
                   className="fill-btn btn w-75 m-auto white-color get-stated-btn"
                   onClick={
                     isLoggedIn
@@ -47,6 +48,7 @@ class Page404Component extends Component {
                 >
            Back To Home page
                 </Button>
+                </Link>
               </div>
             </Col>
           </Row>

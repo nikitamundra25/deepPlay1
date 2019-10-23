@@ -26,6 +26,7 @@ import logoutIcon from "../../assets/img/icons/logout.svg";
 import { AppConfig } from "../../config/Appconfig";
 import AllSearchComponent from "../../components/AllSearch";
 import CreateSetComponent from "../../components/Sets/createSet";
+import searchArrow from "../../assets/img/back-search.png";
 
 class DefaultHeader extends React.Component {
   constructor(props) {
@@ -33,7 +34,8 @@ class DefaultHeader extends React.Component {
     this.state = {
       isUserLoggedIn: false,
       path: "",
-      search: ""
+      search: "",
+      open: false
     };
   }
 
@@ -93,6 +95,13 @@ class DefaultHeader extends React.Component {
     });
   };
 
+  openSearch = () => {
+    this.setState({
+      open: !this.state.open,
+      search: ""
+    });
+  };
+
   createFolder = data => {
     this.props.onFolderCreation(data);
   };
@@ -104,11 +113,15 @@ class DefaultHeader extends React.Component {
     const { name, value } = e.target;
     this.setState({
       [name]: value
-    })
-    setTimeout(() => {
-      this.props.allSearchRequest({ search: value })
-    }, 500);
-  }
+    });
+    if (value === "") {
+      return
+    } else {
+      setTimeout(() => {
+        this.props.allSearchRequest({ search: value });
+      }, 500);
+    }
+  };
   /*  */
   render() {
     const {
@@ -133,7 +146,8 @@ class DefaultHeader extends React.Component {
       createFolderModalOpen,
       createSetOpen
     } = modelDetails;
-    const { isUserLoggedIn, path, search } = this.state;
+    const {path, search, open } = this.state;
+    const { isLoginSuccess } = loginReducer
     const profiledata =
       profileInfoReducer && profileInfoReducer.profileInfo
         ? profileInfoReducer.profileInfo
@@ -143,12 +157,17 @@ class DefaultHeader extends React.Component {
         ? profiledata.profileImage.split("/")
         : [];
     const { searchData, isSearchLoading } = allSearchReducer;
-    const ProfileImage = splitedImage[0] === "uploads"
-      ? `${AppConfig.API_ENDPOINT}${profiledata ? profiledata.profileImage : ""}`
-      : profiledata ? profiledata.profileImage : ""
+    const ProfileImage =
+      splitedImage[0] === "uploads"
+        ? `${AppConfig.API_ENDPOINT}${
+        profiledata ? profiledata.profileImage : ""
+        }`
+        : profiledata
+          ? profiledata.profileImage
+          : "";
     return (
       <>
-        <header className="header-global theme-header ">
+        <header className="header-global theme-header dashboard-header">
           <div className="theme-container">
             {/* <Navbar
               className="navbar-main d-flex justify-content-center"
@@ -169,12 +188,12 @@ class DefaultHeader extends React.Component {
                     id="navbar-main"
                   >
                     <div className="header-bar-ic">
-                      <i class="fa fa-bars" aria-hidden="true"></i>
+                      <i className="fa fa-bars" aria-hidden="true"></i>
                     </div>
                     <NavbarBrand className="mr-lg-5" to="/" tag={Link}>
                       <h3 className="mb-0 header-title">Deep Play</h3>
                     </NavbarBrand>
-                    {isLoggedIn ? (
+                    {(isLoggedIn || isLoginSuccess) ? (
                       <Nav className="navbar-nav align-items-center nav-main-section flex-fill creat-option">
                         <div className="nav-inputs-wrap d-flex">
                           <Col className="create-btn-wrap">
@@ -184,8 +203,11 @@ class DefaultHeader extends React.Component {
                                 color=" "
                                 className="nav-dropdown-btn"
                               >
-                                <i className="fas fa-plus-square"></i><span className="dropdown-text"> &nbsp;
-                              Create</span>
+                                <i className="fas fa-plus-square"></i>
+                                <span className="dropdown-text">
+                                  {" "}
+                                  &nbsp; Create
+                              </span>
                               </DropdownToggle>
                               <DropdownMenu>
                                 <DropdownItem></DropdownItem>
@@ -219,7 +241,10 @@ class DefaultHeader extends React.Component {
                             <FormGroup className="mb-0 header-search-wrap ">
                               <InputGroup className="">
                                 <InputGroupAddon addonType="prepend">
-                                  <span className="input-group-text">
+                                  <span
+                                    className="input-group-text header-input-group-text"
+                                    onClick={this.openSearch}
+                                  >
                                     <i
                                       className="fa fa-search"
                                       aria-hidden="true"
@@ -227,22 +252,54 @@ class DefaultHeader extends React.Component {
                                   </span>
                                 </InputGroupAddon>
 
-                                {/* input-open */}
-                                <span className="search-input ">
-                                  <Input placeholder="Search" onChange={this.handleChange} value={search} name={"search"} type="text" autoComplete="off" />
+                                <div
+                                  className={
+                                    open ? "black-search-layer" : "d-none"
+                                  }
+                                  onClick={this.openSearch}
+                                ></div>
+
+                                <span
+                                  className={
+                                    open
+                                      ? "search-input header-search-open "
+                                      : "search-input header-search-close"
+                                  }
+                                >
+                                  <span
+                                    onClick={this.openSearch}
+                                    className="search-arrow-wrap"
+                                  >
+                                    <img
+                                      src={searchArrow}
+                                      alt=""
+                                      className="w-100"
+                                    />
+                                  </span>
+                                  <Input
+                                    placeholder="Search for set, folder, Move and More"
+                                    onChange={this.handleChange}
+                                    value={search}
+                                    name={"search"}
+                                    type="text"
+                                    autoComplete="off"
+                                  />
                                 </span>
-                                {
-                                  search ?
-                                    <AllSearchComponent
-                                      searchData={searchData}
-                                      isSearchLoading={isSearchLoading}
-                                      handleSearchEmpty={() => this.setState({
+                                {search && search !== "" ? (
+                                  <AllSearchComponent
+                                    searhClose={this.openSearch}
+                                    searchData={searchData}
+                                    isSearchLoading={isSearchLoading}
+
+                                    handleSearchEmpty={() =>
+                                      this.setState({
                                         search: ""
-                                      })}
-                                      {...this.props}
-                                    /> :
-                                    null
-                                }
+                                      })
+                                    }
+                                    profiledata={profiledata}
+                                    {...this.props}
+                                  />
+                                ) : null}
                               </InputGroup>
                             </FormGroup>
                           </Col>
@@ -253,20 +310,20 @@ class DefaultHeader extends React.Component {
                       className="navbar-nav align-items-center nav-main-section user-section"
                       navbar
                     >
-                      {!isUserLoggedIn ? (
+                      {!(isLoggedIn || isLoginSuccess) ? (
                         <div className="nav-main-section">
                           <React.Fragment>
                             <span
                               onClick={this.handleLoginModel}
                               className="nav-link-inner--text pr-4 cusror_pointer"
                             >
-                              Signin
+                              Sign in
                           </span>
                             <span
                               onClick={this.handleSignupModel}
                               className="nav-link-inner--text pr-2 cusror_pointer"
                             >
-                              Signup
+                              Sign up
                           </span>
                           </React.Fragment>
                         </div>
@@ -290,36 +347,30 @@ class DefaultHeader extends React.Component {
                                       <div
                                         style={{
                                           backgroundImage:
-                                            'url("' +
-                                            ProfileImage
-                                            +
-                                            '")'
+                                            'url("' + ProfileImage + '")'
                                         }}
                                         className="user-back-img-wrap"
                                       ></div>
-                                      // <img
-                                      //   src={
-
-                                      //   }
-                                      //   className="w-100 "
-                                      //   alt={"img"}
-                                      // />
                                     ) : (
+                                        // <img
+                                        //   src={
+
+                                        //   }
+                                        //   className="w-100 "
+                                        //   alt={"img"}
+                                        // />
                                         // <img
                                         //   src={profileImage}
                                         //   className="w-100 "
                                         //   alt={"img"}
                                         // />
                                         <div
-                                        style={{
-                                          backgroundImage:
-                                            'url("' +
-                                            profileImageIc
-                                            +
-                                            '")'
-                                        }}
-                                        className="user-back-img-wrap"
-                                      ></div>
+                                          style={{
+                                            backgroundImage:
+                                              'url("' + profileImageIc + '")'
+                                          }}
+                                          className="user-back-img-wrap"
+                                        ></div>
                                       )}
                                   </div>
                                   <div className="user-text">

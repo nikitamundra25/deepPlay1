@@ -11,12 +11,36 @@ import {
 // import Login from "../Auth/Login"
 // import ForgotPassword from "../Auth/ForgotPassword";
 // import { UncontrolledDropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap';
-const homePageImage = [
-  "https://images.pexels.com/photos/67636/rose-blue-flower-rose-blooms-67636.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500",
-  "https://p.bigstockphoto.com/GeFvQkBbSLaMdpKXF1Zv_bigstock-Aerial-View-Of-Blue-Lakes-And--227291596.jpg",
-  "https://images.pexels.com/photos/462118/pexels-photo-462118.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500",
-  "https://helpx.adobe.com/content/dam/help/en/stock/how-to/visual-reverse-image-search/jcr_content/main-pars/image/visual-reverse-image-search-v2_intro.jpg",
-  "https://i.pinimg.com/originals/26/94/93/269493fbeb10e31ad3867248e3f68b94.jpg"
+
+const image = [
+  {
+    id: 1,
+    title: "Rumba",
+    image:
+      "https://www.rushlake-media.com/wp-content/uploads/2018/11/victor-Anastacia-1080p.jpg"
+  },
+  {
+    id: 2,
+    title: "Zumba",
+    image:
+      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQmW2LRpRoa11a0iFmo5cbyagU92VXVAtLqZt1Y4sT0dQ1jMfUeUQ"
+  },
+  {
+    id: 3,
+    title: "Tango",
+    image:
+      "https://static.wixstatic.com/media/727c8f_9d251f742b3c44538dbf2f2c7552192d~mv2_d_1600_1200_s_2.jpg"
+  },
+  {
+    id: 4,
+    title: "Ballroom Dancing",
+    image: "https://vistapointe.net/images/ballroom-dancing-wallpaper-5.jpg"
+  },
+  {
+    id: 5,
+    title: "Flamenco",
+    image: "http://www.ritmoflamenco.ca/wp-content/uploads/flamencomusic.jpg"
+  }
 ];
 // core components
 class HomePage extends React.Component {
@@ -97,11 +121,21 @@ class HomePage extends React.Component {
             </Col>
             <Col md="6">
               {/* <iframe width="560" title={"Dance"} height="315" src="https://www.youtube.com/embed/nrDtcsyd-U4" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe> */}
-              <div className="d-flex video-add-banner justify-content-center align-items-center">
+              
+              {/* no videos */}
+              {/* <div className="d-flex video-add-banner justify-content-center align-items-center">
                 <span className="play-ic-wrap">
                   <i className="fa fa-play" aria-hidden="true"></i>
                 </span>
-              </div>
+              </div> */}
+
+                {/* videos */}
+                <div className="videos-wrap d-flex justify-content-center align-items-center">
+                <video width="100%" id="webm-video-0" controls>
+                  <source src="https://s3.amazonaws.com/hope.bucket/moves/1571752097935_deep-play.webm" type="video/webm" />
+                  </video> 
+                </div>
+              
             </Col>
           </Row>
         </section>
@@ -133,7 +167,7 @@ class HomePage extends React.Component {
                 </div>
               </div>
             </Col>
-            {homePageImage.map((images, index) => {
+            {image.map((images, index) => {
               return (
                 <Col md="4" key={index}>
                   <div className="play-list-block ">
@@ -144,16 +178,18 @@ class HomePage extends React.Component {
                       }
                     >
                       <div className="play-list-img blur-img-wrap">
-                        <img src={images} alt={""} />
+                        <img src={images.image} alt={""} />
                         <div
                           className="blur-img"
-                          style={{ backgroundImage: 'url("' + images + '")' }}
+                          style={{
+                            backgroundImage: 'url("' + images.image + '")'
+                          }}
                         ></div>
                       </div>
 
                       <div className="play-list-text">
                         <div className="play-list-heading h6 ">
-                          Salsa Footwork
+                          {images.title}
                         </div>
                       </div>
                     </div>

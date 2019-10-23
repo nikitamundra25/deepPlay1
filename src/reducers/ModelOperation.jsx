@@ -17,7 +17,11 @@ const initialAuthState = {
     createSetModalOpen: false,
     isDescriptionModalOpen: false,
     isMoveSuccessModal: false,
-    isVideoModalOpen: false
+    isVideoModalOpen: false,
+    addTagModalOpen: false,
+    viewInfoModalOpen: false,
+    addTagModalOpenReq: false,
+    editMoveModalOpen: false
   }
 };
 

@@ -84,6 +84,15 @@ class CreateSetComponent extends React.Component {
     });
   };
 
+  handleClose = () => {
+    this.setState({
+      errors: "",
+      title: "",
+      description: ""
+    });
+    this.props.handleOpen();
+  };
+
   render() {
     const { modal, handleOpen, setDetails } = this.props;
     const { title, description, errors } = this.state;
@@ -105,7 +114,7 @@ class CreateSetComponent extends React.Component {
               className="close"
               data-dismiss="modal"
               type="button"
-              onClick={handleOpen}
+              onClick={this.handleClose}
             >
               <span aria-hidden="true">
                 <img src={closeBtn} alt="close-ic" />
@@ -153,7 +162,6 @@ class CreateSetComponent extends React.Component {
               onClick={this.onCreateSet}
               color=" "
               className="btn btn-black"
-              disabled={!title}
             >
               {setDetails ? "Update Set" : "Create Set"}
             </Button>
@@ -163,7 +171,6 @@ class CreateSetComponent extends React.Component {
                 onClick={() => this.onCreateSet("addMove")}
                 color=" "
                 className="btn btn-black"
-                disabled={!title}
               >
                 Add a Move
               </Button>
