@@ -120,7 +120,7 @@ class SignupComponent extends React.Component {
     }
     if (name === "firstName" || name === "lastName") {
       this.setState({
-        [name]: value.replace(/[^\w\s]|[0-9]/gi, "")
+        [name]: value.replace(/[^\w\s]|[0-9]/gi, "").trim()
       });
       return;
     }
