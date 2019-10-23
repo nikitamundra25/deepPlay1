@@ -61,6 +61,7 @@
     "react-beautiful-dnd": "^11.0.5",
     "react-copy-to-clipboard": "^5.0.1",
     "react-datetime": "2.16.3",
+    "react-debounce-input": "^3.2.2",
     "react-dom": "16.8.6",
     "react-dropzone": "^10.1.9",
     "react-facebook-login": "^4.1.1",
