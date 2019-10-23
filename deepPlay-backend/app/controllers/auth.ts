@@ -24,8 +24,6 @@ const login = async (req: Request, res: Response): Promise<any> => {
     const { body } = req;
     const { email, password } = body;
     const Email: string = email.toLowerCase()
-    console.log("Email", Email);
-
     const result: Document | null | any = await UserModel.findOne({
       email: Email,
       isDeleted: false

@@ -55,7 +55,7 @@ const loginLogic = createLogic({
         })
       );
       dispatch(loginSuccess({ isLoginSuccess: true }));
-      window.location.href = AppRoutes.DASHBOARD.url;
+      dispatch(redirectTo({ path: AppRoutes.DASHBOARD.url }))
       done();
     }
   }
@@ -66,9 +66,9 @@ const loginLogic = createLogic({
 const logOutLogic = createLogic({
   type: loginAction.LOGOUT_REQUEST,
   async process({ action }, dispatch, done) {
-    dispatch(logoutSuccess({ isLoginSuccess: false }));
     localStorage.removeItem("token");
-    window.location.href = AppRoutes.HOME_PAGE.url;
+    dispatch(logoutSuccess({ isLoginSuccess: false }));
+    dispatch(redirectTo({ path: AppRoutes.HOME_PAGE.url }))
     done();
   }
 });
@@ -104,7 +104,7 @@ const socialLoginLogic = createLogic({
         })
       );
       dispatch(loginSuccess({ isLoginSuccess: true }));
-      window.location.href = AppRoutes.DASHBOARD.url;
+      dispatch(redirectTo({ path: AppRoutes.DASHBOARD.url }))
       done();
     }
   }
@@ -218,7 +218,6 @@ const verifyAccountAccessLogic = createLogic({
       dispatch(logoutRequest());
     }
     localStorage.setItem("token", user);
-
     dispatch(
       redirectTo({
         path: AppRoutes.DASHBOARD.url
@@ -245,8 +244,8 @@ const changePasswordLogic = createLogic({
       if (!toast.isActive(toastId)) {
         toastId = toast.error(
           result.messages[0].oldPassword ||
-            result.messages[0] ||
-            result.messages
+          result.messages[0] ||
+          result.messages
         );
       }
       dispatch(changePasswordFailed());
