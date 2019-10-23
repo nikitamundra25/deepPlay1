@@ -21,7 +21,8 @@ import {
   getAllSetRequest,
   modelOpenRequest,
   addNewTagToList,
-  createAnotherMoveRequest
+  createAnotherMoveRequest,
+  removeVideoLocalServerRequest,
 } from "../../../actions";
 import "./index.scss";
 import Loader from "components/comman/Loader/Loader";
@@ -54,7 +55,8 @@ class MoveDetails extends React.Component {
         min: 0,
         max: 15
       },
-      videoMaxDuration: 0
+      videoMaxDuration: 0,
+      isEdit: false
     };
     this.videoDetails = React.createRef();
   }
@@ -73,6 +75,10 @@ class MoveDetails extends React.Component {
         }
       });
     }
+    let parsed = qs.parse(this.props.location.search);
+    this.setState({
+      isEdit: parsed.isEdit
+    })
   };
 
   componentDidUpdate = ({ modelInfoReducer, location, moveReducer }) => {
@@ -112,14 +118,14 @@ class MoveDetails extends React.Component {
       const { allSetList } = this.props.setReducer;
       let selectOption;
       if (allSetList && allSetList.length) {
-        // eslint-disable-next-line 
+        // eslint-disable-next-line
         allSetList.map(data => {
           if (setId) {
             if (setId === data._id) {
-              (selectOption = {
+              selectOption = {
                 label: data.title,
                 value: data._id
-              });
+              };
             }
           }
         });
@@ -193,6 +199,7 @@ class MoveDetails extends React.Component {
   };
 
   createAnother = data => {
+    this.handleMoveSuccessModal();
     this.props.createAnotherMoveRequest({ moveUrl: data });
   };
   /**
@@ -264,7 +271,8 @@ class MoveDetails extends React.Component {
         selectSetOptions: {
           label: e.label,
           value: e.value
-        }
+        },
+        errors: ""
       });
     } else {
       this.setState({
@@ -277,7 +285,9 @@ class MoveDetails extends React.Component {
   };
 
   handleSetDetails = id => {
-    this.props.redirectTo(AppRoutes.SET_DETAILS.url.replace(":id", id));
+    const { moveReducer } = this.props
+    const { moveUrlDetails } = moveReducer
+    this.props.removeVideoLocalServerRequest({ videoOriginalFile: moveUrlDetails.videoOriginalFile, videoFileMain: moveUrlDetails.videoFileMain, setId: id })
   };
   /**
    *
@@ -288,6 +298,8 @@ class MoveDetails extends React.Component {
     const { isDescriptionModalOpen, isMoveSuccessModal } = modelDetails;
     const { moveDetails, isSavingWebM, tagsList, moveUrlDetails } = moveReducer;
     const { frames, videoMetaData } = moveDetails || {};
+    console.log("###################",frames);
+    
     const {
       timer,
       title,
@@ -297,7 +309,8 @@ class MoveDetails extends React.Component {
       selectSetOptions,
       isUpdateDescription,
       videoDuration,
-      videoMaxDuration
+      videoMaxDuration,
+      isEdit
     } = this.state;
 
     return (
@@ -330,6 +343,7 @@ class MoveDetails extends React.Component {
                             description={description}
                             timer={timer}
                             title={title}
+                            isEdit={isEdit}
                             videoDuration={data =>
                               this.setState({
                                 videoDuration: data.timeDuration,
@@ -460,7 +474,8 @@ const mapDispatchToProps = dispatch => ({
   completeVideoEditing: data => dispatch(completeVideoEditing(data)),
   modelOperate: data => dispatch(modelOpenRequest(data)),
   addNewTagToList: data => dispatch(addNewTagToList(data)),
-  createAnotherMoveRequest: data => dispatch(createAnotherMoveRequest(data))
+  createAnotherMoveRequest: data => dispatch(createAnotherMoveRequest(data)),
+  removeVideoLocalServerRequest: data => dispatch(removeVideoLocalServerRequest(data))
 });
 export default connect(
   mapStateToProps,

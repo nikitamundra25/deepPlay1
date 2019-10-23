@@ -58,7 +58,15 @@
       padding: 1px 8px;
     }
   }
- 
+ .content-title{
+  .btn-group{
+    .btn{
+      &:hover{
+        background: #fff;
+      }
+    }
+  }
+ }
 }
 .video-effect{
   z-index: 1;

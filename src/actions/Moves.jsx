@@ -27,7 +27,11 @@ export const MovesAction = {
   ADD_TAGS_REQUEST: "Add Tags Request",
   ADD_TAGS_SUCCESS: "Add Tags Success",
   UPDATE_SORT_INDEX_REQUEST: "Update Sort Index Request",
-  UPDATE_SORT_INDEX_SUCCESS: "Update Sort Index Success"
+  UPDATE_SORT_INDEX_SUCCESS: "Update Sort Index Success",
+  REMOVE_VIDEO_LOCAL_SERVER_REQUEST: "Remove video from local server request!",
+  REMOVE_VIDEO_LOCAL_SERVER_SUCCESS: "Remove video from local server success!",
+  UPDATE_MOVE_REQUEST: "Update Move Request",
+  UPDATE_MOVE_SUCCESS: "Update Move Success"
 };
 
 export const downloadYoutubeVideoRequest = createAction(
@@ -104,3 +108,12 @@ export const updateSortIndexRequest = createAction(
 export const updateSortIndexSuccess = createAction(
   MovesAction.UPDATE_SORT_INDEX_SUCCESS
 );
+export const removeVideoLocalServerRequest = createAction(
+  MovesAction.REMOVE_VIDEO_LOCAL_SERVER_REQUEST
+);
+export const removeVideoLocalServerSuccess = createAction(
+  MovesAction.REMOVE_VIDEO_LOCAL_SERVER_SUCCESS
+);
+
+export const updateMoveRequest = createAction(MovesAction.UPDATE_MOVE_REQUEST);
+export const updateMoveSuccess = createAction(MovesAction.UPDATE_MOVE_SUCCESS);

@@ -17,31 +17,29 @@ const image = [
     id: 1,
     title: "Rumba",
     image:
-      "https://images.pexels.com/photos/67636/rose-blue-flower-rose-blooms-67636.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500"
+      "https://www.rushlake-media.com/wp-content/uploads/2018/11/victor-Anastacia-1080p.jpg"
   },
   {
     id: 2,
     title: "Zumba",
     image:
-      "https://p.bigstockphoto.com/GeFvQkBbSLaMdpKXF1Zv_bigstock-Aerial-View-Of-Blue-Lakes-And--227291596.jpg"
+      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQmW2LRpRoa11a0iFmo5cbyagU92VXVAtLqZt1Y4sT0dQ1jMfUeUQ"
   },
   {
     id: 3,
     title: "Tango",
     image:
-      "https://i.pinimg.com/originals/26/94/93/269493fbeb10e31ad3867248e3f68b94.jpg"
+      "https://static.wixstatic.com/media/727c8f_9d251f742b3c44538dbf2f2c7552192d~mv2_d_1600_1200_s_2.jpg"
   },
   {
     id: 4,
-    title: "SalsaFootwork",
-    image:
-      "https://images.pexels.com/photos/462118/pexels-photo-462118.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500"
+    title: "Ballroom Dancing",
+    image: "https://vistapointe.net/images/ballroom-dancing-wallpaper-5.jpg"
   },
   {
     id: 5,
     title: "Flamenco",
-    image:
-      "https://helpx.adobe.com/content/dam/help/en/stock/how-to/visual-reverse-image-search/jcr_content/main-pars/image/visual-reverse-image-search-v2_intro.jpg"
+    image: "http://www.ritmoflamenco.ca/wp-content/uploads/flamencomusic.jpg"
   }
 ];
 // core components

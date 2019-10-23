@@ -18,6 +18,7 @@ import {
 import emptyFolderIc from "../../assets/img/empty-folder.png";
 import emptySetIc from "../../assets/img/empty-sets.png";
 import Loader from "../../components/comman/Loader/Loader";
+import emptyImg from "../../assets/img/empty-img.svg";
 // import defaultProfileImage from "../../assets/img/profile-ic.png";
 // import { AppConfig } from "../../config/Appconfig";
 
@@ -114,12 +115,23 @@ class Dashboard extends React.Component {
                             onClick={() => this.handleSetDetails(set._id)}
                           >
                             <div className="cotent-img-tile">
-                              <video width={"100%"} id="webm-video">
-                                <source
-                                  src={`${set.recentlyAddMoveImg}`}
-                                  type="video/webm"
-                                />
-                              </video>
+                              {set.recentlyAddMoveImg ? (
+                                <video width={"100%"} id="webm-video">
+                                  <source
+                                    src={`${set.recentlyAddMoveImg}`}
+                                    type="video/webm"
+                                  />
+                                </video>
+                              ) : (
+                                <div className={""}>
+                                  <img
+                                    src={emptyImg}
+                                    alt=""
+                                    width="60"
+                                    height="60"
+                                  />
+                                </div>
+                              )}
                             </div>
                           </div>
                         </div>
@@ -199,7 +211,6 @@ class Dashboard extends React.Component {
               <span
                 className="dashboard-right-content cursor_pointer font-weight-bold view-all-btn"
                 onClick={() => this.handleViewAll("folders")}
-                
               >
                 View all
               </span>

@@ -10,7 +10,8 @@ import {
   modelOpenRequest,
   searchMoveSuccess,
   getSetDetailsRequest,
-  updateSortIndexSuccess
+  updateSortIndexSuccess,
+  createAnotherMoveSuccess
 } from "../actions";
 import { AppRoutes } from "../config/AppRoutes";
 import { toast } from "react-toastify";
@@ -175,7 +176,9 @@ const completeVideoEditingLogic = createLogic({
           isSavingWebM: false,
           moveUrlDetails: {
             moveURL: result.data.data.videoUrl,
-            setId: result.data.setId
+            setId: result.data.setId,
+            videoOriginalFile: result.data.videoOriginalFile,
+            videoFileMain: result.data.videoFileMain
           }
         })
       );
@@ -326,6 +329,11 @@ const createAnotherMoveLogic = createLogic({
           )}`
         })
       );
+      dispatch(
+        createAnotherMoveSuccess({
+          moveDetails: result.data
+        })
+      );
       done();
     }
   }
@@ -438,6 +446,81 @@ const updateSortIndexLogic = createLogic({
   }
 });
 
+const removeVideoLocalServerLogic = createLogic({
+  type: MovesAction.REMOVE_VIDEO_LOCAL_SERVER_REQUEST,
+  async process({ action }, dispatch, done) {
+    let api = new ApiHelper();
+    let result = await api.FetchFromServer(
+      "move",
+      "/remove-local-video",
+      "POST",
+      true,
+      undefined,
+      action.payload
+    );
+    if (result.isError) {
+      if (!toast.isActive(toastId)) {
+        toastId = toast.error(result.messages[0]);
+      }
+      done();
+      return;
+    } else {
+      dispatch(
+        redirectTo({
+          path: `${AppRoutes.SET_DETAILS.url.replace(
+            ":id",
+            action.payload.setId
+          )}`
+        })
+      );
+      dispatch(
+        modelOpenRequest({
+          modelDetails: {
+            isMoveSuccessModal: false
+          }
+        })
+      );
+      done();
+    }
+  }
+});
+
+//Edit moves
+const editMoveLogic = createLogic({
+  type: MovesAction.UPDATE_MOVE_REQUEST,
+  async process({ action }, dispatch, done) {
+    let api = new ApiHelper();
+    let result = await api.FetchFromServer(
+      "move",
+      "/update-move",
+      "PUT",
+      true,
+      undefined,
+      action.payload
+    );
+    if (result.isError) {
+      if (!toast.isActive(toastId)) {
+        toastId = toast.error(result.messages[0]);
+      }
+      done();
+      return;
+    } else {
+      if (!toast.isActive(toastId)) {
+        toastId = toast.success(result.messages[0]);
+      }
+      dispatch(
+        modelOpenRequest({
+          modelDetails: {
+            editMoveModalOpen: false,
+            isVideoModalOpen: false
+          }
+        })
+      );
+      dispatch(getMovesOfSetRequest({ setId: action.payload.setId }));
+      done();
+    }
+  }
+});
 export const MoveLogics = [
   downloadVideoLogic,
   getMovesOfSetLogic,
@@ -449,5 +532,7 @@ export const MoveLogics = [
   createAnotherMoveLogic,
   searchMoveLogic,
   addTagsLogic,
-  updateSortIndexLogic
+  updateSortIndexLogic,
+  removeVideoLocalServerLogic,
+  editMoveLogic
 ];

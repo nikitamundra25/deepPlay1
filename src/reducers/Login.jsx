@@ -18,7 +18,8 @@ export const loginReducer = handleActions(
     }),
     [loginAction.LOGIN_SUCCESS]: (state, { payload }) => ({
       ...state,
-      isLoginRequest: false
+      isLoginRequest: false,
+      isLoginSuccess: true
     }),
     [signupActions.SIGNUP_REQUEST]: (state, { payload }) => ({
       ...state,

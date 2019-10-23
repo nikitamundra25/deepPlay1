@@ -27,7 +27,8 @@ import {
   addTagsRequest,
   getAllFolderRequest,
   ManageSetRequest,
-  updateSortIndexRequest
+  updateSortIndexRequest,
+  updateMoveRequest
 } from "../../../actions";
 import SharableLinkModal from "../../comman/shareableLink/SharableLink";
 import { AppRoutes } from "../../../config/AppRoutes";
@@ -63,7 +64,6 @@ class SetDetails extends React.Component {
     const location = this.props.location;
     const pathName = location.pathname.split("/");
     const isStarred = location.search.split("=");
-    console.log("#########", isStarred);
     this.props.getSetDetailsRequest({ setId: pathName[3] });
     this.props.getMovesOfSetRequest({
       setId: pathName[3],
@@ -235,6 +235,13 @@ class SetDetails extends React.Component {
   };
 
   onEditMove = id => {
+    const { modelInfoReducer } = this.props;
+    const { modelDetails } = modelInfoReducer;
+    this.props.modelOperate({
+      modelDetails: {
+        isVideoModalOpen: !modelDetails.isVideoModalOpen
+      }
+    });
     this.props.redirectTo(
       AppRoutes.MOVE_DETAILS.url.replace(":id", id) + `?isEdit=${true}`
     );
@@ -301,7 +308,6 @@ class SetDetails extends React.Component {
       moveListItem
     } = this.state;
 
-
     return (
       <>
         <div className="set-main-section">
@@ -335,10 +341,7 @@ class SetDetails extends React.Component {
               <UncontrolledTooltip placement="top" target="share">
                 Get Shareable Link
               </UncontrolledTooltip>
-              <UncontrolledDropdown
-                className="header-dropdown dropdown-without-tip not-header-dropdown"
-                direction="bottom"
-              >
+              <UncontrolledDropdown className="header-dropdown dropdown-without-tip not-header-dropdown">
                 <DropdownToggle color={" "} className="mr-0">
                   <span id="edit" className="cursor_pointer ml-4 ">
                     <i className="fas fa-sliders-h icon-font"></i>
@@ -389,6 +392,7 @@ class SetDetails extends React.Component {
                   loadVideoDataRequest={loadVideoDataRequest}
                   addTagstoMove={this.addTagstoMove}
                   isStarred={this.isStarred}
+                  editMove={data => this.props.updateMoveRequest(data)}
                   {...this.props}
                 />
               ) : null}
@@ -399,7 +403,7 @@ class SetDetails extends React.Component {
                     setIndex={setIndex}
                     closePopOver={this.closePopOver}
                     showPopOver={this.showPopOver}
-                    moveCount={setDetails.moveCount}
+                    moveCount={setDetails ? setDetails.moveCount : 0}
                     isStarred={this.isStarred}
                     deleteMove={this.deleteMove}
                     movesOfSet={moveListItem}
@@ -425,9 +429,9 @@ class SetDetails extends React.Component {
             </>
           ) : (
             <Row>
-            <Col md="12">
-              <Loader />
-            </Col>
+              <Col md="12">
+                <Loader />
+              </Col>
             </Row>
           )}
         </div>
@@ -499,6 +503,9 @@ const mapDispatchToProps = dispatch => ({
   },
   updateSortIndexRequest: data => {
     dispatch(updateSortIndexRequest(data));
+  },
+  updateMoveRequest: data => {
+    dispatch(updateMoveRequest(data));
   }
 });
 export default connect(

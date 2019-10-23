@@ -3,7 +3,7 @@ import InputRange from "react-input-range";
 import { AppConfig } from "config/Appconfig";
 import { Input, Row, Col, FormGroup, Label, Button } from "reactstrap";
 import { orderBy } from "natural-orderby";
-import { SecondsToHHMMSS } from "helper/Time";
+import { SecondsToHHMMSS, SecondsToMMSS } from "helper/Time";
 import { logger } from "helper/Logger";
 
 class FrameDetails extends Component {
@@ -138,13 +138,20 @@ class FrameDetails extends Component {
     return (
       <div className="fram-picker">
         <div className=" mt-5 video-controls " id={"video-controls"}>
-          {/* <div id={"left-container"}></div>
-          <div id={"right-container"}></div> */}
+          <div id={"left-container"}></div>
+          <div id={"right-container"}></div>
           <InputRange
             draggableTrack
             maxValue={maxValue}
             minValue={0}
-            formatLabel={() => `${time.min}`}
+            formatLabel={(val, type) => {
+              console.log("fasdfasd", type, type === "min");
+              return type === "min"
+                ? `${SecondsToMMSS(time.min)}`
+                : type === "max"
+                ? `${SecondsToMMSS(time.max)}`
+                : null;
+            }}
             value={time}
             onChange={this.labelValueChange}
           />

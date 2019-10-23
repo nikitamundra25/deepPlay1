@@ -1003,6 +1003,13 @@ a {
       right: 7px;
     }
   }
+  .modal-header {
+      .close{ 
+          img{
+          width: 60%;
+          }
+      }
+  }
 }
 .upload-file-wrap {
   border: 2px dashed #ccc;
@@ -1554,9 +1561,12 @@ a {
   @extend %flexFullAlign;
   margin-bottom: 10px;
   .video-slider-title {
-    font-size: 18px;
+    font-size: 24px;
     color: $blackcolor;
     font-weight: 600;
+  }
+  i.fa{
+    font-size: 22px;
   }
 }
 .slick-arrow {
@@ -1600,6 +1610,10 @@ a {
   }
   .play-list-heading {
     font-weight: normal;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    width: calc(100% - 60px);
+    overflow: hidden;
   }
   .play-list-text {
     position: relative;
@@ -2042,6 +2056,7 @@ a {
       }
       .content-title {
         font-size: 18px;
+
       }
     }
   }
@@ -2333,4 +2348,7 @@ a {
 .colon-wrap{
   margin-right: 7px;
 }
+}
+.infinite-scroll-component {
+  min-height: 300px;
 }
