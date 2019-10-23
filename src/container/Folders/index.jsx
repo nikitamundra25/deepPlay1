@@ -16,7 +16,10 @@ import { isEqual } from "../../helper/Object";
 // core components
 class Folder extends React.Component {
   componentDidMount = () => {
-    this.props.allFolders();
+    const { location } = this.props;
+    const lSearch = location.search;
+    const search = lSearch.split("=");
+    this.props.allFolders({ search: search[1] });
   };
 
   handleForRecentFolder = folderId => {
@@ -48,6 +51,10 @@ class Folder extends React.Component {
     );
   };
 
+  handleResetSearch = () => {
+    this.props.redirectTo(AppRoutes.FOLDERS.url);
+  };
+
   render() {
     const { modelOperate, modelInfoReducer, folderReducer } = this.props;
     return (
@@ -62,6 +69,7 @@ class Folder extends React.Component {
           isFolderLoading={folderReducer.isFolderLoading}
           onDelete={this.onDelete}
           onPageChange={this.onPageChange}
+          handleResetSearch={this.handleResetSearch}
           {...this.props}
         />
       </>

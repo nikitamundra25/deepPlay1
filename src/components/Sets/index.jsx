@@ -100,12 +100,18 @@ class SetComponent extends React.Component {
   };
 
   render() {
-    const { setReducer, modelInfoReducer, userEncryptedInfo } = this.props;
+    const {
+      setReducer,
+      modelInfoReducer,
+      userEncryptedInfo,
+      location
+    } = this.props;
     const { allSetList, isSetListLoading, totalSets } = setReducer;
     const { modelDetails } = modelInfoReducer;
     const { sharableLinkModalOpen, createSetModalOpen } = modelDetails;
     const { show, setIndex, page } = this.state;
-
+    const lSearch = location.search;
+    const search = lSearch.split("=");
     return (
       <div className="set-main-section">
         <div className="content-header">
@@ -116,6 +122,20 @@ class SetComponent extends React.Component {
             </div>
           </span>
           <div>
+            {search && search[1] ? (
+              <>
+                <span
+                  id="reset"
+                  className={"cursor_pointer"}
+                  onClick={this.props.handleResetSearch}
+                >
+                  <i className="fas fa-undo-alt icon-font"></i>
+                </span>
+                <UncontrolledTooltip placement="top" target="reset">
+                  Reset search results
+                </UncontrolledTooltip>
+              </>
+            ) : null}
             <span
               id="set"
               className={"cursor_pointer"}
