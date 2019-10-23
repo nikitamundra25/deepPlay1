@@ -55,7 +55,8 @@ const loginLogic = createLogic({
         })
       );
       dispatch(loginSuccess({ isLoginSuccess: true }));
-      window.location.href = AppRoutes.DASHBOARD.url;
+      dispatch(redirectTo({ path: AppRoutes.DASHBOARD.url }))
+      //window.location.href = AppRoutes.DASHBOARD.url;
       done();
     }
   }
@@ -245,8 +246,8 @@ const changePasswordLogic = createLogic({
       if (!toast.isActive(toastId)) {
         toastId = toast.error(
           result.messages[0].oldPassword ||
-            result.messages[0] ||
-            result.messages
+          result.messages[0] ||
+          result.messages
         );
       }
       dispatch(changePasswordFailed());

@@ -40,21 +40,31 @@ class EditMoveModal extends React.Component {
       title: "",
       description: "",
       tags: "",
+      sets: "",
       isEdit: false,
       open: false,
       errors: {}
     };
   }
 
-  componentDidUpdate(prevProps) {
-    if (prevProps.videoData !== this.props.videoData) {
-      console.log("title");
-
-      const { title, description, tags } = this.props.videoData;
+  componentDidUpdate({ videoData, modal }) {
+    if (videoData !== this.props.videoData) {
+      const { title, description, tags, setId } = this.props.videoData;
       this.setState({
         title,
         description,
-        tags: tags
+        tags: tags,
+        sets: setId ? setId.title : "",
+      });
+    }
+    if (modal !== this.props.modal) {
+      const { title, description, tags, setId } = this.props.videoData;
+      this.setState({
+        title,
+        description,
+        tags: tags,
+        sets: setId ? setId.title : "",
+        errors: {}
       });
     }
   }
@@ -120,7 +130,7 @@ class EditMoveModal extends React.Component {
 
   render() {
     const { modal, handleOpen } = this.props;
-    const { title, description, errors, tags } = this.state;
+    const { title, description, errors, tags, sets } = this.state;
 
     return (
       <div>
@@ -179,6 +189,20 @@ class EditMoveModal extends React.Component {
               <FormFeedback>
                 {errors.description ? errors.description : null}
               </FormFeedback>
+            </FormGroup>
+            <FormGroup>
+              <Label for="description" className="font-weight-bold text-center">
+                SELECTED SET
+              </Label>
+              <Input
+                id="set"
+                type="text"
+                placeholder="Enter a description (optional)"
+                name="sets"
+                disabled={true}
+                value={sets}
+                rows={3}
+              />
             </FormGroup>
             <FormGroup>
               <Label for="tags" className="font-weight-bold text-center">
