@@ -48,9 +48,9 @@
   transform: translateZ(0);
   white-space: nowrap;
   width: 20px;
+  opacity: 0;
+  transition: all 0.3s ease-out;
 }
-
-
 
 .input-range__label--value {
   position: absolute;
@@ -61,7 +61,6 @@
   left: -50%;
   position: relative;
 }
-
 
 .input-range__track {
   background: #eeeeee;
@@ -82,11 +81,9 @@
   margin-top: -0.15rem;
   position: absolute;
   right: 0;
-  top: 50%;// border: 3px solid #ddd;
+  top: 50%; // border: 3px solid #ddd;
   border-width: 1px 0px 1px 0px;
 }
-
-
 
 .input-range {
   height: 1rem;
@@ -96,6 +93,13 @@
 
 /*# sourceMappingURL=react-input-range.css.map*/
 .video-controls {
+  &:hover {
+    transition: all 0.3s ease-out;
+    .input-range__label {
+      opacity: 1;
+      transition: all 0.3s ease-out;
+    }
+  }
   position: relative;
   height: 50px;
   .frame-container {
@@ -133,14 +137,13 @@
     }
   }
 }
-.fram-picker { 
+.fram-picker {
   .input-range__track + .input-range__slider-container {
     .input-range__label.input-range__label--value {
       top: -65px;
       left: -5px;
     }
   }
-
 
   .input-range__track + .input-range__slider-container + .input-range__slider-container {
     .input-range__label.input-range__label--value {
@@ -151,9 +154,7 @@
   }
 }
 
-
 .input-range__label--max {
- 
   position: absolute;
   transition: left 0.3s ease-out, width 0.3s ease-out;
   span {
@@ -162,7 +163,7 @@
     background: #3ab59b;
     position: absolute;
     left: -31px;
-    padding:4px 15px;
+    padding: 4px 15px;
     border-radius: 18px;
     color: #fff;
     &::before {
@@ -176,13 +177,12 @@
       transform: translateX(-50%);
     }
     .input-range__label-container {
- left: 50%;
+      left: 50%;
     }
   }
 }
 
 .input-range__label--min {
- 
   position: absolute;
   transition: left 0.3s ease-out, width 0.3s ease-out;
   span {
@@ -191,7 +191,7 @@
     background: #3ab59b;
     position: absolute;
     left: -30px;
-    padding:4px 15px;
+    padding: 4px 15px;
     border-radius: 18px;
     color: #fff;
     &::before {
@@ -205,7 +205,7 @@
       transform: translateX(-50%);
     }
     .input-range__label-container {
- left: 50%;
+      left: 50%;
     }
   }
 }
@@ -227,7 +227,6 @@
       max-height: 100%;
       width: auto;
       height: auto;
-
     }
   }
 }
