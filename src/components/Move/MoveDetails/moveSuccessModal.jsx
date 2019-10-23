@@ -5,7 +5,7 @@ import {
   ModalBody,
   Button
 } from "reactstrap";
-import { AppConfig } from "../../../config/Appconfig";
+//import { AppConfig } from "../../../config/Appconfig";
 // core components
 class MoveSuccessModal extends React.Component {
   constructor(props) {
