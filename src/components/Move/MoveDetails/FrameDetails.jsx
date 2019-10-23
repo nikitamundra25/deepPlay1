@@ -33,7 +33,7 @@ class FrameDetails extends Component {
             for (let k = 0; k < child.childNodes.length; k++) {
               const newChild = child.childNodes[k];
               if (newChild.classList.contains("input-range__track")) {
-                const leftContainer = document.getElementById("left-container");               
+                const leftContainer = document.getElementById("left-container");
                 const rightContainer = document.getElementById(
                   "right-container"
                 );
@@ -151,10 +151,10 @@ class FrameDetails extends Component {
             formatLabel={(val, type) => {
               console.log("fasdfasd", type, type === "min");
               return type === "min"
-                ? `${SecondsToMMSS(time.min)}`
+                ? `${SecondsToMMSS(time.min >= 0 ? time.min : 0)}`
                 : type === "max"
-                ? `${SecondsToMMSS(time.max)}`
-                : null;
+                  ? `${SecondsToMMSS(time.max >= 0 ? time.max : 0)}`
+                  : null;
             }}
             value={time}
             onChange={this.labelValueChange}
