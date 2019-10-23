@@ -435,7 +435,7 @@ class MoveList extends React.Component {
                   {provided => (
                     <>
                       <div
-                        className="video-thumbnail-sub-block"
+                        className="video-thumbnail-sub-block  video-thumb-edit-view"
                         ref={provided.innerRef}
                       >
                         <div className="play-list-tile">
@@ -563,19 +563,7 @@ class MoveList extends React.Component {
                                                   />
                                                 </span>
                                               ) : null}
-                                              <div className="star-wrap">
-                                                {video.isStarred ? (
-                                                  <img
-                                                    src={starIc}
-                                                    alt={"star"}
-                                                  />
-                                                ) : (
-                                                    <img
-                                                      src={blankStar}
-                                                      alt={"star"}
-                                                    />
-                                                  )}
-                                              </div>
+                                            
                                               <div
                                                 className={"video-effect"}
                                                 onClick={
@@ -617,7 +605,28 @@ class MoveList extends React.Component {
                                               <div className="text-capitalize play-list-heading h6 m-0">
                                                 {video.title || "unnamed"}
                                               </div>
-
+                                              <div className="star-wrap"
+                                               onClick={() =>
+                                                this.handleStarred(
+                                                  video._id,
+                                                  video.isStarred
+                                                )
+                                              }
+                                              >
+                                                {video.isStarred ? (
+                                                  <img
+                                                    src={starIc}
+                                                    alt={"star"}
+                                                    className="w-100"
+                                                  />
+                                                ) : (
+                                                    <img
+                                                    className="w-100"
+                                                      src={blankStar}
+                                                      alt={"star"}
+                                                    />
+                                                  )}
+                                              </div>
                                               <div
                                                 onMouseOver={() =>
                                                   this.props.showPopOver(
