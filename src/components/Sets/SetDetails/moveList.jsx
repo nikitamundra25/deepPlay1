@@ -18,6 +18,7 @@ import blankStar from "../../../assets/img/star-line.svg";
 import AddTagModal from "./addTagsModal";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 import { ConfirmBox } from "helper/SweetAleart";
+import { DebounceInput } from 'react-debounce-input';
 
 // a little function to help us with reordering the result
 const reorder = (list, startIndex, endIndex) => {
@@ -228,26 +229,24 @@ class MoveList extends React.Component {
   };
 
   handleInputChange = e => {
-    const { name, value } = e.target;
+    const { value } = e.target;
     this.setState({
-      [name]: value
+      search: value
     });
     const data = {
       search: value,
       setId: this.props.setIdPathName
     };
-    setTimeout(() => {
-      this.props.searchMove(data);
-    }, 400);
+    this.props.searchMove(data);
   };
 
   //Drag & drop move items
   onDragEnd = result => {
     const { source, destination, draggableId } = result;
     // dropped outside the list
-    console.log("########destination",destination);
-    console.log("$$$$$$$$$$$$$$$source",source);
-    
+    console.log("########destination", destination);
+    console.log("$$$$$$$$$$$$$$$source", source);
+
     if (!destination) {
       return;
     }
@@ -352,13 +351,14 @@ class MoveList extends React.Component {
                   </ButtonGroup>
                   <FormGroup className="mb-0 header-search-wrap ">
                     <InputGroup className="">
-                      <Input
-                        placeholder="Type to filter moves"
-                        type="text"
-                        autoComplete="off"
+                      <DebounceInput
+                        minLength={1}
                         value={search}
-                        name="search"
-                        onChange={this.handleInputChange}
+                        className={"form-control"}
+                        autoComplete="off"
+                        placeholder="Type to filter moves"
+                        debounceTimeout={300}
+                        onChange={event => this.handleInputChange(event)}
                       />
                     </InputGroup>
                   </FormGroup>
@@ -429,8 +429,7 @@ class MoveList extends React.Component {
               <DragDropContext onDragEnd={this.onDragEnd}>
                 <Droppable
                   droppableId="droppable"
-                  type="droppableItem"
-                  direction="auto"
+                  // type="droppableItem"
                 >
                   {provided => (
                     <>
@@ -563,7 +562,7 @@ class MoveList extends React.Component {
                                                   />
                                                 </span>
                                               ) : null}
-                                            
+
                                               <div
                                                 className={"video-effect"}
                                                 onClick={
@@ -606,12 +605,12 @@ class MoveList extends React.Component {
                                                 {video.title || "unnamed"}
                                               </div>
                                               <div className="star-wrap"
-                                               onClick={() =>
-                                                this.handleStarred(
-                                                  video._id,
-                                                  video.isStarred
-                                                )
-                                              }
+                                                onClick={() =>
+                                                  this.handleStarred(
+                                                    video._id,
+                                                    video.isStarred
+                                                  )
+                                                }
                                               >
                                                 {video.isStarred ? (
                                                   <img
@@ -621,7 +620,7 @@ class MoveList extends React.Component {
                                                   />
                                                 ) : (
                                                     <img
-                                                    className="w-100"
+                                                      className="w-100"
                                                       src={blankStar}
                                                       alt={"star"}
                                                     />

@@ -33,7 +33,10 @@ class Set extends React.Component {
   }
 
   componentDidMount = () => {
-    this.props.getSetList({ isSetNoLimit: false });
+    const { location } = this.props;
+    const lSearch = location.search;
+    const search = lSearch.split("=");
+    this.props.getSetList({ isSetNoLimit: false, search: search[1] });
   };
 
   componentDidUpdate({ location }) {
@@ -150,6 +153,9 @@ class Set extends React.Component {
     }
   };
 
+  handleResetSearch = () => {
+    this.props.redirectTo(AppRoutes.SETS.url);
+  };
   render() {
     const {
       modelOperate,
@@ -182,6 +188,7 @@ class Set extends React.Component {
             shareableLink={data => this.props.shareableLink(data)}
             onPageChange={this.onPageChange}
             userEncryptedInfo={userEncryptedInfo}
+            handleResetSearch={this.handleResetSearch}
             {...this.props}
           />
         )}

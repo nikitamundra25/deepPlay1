@@ -14,7 +14,6 @@ import {
   InputGroupAddon,
   FormGroup,
   InputGroup,
-  Input
 } from "reactstrap";
 import Login from "../Auth/Login/index.jsx";
 import Signup from "../Auth/Signup/index.jsx";
@@ -27,6 +26,7 @@ import { AppConfig } from "../../config/Appconfig";
 import AllSearchComponent from "../../components/AllSearch";
 import CreateSetComponent from "../../components/Sets/createSet";
 import searchArrow from "../../assets/img/back-search.png";
+import { DebounceInput } from 'react-debounce-input';
 
 class DefaultHeader extends React.Component {
   constructor(props) {
@@ -110,17 +110,33 @@ class DefaultHeader extends React.Component {
   };
   /*  */
   handleChange = e => {
-    const { name, value } = e.target;
+    const { value } = e.target;
     this.setState({
-      [name]: value
+      search: value
     });
     if (value === "") {
-      return
+      return;
     } else {
       setTimeout(() => {
         this.props.allSearchRequest({ search: value });
       }, 500);
     }
+  };
+
+  searchAllSet = () => {
+    this.props.redirectTo(AppRoutes.SETS.url + `?search=${this.state.search}`);
+    this.setState({
+      search: ""
+    });
+  };
+
+  searchAllFolder = () => {
+    this.props.redirectTo(
+      AppRoutes.FOLDERS.url + `?search=${this.state.search}`
+    );
+    this.setState({
+      search: ""
+    });
   };
   /*  */
   render() {
@@ -146,8 +162,8 @@ class DefaultHeader extends React.Component {
       createFolderModalOpen,
       createSetOpen
     } = modelDetails;
-    const {path, search, open } = this.state;
-    const { isLoginSuccess } = loginReducer
+    const { path, search, open } = this.state;
+    const { isLoginSuccess } = loginReducer;
     const profiledata =
       profileInfoReducer && profileInfoReducer.profileInfo
         ? profileInfoReducer.profileInfo
@@ -193,7 +209,7 @@ class DefaultHeader extends React.Component {
                     <NavbarBrand className="mr-lg-5" to="/" tag={Link}>
                       <h3 className="mb-0 header-title">Deep Play</h3>
                     </NavbarBrand>
-                    {(isLoggedIn || isLoginSuccess) ? (
+                    {isLoggedIn || isLoginSuccess ? (
                       <Nav className="navbar-nav align-items-center nav-main-section flex-fill creat-option">
                         <div className="nav-inputs-wrap d-flex">
                           <Col className="create-btn-wrap">
@@ -276,21 +292,24 @@ class DefaultHeader extends React.Component {
                                       className="w-100"
                                     />
                                   </span>
-                                  <Input
-                                    placeholder="Search for set, folder, Move and More"
-                                    onChange={this.handleChange}
+                                  <DebounceInput
+                                    minLength={2}
                                     value={search}
-                                    name={"search"}
-                                    type="text"
+                                    className={"form-control"}
                                     autoComplete="off"
-                                  />
+                                    placeholder="Search for set, folder, Move and More"
+                                    debounceTimeout={300}
+                                    onChange={event => this.handleChange(event)} />
                                 </span>
-                                {search && search !== "" ? (
+                                {search ? (
+
                                   <AllSearchComponent
                                     searhClose={this.openSearch}
                                     searchData={searchData}
                                     isSearchLoading={isSearchLoading}
-
+                                    searchAllSet={this.searchAllSet}
+                                    searchAllFolder={this.searchAllFolder}
+                                    searchAllMove={this.searchAllMove}
                                     handleSearchEmpty={() =>
                                       this.setState({
                                         search: ""
