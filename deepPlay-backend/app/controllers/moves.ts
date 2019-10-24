@@ -236,8 +236,7 @@ const createMove = async (req: Request, res: Response): Promise<any> => {
             });
         }
 
-        let fileName: [string];
-        fileName = moveUrl.split("/");
+        let fileName: string[] = moveUrl.split("/");
         const {
             frames: framesArray,
             videoMetaData,
