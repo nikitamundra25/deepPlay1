@@ -28,6 +28,10 @@ const allSetSharedLink = React.lazy(() =>
   import("./components/comman/shareableLink/AllSetSharedLink")
 );
 const sampleSet = React.lazy(() => import("./components/SampleSet"));
+const moveSearchAll = React.lazy(() =>
+  import("./components/Sets/SetDetails/moveSearch")
+);
+
 const routes = [
   {
     path: AppRoutes.HOME_PAGE.url,
@@ -130,6 +134,12 @@ const routes = [
     name: AppRoutes.SAMPLE_SET.name,
     exact: AppRoutes.SAMPLE_SET.exact,
     component: sampleSet
+  },
+  {
+    path: AppRoutes.MOVE_SEAECH_ALL.url,
+    name: AppRoutes.MOVE_SEAECH_ALL.name,
+    exact: AppRoutes.MOVE_SEAECH_ALL.exact,
+    component: moveSearchAll
   }
 ];
 

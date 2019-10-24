@@ -155,7 +155,7 @@ class WebmView extends Component {
   /**
    *
    */
-  handleMoveDelete = async (id) => {
+  handleMoveDelete = async id => {
     const data = {
       moveId: id,
       isDeleted: true,
@@ -215,12 +215,16 @@ class WebmView extends Component {
   };
 
   handleStarred = (id, isStarred) => {
+    console.log("id", id);
+
     const data = {
       moveId: id,
       isStarred: isStarred ? false : true,
       setId: this.props.setIdPathName
     };
-    this.props.isStarred({ data: data, isVideoModalOpen: true });
+    console.log("dataaa", data);
+
+    this.props.isStarred(data);
   };
 
   openAddTagsModal = id => {
@@ -332,18 +336,18 @@ class WebmView extends Component {
                               videoData ? videoData._id : video._id
                             )
                           }
-                        // onClick={() =>
-                        //   this.props.onEditMove(
-                        //     videoData ? videoData._id : video._id
-                        //   )
-                        // }
+                          // onClick={() =>
+                          //   this.props.onEditMove(
+                          //     videoData ? videoData._id : video._id
+                          //   )
+                          // }
                         >
                           Edit
                         </DropdownItem>
                         <DropdownItem
                           onClick={() =>
                             this.handleStarred(
-                              videoData._id,
+                              videoData ? videoData._id : video._id,
                               videoData.isStarred
                             )
                           }
@@ -366,13 +370,13 @@ class WebmView extends Component {
                           onClick={() =>
                             videoData
                               ? this.openTransferToModal(
-                                videoData._id,
-                                videoData.setId
-                              )
+                                  videoData._id,
+                                  videoData.setId
+                                )
                               : this.openTransferToModal(video._id, video.setId)
                           }
                         >
-                          Tranfer
+                          Transfer
                         </DropdownItem>
                         <DropdownItem
                           onClick={() =>
@@ -421,15 +425,15 @@ class WebmView extends Component {
                         videoData && videoData.moveURL
                           ? videoData.moveURL
                           : moveURL
-                        }`}
+                      }`}
                       type="video/webm"
                     />
                   </video>
                 ) : (
-                    <div className="video-loader">
-                      <Loader videoLoader={true} />
-                    </div>
-                  )}
+                  <div className="video-loader">
+                    <Loader videoLoader={true} />
+                  </div>
+                )}
                 <div className={"controls"}>
                   <div className="control-background-wrap"></div>
                   <InputRange
@@ -452,13 +456,13 @@ class WebmView extends Component {
                             <i className={"fa fa-pause"}></i>
                           </span>
                         ) : (
-                            <span
-                              onClick={this.playVideo}
-                              className={"cursor_pointer"}
-                            >
-                              <i className={"fa fa-play"}></i>
-                            </span>
-                          )}
+                          <span
+                            onClick={this.playVideo}
+                            className={"cursor_pointer"}
+                          >
+                            <i className={"fa fa-play"}></i>
+                          </span>
+                        )}
                       </div>
                       <div className="video-time-wrap control-tile">
                         {SecondsToHHMMSS(parseInt(currentTime))} /{" "}
@@ -474,11 +478,11 @@ class WebmView extends Component {
                             audioSpeed > 0.6 ? (
                               <i className="fas fa-volume-up"></i>
                             ) : (
-                                <i class="fas fa-volume-down"></i>
-                              )
+                              <i class="fas fa-volume-down"></i>
+                            )
                           ) : (
-                                <i class="fas fa-volume-mute"></i>
-                              )}
+                            <i class="fas fa-volume-mute"></i>
+                          )}
                         </span>
                       </div>
                       <div className="volume-range cursor_pointer control-tile">
@@ -501,7 +505,7 @@ class WebmView extends Component {
                       <div className="speed-wrap control-tile">
                         <UncontrolledDropdown
                           className="header-dropdown custom-dropdown"
-                        // direction="auto"
+                          // direction="auto"
                         >
                           <DropdownToggle color={" "}>
                             <span
