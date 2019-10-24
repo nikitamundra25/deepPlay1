@@ -236,8 +236,7 @@ const createMove = async (req: Request, res: Response): Promise<any> => {
       });
     }
 
-    let fileName: string | null;
-    fileName = moveUrl.split("/");
+    let fileName: string[] = moveUrl.split("/");
     const {
       frames: framesArray,
       videoMetaData,
@@ -245,7 +244,7 @@ const createMove = async (req: Request, res: Response): Promise<any> => {
     } = await getVideoFrames(fileName[2]);
     delete videoMetaData.filename;
     const frames = framesArray.map(
-      (frame: string) => `${ServerURL}/uploads/youtube-videos/${frame}`
+      (frame: string | null) => `${ServerURL}/uploads/youtube-videos/${frame}`
     );
     const moveResult: Document | any = new MoveModel({
       videoUrl: moveUrl,
