@@ -325,7 +325,7 @@ class MoveList extends React.Component {
             <Col md="12" className={"pb-3"}>
               <div className="content-header mt-3 mb-1">
                 <span className="content-title ">
-                  Moves in this set ({moveCount || 0})
+                  Moves in this set ({totalMoves || 0})
                 </span>
                 {!isStarred[1] ? (
                   <div className="set-detail-right-section">
