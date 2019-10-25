@@ -155,9 +155,13 @@ class MoveList extends React.Component {
     const pathName = location.pathname.split("/");
     const { selectedMoveIds } = this.state;
     let moveofSetList = [...this.state.moveofSetList]
+    const starDiv = document.getElementsByClassName('star-mark')[index]
+    console.log(starDiv,"starDiv")
     if (isStarred) {
       moveofSetList[index].isStarred = false
+      starDiv.classList.remove('isStarred')
     } else {
+      starDiv.classList.add('isStarred')
       moveofSetList[index].isStarred = true
     }
     const data = {
@@ -529,12 +533,22 @@ class MoveList extends React.Component {
                                                   : `play-list-img blur-img-wrap checked-wrap`
                                               }
                                             >
-                                              {
-                                                isMarkingStar && isMarkingStar.isChanging && isMarkingStar.index === index ?
-                                                  <div className={"star-blinking"}>
+                                                  <div className={'star-mark'}>
+                                                    {video.isStarred ? (
+                                                      <img
+                                                        src={starIc}
+                                                        alt={"star"}
+                                                        className="w-100"
+                                                      />
+                                                    ) : (
+                                                        <img
+                                                          className="w-100"
+                                                          src={blankStar}
+                                                          alt={"star"}
+                                                        />
+                                                      )}
 
-                                                  </div> : null
-                                              }
+                                                  </div> 
                                               {!isVideoChecked &&
                                                 isSelectVideo &&
                                                 videoIndex === index ? (
@@ -637,6 +651,7 @@ class MoveList extends React.Component {
                                                     index
                                                   )
                                                 }
+                                              
                                               >
                                                 {video.isStarred ? (
                                                   <img
@@ -677,7 +692,7 @@ class MoveList extends React.Component {
                                                     }
                                                     size="sm"
                                                   >
-                                                    <Button
+                                                    {/* <Button
                                                       color=" "
                                                       onClick={() =>
                                                         this.handleStarred(
@@ -689,7 +704,7 @@ class MoveList extends React.Component {
                                                       {video.isStarred
                                                         ? "Unstar"
                                                         : "Mark star"}
-                                                    </Button>
+                                                    </Button> */}
                                                     <Button
                                                       onClick={() =>
                                                         this.openAddTagsModal(
