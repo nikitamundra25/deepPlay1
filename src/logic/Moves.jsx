@@ -217,9 +217,9 @@ const starMoveLogic = createLogic({
       done();
       return;
     } else {
-      if (!toast.isActive(toastId)) {
-        toastId = toast.success(result.messages[0]);
-      }
+      // if (!toast.isActive(toastId)) {
+      //   toastId = toast.success(result.messages[0]);
+      // }
       if (action.payload.isSearch) {
         dispatch(getMoveBySearchRequest({ search: action.payload.isSearch }));
       }

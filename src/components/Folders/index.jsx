@@ -116,6 +116,8 @@ class FolderComponent extends React.Component {
     const { createFolderOpen } = modelDetails;
     const lSearch = location.search;
     const search = lSearch.split("=");
+    console.log("lSearchlSearch",lSearch);
+    
     return (
       <div className="page-body">
         <div className="content-header">

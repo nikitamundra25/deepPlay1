@@ -156,7 +156,6 @@ class MoveList extends React.Component {
     const { selectedMoveIds } = this.state;
     let moveofSetList = [...this.state.moveofSetList]
     const starDiv = document.getElementsByClassName('star-mark')[index]
-    console.log(starDiv,"starDiv")
     if (isStarred) {
       moveofSetList[index].isStarred = false
       starDiv.classList.remove('isStarred')
@@ -320,10 +319,11 @@ class MoveList extends React.Component {
       moveofSetList,
       search,
       moveIdToAddTag,
-      isMarkingStar
+      // isMarkingStar
     } = this.state;
     const location = this.props.location;
     const isStarred = location.search.split("=");
+    const serachContent = location.search.split("search")
     return (
       <section className="play-list-collection set-detail-section">
         <InfiniteScroll
@@ -349,45 +349,48 @@ class MoveList extends React.Component {
                 <span className="content-title ">
                   Moves in this set ({totalMoves || 0})
                 </span>
-                {!isStarred[1] ? (
-                  <div className="set-detail-right-section">
-                    <ButtonGroup size="sm" className="mr-2">
-                      <Button
-                        className={
-                          isStarred[0]
-                            ? isStarred[1] === "false"
-                              ? "active"
-                              : ""
-                            : "active"
-                        }
-                        color=" "
-                        onClick={this.handleShowAll}
-                      >
-                        All
+                {
+                  serachContent && serachContent[1] ?
+                    null :
+                    <div className="set-detail-right-section">
+                      <ButtonGroup size="sm" className="mr-2">
+                        <Button
+                          className={
+                            isStarred[0]
+                              ? isStarred[1] === "false"
+                                ? "active"
+                                : ""
+                              : "active"
+                          }
+                          color=" "
+                          onClick={this.handleShowAll}
+                        >
+                          All
                       </Button>
-                      <Button
-                        className={isStarred[1] === "true" ? "active" : ""}
-                        color=" "
-                        onClick={this.handleShowStarred}
-                      >
-                        Starred
+                        <Button
+                          className={isStarred[1] === "true" ? "active" : ""}
+                          color=" "
+                          onClick={this.handleShowStarred}
+                        >
+                          Starred
                       </Button>
-                    </ButtonGroup>
-                    <FormGroup className="mb-0 header-search-wrap ">
-                      <InputGroup className="">
-                        <DebounceInput
-                          minLength={1}
-                          value={search}
-                          className={"form-control"}
-                          autoComplete="off"
-                          placeholder="Type to filter moves"
-                          debounceTimeout={300}
-                          onChange={event => this.handleInputChange(event)}
-                        />
-                      </InputGroup>
-                    </FormGroup>
-                  </div>
-                ) : null}
+                      </ButtonGroup>
+                      <FormGroup className="mb-0 header-search-wrap ">
+                        <InputGroup className="">
+                          <DebounceInput
+                            minLength={1}
+                            value={search}
+                            className={"form-control"}
+                            autoComplete="off"
+                            placeholder="Type to filter moves"
+                            debounceTimeout={300}
+                            onChange={event => this.handleInputChange(event)}
+                          />
+                        </InputGroup>
+                      </FormGroup>
+                    </div>
+                }
+
               </div>
               {selectedMoveIds && selectedMoveIds.length ? (
                 <div className={"selected-moves selected-detail-page"}>
@@ -533,22 +536,22 @@ class MoveList extends React.Component {
                                                   : `play-list-img blur-img-wrap checked-wrap`
                                               }
                                             >
-                                                  <div className={'star-mark'}>
-                                                    {video.isStarred ? (
-                                                      <img
-                                                        src={starIc}
-                                                        alt={"star"}
-                                                        className="w-100"
-                                                      />
-                                                    ) : (
-                                                        <img
-                                                          className="w-100"
-                                                          src={blankStar}
-                                                          alt={"star"}
-                                                        />
-                                                      )}
+                                              <div className={'star-mark'}>
+                                                {video.isStarred ? (
+                                                  <img
+                                                    src={starIc}
+                                                    alt={"star"}
+                                                    className="w-100"
+                                                  />
+                                                ) : (
+                                                    <img
+                                                      className="w-100"
+                                                      src={blankStar}
+                                                      alt={"star"}
+                                                    />
+                                                  )}
 
-                                                  </div> 
+                                              </div>
                                               {!isVideoChecked &&
                                                 isSelectVideo &&
                                                 videoIndex === index ? (
@@ -651,7 +654,7 @@ class MoveList extends React.Component {
                                                     index
                                                   )
                                                 }
-                                              
+
                                               >
                                                 {video.isStarred ? (
                                                   <img
