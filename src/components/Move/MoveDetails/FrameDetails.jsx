@@ -37,6 +37,8 @@ class FrameDetails extends Component {
                 const rightContainer = document.getElementById(
                   "right-container"
                 );
+                const leftCount = document.getElementsByClassName("input-range__label--min");
+                const rightCount = document.getElementsByClassName("input-range__label--max");
                 // get width for left and right container
                 const leftWidth = newChild.childNodes[1].style.left;
                 const rightWidth = newChild.childNodes[2].style.left;
@@ -47,6 +49,8 @@ class FrameDetails extends Component {
                 leftContainer.style.left = 0;
                 rightContainer.style.width = `${actualRightWidth}%`;
                 rightContainer.style.left = rightWidth;
+                leftCount[0].style.left = leftWidth;
+                rightCount[0].style.left = rightWidth;
                 logger(leftWidth, actualRightWidth, siderWidth);
               }
             }
@@ -147,10 +151,10 @@ class FrameDetails extends Component {
             formatLabel={(val, type) => {
               console.log("fasdfasd", type, type === "min");
               return type === "min"
-                ? `${SecondsToMMSS(time.min)}`
+                ? `${SecondsToMMSS(time.min >= 0 ? time.min : 0)}`
                 : type === "max"
-                ? `${SecondsToMMSS(time.max)}`
-                : null;
+                  ? `${SecondsToMMSS(time.max >= 0 ? time.max : 0)}`
+                  : null;
             }}
             value={time}
             onChange={this.labelValueChange}

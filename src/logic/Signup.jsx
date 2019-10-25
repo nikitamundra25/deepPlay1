@@ -1,6 +1,6 @@
 import { createLogic } from "redux-logic";
 import { ApiHelper } from "../helper";
-import { signupActions, modelOpenRequest, signupSuccess } from "../actions";
+import { signupActions, modelOpenRequest, signupSuccess, signupFailed, redirectTo } from "../actions";
 import { AppRoutes } from "../config/AppRoutes";
 import { toast } from "react-toastify";
 let toastId = null;
@@ -23,12 +23,12 @@ const signupLogic = createLogic({
       if (!toast.isActive(toastId)) {
         toastId = toast.error(result.messages[0]);
       }
-      dispatch(signupSuccess({ isLoginSuccess: false }));
+      dispatch(signupFailed({ isLoginSuccess: false }));
       done();
       return;
     } else {
       localStorage.setItem("token", result.data.token);
-      window.location.href = AppRoutes.DASHBOARD.url;
+      dispatch(redirectTo({ path: AppRoutes.DASHBOARD.url }))
       toast.success(result.messages[0]);
       dispatch(
         modelOpenRequest({

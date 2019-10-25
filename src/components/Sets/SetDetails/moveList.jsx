@@ -18,13 +18,13 @@ import blankStar from "../../../assets/img/star-line.svg";
 import AddTagModal from "./addTagsModal";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 import { ConfirmBox } from "helper/SweetAleart";
+import { DebounceInput } from "react-debounce-input";
 
 // a little function to help us with reordering the result
 const reorder = (list, startIndex, endIndex) => {
   const result = Array.from(list);
   const [removed] = result.splice(startIndex, 1);
   result.splice(endIndex, 0, removed);
-
   return result;
 };
 
@@ -45,7 +45,11 @@ class MoveList extends React.Component {
       setId: "",
       moveofSetList: this.props.movesOfSet,
       search: "",
-      moveIdToAddTag: ""
+      moveIdToAddTag: "",
+      isMarkingStar: {
+        index: -1,
+        isChanging: false
+      }
     };
   }
   handleVideoHoverLeave = () => {
@@ -71,6 +75,14 @@ class MoveList extends React.Component {
       this.setState({
         moveofSetList: this.props.movesOfSet
       });
+    }
+    if (prevProps.isMoveStarLoading.loading !== this.props.isMoveStarLoading.loading) {
+      this.setState({
+        isMarkingStar: {
+          index: this.props.isMoveStarLoading.index,
+          isChanging: true
+        }
+      })
     }
   };
 
@@ -138,14 +150,25 @@ class MoveList extends React.Component {
   };
   /*
    */
-  handleStarred = (id, isStarred) => {
+  handleStarred = (id, isStarred, index) => {
     const location = this.props.location;
     const pathName = location.pathname.split("/");
     const { selectedMoveIds } = this.state;
+    let moveofSetList = [...this.state.moveofSetList]
+    const starDiv = document.getElementsByClassName('star-mark')[index]
+    if (isStarred) {
+      moveofSetList[index].isStarred = false
+      starDiv.classList.remove('isStarred')
+    } else {
+      starDiv.classList.add('isStarred')
+      moveofSetList[index].isStarred = true
+    }
     const data = {
       moveId: selectedMoveIds.length ? selectedMoveIds : id,
       isStarred: isStarred ? false : true,
-      setId: pathName[3]
+      setId: pathName[3],
+      moveofSetList: moveofSetList,
+      index
     };
     this.props.isStarred(data);
   };
@@ -160,7 +183,7 @@ class MoveList extends React.Component {
       setId: pathName[3]
     };
     const { value } = await ConfirmBox({
-      text: "You want to delete this move! "
+      text: "You want to remove this move! "
     });
     if (value) {
       this.props.deleteMove(data);
@@ -228,26 +251,21 @@ class MoveList extends React.Component {
   };
 
   handleInputChange = e => {
-    const { name, value } = e.target;
+    const { value } = e.target;
     this.setState({
-      [name]: value
+      search: value
     });
     const data = {
       search: value,
       setId: this.props.setIdPathName
     };
-    setTimeout(() => {
-      this.props.searchMove(data);
-    }, 400);
+    this.props.searchMove(data);
   };
 
   //Drag & drop move items
   onDragEnd = result => {
     const { source, destination, draggableId } = result;
     // dropped outside the list
-    console.log("########destination",destination);
-    console.log("$$$$$$$$$$$$$$$source",source);
-    
     if (!destination) {
       return;
     }
@@ -280,12 +298,11 @@ class MoveList extends React.Component {
     const {
       show,
       setIndex,
-      moveCount,
       modelInfoReducer,
       allSetList,
       setIdPathName,
       isMoveSearchLoading,
-      totalMoves
+      totalMoves,
     } = this.props;
     const { modelDetails } = modelInfoReducer;
     const { transferToModalOpen, addTagModalOpen } = modelDetails;
@@ -301,21 +318,27 @@ class MoveList extends React.Component {
       page,
       moveofSetList,
       search,
-      moveIdToAddTag
+      moveIdToAddTag,
+      // isMarkingStar
     } = this.state;
     const location = this.props.location;
     const isStarred = location.search.split("=");
-
+    const serachContent = location.search.split("search")
     return (
       <section className="play-list-collection set-detail-section">
         <InfiniteScroll
           dataLength={moveofSetList.length} //This is important field to render the next data
-          next={() =>
+          next={() => {
             this.props.getMovesOfSetRequest({
               setId: setIdPathName,
               page: page + 1,
               isInfiniteScroll: true
-            })
+            }, () => {
+              this.setState({
+                page: page + 1
+              })
+            });
+          }
           }
           hasMore={totalMoves !== moveofSetList.length ? true : false}
           loader={<h4>Loading...</h4>}
@@ -324,49 +347,58 @@ class MoveList extends React.Component {
             <Col md="12" className={"pb-3"}>
               <div className="content-header mt-3 mb-1">
                 <span className="content-title ">
-                  Moves in this set ({moveCount || 0})
+                  Moves in this set ({totalMoves || 0})
                 </span>
+                {
+                  serachContent && serachContent[1] ?
+                    null :
+                    <div className="set-detail-right-section">
+                      <ButtonGroup size="sm" className="mr-2">
+                        <Button
+                          className={
+                            isStarred[0]
+                              ? isStarred[1] === "false"
+                                ? "active"
+                                : ""
+                              : "active"
+                          }
+                          color=" "
+                          onClick={this.handleShowAll}
+                        >
+                          All
+                      </Button>
+                        <Button
+                          className={isStarred[1] === "true" ? "active" : ""}
+                          color=" "
+                          onClick={this.handleShowStarred}
+                        >
+                          Starred
+                      </Button>
+                      </ButtonGroup>
+                      <FormGroup className="mb-0 header-search-wrap ">
+                        <InputGroup className="">
+                          <DebounceInput
+                            minLength={1}
+                            value={search}
+                            className={"form-control"}
+                            autoComplete="off"
+                            placeholder="Type to filter moves"
+                            debounceTimeout={300}
+                            onChange={event => this.handleInputChange(event)}
+                          />
+                        </InputGroup>
+                      </FormGroup>
+                    </div>
+                }
 
-                <div className="set-detail-right-section">
-                  <ButtonGroup size="sm" className="mr-2">
-                    <Button
-                      className={
-                        isStarred[0]
-                          ? isStarred[1] === "false"
-                            ? "active"
-                            : ""
-                          : "active"
-                      }
-                      color=" "
-                      onClick={this.handleShowAll}
-                    >
-                      All
-                    </Button>
-                    <Button
-                      className={isStarred[1] === "true" ? "active" : ""}
-                      color=" "
-                      onClick={this.handleShowStarred}
-                    >
-                      Starred
-                    </Button>
-                  </ButtonGroup>
-                  <FormGroup className="mb-0 header-search-wrap ">
-                    <InputGroup className="">
-                      <Input
-                        placeholder="Type to filter moves"
-                        type="text"
-                        autoComplete="off"
-                        value={search}
-                        name="search"
-                        onChange={this.handleInputChange}
-                      />
-                    </InputGroup>
-                  </FormGroup>
-                </div>
               </div>
               {selectedMoveIds && selectedMoveIds.length ? (
                 <div className={"selected-moves selected-detail-page"}>
-                  <div className={"d-flex justify-content-between"}>
+                  <div
+                    className={
+                      "d-flex justify-content-between align-items-center"
+                    }
+                  >
                     <div className="content-title">
                       Selected Moves:{" "}
                       {selectedMoveIds && selectedMoveIds.length
@@ -376,13 +408,6 @@ class MoveList extends React.Component {
                     <div className="content-title ">
                       <span className={"d-flex"}>
                         <ButtonGroup size="sm">
-                          <Button
-                            onClick={() => this.handleStarred()}
-                            className=" "
-                            color=" "
-                          >
-                            Mark star
-                          </Button>
                           <Button
                             onClick={() => this.openAddTagsModal()}
                             className=" "
@@ -429,8 +454,7 @@ class MoveList extends React.Component {
               <DragDropContext onDragEnd={this.onDragEnd}>
                 <Droppable
                   droppableId="droppable"
-                  type="droppableItem"
-                  direction="auto"
+                // type="droppableItem"
                 >
                   {provided => (
                     <>
@@ -450,7 +474,7 @@ class MoveList extends React.Component {
                               <Button color={" "} className="fill-btn btn mt-4">
                                 {" "}
                                 Create Now
-                                </Button>
+                              </Button>
                             </div>
                           </div>
                         </div>
@@ -512,6 +536,22 @@ class MoveList extends React.Component {
                                                   : `play-list-img blur-img-wrap checked-wrap`
                                               }
                                             >
+                                              <div className={'star-mark'}>
+                                                {video.isStarred ? (
+                                                  <img
+                                                    src={starIc}
+                                                    alt={"star"}
+                                                    className="w-100"
+                                                  />
+                                                ) : (
+                                                    <img
+                                                      className="w-100"
+                                                      src={blankStar}
+                                                      alt={"star"}
+                                                    />
+                                                  )}
+
+                                              </div>
                                               {!isVideoChecked &&
                                                 isSelectVideo &&
                                                 videoIndex === index ? (
@@ -563,7 +603,7 @@ class MoveList extends React.Component {
                                                   />
                                                 </span>
                                               ) : null}
-                                            
+
                                               <div
                                                 className={"video-effect"}
                                                 onClick={
@@ -605,13 +645,16 @@ class MoveList extends React.Component {
                                               <div className="text-capitalize play-list-heading h6 m-0">
                                                 {video.title || "unnamed"}
                                               </div>
-                                              <div className="star-wrap"
-                                               onClick={() =>
-                                                this.handleStarred(
-                                                  video._id,
-                                                  video.isStarred
-                                                )
-                                              }
+                                              <div
+                                                className="star-wrap"
+                                                onClick={() =>
+                                                  this.handleStarred(
+                                                    video._id,
+                                                    video.isStarred,
+                                                    index
+                                                  )
+                                                }
+
                                               >
                                                 {video.isStarred ? (
                                                   <img
@@ -621,7 +664,7 @@ class MoveList extends React.Component {
                                                   />
                                                 ) : (
                                                     <img
-                                                    className="w-100"
+                                                      className="w-100"
                                                       src={blankStar}
                                                       alt={"star"}
                                                     />
@@ -642,64 +685,63 @@ class MoveList extends React.Component {
                                                   {" "}
                                                   <i className="fas fa-ellipsis-v setting-icon "></i>
                                                 </span>
-                                                {show &&
-                                                  setIndex === index ? (
-                                                    <ButtonGroup
-                                                      onMouseOver={() =>
-                                                        this.props.showPopOver(
-                                                          index,
-                                                          show
+                                                {show && setIndex === index ? (
+                                                  <ButtonGroup
+                                                    onMouseOver={() =>
+                                                      this.props.showPopOver(
+                                                        index,
+                                                        show
+                                                      )
+                                                    }
+                                                    size="sm"
+                                                  >
+                                                    {/* <Button
+                                                      color=" "
+                                                      onClick={() =>
+                                                        this.handleStarred(
+                                                          video._id,
+                                                          video.isStarred
                                                         )
                                                       }
-                                                      size="sm"
                                                     >
-                                                      <Button
-                                                        color=" "
-                                                        onClick={() =>
-                                                          this.handleStarred(
-                                                            video._id,
-                                                            video.isStarred
-                                                          )
-                                                        }
-                                                      >
-                                                        {video.isStarred
-                                                          ? "Unstar"
-                                                          : "Mark star"}
-                                                      </Button>
-                                                      <Button
-                                                        onClick={() =>
-                                                          this.openAddTagsModal(
-                                                            video._id
-                                                          )
-                                                        }
-                                                        color=" "
-                                                      >
-                                                        Add tags
-                                                      </Button>
-                                                      <Button
-                                                        color=" "
-                                                        onClick={() =>
-                                                          this.openTransferToModal(
-                                                            video._id,
-                                                            video.setId,
-                                                            page
-                                                          )
-                                                        }
-                                                      >
-                                                        Transfer
-                                                      </Button>
-                                                      <Button
-                                                        color=" "
-                                                        onClick={() =>
-                                                          this.handleMoveDelete(
-                                                            video._id
-                                                          )
-                                                        }
-                                                      >
-                                                        Remove
-                                                      </Button>
-                                                    </ButtonGroup>
-                                                  ) : null}
+                                                      {video.isStarred
+                                                        ? "Unstar"
+                                                        : "Mark star"}
+                                                    </Button> */}
+                                                    <Button
+                                                      onClick={() =>
+                                                        this.openAddTagsModal(
+                                                          video._id
+                                                        )
+                                                      }
+                                                      color=" "
+                                                    >
+                                                      Add tags
+                                                    </Button>
+                                                    <Button
+                                                      color=" "
+                                                      onClick={() =>
+                                                        this.openTransferToModal(
+                                                          video._id,
+                                                          video.setId,
+                                                          page
+                                                        )
+                                                      }
+                                                    >
+                                                      Transfer
+                                                    </Button>
+                                                    <Button
+                                                      color=" "
+                                                      onClick={() =>
+                                                        this.handleMoveDelete(
+                                                          video._id
+                                                        )
+                                                      }
+                                                    >
+                                                      Remove
+                                                    </Button>
+                                                  </ButtonGroup>
+                                                ) : null}
                                               </div>
                                             </div>
                                           </div>

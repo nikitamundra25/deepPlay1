@@ -6,7 +6,9 @@ import {
   DropdownItem,
   Modal,
   ModalBody,
+  UncontrolledTooltip,
   ModalHeader
+  
 } from "reactstrap";
 import { logger } from "helper/Logger";
 import InputRange from "react-input-range";
@@ -18,6 +20,7 @@ import ViewInfoModal from "./viewInfoModal";
 import AddTagModal from "./addTagsModal";
 import EditMoveModal from "./editMoveModal";
 import { ConfirmBox } from "helper/SweetAleart";
+
 
 class WebmView extends Component {
   video;
@@ -155,7 +158,7 @@ class WebmView extends Component {
   /**
    *
    */
-  handleMoveDelete = async (id) => {
+  handleMoveDelete = async id => {
     const data = {
       moveId: id,
       isDeleted: true,
@@ -215,12 +218,19 @@ class WebmView extends Component {
   };
 
   handleStarred = (id, isStarred) => {
+    const videoData = this.props.videoData
+    if (isStarred) {
+      videoData.isStarred = false
+    } else {
+      videoData.isStarred = true
+    }
     const data = {
       moveId: id,
       isStarred: isStarred ? false : true,
-      setId: this.props.setIdPathName
+      setId: this.props.setIdPathName,
+      videoData: videoData
     };
-    this.props.isStarred({ data: data, isVideoModalOpen: true });
+    this.props.isStarred(data);
   };
 
   openAddTagsModal = id => {
@@ -343,12 +353,15 @@ class WebmView extends Component {
                         <DropdownItem
                           onClick={() =>
                             this.handleStarred(
-                              videoData._id,
+                              videoData ? videoData._id : video._id,
                               videoData.isStarred
                             )
                           }
                         >
-                          Mark Star
+                          {
+                            videoData && videoData.isStarred ?
+                              "Unstar" : "Mark Star"
+                          }
                         </DropdownItem>
                         <DropdownItem
                           onClick={() =>
@@ -372,7 +385,7 @@ class WebmView extends Component {
                               : this.openTransferToModal(video._id, video.setId)
                           }
                         >
-                          Tranfer
+                          Transfer
                         </DropdownItem>
                         <DropdownItem
                           onClick={() =>
@@ -503,18 +516,23 @@ class WebmView extends Component {
                           className="header-dropdown custom-dropdown"
                         // direction="auto"
                         >
-                          <DropdownToggle color={" "}>
+                          <DropdownToggle color={" "} className="ml-2" id="playback-speed-wrap">
+
                             <span
                               id="playback-speed"
-                              className="cursor_pointer ml-2 text-white"
+                              className="cursor_pointer  text-white d-flex align-items-center"
                             >
-                              {playBackSpeed !== 1 ? `${playBackSpeed}x` : null}{" "}
+                              <span>{playBackSpeed !== 1 ? `${playBackSpeed}x` : null}{" "}</span>
                               <i
-                                className="fa fa-clock-o"
+                                className="fa fa-clock-o" 
                                 aria-hidden="true"
                               ></i>
                             </span>
+                           
                           </DropdownToggle>
+                          <UncontrolledTooltip placement="top" target="playback-speed-wrap">
+             Playback speed
+            </UncontrolledTooltip>
                           <DropdownMenu>
                             <DropdownItem
                               active={playBackSpeed === 0.5}

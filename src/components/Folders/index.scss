@@ -1,7 +1,12 @@
-.fullSize-btn {
-  width: 100%;
-}
-.wrap-folder {
-  padding: 38px;
-  background: #c3c3c3;
+.reset-search{
+  width: 24px;
+  height: 24px;
+  line-height: 24px;
+  display: inline-block;
+  border-radius: 50%;
+  background: #000;
+  color: #fff;
+  i{
+    font-size: 14px;
+  }
 }

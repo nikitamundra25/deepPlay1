@@ -88,5 +88,10 @@ export const AppRoutes = {
     url: "/sample-set",
     name: "Sample Set",
     exact: true
+  },
+  MOVE_SEAECH_ALL: {
+    url: "/move-search-all",
+    name: "Move Search All",
+    exact: true
   }
 };

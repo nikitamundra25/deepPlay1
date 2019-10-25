@@ -11,7 +11,10 @@ import {
   searchMoveSuccess,
   getSetDetailsRequest,
   updateSortIndexSuccess,
-  createAnotherMoveSuccess
+  createAnotherMoveSuccess,
+  getMoveBySearchSuccess,
+  getMoveBySearchRequest,
+  starredMovesSuccess
 } from "../actions";
 import { AppRoutes } from "../config/AppRoutes";
 import { toast } from "react-toastify";
@@ -201,7 +204,11 @@ const starMoveLogic = createLogic({
       "/starred-move",
       "PUT",
       true,
-      action.payload
+      {
+        moveId: action.payload ? action.payload.moveId : null,
+        isStarred: action.payload ? action.payload.isStarred : false,
+        setId: action.payload ? action.payload.setId : null,
+      }
     );
     if (result.isError) {
       if (!toast.isActive(toastId)) {
@@ -210,10 +217,24 @@ const starMoveLogic = createLogic({
       done();
       return;
     } else {
-      if (!toast.isActive(toastId)) {
-        toastId = toast.success(result.messages[0]);
+      // if (!toast.isActive(toastId)) {
+      //   toastId = toast.success(result.messages[0]);
+      // }
+      if (action.payload.isSearch) {
+        dispatch(getMoveBySearchRequest({ search: action.payload.isSearch }));
       }
-      dispatch(getMovesOfSetRequest({ setId: action.payload.setId }));
+      if (action.payload && action.payload.moveofSetList) {
+        dispatch(starredMovesSuccess({
+          moveofSetList: action.payload.moveofSetList,
+          index: action.payload.index
+        }
+        ))
+      } else {
+        dispatch(starredMovesSuccess({
+          videoData: action.payload.videoData,
+        }
+        ))
+      }
       done();
     }
   }
@@ -241,8 +262,12 @@ const deleteMoveLogic = createLogic({
       if (!toast.isActive(toastId)) {
         toastId = toast.success(result.messages[0]);
       }
-      dispatch(getMovesOfSetRequest({ setId: action.payload.setId }));
-      dispatch(getSetDetailsRequest({ setId: action.payload.setId }));
+      if (!action.payload.isSearch) {
+        dispatch(getMovesOfSetRequest({ setId: action.payload.setId }));
+        dispatch(getSetDetailsRequest({ setId: action.payload.setId }));
+      } else {
+        dispatch(getMoveBySearchRequest({ search: action.payload.isSearch }));
+      }
       done();
     }
   }
@@ -279,14 +304,19 @@ const transferMoveLogic = createLogic({
           }
         })
       );
-      dispatch(
-        getMovesOfSetRequest({
-          setId: action.payload.previousSetId,
-          page: 1,
-          isInfiniteScroll: false
-        })
-      );
-      dispatch(getSetDetailsRequest({ setId: action.payload.previousSetId }));
+
+      if (!action.payload.isSearch) {
+        dispatch(
+          getMovesOfSetRequest({
+            setId: action.payload.previousSetId,
+            page: 1,
+            isInfiniteScroll: false
+          })
+        );
+        dispatch(getSetDetailsRequest({ setId: action.payload.previousSetId }));
+      } else {
+        dispatch(getMoveBySearchRequest({ search: action.payload.isSearch }));
+      }
       done();
     }
   }
@@ -522,6 +552,37 @@ const editMoveLogic = createLogic({
     }
   }
 });
+
+// Get Moves By Search
+const getMovesBySearchLogic = createLogic({
+  type: MovesAction.GET_MOVE_BY_SEARCH_REQUEST,
+  async process({ action }, dispatch, done) {
+    let api = new ApiHelper();
+    let result = await api.FetchFromServer(
+      "move",
+      "/get-move-by-search",
+      "GET",
+      true,
+      action.payload,
+      undefined
+    );
+    if (result.isError) {
+      toast.error(result.messages[0]);
+      done();
+      return;
+    } else {
+      dispatch(
+        getMoveBySearchSuccess({
+          showLoader: false,
+          movesOfSet: result.data.movesData,
+          totalMoves: result.data.totalMoves,
+          isInfiniteScroll: action.payload.isInfiniteScroll
+        })
+      );
+      done();
+    }
+  }
+});
 export const MoveLogics = [
   downloadVideoLogic,
   getMovesOfSetLogic,
@@ -535,5 +596,6 @@ export const MoveLogics = [
   addTagsLogic,
   updateSortIndexLogic,
   removeVideoLocalServerLogic,
-  editMoveLogic
+  editMoveLogic,
+  getMovesBySearchLogic
 ];

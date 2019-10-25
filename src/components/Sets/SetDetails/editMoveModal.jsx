@@ -54,7 +54,7 @@ class EditMoveModal extends React.Component {
         title,
         description,
         tags: tags,
-        sets: setId ? setId.title : "",
+        sets: setId ? setId.title : ""
       });
     }
     if (modal !== this.props.modal) {
@@ -223,7 +223,7 @@ class EditMoveModal extends React.Component {
               className="btn btn-black"
               onClick={this.handleEditMove}
             >
-              Edit Move
+              Update Move
             </Button>
           </ModalFooter>
         </Modal>

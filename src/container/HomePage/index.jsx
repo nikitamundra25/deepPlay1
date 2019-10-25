@@ -131,7 +131,7 @@ class HomePage extends React.Component {
 
                 {/* videos */}
                 <div className="videos-wrap d-flex justify-content-center align-items-center">
-                <video width="100%" id="webm-video-0" controls>
+                <video width="100%" id="webm-video-0">
                   <source src="https://s3.amazonaws.com/hope.bucket/moves/1571752097935_deep-play.webm" type="video/webm" />
                   </video> 
                 </div>

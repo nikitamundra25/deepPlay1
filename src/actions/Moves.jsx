@@ -31,7 +31,9 @@ export const MovesAction = {
   REMOVE_VIDEO_LOCAL_SERVER_REQUEST: "Remove video from local server request!",
   REMOVE_VIDEO_LOCAL_SERVER_SUCCESS: "Remove video from local server success!",
   UPDATE_MOVE_REQUEST: "Update Move Request",
-  UPDATE_MOVE_SUCCESS: "Update Move Success"
+  UPDATE_MOVE_SUCCESS: "Update Move Success",
+  GET_MOVE_BY_SEARCH_REQUEST: "Get Move Details By Search Request",
+  GET_MOVE_BY_SEARCH_SUCCESS: "Get Move Details By Search Success"
 };
 
 export const downloadYoutubeVideoRequest = createAction(
@@ -117,3 +119,10 @@ export const removeVideoLocalServerSuccess = createAction(
 
 export const updateMoveRequest = createAction(MovesAction.UPDATE_MOVE_REQUEST);
 export const updateMoveSuccess = createAction(MovesAction.UPDATE_MOVE_SUCCESS);
+
+export const getMoveBySearchRequest = createAction(
+  MovesAction.GET_MOVE_BY_SEARCH_REQUEST
+);
+export const getMoveBySearchSuccess = createAction(
+  MovesAction.GET_MOVE_BY_SEARCH_SUCCESS
+);

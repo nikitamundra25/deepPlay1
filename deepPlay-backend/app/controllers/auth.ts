@@ -168,7 +168,7 @@ const signup = async (req: Request, res: Response): Promise<any> => {
       });
       await emailVar.sendEmail(body.email);
       return res.status(200).json({
-        message: "User added successfully.",
+        message: "Thank you for Signing Up!",
         token: token,
         userData: userResult,
         success: true
