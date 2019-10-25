@@ -304,17 +304,23 @@ class MoveList extends React.Component {
     } = this.state;
     const location = this.props.location;
     const isStarred = location.search.split("=");
+    console.log("GGGGGGGGGGGGGGGGGG", page);
 
     return (
       <section className="play-list-collection set-detail-section">
         <InfiniteScroll
           dataLength={moveofSetList.length} //This is important field to render the next data
-          next={() =>
+          next={() => {
             this.props.getMovesOfSetRequest({
               setId: setIdPathName,
               page: page + 1,
               isInfiniteScroll: true
-            })
+            },()=>{
+              this.setState({
+                page: page + 1
+              })
+            });
+          }
           }
           hasMore={totalMoves !== moveofSetList.length ? true : false}
           loader={<h4>Loading...</h4>}
@@ -429,7 +435,7 @@ class MoveList extends React.Component {
               <DragDropContext onDragEnd={this.onDragEnd}>
                 <Droppable
                   droppableId="droppable"
-                  // type="droppableItem"
+                // type="droppableItem"
                 >
                   {provided => (
                     <>
