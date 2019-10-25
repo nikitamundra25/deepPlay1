@@ -223,7 +223,18 @@ const starMoveLogic = createLogic({
       if (action.payload.isSearch) {
         dispatch(getMoveBySearchRequest({ search: action.payload.isSearch }));
       }
-      dispatch(starredMovesSuccess({ moveofSetList: action.payload.moveofSetList, index: action.payload.index }))
+      if (action.payload && action.payload.moveofSetList) {
+        dispatch(starredMovesSuccess({
+          moveofSetList: action.payload.moveofSetList,
+          index: action.payload.index
+        }
+        ))
+      } else {
+        dispatch(starredMovesSuccess({
+          videoData: action.payload.videoData,
+        }
+        ))
+      }
       done();
     }
   }

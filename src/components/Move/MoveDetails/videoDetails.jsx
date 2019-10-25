@@ -56,7 +56,7 @@ class VideoDetails extends React.Component {
         value: recentSetAdded._id
       };
     }
-    
+
 
     return (
       <>
@@ -83,7 +83,7 @@ class VideoDetails extends React.Component {
                 onChange={this.props.handleTagChange}
                 value={tags}
                 options={colourOptions}
-                // options={colourOptions}
+              // options={colourOptions}
               />
             </div>
           </FormGroup>
@@ -105,7 +105,7 @@ class VideoDetails extends React.Component {
                   value={recentAddedSet ? recentAddedSet : selectSetOptions}
                 />
                 <FormFeedback>
-                  {errors && errors.setId ? errors.setId : null}
+                  {errors && errors.setId && (selectSetOptions.value === "" || recentAddedSet.value === "") ? errors.setId : null}
                 </FormFeedback>
               </div>
             </InputGroup>
