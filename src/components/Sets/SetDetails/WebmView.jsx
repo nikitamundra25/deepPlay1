@@ -6,7 +6,9 @@ import {
   DropdownItem,
   Modal,
   ModalBody,
+  UncontrolledTooltip,
   ModalHeader
+  
 } from "reactstrap";
 import { logger } from "helper/Logger";
 import InputRange from "react-input-range";
@@ -18,6 +20,7 @@ import ViewInfoModal from "./viewInfoModal";
 import AddTagModal from "./addTagsModal";
 import EditMoveModal from "./editMoveModal";
 import { ConfirmBox } from "helper/SweetAleart";
+
 
 class WebmView extends Component {
   video;
@@ -507,18 +510,23 @@ class WebmView extends Component {
                           className="header-dropdown custom-dropdown"
                           // direction="auto"
                         >
-                          <DropdownToggle color={" "}>
+                          <DropdownToggle color={" "} className="ml-2" id="playback-speed-wrap">
+
                             <span
                               id="playback-speed"
-                              className="cursor_pointer ml-2 text-white"
+                              className="cursor_pointer  text-white d-flex align-items-center"
                             >
-                              {playBackSpeed !== 1 ? `${playBackSpeed}x` : null}{" "}
+                              <span>{playBackSpeed !== 1 ? `${playBackSpeed}x` : null}{" "}</span>
                               <i
-                                className="fa fa-clock-o"
+                                className="fa fa-clock-o" 
                                 aria-hidden="true"
                               ></i>
                             </span>
+                           
                           </DropdownToggle>
+                          <UncontrolledTooltip placement="top" target="playback-speed-wrap">
+             Playback speed
+            </UncontrolledTooltip>
                           <DropdownMenu>
                             <DropdownItem
                               active={playBackSpeed === 0.5}
