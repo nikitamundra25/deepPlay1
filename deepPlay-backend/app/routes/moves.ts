@@ -15,7 +15,8 @@ import {
   addTagsInMove,
   updateMoveIndex,
   removeVideolocalServer,
-  updateMove
+  updateMove,
+  getMoveBySearch
 } from "../controllers";
 import { ValidateAdminToken } from "../common";
 import { storageFile } from "../common/video";
@@ -36,6 +37,7 @@ MoveRouter.post(
   downloadYoutubeVideo
 );
 MoveRouter.get("/getMoveForSet", ValidateAdminToken, getMoveBySetId);
+MoveRouter.get("/get-move-by-search", ValidateAdminToken, getMoveBySearch);
 MoveRouter.get(
   "/get-move-details-by-id",
   ValidateAdminToken,

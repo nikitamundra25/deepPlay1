@@ -1,22 +1,9 @@
 import React from "react";
 import { connect } from "react-redux";
+import { Card, Col, Row } from "reactstrap";
 import {
-  Card,
-  Col,
-  Row,
-  DropdownToggle,
-  UncontrolledDropdown,
-  DropdownMenu,
-  DropdownItem,
-  UncontrolledTooltip
-} from "reactstrap";
-import {
-  getSetDetailsRequest,
+  getMoveBySearchRequest,
   modelOpenRequest,
-  publicAccessRequest,
-  shareableLinkRequest,
-  deleteSetRequest,
-  getMovesOfSetRequest,
   UpdateSetRequest,
   starredMovesRequest,
   getAllSetRequest,
@@ -38,11 +25,10 @@ import "slick-carousel/slick/slick-theme.css";
 import { ConfirmBox } from "../../../helper/SweetAleart";
 import WebmView from "./WebmView";
 import Loader from "../../comman/Loader/Loader";
-import CreateSetComponent from "../../Sets/createSet";
 import MoveList from "./moveList";
 import TransferToModal from "../../Folders/FolderDetails/transferTo";
 // core components
-class SetDetails extends React.Component {
+class MoveSearchComponent extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -64,9 +50,8 @@ class SetDetails extends React.Component {
     const location = this.props.location;
     const pathName = location.pathname.split("/");
     const isStarred = location.search.split("=");
-    this.props.getSetDetailsRequest({ setId: pathName[3] });
-    this.props.getMovesOfSetRequest({
-      setId: pathName[3],
+    this.props.getMoveBySearchRequest({
+      search: isStarred[1],
       page: 1,
       isInfiniteScroll: false,
       isStarred: isStarred[1]
@@ -128,20 +113,6 @@ class SetDetails extends React.Component {
   };
   /*
    */
-  handleDeleteSet = async id => {
-    const { value } = await ConfirmBox({
-      text: "You want to delete this set! "
-    });
-    if (value) {
-      const data = {
-        id,
-        setDetails: true
-      };
-      this.props.onDeleteSets(data);
-    }
-  };
-  /*
-   */
   handleMoveAdd = () => {
     const location = this.props.location;
     const pathName = location.pathname.split("/");
@@ -149,16 +120,6 @@ class SetDetails extends React.Component {
   };
   /*
    */
-  handleSetModal = () => {
-    const { modelInfoReducer } = this.props;
-    const { modelDetails } = modelInfoReducer;
-    this.props.modelOperate({
-      modelDetails: {
-        createSetModalOpen: !modelDetails.createSetModalOpen
-      }
-    });
-  };
-
   openTransferToModal = (id, folderId) => {
     this.props.allFolders();
     const { modelInfoReducer } = this.props;
@@ -223,15 +184,38 @@ class SetDetails extends React.Component {
   /*
    */
   isStarred = data => {
-    this.props.isStarredRequest(data);
+    const location = this.props.location;
+    const isSearch = location.search.split("=");
+    const moveData = {
+      moveId: data.moveId,
+      isStarred: data.isStarred,
+      isSearch: isSearch.length ? isSearch[1] : false,
+      isVideoModalOpen: true
+    };
+    this.props.isStarredRequest(moveData);
   };
 
   deleteMove = data => {
-    this.props.deleteMoveRequest(data);
+    const location = this.props.location;
+    const isSearch = location.search.split("=");
+    const data1 = {
+      moveId: data.moveId,
+      isDeleted: data.isDeleted,
+      isSearch: isSearch.length ? isSearch[1] : false
+    };
+    this.props.deleteMoveRequest(data1);
   };
 
   transferMove = data => {
-    this.props.transferMoveRequest(data);
+    const location = this.props.location;
+    const isSearch = location.search.split("=");
+    const data1 = {
+      moveId: data.moveId,
+      setId: data.setId,
+      previousSetId: data.previousSetId,
+      isSearch: isSearch.length ? isSearch[1] : false
+    };
+    this.props.transferMoveRequest(data1);
   };
 
   onEditMove = id => {
@@ -269,7 +253,6 @@ class SetDetails extends React.Component {
 
   render() {
     const {
-      setReducer,
       moveReducer,
       shareLinkReducer,
       modelInfoReducer,
@@ -280,7 +263,6 @@ class SetDetails extends React.Component {
       getAllFolders,
       updateSortIndexRequest
     } = this.props;
-    const { setDetails } = setReducer;
     const { modelDetails } = modelInfoReducer;
     const {
       movesOfSet,
@@ -288,13 +270,11 @@ class SetDetails extends React.Component {
       videoData,
       totalMoves,
       searchMoveResult,
-      isMoveSearchLoading,
-      isMoveStarLoading
+      isMoveSearchLoading
     } = moveReducer;
     const { userEncryptedInfo } = shareLinkReducer;
     const {
       sharableLinkModalOpen,
-      createSetModalOpen,
       isVideoModalOpen,
       transferToModalOpenReq
     } = modelDetails;
@@ -312,68 +292,6 @@ class SetDetails extends React.Component {
     return (
       <>
         <div className="set-main-section">
-          <div className="content-header">
-            <span className="content-title">
-              <div className="main-title">
-                {setDetails ? setDetails.title : "MyFolder"}
-              </div>
-              <div className="sub-title">
-                Total Move {setDetails ? `${setDetails.moveCount}` : 0}
-              </div>
-            </span>
-            <div>
-              <span
-                id="move"
-                className={"cursor_pointer"}
-                onClick={this.handleMoveAdd}
-              >
-                <i className="fas fa-plus-circle icon-font"></i>
-              </span>
-              <UncontrolledTooltip placement="top" target="move">
-                Add new move
-              </UncontrolledTooltip>
-              <span
-                id="share"
-                onClick={this.handleSharableLink}
-                className="cursor_pointer ml-4"
-              >
-                <i className="fas fa-share icon-font"></i>
-              </span>
-              <UncontrolledTooltip placement="top" target="share">
-                Get Shareable Link
-              </UncontrolledTooltip>
-              <UncontrolledDropdown className="header-dropdown dropdown-without-tip not-header-dropdown">
-                <DropdownToggle color={" "} className="mr-0">
-                  <span id="edit" className="cursor_pointer ml-4 ">
-                    <i className="fas fa-sliders-h icon-font"></i>
-                  </span>
-                </DropdownToggle>
-                <DropdownMenu>
-                  <DropdownItem onClick={() => this.handleSetModal()}>
-                    Edit Set
-                  </DropdownItem>
-                  <DropdownItem
-                    onClick={() =>
-                      this.openTransferToModal(
-                        setDetails._id,
-                        setDetails.folderId
-                      )
-                    }
-                  >
-                    Add to Folder
-                  </DropdownItem>
-                  <DropdownItem
-                    onClick={() => this.handleDeleteSet(setDetails._id)}
-                  >
-                    Delete Set
-                  </DropdownItem>
-                </DropdownMenu>
-              </UncontrolledDropdown>
-              <UncontrolledTooltip placement="top" target="edit">
-                Edit & Delete
-              </UncontrolledTooltip>
-            </div>
-          </div>
           {!isMoveofSetLoading ? (
             <>
               {movesOfSet && movesOfSet.length ? (
@@ -404,7 +322,7 @@ class SetDetails extends React.Component {
                     setIndex={setIndex}
                     closePopOver={this.closePopOver}
                     showPopOver={this.showPopOver}
-                    moveCount={setDetails ? setDetails.moveCount : 0}
+                    moveCount={0}
                     isStarred={this.isStarred}
                     deleteMove={this.deleteMove}
                     movesOfSet={moveListItem}
@@ -423,7 +341,6 @@ class SetDetails extends React.Component {
                     getMovesOfSetRequest={getMovesOfSetRequest}
                     updateSortIndexRequest={updateSortIndexRequest}
                     searchMove={data => this.props.searchMoveRequest(data)}
-                    isMoveStarLoading={isMoveStarLoading}
                     {...this.props}
                   />
                 </div>
@@ -441,16 +358,9 @@ class SetDetails extends React.Component {
           modal={sharableLinkModalOpen}
           handleOpen={this.handleSharableLink}
           onTogglePublicAccess={this.onTogglePublicAccess}
-          isPublic={setDetails ? setDetails.isPublic : false}
+          isPublic={false}
           userEncryptedInfo={userEncryptedInfo ? userEncryptedInfo : ""}
           shareComponent="Sets"
-        />
-        <CreateSetComponent
-          modal={createSetModalOpen}
-          handleOpen={this.handleSetModal}
-          createSet={this.updateSet}
-          editSet="true"
-          setDetails={setDetails ? setDetails : null}
         />
         <TransferToModal
           modal={transferToModalOpenReq}
@@ -476,17 +386,7 @@ const mapStateToProps = state => ({
 });
 const mapDispatchToProps = dispatch => ({
   modelOperate: data => dispatch(modelOpenRequest(data)),
-  getSetDetailsRequest: data => dispatch(getSetDetailsRequest(data)),
-  publicAccess: data => {
-    dispatch(publicAccessRequest(data));
-  },
-  shareableLink: data => {
-    dispatch(shareableLinkRequest(data));
-  },
-  onDeleteSets: data => {
-    dispatch(deleteSetRequest(data));
-  },
-  getMovesOfSetRequest: data => dispatch(getMovesOfSetRequest(data)),
+  getMoveBySearchRequest: data => dispatch(getMoveBySearchRequest(data)),
   UpdateSetRequest: data => dispatch(UpdateSetRequest(data)),
   isStarredRequest: data => dispatch(starredMovesRequest(data)),
   deleteMoveRequest: data => dispatch(deleteMovesRequest(data)),
@@ -513,4 +413,4 @@ const mapDispatchToProps = dispatch => ({
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(SetDetails);
+)(MoveSearchComponent);

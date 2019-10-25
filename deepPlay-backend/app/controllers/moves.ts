@@ -236,8 +236,7 @@ const createMove = async (req: Request, res: Response): Promise<any> => {
       });
     }
 
-    let fileName: string | null;
-    fileName = moveUrl.split("/");
+    let fileName: string[] = moveUrl.split("/");
     const {
       frames: framesArray,
       videoMetaData,
@@ -245,7 +244,7 @@ const createMove = async (req: Request, res: Response): Promise<any> => {
     } = await getVideoFrames(fileName[2]);
     delete videoMetaData.filename;
     const frames = framesArray.map(
-      (frame: string) => `${ServerURL}/uploads/youtube-videos/${frame}`
+      (frame: string | null) => `${ServerURL}/uploads/youtube-videos/${frame}`
     );
     const moveResult: Document | any = new MoveModel({
       videoUrl: moveUrl,
@@ -624,9 +623,8 @@ const isStarredMove = async (req: Request, res: Response): Promise<any> => {
         }
       }
     );
-
     return res.status(200).json({
-      message: "Move has been starred successfully!"
+      message: `Move has been ${isStarred === "true" ? "starred" : "Unstarred"} successfully!`
     });
   } catch (error) {
     console.log(error);
@@ -902,6 +900,70 @@ const updateMove = async (req: Request, res: Response): Promise<any> => {
     });
   }
 };
+
+// --------------Get all Move info by search---------------------
+const getMoveBySearch = async (req: Request, res: Response): Promise<any> => {
+  try {
+    const { currentUser, query } = req;
+    const { page, limit, search } = query;
+    let headToken: Request | any = currentUser;
+    if (!headToken.id) {
+      res.status(400).json({
+        message: "User id not found"
+      });
+    }
+    const pageNumber: number = ((parseInt(page) || 1) - 1) * (limit || 20);
+    const limitNumber: number = parseInt(limit) || 20;
+    let movesData: Document | any,
+      moveList: Document | any | null,
+      totalMoves: Document | any | null;
+    if (search) {
+      if (query.isStarred === "true") {
+        movesData = await MoveModel.find({
+          title: {
+            $regex: new RegExp(search.trim(), "i")
+          },
+          isDeleted: false,
+          isStarred: true
+        })
+          .populate("setId")
+          .skip(pageNumber)
+          .limit(limitNumber)
+          .sort({ sortIndex: 1 });
+      } else {
+        movesData = await MoveModel.find({
+          title: {
+            $regex: new RegExp(search.trim(), "i")
+          },
+          isDeleted: false
+        })
+          .populate("setId")
+          .skip(pageNumber)
+          .limit(limitNumber)
+          .sort({ sortIndex: 1 });
+      }
+
+      moveList = await MoveModel.populate(movesData, {
+        path: "setId.folderId"
+      });
+      totalMoves = await MoveModel.count({
+        title: {
+          $regex: new RegExp(search.trim(), "i")
+        },
+        isDeleted: false
+      });
+    }
+    return res.status(200).json({
+      movesData: moveList,
+      totalMoves: totalMoves
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).send({
+      message: error.message
+    });
+  }
+};
 export {
   downloadVideo,
   getMoveBySetId,
@@ -918,5 +980,6 @@ export {
   addTagsInMove,
   updateMoveIndex,
   removeVideolocalServer,
-  updateMove
+  updateMove,
+  getMoveBySearch
 };
