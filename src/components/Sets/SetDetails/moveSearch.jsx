@@ -4,10 +4,6 @@ import { Card, Col, Row } from "reactstrap";
 import {
   getMoveBySearchRequest,
   modelOpenRequest,
-  publicAccessRequest,
-  shareableLinkRequest,
-  deleteSetRequest,
-  getMovesOfSetRequest,
   UpdateSetRequest,
   starredMovesRequest,
   getAllSetRequest,

@@ -86,14 +86,16 @@ const createSetLogic = createLogic({
           toastId = toast.success("Set Copy has been created successfully");
         }
         dispatch(getAllSetRequest({ isSetNoLimit: false }));
-        dispatch(
-          getFolderSetRequest({
-            folderId: action.payload.folderId
-              ? action.payload.folderId._id
-              : "",
-            limit: AppConfig.ITEMS_PER_PAGE
-          })
-        );
+        if (action.payload.folderId !== "") {
+          dispatch(
+            getFolderSetRequest({
+              folderId: action.payload.folderId
+                ? action.payload.folderId._id
+                : "",
+              limit: AppConfig.ITEMS_PER_PAGE
+            })
+          );
+        }
       }
       done();
     }

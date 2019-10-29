@@ -288,7 +288,8 @@ class SetDetails extends React.Component {
       videoData,
       totalMoves,
       searchMoveResult,
-      isMoveSearchLoading
+      isMoveSearchLoading,
+      isMoveStarLoading
     } = moveReducer;
     const { userEncryptedInfo } = shareLinkReducer;
     const {
@@ -422,6 +423,7 @@ class SetDetails extends React.Component {
                     getMovesOfSetRequest={getMovesOfSetRequest}
                     updateSortIndexRequest={updateSortIndexRequest}
                     searchMove={data => this.props.searchMoveRequest(data)}
+                    isMoveStarLoading={isMoveStarLoading}
                     {...this.props}
                   />
                 </div>

@@ -12,7 +12,8 @@ import {
   changePasswordSuccess,
   changePasswordAction,
   forgotPasswordFailed,
-  changePasswordFailed
+  changePasswordFailed,
+  loginFailed
 } from "../actions";
 //import { logger } from "helper/Logger";
 import { toast } from "react-toastify";
@@ -37,7 +38,7 @@ const loginLogic = createLogic({
       if (!toast.isActive(toastId)) {
         toastId = toast.error(result.messages[0]);
       }
-      dispatch(loginSuccess({ isLoginSuccess: false }));
+      dispatch(loginFailed({ isLoginSuccess: false }));
       done();
       return;
     } else {
@@ -89,6 +90,7 @@ const socialLoginLogic = createLogic({
     );
     if (result.isError || !result.data.userData) {
       toast.error(result.messages[0]);
+      dispatch(loginFailed({ isLoginSuccess: false }));
       done();
       return;
     } else {

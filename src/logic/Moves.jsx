@@ -13,7 +13,8 @@ import {
   updateSortIndexSuccess,
   createAnotherMoveSuccess,
   getMoveBySearchSuccess,
-  getMoveBySearchRequest
+  getMoveBySearchRequest,
+  starredMovesSuccess
 } from "../actions";
 import { AppRoutes } from "../config/AppRoutes";
 import { toast } from "react-toastify";
@@ -197,15 +198,17 @@ const completeVideoEditingLogic = createLogic({
 const starMoveLogic = createLogic({
   type: MovesAction.STARRED_MOVE_REQUEST,
   async process({ action }, dispatch, done) {
-    console.log("actionn", action.payload);
-
     let api = new ApiHelper();
     let result = await api.FetchFromServer(
       "move",
       "/starred-move",
       "PUT",
       true,
-      action.payload
+      {
+        moveId: action.payload ? action.payload.moveId : null,
+        isStarred: action.payload ? action.payload.isStarred : false,
+        setId: action.payload ? action.payload.setId : null,
+      }
     );
     if (result.isError) {
       if (!toast.isActive(toastId)) {
@@ -214,13 +217,23 @@ const starMoveLogic = createLogic({
       done();
       return;
     } else {
-      if (!toast.isActive(toastId)) {
-        toastId = toast.success(result.messages[0]);
-      }
-      if (!action.payload.isSearch) {
-        dispatch(getMovesOfSetRequest({ setId: action.payload.setId }));
-      } else {
+      // if (!toast.isActive(toastId)) {
+      //   toastId = toast.success(result.messages[0]);
+      // }
+      if (action.payload.isSearch) {
         dispatch(getMoveBySearchRequest({ search: action.payload.isSearch }));
+      }
+      if (action.payload && action.payload.moveofSetList) {
+        dispatch(starredMovesSuccess({
+          moveofSetList: action.payload.moveofSetList,
+          index: action.payload.index
+        }
+        ))
+      } else {
+        dispatch(starredMovesSuccess({
+          videoData: action.payload.videoData,
+        }
+        ))
       }
       done();
     }

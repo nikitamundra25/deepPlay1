@@ -20,6 +20,7 @@ class MoveSuccessModal extends React.Component {
     this.setState({
       isPlaying: true
     });
+    this.video.load();
     this.video.play();
   }
   /**
@@ -27,7 +28,7 @@ class MoveSuccessModal extends React.Component {
    */
   render() {
     const { isMoveSuccessModal, moveUrlDetails } = this.props;
-    const { isPlaying } = this.state
+    //const { isPlaying } = this.state
     return (
       <>
         <Modal
@@ -48,17 +49,11 @@ class MoveSuccessModal extends React.Component {
                 <div className="set-content-block w-100">
 
                   <div className="d-flex vieos-add-section video-add-banner justify-content-center align-items-center">
-                    <video width={"100%"} loop id={"video-trimmer"}>
+                    <video width={"100%"} autoPlay loop id={"video-trimmer"}>
                       <source
                         src={`${moveUrlDetails.s3VideoUrl}`}
                       />
                     </video>
-                    {
-                      !isPlaying ?
-                        <span onClick={this.handleVideoPlay} className="play-ic-wrap">
-                          <i className="fa fa-play" aria-hidden="true"></i>
-                        </span> : null
-                    }
                   </div>
                   <p className="font-weight-bold my-3 text-center h5 mb">
                     Would you like to create another Move from the same video?

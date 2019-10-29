@@ -6,7 +6,9 @@ import {
   DropdownItem,
   Modal,
   ModalBody,
+  UncontrolledTooltip,
   ModalHeader
+  
 } from "reactstrap";
 import { logger } from "helper/Logger";
 import InputRange from "react-input-range";
@@ -18,6 +20,7 @@ import ViewInfoModal from "./viewInfoModal";
 import AddTagModal from "./addTagsModal";
 import EditMoveModal from "./editMoveModal";
 import { ConfirmBox } from "helper/SweetAleart";
+
 
 class WebmView extends Component {
   video;
@@ -90,6 +93,8 @@ class WebmView extends Component {
    *
    */
   labelValueChange = value => {
+    this.video = document.getElementById("webm-video");
+    this.video.currentTime = value
     this.setState({
       currentTime: value
     });
@@ -215,15 +220,18 @@ class WebmView extends Component {
   };
 
   handleStarred = (id, isStarred) => {
-    console.log("id", id);
-
+    const videoData = this.props.videoData
+    if (isStarred) {
+      videoData.isStarred = false
+    } else {
+      videoData.isStarred = true
+    }
     const data = {
       moveId: id,
       isStarred: isStarred ? false : true,
-      setId: this.props.setIdPathName
+      setId: this.props.setIdPathName,
+      videoData: videoData
     };
-    console.log("dataaa", data);
-
     this.props.isStarred(data);
   };
 
@@ -271,7 +279,7 @@ class WebmView extends Component {
       addTagModalOpenReq,
       editMoveModalOpen
     } = modelDetails;
-    const { moveURL, title } = video;
+    const { moveURL } = video;
     const {
       isPlaying,
       currentTime,
@@ -312,7 +320,7 @@ class WebmView extends Component {
             <div className="video-slider-text">
               <div className="video-slider-title font-weight-bold">
                 {" "}
-                {videoData ? videoData.title : title}{" "}
+                {videoData ? videoData.title : "Unnamed"}{" "}
               </div>
               {!isShareable ? (
                 <div className="video-slider-dropDown">
@@ -336,11 +344,11 @@ class WebmView extends Component {
                               videoData ? videoData._id : video._id
                             )
                           }
-                          // onClick={() =>
-                          //   this.props.onEditMove(
-                          //     videoData ? videoData._id : video._id
-                          //   )
-                          // }
+                        // onClick={() =>
+                        //   this.props.onEditMove(
+                        //     videoData ? videoData._id : video._id
+                        //   )
+                        // }
                         >
                           Edit
                         </DropdownItem>
@@ -352,7 +360,10 @@ class WebmView extends Component {
                             )
                           }
                         >
-                          Mark Star
+                          {
+                            videoData && videoData.isStarred ?
+                              "Unstar" : "Mark Star"
+                          }
                         </DropdownItem>
                         <DropdownItem
                           onClick={() =>
@@ -370,9 +381,9 @@ class WebmView extends Component {
                           onClick={() =>
                             videoData
                               ? this.openTransferToModal(
-                                  videoData._id,
-                                  videoData.setId
-                                )
+                                videoData._id,
+                                videoData.setId
+                              )
                               : this.openTransferToModal(video._id, video.setId)
                           }
                         >
@@ -425,15 +436,15 @@ class WebmView extends Component {
                         videoData && videoData.moveURL
                           ? videoData.moveURL
                           : moveURL
-                      }`}
+                        }`}
                       type="video/webm"
                     />
                   </video>
                 ) : (
-                  <div className="video-loader">
-                    <Loader videoLoader={true} />
-                  </div>
-                )}
+                    <div className="video-loader">
+                      <Loader videoLoader={true} />
+                    </div>
+                  )}
                 <div className={"controls"}>
                   <div className="control-background-wrap"></div>
                   <InputRange
@@ -456,13 +467,13 @@ class WebmView extends Component {
                             <i className={"fa fa-pause"}></i>
                           </span>
                         ) : (
-                          <span
-                            onClick={this.playVideo}
-                            className={"cursor_pointer"}
-                          >
-                            <i className={"fa fa-play"}></i>
-                          </span>
-                        )}
+                            <span
+                              onClick={this.playVideo}
+                              className={"cursor_pointer"}
+                            >
+                              <i className={"fa fa-play"}></i>
+                            </span>
+                          )}
                       </div>
                       <div className="video-time-wrap control-tile">
                         {SecondsToHHMMSS(parseInt(currentTime))} /{" "}
@@ -478,11 +489,11 @@ class WebmView extends Component {
                             audioSpeed > 0.6 ? (
                               <i className="fas fa-volume-up"></i>
                             ) : (
-                              <i class="fas fa-volume-down"></i>
-                            )
+                                <i class="fas fa-volume-down"></i>
+                              )
                           ) : (
-                            <i class="fas fa-volume-mute"></i>
-                          )}
+                                <i class="fas fa-volume-mute"></i>
+                              )}
                         </span>
                       </div>
                       <div className="volume-range cursor_pointer control-tile">
@@ -505,20 +516,25 @@ class WebmView extends Component {
                       <div className="speed-wrap control-tile">
                         <UncontrolledDropdown
                           className="header-dropdown custom-dropdown"
-                          // direction="auto"
+                        // direction="auto"
                         >
-                          <DropdownToggle color={" "}>
+                          <DropdownToggle color={" "} className="ml-2" id="playback-speed-wrap">
+
                             <span
                               id="playback-speed"
-                              className="cursor_pointer ml-2 text-white"
+                              className="cursor_pointer  text-white d-flex align-items-center"
                             >
-                              {playBackSpeed !== 1 ? `${playBackSpeed}x` : null}{" "}
+                              <span>{playBackSpeed !== 1 ? `${playBackSpeed}x` : null}{" "}</span>
                               <i
-                                className="fa fa-clock-o"
+                                className="fa fa-clock-o" 
                                 aria-hidden="true"
                               ></i>
                             </span>
+                           
                           </DropdownToggle>
+                          <UncontrolledTooltip placement="top" target="playback-speed-wrap">
+             Playback speed
+            </UncontrolledTooltip>
                           <DropdownMenu>
                             <DropdownItem
                               active={playBackSpeed === 0.5}

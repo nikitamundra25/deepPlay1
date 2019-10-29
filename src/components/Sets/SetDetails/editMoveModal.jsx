@@ -223,7 +223,7 @@ class EditMoveModal extends React.Component {
               className="btn btn-black"
               onClick={this.handleEditMove}
             >
-              Edit Move
+              Update Move
             </Button>
           </ModalFooter>
         </Modal>

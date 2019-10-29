@@ -135,7 +135,7 @@ const downloadYoutubeVideo = async (
           ytdl(body.url).pipe(
             (videoStream = fs.createWriteStream(originalVideoPath))
           );
-          videoStream.on("close", async function() {
+          videoStream.on("close", async function () {
             const {
               frames: framesArray,
               videoMetaData,
@@ -312,10 +312,19 @@ const getMoveBySetId = async (req: Request, res: Response): Promise<any> => {
       movesData,
       { path: "setId.folderId" }
     );
-    const totalMoves: Document | any | null = await MoveModel.count({
-      setId: query.setId,
-      isDeleted: false
-    });
+    let totalMoves: Document | any | null
+    if (query.isStarred === "true") {
+      totalMoves = await MoveModel.count({
+        setId: query.setId,
+        isDeleted: false,
+        isStarred: true
+      });
+    } else {
+      totalMoves = await MoveModel.count({
+        setId: query.setId,
+        isDeleted: false
+      });
+    }
     return res.status(200).json({
       movesData: moveList,
       totalMoves: totalMoves
@@ -463,7 +472,7 @@ const updateMoveDetailsAndTrimVideo = async (
 
       const fileName = `${
         result.videoUrl.split(".")[0]
-      }_clip_${moment().unix()}.webm`;
+        }_clip_${moment().unix()}.webm`;
       let videoFileMain: String | any, videoOriginalFile: String | any;
       if (IsProductionMode) {
         videoFileMain = path.join(__dirname, `${fileName}`);
@@ -623,9 +632,8 @@ const isStarredMove = async (req: Request, res: Response): Promise<any> => {
         }
       }
     );
-
     return res.status(200).json({
-      message: "Move has been starred successfully!"
+      message: `Move has been ${isStarred === "true" ? "starred" : "Unstarred"} successfully!`
     });
   } catch (error) {
     console.log(error);

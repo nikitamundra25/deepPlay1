@@ -17,7 +17,11 @@ const initialState = {
   isMoveSearchLoading: false,
   isCreatingAnotherMove: false,
   videoOriginalFile: "",
-  videoFileMain: ""
+  videoFileMain: "",
+  isMoveStarLoading: {
+    index: 0,
+    loading: false
+  }
 };
 
 export const moveReducer = handleActions(
@@ -107,7 +111,23 @@ export const moveReducer = handleActions(
         : payload.movesOfSet,
       totalMoves: payload.totalMoves,
       isMoveofSetLoading: false
-    })
+    }),
+    [MovesAction.STARRED_MOVE_REQUEST]: (state, { payload }) => ({
+      ...state,
+      isMoveStarLoading: {
+        index: payload.index,
+        loading: true
+      }
+    }),
+    [MovesAction.STARRED_MOVE_SUCCESS]: (state, { payload }) => ({
+      ...state,
+      movesOfSet: payload.moveofSetList ? payload.moveofSetList : state.movesOfSet,
+      videoData: payload.videoData ? payload.videoData : state.videoData,
+      isMoveStarLoading: {
+        index: payload.index,
+        loading: false
+      }
+    }),
   },
   initialState
 );

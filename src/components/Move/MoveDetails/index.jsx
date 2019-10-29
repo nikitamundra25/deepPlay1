@@ -26,6 +26,7 @@ import {
 } from "../../../actions";
 import "./index.scss";
 import Loader from "components/comman/Loader/Loader";
+import VideoLoader from "components/comman/Loader/videoLoader";
 import FrameDetails from "./FrameDetails";
 import { logger } from "helper/Logger";
 import { completeVideoEditing } from "actions/Moves";
@@ -316,19 +317,25 @@ class MoveDetails extends React.Component {
         <div className="create-set-section step-2 ">
           <Card className="w-100">
             <CardBody className="p-0">
-              <div>
-                <span
-                  onClick={() => {
-                    this.props.redirectTo("/move");
-                  }}
-                  className={"cursor_pointer back-arrow"}
-                >
-                  {" "}
-                  <i className="fas fa-long-arrow-alt-left" /> Back
-                </span>
-              </div>
+              {
+                !isSavingWebM ?
+                  <div>
+                    <span
+                      onClick={() => {
+                        this.props.redirectTo("/move");
+                      }}
+                      className={"cursor_pointer back-arrow"}
+                    >
+                      {" "}
+                      <i className="fas fa-long-arrow-alt-left" /> Back
+                    </span>
+                  </div> :
+                  null
+              }
               {isSavingWebM ? (
-                <Loader />
+                <div>
+                  <VideoLoader fullLoader={true} />
+                </div>
               ) : (
                   <>
                     <Row className={"mt-3"}>
@@ -401,7 +408,11 @@ class MoveDetails extends React.Component {
                 className="close"
                 data-dismiss="modal"
                 type="button"
-                onClick={this.cancelDescription}
+                onClick={
+                  isUpdateDescription
+                    ? this.handleDesriptionModal
+                    : this.cancelDescription
+                }
               >
                 <span aria-hidden="true">
                   <img src={closeBtn} alt="close-ic" />

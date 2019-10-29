@@ -24,6 +24,32 @@
     }
 
 }
+.loader-video-wrap{
+    width: 100%;
+    position: relative;
+    min-height: 450px;
+    .loader-block{
+        position: absolute;
+    z-index: 8;
+    left: 0px;
+    top: 0px;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #fff;
+    border-radius: 4px;
+    margin-top: 15px;
+    padding: 15px;
+    border: 1px solid #d4d4d4;
+        img{
+            width: 250px; 
+        }
+        height: calc(100% - 15px);
+    }
+
+}
 .full-loader{
     .loader-block{
         border: none;
