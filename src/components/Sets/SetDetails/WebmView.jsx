@@ -93,6 +93,8 @@ class WebmView extends Component {
    *
    */
   labelValueChange = value => {
+    this.video = document.getElementById("webm-video");
+    this.video.currentTime = value
     this.setState({
       currentTime: value
     });
@@ -277,7 +279,7 @@ class WebmView extends Component {
       addTagModalOpenReq,
       editMoveModalOpen
     } = modelDetails;
-    const { moveURL, title } = video;
+    const { moveURL } = video;
     const {
       isPlaying,
       currentTime,
@@ -318,7 +320,7 @@ class WebmView extends Component {
             <div className="video-slider-text">
               <div className="video-slider-title font-weight-bold">
                 {" "}
-                {videoData ? videoData.title : title}{" "}
+                {videoData ? videoData.title : "Unnamed"}{" "}
               </div>
               {!isShareable ? (
                 <div className="video-slider-dropDown">

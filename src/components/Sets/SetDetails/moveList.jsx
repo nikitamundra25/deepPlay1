@@ -266,6 +266,9 @@ class MoveList extends React.Component {
   onDragEnd = result => {
     const { source, destination, draggableId } = result;
     // dropped outside the list
+    console.log("###########Destination####", destination);
+    console.log("!!!!!!!!!!!!!!!Source", source);
+    
     if (!destination) {
       return;
     }
