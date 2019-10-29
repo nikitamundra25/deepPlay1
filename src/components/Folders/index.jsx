@@ -13,6 +13,7 @@ import FolderModal from "./createFolderModal";
 import { ConfirmBox } from "../../helper/SweetAleart";
 import { AppRoutes } from "../../config/AppRoutes";
 import emptyFolderIc from "../../assets/img/empty-folder.png";
+import fileFolderIc from "../../assets/img/file-folder.png";
 import Loader from "../comman/Loader/Loader";
 import { logger } from "helper/Logger";
 import PaginationHelper from "helper/Pagination";
@@ -164,10 +165,10 @@ class FolderComponent extends React.Component {
                     return (
                       <Col key={i} md={"6"}>
                         <div
-                          className="tile-wrap card cursor_pointer"
+                          className="tile-wrap card cursor_pointer content-tip-img"
                           onMouseLeave={() => this.closePopOver()}
                         >
-                          <div className="cotent-tile d-flex content-with-tip">
+                          <div className="cotent-tile d-flex content-with-tip content-with-img">
                             <div
                               className="cotent-text-tile "
                               onClick={() =>
@@ -189,6 +190,15 @@ class FolderComponent extends React.Component {
                               <span className={"content-sub-heading-tile"}>
                                 {folder.description ? folder.description : ""}
                               </span>
+                            </div>
+                            <div className="d-flex img-tile-wrap cursor_pointer">
+                              <div className="cotent-img-tile">
+                                {
+                                  folder.setCount ? <img src={fileFolderIc} alt="" className="folder-ic" /> :
+                                    <img src={emptyFolderIc} alt="" className="folder-ic" />
+                                }
+
+                              </div>
                             </div>
                           </div>
                           <div
