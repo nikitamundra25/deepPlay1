@@ -32,7 +32,7 @@ const createSet = async (req: Request, res: Response): Promise<any> => {
     const setId: String = setResult._id;
     if (body.isCopy) {
       const moveResult: Document | any | null = await MoveModel.find({
-        setId: body.copyOfSetId,
+        setId: Mongoose.Types.ObjectId(body.copyOfSetId),
         isDeleted: false
       });
       if (moveResult && moveResult.length) {
@@ -476,7 +476,7 @@ const publicUrlsetDetails = async (
       count: Document | any;
 
     let temp: Document | any | null = await FolderModel.findOne({
-      _id: decryptedFolderId
+      _id: Mongoose.Types.ObjectId(decryptedFolderId)
     });
 
     if (temp.isPublic) {
@@ -557,15 +557,19 @@ const publicAccessSetInfoById = async (
     let temp: Document | any | null,
       moveCount: Document | any,
       setResult: any = [];
-    if (fromFolder) {
-      temp = {
-        isPublic: true
-      };
-    } else {
-      temp = await SetModel.findOne({
-        _id: decryptedSetId
-      });
-    }
+
+    // if (fromFolder) {
+    //   temp = {
+    //     isPublic: true
+    //   };
+    // }
+    // else {
+    temp = await SetModel.findOne({
+      _id: Mongoose.Types.ObjectId(decryptedSetId)
+    });
+    // }
+
+    console.log(">>>>>>>>>", temp);
 
     if (temp.isPublic) {
       result = await SetModel.findOne({
