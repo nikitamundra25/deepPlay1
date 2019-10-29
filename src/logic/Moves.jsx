@@ -14,7 +14,8 @@ import {
   createAnotherMoveSuccess,
   getMoveBySearchSuccess,
   getMoveBySearchRequest,
-  starredMovesSuccess
+  starredMovesSuccess,
+  getTagListSuccess
 } from "../actions";
 import { AppRoutes } from "../config/AppRoutes";
 import { toast } from "react-toastify";
@@ -207,7 +208,7 @@ const starMoveLogic = createLogic({
       {
         moveId: action.payload ? action.payload.moveId : null,
         isStarred: action.payload ? action.payload.isStarred : false,
-        setId: action.payload ? action.payload.setId : null,
+        setId: action.payload ? action.payload.setId : null
       }
     );
     if (result.isError) {
@@ -224,16 +225,18 @@ const starMoveLogic = createLogic({
         dispatch(getMoveBySearchRequest({ search: action.payload.isSearch }));
       }
       if (action.payload && action.payload.moveofSetList) {
-        dispatch(starredMovesSuccess({
-          moveofSetList: action.payload.moveofSetList,
-          index: action.payload.index
-        }
-        ))
+        dispatch(
+          starredMovesSuccess({
+            moveofSetList: action.payload.moveofSetList,
+            index: action.payload.index
+          })
+        );
       } else {
-        dispatch(starredMovesSuccess({
-          videoData: action.payload.videoData,
-        }
-        ))
+        dispatch(
+          starredMovesSuccess({
+            videoData: action.payload.videoData
+          })
+        );
       }
       done();
     }
@@ -583,6 +586,54 @@ const getMovesBySearchLogic = createLogic({
     }
   }
 });
+
+//Add Tags In TagModal
+const addTagsInModalLogic = createLogic({
+  type: MovesAction.ADD_TAGS_IN_TAGMODAL_REQUEST,
+  async process({ action }, dispatch, done) {
+    let api = new ApiHelper();
+    let result = await api.FetchFromServer(
+      "move",
+      "/add-tags",
+      "PUT",
+      true,
+      undefined,
+      action.payload
+    );
+    if (result.isError) {
+      done();
+      return;
+    } else {
+      done();
+    }
+  }
+});
+
+// Get Tags List
+const getTagListRequestLogic = createLogic({
+  type: MovesAction.GET_TAG_LIST_REQUEST,
+  async process({ action }, dispatch, done) {
+    let api = new ApiHelper();
+    let result = await api.FetchFromServer(
+      "move",
+      "/get-tag-list",
+      "GET",
+      true
+    );
+    if (result.isError) {
+      done();
+      return;
+    } else {
+      console.log(">>>>taglist>", result.data.data);
+      dispatch(
+        getTagListSuccess({
+          tagsList: result.data.data
+        })
+      );
+      done();
+    }
+  }
+});
 export const MoveLogics = [
   downloadVideoLogic,
   getMovesOfSetLogic,
@@ -597,5 +648,7 @@ export const MoveLogics = [
   updateSortIndexLogic,
   removeVideoLocalServerLogic,
   editMoveLogic,
-  getMovesBySearchLogic
+  getMovesBySearchLogic,
+  addTagsInModalLogic,
+  getTagListRequestLogic
 ];

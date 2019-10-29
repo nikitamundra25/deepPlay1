@@ -28,7 +28,9 @@ import {
   getAllFolderRequest,
   ManageSetRequest,
   updateSortIndexRequest,
-  updateMoveRequest
+  updateMoveRequest,
+  getTagListRequest,
+  addTagsInTagModalRequest
 } from "../../../actions";
 import SharableLinkModal from "../../comman/shareableLink/SharableLink";
 import { AppRoutes } from "../../../config/AppRoutes";
@@ -72,6 +74,7 @@ class SetDetails extends React.Component {
       isStarred: isStarred[1]
     });
     this.props.getSetList({ isSetNoLimit: false });
+
     this.setState({
       setIdPathName: pathName[3]
     });
@@ -289,7 +292,8 @@ class SetDetails extends React.Component {
       totalMoves,
       searchMoveResult,
       isMoveSearchLoading,
-      isMoveStarLoading
+      isMoveStarLoading,
+      tagsList
     } = moveReducer;
     const { userEncryptedInfo } = shareLinkReducer;
     const {
@@ -393,7 +397,12 @@ class SetDetails extends React.Component {
                   loadVideoDataRequest={loadVideoDataRequest}
                   addTagstoMove={this.addTagstoMove}
                   isStarred={this.isStarred}
+                  tagsList={tagsList}
                   editMove={data => this.props.updateMoveRequest(data)}
+                  addTagsInTagModalRequest={data =>
+                    this.addTagsInTagModalRequest(data)
+                  }
+                  getTagListRequest={() => this.getTagListRequest()}
                   {...this.props}
                 />
               ) : null}
@@ -421,9 +430,14 @@ class SetDetails extends React.Component {
                     addTagstoMove={this.addTagstoMove}
                     isMoveSearchLoading={isMoveSearchLoading}
                     getMovesOfSetRequest={getMovesOfSetRequest}
+                    tagsList={tagsList}
                     updateSortIndexRequest={updateSortIndexRequest}
                     searchMove={data => this.props.searchMoveRequest(data)}
                     isMoveStarLoading={isMoveStarLoading}
+                    addTagsInTagModalRequest={data =>
+                      this.addTagsInTagModalRequest(data)
+                    }
+                    getTagListRequest={() => this.getTagListRequest()}
                     {...this.props}
                   />
                 </div>
@@ -508,6 +522,12 @@ const mapDispatchToProps = dispatch => ({
   },
   updateMoveRequest: data => {
     dispatch(updateMoveRequest(data));
+  },
+  getTagListRequest: () => {
+    dispatch(getTagListRequest());
+  },
+  addTagsInTagModalRequest: data => {
+    dispatch(addTagsInTagModalRequest(data));
   }
 });
 export default connect(

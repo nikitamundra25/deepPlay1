@@ -558,18 +558,16 @@ const publicAccessSetInfoById = async (
       moveCount: Document | any,
       setResult: any = [];
 
-    // if (fromFolder) {
-    //   temp = {
-    //     isPublic: true
-    //   };
-    // }
-    // else {
-    temp = await SetModel.findOne({
-      _id: Mongoose.Types.ObjectId(decryptedSetId)
-    });
-    // }
-
-    console.log(">>>>>>>>>", temp);
+    if (fromFolder) {
+      temp = {
+        isPublic: true
+      };
+    }
+    if (decryptedSetId && !fromFolder) {
+      temp = await SetModel.findOne({
+        _id: Mongoose.Types.ObjectId(decryptedSetId)
+      });
+    }
 
     if (temp.isPublic) {
       result = await SetModel.findOne({

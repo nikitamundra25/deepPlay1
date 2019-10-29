@@ -121,13 +121,19 @@ export const moveReducer = handleActions(
     }),
     [MovesAction.STARRED_MOVE_SUCCESS]: (state, { payload }) => ({
       ...state,
-      movesOfSet: payload.moveofSetList ? payload.moveofSetList : state.movesOfSet,
+      movesOfSet: payload.moveofSetList
+        ? payload.moveofSetList
+        : state.movesOfSet,
       videoData: payload.videoData ? payload.videoData : state.videoData,
       isMoveStarLoading: {
         index: payload.index,
         loading: false
       }
     }),
+    [MovesAction.GET_TAG_LIST_SUCCESS]: (state, { payload }) => ({
+      ...state,
+      ...payload
+    })
   },
   initialState
 );

@@ -33,7 +33,11 @@ export const MovesAction = {
   UPDATE_MOVE_REQUEST: "Update Move Request",
   UPDATE_MOVE_SUCCESS: "Update Move Success",
   GET_MOVE_BY_SEARCH_REQUEST: "Get Move Details By Search Request",
-  GET_MOVE_BY_SEARCH_SUCCESS: "Get Move Details By Search Success"
+  GET_MOVE_BY_SEARCH_SUCCESS: "Get Move Details By Search Success",
+  ADD_TAGS_IN_TAGMODAL_REQUEST: "Add Tags In Tag Modal Request",
+  ADD_TAGS_IN_TAGMODAL_SUCCESS: "Add Tags In Tag Modal Success",
+  GET_TAG_LIST_REQUEST: "Get Tags List Request",
+  GET_TAG_LIST_SUCCESS: "Get Tags List Success"
 };
 
 export const downloadYoutubeVideoRequest = createAction(
@@ -126,3 +130,13 @@ export const getMoveBySearchRequest = createAction(
 export const getMoveBySearchSuccess = createAction(
   MovesAction.GET_MOVE_BY_SEARCH_SUCCESS
 );
+
+export const addTagsInTagModalRequest = createAction(
+  MovesAction.ADD_TAGS_IN_TAGMODAL_REQUEST
+);
+export const addTagsInTagModalSuccess = createAction(
+  MovesAction.ADD_TAGS_IN_TAGMODAL_SUCCESS
+);
+
+export const getTagListRequest = createAction(MovesAction.GET_TAG_LIST_REQUEST);
+export const getTagListSuccess = createAction(MovesAction.GET_TAG_LIST_SUCCESS);

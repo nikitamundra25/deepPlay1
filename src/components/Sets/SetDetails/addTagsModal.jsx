@@ -2,24 +2,7 @@ import React from "react";
 import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from "reactstrap";
 import CreatableSelect from "react-select/creatable";
 import closeBtn from "../../../assets/img/close-img.png";
-const colourOptions = [
-  {
-    label: "Red",
-    value: "red"
-  },
-  {
-    label: "Green",
-    value: "Green"
-  },
-  {
-    label: "Yellow",
-    value: "Yellow"
-  },
-  {
-    label: "Blue",
-    value: "Blue"
-  }
-];
+
 // core components
 class AddTagModal extends React.Component {
   constructor(props) {
@@ -42,19 +25,25 @@ class AddTagModal extends React.Component {
       });
     }
     console.log(`action: ${actionMeta.action}`);
+    if (actionMeta.action === "create-option") {
+      this.props.addTagsInTagModalRequest({
+        tags: newValue[newValue.length - 1]
+      });
+    }
     console.groupEnd();
   };
 
   onhandleTags = () => {
     const data = {
       moveId: this.props.moveIdToAddTag,
-      tags: this.state.tags
+      tags: this.props.tags
     };
     this.props.addTagstoMove(data);
   };
+
   render() {
-    const { modal, handleOpen } = this.props;
-    const { tags } = this.state;
+    const { modal, handleOpen, tagsList, tags } = this.props;
+    // const { tags } = this.state;
 
     return (
       <div>
@@ -84,9 +73,9 @@ class AddTagModal extends React.Component {
             <div className="w-100 tag-input-wrap search-select-wrap">
               <CreatableSelect
                 isMulti
-                onChange={this.handleTagChange}
+                onChange={this.props.handleTagChange}
                 value={tags}
-                options={colourOptions}
+                options={tagsList}
                 // options={colourOptions}
               />
             </div>

@@ -7,9 +7,9 @@ import {
   ServerURL
 } from "../config";
 import cloudinary from "cloudinary";
-import { Document } from "mongoose";
+import Mongoose, { Document } from "mongoose";
 import ytdl from "ytdl-core";
-import { MoveModel, SetModel } from "../models";
+import { MoveModel, SetModel, TagModel } from "../models";
 import fs from "fs";
 import path from "path";
 import ffmpeg from "ffmpeg";
@@ -135,7 +135,7 @@ const downloadYoutubeVideo = async (
           ytdl(body.url).pipe(
             (videoStream = fs.createWriteStream(originalVideoPath))
           );
-          videoStream.on("close", async function () {
+          videoStream.on("close", async function() {
             const {
               frames: framesArray,
               videoMetaData,
@@ -312,7 +312,7 @@ const getMoveBySetId = async (req: Request, res: Response): Promise<any> => {
       movesData,
       { path: "setId.folderId" }
     );
-    let totalMoves: Document | any | null
+    let totalMoves: Document | any | null;
     if (query.isStarred === "true") {
       totalMoves = await MoveModel.count({
         setId: query.setId,
@@ -379,7 +379,8 @@ const publicUrlMoveDetails = async (
       temp = {
         isPublic: true
       };
-    } else {
+    }
+    if (decryptedSetId && !fromFolder) {
       temp = await SetModel.findOne({
         _id: decryptedSetId
       });
@@ -472,7 +473,7 @@ const updateMoveDetailsAndTrimVideo = async (
 
       const fileName = `${
         result.videoUrl.split(".")[0]
-        }_clip_${moment().unix()}.webm`;
+      }_clip_${moment().unix()}.webm`;
       let videoFileMain: String | any, videoOriginalFile: String | any;
       if (IsProductionMode) {
         videoFileMain = path.join(__dirname, `${fileName}`);
@@ -633,7 +634,9 @@ const isStarredMove = async (req: Request, res: Response): Promise<any> => {
       }
     );
     return res.status(200).json({
-      message: `Move has been ${isStarred === "true" ? "starred" : "Unstarred"} successfully!`
+      message: `Move has been ${
+        isStarred === "true" ? "starred" : "Unstarred"
+      } successfully!`
     });
   } catch (error) {
     console.log(error);
@@ -973,6 +976,73 @@ const getMoveBySearch = async (req: Request, res: Response): Promise<any> => {
     });
   }
 };
+
+const addTags = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const { currentUser, body } = req;
+    let headToken: Request | any = currentUser;
+    let tagData: Document | any;
+    if (!headToken.id) {
+      res.status(400).json({
+        message: "User id not found"
+      });
+    }
+    if (body.tags) {
+      const tagDetails = {
+        tags: body.tags ? body.tags : "",
+        userId: headToken.id
+      };
+      tagData = new TagModel(tagDetails);
+      await tagData.save();
+    }
+    res.status(200).json({
+      data: tagData,
+      message: "Tags have been added successfully",
+      success: true
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).send({
+      message: error.message
+    });
+  }
+};
+
+//Get TagList from tag modal
+const getTagListByUserId = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
+  try {
+    const { currentUser } = req;
+    let headToken: Request | any = currentUser,
+      tagList: Document | null | any = [];
+
+    if (!headToken.id) {
+      res.status(400).json({
+        message: "User id not found"
+      });
+    }
+    const result: Document | any = await TagModel.find({
+      userId: Mongoose.Types.ObjectId(headToken.id)
+    });
+
+    for (let index = 0; index < result.length; index++) {
+      const element = result[index].tags;
+      tagList.push(element);
+    }
+
+    res.status(200).json({
+      data: tagList,
+      success: true
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).send({
+      message: error.message
+    });
+  }
+};
 export {
   downloadVideo,
   getMoveBySetId,
@@ -990,5 +1060,7 @@ export {
   updateMoveIndex,
   removeVideolocalServer,
   updateMove,
-  getMoveBySearch
+  getMoveBySearch,
+  addTags,
+  getTagListByUserId
 };
