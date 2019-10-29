@@ -9,6 +9,7 @@ import {
   CardHeader,
   Button
 } from "reactstrap";
+
 import { AppRoutes } from "../../config/AppRoutes";
 import {
   profileRequest,
@@ -16,6 +17,7 @@ import {
   recentSetRequest
 } from "../../actions";
 import emptyFolderIc from "../../assets/img/empty-folder.png";
+import fileFolderIc from "../../assets/img/file-folder.png";
 import emptySetIc from "../../assets/img/empty-sets.png";
 import Loader from "../../components/comman/Loader/Loader";
 import emptyImg from "../../assets/img/empty-img.svg";
@@ -58,9 +60,51 @@ class Dashboard extends React.Component {
 
     return (
       <>
-        {!isRecentSetLoading ? (
-          (recentSets && recentSets.length) ||
+        {!isRecentSetLoading && !isRecentFolderLoading ? (
+          recentSets &&
+          recentSets.length &&
           (recentFolders && recentFolders.length) ? (
+            <div className="create-set-section w-100 empty-folder-section">
+              <Card className="set-content-wrap empty-folder-card">
+                <div className="set-content-block w-100 empty-folder-wrap">
+                  <CardHeader className="empty-folder-header">
+                    <img src={emptyFolderIc} alt={"folder"} />
+                    <div className="content-header set-header">
+                      <span className="content-title">
+                        {" "}
+                        <h3>You haven't visited any folder & sets yet</h3>
+                      </span>
+                    </div>
+                  </CardHeader>
+                  <CardBody className="">
+                    <div className="create-set-tile"></div>
+                    <div className="text-center">
+                      <Button
+                        color=" "
+                        type="button"
+                        className="btn-black btn folder-create-btn"
+                        onClick={() =>
+                          this.props.redirectTo(AppRoutes.FOLDERS.url)
+                        }
+                      >
+                        View Folder
+                      </Button>
+                      <Button
+                        color=" "
+                        type="button"
+                        className="btn-black btn folder-create-btn"
+                        onClick={() =>
+                          this.props.redirectTo(AppRoutes.SETS.url)
+                        }
+                      >
+                        View Set
+                      </Button>
+                    </div>
+                  </CardBody>
+                </div>
+              </Card>
+            </div>
+          ) : (
             <>
               <div className="page-body dashboard-recent-section">
                 {/* <div className="content-header">
@@ -207,9 +251,7 @@ class Dashboard extends React.Component {
                       </>
                     )
                   ) : (
-                    <Col sm={12} className="loader-col">
-                      <Loader />
-                    </Col>
+                    ""
                   )}
                 </Row>
               </div>
@@ -239,16 +281,16 @@ class Dashboard extends React.Component {
                             className="cursor_pointer"
                           >
                             <div className="tile-wrap card">
-                              <div className="badge-wrap">
-                                <Badge
-                                  variant="secondary"
-                                  className="draft-wrap"
-                                >
-                                  DRAFT
-                                </Badge>
-                              </div>
-                              <div className="cotent-tile d-flex content-with-tip ">
+                              <div className="cotent-tile d-flex content-with-tip content-with-img">
                                 <div className="cotent-text-tile pt-2">
+                                  <div className="badge-wrap">
+                                    <Badge
+                                      variant="secondary"
+                                      className="draft-wrap"
+                                    >
+                                      DRAFT
+                                    </Badge>
+                                  </div>
                                   <div className="content-heading-tile d-flex">
                                     {" "}
                                     <span className={"cursor_pointer"}>
@@ -260,6 +302,23 @@ class Dashboard extends React.Component {
                                   <div className="content-number-tile">
                                     {" "}
                                     {folder.setCount || 0} sets
+                                  </div>
+                                </div>
+                                <div className="d-flex img-tile-wrap cursor_pointer">
+                                  <div className="cotent-img-tile">
+                                    {folder.setCount ? (
+                                      <img
+                                        src={fileFolderIc}
+                                        alt=""
+                                        className="folder-ic"
+                                      />
+                                    ) : (
+                                      <img
+                                        src={emptyFolderIc}
+                                        alt=""
+                                        className="folder-ic"
+                                      />
+                                    )}
                                   </div>
                                 </div>
                               </div>
@@ -330,61 +389,16 @@ class Dashboard extends React.Component {
                       </>
                     )
                   ) : (
-                    <Col sm={12} className="loader-col">
-                      <Loader />
-                    </Col>
+                    ""
                   )}
                 </Row>
               </div>
             </>
-          ) : (
-            <div className="create-set-section w-100 empty-folder-section">
-              <Card className="set-content-wrap empty-folder-card">
-                <div className="set-content-block w-100 empty-folder-wrap">
-                  <CardHeader className="empty-folder-header">
-                    <img src={emptyFolderIc} alt={"folder"} />
-                    <div className="content-header set-header">
-                      <span className="content-title">
-                        {" "}
-                        <h3>You haven't visited any folder & sets yet</h3>
-                      </span>
-                    </div>
-                  </CardHeader>
-                  <CardBody className="">
-                    <div className="create-set-tile"></div>
-                    <div className="text-center">
-                      <Button
-                        color=" "
-                        type="button"
-                        className="btn-black btn folder-create-btn"
-                        onClick={() =>
-                          this.props.redirectTo(AppRoutes.FOLDERS.url)
-                        }
-                      >
-                        View Folder
-                      </Button>
-                      <Button
-                        color=" "
-                        type="button"
-                        className="btn-black btn folder-create-btn"
-                        onClick={() =>
-                          this.props.redirectTo(AppRoutes.SETS.url)
-                        }
-                      >
-                        View Set
-                      </Button>
-                    </div>
-                  </CardBody>
-                </div>
-              </Card>
-            </div>
           )
         ) : (
-          <Row>
-            <Col sm={12} className="loader-col">
-              <Loader />
-            </Col>
-          </Row>
+          <Col sm={12} className="loader-col">
+            <Loader />
+          </Col>
         )}
       </>
     );
