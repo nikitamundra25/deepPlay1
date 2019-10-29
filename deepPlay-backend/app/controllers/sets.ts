@@ -15,6 +15,19 @@ const createSet = async (req: Request, res: Response): Promise<any> => {
     const { currentUser } = req;
     const { body } = req;
     const headToken: Request | any = currentUser;
+
+    const countSetCopy: Document | any | null = await SetModel.count({
+      title: body.title,
+      description: body.description ? body.description : "",
+      status: body.status ? body.status : true,
+      userId: body.userId ? body.userId : headToken.id,
+      folderId: body.folderId ? body.folderId : null,
+      sharableLink: body.sharableLink ? body.sharableLink : "",
+      isPublic: body.isPublic ? body.isPublic : true,
+      isDeleted: body.isDeleted ? body.isDeleted : false,
+      isCopy: true
+    });
+    
     const setData: ISet = {
       title: body.title,
       description: body.description ? body.description : "",
@@ -24,7 +37,8 @@ const createSet = async (req: Request, res: Response): Promise<any> => {
       sharableLink: body.sharableLink ? body.sharableLink : "",
       isPublic: body.isPublic ? body.isPublic : true,
       isDeleted: body.isDeleted ? body.isDeleted : false,
-      isCopy: body.isCopy ? true : false
+      isCopy: body.isCopy ? true : false,
+      copyIndex: countSetCopy && body.isCopy ? countSetCopy : 0
     };
     const setResult: Document | any = new SetModel(setData);
     await setResult.save();
@@ -35,6 +49,7 @@ const createSet = async (req: Request, res: Response): Promise<any> => {
         setId: Mongoose.Types.ObjectId(body.copyOfSetId),
         isDeleted: false
       });
+
       if (moveResult && moveResult.length) {
         for (let index = 0; index < moveResult.length; index++) {
           const moveElement = moveResult[index];

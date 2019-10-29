@@ -58,84 +58,91 @@ class Dashboard extends React.Component {
 
     return (
       <>
-        <div className="page-body dashboard-recent-section">
-          {/* <div className="content-header">
+        {!isRecentSetLoading ? (
+          (recentSets && recentSets.length) ||
+          (recentFolders && recentFolders.length) ? (
+            <>
+              <div className="page-body dashboard-recent-section">
+                {/* <div className="content-header">
             <span className="content-title">RECENT</span>
           </div> */}
-          <div className="content-header">
-            <span className="content-title ">Recent sets</span>
-            {recentSets && recentSets.length > 4 ? (
-              <span
-                className="dashboard-right-content cursor_pointer font-weight-bold view-all-btn"
-                onClick={() => this.handleViewAll("sets")}
-              >
-                View all
-              </span>
-            ) : (
-              " "
-            )}
-          </div>
-          <Row>
-            {!isRecentSetLoading ? (
-              recentSets && recentSets.length ? (
-                recentSets.slice(0, 4).map((set, i) => {
-                  return (
-                    <Col
-                      md="6"
-                      key={i}
-                      onClick={() => this.handleSetDetails(set._id)}
-                      className="cursor_pointer"
+                <div className="content-header">
+                  <span className="content-title ">Recent sets</span>
+                  {recentSets && recentSets.length > 4 ? (
+                    <span
+                      className="dashboard-right-content cursor_pointer font-weight-bold view-all-btn"
+                      onClick={() => this.handleViewAll("sets")}
                     >
-                      <div className="tile-wrap card">
-                        <div className="cotent-tile d-flex content-with-tip content-with-img">
-                          <div className="cotent-text-tile ">
-                            <div className="badge-wrap mb-2">
-                              <Badge variant="secondary" className="draft-wrap">
-                                DRAFT
-                              </Badge>
-                            </div>
-                            <div className="content-heading-tile d-flex">
-                              {" "}
-                              <span className={" text-capitalize"}>
-                                <span>
-                                  {set.isCopy
-                                    ? `Copy of ${set.title}`
-                                    : set.title}
-                                </span>
-                              </span>
-                            </div>
-                            {set.description ? set.description : ""}
-                            <div className="content-number-tile">
-                              {" "}
-                              {set.moveCount || 0} moves
-                            </div>
-                          </div>
-                          <div
-                            className="d-flex img-tile-wrap cursor_pointer"
+                      View all
+                    </span>
+                  ) : (
+                    " "
+                  )}
+                </div>
+                <Row>
+                  {!isRecentSetLoading ? (
+                    recentSets && recentSets.length ? (
+                      recentSets.slice(0, 4).map((set, i) => {
+                        return (
+                          <Col
+                            md="6"
+                            key={i}
                             onClick={() => this.handleSetDetails(set._id)}
+                            className="cursor_pointer"
                           >
-                            <div className="cotent-img-tile">
-                              {set.recentlyAddMoveImg ? (
-                                <video width={"100%"} id="webm-video">
-                                  <source
-                                    src={`${set.recentlyAddMoveImg}`}
-                                    type="video/webm"
-                                  />
-                                </video>
-                              ) : (
-                                <div className={""}>
-                                  <img
-                                    src={emptyImg}
-                                    alt=""
-                                    width="60"
-                                    height="60"
-                                  />
+                            <div className="tile-wrap card">
+                              <div className="cotent-tile d-flex content-with-tip content-with-img">
+                                <div className="cotent-text-tile ">
+                                  <div className="badge-wrap mb-2">
+                                    <Badge
+                                      variant="secondary"
+                                      className="draft-wrap"
+                                    >
+                                      DRAFT
+                                    </Badge>
+                                  </div>
+                                  <div className="content-heading-tile d-flex">
+                                    {" "}
+                                    <span className={" text-capitalize"}>
+                                      <span>
+                                        {set.isCopy
+                                          ? `Copy of ${set.title}`
+                                          : set.title}
+                                      </span>
+                                    </span>
+                                  </div>
+                                  {set.description ? set.description : ""}
+                                  <div className="content-number-tile">
+                                    {" "}
+                                    {set.moveCount || 0} moves
+                                  </div>
                                 </div>
-                              )}
-                            </div>
-                          </div>
-                        </div>
-                        {/* <div className="bottom-content-tile">
+                                <div
+                                  className="d-flex img-tile-wrap cursor_pointer"
+                                  onClick={() => this.handleSetDetails(set._id)}
+                                >
+                                  <div className="cotent-img-tile">
+                                    {set.recentlyAddMoveImg ? (
+                                      <video width={"100%"} id="webm-video">
+                                        <source
+                                          src={`${set.recentlyAddMoveImg}`}
+                                          type="video/webm"
+                                        />
+                                      </video>
+                                    ) : (
+                                      <div className={""}>
+                                        <img
+                                          src={emptyImg}
+                                          alt=""
+                                          width="60"
+                                          height="60"
+                                        />
+                                      </div>
+                                    )}
+                                  </div>
+                                </div>
+                              </div>
+                              {/* <div className="bottom-content-tile">
                           <div
                             className="cotent-img-tile teacher-profile-img"
                             style={{
@@ -157,101 +164,106 @@ class Dashboard extends React.Component {
                               : ""}
                           </span>
                         </div> */}
-                      </div>
+                            </div>
+                          </Col>
+                        );
+                      })
+                    ) : (
+                      <>
+                        <Col>
+                          <div className="create-set-section w-100 empty-folder-section sjp">
+                            <Card className="set-content-wrap empty-folder-card">
+                              <div className="set-content-block w-100 empty-folder-wrap">
+                                <CardHeader className="empty-folder-header">
+                                  <img src={emptySetIc} alt={"Folder"} />
+                                  <div className="content-header set-header">
+                                    <span className="content-title">
+                                      {" "}
+                                      <h3>You haven't visited any set yet</h3>
+                                    </span>
+                                  </div>
+                                </CardHeader>
+                                <CardBody className="">
+                                  <div className="create-set-tile"></div>
+                                  <div className="text-center">
+                                    <Button
+                                      color=" "
+                                      type="button"
+                                      className="btn-black btn folder-create-btn"
+                                      onClick={() =>
+                                        this.props.redirectTo(
+                                          AppRoutes.SETS.url
+                                        )
+                                      }
+                                    >
+                                      View Set
+                                    </Button>
+                                  </div>
+                                </CardBody>
+                              </div>
+                            </Card>
+                          </div>
+                        </Col>
+                      </>
+                    )
+                  ) : (
+                    <Col sm={12} className="loader-col">
+                      <Loader />
                     </Col>
-                  );
-                })
-              ) : (
-                <>
-                  <Col>
-                    <div className="create-set-section w-100 empty-folder-section sjp">
-                      <Card className="set-content-wrap empty-folder-card">
-                        <div className="set-content-block w-100 empty-folder-wrap">
-                          <CardHeader className="empty-folder-header">
-                            <img src={emptySetIc} alt={"Folder"} />
-                            <div className="content-header set-header">
-                              <span className="content-title">
-                                {" "}
-                                <h3>You haven't visited any set yet</h3>
-                              </span>
-                            </div>
-                          </CardHeader>
-                          <CardBody className="">
-                            <div className="create-set-tile"></div>
-                            <div className="text-center">
-                              <Button
-                                color=" "
-                                type="button"
-                                className="btn-black btn folder-create-btn"
-                                onClick={() =>
-                                  this.props.redirectTo(AppRoutes.SETS.url)
-                                }
-                              >
-                                View Set
-                              </Button>
-                            </div>
-                          </CardBody>
-                        </div>
-                      </Card>
-                    </div>
-                  </Col>
-                </>
-              )
-            ) : (
-              <Col sm={12} className="loader-col">
-                <Loader />
-              </Col>
-            )}
-          </Row>
-        </div>
-        <div className="page-body mt-4 dashboard-recent-section">
-          <div className="content-header">
-            <span className="content-title">Recent folders</span>
-            {recentFolders && recentFolders.length > 4 ? (
-              <span
-                className="dashboard-right-content cursor_pointer font-weight-bold view-all-btn"
-                onClick={() => this.handleViewAll("folders")}
-              >
-                View all
-              </span>
-            ) : (
-              ""
-            )}
-          </div>
-          <Row>
-            {!isRecentFolderLoading ? (
-              recentFolders && recentFolders.length ? (
-                recentFolders.slice(0, 4).map((folder, i) => {
-                  return (
-                    <Col
-                      key={i}
-                      md={"6"}
-                      onClick={() => this.handleFolderdetails(folder._id)}
-                      className="cursor_pointer"
+                  )}
+                </Row>
+              </div>
+              <div className="page-body mt-4 dashboard-recent-section">
+                <div className="content-header">
+                  <span className="content-title">Recent folders</span>
+                  {recentFolders && recentFolders.length > 4 ? (
+                    <span
+                      className="dashboard-right-content cursor_pointer font-weight-bold view-all-btn"
+                      onClick={() => this.handleViewAll("folders")}
                     >
-                      <div className="tile-wrap card">
-                        <div className="badge-wrap">
-                          <Badge variant="secondary" className="draft-wrap">
-                            DRAFT
-                          </Badge>
-                        </div>
-                        <div className="cotent-tile d-flex content-with-tip ">
-                          <div className="cotent-text-tile pt-2">
-                            <div className="content-heading-tile d-flex">
-                              {" "}
-                              <span className={"cursor_pointer"}>
-                                {folder.isCopy
-                                  ? `Copy of ${folder.title}`
-                                  : folder.title}
-                              </span>
-                            </div>
-                            <div className="content-number-tile">
-                              {" "}
-                              {folder.setCount || 0} sets
-                            </div>
-                          </div>
-                        </div>
-                        {/* <div className="bottom-content-tile pt-3">
+                      View all
+                    </span>
+                  ) : (
+                    ""
+                  )}
+                </div>
+                <Row>
+                  {!isRecentFolderLoading ? (
+                    recentFolders && recentFolders.length ? (
+                      recentFolders.slice(0, 4).map((folder, i) => {
+                        return (
+                          <Col
+                            key={i}
+                            md={"6"}
+                            onClick={() => this.handleFolderdetails(folder._id)}
+                            className="cursor_pointer"
+                          >
+                            <div className="tile-wrap card">
+                              <div className="badge-wrap">
+                                <Badge
+                                  variant="secondary"
+                                  className="draft-wrap"
+                                >
+                                  DRAFT
+                                </Badge>
+                              </div>
+                              <div className="cotent-tile d-flex content-with-tip ">
+                                <div className="cotent-text-tile pt-2">
+                                  <div className="content-heading-tile d-flex">
+                                    {" "}
+                                    <span className={"cursor_pointer"}>
+                                      {folder.isCopy
+                                        ? `Copy of ${folder.title}`
+                                        : folder.title}
+                                    </span>
+                                  </div>
+                                  <div className="content-number-tile">
+                                    {" "}
+                                    {folder.setCount || 0} sets
+                                  </div>
+                                </div>
+                              </div>
+                              {/* <div className="bottom-content-tile pt-3">
                           <div
                             className="cotent-img-tile teacher-profile-img"
                             style={{
@@ -273,53 +285,107 @@ class Dashboard extends React.Component {
                               : ""}
                           </span>
                         </div> */}
-                      </div>
+                            </div>
+                          </Col>
+                        );
+                      })
+                    ) : (
+                      <>
+                        <Col>
+                          <div className="create-set-section w-100 empty-folder-section">
+                            <Card className="set-content-wrap empty-folder-card">
+                              <div className="set-content-block w-100 empty-folder-wrap">
+                                <CardHeader className="empty-folder-header">
+                                  <img src={emptyFolderIc} alt={"folder"} />
+                                  <div className="content-header set-header">
+                                    <span className="content-title">
+                                      {" "}
+                                      <h3>
+                                        You haven't visited any folder yet
+                                      </h3>
+                                    </span>
+                                  </div>
+                                </CardHeader>
+                                <CardBody className="">
+                                  <div className="create-set-tile"></div>
+                                  <div className="text-center">
+                                    <Button
+                                      color=" "
+                                      type="button"
+                                      className="btn-black btn folder-create-btn"
+                                      onClick={() =>
+                                        this.props.redirectTo(
+                                          AppRoutes.FOLDERS.url
+                                        )
+                                      }
+                                    >
+                                      View Folder
+                                    </Button>
+                                  </div>
+                                </CardBody>
+                              </div>
+                            </Card>
+                          </div>
+                        </Col>
+                      </>
+                    )
+                  ) : (
+                    <Col sm={12} className="loader-col">
+                      <Loader />
                     </Col>
-                  );
-                })
-              ) : (
-                <>
-                  <Col>
-                    <div className="create-set-section w-100 empty-folder-section">
-                      <Card className="set-content-wrap empty-folder-card">
-                        <div className="set-content-block w-100 empty-folder-wrap">
-                          <CardHeader className="empty-folder-header">
-                            <img src={emptyFolderIc} alt={"folder"} />
-                            <div className="content-header set-header">
-                              <span className="content-title">
-                                {" "}
-                                <h3>You haven't visited any folder yet</h3>
-                              </span>
-                            </div>
-                          </CardHeader>
-                          <CardBody className="">
-                            <div className="create-set-tile"></div>
-                            <div className="text-center">
-                              <Button
-                                color=" "
-                                type="button"
-                                className="btn-black btn folder-create-btn"
-                                onClick={() =>
-                                  this.props.redirectTo(AppRoutes.FOLDERS.url)
-                                }
-                              >
-                                View Folder
-                              </Button>
-                            </div>
-                          </CardBody>
-                        </div>
-                      </Card>
+                  )}
+                </Row>
+              </div>
+            </>
+          ) : (
+            <div className="create-set-section w-100 empty-folder-section">
+              <Card className="set-content-wrap empty-folder-card">
+                <div className="set-content-block w-100 empty-folder-wrap">
+                  <CardHeader className="empty-folder-header">
+                    <img src={emptyFolderIc} alt={"folder"} />
+                    <div className="content-header set-header">
+                      <span className="content-title">
+                        {" "}
+                        <h3>You haven't visited any folder & sets yet</h3>
+                      </span>
                     </div>
-                  </Col>
-                </>
-              )
-            ) : (
-              <Col sm={12} className="loader-col">
-                <Loader />
-              </Col>
-            )}
+                  </CardHeader>
+                  <CardBody className="">
+                    <div className="create-set-tile"></div>
+                    <div className="text-center">
+                      <Button
+                        color=" "
+                        type="button"
+                        className="btn-black btn folder-create-btn"
+                        onClick={() =>
+                          this.props.redirectTo(AppRoutes.FOLDERS.url)
+                        }
+                      >
+                        View Folder
+                      </Button>
+                      <Button
+                        color=" "
+                        type="button"
+                        className="btn-black btn folder-create-btn"
+                        onClick={() =>
+                          this.props.redirectTo(AppRoutes.SETS.url)
+                        }
+                      >
+                        View Set
+                      </Button>
+                    </div>
+                  </CardBody>
+                </div>
+              </Card>
+            </div>
+          )
+        ) : (
+          <Row>
+            <Col sm={12} className="loader-col">
+              <Loader />
+            </Col>
           </Row>
-        </div>
+        )}
       </>
     );
   }

@@ -8,6 +8,7 @@ export interface ISet {
   status: Boolean;
   isCopy: Boolean;
   isDeleted: Boolean;
+  copyIndex: Number;
 }
 export interface IUpdateSet {
   title: String;

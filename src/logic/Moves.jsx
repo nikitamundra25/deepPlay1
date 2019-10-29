@@ -21,6 +21,7 @@ import { AppRoutes } from "../config/AppRoutes";
 import { toast } from "react-toastify";
 import { logger } from "helper/Logger";
 import { completeVideoEditingSuccess } from "actions/Moves";
+import { addTagsSuccess } from "actions/Moves";
 let toastId = null;
 
 //  Download video
@@ -413,7 +414,9 @@ const addTagsLogic = createLogic({
       "PUT",
       true,
       undefined,
-      action.payload
+      {
+        data: action.payload.data
+      }
     );
     if (result.isError) {
       if (!toast.isActive(toastId)) {
@@ -424,6 +427,11 @@ const addTagsLogic = createLogic({
     } else {
       if (!toast.isActive(toastId)) {
         toastId = toast.success(result.messages[0]);
+      }
+      if (action.payload.data.fromMoveList) {
+        dispatch(addTagsSuccess({ movesOfSet: action.payload.moveList }));
+      } else {
+        dispatch(addTagsSuccess({ videoData: action.payload.moveVideo }));
       }
       dispatch(
         modelOpenRequest({

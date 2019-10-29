@@ -251,7 +251,15 @@ class SetDetails extends React.Component {
   };
 
   addTagstoMove = data => {
-    this.props.addTagsRequest(data);
+    if (data.fromMoveList) {
+      const moveList = [...data.moveofSetList];
+      moveList[data.index].tags = data.tags;
+      this.props.addTagsRequest({ data: data, moveList: moveList });
+    } else {
+      const moveVideo = data.videoData;
+      moveVideo.tags = data.tags;
+      this.props.addTagsRequest({ data: data, moveVideo: moveVideo });
+    }
   };
 
   // Transfer sets to particular folder
@@ -397,12 +405,13 @@ class SetDetails extends React.Component {
                   loadVideoDataRequest={loadVideoDataRequest}
                   addTagstoMove={this.addTagstoMove}
                   isStarred={this.isStarred}
+                  // addTagsInTagModalRequest={addTagsInTagModalRequest}
                   tagsList={tagsList}
                   editMove={data => this.props.updateMoveRequest(data)}
                   addTagsInTagModalRequest={data =>
-                    this.addTagsInTagModalRequest(data)
+                    this.props.addTagsInTagModalRequest(data)
                   }
-                  getTagListRequest={() => this.getTagListRequest()}
+                  getTagListRequest={() => this.props.getTagListRequest()}
                   {...this.props}
                 />
               ) : null}
@@ -435,9 +444,9 @@ class SetDetails extends React.Component {
                     searchMove={data => this.props.searchMoveRequest(data)}
                     isMoveStarLoading={isMoveStarLoading}
                     addTagsInTagModalRequest={data =>
-                      this.addTagsInTagModalRequest(data)
+                      this.props.addTagsInTagModalRequest(data)
                     }
-                    getTagListRequest={() => this.getTagListRequest()}
+                    getTagListRequest={() => this.props.getTagListRequest()}
                     {...this.props}
                   />
                 </div>

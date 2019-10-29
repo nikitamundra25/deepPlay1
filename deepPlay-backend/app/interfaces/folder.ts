@@ -7,6 +7,7 @@ export interface IFolder {
   status: Boolean;
   isDeleted: Boolean;
   isCopy: Boolean;
+  copyIndex: Number;
 }
 
 export interface IUpdateFolder {

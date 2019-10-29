@@ -26,6 +26,9 @@ const setSchema: Mongoose.Schema = new Schema({
     type: Boolean,
     default: false
   },
+  copyIndex: {
+    type: Number
+  },
   userId: {
     type: Schema.Types.ObjectId,
     ref: "user",
