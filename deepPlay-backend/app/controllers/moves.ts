@@ -312,10 +312,19 @@ const getMoveBySetId = async (req: Request, res: Response): Promise<any> => {
       movesData,
       { path: "setId.folderId" }
     );
-    const totalMoves: Document | any | null = await MoveModel.count({
-      setId: query.setId,
-      isDeleted: false
-    });
+    let totalMoves: Document | any | null
+    if (query.isStarred === "true") {
+      totalMoves = await MoveModel.count({
+        setId: query.setId,
+        isDeleted: false,
+        isStarred: true
+      });
+    } else {
+      totalMoves = await MoveModel.count({
+        setId: query.setId,
+        isDeleted: false
+      });
+    }
     return res.status(200).json({
       movesData: moveList,
       totalMoves: totalMoves

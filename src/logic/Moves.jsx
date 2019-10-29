@@ -217,13 +217,24 @@ const starMoveLogic = createLogic({
       done();
       return;
     } else {
-      if (!toast.isActive(toastId)) {
-        toastId = toast.success(result.messages[0]);
-      }
+      // if (!toast.isActive(toastId)) {
+      //   toastId = toast.success(result.messages[0]);
+      // }
       if (action.payload.isSearch) {
         dispatch(getMoveBySearchRequest({ search: action.payload.isSearch }));
       }
-      dispatch(starredMovesSuccess({ moveofSetList: action.payload.moveofSetList, index: action.payload.index }))
+      if (action.payload && action.payload.moveofSetList) {
+        dispatch(starredMovesSuccess({
+          moveofSetList: action.payload.moveofSetList,
+          index: action.payload.index
+        }
+        ))
+      } else {
+        dispatch(starredMovesSuccess({
+          videoData: action.payload.videoData,
+        }
+        ))
+      }
       done();
     }
   }
