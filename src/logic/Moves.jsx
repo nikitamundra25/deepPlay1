@@ -96,7 +96,7 @@ const getMovesOfSetLogic = createLogic({
     } else {
       dispatch(
         getMovesOfSetSuccess({
-          showLoader: false,
+          // showLoader: false,
           movesOfSet: result.data.movesData,
           totalMoves: result.data.totalMoves,
           isInfiniteScroll: action.payload.isInfiniteScroll

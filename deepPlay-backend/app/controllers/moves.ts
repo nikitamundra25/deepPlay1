@@ -18,6 +18,7 @@ import { IMoveCopy, IUpdateMove } from "../interfaces";
 import moment from "moment";
 import { s3BucketUpload } from "../common/awsBucket";
 import { algoliaAppId, algoliaAPIKey } from "../config/app";
+import { log } from "util";
 const algoliasearch = require("algoliasearch");
 const client = algoliasearch(algoliaAppId, algoliaAPIKey);
 const index = client.initIndex("deep_play_data");
@@ -42,7 +43,7 @@ var up_options = {
  */
 
 const downloadVideo = async (req: Request, res: Response): Promise<any> => {
-  const { file, currentUser } = req;
+  const { file, currentUser,body } = req;
   try {
     let headToken: Request | any = currentUser;
     if (!headToken.id) {
@@ -69,7 +70,8 @@ const downloadVideo = async (req: Request, res: Response): Promise<any> => {
       frames: frames,
       videoMetaData,
       videoName,
-      isYoutubeUrl: false
+      isYoutubeUrl: false,
+      setId: body.setId ? body.setId :null
     });
     await moveResult.save();
     res.status(200).json({
@@ -152,7 +154,8 @@ const downloadYoutubeVideo = async (
               userId: headToken.id,
               frames: frames,
               videoMetaData,
-              videoName
+              videoName,
+              setId: body.setId ? body.setId :null
             });
             await moveResult.save();
             return res.status(200).json({
@@ -255,6 +258,8 @@ const createMove = async (req: Request, res: Response): Promise<any> => {
       videoName,
       isYoutubeUrl: false
     });
+    console.log("moveResult",moveResult);
+    
     await moveResult.save();
     return res.status(200).json({
       message: "Created new move",
@@ -372,8 +377,8 @@ const publicUrlMoveDetails = async (
     const decryptedSetId = decrypt(setId);
     let result: Document | any | null;
     let temp: Document | any | null, movesData: Document | any;
-    // const pageNumber: number = ((parseInt(page) || 1) - 1) * (limit || 20);
-    // const limitNumber: number = parseInt(limit) || 20;
+     const pageNumber: number = ((parseInt(page) || 1) - 1) * (limit || 20);
+     const limitNumber: number = parseInt(limit) || 20;
 
     if (fromFolder) {
       temp = {
@@ -389,9 +394,9 @@ const publicUrlMoveDetails = async (
     if (temp.isPublic) {
       result = await MoveModel.find({
         setId: decryptedSetId
-      });
-      // .skip(pageNumber)
-      // .limit(limitNumber);
+      }).populate("setId")
+       .skip(pageNumber)
+       .limit(limitNumber);
     } else {
       return res.status(400).json({
         message: {

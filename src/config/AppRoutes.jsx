@@ -93,5 +93,10 @@ export const AppRoutes = {
     url: "/move-search-all",
     name: "Move Search All",
     exact: true
+  },
+  NON_PUBLIC_ACCESS: {
+    url: "/public-access-denied",
+    name: "Public Access Denied",
+    exact: true
   }
 };

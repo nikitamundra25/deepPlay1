@@ -204,7 +204,8 @@ class DefaultHeader extends React.Component {
             {path !== AppRoutes.FOLDER_SHARED_LINK.url &&
             path !== AppRoutes.SET_SHARED_LINK.url &&
             path !== AppRoutes.ALL_SET_SHARED_LINK.url &&
-            path !== "/404" ? (
+            path !== "/404" &&
+            path !=="/public-access-denied" ? (
               <>
                 <Navbar
                   className="navbar-main header-navbar"

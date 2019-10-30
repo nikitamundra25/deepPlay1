@@ -22,6 +22,8 @@ class VideoDetails extends React.Component {
 
   render() {
     const { selectSetOptions, setReducer, tags, errors, tagsList } = this.props;
+    console.log("selectSetOptions",selectSetOptions);
+    
     const { recentSetAdded, allSetList } = setReducer;
     let recentAddedSet,
       defaultSetoptions = [];
@@ -86,7 +88,7 @@ class VideoDetails extends React.Component {
                       : ""
                   }
                   onChange={e => this.props.handleInputChange(e)}
-                  value={recentAddedSet ? recentAddedSet : selectSetOptions}
+                  value={recentAddedSet ? recentAddedSet.title : selectSetOptions}
                 />
                 <FormFeedback>
                   {errors &&

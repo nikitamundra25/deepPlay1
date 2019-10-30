@@ -193,6 +193,15 @@ class MoveList extends React.Component {
       text: "You want to remove this move! "
     });
     if (value) {
+      this.props.getMovesOfSetRequest({
+        setId: this.props.setIdPathName,
+        page: 1,
+        isInfiniteScroll: true
+      });
+      this.setState({
+        page: 1,
+        selectedMoveIds: []
+      })
       this.props.deleteMove(data);
     }
   };
@@ -220,7 +229,7 @@ class MoveList extends React.Component {
     this.setState({
       moveIdToAddTag: selectedMoveIds.length ? selectedMoveIds : id,
       tags: tags ? tags : "",
-      moveIndexToAddTag: index
+      moveIndexToAddTag: index 
     });
     this.props.modelOperate({
       modelDetails: {
@@ -240,6 +249,15 @@ class MoveList extends React.Component {
       text: "You want to transfer this move! "
     });
     if (value) {
+      this.props.getMovesOfSetRequest({
+        setId: this.props.setIdPathName,
+        page: 1,
+        isInfiniteScroll: true
+      });
+      this.setState({
+        page: 1,
+        selectedMoveIds: []
+      })
       this.props.transferMove(moveData);
     }
   };
@@ -330,15 +348,18 @@ class MoveList extends React.Component {
   /*
   /*  
   */
-  handleLoadmoreRequest = (setIdPathName) => {
-    this.props.getMovesOfSetRequest(
-      {
-        setId: setIdPathName,
-        page: this.state.page + 1,
-        isInfiniteScroll: true
-      },
-    );
-  }
+  handleLoadmoreRequest = setIdPathName => {
+    const pageLimit = this.state.page;
+     this.setState({
+       page: pageLimit + 1
+     })
+const pageCount =  pageLimit + 1
+    this.props.getMovesOfSetRequest({
+      setId: setIdPathName,
+      page: pageCount,
+      isInfiniteScroll: true
+    });
+  };
   render() {
     const {
       show,
@@ -369,6 +390,8 @@ class MoveList extends React.Component {
       moveIndexToAddTag
       // isMarkingStar
     } = this.state;
+    console.log("pageeeeeeee", this.state.page);
+
     const location = this.props.location;
     const isStarred = location.search.split("=");
     const serachContent = location.search.split("search");
@@ -490,7 +513,7 @@ class MoveList extends React.Component {
               <DragDropContext onDragEnd={this.onDragEnd}>
                 <Droppable
                   droppableId="droppable"
-                // type="droppableItem"
+                  // type="droppableItem"
                 >
                   {provided => (
                     <>
@@ -555,19 +578,19 @@ class MoveList extends React.Component {
                                               }
                                               onClick={
                                                 isVideoChecked &&
-                                                  !isVideoModalOpen
+                                                !isVideoModalOpen
                                                   ? () =>
-                                                    this.handleMovesSelect(
-                                                      !selectedMoves[index],
-                                                      null,
-                                                      index,
-                                                      video._id
-                                                    )
+                                                      this.handleMovesSelect(
+                                                        !selectedMoves[index],
+                                                        null,
+                                                        index,
+                                                        video._id
+                                                      )
                                                   : null
                                               }
                                               className={
                                                 isVideoChecked &&
-                                                  selectedMoves[index]
+                                                selectedMoves[index]
                                                   ? `play-list-img blur-img-wrap checked-wrap video-select`
                                                   : `play-list-img blur-img-wrap checked-wrap`
                                               }
@@ -580,38 +603,38 @@ class MoveList extends React.Component {
                                                     className="w-100"
                                                   />
                                                 ) : (
-                                                    <img
-                                                      className="w-100"
-                                                      src={blankStar}
-                                                      alt={"star"}
-                                                    />
-                                                  )}
+                                                  <img
+                                                    className="w-100"
+                                                    src={blankStar}
+                                                    alt={"star"}
+                                                  />
+                                                )}
                                               </div>
                                               {!isVideoChecked &&
-                                                isSelectVideo &&
-                                                videoIndex === index ? (
-                                                  <span
-                                                    onClick={() => {
-                                                      this.setState(
-                                                        {
-                                                          isVideoModalOpen: false
-                                                        },
-                                                        () =>
-                                                          this.handleVideoCheckBox(
-                                                            true,
-                                                            index,
-                                                            video._id
-                                                          )
-                                                      );
-                                                    }}
-                                                    className="plus-ic-wrap"
-                                                  >
-                                                    <i
-                                                      className="text-white fa fa-plus-circle"
-                                                      aria-hidden="true"
-                                                    />
-                                                  </span>
-                                                ) : null}
+                                              isSelectVideo &&
+                                              videoIndex === index ? (
+                                                <span
+                                                  onClick={() => {
+                                                    this.setState(
+                                                      {
+                                                        isVideoModalOpen: false
+                                                      },
+                                                      () =>
+                                                        this.handleVideoCheckBox(
+                                                          true,
+                                                          index,
+                                                          video._id
+                                                        )
+                                                    );
+                                                  }}
+                                                  className="plus-ic-wrap"
+                                                >
+                                                  <i
+                                                    className="text-white fa fa-plus-circle"
+                                                    aria-hidden="true"
+                                                  />
+                                                </span>
+                                              ) : null}
                                               {isVideoChecked ? (
                                                 <span className="plus-ic-wrap custom-control custom-checkbox">
                                                   <Input
@@ -643,12 +666,12 @@ class MoveList extends React.Component {
                                                 className={"video-effect"}
                                                 onClick={
                                                   !isVideoChecked &&
-                                                    isVideoModalOpen
+                                                  isVideoModalOpen
                                                     ? () =>
-                                                      this.props.handleVideoModal(
-                                                        video,
-                                                        index
-                                                      )
+                                                        this.props.handleVideoModal(
+                                                          video,
+                                                          index
+                                                        )
                                                     : null
                                                 }
                                               >
@@ -697,12 +720,12 @@ class MoveList extends React.Component {
                                                     className="w-100"
                                                   />
                                                 ) : (
-                                                    <img
-                                                      className="w-100"
-                                                      src={blankStar}
-                                                      alt={"star"}
-                                                    />
-                                                  )}
+                                                  <img
+                                                    className="w-100"
+                                                    src={blankStar}
+                                                    alt={"star"}
+                                                  />
+                                                )}
                                               </div>
                                               <div
                                                 onMouseOver={() =>
@@ -791,8 +814,8 @@ class MoveList extends React.Component {
                             );
                           })
                         ) : (
-                            <Loader />
-                          )}
+                          <Loader />
+                        )}
                       </div>
                       {provided.placeholder}
                     </>

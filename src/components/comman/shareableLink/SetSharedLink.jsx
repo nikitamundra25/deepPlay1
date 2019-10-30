@@ -15,8 +15,7 @@ import qs from "query-string";
 import Loader from "../Loader/Loader";
 import WebmView from "../../Sets/SetDetails/WebmView";
 import emptySetIc from "../../../assets/img/empty-sets.png";
-
-//import InfiniteScroll from "react-infinite-scroll-component";
+import InfiniteScroll from "react-infinite-scroll-component";
 
 // core components
 class SetSharedLink extends React.Component {
@@ -94,6 +93,20 @@ class SetSharedLink extends React.Component {
       }
     );
   };
+
+  handleLoadmoreRequest = setIdPathName => {
+    const pageLimit = this.state.page;
+     this.setState({
+       page: pageLimit + 1
+     })
+const pageCount =  pageLimit + 1
+    this.props.publicUrlSetDetails({
+      setId: setIdPathName,
+      page: pageCount,
+      isInfiniteScroll: true
+    });
+  };
+
   render() {
     const {
       shareLinkReducer,
@@ -153,22 +166,18 @@ class SetSharedLink extends React.Component {
               ) : null}
 
               <section className="play-list-collection set-detail-section">
-                {/* <InfiniteScroll
+                <InfiniteScroll
                   dataLength={moveListItem.length} //This is important field to render the next data
-                  next={() =>
-                    this.props.publicUrlSetDetails({
-                      setId: parsed.setId,
-                      page: page + 1,
-                      isInfiniteScroll: true
-                    })
-                  }
+                  next={() => {
+                    this.handleLoadmoreRequest(parsed.setId);
+                  }}
                   hasMore={
                     decryptedSetDetails.moveCount !== moveListItem.length
                       ? true
                       : false
                   }
                   loader={<h4>Loading...</h4>}
-                > */}
+               >
                 <Row>
                   <Col md="12">
                     <div class="content-header mt-3 mb-2">
@@ -254,7 +263,7 @@ class SetSharedLink extends React.Component {
                     </div>
                   )}
                 </Row>
-                {/* </InfiniteScroll> */}
+                </InfiniteScroll>
               </section>
             </>
           ) : (

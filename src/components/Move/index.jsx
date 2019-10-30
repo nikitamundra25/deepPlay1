@@ -103,11 +103,14 @@ class MoveComponent extends React.Component {
         return;
       }
       if (!this.state.errors) {
+        const search = window.location.search
+        const setId = search.split("=")
         const payload = {
           url: this.state.url,
-          isYoutubeUrl: this.state.isYouTubeUrl
+          isYoutubeUrl: this.state.isYouTubeUrl,
+          setId : setId ? setId[1] : ""
         };
-        this.props.downloadVideo(payload);
+         this.props.downloadVideo(payload);
       }
     } catch (error) {
       logger(error);
@@ -138,13 +141,15 @@ class MoveComponent extends React.Component {
           confirmButtonText: "Okay"
         });
       } else {
+        const search = window.location.search
+        const setId = search.split("=")
         this.setState(
           {
             url: files[0].name,
             errors: ""
           },
           () => {
-            this.props.downloadVideo({ url: files[0], isYoutubeUrl: false });
+            this.props.downloadVideo({ url: files[0], isYoutubeUrl: false, setId:setId ? setId[1] : "" });
           }
         );
       }
@@ -154,7 +159,7 @@ class MoveComponent extends React.Component {
   onSubmitForm = e => {
     e.preventDefault();
     if (this.state.url && !this.state.errors) {
-      this.handleMoveUpload();
+       this.handleMoveUpload();
     }
   };
 

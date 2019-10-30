@@ -70,8 +70,8 @@ class MoveDetails extends React.Component {
     this.props.getMoveDetailsRequest({ moveId: moveId[3] });
     this.props.getAllSetRequest({ isSetNoLimit: false });
     this.props.getTagListRequest();
-    const { recentSetAdded } = this.props.setReducer;
-    if (recentSetAdded !== "") {
+    const { recentSetAdded } = this.props.setReducer;    
+    if (recentSetAdded) {
       this.setState({
         selectSetOptions: {
           label: recentSetAdded.title,
@@ -120,17 +120,18 @@ class MoveDetails extends React.Component {
         setId
       } = this.props.moveReducer.moveDetails;
       const { allSetList } = this.props.setReducer;
-      let selectOption;
+      let selectOption;  
       if (allSetList && allSetList.length) {
         // eslint-disable-next-line
-        allSetList.map(data => {
-          if (setId) {
+        allSetList.map(data => { 
+          if (setId) {   
             if (setId === data._id) {
               selectOption = {
                 label: data.title,
                 value: data._id
               };
             }
+            
           }
         });
       }
@@ -163,8 +164,6 @@ class MoveDetails extends React.Component {
     const { moveReducer } = this.props;
     const { moveDetails, isSavingWebM } = moveReducer;
     let parsed = qs.parse(this.props.location.search);
-    console.log("parsed", parsed);
-
     logger(isSavingWebM);
     const { _id: moveId } = moveDetails;
     const { timer, title, description } = this.state;
