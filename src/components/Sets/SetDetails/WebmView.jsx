@@ -578,7 +578,7 @@ class WebmView extends Component {
                               active={playBackSpeed === 1}
                               onClick={() => this.handleSpeed(1)}
                             >
-                              1
+                              Normal
                             </DropdownItem>
                             <DropdownItem
                               active={playBackSpeed === 1.5}
