@@ -57,9 +57,6 @@ class Dashboard extends React.Component {
     const { folderReducer, setReducer } = this.props;
     const { isRecentFolderLoading, recentFolders } = folderReducer;
     const { isRecentSetLoading, recentSets } = setReducer;
-    console.log("EEEEEEE",recentSets);
-    console.log("########",recentFolders);    
-
     return (
       <>
         {!isRecentSetLoading && !isRecentFolderLoading ? (
