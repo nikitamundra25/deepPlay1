@@ -285,8 +285,8 @@ const getMoveBySetId = async (req: Request, res: Response): Promise<any> => {
         message: "User id not found"
       });
     }
-    const pageNumber: number = ((parseInt(page) || 1) - 1) * (limit || 20);
-    const limitNumber: number = parseInt(limit) || 20;
+    const pageNumber: number = ((parseInt(page) || 1) - 1) * (limit || 2);
+    const limitNumber: number = parseInt(limit) || 2;
     let movesData: Document | any;
     if (query.isStarred === "true") {
       movesData = await MoveModel.find({

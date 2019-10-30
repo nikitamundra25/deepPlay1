@@ -327,6 +327,18 @@ class MoveList extends React.Component {
     }
     console.groupEnd();
   };
+  /*
+  /*  
+  */
+  handleLoadmoreRequest = (setIdPathName) => {
+    this.props.getMovesOfSetRequest(
+      {
+        setId: setIdPathName,
+        page: this.state.page + 1,
+        isInfiniteScroll: true
+      },
+    );
+  }
   render() {
     const {
       show,
@@ -365,18 +377,7 @@ class MoveList extends React.Component {
         <InfiniteScroll
           dataLength={moveofSetList.length} //This is important field to render the next data
           next={() => {
-            this.props.getMovesOfSetRequest(
-              {
-                setId: setIdPathName,
-                page: page + 1,
-                isInfiniteScroll: true
-              },
-              () => {
-                this.setState({
-                  page: page + 1
-                });
-              }
-            );
+            this.handleLoadmoreRequest(setIdPathName);
           }}
           hasMore={totalMoves !== moveofSetList.length ? true : false}
           loader={<h4>Loading...</h4>}
@@ -489,7 +490,7 @@ class MoveList extends React.Component {
               <DragDropContext onDragEnd={this.onDragEnd}>
                 <Droppable
                   droppableId="droppable"
-                  // type="droppableItem"
+                // type="droppableItem"
                 >
                   {provided => (
                     <>
@@ -554,19 +555,19 @@ class MoveList extends React.Component {
                                               }
                                               onClick={
                                                 isVideoChecked &&
-                                                !isVideoModalOpen
+                                                  !isVideoModalOpen
                                                   ? () =>
-                                                      this.handleMovesSelect(
-                                                        !selectedMoves[index],
-                                                        null,
-                                                        index,
-                                                        video._id
-                                                      )
+                                                    this.handleMovesSelect(
+                                                      !selectedMoves[index],
+                                                      null,
+                                                      index,
+                                                      video._id
+                                                    )
                                                   : null
                                               }
                                               className={
                                                 isVideoChecked &&
-                                                selectedMoves[index]
+                                                  selectedMoves[index]
                                                   ? `play-list-img blur-img-wrap checked-wrap video-select`
                                                   : `play-list-img blur-img-wrap checked-wrap`
                                               }
@@ -579,38 +580,38 @@ class MoveList extends React.Component {
                                                     className="w-100"
                                                   />
                                                 ) : (
-                                                  <img
-                                                    className="w-100"
-                                                    src={blankStar}
-                                                    alt={"star"}
-                                                  />
-                                                )}
+                                                    <img
+                                                      className="w-100"
+                                                      src={blankStar}
+                                                      alt={"star"}
+                                                    />
+                                                  )}
                                               </div>
                                               {!isVideoChecked &&
-                                              isSelectVideo &&
-                                              videoIndex === index ? (
-                                                <span
-                                                  onClick={() => {
-                                                    this.setState(
-                                                      {
-                                                        isVideoModalOpen: false
-                                                      },
-                                                      () =>
-                                                        this.handleVideoCheckBox(
-                                                          true,
-                                                          index,
-                                                          video._id
-                                                        )
-                                                    );
-                                                  }}
-                                                  className="plus-ic-wrap"
-                                                >
-                                                  <i
-                                                    className="text-white fa fa-plus-circle"
-                                                    aria-hidden="true"
-                                                  />
-                                                </span>
-                                              ) : null}
+                                                isSelectVideo &&
+                                                videoIndex === index ? (
+                                                  <span
+                                                    onClick={() => {
+                                                      this.setState(
+                                                        {
+                                                          isVideoModalOpen: false
+                                                        },
+                                                        () =>
+                                                          this.handleVideoCheckBox(
+                                                            true,
+                                                            index,
+                                                            video._id
+                                                          )
+                                                      );
+                                                    }}
+                                                    className="plus-ic-wrap"
+                                                  >
+                                                    <i
+                                                      className="text-white fa fa-plus-circle"
+                                                      aria-hidden="true"
+                                                    />
+                                                  </span>
+                                                ) : null}
                                               {isVideoChecked ? (
                                                 <span className="plus-ic-wrap custom-control custom-checkbox">
                                                   <Input
@@ -642,12 +643,12 @@ class MoveList extends React.Component {
                                                 className={"video-effect"}
                                                 onClick={
                                                   !isVideoChecked &&
-                                                  isVideoModalOpen
+                                                    isVideoModalOpen
                                                     ? () =>
-                                                        this.props.handleVideoModal(
-                                                          video,
-                                                          index
-                                                        )
+                                                      this.props.handleVideoModal(
+                                                        video,
+                                                        index
+                                                      )
                                                     : null
                                                 }
                                               >
@@ -696,12 +697,12 @@ class MoveList extends React.Component {
                                                     className="w-100"
                                                   />
                                                 ) : (
-                                                  <img
-                                                    className="w-100"
-                                                    src={blankStar}
-                                                    alt={"star"}
-                                                  />
-                                                )}
+                                                    <img
+                                                      className="w-100"
+                                                      src={blankStar}
+                                                      alt={"star"}
+                                                    />
+                                                  )}
                                               </div>
                                               <div
                                                 onMouseOver={() =>
@@ -790,8 +791,8 @@ class MoveList extends React.Component {
                             );
                           })
                         ) : (
-                          <Loader />
-                        )}
+                            <Loader />
+                          )}
                       </div>
                       {provided.placeholder}
                     </>
@@ -820,7 +821,7 @@ class MoveList extends React.Component {
             handleTagChange={this.handleTagChange}
             moveIndexToAddTag={moveIndexToAddTag}
             moveofSetList={moveofSetList}
-            fromMoveList = {true}
+            fromMoveList={true}
           />
         </InfiniteScroll>
       </section>
