@@ -5,19 +5,28 @@ import closeBtn from "../../../assets/img/close-img.png";
 
 // core components
 class AddTagModal extends React.Component {
- 
   onhandleTags = () => {
+    const {
+      moveIdToAddTag,
+      tags,
+      moveIndexToAddTag,
+      moveofSetList,
+      fromMoveList,
+      videoData
+    } = this.props;
     const data = {
-      moveId: this.props.moveIdToAddTag,
-      tags: this.props.tags
+      moveId: moveIdToAddTag,
+      tags: tags,
+      index: moveIndexToAddTag,
+      moveofSetList: moveofSetList,
+      fromMoveList: fromMoveList,
+      videoData: videoData ? videoData : ""
     };
     this.props.addTagstoMove(data);
   };
 
   render() {
     const { modal, handleOpen, tagsList, tags } = this.props;
-    // const { tags } = this.state;
-
     return (
       <div>
         <Modal

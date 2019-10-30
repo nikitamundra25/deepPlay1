@@ -235,12 +235,12 @@ class WebmView extends Component {
   };
 
   openAddTagsModal = id => {
-    const { modelInfoReducer } = this.props;
+    const { modelInfoReducer, videoData } = this.props;
     const { modelDetails } = modelInfoReducer;
     this.props.getTagListRequest();
     this.setState({
       moveIdToAddTags: id,
-      tags: []
+      tags: videoData.tags ? videoData.tags : []
     });
     this.props.modelOperate({
       modelDetails: {
@@ -344,7 +344,9 @@ class WebmView extends Component {
             <div className="video-slider-text">
               <div className="video-slider-title font-weight-bold">
                 {" "}
-                {videoData ? videoData.title : "Unnamed"}{" "}
+                {videoData && videoData.title
+                  ? videoData.title
+                  : "Unnamed"}{" "}
               </div>
               {!isShareable ? (
                 <div className="video-slider-dropDown">
@@ -628,6 +630,8 @@ class WebmView extends Component {
           tagsList={tagsList}
           handleTagChange={this.handleTagChange}
           tags={tags}
+          videoData={videoData}
+          fromMoveList={false}
         />
         <ViewInfoModal
           modal={viewInfoModalOpen}

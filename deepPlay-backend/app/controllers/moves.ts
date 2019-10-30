@@ -762,7 +762,8 @@ const filterMove = async (req: Request, res: Response): Promise<any> => {
 const addTagsInMove = async (req: Request, res: Response): Promise<any> => {
   try {
     const { body } = req;
-    const { tags, moveId } = body;
+    const { data } = body;
+    const { tags, moveId } = data;
     if (!moveId) {
       res.status(400).json({
         message: "MoveId not found"

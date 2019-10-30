@@ -47,6 +47,7 @@ class MoveList extends React.Component {
       search: "",
       tags: [],
       moveIdToAddTag: "",
+      moveIndexToAddTag: -1,
       isMarkingStar: {
         index: -1,
         isChanging: false
@@ -211,14 +212,15 @@ class MoveList extends React.Component {
     });
   };
 
-  openAddTagsModal = id => {
+  openAddTagsModal = (id, tags, index) => {
     const { modelInfoReducer } = this.props;
     const { selectedMoveIds } = this.state;
     const { modelDetails } = modelInfoReducer;
     this.props.getTagListRequest();
     this.setState({
       moveIdToAddTag: selectedMoveIds.length ? selectedMoveIds : id,
-      tags: []
+      tags: tags ? tags : "",
+      moveIndexToAddTag: index
     });
     this.props.modelOperate({
       modelDetails: {
@@ -351,7 +353,8 @@ class MoveList extends React.Component {
       moveofSetList,
       search,
       moveIdToAddTag,
-      tags
+      tags,
+      moveIndexToAddTag
       // isMarkingStar
     } = this.state;
     const location = this.props.location;
@@ -741,7 +744,9 @@ class MoveList extends React.Component {
                                                     <Button
                                                       onClick={() =>
                                                         this.openAddTagsModal(
-                                                          video._id
+                                                          video._id,
+                                                          video.tags,
+                                                          index
                                                         )
                                                       }
                                                       color=" "
@@ -813,6 +818,9 @@ class MoveList extends React.Component {
             tags={tags}
             addTagstoMove={data => this.props.addTagstoMove(data)}
             handleTagChange={this.handleTagChange}
+            moveIndexToAddTag={moveIndexToAddTag}
+            moveofSetList={moveofSetList}
+            fromMoveList = {true}
           />
         </InfiniteScroll>
       </section>

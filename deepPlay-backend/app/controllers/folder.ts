@@ -18,6 +18,18 @@ const createFolder = async (req: Request, res: Response): Promise<any> => {
       });
     }
     const headToken: Request | any = currentUser;
+
+    const countFolderCopy: Document | any | null = await FolderModel.count({
+      title: body.title,
+      description: body.description ? body.description : "",
+      status: body.status ? body.status : true,
+      userId: body.userId ? body.userId : headToken.id,
+      sharableLink: body.sharableLink ? body.sharableLink : "",
+      isPublic: body.isPublic ? body.isPublic : true,
+      isDeleted: body.isDeleted ? body.isDeleted : false,
+      isCopy: true
+    });
+
     const folderData: IFolder = {
       title: body.title,
       description: body.description ? body.description : "",
@@ -26,7 +38,8 @@ const createFolder = async (req: Request, res: Response): Promise<any> => {
       sharableLink: body.sharableLink ? body.sharableLink : "",
       isPublic: body.isPublic ? body.isPublic : true,
       isDeleted: body.isDeleted ? body.isDeleted : false,
-      isCopy: body.isCopy ? true : false
+      isCopy: body.isCopy ? true : false,
+      copyIndex: countFolderCopy && body.isCopy ? countFolderCopy : 0
     };
     const Result: Document | any = new FolderModel(folderData);
     await Result.save();
@@ -49,7 +62,8 @@ const createFolder = async (req: Request, res: Response): Promise<any> => {
             status: true,
             userId: headToken.id,
             isCopy: element.isCopy,
-            isDeleted: element.isDeleted
+            isDeleted: element.isDeleted,
+            copyIndex: element.copyIndex
           };
           const setData: Document | any = new SetModel(newSetData);
           await setData.save();

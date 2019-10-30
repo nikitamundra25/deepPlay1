@@ -173,7 +173,11 @@ class SetComponent extends React.Component {
                               >
                                 <span>
                                   {setList.isCopy
-                                    ? `Copy of ${setList.title}`
+                                    ? `Copy of ${setList.title} ${
+                                        setList.copyIndex > 0
+                                          ? `(${setList.copyIndex})`
+                                          : ""
+                                      }`
                                     : setList.title}
                                 </span>
                               </span>
