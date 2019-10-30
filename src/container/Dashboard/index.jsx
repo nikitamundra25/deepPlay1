@@ -57,13 +57,15 @@ class Dashboard extends React.Component {
     const { folderReducer, setReducer } = this.props;
     const { isRecentFolderLoading, recentFolders } = folderReducer;
     const { isRecentSetLoading, recentSets } = setReducer;
+    console.log("EEEEEEE",recentSets);
+    console.log("########",recentFolders);    
 
     return (
       <>
         {!isRecentSetLoading && !isRecentFolderLoading ? (
-          recentSets &&
-          recentSets.length &&
-          (recentFolders && recentFolders.length) ? (
+          (recentSets &&
+          !recentSets.length) &&
+          (recentFolders && !recentFolders.length) ? (
             <div className="create-set-section w-100 empty-folder-section">
               <Card className="set-content-wrap empty-folder-card">
                 <div className="set-content-block w-100 empty-folder-wrap">
