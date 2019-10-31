@@ -125,9 +125,7 @@ class DefaultHeader extends React.Component {
     if (value === "") {
       return;
     } else {
-      setTimeout(() => {
-        this.props.allSearchRequest({ search: value });
-      }, 500);
+      this.props.allSearchRequest({ search: value });
     }
   };
 

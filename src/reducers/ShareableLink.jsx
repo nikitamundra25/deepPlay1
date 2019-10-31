@@ -65,15 +65,13 @@ export const shareLinkReducer = handleActions(
       { payload }
     ) => ({
       ...state,
-      publicUrlmoveDetails: payload.isInfiniteScroll ? [...state.publicUrlmoveDetails, ...payload.publicUrlmoveDetails]
-      : payload.publicUrlmoveDetails,
+      publicUrlmoveDetails: payload.isInfiniteScroll
+        ? [...state.publicUrlmoveDetails, ...payload.publicUrlmoveDetails]
+        : payload.publicUrlmoveDetails,
       isMoveDetailsLoading: false,
-      isShareableUrl: true
+      isShareableUrl: true,
     }),
-    [SharableLinkAction.IS_CHANGE_HEADER_REQUEST]: (
-      state,
-      { payload }
-    ) => ({
+    [SharableLinkAction.IS_CHANGE_HEADER_REQUEST]: (state, { payload }) => ({
       ...state,
       isShareableUrl: false
     })

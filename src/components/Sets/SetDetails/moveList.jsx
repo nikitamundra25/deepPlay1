@@ -79,8 +79,9 @@ class MoveList extends React.Component {
       });
     }
     if (
+      prevProps.isMoveStarLoading &&
       prevProps.isMoveStarLoading.loading !==
-      this.props.isMoveStarLoading.loading
+        this.props.isMoveStarLoading.loading
     ) {
       this.setState({
         isMarkingStar: {
@@ -349,16 +350,26 @@ class MoveList extends React.Component {
   /*  
   */
   handleLoadmoreRequest = setIdPathName => {
+    const location = this.props.location;
+    const path = location.search.split("=");
     const pageLimit = this.state.page;
     this.setState({
       page: pageLimit + 1
     });
     const pageCount = pageLimit + 1;
-    this.props.getMovesOfSetRequest({
-      setId: setIdPathName,
-      page: pageCount,
-      isInfiniteScroll: true
-    });
+    if (path) {
+      this.props.getMoveBySearchRequest({
+        search: path[1],
+        page: pageCount,
+        isInfiniteScroll: true
+      });
+    } else {
+      this.props.getMovesOfSetRequest({
+        setId: setIdPathName,
+        page: pageCount,
+        isInfiniteScroll: true
+      });
+    }
   };
   render() {
     const {
@@ -518,6 +529,7 @@ class MoveList extends React.Component {
                       <div
                         className="video-thumbnail-sub-block  video-thumb-edit-view"
                         ref={provided.innerRef}
+                        {...provided.droppableProps}
                       >
                         <div className="play-list-tile">
                           <div

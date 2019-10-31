@@ -1326,15 +1326,13 @@ a {
     z-index: 1;
   }
 }
-.content-tip-img{
-    .tooltip-btn-wrap {
-      right: 8px;
-      top: 5px;
-    }
+.content-tip-img {
+  .tooltip-btn-wrap {
+    right: 8px;
+    top: 5px;
+  }
 }
 
-  
-     
 .dashboard-full-section .folder-main-wrap {
   align-items: flex-start;
   i {
@@ -2105,6 +2103,7 @@ a {
 }
 .infinite-scroll-component {
   min-height: 300px;
+  overflow: hidden !important;
 }
 .star-mark {
   position: absolute;

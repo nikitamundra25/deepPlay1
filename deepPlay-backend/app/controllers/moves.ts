@@ -394,7 +394,8 @@ const publicUrlMoveDetails = async (
 
     if (temp.isPublic) {
       result = await MoveModel.find({
-        setId: decryptedSetId
+        setId: decryptedSetId,
+        isDeleted: false
       })
         .populate("setId")
         .skip(pageNumber)
@@ -932,8 +933,8 @@ const getMoveBySearch = async (req: Request, res: Response): Promise<any> => {
         message: "User id not found"
       });
     }
-    const pageNumber: number = ((parseInt(page) || 1) - 1) * (limit || 20);
-    const limitNumber: number = parseInt(limit) || 20;
+    const pageNumber: number = ((parseInt(page) || 1) - 1) * (limit || 8);
+    const limitNumber: number = parseInt(limit) || 8;
     let movesData: Document | any,
       moveList: Document | any | null,
       totalMoves: Document | any | null;
@@ -946,7 +947,10 @@ const getMoveBySearch = async (req: Request, res: Response): Promise<any> => {
           isDeleted: false,
           isStarred: true
         })
-          .populate("setId")
+          .populate({
+            path: "setId",
+            match: { isDeleted: false }
+          })
           .skip(pageNumber)
           .limit(limitNumber)
           .sort({ sortIndex: 1 });
@@ -955,16 +959,22 @@ const getMoveBySearch = async (req: Request, res: Response): Promise<any> => {
           title: {
             $regex: new RegExp(search.trim(), "i")
           },
-          isDeleted: false
+          isDeleted: false,
+          userId: headToken.id
         })
-          .populate("setId")
+          .populate({
+            path: "setId",
+            match: { isDeleted: false }
+          })
           .skip(pageNumber)
           .limit(limitNumber)
           .sort({ sortIndex: 1 });
       }
+      console.log("movesData", movesData.length);
 
       moveList = await MoveModel.populate(movesData, {
-        path: "setId.folderId"
+        path: "setId.folderId",
+        match: { isDeleted: false }
       });
       totalMoves = await MoveModel.count({
         title: {
