@@ -93,7 +93,6 @@ class TransferToModal extends React.Component {
   render() {
     const { handleOpen, modal, folderId, AllFolders } = this.props;
     const { selectFolderOptions, errors } = this.state;
-    console.log("errors", errors);
 
     const defaultFolderList = [];
     let list = [];
