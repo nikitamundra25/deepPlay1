@@ -65,7 +65,8 @@ class DefaultLayout extends React.Component {
       forgotPasswordRequest,
       profileInfoReducer,
       allSearchRequest,
-      allSearchReducer
+      allSearchReducer,
+      shareLinkReducer
     } = this.props;
     let isLoggedIn;
 
@@ -94,6 +95,7 @@ class DefaultLayout extends React.Component {
             isLoggedIn={isLoggedIn}
             allSearchRequest={allSearchRequest}
             allSearchReducer={allSearchReducer}
+            shareLinkReducer={shareLinkReducer}
             {...this.props}
           />
         ) : null}
@@ -219,7 +221,8 @@ const mapStateToProps = state => ({
   modelInfoReducer: state.modelInfoReducer,
   loginReducer: state.loginReducer,
   profileInfoReducer: state.profileInfoReducer,
-  allSearchReducer: state.allSearchReducer
+  allSearchReducer: state.allSearchReducer,
+  shareLinkReducer: state.shareLinkReducer
 });
 const mapDispatchToProps = dispatch => ({
   modelOperate: data => dispatch(modelOpenRequest(data)),

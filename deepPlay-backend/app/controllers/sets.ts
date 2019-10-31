@@ -8,6 +8,7 @@ const algoliasearch = require("algoliasearch");
 const client = algoliasearch(algoliaAppId, algoliaAPIKey);
 const index = client.initIndex("deep_play_data");
 import { decrypt, encrypt } from "../common";
+import { body } from "express-validator";
 
 // --------------Create set---------------------
 const createSet = async (req: Request, res: Response): Promise<any> => {
@@ -27,7 +28,7 @@ const createSet = async (req: Request, res: Response): Promise<any> => {
       isDeleted: body.isDeleted ? body.isDeleted : false,
       isCopy: true
     });
-    
+
     const setData: ISet = {
       title: body.title,
       description: body.description ? body.description : "",

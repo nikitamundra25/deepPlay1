@@ -376,7 +376,7 @@ class WebmView extends Component {
                           //   )
                           // }
                         >
-                          Edit
+                          Edit Move Details
                         </DropdownItem>
                         <DropdownItem
                           onClick={() =>

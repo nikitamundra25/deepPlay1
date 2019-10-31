@@ -19,7 +19,10 @@ export const SharableLinkAction = {
   PUBLIC_URL_MOVE_DETAILS_SUCCESS: "Get Public Url Move Details Success",
 
   SHAREABLE_LINK_ENCRYPT_SET_REQUEST: "Get encrypt setId Request",
-  SHAREABLE_LINK_ENCRYPT_SET_SUCCESS: "Get encrypt setId Success"
+  SHAREABLE_LINK_ENCRYPT_SET_SUCCESS: "Get encrypt setId Success",
+
+  IS_CHANGE_HEADER_REQUEST: "Change Header Request",
+  
 };
 export const publicAccessRequest = createAction(
   SharableLinkAction.PUBLIC_ACCESS_REQUEST
@@ -68,3 +71,4 @@ export const encryptSetRequest = createAction(
 export const encryptSetSuccess = createAction(
   SharableLinkAction.SHAREABLE_LINK_ENCRYPT_SET_SUCCESS
 );
+export const changeHeaderRequest = createAction(SharableLinkAction.IS_CHANGE_HEADER_REQUEST)

@@ -36,6 +36,22 @@ class FolderModal extends React.Component {
         description
       });
     }
+    if (prevProps.modal !== this.props.modal) {
+      if (this.props.folderDetails) {
+        const { title, description } = this.props.folderDetails;
+        this.setState({
+          title,
+          description,
+          errors: {}
+        });
+      } else {
+        this.setState({
+          title: "",
+          description: "",
+          errors: {}
+        });
+      }
+    }
   }
 
   handleChange = e => {

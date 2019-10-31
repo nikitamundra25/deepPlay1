@@ -201,7 +201,7 @@ class MoveList extends React.Component {
       this.setState({
         page: 1,
         selectedMoveIds: []
-      })
+      });
       this.props.deleteMove(data);
     }
   };
@@ -229,7 +229,7 @@ class MoveList extends React.Component {
     this.setState({
       moveIdToAddTag: selectedMoveIds.length ? selectedMoveIds : id,
       tags: tags ? tags : "",
-      moveIndexToAddTag: index 
+      moveIndexToAddTag: index
     });
     this.props.modelOperate({
       modelDetails: {
@@ -257,7 +257,7 @@ class MoveList extends React.Component {
       this.setState({
         page: 1,
         selectedMoveIds: []
-      })
+      });
       this.props.transferMove(moveData);
     }
   };
@@ -350,10 +350,10 @@ class MoveList extends React.Component {
   */
   handleLoadmoreRequest = setIdPathName => {
     const pageLimit = this.state.page;
-     this.setState({
-       page: pageLimit + 1
-     })
-const pageCount =  pageLimit + 1
+    this.setState({
+      page: pageLimit + 1
+    });
+    const pageCount = pageLimit + 1;
     this.props.getMovesOfSetRequest({
       setId: setIdPathName,
       page: pageCount,
@@ -390,8 +390,6 @@ const pageCount =  pageLimit + 1
       moveIndexToAddTag
       // isMarkingStar
     } = this.state;
-    console.log("pageeeeeeee", this.state.page);
-
     const location = this.props.location;
     const isStarred = location.search.split("=");
     const serachContent = location.search.split("search");
@@ -403,7 +401,7 @@ const pageCount =  pageLimit + 1
             this.handleLoadmoreRequest(setIdPathName);
           }}
           hasMore={totalMoves !== moveofSetList.length ? true : false}
-          loader={<h4>Loading...</h4>}
+          loader={<Loader />}
         >
           <Row className={"m-0"}>
             <Col md="12" className={"pb-3"}>

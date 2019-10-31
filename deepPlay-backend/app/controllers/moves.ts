@@ -43,7 +43,7 @@ var up_options = {
  */
 
 const downloadVideo = async (req: Request, res: Response): Promise<any> => {
-  const { file, currentUser,body } = req;
+  const { file, currentUser, body } = req;
   try {
     let headToken: Request | any = currentUser;
     if (!headToken.id) {
@@ -63,6 +63,7 @@ const downloadVideo = async (req: Request, res: Response): Promise<any> => {
     const frames = framesArray.map(
       (frame: string) => `${ServerURL}/uploads/youtube-videos/${frame}`
     );
+
     const moveResult: Document | any = new MoveModel({
       videoUrl: videoURL,
       userId: headToken.id,
@@ -71,7 +72,7 @@ const downloadVideo = async (req: Request, res: Response): Promise<any> => {
       videoMetaData,
       videoName,
       isYoutubeUrl: false,
-      setId: body.setId ? body.setId :null
+      setId: body.setId !== "undefined" ? body.setId : null
     });
     await moveResult.save();
     res.status(200).json({
@@ -155,7 +156,7 @@ const downloadYoutubeVideo = async (
               frames: frames,
               videoMetaData,
               videoName,
-              setId: body.setId ? body.setId :null
+              setId: body.setId !== "undefined" ? body.setId : null
             });
             await moveResult.save();
             return res.status(200).json({
@@ -258,8 +259,8 @@ const createMove = async (req: Request, res: Response): Promise<any> => {
       videoName,
       isYoutubeUrl: false
     });
-    console.log("moveResult",moveResult);
-    
+    console.log("moveResult", moveResult);
+
     await moveResult.save();
     return res.status(200).json({
       message: "Created new move",
@@ -290,8 +291,8 @@ const getMoveBySetId = async (req: Request, res: Response): Promise<any> => {
         message: "User id not found"
       });
     }
-    const pageNumber: number = ((parseInt(page) || 1) - 1) * (limit || 2);
-    const limitNumber: number = parseInt(limit) || 2;
+    const pageNumber: number = ((parseInt(page) || 1) - 1) * (limit || 20);
+    const limitNumber: number = parseInt(limit) || 20;
     let movesData: Document | any;
     if (query.isStarred === "true") {
       movesData = await MoveModel.find({
@@ -377,8 +378,8 @@ const publicUrlMoveDetails = async (
     const decryptedSetId = decrypt(setId);
     let result: Document | any | null;
     let temp: Document | any | null, movesData: Document | any;
-     const pageNumber: number = ((parseInt(page) || 1) - 1) * (limit || 20);
-     const limitNumber: number = parseInt(limit) || 20;
+    const pageNumber: number = ((parseInt(page) || 1) - 1) * (limit || 20);
+    const limitNumber: number = parseInt(limit) || 20;
 
     if (fromFolder) {
       temp = {
@@ -394,9 +395,10 @@ const publicUrlMoveDetails = async (
     if (temp.isPublic) {
       result = await MoveModel.find({
         setId: decryptedSetId
-      }).populate("setId")
-       .skip(pageNumber)
-       .limit(limitNumber);
+      })
+        .populate("setId")
+        .skip(pageNumber)
+        .limit(limitNumber);
     } else {
       return res.status(400).json({
         message: {

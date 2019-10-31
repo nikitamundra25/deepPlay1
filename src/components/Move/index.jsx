@@ -103,14 +103,14 @@ class MoveComponent extends React.Component {
         return;
       }
       if (!this.state.errors) {
-        const search = window.location.search
-        const setId = search.split("=")
+        const search = window.location.search;
+        const setId = search.split("=");
         const payload = {
           url: this.state.url,
           isYoutubeUrl: this.state.isYouTubeUrl,
-          setId : setId ? setId[1] : ""
+          setId: setId ? setId[1] : ""
         };
-         this.props.downloadVideo(payload);
+        this.props.downloadVideo(payload);
       }
     } catch (error) {
       logger(error);
@@ -141,15 +141,19 @@ class MoveComponent extends React.Component {
           confirmButtonText: "Okay"
         });
       } else {
-        const search = window.location.search
-        const setId = search.split("=")
+        const search = window.location.search;
+        const setId = search.split("=");
         this.setState(
           {
             url: files[0].name,
             errors: ""
           },
           () => {
-            this.props.downloadVideo({ url: files[0], isYoutubeUrl: false, setId:setId ? setId[1] : "" });
+            this.props.downloadVideo({
+              url: files[0],
+              isYoutubeUrl: false,
+              setId: setId && setId.length ? setId[1] : null
+            });
           }
         );
       }
@@ -159,7 +163,7 @@ class MoveComponent extends React.Component {
   onSubmitForm = e => {
     e.preventDefault();
     if (this.state.url && !this.state.errors) {
-       this.handleMoveUpload();
+      this.handleMoveUpload();
     }
   };
 
@@ -176,8 +180,11 @@ class MoveComponent extends React.Component {
               <CardHeader className="border-bottom pt-4 pb-2">
                 <div className="content-header set-header d-flex ">
                   <Link to="/dashboard">
-                <span className="cursor_pointer back-arrow create-move-back"> <i className="fas fa-long-arrow-alt-left"></i> Back</span>
-                </Link>
+                    <span className="cursor_pointer back-arrow create-move-back">
+                      {" "}
+                      <i className="fas fa-long-arrow-alt-left"></i> Back
+                    </span>
+                  </Link>
                   <span className="content-title creat-set-title">
                     {isVideoDownloading ? "Preparing WebM" : "Create a move"}
                   </span>

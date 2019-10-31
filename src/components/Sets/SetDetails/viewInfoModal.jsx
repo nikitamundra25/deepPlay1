@@ -36,73 +36,78 @@ class ViewInfoModal extends React.Component {
               <div className="content-heading-tile d-flex flex-column ">
                 <span className="content-title justify-content-between">
                   <div class="info-wrap">
-                    {videoData.title ?
+                    {videoData.title ? (
                       <>
                         <span class="info-heading">Title </span>
                         <span className="info-content">
-                        <span className="colon-wrap">:{" "} </span> {videoData.title}
+                          <span className="colon-wrap">: </span>{" "}
+                          {videoData.title}
                         </span>
-                      </> : null}
+                      </>
+                    ) : null}
                   </div>
                   <div class="info-wrap">
                     {" "}
-                    {videoData.description ?
+                    {videoData.description ? (
                       <>
                         <span class="info-heading">Description </span>
                         <span className="info-content">
-                        <span className="colon-wrap">:{" "} </span>{videoData.description}
+                          <span className="colon-wrap">: </span>
+                          {videoData.description}
                         </span>
-                      </> : null}
-
+                      </>
+                    ) : null}
                   </div>
                 </span>
                 <div class="info-wrap">
-
                   <span className="info-heading"> Source URL</span>
                   <a href={videoData.sourceUrl ? videoData.sourceUrl : null}>
                     <span className="info-content">
-                    <span className="colon-wrap">:{" "} </span>{videoData.sourceUrl ? videoData.sourceUrl : null}{" "}
+                      <span className="colon-wrap cursor_pointer">: </span>
+                      {videoData.sourceUrl ? videoData.sourceUrl : null}{" "}
                     </span>
                   </a>
                 </div>
-              
+
                 <div class="info-wrap">
                   {" "}
                   {videoData.setId &&
-                    videoData.setId.folderId &&
-                    videoData.setId.folderId.title ?
+                  videoData.setId.folderId &&
+                  videoData.setId.folderId.title ? (
                     <>
                       <span class="info-heading">Folder </span>
                       <span className="info-content">
-                      <span className="colon-wrap">:{" "} </span>{videoData.setId.folderId.title}
+                        <span className="colon-wrap">: </span>
+                        {videoData.setId.folderId.title}
                       </span>
-                    </> : null}
+                    </>
+                  ) : null}
                 </div>
                 <div class="info-wrap">
                   <span className="info-heading"> Dimensions</span>
                   <span className="info-content">
-                  <span className="colon-wrap">:{" "}</span>{videoDimentions ? videoDimentions.videoHeight : 0}px <b className="multiply-option">x </b>{" "}
+                    <span className="colon-wrap">: </span>
+                    {videoDimentions ? videoDimentions.videoHeight : 0}px{" "}
+                    <b className="multiply-option">x </b>{" "}
                     {videoDimentions ? videoDimentions.videoWidth : ""}px
-                    </span>
+                  </span>
                 </div>
-                <div class="info-wrap">
+                {/* <div class="info-wrap">
                   <span className="info-heading"> Size</span>
                   <span className="info-content">
-                  <span className="colon-wrap">:{" "} </span>
-                    </span>
-                </div>
+                    <span className="colon-wrap">: </span>
+                  </span>
+                </div> */}
                 <div class="info-wrap">
-                <span className="info-heading"> Uploaded</span>{" "}
+                  <span className="info-heading"> Uploaded</span>{" "}
                   <span className="info-content">
-                  <span className="colon-wrap">:{" "} </span>{moment(
-                    videoData.createdAt ? videoData.createdAt : null
-                  ).format("l")}{" "}
-                    </span>
+                    <span className="colon-wrap">: </span>
+                    {moment(
+                      videoData.createdAt ? videoData.createdAt : null
+                    ).format("l")}{" "}
+                  </span>
                 </div>
-                <span>
-              
-                 
-                </span>
+                <span></span>
               </div>
             </div>
           </ModalBody>
