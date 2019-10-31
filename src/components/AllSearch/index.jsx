@@ -217,10 +217,7 @@ class AllSearchComponent extends React.Component {
                           <div className="searhed-img-main-wrap">
                             <div className="searched-img-wrap">
                               <div className="searched-img">
-                                <img
-                                  alt={""}
-                                  src="https://a10.gaanacdn.com/gn_img/albums/P7m3GNKqxo/7m3GjN47Kq/size_m.jpg"
-                                />
+                                <img alt={""} src={emptyMoveIc} />
                               </div>
                             </div>
                           </div>

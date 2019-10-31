@@ -299,7 +299,16 @@ class RecentFolderComponent extends React.Component {
           <span className="content-title">
             <div className="main-title">
               {" "}
-              {folderDetails ? folderDetails.title : "MyFolder"}
+              {folderDetails
+                ? folderDetails && folderDetails.isCopy
+                  ? `Copy of ${folderDetails.title} ${
+                      folderDetails.copyIndex > 0
+                        ? `(${folderDetails.copyIndex})`
+                        : ""
+                    }`
+                  : folderDetails.title
+                : "MyFolder"}
+              {/* {folderDetails ? folderDetails.title : "MyFolder"} */}
             </div>
             <div className="sub-title">
               {folderDetails ? folderDetails.description : ""}
@@ -363,52 +372,48 @@ class RecentFolderComponent extends React.Component {
                       className="tile-wrap card"
                       onMouseLeave={() => this.closePopOver()}
                     >
-                      <div className="cotent-tile d-flex content-with-tip " 
-                      >
+                      <div className="cotent-tile d-flex content-with-tip ">
                         <div
-                        className="d-flex  content-with-img w-100" 
-                         onClick={() => this.handleSetDetails(list._id)}
+                          className="d-flex  content-with-img w-100"
+                          onClick={() => this.handleSetDetails(list._id)}
                         >
-                        <div
-                          className="cotent-text-tile cursor_pointer text-capitalize"
-                        
-                        >
-                          <div className="content-heading-tile d-flex">
-                            {" "}
-                            <span
-                              // onClick={() => this.handleSetDetails(list._id)}
-                              className={"text-capitalize"}
-                            >
-                              <span>
-                                {list.isCopy
-                                  ? `Copy of ${list.title}`
-                                  : list.title}{" "}
+                          <div className="cotent-text-tile cursor_pointer text-capitalize">
+                            <div className="content-heading-tile d-flex">
+                              {" "}
+                              <span
+                                // onClick={() => this.handleSetDetails(list._id)}
+                                className={"text-capitalize"}
+                              >
+                                <span>
+                                  {list.isCopy
+                                    ? `Copy of ${list.title}`
+                                    : list.title}{" "}
+                                </span>
                               </span>
+                            </div>
+                            <span className={"text-capitalize"}>
+                              {list.description ? list.description : ""}
                             </span>
-                          </div>
-                          <span className={"text-capitalize"}>
-                            {list.description ? list.description : ""}
-                          </span>
-                          <div className="content-number-tile">
-                            {" "}
-                            {list.moveCount ? list.moveCount : 0} items
-                          </div>
-                        </div>
-                        {list.recentlyAddMoveImg ? (
-                          <div
-                            className="d-flex img-tile-wrap cursor_pointer"
-                            onClick={() => this.handleSetDetails(list._id)}
-                          >
-                            <div className="cotent-img-tile">
-                              <video width={"100%"} id="webm-video">
-                                <source
-                                  src={`${list.recentlyAddMoveImg}`}
-                                  type="video/webm"
-                                />
-                              </video>
+                            <div className="content-number-tile">
+                              {" "}
+                              {list.moveCount ? list.moveCount : 0} items
                             </div>
                           </div>
-                        ) : null}
+                          {list.recentlyAddMoveImg ? (
+                            <div
+                              className="d-flex img-tile-wrap cursor_pointer"
+                              onClick={() => this.handleSetDetails(list._id)}
+                            >
+                              <div className="cotent-img-tile">
+                                <video width={"100%"} id="webm-video">
+                                  <source
+                                    src={`${list.recentlyAddMoveImg}`}
+                                    type="video/webm"
+                                  />
+                                </video>
+                              </div>
+                            </div>
+                          ) : null}
                         </div>
                         <div
                           onMouseOver={() => this.showPopOver(i, show)}

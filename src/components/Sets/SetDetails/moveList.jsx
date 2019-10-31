@@ -357,7 +357,7 @@ class MoveList extends React.Component {
       page: pageLimit + 1
     });
     const pageCount = pageLimit + 1;
-    if (path) {
+    if (path.length > 1) {
       this.props.getMoveBySearchRequest({
         search: path[1],
         page: pageCount,

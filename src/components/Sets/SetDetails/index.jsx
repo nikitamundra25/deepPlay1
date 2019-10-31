@@ -327,7 +327,15 @@ class SetDetails extends React.Component {
           <div className="content-header">
             <span className="content-title">
               <div className="main-title">
-                {setDetails ? setDetails.title : "MyFolder"}
+                {setDetails
+                  ? setDetails && setDetails.isCopy
+                    ? `Copy of ${setDetails.title} ${
+                        setDetails.copyIndex > 0
+                          ? `(${setDetails.copyIndex})`
+                          : ""
+                      }`
+                    : setDetails.title
+                  : "MySets"}
               </div>
               <div className="sub-title">
                 Total Move {setDetails ? `${setDetails.moveCount}` : 0}
