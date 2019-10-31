@@ -194,7 +194,7 @@ class SetComponent extends React.Component {
                           >
                             <div className="cotent-img-tile">
                               {setList.recentlyAddMoveImg ? (
-                                <video  width={"100%"} id="webm-video">
+                                <video width={"100%"} id="webm-video">
                                   <source
                                     src={`${setList.recentlyAddMoveImg}`}
                                     type="video/webm"
@@ -261,7 +261,7 @@ class SetComponent extends React.Component {
                                     )
                                   }
                                 >
-                                  Delete
+                                  Remove
                                 </Button>
                               </ButtonGroup>
                             ) : null}

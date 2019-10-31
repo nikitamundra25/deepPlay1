@@ -65,7 +65,7 @@ const createSetLogic = createLogic({
         if (action.payload.addMove) {
           dispatch(redirectTo({ path: AppRoutes.MOVE.url }));
         }
-        if (action.payload.folderId !== "") {
+        if (action.payload.folderId !== null) {
           dispatch(
             getFolderSetRequest({
               folderId: action.payload.folderId,
@@ -89,9 +89,7 @@ const createSetLogic = createLogic({
         if (action.payload.folderId !== "") {
           dispatch(
             getFolderSetRequest({
-              folderId: action.payload.folderId
-                ? action.payload.folderId._id
-                : "",
+              folderId: action.payload.folderId ? action.payload.folderId : "",
               limit: AppConfig.ITEMS_PER_PAGE
             })
           );
@@ -155,6 +153,13 @@ const deleteSetLogic = createLogic({
       }
       if (action.payload.setDetails) {
         dispatch(redirectTo({ path: AppRoutes.SETS.url }));
+      }
+      if (action.payload.previousFolderId) {
+        dispatch(
+          getFolderSetRequest({
+            folderId: action.payload.previousFolderId
+          })
+        );
       }
       dispatch(getAllSetRequest({ isSetNoLimit: false }));
       done();

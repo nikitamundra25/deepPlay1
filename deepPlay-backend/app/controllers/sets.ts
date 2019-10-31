@@ -22,7 +22,7 @@ const createSet = async (req: Request, res: Response): Promise<any> => {
       description: body.description ? body.description : "",
       status: body.status ? body.status : true,
       userId: body.userId ? body.userId : headToken.id,
-      folderId: body.folderId ? body.folderId : null,
+      folderId: body.folderId ? Mongoose.Types.ObjectId(body.folderId) : null,
       sharableLink: body.sharableLink ? body.sharableLink : "",
       isPublic: body.isPublic ? body.isPublic : true,
       isDeleted: body.isDeleted ? body.isDeleted : false,
@@ -312,7 +312,6 @@ const getSetsForFolder = async (req: Request, res: Response): Promise<void> => {
       })
       .skip(((parseInt(page) || 1) - 1) * (limit || 10))
       .limit(parseInt(limit) || 10);
-
     if (result && result.length) {
       for (let index = 0; index < result.length; index++) {
         const setData = result[index];
@@ -320,7 +319,6 @@ const getSetsForFolder = async (req: Request, res: Response): Promise<void> => {
           setId: setData._id,
           isDeleted: false
         });
-
         let data: any = await MoveModel.find({
           setId: setData._id,
           isDeleted: false

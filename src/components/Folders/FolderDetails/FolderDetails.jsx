@@ -26,7 +26,8 @@ import {
   deleteFolderRequest,
   updateFolderRequest,
   redirectTo,
-  getAllSetRequest
+  getAllSetRequest,
+  deleteSetRequest
 } from "../../../actions";
 import AddSetModal from "./addSet";
 import TransferToModal from "./transferTo";
@@ -141,7 +142,7 @@ class RecentFolderComponent extends React.Component {
     let data;
     data = {
       isFolderAdd: name === "add" ? true : false,
-      setId: id,
+      id,
       folderId: pathName[3],
       previousFolderId: pathName[3]
     };
@@ -149,7 +150,7 @@ class RecentFolderComponent extends React.Component {
       text: "You want to remove Set from this folder!"
     });
     if (value) {
-      this.props.manageSets(data);
+      this.props.onDeleteSets(data);
     }
   };
 
@@ -177,8 +178,9 @@ class RecentFolderComponent extends React.Component {
       description: list.description,
       isDeleted: list.isDeleted,
       isPublic: list.isPublic,
-      folderId: list.folderId,
+      folderId: list.folderId && list.folderId._id ? list.folderId._id : null,
       sharableLink: list.sharableLink,
+      copyOfSetId: list._id,
       status: list.status,
       userId: list.userId,
       isCopy: true
@@ -386,8 +388,12 @@ class RecentFolderComponent extends React.Component {
                               >
                                 <span>
                                   {list.isCopy
-                                    ? `Copy of ${list.title}`
-                                    : list.title}{" "}
+                                    ? `Copy of ${list.title} ${
+                                        list.copyIndex > 0
+                                          ? `(${list.copyIndex})`
+                                          : ""
+                                      }`
+                                    : list.title}
                                 </span>
                               </span>
                             </div>
@@ -583,7 +589,10 @@ const mapDispatchToProps = dispatch => ({
   onGoPage: data => {
     dispatch(redirectTo({ path: data }));
   },
-  getAllSetRequest: data => dispatch(getAllSetRequest(data))
+  getAllSetRequest: data => dispatch(getAllSetRequest(data)),
+  onDeleteSets: data => {
+    dispatch(deleteSetRequest(data));
+  }
 });
 
 export default connect(
