@@ -129,7 +129,7 @@ class SetComponent extends React.Component {
                   className={"cursor_pointer reset-search text-center"}
                   onClick={this.props.handleResetSearch}
                 >
-                  <i className="fas fa-undo-alt icon-font"></i>
+                  <i className="fas fa-undo-alt"></i>
                 </span>
                 <UncontrolledTooltip placement="top" target="reset">
                   Reset search results

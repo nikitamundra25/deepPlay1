@@ -11,7 +11,7 @@ class VideoDetails extends React.Component {
     super(props);
     this.state = {};
   }
-  
+
   getDetails = () => {
     const { tags, selectSetOptions } = this.props;
     return {
@@ -22,15 +22,18 @@ class VideoDetails extends React.Component {
 
   render() {
     const { selectSetOptions, setReducer, tags, errors, tagsList } = this.props;
-    console.log("selectSetOptions",selectSetOptions);
-    
     const { recentSetAdded, allSetList } = setReducer;
     let recentAddedSet,
       defaultSetoptions = [];
     if (allSetList && allSetList.length) {
       allSetList.map(data => {
         const defaultSetoptionsValue = {
-          label: data.title,
+          label:
+            data && data.isCopy
+              ? `Copy of ${data.title}${
+                  data.copyIndex > 0 ? `(${data.copyIndex})` : ""
+                }`
+              : data.title,
           value: data._id
         };
         defaultSetoptions.push(defaultSetoptionsValue);
@@ -88,7 +91,9 @@ class VideoDetails extends React.Component {
                       : ""
                   }
                   onChange={e => this.props.handleInputChange(e)}
-                  value={recentAddedSet ? recentAddedSet.title : selectSetOptions}
+                  value={
+                    recentAddedSet ? recentAddedSet.title : selectSetOptions
+                  }
                 />
                 <FormFeedback>
                   {errors &&

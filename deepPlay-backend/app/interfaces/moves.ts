@@ -9,6 +9,8 @@ export interface IMove {
   status: Boolean;
   setId: String;
   moveURL: String;
+  sourceUrl: String;
+  isYoutubeUrl: Boolean;
 }
 export interface IMoveCopy {
   title: String;

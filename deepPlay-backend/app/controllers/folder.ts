@@ -85,7 +85,11 @@ const createFolder = async (req: Request, res: Response): Promise<any> => {
                 sharableLink: moveElement.sharableLink,
                 status: true,
                 setId: setId,
-                moveURL: moveElement.moveURL
+                moveURL: moveElement.moveURL,
+                sourceUrl: moveElement.sourceUrl ? moveElement.sourceUrl : null,
+                isYoutubeUrl: moveElement.isYoutubeUrl
+                  ? moveElement.isYoutubeUrl
+                  : false
               };
               const moveData: Document | any = new MoveModel(newMoveData);
               await moveData.save();
