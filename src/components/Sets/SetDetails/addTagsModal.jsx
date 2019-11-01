@@ -2,60 +2,31 @@ import React from "react";
 import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from "reactstrap";
 import CreatableSelect from "react-select/creatable";
 import closeBtn from "../../../assets/img/close-img.png";
-const colourOptions = [
-  {
-    label: "Red",
-    value: "red"
-  },
-  {
-    label: "Green",
-    value: "Green"
-  },
-  {
-    label: "Yellow",
-    value: "Yellow"
-  },
-  {
-    label: "Blue",
-    value: "Blue"
-  }
-];
+
 // core components
 class AddTagModal extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      tags: ""
-    };
-  }
-
-  handleTagChange = (newValue, actionMeta) => {
-    //const { tagsList } = this.props.moveReducer
-    console.log(newValue);
-    if (newValue) {
-      this.setState({
-        tags: newValue
-      });
-    } else {
-      this.setState({
-        tags: []
-      });
-    }
-    console.log(`action: ${actionMeta.action}`);
-    console.groupEnd();
-  };
-
   onhandleTags = () => {
+    const {
+      moveIdToAddTag,
+      tags,
+      moveIndexToAddTag,
+      moveofSetList,
+      fromMoveList,
+      videoData
+    } = this.props;
     const data = {
-      moveId: this.props.moveIdToAddTag,
-      tags: this.state.tags
+      moveId: moveIdToAddTag,
+      tags: tags,
+      index: moveIndexToAddTag,
+      moveofSetList: moveofSetList,
+      fromMoveList: fromMoveList,
+      videoData: videoData ? videoData : ""
     };
     this.props.addTagstoMove(data);
   };
-  render() {
-    const { modal, handleOpen } = this.props;
-    const { tags } = this.state;
 
+  render() {
+    const { modal, handleOpen, tagsList, tags } = this.props;
     return (
       <div>
         <Modal
@@ -84,9 +55,9 @@ class AddTagModal extends React.Component {
             <div className="w-100 tag-input-wrap search-select-wrap">
               <CreatableSelect
                 isMulti
-                onChange={this.handleTagChange}
+                onChange={this.props.handleTagChange}
                 value={tags}
-                options={colourOptions}
+                options={tagsList}
                 // options={colourOptions}
               />
             </div>

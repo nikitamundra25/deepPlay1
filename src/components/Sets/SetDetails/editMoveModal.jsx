@@ -12,26 +12,7 @@ import {
 } from "reactstrap";
 import "./index.scss";
 import closeBtn from "../../../assets/img/close-img.png";
-import CreatableSelect from "react-select/creatable";
 import { logger } from "helper/Logger";
-const colourOptions = [
-  {
-    label: "Red",
-    value: "red"
-  },
-  {
-    label: "Green",
-    value: "Green"
-  },
-  {
-    label: "Yellow",
-    value: "Yellow"
-  },
-  {
-    label: "Blue",
-    value: "Blue"
-  }
-];
 
 class EditMoveModal extends React.Component {
   constructor(props) {
@@ -80,21 +61,26 @@ class EditMoveModal extends React.Component {
     });
   };
 
-  handleTagChange = (newValue, actionMeta) => {
-    //const { tagsList } = this.props.moveReducer
-    console.log(newValue);
-    if (newValue) {
-      this.setState({
-        tags: newValue
-      });
-    } else {
-      this.setState({
-        tags: []
-      });
-    }
-    console.log(`action: ${actionMeta.action}`);
-    console.groupEnd();
-  };
+  // handleTagChange = (newValue, actionMeta) => {
+  //   //const { tagsList } = this.props.moveReducer
+  //   console.log(newValue);
+  //   if (newValue) {
+  //     this.setState({
+  //       tags: newValue
+  //     });
+  //   } else {
+  //     this.setState({
+  //       tags: []
+  //     });
+  //   }
+  //   console.log(`action: ${actionMeta.action}`);
+  //   if (actionMeta.action === "create-option") {
+  //     this.props.addTagsInTagModalRequest({
+  //       tags: newValue[newValue.length - 1]
+  //     });
+  //   }
+  //   console.groupEnd();
+  // };
 
   handleEditMove = async e => {
     e.preventDefault();
@@ -130,7 +116,7 @@ class EditMoveModal extends React.Component {
 
   render() {
     const { modal, handleOpen } = this.props;
-    const { title, description, errors, tags, sets } = this.state;
+    const { title, description, errors, sets } = this.state;
 
     return (
       <div>
@@ -204,7 +190,7 @@ class EditMoveModal extends React.Component {
                 rows={3}
               />
             </FormGroup>
-            <FormGroup>
+            {/* <FormGroup>
               <Label for="tags" className="font-weight-bold text-center">
                 ADD TAGS
               </Label>
@@ -212,9 +198,9 @@ class EditMoveModal extends React.Component {
                 isMulti
                 onChange={this.handleTagChange}
                 value={tags}
-                options={colourOptions}
+                options={tagsList}
               />
-            </FormGroup>
+            </FormGroup> */}
           </ModalBody>
           <ModalFooter>
             <Button

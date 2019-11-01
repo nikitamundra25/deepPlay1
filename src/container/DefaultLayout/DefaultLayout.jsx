@@ -34,7 +34,8 @@ class DefaultLayout extends React.Component {
       pathname !== "/folder/shared/link" &&
       pathname !== "/set/shared/link" &&
       pathname !== "/all/set/shared/link" &&
-      pathname !== "/404"
+      pathname !== "/404" &&
+      pathname !== "/public-access-denied"
     ) {
       this.props.redirectTo("/");
     }
@@ -64,7 +65,8 @@ class DefaultLayout extends React.Component {
       forgotPasswordRequest,
       profileInfoReducer,
       allSearchRequest,
-      allSearchReducer
+      allSearchReducer,
+      shareLinkReducer
     } = this.props;
     let isLoggedIn;
 
@@ -93,6 +95,7 @@ class DefaultLayout extends React.Component {
             isLoggedIn={isLoggedIn}
             allSearchRequest={allSearchRequest}
             allSearchReducer={allSearchReducer}
+            shareLinkReducer={shareLinkReducer}
             {...this.props}
           />
         ) : null}
@@ -105,7 +108,8 @@ class DefaultLayout extends React.Component {
               routePath !== "/folder/shared/link" &&
               routePath !== "/set/shared/link" &&
               routePath !== "/all/set/shared/link" &&
-              routePath !== "/404"
+              routePath !== "/404" &&
+              routePath !== "/public-access-denied"
                 ? "dashboard-full-section"
                 : ""
             }
@@ -131,7 +135,8 @@ class DefaultLayout extends React.Component {
                   routePath !== "/folder/shared/link" &&
                   routePath !== "/set/shared/link" &&
                   routePath !== "/all/set/shared/link" &&
-                  routePath !== "/404") ? (
+                  routePath !== "/404" &&
+                  routePath !== "/public-access-denied") ? (
                   <div className="ct-sidebar app-sidebar">
                     <DefaultSidebar
                       profileInfoReducer={profileInfoReducer}
@@ -146,7 +151,8 @@ class DefaultLayout extends React.Component {
                   routePath !== "/folder/shared/link" &&
                   routePath !== "/set/shared/link" &&
                   routePath !== "/all/set/shared/link" &&
-                  routePath !== "/404") ? (
+                  routePath !== "/404" &&
+                  routePath !== "/public-access-denied") ? (
                   <div className="dashboard-right-wrap">
                     <div className="dashboard-right-section">
                       <Suspense fallback={""}>
@@ -202,7 +208,8 @@ class DefaultLayout extends React.Component {
           routePath !== "/folder/shared/link" &&
           routePath !== "/all/set/shared/link" &&
           routePath !== "/set/shared/link" &&
-          routePath !== "/404" ? (
+          routePath !== "/404" &&
+          routePath !== "/public-access-denied" ? (
           <DefaultFooter />
         ) : null}
       </>
@@ -214,7 +221,8 @@ const mapStateToProps = state => ({
   modelInfoReducer: state.modelInfoReducer,
   loginReducer: state.loginReducer,
   profileInfoReducer: state.profileInfoReducer,
-  allSearchReducer: state.allSearchReducer
+  allSearchReducer: state.allSearchReducer,
+  shareLinkReducer: state.shareLinkReducer
 });
 const mapDispatchToProps = dispatch => ({
   modelOperate: data => dispatch(modelOpenRequest(data)),

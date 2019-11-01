@@ -42,7 +42,7 @@ export const moveReducer = handleActions(
     }),
     [MovesAction.GET_MOVES_OF_SET_REQUEST]: (state, { payload }) => ({
       ...state,
-      isMoveofSetLoading: true
+      isMoveofSetLoading: false
     }),
     [MovesAction.GET_MOVES_OF_SET_SUCCESS]: (state, { payload }) => ({
       ...state,
@@ -101,7 +101,7 @@ export const moveReducer = handleActions(
     }),
     [MovesAction.GET_MOVE_BY_SEARCH_REQUEST]: (state, { payload }) => ({
       ...state,
-      isMoveofSetLoading: true
+      isMoveofSetLoading: false
     }),
     [MovesAction.GET_MOVE_BY_SEARCH_SUCCESS]: (state, { payload }) => ({
       ...state,
@@ -121,13 +121,23 @@ export const moveReducer = handleActions(
     }),
     [MovesAction.STARRED_MOVE_SUCCESS]: (state, { payload }) => ({
       ...state,
-      movesOfSet: payload.moveofSetList ? payload.moveofSetList : state.movesOfSet,
+      movesOfSet: payload.moveofSetList
+        ? payload.moveofSetList
+        : state.movesOfSet,
       videoData: payload.videoData ? payload.videoData : state.videoData,
       isMoveStarLoading: {
         index: payload.index,
         loading: false
       }
     }),
+    [MovesAction.GET_TAG_LIST_SUCCESS]: (state, { payload }) => ({
+      ...state,
+      ...payload
+    }),
+    [MovesAction.ADD_TAGS_SUCCESS]: (state, { payload }) => ({
+      ...state,
+      ...payload
+    })
   },
   initialState
 );

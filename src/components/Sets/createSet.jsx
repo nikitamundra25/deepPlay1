@@ -44,6 +44,22 @@ class CreateSetComponent extends React.Component {
         description
       });
     }
+    if (prevProps.modal !== this.props.modal) {
+      if (this.props.setDetails) {
+        const { title, description } = this.props.setDetails;
+        this.setState({
+          title,
+          description,
+          errors: {}
+        });
+      } else {
+        this.setState({
+          title: "",
+          description: "",
+          errors: {}
+        });
+      }
+    }
   }
 
   handleChange = e => {

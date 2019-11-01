@@ -14,12 +14,14 @@ import {
   createAnotherMoveSuccess,
   getMoveBySearchSuccess,
   getMoveBySearchRequest,
-  starredMovesSuccess
+  starredMovesSuccess,
+  getTagListSuccess
 } from "../actions";
 import { AppRoutes } from "../config/AppRoutes";
 import { toast } from "react-toastify";
 import { logger } from "helper/Logger";
 import { completeVideoEditingSuccess } from "actions/Moves";
+import { addTagsSuccess } from "actions/Moves";
 let toastId = null;
 
 //  Download video
@@ -94,7 +96,7 @@ const getMovesOfSetLogic = createLogic({
     } else {
       dispatch(
         getMovesOfSetSuccess({
-          showLoader: false,
+          // showLoader: false,
           movesOfSet: result.data.movesData,
           totalMoves: result.data.totalMoves,
           isInfiniteScroll: action.payload.isInfiniteScroll
@@ -207,7 +209,7 @@ const starMoveLogic = createLogic({
       {
         moveId: action.payload ? action.payload.moveId : null,
         isStarred: action.payload ? action.payload.isStarred : false,
-        setId: action.payload ? action.payload.setId : null,
+        setId: action.payload ? action.payload.setId : null
       }
     );
     if (result.isError) {
@@ -224,16 +226,21 @@ const starMoveLogic = createLogic({
         dispatch(getMoveBySearchRequest({ search: action.payload.isSearch }));
       }
       if (action.payload && action.payload.moveofSetList) {
-        dispatch(starredMovesSuccess({
-          moveofSetList: action.payload.moveofSetList,
-          index: action.payload.index
-        }
-        ))
+        dispatch(
+          starredMovesSuccess({
+            moveofSetList: action.payload.moveofSetList,
+            index: action.payload.index
+          })
+        );
       } else {
-        dispatch(starredMovesSuccess({
-          videoData: action.payload.videoData,
+        if (!toast.isActive(toastId)) {
+          toastId = toast.success(result.messages[0]);
         }
-        ))
+        dispatch(
+          starredMovesSuccess({
+            videoData: action.payload.videoData
+          })
+        );
       }
       done();
     }
@@ -410,7 +417,9 @@ const addTagsLogic = createLogic({
       "PUT",
       true,
       undefined,
-      action.payload
+      {
+        data: action.payload.data
+      }
     );
     if (result.isError) {
       if (!toast.isActive(toastId)) {
@@ -421,6 +430,11 @@ const addTagsLogic = createLogic({
     } else {
       if (!toast.isActive(toastId)) {
         toastId = toast.success(result.messages[0]);
+      }
+      if (action.payload.data.fromMoveList) {
+        dispatch(addTagsSuccess({ movesOfSet: action.payload.moveList }));
+      } else {
+        dispatch(addTagsSuccess({ videoData: action.payload.moveVideo }));
       }
       dispatch(
         modelOpenRequest({
@@ -439,17 +453,6 @@ const addTagsLogic = createLogic({
 const updateSortIndexLogic = createLogic({
   type: MovesAction.UPDATE_SORT_INDEX_REQUEST,
   async process({ action }, dispatch, done) {
-    // const { sourceIndex, sortIndex } = action.payload;
-    // const { movesOfSet } = getState().moveReducer;
-    // movesOfSet.splice(sourceIndex, 1);
-    // movesOfSet.splice(sortIndex, 0, movesOfSet[sourceIndex]);
-    // console.log("movesOfSet", movesOfSet);
-
-    // dispatch(
-    //   updateSortIndexSuccess({
-    //     movesOfSet: movesOfSet
-    //   })
-    // );
     let api = new ApiHelper();
     let result = await api.FetchFromServer(
       "move",
@@ -458,7 +461,6 @@ const updateSortIndexLogic = createLogic({
       true,
       undefined,
       action.payload
-      // { ...action.payload, movesOfSet: movesOfSet }
     );
     if (result.isError) {
       if (!toast.isActive(toastId)) {
@@ -583,6 +585,54 @@ const getMovesBySearchLogic = createLogic({
     }
   }
 });
+
+//Add Tags In TagModal
+const addTagsInModalLogic = createLogic({
+  type: MovesAction.ADD_TAGS_IN_TAGMODAL_REQUEST,
+  async process({ action }, dispatch, done) {
+    let api = new ApiHelper();
+    let result = await api.FetchFromServer(
+      "move",
+      "/add-tags",
+      "PUT",
+      true,
+      undefined,
+      action.payload
+    );
+    if (result.isError) {
+      done();
+      return;
+    } else {
+      done();
+    }
+  }
+});
+
+// Get Tags List
+const getTagListRequestLogic = createLogic({
+  type: MovesAction.GET_TAG_LIST_REQUEST,
+  async process({ action }, dispatch, done) {
+    let api = new ApiHelper();
+    let result = await api.FetchFromServer(
+      "move",
+      "/get-tag-list",
+      "GET",
+      true
+    );
+    if (result.isError) {
+      done();
+      return;
+    } else {
+      console.log(">>>>taglist>", result.data.data);
+      dispatch(
+        getTagListSuccess({
+          tagsList: result.data.data
+        })
+      );
+      done();
+    }
+  }
+});
 export const MoveLogics = [
   downloadVideoLogic,
   getMovesOfSetLogic,
@@ -597,5 +647,7 @@ export const MoveLogics = [
   updateSortIndexLogic,
   removeVideoLocalServerLogic,
   editMoveLogic,
-  getMovesBySearchLogic
+  getMovesBySearchLogic,
+  addTagsInModalLogic,
+  getTagListRequestLogic
 ];

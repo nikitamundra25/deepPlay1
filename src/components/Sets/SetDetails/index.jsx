@@ -28,7 +28,9 @@ import {
   getAllFolderRequest,
   ManageSetRequest,
   updateSortIndexRequest,
-  updateMoveRequest
+  updateMoveRequest,
+  getTagListRequest,
+  addTagsInTagModalRequest
 } from "../../../actions";
 import SharableLinkModal from "../../comman/shareableLink/SharableLink";
 import { AppRoutes } from "../../../config/AppRoutes";
@@ -72,6 +74,7 @@ class SetDetails extends React.Component {
       isStarred: isStarred[1]
     });
     this.props.getSetList({ isSetNoLimit: false });
+
     this.setState({
       setIdPathName: pathName[3]
     });
@@ -248,7 +251,15 @@ class SetDetails extends React.Component {
   };
 
   addTagstoMove = data => {
-    this.props.addTagsRequest(data);
+    if (data.fromMoveList) {
+      const moveList = [...data.moveofSetList];
+      moveList[data.index].tags = data.tags;
+      this.props.addTagsRequest({ data: data, moveList: moveList });
+    } else {
+      const moveVideo = data.videoData;
+      moveVideo.tags = data.tags;
+      this.props.addTagsRequest({ data: data, moveVideo: moveVideo });
+    }
   };
 
   // Transfer sets to particular folder
@@ -289,7 +300,8 @@ class SetDetails extends React.Component {
       totalMoves,
       searchMoveResult,
       isMoveSearchLoading,
-      isMoveStarLoading
+      isMoveStarLoading,
+      tagsList
     } = moveReducer;
     const { userEncryptedInfo } = shareLinkReducer;
     const {
@@ -315,7 +327,15 @@ class SetDetails extends React.Component {
           <div className="content-header">
             <span className="content-title">
               <div className="main-title">
-                {setDetails ? setDetails.title : "MyFolder"}
+                {setDetails
+                  ? setDetails && setDetails.isCopy
+                    ? `Copy of ${setDetails.title} ${
+                        setDetails.copyIndex > 0
+                          ? `(${setDetails.copyIndex})`
+                          : ""
+                      }`
+                    : setDetails.title
+                  : "MySets"}
               </div>
               <div className="sub-title">
                 Total Move {setDetails ? `${setDetails.moveCount}` : 0}
@@ -370,7 +390,7 @@ class SetDetails extends React.Component {
                 </DropdownMenu>
               </UncontrolledDropdown>
               <UncontrolledTooltip placement="top" target="edit">
-                Edit & Delete
+                Add, Edit & Delete
               </UncontrolledTooltip>
             </div>
           </div>
@@ -393,7 +413,13 @@ class SetDetails extends React.Component {
                   loadVideoDataRequest={loadVideoDataRequest}
                   addTagstoMove={this.addTagstoMove}
                   isStarred={this.isStarred}
+                  // addTagsInTagModalRequest={addTagsInTagModalRequest}
+                  tagsList={tagsList}
                   editMove={data => this.props.updateMoveRequest(data)}
+                  addTagsInTagModalRequest={data =>
+                    this.props.addTagsInTagModalRequest(data)
+                  }
+                  getTagListRequest={() => this.props.getTagListRequest()}
                   {...this.props}
                 />
               ) : null}
@@ -421,9 +447,14 @@ class SetDetails extends React.Component {
                     addTagstoMove={this.addTagstoMove}
                     isMoveSearchLoading={isMoveSearchLoading}
                     getMovesOfSetRequest={getMovesOfSetRequest}
+                    tagsList={tagsList}
                     updateSortIndexRequest={updateSortIndexRequest}
                     searchMove={data => this.props.searchMoveRequest(data)}
                     isMoveStarLoading={isMoveStarLoading}
+                    addTagsInTagModalRequest={data =>
+                      this.props.addTagsInTagModalRequest(data)
+                    }
+                    getTagListRequest={() => this.props.getTagListRequest()}
                     {...this.props}
                   />
                 </div>
@@ -508,6 +539,12 @@ const mapDispatchToProps = dispatch => ({
   },
   updateMoveRequest: data => {
     dispatch(updateMoveRequest(data));
+  },
+  getTagListRequest: () => {
+    dispatch(getTagListRequest());
+  },
+  addTagsInTagModalRequest: data => {
+    dispatch(addTagsInTagModalRequest(data));
   }
 });
 export default connect(

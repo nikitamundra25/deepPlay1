@@ -6,7 +6,8 @@ import {
   modelOpenRequest,
   loginRequest,
   socialLoginRequest,
-  forgotPasswordRequest
+  forgotPasswordRequest,
+  changeHeaderRequest
 } from "../../actions";
 // import Login from "../Auth/Login"
 // import ForgotPassword from "../Auth/ForgotPassword";
@@ -44,6 +45,14 @@ const image = [
 ];
 // core components
 class HomePage extends React.Component {
+  componentDidMount = () => {
+    console.log("Currldfhfghocation", this.props.location);
+    const path = this.props.location.pathname;
+    if (path === "/") {
+      this.props.changeHeaderRequest();
+    }
+  };
+
   handleDashboardOpen = () => {
     this.props.redirectTo(AppRoutes.DASHBOARD.url);
   };
@@ -121,7 +130,7 @@ class HomePage extends React.Component {
             </Col>
             <Col md="6">
               {/* <iframe width="560" title={"Dance"} height="315" src="https://www.youtube.com/embed/nrDtcsyd-U4" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe> */}
-              
+
               {/* no videos */}
               {/* <div className="d-flex video-add-banner justify-content-center align-items-center">
                 <span className="play-ic-wrap">
@@ -129,13 +138,15 @@ class HomePage extends React.Component {
                 </span>
               </div> */}
 
-                {/* videos */}
-                <div className="videos-wrap d-flex justify-content-center align-items-center">
+              {/* videos */}
+              <div className="videos-wrap d-flex justify-content-center align-items-center">
                 <video width="100%" id="webm-video-0">
-                  <source src="https://s3.amazonaws.com/hope.bucket/moves/1571752097935_deep-play.webm" type="video/webm" />
-                  </video> 
-                </div>
-              
+                  <source
+                    src="https://s3.amazonaws.com/hope.bucket/moves/1571752097935_deep-play.webm"
+                    type="video/webm"
+                  />
+                </video>
+              </div>
             </Col>
           </Row>
         </section>
@@ -244,7 +255,8 @@ const mapDispatchToProps = dispatch => ({
   modelOpenRequest: data => dispatch(modelOpenRequest(data)),
   loginRequest: data => dispatch(loginRequest(data)),
   forgotPasswordRequest: data => dispatch(forgotPasswordRequest(data)),
-  socialLoginRequest: data => dispatch(socialLoginRequest(data))
+  socialLoginRequest: data => dispatch(socialLoginRequest(data)),
+  changeHeaderRequest: () => dispatch(changeHeaderRequest())
 });
 export default connect(
   mapStateToProps,

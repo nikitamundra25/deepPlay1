@@ -115,12 +115,12 @@ class VideoView extends React.Component {
             <>
               {
                 !isEdit ?
-                  <video width={"100%"} autoPlay loop id={"video-trimmer"} muted>
+                  <video width={"100%"} autoPlay loop id={"video-trimmer"} muted={false}>
                     <source
                       src={`${AppConfig.API_ENDPOINT}${moveDetails.videoUrl}`}
                     />
                   </video> :
-                  <video width={"100%"} autoPlay loop id={"video-trimmer"} muted>
+                  <video width={"100%"} autoPlay loop id={"video-trimmer"} muted={false}>
                     <source
                       src={`${moveDetails.moveURL}`}
                     />
