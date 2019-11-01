@@ -15,7 +15,6 @@ import {
   Form,
   Progress
 } from "reactstrap";
-import { Link } from "react-router-dom";
 import "./index.scss";
 import { logger } from "helper/Logger";
 import { connect } from "react-redux";
@@ -179,12 +178,14 @@ class MoveComponent extends React.Component {
             <div className="set-content-block w-100">
               <CardHeader className="border-bottom pt-4 pb-2">
                 <div className="content-header set-header d-flex ">
-                  <Link to="/dashboard">
+                  <div onClick={() => {
+                    window.history.back();
+                  }}>
                     <span className="cursor_pointer back-arrow create-move-back">
                       {" "}
                       <i className="fas fa-long-arrow-alt-left"></i> Back
                     </span>
-                  </Link>
+                  </div>
                   <span className="content-title creat-set-title">
                     {isVideoDownloading ? "Preparing WebM" : "Create a move"}
                   </span>
@@ -202,100 +203,100 @@ class MoveComponent extends React.Component {
                       </p>
                     </div>
                   ) : (
-                    <Form
-                      className="url-update-wrap"
-                      onSubmit={e => this.onSubmitForm(e)}
-                    >
-                      <div className="ml-3 mr-3">
-                        <FormGroup className="flex-fill flex-column ">
-                          <Label className="text-center d-block mt-4 mb-3">
-                            Paste YouTube Video URL or Type URL Manually{" "}
-                          </Label>
-                        </FormGroup>
-                        <FormGroup
-                          className={
-                            errors
-                              ? `flex-fill flex-column mt-0 form-custom-error error-with-append-btn`
-                              : "flex-fill flex-column mt-0 form-custom-error"
-                          }
-                        >
-                          <InputGroup>
-                            <Input
-                              id="url"
-                              className={
-                                errors
-                                  ? " pl-2 boder-1-invalid is-invalid "
-                                  : " pl-2 boder-1 "
-                              }
-                              placeholder="Ex: https://www.youtube.com/watch?v=I5t894l5b1w"
-                              type="text"
-                              onPaste={e => this.handlePasteEvent(e)}
-                              name="url"
-                              onChange={e => this.handleChange(e)}
-                              value={url}
-                            />
-                            <FormFeedback>
-                              {errors.validUrl && url ? errors.validUrl : null}
-                              {errors.notUrl ? errors.notUrl : null}
-                            </FormFeedback>
-                            <InputGroupAddon
-                              addonType="append"
-                              id="upload-title"
-                            >
-                              <InputGroupText>
-                                <i
-                                  className="fa fa-exclamation-circle display-5"
-                                  aria-hidden="true"
-                                ></i>
-                              </InputGroupText>
-                            </InputGroupAddon>
-                            <UncontrolledTooltip
-                              placement="top"
-                              target="upload-title"
-                            >
-                              Paste YouTube Video URL or Type URL Manually
+                      <Form
+                        className="url-update-wrap"
+                        onSubmit={e => this.onSubmitForm(e)}
+                      >
+                        <div className="ml-3 mr-3">
+                          <FormGroup className="flex-fill flex-column ">
+                            <Label className="text-center d-block mt-4 mb-3">
+                              Paste YouTube Video URL or Type URL Manually{" "}
+                            </Label>
+                          </FormGroup>
+                          <FormGroup
+                            className={
+                              errors
+                                ? `flex-fill flex-column mt-0 form-custom-error error-with-append-btn`
+                                : "flex-fill flex-column mt-0 form-custom-error"
+                            }
+                          >
+                            <InputGroup>
+                              <Input
+                                id="url"
+                                className={
+                                  errors
+                                    ? " pl-2 boder-1-invalid is-invalid "
+                                    : " pl-2 boder-1 "
+                                }
+                                placeholder="Ex: https://www.youtube.com/watch?v=I5t894l5b1w"
+                                type="text"
+                                onPaste={e => this.handlePasteEvent(e)}
+                                name="url"
+                                onChange={e => this.handleChange(e)}
+                                value={url}
+                              />
+                              <FormFeedback>
+                                {errors.validUrl && url ? errors.validUrl : null}
+                                {errors.notUrl ? errors.notUrl : null}
+                              </FormFeedback>
+                              <InputGroupAddon
+                                addonType="append"
+                                id="upload-title"
+                              >
+                                <InputGroupText>
+                                  <i
+                                    className="fa fa-exclamation-circle display-5"
+                                    aria-hidden="true"
+                                  ></i>
+                                </InputGroupText>
+                              </InputGroupAddon>
+                              <UncontrolledTooltip
+                                placement="top"
+                                target="upload-title"
+                              >
+                                Paste YouTube Video URL or Type URL Manually
                             </UncontrolledTooltip>
-                          </InputGroup>
-                          {/* <FormFeedback>
+                            </InputGroup>
+                            {/* <FormFeedback>
                             {errors.notUrl
                               ? errors.notUrl
                               : errors.validUrl && url
                               ? errors.validUrl
                               : null}
                           </FormFeedback> */}
-                        </FormGroup>
-                      </div>
-                      <div className="divider-or mt-5 mb-5">
-                        <span> OR </span>
-                      </div>
-                      <div className="text-center video-upload-manually pb-4">
-                        <FormGroup>
-                          <FormGroup className="flex-fill flex-column ">
-                            <Label className="mb-3 set-wrap ">
-                              Upload video file from your system (mp4, 3gp, ogg,
-                              wmv, webm, flv etc..){" "}
-                            </Label>
                           </FormGroup>
-                          <Label
-                            for="videoUpload"
-                            className="btn-black btn url-upload-btn"
-                          >
-                            <i className="fa fa-cloud-upload mr-2"></i>
-                            {isVideoDownloading ? "Please wait..." : "Upload"}
-                          </Label>
-                          <CustomInput
-                            onChange={this.handleVideoFileSelect}
-                            type="file"
-                            accept="video/mp4,video/x-m4v,video/*,video/ogg"
-                            disabled={false}
-                            className={fileErr ? "is-invalid d-none" : "d-none"}
-                            id="videoUpload"
-                            name="customFile"
-                          />
-                        </FormGroup>
-                      </div>
-                    </Form>
-                  )}
+                        </div>
+                        <div className="divider-or mt-5 mb-5">
+                          <span> OR </span>
+                        </div>
+                        <div className="text-center video-upload-manually pb-4">
+                          <FormGroup>
+                            <FormGroup className="flex-fill flex-column ">
+                              <Label className="mb-3 set-wrap ">
+                                Upload video file from your system (mp4, 3gp, ogg,
+                              wmv, webm, flv etc..){" "}
+                              </Label>
+                            </FormGroup>
+                            <Label
+                              for="videoUpload"
+                              className="btn-black btn url-upload-btn"
+                            >
+                              <i className="fa fa-cloud-upload mr-2"></i>
+                              {isVideoDownloading ? "Please wait..." : "Upload"}
+                            </Label>
+                            <CustomInput
+                              onChange={this.handleVideoFileSelect}
+                              type="file"
+                              accept="video/mp4,video/x-m4v,video/*,video/ogg"
+                              disabled={false}
+                              className={fileErr ? "is-invalid d-none" : "d-none"}
+                              id="videoUpload"
+                              name="customFile"
+                            />
+                          </FormGroup>
+                        </div>
+                      </Form>
+                    )}
                 </div>
               </CardBody>
             </div>
