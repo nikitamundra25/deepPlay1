@@ -104,7 +104,7 @@ class HomePage extends React.Component {
         <section className="home-video-section">
           <Row className="">
             <Col md="6" className="d-flex flex-column justify-content-between ">
-              <div className="banner-text">
+              <div className="banner-text text-right">
                 <h3 className="banner-heading">
                   Deconstruct Movements to Accelerate Learning
                 </h3>
@@ -157,7 +157,7 @@ class HomePage extends React.Component {
                 Explore Sample Sets
               </h6>
             </Col>
-            <Col md="4">
+            <Col md="4" lg="3">
               <div className="play-list-block  d-flex h-100">
                 <div className="add-play-list-block d-flex  justify-content-center align-items-center text-center flex-column">
                   <div className="h4 font-dark-bold">
@@ -180,7 +180,7 @@ class HomePage extends React.Component {
             </Col>
             {image.map((images, index) => {
               return (
-                <Col md="4" key={index}>
+                <Col md="4" lg="3" key={index}>
                   <div className="play-list-block ">
                     <div
                       className="play-sub-block cursor_pointer"
