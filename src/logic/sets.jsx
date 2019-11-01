@@ -154,10 +154,10 @@ const deleteSetLogic = createLogic({
       if (action.payload.setDetails) {
         dispatch(redirectTo({ path: AppRoutes.SETS.url }));
       }
-      if (action.payload.previousFolderId) {
+      if (action.payload.folderId) {
         dispatch(
           getFolderSetRequest({
-            folderId: action.payload.previousFolderId
+            folderId: action.payload.folderId
           })
         );
       }
