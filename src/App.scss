@@ -28,7 +28,8 @@ $source: "Roboto", sans-serif;
 @font-face {
   font-family: "hurmegeosans-no2-400";
   src: url("/public/assets/font/hurmegeosans-no2-400.eot");
-  src: url("/assets/font/hurmegeosans/hurmegeosans-no2-400.eot?#iefix") format("embedded-opentype"),
+  src: url("/assets/font/hurmegeosans/hurmegeosans-no2-400.eot?#iefix")
+      format("embedded-opentype"),
     url("/assets/font/hurmegeosans/hurmegeosans-no2-400.woff2") format("woff2");
   font-weight: normal;
   font-style: normal;
@@ -209,7 +210,7 @@ a {
   box-shadow: none !important;
   transform: none;
   font-size: 16px;
-  border-radius:2px ;
+  border-radius: 2px;
   &:hover {
     box-shadow: none;
   }
@@ -623,7 +624,7 @@ a {
 }
 .btn-black {
   background: $blackcolor;
-  border:1px solid $blackcolor;
+  border: 1px solid $blackcolor;
   color: $whiteColor;
   &:hover {
     background: #fff;
@@ -1244,17 +1245,16 @@ a {
   border: 1px solid #d4d4d4;
 }
 .auth-user-model {
-  
-.form-group .input-group .input-group-prepend{
-  border:2px solid #455358;
-  border-right:none;
-  
-  & + input {
-  border-radius: 0px 4px 4px 0px;
-  border:2px solid #455358;
-  border-left:none;}
-}
+  .form-group .input-group .input-group-prepend {
+    border: 2px solid #455358;
+    border-right: none;
 
+    & + input {
+      border-radius: 0px 4px 4px 0px;
+      border: 2px solid #455358;
+      border-left: none;
+    }
+  }
 
   i {
     color: #555;
@@ -1272,16 +1272,15 @@ a {
     padding-bottom: 25px;
     background: #fff;
     border: none;
-    
   }
   .card-body {
     background: $whiteColor;
     padding-top: 0px;
-    }
+  }
   .auth-subheading {
     font-size: 16px;
     position: relative;
-    &::before{
+    &::before {
       content: "";
       width: 100%;
       border-bottom: 1px;
@@ -1291,15 +1290,14 @@ a {
       background: #ccc;
       left: -42px;
       top: 50%;
-   
+
       transform: translateY(-50%);
     }
-    span{
+    span {
       z-index: 9;
       background: #fff;
       position: relative;
       padding: 0px 5px;
-  
     }
   }
   .close {
@@ -1312,7 +1310,6 @@ a {
     margin-top: 0px;
     padding-top: 0px;
   }
-
 }
 .tooltip-btn-wrap {
   position: absolute;
@@ -1748,8 +1745,9 @@ a {
   }
 }
 .url-upload-btn {
-  &:nth-child(2){
-  margin: 0px !important;}
+  &:nth-child(2) {
+    margin: 0px !important;
+  }
 }
 .set-content-wrap {
   width: 100%;
@@ -2473,3 +2471,14 @@ a {
 }
 // media query end
 // Please don't write other css in the bottom of media query
+.videos-move-wrap {
+  .dl-list {
+    display: flex !important;
+  }
+  .dl-item {
+    width: 25%;
+  }
+  .play-list-tile {
+    width: 100%;
+  }
+}

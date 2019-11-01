@@ -528,7 +528,7 @@ class MoveList extends React.Component {
                 </div>
               ) : null}
             </Col>
-            <div className="video-thumbnail-block">
+            <div className="video-thumbnail-block videos-move-wrap">
               <div className="play-list-tile">
                 <div
                   className="play-list-block  d-flex h-100 cursor_pointer"
