@@ -25,6 +25,14 @@ $source: "Roboto", sans-serif;
 // @import "./assets/scss/custom/variables.scss";
 @import url("https://fonts.googleapis.com/css?family=Poppins&display=swap");
 @import url("https://fonts.googleapis.com/css?family=Roboto:400,500,700&display=swap");
+@font-face {
+  font-family: "hurmegeosans-no2-400";
+  src: url("/assets/font/hurmegeosans/hurmegeosans-no2-400.eot");
+  src: url("/assets/font/hurmegeosans/hurmegeosans-no2-400.eot?#iefix") format("embedded-opentype"),
+    url("/assets/font/hurmegeosans/hurmegeosans-no2-400.woff2") format("woff2");
+  font-weight: normal;
+  font-style: normal;
+}
 textarea {
   resize: none;
 }
@@ -170,7 +178,7 @@ a {
   }
 }
 .theme-header {
-  min-height: 58px;
+  min-height: 74px;
   background-color: $blackcolor;
   color: $whiteColor;
   z-index: 99;
@@ -178,7 +186,7 @@ a {
   width: 100%;
   top: 0px;
   .navbar-main.navbar {
-    padding: 0.5em;
+    padding: 15px 8px;
   }
   .header-title {
     font-size: 28px;
@@ -201,6 +209,7 @@ a {
   box-shadow: none !important;
   transform: none;
   font-size: 16px;
+  border-radius:2px ;
   &:hover {
     box-shadow: none;
   }
@@ -225,8 +234,8 @@ a {
   color: #fff;
   background: $blackcolor;
   &:hover {
-    color: #fff;
-    background: $textColor;
+    color: $textColor;
+    background: $whiteColor;
     border: 2px solid $textColor;
   }
 }
@@ -1255,8 +1264,8 @@ a {
     background: #fff;
   }
   .card-body {
-    background: #dfe7ed;
-  }
+    background: $whiteColor;
+    }
   .auth-subheading {
     font-size: 16px;
   }

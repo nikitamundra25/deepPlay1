@@ -25,7 +25,7 @@ class Page404Component extends Component {
               </div>
             </Col>
             <Col md="6" className="d-flex flex-column justify-content-between ">
-              <div className="banner-text">
+              <div className="banner-text text-right">
                 <h1 className="banner-heading">
                 Oops !
                 </h1>
