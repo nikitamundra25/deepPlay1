@@ -1,11 +1,5 @@
 import React from "react";
-import {
-  Modal,
-  ModalBody,
-  ModalHeader,
-  Button,
-  ModalFooter
-} from "reactstrap";
+import { Modal, ModalBody, ModalHeader, Button, ModalFooter } from "reactstrap";
 import closeIcon from "../../../assets/img/close-img.png";
 import { logger } from "helper/Logger";
 import AsyncSelect from "react-select/async";
@@ -112,7 +106,12 @@ class TransferToModal extends React.Component {
         }
         if (!isNotAccesible) {
           defaultFolderList.push({
-            label: item && item.isCopy ? `Copy of ${item.title}` : item.title,
+            label:
+              item && item.isCopy
+                ? `Copy of ${item.title}${
+                    item.copyIndex > 0 ? `(${item.copyIndex})` : ""
+                  }`
+                : item.title,
             value: item._id
           });
         }

@@ -25,7 +25,7 @@ import "slick-carousel/slick/slick-theme.css";
 import { ConfirmBox } from "../../../helper/SweetAleart";
 import WebmView from "./WebmView";
 import Loader from "../../comman/Loader/Loader";
-import MoveList from "./moveList";
+import MoveSearchList from "./moveSearchList";
 import TransferToModal from "../../Folders/FolderDetails/transferTo";
 // core components
 class MoveSearchComponent extends React.Component {
@@ -317,7 +317,7 @@ class MoveSearchComponent extends React.Component {
               ) : null}
               <Card className="video-slider-section">
                 <div className="step-2">
-                  <MoveList
+                  <MoveSearchList
                     show={show}
                     setIndex={setIndex}
                     closePopOver={this.closePopOver}

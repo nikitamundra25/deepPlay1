@@ -351,26 +351,16 @@ class MoveList extends React.Component {
   /*  
   */
   handleLoadmoreRequest = setIdPathName => {
-    const location = this.props.location;
-    const path = location.search.split("=");
     const pageLimit = this.state.page;
     this.setState({
       page: pageLimit + 1
     });
     const pageCount = pageLimit + 1;
-    if (path.length > 1) {
-      this.props.getMoveBySearchRequest({
-        search: path[1],
-        page: pageCount,
-        isInfiniteScroll: true
-      });
-    } else {
-      this.props.getMovesOfSetRequest({
-        setId: setIdPathName,
-        page: pageCount,
-        isInfiniteScroll: true
-      });
-    }
+    this.props.getMovesOfSetRequest({
+      setId: setIdPathName,
+      page: pageCount,
+      isInfiniteScroll: true
+    });
   };
   render() {
     const {

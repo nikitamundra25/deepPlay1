@@ -274,7 +274,8 @@ const ManageSetLogic = createLogic({
       dispatch(
         modelOpenRequest({
           modelDetails: {
-            transferToModalOpen: false
+            transferToModalOpen: false,
+            transferToModalOpenReq: false
             // addSetModalOpen: false
           }
         })

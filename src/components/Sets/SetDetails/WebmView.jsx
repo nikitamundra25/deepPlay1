@@ -166,7 +166,7 @@ class WebmView extends Component {
       setId: this.props.setIdPathName
     };
     const { value } = await ConfirmBox({
-      text: "You want to delete this move! "
+      text: "You want to remove this move! "
     });
     if (value) {
       this.props.deleteMove(data);

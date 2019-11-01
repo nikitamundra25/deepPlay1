@@ -165,7 +165,13 @@ class AddSetModal extends React.Component {
                             <div className="d-flex flex-warp align-item-center">
                               <div className="sets-heading text-capitalize">
                                 {" "}
-                                {set.title}
+                                {set && set.isCopy
+                                  ? `Copy of ${set.title}${
+                                      set.copyIndex > 0
+                                        ? `(${set.copyIndex})`
+                                        : ""
+                                    }`
+                                  : set.title}
                               </div>
                               <div className="sets-icon ml-auto">
                                 {set.folderId !== null ? (
