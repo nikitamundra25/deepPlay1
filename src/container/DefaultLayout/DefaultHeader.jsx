@@ -53,7 +53,15 @@ class DefaultHeader extends React.Component {
       });
     }
   };
-
+  componentDidUpdate = ({ location }) => {
+    const temp = this.props.location.pathname;
+    if (location !== this.props.location) {
+      this.setState({
+        isUserLoggedIn: false,
+        path: temp
+      });
+    }
+  };
   handleLoginModel = () => {
     const { modelInfoReducer } = this.props;
     const { modelDetails } = modelInfoReducer;
@@ -117,9 +125,7 @@ class DefaultHeader extends React.Component {
     if (value === "") {
       return;
     } else {
-      setTimeout(() => {
-        this.props.allSearchRequest({ search: value });
-      }, 500);
+      this.props.allSearchRequest({ search: value });
     }
   };
 
@@ -160,9 +166,11 @@ class DefaultHeader extends React.Component {
       modelOpenRequest,
       isLoggedIn,
       routePath,
-      allSearchReducer
+      allSearchReducer,
+      shareLinkReducer
     } = this.props;
     const { modelDetails } = modelInfoReducer;
+    const { isShareableUrl } = shareLinkReducer;
     const {
       loginModelOpen,
       signupModelOpen,
@@ -189,6 +197,7 @@ class DefaultHeader extends React.Component {
         : profiledata
         ? profiledata.profileImage
         : "";
+
     return (
       <>
         <header className="header-global theme-header dashboard-header">
@@ -204,7 +213,9 @@ class DefaultHeader extends React.Component {
             {path !== AppRoutes.FOLDER_SHARED_LINK.url &&
             path !== AppRoutes.SET_SHARED_LINK.url &&
             path !== AppRoutes.ALL_SET_SHARED_LINK.url &&
-            path !== "/404" ? (
+            path !== "/404" &&
+            path !== "/public-access-denied" &&
+            !isShareableUrl ? (
               <>
                 <Navbar
                   className="navbar-main header-navbar"

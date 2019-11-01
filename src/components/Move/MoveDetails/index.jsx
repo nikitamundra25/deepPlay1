@@ -23,9 +23,12 @@ import {
   addNewTagToList,
   createAnotherMoveRequest,
   removeVideoLocalServerRequest,
+  addTagsInTagModalRequest,
+  getTagListRequest
 } from "../../../actions";
 import "./index.scss";
 import Loader from "components/comman/Loader/Loader";
+import VideoLoader from "components/comman/Loader/videoLoader";
 import FrameDetails from "./FrameDetails";
 import { logger } from "helper/Logger";
 import { completeVideoEditing } from "actions/Moves";
@@ -66,8 +69,9 @@ class MoveDetails extends React.Component {
     const moveId = location.split("/");
     this.props.getMoveDetailsRequest({ moveId: moveId[3] });
     this.props.getAllSetRequest({ isSetNoLimit: false });
-    const { recentSetAdded } = this.props.setReducer;
-    if (recentSetAdded !== "") {
+    this.props.getTagListRequest();
+    const { recentSetAdded } = this.props.setReducer;    
+    if (recentSetAdded) {
       this.setState({
         selectSetOptions: {
           label: recentSetAdded.title,
@@ -78,7 +82,7 @@ class MoveDetails extends React.Component {
     let parsed = qs.parse(this.props.location.search);
     this.setState({
       isEdit: parsed.isEdit
-    })
+    });
   };
 
   componentDidUpdate = ({ modelInfoReducer, location, moveReducer }) => {
@@ -116,17 +120,18 @@ class MoveDetails extends React.Component {
         setId
       } = this.props.moveReducer.moveDetails;
       const { allSetList } = this.props.setReducer;
-      let selectOption;
+      let selectOption;  
       if (allSetList && allSetList.length) {
         // eslint-disable-next-line
-        allSetList.map(data => {
-          if (setId) {
+        allSetList.map(data => { 
+          if (setId) {   
             if (setId === data._id) {
               selectOption = {
                 label: data.title,
                 value: data._id
               };
             }
+            
           }
         });
       }
@@ -137,9 +142,9 @@ class MoveDetails extends React.Component {
         selectSetOptions: selectOption
           ? selectOption
           : {
-            label: "Type to select sets",
-            value: ""
-          }
+              label: "Type to select sets",
+              value: ""
+            }
       });
     }
   };
@@ -159,8 +164,6 @@ class MoveDetails extends React.Component {
     const { moveReducer } = this.props;
     const { moveDetails, isSavingWebM } = moveReducer;
     let parsed = qs.parse(this.props.location.search);
-    console.log("parsed", parsed);
-
     logger(isSavingWebM);
     const { _id: moveId } = moveDetails;
     const { timer, title, description } = this.state;
@@ -207,7 +210,7 @@ class MoveDetails extends React.Component {
    */
   handleTagChange = (newValue, actionMeta) => {
     //const { tagsList } = this.props.moveReducer
-    console.log(newValue);
+    console.log(newValue, "kite", actionMeta);
     if (newValue) {
       this.setState({
         tags: newValue
@@ -222,6 +225,12 @@ class MoveDetails extends React.Component {
     //   this.props.addNewTagToList(tags)
     // }
     console.log(`action: ${actionMeta.action}`);
+
+    if (actionMeta.action === "create-option") {
+      this.props.addTagsInTagModalRequest({
+        tags: newValue[newValue.length - 1]
+      });
+    }
     console.groupEnd();
   };
   handleChange = e => {
@@ -285,9 +294,13 @@ class MoveDetails extends React.Component {
   };
 
   handleSetDetails = id => {
-    const { moveReducer } = this.props
-    const { moveUrlDetails } = moveReducer
-    this.props.removeVideoLocalServerRequest({ videoOriginalFile: moveUrlDetails.videoOriginalFile, videoFileMain: moveUrlDetails.videoFileMain, setId: id })
+    const { moveReducer } = this.props;
+    const { moveUrlDetails } = moveReducer;
+    this.props.removeVideoLocalServerRequest({
+      videoOriginalFile: moveUrlDetails.videoOriginalFile,
+      videoFileMain: moveUrlDetails.videoFileMain,
+      setId: id
+    });
   };
   /**
    *
@@ -316,69 +329,73 @@ class MoveDetails extends React.Component {
         <div className="create-set-section step-2 ">
           <Card className="w-100">
             <CardBody className="p-0">
-              <div>
-                <span
-                  onClick={() => {
-                    this.props.redirectTo("/move");
-                  }}
-                  className={"cursor_pointer back-arrow"}
-                >
-                  {" "}
-                  <i className="fas fa-long-arrow-alt-left" /> Back
-                </span>
-              </div>
+              {!isSavingWebM ? (
+                <div>
+                  <span
+                    onClick={() => {
+                      this.props.redirectTo("/move");
+                    }}
+                    className={"cursor_pointer back-arrow"}
+                  >
+                    {" "}
+                    <i className="fas fa-long-arrow-alt-left" /> Back
+                  </span>
+                </div>
+              ) : null}
               {isSavingWebM ? (
-                <Loader />
+                <div>
+                  <VideoLoader fullLoader={true} />
+                </div>
               ) : (
-                  <>
-                    <Row className={"mt-3"}>
-                      {moveDetails && moveDetails.videoUrl ? (
-                        <>
-                          <VideoView
-                            moveReducer={moveReducer}
-                            handleChange={this.handleChange}
-                            handleDesriptionModal={this.handleDesriptionModal}
-                            description={description}
-                            timer={timer}
-                            title={title}
-                            isEdit={isEdit}
-                            videoDuration={data =>
-                              this.setState({
-                                videoDuration: data.timeDuration,
-                                videoMaxDuration: data.videoMaxDuration
-                              })
-                            }
-                          />
-                          <VideoDetails
-                            setReducer={setReducer}
-                            isDescriptionModalOpen={isDescriptionModalOpen}
-                            selectSetOptions={selectSetOptions}
-                            handleChange={this.handleChange}
-                            handleInputChange={this.handleInputChange}
-                            errors={errors}
-                            handleTagChange={this.handleTagChange}
-                            tags={tags}
-                            setId={moveDetails ? moveDetails.setId : null}
-                            tagsList={tagsList}
-                            ref={this.videoDetails}
-                          />
-                        </>
-                      ) : (
-                          <Col sm={12} className="loader-col video-loader-wrap">
-                            <Loader fullLoader={true} />
-                          </Col>
-                        )}
-                    </Row>
-                    <FrameDetails
-                      videoDuration={videoDuration || []}
-                      videoMaxDuration={videoMaxDuration || 0}
-                      frames={frames || []}
-                      videoMetaData={videoMetaData || {}}
-                      onTimerChange={this.onTimerChange}
-                      completeEditing={this.completeEditing}
-                    />
-                  </>
-                )}
+                <>
+                  <Row className={"mt-3"}>
+                    {moveDetails && moveDetails.videoUrl ? (
+                      <>
+                        <VideoView
+                          moveReducer={moveReducer}
+                          handleChange={this.handleChange}
+                          handleDesriptionModal={this.handleDesriptionModal}
+                          description={description}
+                          timer={timer}
+                          title={title}
+                          isEdit={isEdit}
+                          videoDuration={data =>
+                            this.setState({
+                              videoDuration: data.timeDuration,
+                              videoMaxDuration: data.videoMaxDuration
+                            })
+                          }
+                        />
+                        <VideoDetails
+                          setReducer={setReducer}
+                          isDescriptionModalOpen={isDescriptionModalOpen}
+                          selectSetOptions={selectSetOptions}
+                          handleChange={this.handleChange}
+                          handleInputChange={this.handleInputChange}
+                          errors={errors}
+                          handleTagChange={this.handleTagChange}
+                          tags={tags}
+                          setId={moveDetails ? moveDetails.setId : null}
+                          tagsList={tagsList}
+                          ref={this.videoDetails}
+                        />
+                      </>
+                    ) : (
+                      <Col sm={12} className="loader-col video-loader-wrap">
+                        <Loader fullLoader={true} />
+                      </Col>
+                    )}
+                  </Row>
+                  <FrameDetails
+                    videoDuration={videoDuration || []}
+                    videoMaxDuration={videoMaxDuration || 0}
+                    frames={frames || []}
+                    videoMetaData={videoMetaData || {}}
+                    onTimerChange={this.onTimerChange}
+                    completeEditing={this.completeEditing}
+                  />
+                </>
+              )}
             </CardBody>
           </Card>
         </div>
@@ -401,7 +418,11 @@ class MoveDetails extends React.Component {
                 className="close"
                 data-dismiss="modal"
                 type="button"
-                onClick={this.cancelDescription}
+                onClick={
+                  isUpdateDescription
+                    ? this.handleDesriptionModal
+                    : this.cancelDescription
+                }
               >
                 <span aria-hidden="true">
                   <img src={closeBtn} alt="close-ic" />
@@ -473,7 +494,10 @@ const mapDispatchToProps = dispatch => ({
   modelOperate: data => dispatch(modelOpenRequest(data)),
   addNewTagToList: data => dispatch(addNewTagToList(data)),
   createAnotherMoveRequest: data => dispatch(createAnotherMoveRequest(data)),
-  removeVideoLocalServerRequest: data => dispatch(removeVideoLocalServerRequest(data))
+  removeVideoLocalServerRequest: data =>
+    dispatch(removeVideoLocalServerRequest(data)),
+  addTagsInTagModalRequest: data => dispatch(addTagsInTagModalRequest(data)),
+  getTagListRequest: () => dispatch(getTagListRequest())
 });
 export default connect(
   mapStateToProps,

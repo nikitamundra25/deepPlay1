@@ -4,30 +4,14 @@ import CreatableSelect from "react-select/creatable";
 import "react-tagsinput/react-tagsinput.css";
 import AsyncSelect from "react-select/async";
 import "./index.scss";
-const colourOptions = [
-  {
-    label: "Red",
-    value: "red"
-  },
-  {
-    label: "Green",
-    value: "Green"
-  },
-  {
-    label: "Yellow",
-    value: "Yellow"
-  },
-  {
-    label: "Blue",
-    value: "Blue"
-  }
-];
+
 // core components
 class VideoDetails extends React.Component {
   constructor(props) {
     super(props);
     this.state = {};
   }
+  
   getDetails = () => {
     const { tags, selectSetOptions } = this.props;
     return {
@@ -35,8 +19,11 @@ class VideoDetails extends React.Component {
       setId: selectSetOptions ? selectSetOptions.value : null
     };
   };
+
   render() {
-    const { selectSetOptions, setReducer, tags, errors } = this.props;
+    const { selectSetOptions, setReducer, tags, errors, tagsList } = this.props;
+    console.log("selectSetOptions",selectSetOptions);
+    
     const { recentSetAdded, allSetList } = setReducer;
     let recentAddedSet,
       defaultSetoptions = [];
@@ -56,7 +43,6 @@ class VideoDetails extends React.Component {
         value: recentSetAdded._id
       };
     }
-
 
     return (
       <>
@@ -82,8 +68,8 @@ class VideoDetails extends React.Component {
                 isMulti
                 onChange={this.props.handleTagChange}
                 value={tags}
-                options={colourOptions}
-              // options={colourOptions}
+                options={tagsList}
+                // options={colourOptions}
               />
             </div>
           </FormGroup>
@@ -102,10 +88,14 @@ class VideoDetails extends React.Component {
                       : ""
                   }
                   onChange={e => this.props.handleInputChange(e)}
-                  value={recentAddedSet ? recentAddedSet : selectSetOptions}
+                  value={recentAddedSet ? recentAddedSet.title : selectSetOptions}
                 />
                 <FormFeedback>
-                  {errors && errors.setId && (selectSetOptions.value === "" || recentAddedSet.value === "") ? errors.setId : null}
+                  {errors &&
+                  errors.setId &&
+                  (selectSetOptions.value === "" || recentAddedSet.value === "")
+                    ? errors.setId
+                    : null}
                 </FormFeedback>
               </div>
             </InputGroup>

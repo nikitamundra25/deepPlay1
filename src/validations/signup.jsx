@@ -3,11 +3,11 @@ import { ValidationTypes } from "js-object-validation";
 export const SingupValidations = {
   firstName: {
     [ValidationTypes.REQUIRED]: true,
-    [ValidationTypes.MAXLENGTH]: 100
+    [ValidationTypes.MAXLENGTH]: 50
   },
   lastName: {
     [ValidationTypes.REQUIRED]: true,
-    [ValidationTypes.MAXLENGTH]: 100
+    [ValidationTypes.MAXLENGTH]: 50
   },
   email: {
     [ValidationTypes.REQUIRED]: true,
@@ -29,12 +29,12 @@ export const SingupValidationsMessaages = {
   firstName: {
     [ValidationTypes.REQUIRED]: "Please enter first name.",
     [ValidationTypes.MAXLENGTH]:
-      "First name cannot have more that 100 characters."
+      "First name cannot have more that 50 characters."
   },
   lastName: {
     [ValidationTypes.REQUIRED]: "Please enter last name.",
     [ValidationTypes.MAXLENGTH]:
-      "Last name cannot have more that 100 characters."
+      "Last name cannot have more that 50 characters."
   },
   email: {
     [ValidationTypes.REQUIRED]: "Please enter email.",

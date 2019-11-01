@@ -72,7 +72,7 @@ class SettingComponent extends Component {
   handleChange = e => {
     const { name, value } = e.target;
     this.setState({
-      [name]: value
+      [name]: value.replace(/[^\w\s]|[0-9]/gi, "").trim()
     });
   };
 
@@ -185,9 +185,10 @@ class SettingComponent extends Component {
     const { modelDetails } = modelInfoReducer;
     const { uploadImageModalOpen } = modelDetails;
     const splitedImage = this.state.file.split("/");
-    const ProfileImage = splitedImage[0] === "uploads"
-    ? `${AppConfig.API_ENDPOINT}${this.state.file}`
-    : this.state.file
+    const ProfileImage =
+      splitedImage[0] === "uploads"
+        ? `${AppConfig.API_ENDPOINT}${this.state.file}`
+        : this.state.file;
     return (
       <div>
         <div className="setting-section">
@@ -213,25 +214,24 @@ class SettingComponent extends Component {
                         <span className="text-profile">Edit Profile</span>
                       </Button>
                     ) : (
-                        <ButtonGroup>
-                          <Button
-                            color=" "
-                            className="dashboard-right-content btn-black "
-                            onClick={this.onSaveData}
-                          >
-                            {/* <i className="profile-ic fa fa-pencil-square-o"></i> */}
-                            <span className="text-profile"> Update Info</span>
-
-                          </Button>
-                          <Button
-                            color=" "
-                            className="dashboard-right-content btn-line-black ml-2"
-                            onClick={this.handlecancel}
-                          >
-                            Cancel
+                      <ButtonGroup>
+                        <Button
+                          color=" "
+                          className="dashboard-right-content btn-black "
+                          onClick={this.onSaveData}
+                        >
+                          {/* <i className="profile-ic fa fa-pencil-square-o"></i> */}
+                          <span className="text-profile"> Update Info</span>
                         </Button>
-                        </ButtonGroup>
-                      )}
+                        <Button
+                          color=" "
+                          className="dashboard-right-content btn-line-black ml-2"
+                          onClick={this.handlecancel}
+                        >
+                          Cancel
+                        </Button>
+                      </ButtonGroup>
+                    )}
                   </CardHeader>
                   <CardBody>
                     <div className="profile-wrap">
@@ -248,28 +248,20 @@ class SettingComponent extends Component {
                             //   className="w-100"
                             // />
                             <div
-                                        style={{
-                                          backgroundImage:
-                                            'url("' +
-                                            ProfileImage
-                                            +
-                                            '")'
-                                        }}
-                                        className="user-back-img-wrap"
-                                      ></div>
+                              style={{
+                                backgroundImage: 'url("' + ProfileImage + '")'
+                              }}
+                              className="user-back-img-wrap"
+                            ></div>
                           ) : (
                             <div
-                            style={{
-                              backgroundImage:
-                                'url("' +
-                                profileIcon
-                                +
-                                '")'
-                            }}
-                            className="user-back-img-wrap"
-                          ></div>
-                              // <img alt="" src={profileIcon} className="w-100" />
-                            )}
+                              style={{
+                                backgroundImage: 'url("' + profileIcon + '")'
+                              }}
+                              className="user-back-img-wrap"
+                            ></div>
+                            // <img alt="" src={profileIcon} className="w-100" />
+                          )}
                           {!isDisabled ? (
                             <span
                               className="changeProfile"
@@ -278,8 +270,8 @@ class SettingComponent extends Component {
                               Change Profile
                             </span>
                           ) : (
-                              ""
-                            )}
+                            ""
+                          )}
                         </div>
                         {imgError ? (
                           <div className="text-danger"> {imgError} </div>
@@ -460,12 +452,12 @@ class SettingComponent extends Component {
                 </Card>
               </>
             ) : (
-                <Row>
-                  <Col sm={12} className="loader-col">
-                    <Loader />
-                  </Col>
-                </Row>
-              )}
+              <Row>
+                <Col sm={12} className="loader-col">
+                  <Loader />
+                </Col>
+              </Row>
+            )}
           </div>
         </div>
         <UploadImage

@@ -27,6 +27,8 @@ export class ErrorHandlerHelper {
       this.rawError.data.message
     ) {
       if (this.rawError.data.message === "Token has expired" || this.rawError.data.message === "Unauthorized, Invalid token!") {
+        console.log("@@@@@@@@@@@@@@@@@@@Hello");
+        
         localStorage.removeItem("token")
         window.location.href = "/"
       } else {

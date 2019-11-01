@@ -3,6 +3,7 @@ import { Modal, ModalBody, ModalHeader, Button, ModalFooter } from "reactstrap";
 import closeIcon from "../../../assets/img/close-img.png";
 import { logger } from "helper/Logger";
 import AsyncSelect from "react-select/async";
+import * as classnames from "classnames";
 
 // core components
 class TransferToModal extends React.Component {
@@ -10,6 +11,7 @@ class TransferToModal extends React.Component {
     super(props);
     this.state = {
       transferToList: [],
+      errors: "",
       selectFolderOptions: {
         label: "Select folder from list",
         value: ""
@@ -17,39 +19,45 @@ class TransferToModal extends React.Component {
     };
   }
 
-  // componentDidUpdate(prevProps) {
-  //   if (prevProps.AllFolders !== this.props.AllFolders) {
-  //     const folders = this.props.AllFolders;
-  //     let arr = [];
-  //     // eslint-disable-next-line
-  //     folders.map((list, i) => {
-  //       if (list._id !== this.props.folderId) {
-  //         arr = [...arr, list];
-  //       }
-  //     });
-  //     this.setState({
-  //       transferToList: arr
-  //     });
-  //   }
-  // }
+  componentDidUpdate({ modal }) {
+    if (modal !== this.props.modal) {
+      this.setState({
+        selectFolderOptions: {
+          label: this.props.transferMove
+            ? "Select set from list"
+            : "Select folder from list",
+          value: ""
+        }
+      });
+    }
+  }
 
   onTransferTo = id => {
     let data;
-    if (this.props.transferMove) {
-      data = {
-        moveId: this.props.moveToTransfer,
-        setId: id,
-        previousSetId: this.props.folderId
-      };
-      this.props.handleMove(data);
+    if (!id) {
+      this.setState({
+        errors: this.props.transferMove
+          ? "Select set from list"
+          : "Select folder from list"
+      });
+      return;
     } else {
-      data = {
-        setId: this.props.setToTransfer,
-        folderId: id,
-        isFolderAdd: true,
-        previousFolderId: this.props.folderId
-      };
-      this.props.handleFolder(data);
+      if (this.props.transferMove) {
+        data = {
+          moveId: this.props.moveToTransfer,
+          setId: id,
+          previousSetId: this.props.folderId
+        };
+        this.props.handleMove(data);
+      } else {
+        data = {
+          setId: this.props.setToTransfer,
+          folderId: id,
+          isFolderAdd: true,
+          previousFolderId: this.props.folderId
+        };
+        this.props.handleFolder(data);
+      }
     }
     logger(data);
   };
@@ -78,7 +86,8 @@ class TransferToModal extends React.Component {
 
   render() {
     const { handleOpen, modal, folderId, AllFolders } = this.props;
-    const { selectFolderOptions } = this.state;
+    const { selectFolderOptions, errors } = this.state;
+
     const defaultFolderList = [];
     let list = [];
     if (AllFolders && AllFolders.length) {
@@ -97,7 +106,12 @@ class TransferToModal extends React.Component {
         }
         if (!isNotAccesible) {
           defaultFolderList.push({
-            label: item && item.isCopy ? `Copy of ${item.title}` : item.title,
+            label:
+              item && item.isCopy
+                ? `Copy of ${item.title}${
+                    item.copyIndex > 0 ? `(${item.copyIndex})` : ""
+                  }`
+                : item.title,
             value: item._id
           });
         }
@@ -149,7 +163,11 @@ class TransferToModal extends React.Component {
                     : this.handleInputChange(e);
                 }}
                 value={selectFolderOptions.value ? selectFolderOptions : ""}
+                className={classnames("", {
+                  "is-invalid": errors
+                })}
               />
+              <p className="text-danger">{errors ? errors : null}</p>
             </div>
           </ModalBody>
           <ModalFooter>
@@ -158,7 +176,7 @@ class TransferToModal extends React.Component {
               onClick={() => this.onTransferTo(selectFolderOptions.value)}
               color=" "
               className="btn btn-black"
-              disabled={selectFolderOptions.value === ""}
+              // disabled={selectFolderOptions.value === ""}
             >
               Transfer To
             </Button>

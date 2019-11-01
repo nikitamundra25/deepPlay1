@@ -61,7 +61,7 @@ const editUserInfo = async (req: Request, res: Response): Promise<any> => {
 
     return res.status(200).json({
       data: result,
-      message: "Profile details udpated successfully."
+      message: "Profile details updated successfully."
     });
   } catch (error) {
     console.log(error);

@@ -8,6 +8,7 @@ const algoliasearch = require("algoliasearch");
 const client = algoliasearch(algoliaAppId, algoliaAPIKey);
 const index = client.initIndex("deep_play_data");
 import { decrypt, encrypt } from "../common";
+import { body } from "express-validator";
 
 // --------------Create set---------------------
 const createSet = async (req: Request, res: Response): Promise<any> => {
@@ -15,6 +16,19 @@ const createSet = async (req: Request, res: Response): Promise<any> => {
     const { currentUser } = req;
     const { body } = req;
     const headToken: Request | any = currentUser;
+
+    const countSetCopy: Document | any | null = await SetModel.count({
+      title: body.title,
+      description: body.description ? body.description : "",
+      status: body.status ? body.status : true,
+      userId: body.userId ? body.userId : headToken.id,
+      folderId: body.folderId ? Mongoose.Types.ObjectId(body.folderId) : null,
+      sharableLink: body.sharableLink ? body.sharableLink : "",
+      isPublic: body.isPublic ? body.isPublic : true,
+      isDeleted: body.isDeleted ? body.isDeleted : false,
+      isCopy: true
+    });
+
     const setData: ISet = {
       title: body.title,
       description: body.description ? body.description : "",
@@ -24,7 +38,8 @@ const createSet = async (req: Request, res: Response): Promise<any> => {
       sharableLink: body.sharableLink ? body.sharableLink : "",
       isPublic: body.isPublic ? body.isPublic : true,
       isDeleted: body.isDeleted ? body.isDeleted : false,
-      isCopy: body.isCopy ? true : false
+      isCopy: body.isCopy ? true : false,
+      copyIndex: countSetCopy && body.isCopy ? countSetCopy : 0
     };
     const setResult: Document | any = new SetModel(setData);
     await setResult.save();
@@ -32,9 +47,10 @@ const createSet = async (req: Request, res: Response): Promise<any> => {
     const setId: String = setResult._id;
     if (body.isCopy) {
       const moveResult: Document | any | null = await MoveModel.find({
-        setId: body.copyOfSetId,
+        setId: Mongoose.Types.ObjectId(body.copyOfSetId),
         isDeleted: false
       });
+
       if (moveResult && moveResult.length) {
         for (let index = 0; index < moveResult.length; index++) {
           const moveElement = moveResult[index];
@@ -296,7 +312,6 @@ const getSetsForFolder = async (req: Request, res: Response): Promise<void> => {
       })
       .skip(((parseInt(page) || 1) - 1) * (limit || 10))
       .limit(parseInt(limit) || 10);
-
     if (result && result.length) {
       for (let index = 0; index < result.length; index++) {
         const setData = result[index];
@@ -304,7 +319,6 @@ const getSetsForFolder = async (req: Request, res: Response): Promise<void> => {
           setId: setData._id,
           isDeleted: false
         });
-
         let data: any = await MoveModel.find({
           setId: setData._id,
           isDeleted: false
@@ -476,7 +490,7 @@ const publicUrlsetDetails = async (
       count: Document | any;
 
     let temp: Document | any | null = await FolderModel.findOne({
-      _id: decryptedFolderId
+      _id: Mongoose.Types.ObjectId(decryptedFolderId)
     });
 
     if (temp.isPublic) {
@@ -557,13 +571,15 @@ const publicAccessSetInfoById = async (
     let temp: Document | any | null,
       moveCount: Document | any,
       setResult: any = [];
+
     if (fromFolder) {
       temp = {
         isPublic: true
       };
-    } else {
+    }
+    if (decryptedSetId && !fromFolder) {
       temp = await SetModel.findOne({
-        _id: decryptedSetId
+        _id: Mongoose.Types.ObjectId(decryptedSetId)
       });
     }
 
