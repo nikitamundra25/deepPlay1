@@ -225,7 +225,7 @@ class FrameDetails extends Component {
             </Button>
             <Button
               color={"default"}
-              className={"btn-black btn url-upload-btn sss"}
+              className={"btn-black btn url-upload-btn"}
               onClick={() => {
                 window.history.back();
               }}
