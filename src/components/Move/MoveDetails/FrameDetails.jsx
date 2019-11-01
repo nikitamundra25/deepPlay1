@@ -219,14 +219,16 @@ class FrameDetails extends Component {
             <Button
               color={"default"}
               className={"btn-line-black btn url-upload-btn mr-3"}
-              onClick={e => this.props.completeEditing(e)}
+          
             >
             Back
             </Button>
             <Button
               color={"default"}
-              className={"btn-black btn url-upload-btn"}
-              onClick={e => this.props.completeEditing(e)}
+              className={"btn-black btn url-upload-btn sss"}
+              onClick={() => {
+                window.history.back();
+              }}
             >
               Finish
             </Button>

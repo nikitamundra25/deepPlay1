@@ -61,6 +61,7 @@ h6,
   color: #000;
 }
 body {
+  
   word-break: break-word;
   word-wrap: break-word;
   font-family: $source;
@@ -88,6 +89,7 @@ body {
     background-color: #4f4f4f;
     border-radius: 10px;
   }
+  font-family: "hurmegeosans-no2-400";
 }
 .btn {
   border-radius: 5px;
@@ -192,6 +194,8 @@ a {
     font-size: 28px;
     font-weight: bold;
     color: $whiteColor;
+    font-family: "hurmegeosans-no2-400";
+    text-transform: capitalize;
   }
   .login-in-wrap {
     flex-flow: row;
@@ -1181,6 +1185,9 @@ a {
       color: #fff;
       border-radius: 5px;
       transform: none;
+    &:hover{
+      color: #000;
+    }
     }
     .form-group {
       max-width: unset;
