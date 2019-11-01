@@ -27,7 +27,7 @@ $source: "Roboto", sans-serif;
 @import url("https://fonts.googleapis.com/css?family=Roboto:400,500,700&display=swap");
 @font-face {
   font-family: "hurmegeosans-no2-400";
-  src: url("/assets/font/hurmegeosans/hurmegeosans-no2-400.eot");
+  src: url("/public/assets/font/hurmegeosans-no2-400.eot");
   src: url("/assets/font/hurmegeosans/hurmegeosans-no2-400.eot?#iefix") format("embedded-opentype"),
     url("/assets/font/hurmegeosans/hurmegeosans-no2-400.woff2") format("woff2");
   font-weight: normal;
@@ -623,12 +623,12 @@ a {
 }
 .btn-black {
   background: $blackcolor;
-  border: $blackcolor;
+  border:1px solid $blackcolor;
   color: $whiteColor;
   &:hover {
-    background: #343434;
-    border: #343434;
-    color: $whiteColor;
+    background: #fff;
+    border-color: $blackcolor;
+    color: $blackcolor;
   }
 }
 .btn-line-black {
@@ -636,12 +636,9 @@ a {
   background: #fff;
   border: 1px solid $blackcolor;
   &:hover {
-    &::after {
-      background-color: rgba(102, 102, 102, 0.3);
-    }
-    color: #343434;
-    background: #fff;
-    border: 1px solid #343434;
+    background: #000;
+    border-color: $whiteColor;
+    color: $whiteColor;
   }
 }
 .custom-checkbox .custom-control-input:checked ~ .custom-control-label {
@@ -1247,6 +1244,18 @@ a {
   border: 1px solid #d4d4d4;
 }
 .auth-user-model {
+  
+.form-group .input-group .input-group-prepend{
+  border:2px solid #455358;
+  border-right:none;
+  
+  & + input {
+  border-radius: 0px 4px 4px 0px;
+  border:2px solid #455358;
+  border-left:none;}
+}
+
+
   i {
     color: #555;
   }
@@ -1262,12 +1271,36 @@ a {
   .card-header {
     padding-bottom: 25px;
     background: #fff;
+    border: none;
+    
   }
   .card-body {
     background: $whiteColor;
+    padding-top: 0px;
     }
   .auth-subheading {
     font-size: 16px;
+    position: relative;
+    &::before{
+      content: "";
+      width: 100%;
+      border-bottom: 1px;
+      height: 1px;
+      width: calc(100% + 80px);
+      position: absolute;
+      background: #ccc;
+      left: -42px;
+      top: 50%;
+   
+      transform: translateY(-50%);
+    }
+    span{
+      z-index: 9;
+      background: #fff;
+      position: relative;
+      padding: 0px 5px;
+  
+    }
   }
   .close {
     background: #58646f;
@@ -1279,6 +1312,7 @@ a {
     margin-top: 0px;
     padding-top: 0px;
   }
+
 }
 .tooltip-btn-wrap {
   position: absolute;
@@ -1714,7 +1748,8 @@ a {
   }
 }
 .url-upload-btn {
-  margin: 0px !important;
+  &:nth-child(2){
+  margin: 0px !important;}
 }
 .set-content-wrap {
   width: 100%;
@@ -1984,6 +2019,7 @@ a {
 .form-group .input-group .input-group-prepend + input {
   border-radius: 0px 4px 4px 0px;
 }
+
 .get-stated-btn {
   overflow: hidden;
   // border: none;

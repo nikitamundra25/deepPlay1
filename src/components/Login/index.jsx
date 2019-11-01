@@ -173,7 +173,7 @@ class LoginComponent extends React.Component {
               </CardHeader>
               <CardBody className="px-lg-5">
                 <div className="text-center login-heading mb-4 auth-subheading">
-                  Or sign in with credentials
+                 <span> Or sign in with credentials</span>
                 </div>
                 <Form onSubmit={this.handleLoginRequest}>
                   <FormGroup className="mb-3">

@@ -331,15 +331,7 @@ class MoveDetails extends React.Component {
             <CardBody className="p-0">
               {!isSavingWebM ? (
                 <div>
-                  <span
-                    onClick={() => {
-                      this.props.redirectTo("/move");
-                    }}
-                    className={"cursor_pointer back-arrow"}
-                  >
-                    {" "}
-                    <i className="fas fa-long-arrow-alt-left" /> Back
-                  </span>
+                 
                 </div>
               ) : null}
               {isSavingWebM ? (

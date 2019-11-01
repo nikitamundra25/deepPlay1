@@ -243,7 +243,7 @@ class SignupComponent extends React.Component {
 
               <CardBody className="px-lg-5">
                 <div className="text-center login-heading mb-4 auth-subheading">
-                  Sign up with email
+                <span>  Sign up with email</span>
                 </div>
                 <Form role="form" onSubmit={this.handleSignupRequest}>
                   <FormGroup>
