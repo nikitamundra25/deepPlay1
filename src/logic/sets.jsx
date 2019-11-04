@@ -86,7 +86,7 @@ const createSetLogic = createLogic({
           toastId = toast.success("Set Copy has been created successfully");
         }
         dispatch(getAllSetRequest({ isSetNoLimit: false }));
-        if (action.payload.folderId !== "") {
+        if (action.payload.folderId !== null) {
           dispatch(
             getFolderSetRequest({
               folderId: action.payload.folderId ? action.payload.folderId : "",
