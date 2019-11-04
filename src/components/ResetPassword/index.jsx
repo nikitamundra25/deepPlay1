@@ -90,7 +90,7 @@ class ResetPasswordComponent extends React.Component {
               className={"cursor_pointer"}
               onClick={() => this.props.redirectTo("/")}
             >
-              Deep Play
+              DeepPlay
               </h2>
           </div>
           <div className="dashboard-full-section without-sidebar">

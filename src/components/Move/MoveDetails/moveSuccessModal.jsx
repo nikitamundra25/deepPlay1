@@ -76,7 +76,7 @@ class MoveSuccessModal extends React.Component {
                       className="btn-black"
                       color=" "
                     >
-                      No i'm done
+                      No, i am done
                       </Button>
                   </div>
 

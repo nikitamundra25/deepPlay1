@@ -395,9 +395,9 @@ class Dashboard extends React.Component {
             </>
           )
         ) : (
-          <Col sm={12} className="loader-col">
+          <div  className="loader-col">
             <Loader />
-          </Col>
+          </div>
         )}
       </>
     );

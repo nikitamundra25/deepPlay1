@@ -310,7 +310,7 @@ class SetComponent extends React.Component {
             )
           ) : (
             <Col sm={12} className="loader-col">
-              <Loader fullLoader={true} />
+              <Loader />
             </Col>
           )}
         </Row>

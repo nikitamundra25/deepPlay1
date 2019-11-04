@@ -226,7 +226,7 @@ class DefaultHeader extends React.Component {
                     <i className="fa fa-bars" aria-hidden="true"></i>
                   </div>
                   <NavbarBrand className="mr-lg-5" to="/" tag={Link}>
-                    <h3 className="mb-0 header-title">Deep Play</h3>
+                    <h3 className="mb-0 header-title">DeepPlay</h3>
                   </NavbarBrand>
                   {isLoggedIn || isLoginSuccess ? (
                     <Nav className="navbar-nav align-items-center nav-main-section flex-fill creat-option">
@@ -493,7 +493,7 @@ class DefaultHeader extends React.Component {
                 id="navbar-main"
               >
                 <NavbarBrand className="m-0" to="/" tag={Link}>
-                  <h3 className="mb-0 header-title ">Deep Play</h3>
+                  <h3 className="mb-0 header-title ">DeepPlay</h3>
                 </NavbarBrand>
               </Navbar>
             )}

@@ -8,7 +8,7 @@ $videoAddBannerBack: #dfe7ed;
 $dashboardTextColor: #000;
 $dashboardTextLight: #868686;
 $headingText: #494949;
-$source: "Roboto", sans-serif;
+$source:  "hurmegeosans-no2-400";
 %flexFullAlign {
   display: flex;
   align-items: center;
@@ -514,13 +514,13 @@ a {
   }
   .card {
     padding: 15px;
-    font-family: "Open Sans", sans-serif;
+    font-family: "hurmegeosans-no2-400";
   }
   .tile-wrap {
     border-radius: 4px;
     margin-top: 15px;
     padding: 15px 25px 15px;
-    border: 1px solid #d4d4d4;
+    box-shadow: 0 0 2px 0 rgba(0,0,0,.24);
     min-height: calc(100% - 15px);
   }
 
@@ -899,6 +899,7 @@ a {
 .account-type-wrap {
   max-width: 400px;
   margin: auto;
+  
 }
 .theme-container.dashboard-container {
   padding: 0px;
@@ -979,6 +980,7 @@ a {
     .loader-block {
       background: #000;
       border: none;
+      box-shadow: none;
       min-height: 500px;
     }
   }
@@ -1196,7 +1198,7 @@ a {
 }
 .vieos-add-section {
   max-width: 400px;
-  height: 200px;
+  height: 300px;
   margin: auto;
   .play-ic-wrap {
     font-size: 35px;
@@ -1238,16 +1240,21 @@ a {
   }
 }
 .header-search-wrap {
-  .input-group-text,
+  .input-group-text{
+    border-color: #fff;
+    border-radius: 2px 0px 0px 2px;
+  }
   input {
     border-color: #fff;
+    border-radius: 2px 0px 0px 2px;
   }
+
 }
 .card {
   border-radius: 4px;
   margin-top: 15px;
   padding: 15px 0px;
-  border: 1px solid #d4d4d4;
+  box-shadow:0 0 2px 0 rgba(0,0,0,.24);
 }
 .auth-user-model {
   .form-group .input-group .input-group-prepend {
@@ -1470,9 +1477,9 @@ a {
   }
 }
 .search-select-wrap {
-  .css-26l3qy-menu {
+  .react_select__menu{
     z-index: 9;
-    & > div {
+    & .react_select__menu-list{
       padding: 0px;
     }
   }
@@ -1482,15 +1489,17 @@ a {
     border-color: #cad1d7;
     box-shadow: none;
   }
-  .css-1n7v3ny-option {
-    background: #d8d8d8;
+  .react_select__option{
+    background: #f1f1f1;
     color: #000;
   }
-  .css-9gakcf-option,
-  .css-yt9ioa-option:active,
-  .css-1n7v3ny-option:active {
+  .react_select__option  {
+    &:hover{
+    background: #cacaca;
+    color: #000;}
+    &:focus, &:active{
     background: #ababab;
-    color: #000;
+    color: #000;}
   }
   .css-169ely9-MenuList,
   .css-dv30gr-MenuList,
@@ -1826,6 +1835,7 @@ a {
   .loader-block {
     background: transparent;
     border: none;
+    box-shadow: none;
   }
 }
 
@@ -1898,7 +1908,7 @@ a {
     }
 
     .video-time-wrap {
-      font-family: "Open Sans", sans-serif;
+      font-family: "hurmegeosans-no2-400";
       font-size: 11px;
       letter-spacing: 1px;
     }
@@ -1963,7 +1973,7 @@ a {
       max-height: 100%;
     }
     .folder-ic {
-      width: 60%;
+      width: 40%;
     }
   }
 }
@@ -2008,6 +2018,7 @@ a {
   }
   .input-group-text {
     border: none;
+
   }
 }
 .set-drag-wrap {
@@ -2071,6 +2082,7 @@ a {
   .loader-block {
     border: none;
     padding: 0px;
+    box-shadow: none;
   }
 }
 .user-section.navbar-nav {

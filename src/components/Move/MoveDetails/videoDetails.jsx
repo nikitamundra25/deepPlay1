@@ -65,6 +65,7 @@ class VideoDetails extends React.Component {
                 onChange={this.props.handleTagChange}
               /> */}
               <CreatableSelect
+               classNamePrefix="react_select"
                 isMulti
                 onChange={this.props.handleTagChange}
                 value={tags}
@@ -79,6 +80,7 @@ class VideoDetails extends React.Component {
             <InputGroup>
               <div className="w-100 search-select-wrap">
                 <AsyncSelect
+                  classNamePrefix="react_select"
                   loadOptions={this.loadSets}
                   isClearable={selectSetOptions.value ? true : false}
                   defaultOptions={defaultSetoptions}
