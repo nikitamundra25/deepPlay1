@@ -48,7 +48,10 @@ class MoveList extends React.Component {
       search: "",
       tags: [],
       moveIdToAddTag: "",
+      doubleClick: false,
+      doubleClickIndex: -1,
       moveIndexToAddTag: -1,
+      title: "",
       isMarkingStar: {
         index: -1,
         isChanging: false
@@ -362,6 +365,47 @@ class MoveList extends React.Component {
       isInfiniteScroll: true
     });
   };
+
+  addTagstoMove = data => {
+    this.setState({
+      selectedMoves: [],
+      selectedMoveIds: [],
+      isVideoChecked: false,
+      isVideoModalOpen: true
+    });
+    this.props.addTagstoMove(data);
+  };
+
+  onDoubleClick = index => {
+    this.setState({
+      doubleClick: !this.state.doubleClick,
+      doubleClickIndex: index
+    });
+  };
+
+  handleonBlur = (videoData, index) => {
+    console.log("Fgfdkjgfhj", videoData);
+    this.setState({
+      doubleClick: false,
+      doubleClickIndex: -1
+    });
+    // const data = {
+    //   moveId: videoData._id,
+    //   title: this.state.title,
+    //   description: videoData.description,
+    //   tags: videoData.tags,
+    //   setId: videoData.setId._id
+    // };
+    // this.props.editMove(data)
+  };
+
+  handleChange = e => {
+    const { name, value } = e.target;
+    this.setState({
+      [name]: value
+    });
+  };
+
   render() {
     const {
       show,
@@ -390,6 +434,9 @@ class MoveList extends React.Component {
       moveIdToAddTag,
       tags,
       moveIndexToAddTag
+      // doubleClick,
+      // doubleClickIndex,
+      // title
       // isMarkingStar
     } = this.state;
     const location = this.props.location;
@@ -700,8 +747,32 @@ class MoveList extends React.Component {
                                                 )
                                               }
                                               className="play-list-text"
+                                              onDoubleClick={() =>
+                                                this.onDoubleClick(index)
+                                              }
                                             >
                                               <div className="text-capitalize play-list-heading h6 m-0">
+                                                {/* {doubleClick &&
+                                                doubleClickIndex === index ? (
+                                                  <FormGroup>
+                                                    <Input
+                                                      id="title"
+                                                      type="text"
+                                                      placeholder="Enter a title"
+                                                      name="title"
+                                                      onChange={
+                                                        this.handleChange
+                                                      }
+                                                      value={title}
+                                                      onBlur={()=>this.handleonBlur(
+                                                        video,
+                                                        index
+                                                      )}
+                                                    />
+                                                  </FormGroup>
+                                                ) : (
+                                                  video.title || "unnamed"
+                                                )} */}
                                                 {video.title || "unnamed"}
                                               </div>
                                               <div
@@ -841,7 +912,7 @@ class MoveList extends React.Component {
             moveIdToAddTag={moveIdToAddTag}
             tagsList={tagsList}
             tags={tags}
-            addTagstoMove={data => this.props.addTagstoMove(data)}
+            addTagstoMove={this.addTagstoMove}
             handleTagChange={this.handleTagChange}
             moveIndexToAddTag={moveIndexToAddTag}
             moveofSetList={moveofSetList}

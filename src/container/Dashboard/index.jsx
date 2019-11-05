@@ -3,7 +3,6 @@ import { connect } from "react-redux";
 import {
   Row,
   Col,
-  Badge,
   Card,
   CardBody,
   CardHeader,
@@ -60,8 +59,8 @@ class Dashboard extends React.Component {
     return (
       <>
         {!isRecentSetLoading && !isRecentFolderLoading ? (
-          (recentSets &&
-          !recentSets.length) &&
+          recentSets &&
+          !recentSets.length &&
           (recentFolders && !recentFolders.length) ? (
             <div className="create-set-section w-100 empty-folder-section">
               <Card className="set-content-wrap empty-folder-card">
@@ -136,14 +135,6 @@ class Dashboard extends React.Component {
                             <div className="tile-wrap card">
                               <div className="cotent-tile d-flex content-with-tip content-with-img">
                                 <div className="cotent-text-tile ">
-                                  <div className="badge-wrap mb-2">
-                                    <Badge
-                                      variant="secondary"
-                                      className="draft-wrap"
-                                    >
-                                      DRAFT
-                                    </Badge>
-                                  </div>
                                   <div className="content-heading-tile d-flex">
                                     {" "}
                                     <span className={" text-capitalize"}>
@@ -282,14 +273,6 @@ class Dashboard extends React.Component {
                             <div className="tile-wrap card">
                               <div className="cotent-tile d-flex content-with-tip content-with-img">
                                 <div className="cotent-text-tile pt-2">
-                                  <div className="badge-wrap">
-                                    <Badge
-                                      variant="secondary"
-                                      className="draft-wrap"
-                                    >
-                                      DRAFT
-                                    </Badge>
-                                  </div>
                                   <div className="content-heading-tile d-flex">
                                     {" "}
                                     <span className={"cursor_pointer"}>

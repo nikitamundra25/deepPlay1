@@ -253,7 +253,14 @@ class SetDetails extends React.Component {
   addTagstoMove = data => {
     if (data.fromMoveList) {
       const moveList = [...data.moveofSetList];
-      moveList[data.index].tags = data.tags;
+      moveList.map((key, i) => {
+        // eslint-disable-next-line
+       return data.moveId.map((k)=>{
+          if (k === key._id) {
+              moveList[i].tags = data.tags;
+          }
+        })
+      });
       this.props.addTagsRequest({ data: data, moveList: moveList });
     } else {
       const moveVideo = data.videoData;
@@ -455,6 +462,7 @@ class SetDetails extends React.Component {
                       this.props.addTagsInTagModalRequest(data)
                     }
                     getTagListRequest={() => this.props.getTagListRequest()}
+                    editMove={data => this.props.updateMoveRequest(data)}
                     {...this.props}
                   />
                 </div>
