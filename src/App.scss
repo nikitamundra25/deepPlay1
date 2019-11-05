@@ -2277,7 +2277,16 @@ a {
     }
   }
 }
-@media (max-width: 991px) {
+.select-focus-wrap{
+  
+}
+@media (max-width: 991px) { 
+  .theme-header{
+    min-height: 60px;
+    .navbar-main.navbar{
+      padding: 10px 8px;
+    }
+  }
   .dashboard-header {
     .theme-container {
       // padding: 0px;
@@ -2295,7 +2304,18 @@ a {
           padding: 10px 15px 10px 15px;
           background: #fff;
           top: -2px;
-          z-index: 9;
+          z-index: -2;
+          min-height: 60px;
+          input{
+            display: none;
+        
+          }
+          &.header-search-open{
+            z-index: 9;
+              input{
+                display: block;
+              }
+          }
         }
         .search-input.header-search-open {
           .search-arrow-wrap {
@@ -2316,7 +2336,7 @@ a {
         }
       }
       .search-result-wrap {
-        top: 140%;
+        top: 108%;
       }
       .header-title {
         font-size: 22px;

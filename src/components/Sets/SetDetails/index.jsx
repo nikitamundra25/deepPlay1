@@ -423,6 +423,7 @@ class SetDetails extends React.Component {
                   {...this.props}
                 />
               ) : null}
+              <div className="select-focus-wrap"></div>
               <Card className="video-slider-section">
                 <div className="step-2">
                   <MoveList

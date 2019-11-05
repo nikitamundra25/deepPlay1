@@ -438,7 +438,7 @@ class SettingComponent extends Component {
                               <Button
                                 color="danger"
                                 type="button"
-                                className="btn-btn-save"
+                                className="btn-btn-save mb-2"
                                 onClick={this.handleDelete}
                               >
                                 Delete Account
