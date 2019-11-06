@@ -186,7 +186,7 @@ a {
     padding: 15px 8px;
   }
   .header-title {
-    font-size: 28px;
+    font-size: 25px;
     font-weight: bold;
     color: $whiteColor;
     font-family: "hurmegeosans-no2-400";
@@ -1080,35 +1080,45 @@ a {
   }
 }
 .nav-main-section {
-  .nav-inputs-wrap input {
-    max-width: 100%;
-    min-width: 248px;
-    font-size: 14px;
-    padding: 8px;
-    height: auto;
-    border-radius: 0px 5px 5px 0px;
-    &:focus {
-      box-shadow: none;
-      border-color: #fff;
-    }
-  }
+ 
   .view-all-wrap {
     text-decoration: underline;
     cursor: pointer;
   }
-  .nav-inputs-wrap button {
+  .nav-inputs-wrap{
+    .input-group-text {
+      border-color: #fff;
+      padding: 6px;
+      border-radius: 2px 0px 0px 2px;
+    }
+    input {
+      max-width: 100%;
+      min-width: 248px;
+      font-size: 14px;
+      padding: 6px;
+      height: auto;
+      border-color: #fff;
+      border-radius: 2px 0px 0px 2px;
+      &:focus {
+        box-shadow: none;
+        border-color: #fff;
+      }
+    }
+    button {
     transform: none;
     display: flex;
     align-items: center;
     background: #fefefe;
-    padding: 8px 18px 7px 18px;
+    padding: 3px 18px 6px 18px;
     font-size: 15px;
     font-family: $source;
     font-weight: 500;
   }
-  .nav-inputs-wrap .dropdown-menu {
+  .dropdown-menu {
     top: 50px !important;
   }
+}
+ 
 }
 .dashboard-container-wrap {
   width: 100%;
@@ -1245,16 +1255,6 @@ a {
     left: 50%;
     top: 50%;
     transform: translate(-50%, -50%);
-  }
-}
-.header-search-wrap {
-  .input-group-text {
-    border-color: #fff;
-    border-radius: 2px 0px 0px 2px;
-  }
-  input {
-    border-color: #fff;
-    border-radius: 2px 0px 0px 2px;
   }
 }
 .card {
