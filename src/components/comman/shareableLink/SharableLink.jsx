@@ -136,7 +136,7 @@ class SharableLinkModal extends React.Component {
         </ModalBody>
         {shareComponent !== "yourSets" ? (
           <ModalFooter className="justify-content-start">
-            <div className="form-inline w-100 justify-content-sm-between">
+            <div className="form-inline w-100 justify-content-between">
               <div className="d-flex">
 
               <span className="font-14">
