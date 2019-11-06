@@ -15,10 +15,14 @@ import InfiniteScroll from "react-infinite-scroll-component";
 import "./index.scss";
 import Loader from "components/comman/Loader/Loader";
 import blankStar from "../../../assets/img/star-line.svg";
+
 import AddTagModal from "./addTagsModal";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 import { ConfirmBox } from "helper/SweetAleart";
 import { DebounceInput } from "react-debounce-input";
+import addTag from "../../../assets/img/set-detail-ic/add-tag.svg";
+import transfer from "../../../assets/img/set-detail-ic/transfer.svg";
+import remove from "../../../assets/img/set-detail-ic/remove.svg";
 // import RLDD from 'react-list-drag-and-drop/lib/RLDD';
 
 // a little function to help us with reordering the result
@@ -428,7 +432,7 @@ class MoveList extends React.Component {
                         All
                       </Button>
                       <Button
-                        className={isStarred[1] === "true" ? "active" : ""}
+                        className={isStarred[1] === "true" ? "active stared-active" : ""}
                         color=" "
                         onClick={this.handleShowStarred}
                       >
@@ -451,47 +455,56 @@ class MoveList extends React.Component {
                   </div>
                 )}
               </div>
-              {selectedMoveIds && selectedMoveIds.length ? (
+            
+            </Col>
+            {selectedMoveIds && selectedMoveIds.length ? (
+            <div className="select-focus-wrap" ></div>
+            ) : null}
+            <div className={`video-thumbnail-block  ${
+                        selectedMoveIds && selectedMoveIds.length
+                          ? "select-focus-event"
+                          : null
+                      } `}>
+            {selectedMoveIds && selectedMoveIds.length ? (
                 <div className={"selected-moves selected-detail-page"}>
                   <div
                     className={
-                      "d-flex justify-content-between align-items-center"
+                      "d-flex justify-content-between align-items-center "
                     }
                   >
-                    <div className="content-title">
+                    {/* <div className="content-title">
                       Selected Moves:{" "}
                       {selectedMoveIds && selectedMoveIds.length
                         ? selectedMoveIds.length
                         : 0}
-                    </div>
+                    </div> */}
                     <div className="content-title ">
                       <span className={"d-flex"}>
-                        <ButtonGroup size="sm">
+                        <ButtonGroup size="lg">
                           <Button
                             onClick={() => this.openAddTagsModal()}
                             className=" "
                             color=" "
                           >
-                            Add tags
+                            <img src={addTag} className="mr-1" /> Add tags
                           </Button>
                           <Button
                             onClick={() => this.openTransferToModal()}
                             className=" "
                             color=" "
                           >
-                            Transfer
+                             <img src={transfer} className="mr-1" /> Transfer
                           </Button>
                           <Button
                             onClick={() => this.handleMoveDelete()}
                             className=" "
                             color=" "
                           >
-                            Remove
+                            <img src={remove} className="mr-1" /> Remove
                           </Button>
-                        </ButtonGroup>
                         <Button
                           color=" "
-                          className="btn-black ml-2 move-close-btn"
+                          className="btn-black"
                           onClick={() =>
                             this.setState({
                               selectedMoves: [],
@@ -501,15 +514,14 @@ class MoveList extends React.Component {
                             })
                           }
                         >
-                          <i className="fa fa-times" aria-hidden="true" />
+                          <i className="fa fa-times fa-lg" aria-hidden="true" />
                         </Button>
+                        </ButtonGroup>
                       </span>
                     </div>
                   </div>
                 </div>
               ) : null}
-            </Col>
-            <div className="video-thumbnail-block">
               <DragDropContext onDragEnd={this.onDragEnd}>
                 <Droppable
                   droppableId="droppable"
@@ -611,31 +623,7 @@ class MoveList extends React.Component {
                                                   />
                                                 )}
                                               </div>
-                                              {!isVideoChecked &&
-                                              isSelectVideo &&
-                                              videoIndex === index ? (
-                                                <span
-                                                  onClick={() => {
-                                                    this.setState(
-                                                      {
-                                                        isVideoModalOpen: false
-                                                      },
-                                                      () =>
-                                                        this.handleVideoCheckBox(
-                                                          true,
-                                                          index,
-                                                          video._id
-                                                        )
-                                                    );
-                                                  }}
-                                                  className="plus-ic-wrap"
-                                                >
-                                                  <i
-                                                    className="text-white fa fa-plus-circle"
-                                                    aria-hidden="true"
-                                                  />
-                                                </span>
-                                              ) : null}
+                                             
                                               {isVideoChecked ? (
                                                 <span className="plus-ic-wrap custom-control custom-checkbox">
                                                   <Input
@@ -661,7 +649,49 @@ class MoveList extends React.Component {
                                                     htmlFor={`selected-video-${index}`}
                                                   />
                                                 </span>
-                                              ) : null}
+                                              ) : <> {!isVideoChecked &&
+                                                isSelectVideo &&
+                                                videoIndex === index ? (
+                                                  <span
+                                                    onClick={() => {
+                                                      this.setState(
+                                                        {
+                                                          isVideoModalOpen: false
+                                                        },
+                                                        () =>
+                                                          this.handleVideoCheckBox(
+                                                            true,
+                                                            index,
+                                                            video._id
+                                                          )
+                                                      );
+                                                    }}
+                                                    className="plus-ic-wrap custom-control custom-checkbox"
+                                                  >
+                                                    <Input
+                                                      className="custom-control-input"
+                                                      id={`selected-video-${index}`}
+                                                      onChange={e =>
+                                                        this.handleMovesSelect(
+                                                          null,
+                                                          e,
+                                                          index,
+                                                          video._id
+                                                        )
+                                                      }
+                                                      type="checkbox"
+                                                      checked={
+                                                        selectedMoves[index]
+                                                          ? true
+                                                          : false
+                                                      }
+                                                    />
+                                                    <label
+                                                      className="custom-control-label"
+                                                      htmlFor={`selected-video-${index}`}
+                                                    />
+                                                  </span>
+                                                ) : null}</>}
 
                                               <div
                                                 className={"video-effect"}
@@ -689,7 +719,7 @@ class MoveList extends React.Component {
                                               </div>
                                               <div
                                                 className="blur-img"
-                                                style={{ background: "#000" }}
+                                                // style={{ background: "#000" }}
                                               />
                                             </div>
                                             <div
@@ -728,81 +758,7 @@ class MoveList extends React.Component {
                                                   />
                                                 )}
                                               </div>
-                                              <div
-                                                onMouseOver={() =>
-                                                  this.props.showPopOver(
-                                                    index,
-                                                    show
-                                                  )
-                                                }
-                                                className={
-                                                  "tooltip-btn-wrap right-btn-tip"
-                                                }
-                                              >
-                                                <span className="cursor_pointer">
-                                                  {" "}
-                                                  <i className="fas fa-ellipsis-v setting-icon "></i>
-                                                </span>
-                                                {show && setIndex === index ? (
-                                                  <ButtonGroup
-                                                    onMouseOver={() =>
-                                                      this.props.showPopOver(
-                                                        index,
-                                                        show
-                                                      )
-                                                    }
-                                                    size="sm"
-                                                  >
-                                                    {/* <Button
-                                                      color=" "
-                                                      onClick={() =>
-                                                        this.handleStarred(
-                                                          video._id,
-                                                          video.isStarred
-                                                        )
-                                                      }
-                                                    >
-                                                      {video.isStarred
-                                                        ? "Unstar"
-                                                        : "Mark star"}
-                                                    </Button> */}
-                                                    <Button
-                                                      onClick={() =>
-                                                        this.openAddTagsModal(
-                                                          video._id,
-                                                          video.tags,
-                                                          index
-                                                        )
-                                                      }
-                                                      color=" "
-                                                    >
-                                                      Add tags
-                                                    </Button>
-                                                    <Button
-                                                      color=" "
-                                                      onClick={() =>
-                                                        this.openTransferToModal(
-                                                          video._id,
-                                                          video.setId,
-                                                          page
-                                                        )
-                                                      }
-                                                    >
-                                                      Transfer
-                                                    </Button>
-                                                    <Button
-                                                      color=" "
-                                                      onClick={() =>
-                                                        this.handleMoveDelete(
-                                                          video._id
-                                                        )
-                                                      }
-                                                    >
-                                                      Remove
-                                                    </Button>
-                                                  </ButtonGroup>
-                                                ) : null}
-                                              </div>
+                                              
                                             </div>
                                           </div>
                                         </div>

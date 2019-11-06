@@ -318,13 +318,13 @@ class RecentFolderComponent extends React.Component {
               Total sets: {totalSetsInFolder ? totalSetsInFolder : 0}
             </div>
           </span>
-          <div>
+          <div className="d-flex  justify-content-center align-items-between">
             <span
               className="dashboard-right-content cursor_pointer ml-4"
               onClick={this.openAddSetModel}
               id="move"
             >
-              <i className="fas fa-plus-circle icon-font"></i>
+              <i className="fas fa-plus icon-font"></i>
             </span>
             <UncontrolledTooltip placement="top" target="move">
               Add Sets
@@ -375,10 +375,10 @@ class RecentFolderComponent extends React.Component {
                     >
                       <div className="cotent-tile d-flex content-with-tip ">
                         <div
-                          className="d-flex  content-with-img w-100"
+                          className="d-flex  content-with-img w-100 cursor_pointer"
                           onClick={() => this.handleSetDetails(list._id)}
                         >
-                          <div className="cotent-text-tile cursor_pointer text-capitalize">
+                          <div className="cotent-text-tile text-capitalize">
                             <div className="content-heading-tile d-flex">
                               {" "}
                               <span

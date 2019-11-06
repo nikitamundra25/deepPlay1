@@ -487,15 +487,34 @@ class DefaultHeader extends React.Component {
                 </Navbar>
               </>
             ) : (
+              <div className="theme-container">
               <Navbar
-                className="navbar-main d-flex justify-content-center"
+                className="navbar-main d-flex navbar-main header-navbar"
                 // expand="lg"
                 id="navbar-main"
               >
                 <NavbarBrand className="m-0" to="/" tag={Link}>
                   <h3 className="mb-0 header-title ">DeepPlay</h3>
                 </NavbarBrand>
+                <div className="nav-main-section">
+                        <React.Fragment>
+                          <span
+                            onClick={this.handleLoginModel}
+                            className="nav-link-inner--text pr-4 cusror_pointer"
+                          >
+                            Sign in
+                          </span>
+                          <span
+                            onClick={this.handleSignupModel}
+                            className="nav-link-inner--text pr-2 cusror_pointer"
+                          >
+                            Sign up
+                          </span>
+                        </React.Fragment>
+                      </div>
+
               </Navbar>
+              </div>
             )}
           </div>
         </header>

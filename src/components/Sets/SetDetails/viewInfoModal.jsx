@@ -61,12 +61,12 @@ class ViewInfoModal extends React.Component {
                 </span>
                 <div class="info-wrap">
                   <span className="info-heading"> Source URL</span>
-                  <a href={videoData.sourceUrl ? videoData.sourceUrl : null}>
                     <span className="info-content">
                       <span className="colon-wrap cursor_pointer">: </span>
+                  <a href={videoData.sourceUrl ? videoData.sourceUrl : null}>
                       {videoData.sourceUrl ? videoData.sourceUrl : null}{" "}
-                    </span>
                   </a>
+                    </span>
                 </div>
 
                 <div class="info-wrap">

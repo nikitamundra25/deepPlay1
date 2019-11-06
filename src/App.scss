@@ -8,7 +8,7 @@ $videoAddBannerBack: #dfe7ed;
 $dashboardTextColor: #000;
 $dashboardTextLight: #868686;
 $headingText: #494949;
-$source:  "hurmegeosans-no2-400";
+$source: "hurmegeosans-no2-400";
 %flexFullAlign {
   display: flex;
   align-items: center;
@@ -173,17 +173,13 @@ a {
   margin-top: 25px;
   margin-left: 12px;
 }
-.modal-open {
-  .theme-header {
-    padding-right: 18px;
-  }
-}
+
 .theme-header {
   min-height: 74px;
   background-color: $blackcolor;
   color: $whiteColor;
   z-index: 99;
-  position: fixed;
+  position: relative;
   width: 100%;
   top: 0px;
   .navbar-main.navbar {
@@ -332,7 +328,7 @@ a {
         font-weight: normal;
         white-space: nowrap;
         text-overflow: ellipsis;
-        width: calc(100% - 45px);
+        width: calc(100% - 20px);
         overflow: hidden;
       }
       .play-list-text {
@@ -401,15 +397,14 @@ a {
   display: flex;
   max-width: 100%;
   margin-top: 0px;
-  padding-top: 58px;
   justify-content: center;
 
   .app-sidebar {
-    position: fixed;
+    position: absolute;
     height: 100%;
     width: 210px;
     bottom: 0px;
-    top: 58px;
+    top: 0px;
     z-index: 9;
     .dashboard-left-wrap {
       height: 100%;
@@ -421,13 +416,14 @@ a {
       display: flex;
       flex-direction: column;
       justify-content: space-between;
-      padding: 20px 0px 60px 0px;
+      padding: 20px 0px 0px 0px;
       i {
         width: 20px;
         margin-right: 10px;
       }
 
       .profile-wrap {
+        display: none;
         background: #f7f7f7;
         border: 1px solid #e6e6e6;
         padding-top: 25px;
@@ -458,6 +454,9 @@ a {
           font-family: $source;
         }
       }
+      a, span{
+        font-weight: 500;
+      }
     }
   }
   .dashboard-right-wrap {
@@ -477,8 +476,13 @@ a {
   }
   .content-header {
     .icon-font {
-      font-size: 24px;
+      font-size: 16px;
+      background: #000;
+      border-radius: 50%;
+      padding: 8px;
+      color: #fff;
     }
+
     color: $dashboardTextColor;
     display: flex;
     align-items: center;
@@ -520,7 +524,7 @@ a {
     border-radius: 4px;
     margin-top: 15px;
     padding: 15px 25px 15px;
-    box-shadow: 0 0 2px 0 rgba(0,0,0,.24);
+    box-shadow: 0 0 2px 0 rgba(0, 0, 0, 0.24);
     min-height: calc(100% - 15px);
   }
 
@@ -899,10 +903,10 @@ a {
 .account-type-wrap {
   max-width: 400px;
   margin: auto;
-  
 }
 .theme-container.dashboard-container {
   padding: 0px;
+  position: relative;
 }
 .custom-radio .custom-control-input {
   & ~ .custom-control-label {
@@ -968,6 +972,9 @@ a {
     button {
       flex: 1;
       max-width: 50%;
+    }
+    .footer-full-btn{
+      max-width: 100%;
     }
   }
 }
@@ -1240,7 +1247,7 @@ a {
   }
 }
 .header-search-wrap {
-  .input-group-text{
+  .input-group-text {
     border-color: #fff;
     border-radius: 2px 0px 0px 2px;
   }
@@ -1248,13 +1255,12 @@ a {
     border-color: #fff;
     border-radius: 2px 0px 0px 2px;
   }
-
 }
 .card {
   border-radius: 4px;
   margin-top: 15px;
   padding: 15px 0px;
-  box-shadow:0 0 2px 0 rgba(0,0,0,.24);
+  box-shadow: 0 0 2px 0 rgba(0, 0, 0, 0.24);
 }
 .auth-user-model {
   .form-group .input-group .input-group-prepend {
@@ -1477,9 +1483,9 @@ a {
   }
 }
 .search-select-wrap {
-  .react_select__menu{
+  .react_select__menu {
     z-index: 9;
-    & .react_select__menu-list{
+    & .react_select__menu-list {
       padding: 0px;
     }
   }
@@ -1489,17 +1495,20 @@ a {
     border-color: #cad1d7;
     box-shadow: none;
   }
-  .react_select__option{
+  .react_select__option {
     background: #f1f1f1;
     color: #000;
   }
-  .react_select__option  {
-    &:hover{
-    background: #cacaca;
-    color: #000;}
-    &:focus, &:active{
-    background: #ababab;
-    color: #000;}
+  .react_select__option {
+    &:hover {
+      background: #cacaca;
+      color: #000;
+    }
+    &:focus,
+    &:active {
+      background: #ababab;
+      color: #000;
+    }
   }
   .css-169ely9-MenuList,
   .css-dv30gr-MenuList,
@@ -2004,9 +2013,22 @@ a {
       font-size: 14px;
     }
     .btn.active {
-      background: #000;
+      background: rgba(0, 0, 0, 1);
       color: #fff;
       border: 1px solid #ddd;
+      &:hover {
+        background: rgba(0, 0, 0, 0.568);
+        
+      }
+      &.stared-active {
+        background: rgba(255, 205, 31, 1);
+        color: #2d3639;
+        &:hover {
+          background: rgba(255, 205, 31, 0.6);
+          
+        }
+      }
+     
     }
   }
 }
@@ -2018,7 +2040,6 @@ a {
   }
   .input-group-text {
     border: none;
-
   }
 }
 .set-drag-wrap {
@@ -2156,6 +2177,9 @@ a {
   }
   .info-content {
     display: flex;
+    a{
+      color: #1c245f;
+    }
   }
   .colon-wrap {
     margin-right: 30px;
@@ -2193,6 +2217,9 @@ a {
     opacity: 0;
     z-index: 9;
   }
+}
+.big-tool-tip{
+  z-index: 99;
 }
 // media query start
 @media (min-width: 576px) {
@@ -2277,13 +2304,23 @@ a {
     }
   }
 }
-.select-focus-wrap{
+.select-focus-wrap {
+  position: fixed;
+  left: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(255, 255, 255, 0.64);
+  z-index: 8;
+}
+.video-thumbnail-block{
+  z-index: 9;
   
 }
-@media (max-width: 991px) { 
-  .theme-header{
+@media (max-width: 991px) {
+  .theme-header {
     min-height: 60px;
-    .navbar-main.navbar{
+    .navbar-main.navbar {
       padding: 10px 8px;
     }
   }
@@ -2306,15 +2343,14 @@ a {
           top: -2px;
           z-index: -2;
           min-height: 60px;
-          input{
+          input {
             display: none;
-        
           }
-          &.header-search-open{
+          &.header-search-open {
             z-index: 9;
-              input{
-                display: block;
-              }
+            input {
+              display: block;
+            }
           }
         }
         .search-input.header-search-open {

@@ -128,7 +128,7 @@ class FolderComponent extends React.Component {
               Total folders {totalFolders ? totalFolders : "0"}
             </div>
           </span>
-          <div className={"d-flex"}>
+          <div className="d-flex  justify-content-center align-items-between">
             {search && search[1] ? (
               <>
                 <span
@@ -149,7 +149,7 @@ class FolderComponent extends React.Component {
               id="move"
               className="dashboard-right-content cursor_pointer ml-4"
             >
-              <i className="fas fa-plus-circle icon-font"></i>
+              <i className="fas fa-plus icon-font"></i>
             </span>
             <UncontrolledTooltip placement="top" target="move">
               Create a New Folder
