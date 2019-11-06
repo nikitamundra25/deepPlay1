@@ -295,8 +295,9 @@ a {
     }
   }
   .play-sub-block {
-    border: solid $videoAddBannerBorder;
+    border: none;
     border-width: 2px 2px 2px 2px;
+    box-shadow: 0 0 5px 0 rgba(0, 0, 0, 0.24);
     video {
       z-index: 1;
     }
