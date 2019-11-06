@@ -114,7 +114,7 @@ class HomePage extends React.Component {
                   more
                 </p>
               </div>
-              <div className="text-center">
+              <div className="text-right">
                 <Button
                   color={" "}
                   className="fill-btn btn w-75 m-auto white-color get-stated-btn"

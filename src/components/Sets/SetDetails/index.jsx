@@ -355,13 +355,13 @@ class SetDetails extends React.Component {
                 Total Move {setDetails ? `${setDetails.moveCount}` : 0}
               </div>
             </span>
-            <div>
+            <div className="d-flex  justify-content-center align-items-between">
               <span
                 id="move"
                 className={"cursor_pointer"}
                 onClick={this.handleMoveAdd}
               >
-                <i className="fas fa-plus-circle icon-font"></i>
+                <i className="fas fa-plus icon-font"></i>
               </span>
               <UncontrolledTooltip placement="top" target="move">
                 Add new move
@@ -440,6 +440,7 @@ class SetDetails extends React.Component {
                   {...this.props}
                 />
               ) : null}
+             
               <Card className="video-slider-section">
                 <div className="step-2">
                   <MoveList

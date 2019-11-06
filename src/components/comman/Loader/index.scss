@@ -16,7 +16,7 @@
     border-radius: 4px;
     margin-top: 15px;
     padding: 15px;
-    border: 1px solid #d4d4d4;
+    box-shadow:0 0 2px 0 rgba(0, 0, 0, 0.24);
         img{
             width: 70px; 
         }
@@ -42,17 +42,22 @@
     border-radius: 4px;
     margin-top: 15px;
     padding: 15px;
-    border: 1px solid #d4d4d4;
+    box-shadow: 0 0 0.5rem 0 rgba(0, 0, 0, 0.24);
         img{
             width: 250px; 
+            margin: auto;
         }
         height: calc(100% - 15px);
+    }
+    .video-loader-img{
+        margin-top: 10px;
     }
 
 }
 .full-loader{
     .loader-block{
         border: none;
+        box-shadow: none;
         margin: 0px;
     }   
 }

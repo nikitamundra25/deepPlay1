@@ -82,7 +82,7 @@ export class Email {
          throw new Error("Please provide email.");
       }
       const mailOption: IMailOption = {
-         from: "Deep Play <test.chapter247@gmail.com>",
+         from: "DeepPlay <test.chapter247@gmail.com>",
          to: email || this.to,
          cc: this.cc,
          subject: this.subject,

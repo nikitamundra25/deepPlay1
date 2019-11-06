@@ -121,7 +121,7 @@ class SetComponent extends React.Component {
               Total sets {totalSets ? totalSets : "0"}
             </div>
           </span>
-          <div className={"d-flex"}>
+          <div className="d-flex  justify-content-center align-items-between">
             {search && search[1] ? (
               <>
                 <span
@@ -141,7 +141,7 @@ class SetComponent extends React.Component {
               className={"cursor_pointer"}
               onClick={this.handleSetModal}
             >
-              <i className="fas fa-plus-circle icon-font"></i>
+              <i className="fas fa-plus icon-font"></i>
             </span>
             <UncontrolledTooltip placement="top" target="set">
               Create New Set
@@ -159,7 +159,7 @@ class SetComponent extends React.Component {
                       className="tile-wrap card"
                       onMouseLeave={() => this.closePopOver()}
                     >
-                      <div className="cotent-tile d-flex content-with-tip ">
+                      <div className="cotent-tile d-flex content-with-tip cursor_pointer">
                         <div
                           className="d-flex content-with-img w-100"
                           onClick={() => this.handleSetDetails(setList._id)}
@@ -310,7 +310,7 @@ class SetComponent extends React.Component {
             )
           ) : (
             <Col sm={12} className="loader-col">
-              <Loader fullLoader={true} />
+              <Loader />
             </Col>
           )}
         </Row>

@@ -384,7 +384,7 @@ class MoveSearchList extends React.Component {
                         All
                       </Button>
                       <Button
-                        className={isStarred[1] === "true" ? "active" : ""}
+                        className={isStarred[1] === "true" ? "active stared-active" : ""}
                         color=" "
                         onClick={this.handleShowStarred}
                       >

@@ -195,6 +195,7 @@ class EditMoveModal extends React.Component {
                 ADD TAGS
               </Label>
               <CreatableSelect
+               classNamePrefix="react_select"
                 isMulti
                 onChange={this.handleTagChange}
                 value={tags}

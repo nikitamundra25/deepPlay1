@@ -145,6 +145,7 @@ class TransferToModal extends React.Component {
           <ModalBody className="">
             <div className="wrap-folder search-select-wrap">
               <AsyncSelect
+                classNamePrefix="react_select"
                 isClearable={selectFolderOptions.value ? true : false}
                 defaultOptions={defaultFolderList}
                 noOptionsMessage={() =>

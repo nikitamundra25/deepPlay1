@@ -54,6 +54,7 @@ class AddTagModal extends React.Component {
           <ModalBody>
             <div className="w-100 tag-input-wrap search-select-wrap">
               <CreatableSelect
+               classNamePrefix="react_select"
                 isMulti
                 onChange={this.props.handleTagChange}
                 value={tags}
