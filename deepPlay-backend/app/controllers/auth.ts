@@ -23,7 +23,7 @@ const login = async (req: Request, res: Response): Promise<any> => {
   try {
     const { body } = req;
     const { email, password } = body;
-    const Email: string = email.toLowerCase()
+    const Email: string = email.toLowerCase();
     const result: Document | null | any = await UserModel.findOne({
       email: Email,
       isDeleted: false
@@ -81,7 +81,8 @@ const adminLogin = async (req: Request, res: Response): Promise<any> => {
     }).select("firstName lastName email password");
     if (result === null) {
       return res.status(400).json({
-        message: "Email Address is not Registred with us. Please try to login with registered email address."
+        message:
+          "Email Address is not Registred with us. Please try to login with registered email address."
       });
     }
     if (result.password) {
@@ -130,7 +131,8 @@ const signup = async (req: Request, res: Response): Promise<any> => {
     });
     if (result) {
       return res.status(400).json({
-        message: "This Email Address is already regisred with us. Please try to register with another Email Address.",
+        message:
+          "This Email Address is already regisred with us. Please try to register with another Email Address.",
         success: false
       });
     } else {
@@ -275,12 +277,14 @@ const userForgotPassword = async (
     }
     const { body } = req;
     const { email } = body;
+    const email_check: string = email.toLowerCase();
     const result: Document | null | any = await UserModel.findOne({
-      email: email
+      email: email_check
     });
     if (result === null) {
       return res.status(400).json({
-        message: "Email Address is not Registred with us. Please try with registered email address."
+        message:
+          "Email Address is not Registred with us. Please try with registered email address."
       });
     }
     const encryptedUserId = encrypt(result.id);
@@ -449,7 +453,7 @@ const updateAdminPassword = async (
       message: "Password updated successfully."
     });
   } catch (error) {
-    console.log(error)
+    console.log(error);
     res.status(500).json({
       message: error.message ? error.message : "Unexpected error occure.",
       success: false

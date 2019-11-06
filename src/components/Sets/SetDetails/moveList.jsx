@@ -201,7 +201,8 @@ class MoveList extends React.Component {
       this.props.getMovesOfSetRequest({
         setId: this.props.setIdPathName,
         page: 1,
-        isInfiniteScroll: true
+        isInfiniteScroll: false,
+        isMoveList: true
       });
       this.setState({
         page: 1,
@@ -257,7 +258,8 @@ class MoveList extends React.Component {
       this.props.getMovesOfSetRequest({
         setId: this.props.setIdPathName,
         page: 1,
-        isInfiniteScroll: true
+        isInfiniteScroll: false,
+        isMoveList: true
       });
       this.setState({
         page: 1,
@@ -384,7 +386,6 @@ class MoveList extends React.Component {
   };
 
   handleonBlur = (videoData, index) => {
-    console.log("Fgfdkjgfhj", videoData);
     this.setState({
       doubleClick: false,
       doubleClickIndex: -1
@@ -415,7 +416,8 @@ class MoveList extends React.Component {
       setIdPathName,
       isMoveSearchLoading,
       totalMoves,
-      tagsList
+      tagsList,
+      isMoveListLoading
     } = this.props;
     const { modelDetails } = modelInfoReducer;
     const { transferToModalOpen, addTagModalOpen } = modelDetails;
@@ -557,36 +559,39 @@ class MoveList extends React.Component {
               ) : null}
             </Col>
             <div className="video-thumbnail-block">
-              <DragDropContext onDragEnd={this.onDragEnd}>
-                <Droppable
-                  droppableId="droppable"
-                  // type="droppableItem"
-                >
-                  {provided => (
-                    <>
-                      <div
-                        className="video-thumbnail-sub-block  video-thumb-edit-view"
-                        ref={provided.innerRef}
-                        {...provided.droppableProps}
-                      >
-                        <div className="play-list-tile">
-                          <div
-                            className="play-list-block  d-flex h-100 cursor_pointer"
-                            onClick={this.props.handleMoveAdd}
-                          >
-                            <div className="add-play-list-block d-flex w-100 justify-content-center align-items-center text-center flex-column">
-                              <div className="h5 font-dark-bold add-img">
-                                <img src={addPlusIc} alt="" />
+              {!isMoveSearchLoading && !isMoveListLoading ? (
+                <DragDropContext onDragEnd={this.onDragEnd}>
+                  <Droppable
+                    droppableId="droppable"
+                    // type="droppableItem"
+                  >
+                    {provided => (
+                      <>
+                        <div
+                          className="video-thumbnail-sub-block  video-thumb-edit-view"
+                          ref={provided.innerRef}
+                          {...provided.droppableProps}
+                        >
+                          <div className="play-list-tile">
+                            <div
+                              className="play-list-block  d-flex h-100 cursor_pointer"
+                              onClick={this.props.handleMoveAdd}
+                            >
+                              <div className="add-play-list-block d-flex w-100 justify-content-center align-items-center text-center flex-column">
+                                <div className="h5 font-dark-bold add-img">
+                                  <img src={addPlusIc} alt="" />
+                                </div>
+                                <Button
+                                  color={" "}
+                                  className="fill-btn btn mt-4"
+                                >
+                                  Create Now
+                                </Button>
                               </div>
-                              <Button color={" "} className="fill-btn btn mt-4">
-                                Create Now
-                              </Button>
                             </div>
                           </div>
-                        </div>
 
-                        {!isMoveSearchLoading ? (
-                          moveofSetList.map((video, index) => {
+                          {moveofSetList.map((video, index) => {
                             return (
                               <Draggable
                                 key={video._id}
@@ -727,6 +732,8 @@ class MoveList extends React.Component {
                                                   width={"100%"}
                                                   id={`webm-video-${index}`}
                                                   muted={true}
+                                                  loop
+                                                  preload="auto"
                                                 >
                                                   <source
                                                     src={`${video.moveURL}`}
@@ -884,16 +891,18 @@ class MoveList extends React.Component {
                                 )}
                               </Draggable>
                             );
-                          })
-                        ) : (
-                          <Loader />
-                        )}
-                      </div>
-                      {provided.placeholder}
-                    </>
-                  )}
-                </Droppable>
-              </DragDropContext>
+                          })}
+                        </div>
+                        {provided.placeholder}
+                      </>
+                    )}
+                  </Droppable>
+                </DragDropContext>
+              ) : (
+                <Col md={12}>
+                  <Loader />
+                </Col>
+              )}
             </div>
           </Row>
           <TransferToModal

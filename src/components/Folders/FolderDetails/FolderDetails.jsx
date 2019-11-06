@@ -78,7 +78,7 @@ class RecentFolderComponent extends React.Component {
     if (
       prevProps.setReducer &&
       prevProps.setReducer.setListinFolder !==
-      this.props.setReducer.setListinFolder
+        this.props.setReducer.setListinFolder
     ) {
       const setList = this.props.setReducer.setListinFolder;
       this.setState({
@@ -143,7 +143,7 @@ class RecentFolderComponent extends React.Component {
     data = {
       isFolderAdd: name === "add" ? true : false,
       id,
-      folderId: pathName[3],
+      folderId: pathName[3]
     };
     const { value } = await ConfirmBox({
       text: "You want to remove Set from this folder!"
@@ -303,10 +303,10 @@ class RecentFolderComponent extends React.Component {
               {folderDetails
                 ? folderDetails && folderDetails.isCopy
                   ? `Copy of ${folderDetails.title} ${
-                  folderDetails.copyIndex > 0
-                    ? `(${folderDetails.copyIndex})`
-                    : ""
-                  }`
+                      folderDetails.copyIndex > 0
+                        ? `(${folderDetails.copyIndex})`
+                        : ""
+                    }`
                   : folderDetails.title
                 : "MyFolder"}
               {/* {folderDetails ? folderDetails.title : "MyFolder"} */}
@@ -347,12 +347,12 @@ class RecentFolderComponent extends React.Component {
               </DropdownToggle>
               <DropdownMenu>
                 <DropdownItem onClick={this.handleFolderModel}>
-                  Edit
+                  Edit Folder Details
                 </DropdownItem>
                 <DropdownItem
                   onClick={() => this.handleDeleteFolder(folderDetails._id)}
                 >
-                  Delete
+                  Delete Folder
                 </DropdownItem>
               </DropdownMenu>
             </UncontrolledDropdown>
@@ -388,10 +388,10 @@ class RecentFolderComponent extends React.Component {
                                 <span>
                                   {list.isCopy
                                     ? `Copy of ${list.title} ${
-                                    list.copyIndex > 0
-                                      ? `(${list.copyIndex})`
-                                      : ""
-                                    }`
+                                        list.copyIndex > 0
+                                          ? `(${list.copyIndex})`
+                                          : ""
+                                      }`
                                     : list.title}
                                 </span>
                               </span>
@@ -401,7 +401,7 @@ class RecentFolderComponent extends React.Component {
                             </span>
                             <div className="content-number-tile">
                               {" "}
-                              {list.moveCount ? list.moveCount : 0} items
+                              {list.moveCount ? list.moveCount : 0} moves
                             </div>
                           </div>
                           {list.recentlyAddMoveImg ? (
@@ -461,46 +461,46 @@ class RecentFolderComponent extends React.Component {
                 );
               })
             ) : (
-                <>
-                  <Col>
-                    <div className="create-set-section mt-2 w-100 empty-folder-section">
-                      <Card className="set-content-wrap empty-folder-card">
-                        <div className="set-content-block w-100 empty-folder-wrap">
-                          <CardHeader className="empty-folder-header">
-                            <img src={emptySetIc} alt={"Images"} />
-                            <div className="content-header set-header">
-                              <span className="content-title">
-                                {" "}
-                                <h3>This folder has no Sets yet</h3>
-                                <p>Organize your Sets for you or your students</p>
-                              </span>
-                            </div>
-                          </CardHeader>
-                          <CardBody className="">
-                            <div className="create-set-tile"></div>
-                            <div className="text-center">
-                              <Button
-                                color=" "
-                                type="button"
-                                className="btn-black btn "
-                                onClick={this.openAddSetModel}
-                              >
-                                <i className="fas fa-plus mr-1"></i>
-                                Add a Set
+              <>
+                <Col>
+                  <div className="create-set-section mt-2 w-100 empty-folder-section">
+                    <Card className="set-content-wrap empty-folder-card">
+                      <div className="set-content-block w-100 empty-folder-wrap">
+                        <CardHeader className="empty-folder-header">
+                          <img src={emptySetIc} alt={"Images"} />
+                          <div className="content-header set-header">
+                            <span className="content-title">
+                              {" "}
+                              <h3>This folder has no Sets yet</h3>
+                              <p>Organize your Sets for you or your students</p>
+                            </span>
+                          </div>
+                        </CardHeader>
+                        <CardBody className="">
+                          <div className="create-set-tile"></div>
+                          <div className="text-center">
+                            <Button
+                              color=" "
+                              type="button"
+                              className="btn-black btn "
+                              onClick={this.openAddSetModel}
+                            >
+                              <i className="fas fa-plus mr-1"></i>
+                              Add a Set
                             </Button>
-                            </div>
-                          </CardBody>
-                        </div>
-                      </Card>
-                    </div>
-                  </Col>
-                </>
-              )
+                          </div>
+                        </CardBody>
+                      </div>
+                    </Card>
+                  </div>
+                </Col>
+              </>
+            )
           ) : (
-              <Col sm={12} className="loader-col">
-                <Loader />
-              </Col>
-            )}
+            <Col sm={12} className="loader-col">
+              <Loader />
+            </Col>
+          )}
         </Row>
         <AddSetModal
           handleOpen={this.openAddSetModel}

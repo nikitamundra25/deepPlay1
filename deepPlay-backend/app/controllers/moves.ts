@@ -202,7 +202,7 @@ const getVideoFrames = async (videoName: string): Promise<any> => {
   const dirName: string = videoURL;
   const video = await new ffmpeg(videoURL);
   const videoDuration = (video.metadata.duration as any).seconds;
-  console.log(videoDuration / 10);
+  console.log(dirName, "dirName");
   return await new Promise((resolve, reject) => {
     video.fnExtractFrameToJPG(
       `${dirName.split(".")[0]}_frames`,
@@ -771,7 +771,9 @@ const addTagsInMove = async (req: Request, res: Response): Promise<any> => {
   try {
     const { body } = req;
     const { data } = body;
-    const { tags, moveId } = data;
+    const { tags, moveId, fromMoveList } = data;
+    console.log("fromMoveList", fromMoveList);
+
     if (!moveId) {
       res.status(400).json({
         message: "MoveId not found"
@@ -786,10 +788,19 @@ const addTagsInMove = async (req: Request, res: Response): Promise<any> => {
         }
       }
     );
-
-    return res.status(200).json({
-      message: "Tags have been added successfully!"
-    });
+    if (fromMoveList) {
+      return res.status(200).json({
+        message: "Tags have been updated successfully"
+      });
+    } else if (!fromMoveList) {
+      return res.status(200).json({
+        message: "Tags have been updated for this move successfully"
+      });
+    } else {
+      return res.status(200).json({
+        message: "Tags have been added for this move successfully"
+      });
+    }
   } catch (error) {
     console.log(error);
     return res.status(500).send({

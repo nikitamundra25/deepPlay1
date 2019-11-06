@@ -20,6 +20,18 @@ class VideoDetails extends React.Component {
     };
   };
 
+  loadSets = (input, callback) => {
+    if (input.length > 1) {
+      this.props.getAllSetRequest({
+        search: input,
+        callback,
+        isSetNoLimit: false
+      });
+    } else {
+      this.props.getAllSetRequest({ isSetNoLimit: false });
+    }
+  };
+
   render() {
     const { selectSetOptions, setReducer, tags, errors, tagsList } = this.props;
     const { recentSetAdded, allSetList } = setReducer;
@@ -36,9 +48,16 @@ class VideoDetails extends React.Component {
               : data.title,
           value: data._id
         };
+
         defaultSetoptions.push(defaultSetoptionsValue);
+
         return true;
       });
+      const addNewOption = {
+        label: "+ Create New Set",
+        value: ""
+      };
+      defaultSetoptions.push(addNewOption);
     }
     if (recentSetAdded && recentSetAdded.value) {
       recentAddedSet = {
@@ -83,8 +102,12 @@ class VideoDetails extends React.Component {
               <div className="w-100 search-select-wrap">
                 <AsyncSelect
                   loadOptions={this.loadSets}
-                  isClearable={selectSetOptions.value ? true : false}
+                  isClearable={
+                    selectSetOptions && selectSetOptions.value ? true : false
+                  }
                   defaultOptions={defaultSetoptions}
+                  onBlur={this.props.onBlur}
+                  placeholder="Type to select sets"
                   className={
                     errors && errors.setId
                       ? "is-invalid form-control search-input-wrap"
@@ -92,13 +115,17 @@ class VideoDetails extends React.Component {
                   }
                   onChange={e => this.props.handleInputChange(e)}
                   value={
-                    recentAddedSet ? recentAddedSet.title : selectSetOptions
+                    recentAddedSet &&
+                    recentAddedSet.label &&
+                    recentAddedSet.value
+                      ? recentAddedSet
+                      : selectSetOptions
                   }
                 />
                 <FormFeedback>
                   {errors &&
                   errors.setId &&
-                  (selectSetOptions.value === "" || recentAddedSet.value === "")
+                  (selectSetOptions === null || recentAddedSet.value === "")
                     ? errors.setId
                     : null}
                 </FormFeedback>

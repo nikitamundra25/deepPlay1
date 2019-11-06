@@ -37,7 +37,9 @@ export const MovesAction = {
   ADD_TAGS_IN_TAGMODAL_REQUEST: "Add Tags In Tag Modal Request",
   ADD_TAGS_IN_TAGMODAL_SUCCESS: "Add Tags In Tag Modal Success",
   GET_TAG_LIST_REQUEST: "Get Tags List Request",
-  GET_TAG_LIST_SUCCESS: "Get Tags List Success"
+  GET_TAG_LIST_SUCCESS: "Get Tags List Success",
+  VIDEO_FULLSCREEN_REQ: "Video Fullscreen Request",
+  VIDEO_FULLSCREEN_EXIT: "Video Fullscreen Exit"
 };
 
 export const downloadYoutubeVideoRequest = createAction(
@@ -140,3 +142,10 @@ export const addTagsInTagModalSuccess = createAction(
 
 export const getTagListRequest = createAction(MovesAction.GET_TAG_LIST_REQUEST);
 export const getTagListSuccess = createAction(MovesAction.GET_TAG_LIST_SUCCESS);
+
+export const videoFullscreenReq = createAction(
+  MovesAction.VIDEO_FULLSCREEN_REQ
+);
+export const videoFullscreenExit = createAction(
+  MovesAction.VIDEO_FULLSCREEN_EXIT
+);

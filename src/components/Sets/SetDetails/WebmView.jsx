@@ -11,7 +11,7 @@ import {
 } from "reactstrap";
 import { logger } from "helper/Logger";
 import InputRange from "react-input-range";
-import { SecondsToHHMMSS } from "helper/Time";
+import { SecondsToMMSS } from "helper/Time";
 import TransferToModal from "../../Folders/FolderDetails/transferTo";
 import Loader from "../../comman/Loader/Loader";
 import closeBtn from "../../../assets/img/close-img.png";
@@ -25,7 +25,7 @@ class WebmView extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      isPlaying: false,
+      isPlaying: true,
       currentTime: 0,
       exactCurrentTime: 0,
       audioSpeed: 5,
@@ -46,15 +46,64 @@ class WebmView extends Component {
   /**
    *
    */
-  componentDidUpdate = ({ isVideoModalOpen, videoData }) => {
+  componentDidUpdate = ({ isVideoModalOpen, videoData, isFullScreenMode }) => {
+    if (isFullScreenMode !== this.props.isFullScreenMode) {
+      const videoFullScreen = true;
+      this.video = document.getElementById("webm-video");
+      this.video.addEventListener("volumechange", () => {
+        if (
+          (this.video.volume === 0 || this.video.volume === 1) &&
+          this.video.muted
+        ) {
+          this.setState({
+            isMuted: true,
+            audioSpeed: 0
+          });
+        } else {
+          this.setState({
+            isMuted: false,
+            audioSpeed: this.video.volume
+          });
+        }
+      });
+      this.video.addEventListener("pause", () => {
+        this.setState({
+          isPlaying: false
+        });
+      });
+      this.video.addEventListener("play", () => {
+        this.setState({
+          isPlaying: true
+        });
+      });
+      if (this.props.isFullScreenMode && videoFullScreen) {
+        let isVideoScreenChange = false;
+        this.video.addEventListener("webkitfullscreenchange", () => {
+          console.log("function");
+          if (!isVideoScreenChange) {
+            this.props.videoFullscreenExit();
+          }
+        });
+      }
+      this.video.controls = false;
+    }
     if (isVideoModalOpen !== this.props.isVideoModalOpen) {
       this.props.loadVideoDataRequest(this.props.showVideo);
       this.setState({
-        videoIndex: this.props.showVideoIndex
+        videoIndex: this.props.showVideoIndex,
+        isPlaying: true,
+        currentTime: 0,
+        exactCurrentTime: 0,
+        audioSpeed: 5,
+        isMuted: false,
+        playBackSpeed: 1
       });
     }
     if (videoData !== this.props.videoData) {
       this.video = document.getElementById("webm-video");
+      this.customVideo = document.getElementById("custom_video_control");
+      console.log("this.customVideo", this.customVideo);
+
       this.video.addEventListener("timeupdate", () => {
         const currentVideoTime = parseFloat(this.video.currentTime).toFixed(2);
         this.setState({
@@ -63,9 +112,10 @@ class WebmView extends Component {
       });
       this.video.addEventListener("ended", () => {
         this.setState({
-          isPlaying: false
+          isPlaying: true
         });
       });
+
       this.video.load();
       let timeDuration = [];
       this.video.onloadeddata = () => {
@@ -83,7 +133,7 @@ class WebmView extends Component {
             videoHeight,
             videoWidth
           },
-          isPlaying: false
+          isPlaying: true
         });
       };
     }
@@ -144,7 +194,11 @@ class WebmView extends Component {
     if (this.video.mozRequestFullScreen) {
       this.video.mozRequestFullScreen();
     } else if (this.video.webkitRequestFullScreen) {
+      this.props.videoFullscreenReq();
       this.video.webkitRequestFullScreen();
+      this.setState({
+        isFullScreenMode: true
+      });
     }
   };
   /**
@@ -319,7 +373,6 @@ class WebmView extends Component {
       moveIdToEdit,
       tags
     } = this.state;
-
     return (
       <>
         <Modal
@@ -430,7 +483,7 @@ class WebmView extends Component {
               ) : null}
             </div>
             <div className="video-slider-img pb-3">
-              <div className="custom-video-player">
+              <div className="custom-video-player" id="custom_video_control">
                 <div className="videos-arrows-wrap">
                   {videoIndex > 0 ? (
                     <div
@@ -455,6 +508,12 @@ class WebmView extends Component {
                     id="webm-video"
                     muted={isMuted}
                     className="video-loading-tag"
+                    loop
+                    // preload="auto"
+                    autoPlay
+                    disablecontrols="true"
+                    disablepictureinpicture="true"
+                    controlsList="nodownload"
                   >
                     <source
                       src={`${
@@ -501,8 +560,8 @@ class WebmView extends Component {
                         )}
                       </div>
                       <div className="video-time-wrap control-tile">
-                        {SecondsToHHMMSS(parseInt(currentTime))} /{" "}
-                        {SecondsToHHMMSS(
+                        {SecondsToMMSS(parseInt(currentTime))} /{" "}
+                        {SecondsToMMSS(
                           parseInt(videoDuration.videoMaxDuration)
                         )}
                       </div>
@@ -570,6 +629,12 @@ class WebmView extends Component {
                             Playback speed
                           </UncontrolledTooltip>
                           <DropdownMenu>
+                            <DropdownItem
+                              active={playBackSpeed === 0.25}
+                              onClick={() => this.handleSpeed(0.25)}
+                            >
+                              0.25
+                            </DropdownItem>
                             <DropdownItem
                               active={playBackSpeed === 0.5}
                               onClick={() => this.handleSpeed(0.5)}

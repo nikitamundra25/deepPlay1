@@ -298,7 +298,7 @@ class SetComponent extends React.Component {
                               onClick={this.handleSetModal}
                             >
                               <i className="fas fa-plus mr-1"></i>
-                              Create a Set
+                              Create New Set
                             </Button>
                           </div>
                         </CardBody>

@@ -30,7 +30,9 @@ import {
   updateSortIndexRequest,
   updateMoveRequest,
   getTagListRequest,
-  addTagsInTagModalRequest
+  addTagsInTagModalRequest,
+  videoFullscreenReq,
+  videoFullscreenExit
 } from "../../../actions";
 import SharableLinkModal from "../../comman/shareableLink/SharableLink";
 import { AppRoutes } from "../../../config/AppRoutes";
@@ -222,6 +224,7 @@ class SetDetails extends React.Component {
         });
       }
     );
+    this.props.videoFullscreenExit();
   };
   /*
    */
@@ -255,11 +258,11 @@ class SetDetails extends React.Component {
       const moveList = [...data.moveofSetList];
       moveList.map((key, i) => {
         // eslint-disable-next-line
-       return data.moveId.map((k)=>{
+        return data.moveId.map(k => {
           if (k === key._id) {
-              moveList[i].tags = data.tags;
+            moveList[i].tags = data.tags;
           }
-        })
+        });
       });
       this.props.addTagsRequest({ data: data, moveList: moveList });
     } else {
@@ -296,7 +299,9 @@ class SetDetails extends React.Component {
       loadVideoDataRequest,
       getMovesOfSetRequest,
       getAllFolders,
-      updateSortIndexRequest
+      updateSortIndexRequest,
+      videoFullscreenReq,
+      videoFullscreenExit
     } = this.props;
     const { setDetails } = setReducer;
     const { modelDetails } = modelInfoReducer;
@@ -308,7 +313,9 @@ class SetDetails extends React.Component {
       searchMoveResult,
       isMoveSearchLoading,
       isMoveStarLoading,
-      tagsList
+      tagsList,
+      isFullScreenMode,
+      isMoveList
     } = moveReducer;
     const { userEncryptedInfo } = shareLinkReducer;
     const {
@@ -377,7 +384,7 @@ class SetDetails extends React.Component {
                 </DropdownToggle>
                 <DropdownMenu>
                   <DropdownItem onClick={() => this.handleSetModal()}>
-                    Edit Set
+                    Edit Set Details
                   </DropdownItem>
                   <DropdownItem
                     onClick={() =>
@@ -397,7 +404,7 @@ class SetDetails extends React.Component {
                 </DropdownMenu>
               </UncontrolledDropdown>
               <UncontrolledTooltip placement="top" target="edit">
-                Add, Edit & Delete
+                Edit & Delete Set Details
               </UncontrolledTooltip>
             </div>
           </div>
@@ -420,6 +427,9 @@ class SetDetails extends React.Component {
                   loadVideoDataRequest={loadVideoDataRequest}
                   addTagstoMove={this.addTagstoMove}
                   isStarred={this.isStarred}
+                  isFullScreenMode={isFullScreenMode}
+                  videoFullscreenReq={videoFullscreenReq}
+                  videoFullscreenExit={videoFullscreenExit}
                   // addTagsInTagModalRequest={addTagsInTagModalRequest}
                   tagsList={tagsList}
                   editMove={data => this.props.updateMoveRequest(data)}
@@ -434,6 +444,7 @@ class SetDetails extends React.Component {
                 <div className="step-2">
                   <MoveList
                     show={show}
+                    isMoveListLoading={isMoveList}
                     setIndex={setIndex}
                     closePopOver={this.closePopOver}
                     showPopOver={this.showPopOver}
@@ -553,6 +564,12 @@ const mapDispatchToProps = dispatch => ({
   },
   addTagsInTagModalRequest: data => {
     dispatch(addTagsInTagModalRequest(data));
+  },
+  videoFullscreenReq: data => {
+    dispatch(videoFullscreenReq(data));
+  },
+  videoFullscreenExit: data => {
+    dispatch(videoFullscreenExit(data));
   }
 });
 export default connect(

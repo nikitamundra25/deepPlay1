@@ -58,41 +58,45 @@ const createSetLogic = createLogic({
           }
         })
       );
-      if (!action.payload.isCopy) {
-        if (!toast.isActive(toastId)) {
-          toastId = toast.success(result.messages[0]);
-        }
-        if (action.payload.addMove) {
-          dispatch(redirectTo({ path: AppRoutes.MOVE.url }));
-        }
-        if (action.payload.folderId !== null) {
-          dispatch(
-            getFolderSetRequest({
-              folderId: action.payload.folderId,
-              limit: AppConfig.ITEMS_PER_PAGE
-            })
-          );
-          // dispatch(
-          //   modelOpenRequest({
-          //     modelDetails: {
-          //       addSetModalOpen: false
-          //     }
-          //   })
-          // );
-        }
-        dispatch(getAllSetRequest({ isSetNoLimit: false }));
-      } else {
-        if (!toast.isActive(toastId)) {
-          toastId = toast.success("Set Copy has been created successfully");
-        }
-        dispatch(getAllSetRequest({ isSetNoLimit: false }));
-        if (action.payload.folderId !== null) {
-          dispatch(
-            getFolderSetRequest({
-              folderId: action.payload.folderId ? action.payload.folderId : "",
-              limit: AppConfig.ITEMS_PER_PAGE
-            })
-          );
+      if (!action.payload.fromMoveDetailsPage) {
+        if (!action.payload.isCopy) {
+          if (!toast.isActive(toastId)) {
+            toastId = toast.success(result.messages[0]);
+          }
+          if (action.payload.addMove) {
+            dispatch(redirectTo({ path: AppRoutes.MOVE.url }));
+          }
+          if (action.payload.folderId !== null) {
+            dispatch(
+              getFolderSetRequest({
+                folderId: action.payload.folderId,
+                limit: AppConfig.ITEMS_PER_PAGE
+              })
+            );
+            // dispatch(
+            //   modelOpenRequest({
+            //     modelDetails: {
+            //       addSetModalOpen: false
+            //     }
+            //   })
+            // );
+          }
+          dispatch(getAllSetRequest({ isSetNoLimit: false }));
+        } else {
+          if (!toast.isActive(toastId)) {
+            toastId = toast.success("Set Copy has been created successfully");
+          }
+          dispatch(getAllSetRequest({ isSetNoLimit: false }));
+          if (action.payload.folderId !== null) {
+            dispatch(
+              getFolderSetRequest({
+                folderId: action.payload.folderId
+                  ? action.payload.folderId
+                  : "",
+                limit: AppConfig.ITEMS_PER_PAGE
+              })
+            );
+          }
         }
       }
       done();
@@ -174,6 +178,11 @@ const getAllSetLogic = createLogic({
     let setPayload;
     if (action.payload.isSetNoLimit) {
       setPayload = action.payload;
+    } else if (action.payload.callback) {
+      setPayload = {
+        search: action.payload.search,
+        limit: AppConfig.ITEMS_PER_PAGE
+      };
     } else {
       setPayload = {
         ...action.payload,
@@ -201,6 +210,17 @@ const getAllSetLogic = createLogic({
           totalSets: result.data.totalSets ? result.data.totalSets : 0
         })
       );
+      let defaultOption = [];
+      result.data.result &&
+        result.data.result.length &&
+        result.data.result.map(set => {
+          return defaultOption.push({ label: set.title, value: set._id });
+        });
+      if (action.payload && action.payload.callback) {
+        action.payload.callback(
+          defaultOption.concat({ label: "+ Create New Set", value: "" })
+        );
+      }
       done();
     }
   }
