@@ -50,6 +50,9 @@ const moveSchema: Mongoose.Schema = new Schema({
     type: Boolean,
     default: false
   },
+  objectId: {
+    type: Number
+  },
   setId: {
     type: Schema.Types.ObjectId,
     ref: "set"

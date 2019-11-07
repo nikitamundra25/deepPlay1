@@ -22,6 +22,9 @@ const setSchema: Mongoose.Schema = new Schema({
     type: Schema.Types.ObjectId,
     ref: "folder"
   },
+  objectId: {
+    type: Number
+  },
   isCopy: {
     type: Boolean,
     default: false

@@ -66,7 +66,9 @@ const createSet = async (req: Request, res: Response): Promise<any> => {
             setId: setId,
             moveURL: moveElement.moveURL,
             sourceUrl: moveElement.sourceUrl ? moveElement.sourceUrl : null,
-            isYoutubeUrl: moveElement.isYoutubeUrl ? moveElement.isYoutubeUrl: false
+            isYoutubeUrl: moveElement.isYoutubeUrl
+              ? moveElement.isYoutubeUrl
+              : false
           };
           const moveData: Document | any = new MoveModel(newMoveData);
           await moveData.save();
@@ -80,8 +82,16 @@ const createSet = async (req: Request, res: Response): Promise<any> => {
       ...setResult._doc,
       searchType: "sets"
     };
-    index.addObjects([setDataForAlgolia], (err: string, content: string) => {
+    let temp: any;
+    index.addObjects([setDataForAlgolia], async (err: string, content: any) => {
       if (err) throw err;
+      temp = content.objectIDs[0];
+      await SetModel.updateOne(
+        { _id: setResult._id },
+        {
+          objectId: temp
+        }
+      );
     });
     /*  */
 
@@ -400,6 +410,12 @@ const deleteSet = async (req: Request, res: Response): Promise<void> => {
       $set: { isDeleted: true }
     });
 
+    const result1: any = await SetModel.find({ _id: body.id });
+    const stemp = result1.length ? result1[0].objectId: null;
+    index.deleteObject(stemp, (err, content) => {
+      if (err) throw err;
+    });
+
     await MoveModel.updateMany(
       { setId: { $in: body.id } },
       {
@@ -633,6 +649,22 @@ const updateSet = async (req: Request, res: Response): Promise<any> => {
     await SetModel.findByIdAndUpdate(setId, {
       $set: { ...updateSet, updatedAt: Date.now() }
     });
+
+    const result1: any = await SetModel.find({ _id: setId });
+    const stemp = result1.length ? result1[0].objectId : null;
+
+    index.partialUpdateObject(
+      {
+        title: title,
+        description: description,
+        objectID: stemp
+      },
+      (err, content) => {
+        if (err) throw err;
+        console.log(content);
+      }
+    );
+
     return res.status(200).json({
       message: "Set details updated successfully."
     });

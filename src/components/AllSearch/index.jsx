@@ -41,7 +41,10 @@ class AllSearchComponent extends React.Component {
     return (
       <>
         {!isSearchLoading ? (
-          <div className="search-result-wrap cutom-scroll temprari-static-search">
+          <div
+            className="search-result-wrap cutom-scroll temprari-static-search"
+            ref={this.props.setWrapperRef}
+          >
             {folderList && folderList.length ? (
               <div className="search-result-block  moves-block">
                 <div className="category-wrap">
@@ -225,12 +228,19 @@ class AllSearchComponent extends React.Component {
                             );
                             this.props.handleSearchEmpty();
                           }}
+                          // onClick={() => this.props.handleMoveSearch(movelist)}
                           className="cursor_pointer searched-tile"
                         >
                           <div className="searhed-img-main-wrap">
                             <div className="searched-img-wrap">
                               <div className="searched-img">
-                                <img alt={""} src={emptyMoveIc} />
+                                {/* <img alt={""} src={emptyMoveIc} /> */}
+                                <video width={"100%"} id="webm-video">
+                                  <source
+                                    src={`${moveData.moveURL}`}
+                                    type="video/webm"
+                                  />
+                                </video>
                               </div>
                             </div>
                           </div>

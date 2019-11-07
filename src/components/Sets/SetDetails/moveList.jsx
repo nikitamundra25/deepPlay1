@@ -410,7 +410,6 @@ class MoveList extends React.Component {
   render() {
     const {
       show,
-      setIndex,
       modelInfoReducer,
       allSetList,
       setIdPathName,
@@ -430,7 +429,6 @@ class MoveList extends React.Component {
       setId,
       moveToTransfer,
       isVideoModalOpen,
-      page,
       moveofSetList,
       search,
       moveIdToAddTag,
@@ -531,21 +529,23 @@ class MoveList extends React.Component {
                             className=" "
                             color=" "
                           >
-                            <img src={addTag} className="mr-1" /> Add tags
+                            <img src={addTag} alt="" className="mr-1" /> Add
+                            tags
                           </Button>
                           <Button
                             onClick={() => this.openTransferToModal()}
                             className=" "
                             color=" "
                           >
-                            <img src={transfer} className="mr-1" /> Transfer
+                            <img src={transfer} alt="" className="mr-1" />{" "}
+                            Transfer
                           </Button>
                           <Button
                             onClick={() => this.handleMoveDelete()}
                             className=" "
                             color=" "
                           >
-                            <img src={remove} className="mr-1" /> Remove
+                            <img src={remove} alt="" className="mr-1" /> Remove
                           </Button>
                           <Button
                             color=" "

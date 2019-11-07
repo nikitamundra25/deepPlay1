@@ -440,7 +440,7 @@ class SetDetails extends React.Component {
                   {...this.props}
                 />
               ) : null}
-             
+
               <Card className="video-slider-section">
                 <div className="step-2">
                   <MoveList

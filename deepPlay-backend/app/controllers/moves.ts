@@ -284,7 +284,7 @@ const createMove = async (req: Request, res: Response): Promise<any> => {
 const getMoveBySetId = async (req: Request, res: Response): Promise<any> => {
   try {
     const { currentUser, query } = req;
-    const { page, limit } = query;
+    const { page, limit, sortIndex } = query;
     let headToken: Request | any = currentUser;
     if (!headToken.id) {
       res.status(400).json({
@@ -294,6 +294,7 @@ const getMoveBySetId = async (req: Request, res: Response): Promise<any> => {
     const pageNumber: number = ((parseInt(page) || 1) - 1) * (limit || 20);
     const limitNumber: number = parseInt(limit) || 20;
     let movesData: Document | any;
+
     if (query.isStarred === "true") {
       movesData = await MoveModel.find({
         setId: query.setId,
@@ -494,7 +495,7 @@ const updateMoveDetailsAndTrimVideo = async (
         videoOriginalFile = path.join(__dirname, "..", `${result.videoUrl}`);
       }
       const video = await new ffmpeg(videoFile);
-      const duration = timer.max - timer.min - 1;
+      const duration = timer.max - timer.min;
       video
         .setVideoStartTime(timer.min)
         .setVideoDuration(duration)
@@ -532,10 +533,19 @@ const updateMoveDetailsAndTrimVideo = async (
             },
             searchType: "move"
           };
+          let temp: any;
+
           index.addObjects(
             [moveDataForAlgolia],
-            (err: string, content: string) => {
+            async (err: string, content: any) => {
               if (err) throw err;
+              temp = content.objectIDs[0];
+              await MoveModel.updateOne(
+                { _id: result._id },
+                {
+                  objectId: temp
+                }
+              );
             }
           );
           /*  */
@@ -674,6 +684,19 @@ const deleteMove = async (req: Request, res: Response): Promise<any> => {
       }
     );
 
+    let objectIds: Document | any = [];
+    for (let index = 0; index < moveId.length; index++) {
+      const element = moveId[index];
+      const result: any = await MoveModel.find({ _id: element });
+      objectIds = [...objectIds, result[0].objectId];
+    }
+
+    if (objectIds.length) {
+      index.deleteObjects(objectIds, (err, content) => {
+        if (err) throw err;
+      });
+    }
+
     return res.status(200).json({
       message: "Move has been deleted successfully!"
     });
@@ -690,7 +713,6 @@ const transferMove = async (req: Request, res: Response): Promise<any> => {
   try {
     const { body } = req;
     const { setId, moveId } = body;
-    console.log(">>>>>>", moveId);
     if (!setId) {
       res.status(400).json({
         message: "SetId not found"
@@ -772,8 +794,6 @@ const addTagsInMove = async (req: Request, res: Response): Promise<any> => {
     const { body } = req;
     const { data } = body;
     const { tags, moveId, fromMoveList } = data;
-    console.log("fromMoveList", fromMoveList);
-
     if (!moveId) {
       res.status(400).json({
         message: "MoveId not found"
@@ -821,7 +841,7 @@ const updateMoveIndex = async (req: Request, res: Response): Promise<any> => {
     for (let index = 0; index < movesOfSet.length; index++) {
       await MoveModel.updateOne(
         { setId: setId, _id: movesOfSet[index]._id },
-        { $set: { sortIndex: index } }
+        { $set: { sortIndex: index + 1 } }
       );
     }
 
@@ -910,8 +930,8 @@ const updateMove = async (req: Request, res: Response): Promise<any> => {
     const { title, description, tags, moveId } = body;
     let updateMove: IUpdateMove = {
       title,
-      description,
-      tags
+      description
+      // tags
     };
 
     if (!moveId) {
@@ -922,6 +942,22 @@ const updateMove = async (req: Request, res: Response): Promise<any> => {
     await MoveModel.findByIdAndUpdate(moveId, {
       $set: { ...updateMove, updatedAt: Date.now() }
     });
+
+    const result1: any = await MoveModel.find({ _id: moveId });
+    const stemp = result1.length ? result1[0].objectId : null;
+
+    index.partialUpdateObject(
+      {
+        title: title,
+        description: description,
+        objectID: stemp
+      },
+      (err, content) => {
+        if (err) throw err;
+        console.log(content);
+      }
+    );
+
     return res.status(200).json({
       message: "Move details updated successfully."
     });

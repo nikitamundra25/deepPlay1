@@ -31,5 +31,4 @@ export interface IMoveCopy {
 export interface IUpdateMove {
   title: String;
   description: String;
-  tags: any;
 }
