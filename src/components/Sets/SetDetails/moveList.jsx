@@ -53,6 +53,9 @@ class MoveList extends React.Component {
       tags: [],
       moveIdToAddTag: "",
       moveIndexToAddTag: -1,
+      doubleClickIndex: -1,
+      title: " ",
+      doubleClick: false,
       isMarkingStar: {
         index: -1,
         isChanging: false
@@ -207,7 +210,8 @@ class MoveList extends React.Component {
       });
       this.setState({
         page: 1,
-        selectedMoveIds: []
+        selectedMoveIds: [],
+        selectedMoves: []
       });
       this.props.deleteMove(data);
     }
@@ -379,26 +383,28 @@ class MoveList extends React.Component {
     this.props.addTagstoMove(data);
   };
 
-  onDoubleClick = index => {
+  onDoubleClick = (index, title) => {
     this.setState({
-      doubleClick: !this.state.doubleClick,
-      doubleClickIndex: index
+      doubleClick: true,
+      doubleClickIndex: index,
+      title: title
     });
   };
 
-  handleonBlur = (videoData, index) => {
+  handleonBlur = videoData => {
     this.setState({
       doubleClick: false,
-      doubleClickIndex: -1
+      doubleClickIndex: -1,
+      title: ""
     });
-    // const data = {
-    //   moveId: videoData._id,
-    //   title: this.state.title,
-    //   description: videoData.description,
-    //   tags: videoData.tags,
-    //   setId: videoData.setId._id
-    // };
-    // this.props.editMove(data)
+    const data = {
+      moveId: videoData._id,
+      title: this.state.title,
+      description: videoData.description,
+      tags: videoData.tags,
+      setId: videoData.setId._id
+    };
+    this.props.editMove(data);
   };
 
   handleChange = e => {
@@ -407,6 +413,7 @@ class MoveList extends React.Component {
       [name]: value
     });
   };
+  
   render() {
     const {
       show,
@@ -434,6 +441,9 @@ class MoveList extends React.Component {
       moveIdToAddTag,
       tags,
       moveIndexToAddTag
+      // doubleClickIndex,
+      // doubleClick,
+      // title
       // isMarkingStar
     } = this.state;
     const location = this.props.location;
@@ -783,9 +793,39 @@ class MoveList extends React.Component {
                                                   show
                                                 )
                                               }
+                                              // onDoubleClick={() =>
+                                              //   this.onDoubleClick(
+                                              //     index,
+                                              //     video.title
+                                              //   )
+                                              // }
                                               className="play-list-text"
                                             >
                                               <div className="text-capitalize play-list-heading h6 m-0">
+                                                {/* {doubleClick &&
+                                                doubleClickIndex === index ? (
+                                                  <FormGroup>
+                                                    <Input
+                                                      id="title"
+                                                      type="text"
+                                                      placeholder="Enter a title"
+                                                      name="title"
+                                                      onChange={
+                                                        this.handleChange
+                                                      }
+                                                      value={title}
+                                                      onBlur={() =>
+                                                        this.handleonBlur(
+                                                          video,
+                                                          index
+                                                        )
+                                                      }
+                                                    />
+                                                  </FormGroup>
+                                                ) : (
+                                                  video.title || "unnamed"
+                                                )} */}
+
                                                 {video.title || "unnamed"}
                                               </div>
                                               <div

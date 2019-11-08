@@ -411,11 +411,13 @@ const deleteSet = async (req: Request, res: Response): Promise<void> => {
     });
 
     const result1: any = await SetModel.find({ _id: body.id });
-    const stemp = result1.length ? result1[0].objectId: null;
-    index.deleteObject(stemp, (err, content) => {
-      if (err) throw err;
-    });
+    const stemp: Number |any = result1.length ? result1[0].objectId : null;
 
+    if (stemp) {
+      index.deleteObject(stemp, (err: string, content: any) => {
+        if (err) throw err;
+      });
+    }
     await MoveModel.updateMany(
       { setId: { $in: body.id } },
       {
@@ -652,19 +654,19 @@ const updateSet = async (req: Request, res: Response): Promise<any> => {
 
     const result1: any = await SetModel.find({ _id: setId });
     const stemp = result1.length ? result1[0].objectId : null;
-
-    index.partialUpdateObject(
-      {
-        title: title,
-        description: description,
-        objectID: stemp
-      },
-      (err, content) => {
-        if (err) throw err;
-        console.log(content);
-      }
-    );
-
+    if (stemp) {
+      index.partialUpdateObject(
+        {
+          title: title,
+          description: description,
+          objectID: stemp
+        },
+        (err: string, content: any) => {
+          if (err) throw err;
+          console.log(content);
+        }
+      );
+    }
     return res.status(200).json({
       message: "Set details updated successfully."
     });

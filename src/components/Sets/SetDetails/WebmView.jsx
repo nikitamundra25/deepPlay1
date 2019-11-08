@@ -80,6 +80,9 @@ class WebmView extends Component {
         let isVideoScreenChange = false;
         this.video.addEventListener("webkitfullscreenchange", () => {
           console.log("function");
+          this.setState({
+            isFullScreenMode: false
+          });
           if (!isVideoScreenChange) {
             this.props.videoFullscreenExit();
           }
@@ -191,13 +194,25 @@ class WebmView extends Component {
    *
    */
   handleVideoFullScreen = () => {
-    if (this.video.mozRequestFullScreen) {
-      this.video.mozRequestFullScreen();
-    } else if (this.video.webkitRequestFullScreen) {
+    this.customVideo = document.getElementById("custom_video_control");
+    if (this.customVideo.mozRequestFullScreen) {
+      this.customVideo.mozRequestFullScreen();
+    } else if (this.customVideo.webkitRequestFullScreen) {
       this.props.videoFullscreenReq();
-      this.video.webkitRequestFullScreen();
+      this.customVideo.webkitRequestFullScreen();
       this.setState({
         isFullScreenMode: true
+      });
+    }
+  };
+  handleVideoResizeScreen = () => {
+    this.customVideo = document.getElementById("webm-video");
+    if (this.customVideo.mozCancelFullScreen) {
+      document.mozCancelFullScreen();
+    } else if (this.customVideo.webkitExitFullscreen) {
+      document.exitFullscreen();
+      this.setState({
+        isFullScreenMode: false
       });
     }
   };
@@ -371,7 +386,8 @@ class WebmView extends Component {
       videoDimentions,
       moveIdToAddTags,
       moveIdToEdit,
-      tags
+      tags,
+      isFullScreenMode
     } = this.state;
     return (
       <>
@@ -664,12 +680,21 @@ class WebmView extends Component {
                       </div>
                     </div>
                     <div className="control-right-block">
-                      <span
-                        onClick={() => this.handleVideoFullScreen()}
-                        className="control-tile cursor_pointer"
-                      >
-                        <i className="fas fa-expand" />
-                      </span>
+                      {!isFullScreenMode ? (
+                        <span
+                          onClick={() => this.handleVideoFullScreen()}
+                          className="control-tile cursor_pointer"
+                        >
+                          <i className="fas fa-expand" />
+                        </span>
+                      ) : (
+                        <span
+                          onClick={() => this.handleVideoResizeScreen()}
+                          className="control-tile cursor_pointer"
+                        >
+                          <i className="fa fa-arrows-alt" aria-hidden="true" />
+                        </span>
+                      )}
                     </div>
                   </div>
                 </div>

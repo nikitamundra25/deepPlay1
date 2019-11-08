@@ -684,19 +684,20 @@ const deleteMove = async (req: Request, res: Response): Promise<any> => {
       }
     );
 
-    let objectIds: Document | any = [];
+    let objectIds: Document | any = [],
+      stemp: any | string;
     for (let index = 0; index < moveId.length; index++) {
       const element = moveId[index];
       const result: any = await MoveModel.find({ _id: element });
-      objectIds = [...objectIds, result[0].objectId];
+      if (result && result.length && result[0].objectId) {
+        objectIds = [...objectIds, result[0].objectId];
+      }
     }
-
-    if (objectIds.length) {
-      index.deleteObjects(objectIds, (err, content) => {
+    if (objectIds) {
+      index.deleteObjects(objectIds, (err: string, content: any) => {
         if (err) throw err;
       });
     }
-
     return res.status(200).json({
       message: "Move has been deleted successfully!"
     });
@@ -945,19 +946,19 @@ const updateMove = async (req: Request, res: Response): Promise<any> => {
 
     const result1: any = await MoveModel.find({ _id: moveId });
     const stemp = result1.length ? result1[0].objectId : null;
-
-    index.partialUpdateObject(
-      {
-        title: title,
-        description: description,
-        objectID: stemp
-      },
-      (err, content) => {
-        if (err) throw err;
-        console.log(content);
-      }
-    );
-
+    if (stemp) {
+      index.partialUpdateObject(
+        {
+          title: title,
+          description: description,
+          objectID: stemp
+        },
+        (err: string, content: any) => {
+          if (err) throw err;
+          console.log(content);
+        }
+      );
+    }
     return res.status(200).json({
       message: "Move details updated successfully."
     });
