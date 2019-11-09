@@ -15,7 +15,7 @@ export const algoliaAPIKey = IsProductionMode
   : "67d8975eec42c620cf98a1f3acb517f3";
 export const ServerURL = !IsProductionMode
   ? "http://192.168.2.120:8000"
-  : "http://192.249.123.124";
+  : "http://192.249.123.124:8005";
 export const s3Key = {
   keyId: "AKIA5R6U3BHKVS3EFDGW",
   key: "hRZ8bTRNBsxThak7Dmf8lep7q7whcSRlRiFX/1OQ",
