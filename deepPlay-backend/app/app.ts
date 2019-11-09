@@ -52,7 +52,7 @@ app.get("/*", (req: express.Request, res: express.Response) => {
 /**
  *
  */
-const port: number = Number(process.env.PORT) || 8000;
+const port: number = Number(process.env.PORT) || 8005;
 /**
  *
  */
