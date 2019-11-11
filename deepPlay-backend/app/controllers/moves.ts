@@ -314,7 +314,7 @@ const getMoveBySetId = async (req: Request, res: Response): Promise<any> => {
       if (moveListData && moveListData.length) {
         for (let index = 0; index < moveListData.length; index++) {
           const element = moveListData[index].sortIndex;
-          const check = moveListData.filter(item => item.sortIndex === element)
+          const check = moveListData.filter((item: any) => item.sortIndex === element)
           if (check && check.length > 1) {
             isRepetedSortIndex = true
           }
