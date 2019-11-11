@@ -17,7 +17,7 @@ const VideoLoader = props => {
             <img src={loader} alt={"loader"} width={"100%"} height={"auto"} />
           </div>
           <div className="h4 videos-loader-text">
-            Your Move is preparing please wait...
+            Your move is preparing please wait...
           </div>
         </div>
       </div>

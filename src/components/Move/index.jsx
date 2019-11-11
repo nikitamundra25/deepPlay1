@@ -134,7 +134,8 @@ class MoveComponent extends React.Component {
       if (fileType[0] !== "video") {
         await ConfirmBox({
           title: "Oops...",
-          text: "Unsupported file type!! We accept only video type",
+          text:
+            "Unsupported file type!! We accept only video type (mp4, 3gp, ogv,wmv, webm, mpeg, m4v, ogm, mov, asx, mpeg, avi)",
           type: "error",
           showCancelButton: false,
           confirmButtonText: "Okay"
@@ -275,8 +276,8 @@ class MoveComponent extends React.Component {
                         <FormGroup>
                           <FormGroup className="flex-fill flex-column ">
                             <Label className="mb-3 set-wrap ">
-                              Upload video file from your system (mp4, 3gp, ogg,
-                              wmv, webm, flv etc..){" "}
+                              Upload video file from your system (mp4, 3gp, ogv,
+                              wmv, webm, mpeg etc..){" "}
                             </Label>
                           </FormGroup>
                           <Label
