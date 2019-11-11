@@ -85,7 +85,11 @@ const createFolder = async (req: Request, res: Response): Promise<any> => {
                 sharableLink: moveElement.sharableLink,
                 status: true,
                 setId: setId,
-                moveURL: moveElement.moveURL
+                moveURL: moveElement.moveURL,
+                sourceUrl: moveElement.sourceUrl ? moveElement.sourceUrl : null,
+                isYoutubeUrl: moveElement.isYoutubeUrl
+                  ? moveElement.isYoutubeUrl
+                  : false
               };
               const moveData: Document | any = new MoveModel(newMoveData);
               await moveData.save();
@@ -101,13 +105,24 @@ const createFolder = async (req: Request, res: Response): Promise<any> => {
       ...Result._doc,
       searchType: "folder"
     };
-    index.addObjects([folderDataForAlgolia], (err: string, content: string) => {
-      if (err) {
-        console.error(err);
-      } else {
-        console.log("##################", content);
+    let temp: any;
+
+    index.addObjects(
+      [folderDataForAlgolia],
+      async (err: string, content: any) => {
+        if (err) {
+          console.error(err);
+        } else {
+          temp = content.objectIDs[0];
+          await FolderModel.updateOne(
+            { _id: Result._id },
+            {
+              objectId: temp
+            }
+          );
+        }
       }
-    });
+    );
     /*  */
     res.status(200).json({
       Result,
@@ -328,6 +343,13 @@ const deleteFolder = async (req: Request, res: Response): Promise<void> => {
         $set: { isDeleted: true }
       }
     );
+    const result1: any = await FolderModel.find({ _id: query.id });
+    const stemp = result1.length ? result1[0].objectId : null;
+    if (stemp) {
+      index.deleteObject(stemp, (err: string, content: any) => {
+        if (err) throw err;
+      });
+    }
     res.status(200).json({
       data: result,
       message: "Folder has been deleted successfully"
@@ -569,6 +591,21 @@ const updateFolder = async (req: Request, res: Response): Promise<any> => {
       $set: { ...updateFolder, updatedAt: Date.now() }
     });
 
+    const result1: any = await FolderModel.find({ _id: id });
+    const stemp = result1.length ? result1[0].objectId : null;
+    if (stemp) {
+      index.partialUpdateObject(
+        {
+          title: title,
+          description: description,
+          objectID: stemp
+        },
+        (err: string, content: any) => {
+          if (err) throw err;
+          console.log(content);
+        }
+      );
+    }
     return res.status(200).json({
       message: "Folder details updated successfully."
     });

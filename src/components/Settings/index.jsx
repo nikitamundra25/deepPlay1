@@ -72,7 +72,7 @@ class SettingComponent extends Component {
   handleChange = e => {
     const { name, value } = e.target;
     this.setState({
-      [name]: value.replace(/[^\w\s]|[0-9]/gi, "").trim()
+      [name]: value.replace(/[^\w\s]|[0-9]|[_]/gi, "").trim()
     });
   };
 
@@ -438,7 +438,7 @@ class SettingComponent extends Component {
                               <Button
                                 color="danger"
                                 type="button"
-                                className="btn-btn-save"
+                                className="btn-btn-save mb-2"
                                 onClick={this.handleDelete}
                               >
                                 Delete Account

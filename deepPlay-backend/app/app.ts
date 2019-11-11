@@ -1,4 +1,4 @@
-import { DBHost, DBName, DBProtocol } from "./config";
+import { DBHost, DBName, DBProtocol, Port } from "./config";
 import Mongoose from "mongoose";
 import express from "express";
 import bodyParser from "body-parser";
@@ -52,7 +52,7 @@ app.get("/*", (req: express.Request, res: express.Response) => {
 /**
  *
  */
-const port: number = Number(process.env.PORT) || 8005;
+const port: number = Number(process.env.PORT) || Port;
 /**
  *
  */

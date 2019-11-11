@@ -138,7 +138,7 @@ const downloadYoutubeVideo = async (
           ytdl(body.url).pipe(
             (videoStream = fs.createWriteStream(originalVideoPath))
           );
-          videoStream.on("close", async function() {
+          videoStream.on("close", async function () {
             const {
               frames: framesArray,
               videoMetaData,
@@ -202,7 +202,7 @@ const getVideoFrames = async (videoName: string): Promise<any> => {
   const dirName: string = videoURL;
   const video = await new ffmpeg(videoURL);
   const videoDuration = (video.metadata.duration as any).seconds;
-  console.log(videoDuration / 10);
+  console.log(dirName, "dirName");
   return await new Promise((resolve, reject) => {
     video.fnExtractFrameToJPG(
       `${dirName.split(".")[0]}_frames`,
@@ -263,7 +263,7 @@ const createMove = async (req: Request, res: Response): Promise<any> => {
 
     await moveResult.save();
     return res.status(200).json({
-      message: "Created new move",
+      message: "Move has been created successfully.",
       moveId: moveResult._id,
       videoUrl: moveUrl,
       moveData: moveResult,
@@ -284,7 +284,7 @@ const createMove = async (req: Request, res: Response): Promise<any> => {
 const getMoveBySetId = async (req: Request, res: Response): Promise<any> => {
   try {
     const { currentUser, query } = req;
-    const { page, limit } = query;
+    const { page, limit, sortIndex } = query;
     let headToken: Request | any = currentUser;
     if (!headToken.id) {
       res.status(400).json({
@@ -305,9 +305,37 @@ const getMoveBySetId = async (req: Request, res: Response): Promise<any> => {
         .limit(limitNumber)
         .sort({ sortIndex: 1 });
     } else {
-      movesData = await MoveModel.find({
+      const moveListData: Document | any = await MoveModel.find({
         setId: query.setId,
         isDeleted: false
+      }).sort({ sortIndex: 1 });
+
+      let isRepetedSortIndex: Boolean = false
+      if (moveListData && moveListData.length) {
+        for (let index = 0; index < moveListData.length; index++) {
+          const element = moveListData[index].sortIndex;
+          const check = moveListData.filter(item => item.sortIndex === element)
+          if (check && check.length > 1) {
+            isRepetedSortIndex = true
+          }
+        }
+      }
+      let num: number = 0
+      if (isRepetedSortIndex) {
+        for (let index = 0; index < moveListData.length; index++) {
+          await MoveModel.updateOne({
+            _id: moveListData[index]._id
+          }, {
+            sortIndex: ++num
+          })
+
+        }
+      }
+
+      movesData = await MoveModel.find({
+        setId: query.setId,
+        isDeleted: false,
+        moveURL: { $ne: null }
       })
         .populate("setId")
         .skip(pageNumber)
@@ -323,12 +351,14 @@ const getMoveBySetId = async (req: Request, res: Response): Promise<any> => {
       totalMoves = await MoveModel.count({
         setId: query.setId,
         isDeleted: false,
-        isStarred: true
+        isStarred: true,
+        moveURL: { $ne: null }
       });
     } else {
       totalMoves = await MoveModel.count({
         setId: query.setId,
-        isDeleted: false
+        isDeleted: false,
+        moveURL: { $ne: null }
       });
     }
     return res.status(200).json({
@@ -376,7 +406,7 @@ const publicUrlMoveDetails = async (
     const { query } = req;
     const { setId, isPublic, fromFolder, page, limit } = query;
     const decryptedSetId = decrypt(setId);
-    let result: Document | any | null;
+    let result: Document | any | null, totalMove: Document | any | null
     let temp: Document | any | null, movesData: Document | any;
     const pageNumber: number = ((parseInt(page) || 1) - 1) * (limit || 20);
     const limitNumber: number = parseInt(limit) || 20;
@@ -395,11 +425,19 @@ const publicUrlMoveDetails = async (
     if (temp.isPublic) {
       result = await MoveModel.find({
         setId: decryptedSetId,
-        isDeleted: false
+        isDeleted: false,
+        moveURL: { $ne: null }
       })
         .populate("setId")
         .skip(pageNumber)
         .limit(limitNumber);
+
+      totalMove = await MoveModel.count({
+        setId: decryptedSetId,
+        isDeleted: false,
+        moveURL: { $ne: null }
+      })
+
     } else {
       return res.status(400).json({
         message: {
@@ -411,6 +449,7 @@ const publicUrlMoveDetails = async (
     return res.status(200).json({
       responsecode: 200,
       data: result,
+      totalMoves: totalMove,
       success: true
     });
   } catch (error) {
@@ -481,7 +520,7 @@ const updateMoveDetailsAndTrimVideo = async (
 
       const fileName = `${
         result.videoUrl.split(".")[0]
-      }_clip_${moment().unix()}.webm`;
+        }_clip_${moment().unix()}.webm`;
       let videoFileMain: String | any, videoOriginalFile: String | any;
       if (IsProductionMode) {
         videoFileMain = path.join(__dirname, `${fileName}`);
@@ -494,7 +533,7 @@ const updateMoveDetailsAndTrimVideo = async (
         videoOriginalFile = path.join(__dirname, "..", `${result.videoUrl}`);
       }
       const video = await new ffmpeg(videoFile);
-      const duration = timer.max - timer.min - 1;
+      const duration = timer.max - timer.min;
       video
         .setVideoStartTime(timer.min)
         .setVideoDuration(duration)
@@ -532,10 +571,19 @@ const updateMoveDetailsAndTrimVideo = async (
             },
             searchType: "move"
           };
+          let temp: any;
+
           index.addObjects(
             [moveDataForAlgolia],
-            (err: string, content: string) => {
+            async (err: string, content: any) => {
               if (err) throw err;
+              temp = content.objectIDs[0];
+              await MoveModel.updateOne(
+                { _id: result._id },
+                {
+                  objectId: temp
+                }
+              );
             }
           );
           /*  */
@@ -644,7 +692,7 @@ const isStarredMove = async (req: Request, res: Response): Promise<any> => {
     return res.status(200).json({
       message: `Move has been ${
         isStarred === "true" ? "starred" : "Unstarred"
-      } successfully!`
+        } successfully!`
     });
   } catch (error) {
     console.log(error);
@@ -674,6 +722,20 @@ const deleteMove = async (req: Request, res: Response): Promise<any> => {
       }
     );
 
+    let objectIds: Document | any = [],
+      stemp: any | string;
+    for (let index = 0; index < moveId.length; index++) {
+      const element = moveId[index];
+      const result: any = await MoveModel.find({ _id: element });
+      if (result && result.length && result[0].objectId) {
+        objectIds = [...objectIds, result[0].objectId];
+      }
+    }
+    if (objectIds) {
+      index.deleteObjects(objectIds, (err: string, content: any) => {
+        if (err) throw err;
+      });
+    }
     return res.status(200).json({
       message: "Move has been deleted successfully!"
     });
@@ -690,7 +752,6 @@ const transferMove = async (req: Request, res: Response): Promise<any> => {
   try {
     const { body } = req;
     const { setId, moveId } = body;
-    console.log(">>>>>>", moveId);
     if (!setId) {
       res.status(400).json({
         message: "SetId not found"
@@ -720,15 +781,25 @@ const transferMove = async (req: Request, res: Response): Promise<any> => {
 //-----------------------Filter move details-----------------------
 const filterMove = async (req: Request, res: Response): Promise<any> => {
   try {
-    const { query } = req;
-    const { search, setId } = query;
-    let searchData: Document | any | null;
+    const { query, currentUser } = req;
+    const { search, setId, page, limit } = query;
+    let searchData: Document | any | null, totalMoves: Number | any | null;
+    const pageNumber: number = ((parseInt(page) || 1) - 1) * (limit || 20);
+    const limitNumber: number = parseInt(limit) || 20;
+
+    let headToken: Request | any = currentUser;
+    if (!headToken.id) {
+      res.status(400).json({
+        message: "User id not found"
+      });
+    }
     let condition: any = {
       $and: []
     };
     condition.$and.push({
       isDeleted: false,
-      setId: setId
+      setId: setId,
+      userId: headToken.id
     });
 
     if (search) {
@@ -745,18 +816,21 @@ const filterMove = async (req: Request, res: Response): Promise<any> => {
             }
           },
           {
-            "tags.label": {
-              $regex: new RegExp(search.trim(), "i")
-            }
+            "tags.label": search.trim()
           }
         ]
       });
-      searchData = await MoveModel.find(condition);
+      searchData = await MoveModel.find(condition)
+        .skip(pageNumber)
+        .limit(limitNumber);
+
+      totalMoves = await MoveModel.count(condition);
     }
 
     return res.status(200).json({
       message: "Move has been searched successfully",
-      data: searchData
+      data: searchData,
+      totalMoves: totalMoves
     });
   } catch (error) {
     console.log(error);
@@ -771,7 +845,7 @@ const addTagsInMove = async (req: Request, res: Response): Promise<any> => {
   try {
     const { body } = req;
     const { data } = body;
-    const { tags, moveId } = data;
+    const { tags, moveId, fromMoveList } = data;
     if (!moveId) {
       res.status(400).json({
         message: "MoveId not found"
@@ -786,10 +860,19 @@ const addTagsInMove = async (req: Request, res: Response): Promise<any> => {
         }
       }
     );
-
-    return res.status(200).json({
-      message: "Tags have been added successfully!"
-    });
+    if (fromMoveList) {
+      return res.status(200).json({
+        message: "Tags have been updated successfully"
+      });
+    } else if (!fromMoveList) {
+      return res.status(200).json({
+        message: "Tags have been updated for this move successfully"
+      });
+    } else {
+      return res.status(200).json({
+        message: "Tags have been added for this move successfully"
+      });
+    }
   } catch (error) {
     console.log(error);
     return res.status(500).send({
@@ -810,7 +893,7 @@ const updateMoveIndex = async (req: Request, res: Response): Promise<any> => {
     for (let index = 0; index < movesOfSet.length; index++) {
       await MoveModel.updateOne(
         { setId: setId, _id: movesOfSet[index]._id },
-        { $set: { sortIndex: index } }
+        { $set: { sortIndex: index + 1 } }
       );
     }
 
@@ -857,7 +940,8 @@ const updateMoveIndex = async (req: Request, res: Response): Promise<any> => {
 
     const resp: Document | any | null = await MoveModel.find({
       setId: setId,
-      isDeleted: false
+      isDeleted: false,
+      moveURL: { $ne: null }
     }).sort({
       sortIndex: 1
     });
@@ -899,8 +983,8 @@ const updateMove = async (req: Request, res: Response): Promise<any> => {
     const { title, description, tags, moveId } = body;
     let updateMove: IUpdateMove = {
       title,
-      description,
-      tags
+      description
+      // tags
     };
 
     if (!moveId) {
@@ -911,6 +995,22 @@ const updateMove = async (req: Request, res: Response): Promise<any> => {
     await MoveModel.findByIdAndUpdate(moveId, {
       $set: { ...updateMove, updatedAt: Date.now() }
     });
+
+    const result1: any = await MoveModel.find({ _id: moveId });
+    const stemp = result1.length ? result1[0].objectId : null;
+    if (stemp) {
+      index.partialUpdateObject(
+        {
+          title: title,
+          description: description,
+          objectID: stemp
+        },
+        (err: string, content: any) => {
+          if (err) throw err;
+          console.log(content);
+        }
+      );
+    }
     return res.status(200).json({
       message: "Move details updated successfully."
     });
@@ -933,8 +1033,8 @@ const getMoveBySearch = async (req: Request, res: Response): Promise<any> => {
         message: "User id not found"
       });
     }
-    const pageNumber: number = ((parseInt(page) || 1) - 1) * (limit || 8);
-    const limitNumber: number = parseInt(limit) || 8;
+    const pageNumber: number = ((parseInt(page) || 1) - 1) * (limit || 20);
+    const limitNumber: number = parseInt(limit) || 20;
     let movesData: Document | any,
       moveList: Document | any | null,
       totalMoves: Document | any | null;

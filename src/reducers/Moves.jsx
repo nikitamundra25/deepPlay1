@@ -10,9 +10,11 @@ const initialState = {
   totalMoves: 0,
   isMoveDetailsLoading: false,
   isMoveofSetLoading: false,
+  isMoveList: false,
   isSavingWebM: false,
   moveUrlDetails: [],
   videoData: {},
+  isFullScreenMode: false,
   searchMoveResult: [],
   isMoveSearchLoading: false,
   isCreatingAnotherMove: false,
@@ -42,7 +44,8 @@ export const moveReducer = handleActions(
     }),
     [MovesAction.GET_MOVES_OF_SET_REQUEST]: (state, { payload }) => ({
       ...state,
-      isMoveofSetLoading: false
+      isMoveofSetLoading: false,
+      isMoveList: payload.isMoveList ? true : false
     }),
     [MovesAction.GET_MOVES_OF_SET_SUCCESS]: (state, { payload }) => ({
       ...state,
@@ -51,7 +54,8 @@ export const moveReducer = handleActions(
         ? [...state.movesOfSet, ...payload.movesOfSet]
         : payload.movesOfSet,
       totalMoves: payload.totalMoves,
-      isMoveofSetLoading: false
+      isMoveofSetLoading: false,
+      isMoveList: false
     }),
     [MovesAction.GET_MOVE_DETAILS_REQUEST]: (state, { payload }) => ({
       ...state,
@@ -79,12 +83,14 @@ export const moveReducer = handleActions(
     }),
     [MovesAction.SEARCH_MOVE_REQUEST]: (state, { payload }) => ({
       ...state,
-      isMoveSearchLoading: true
+      isMoveSearchLoading: true,
+      isMoveList: true
     }),
     [MovesAction.SEARCH_MOVE_SUCCESS]: (state, { payload }) => ({
       ...state,
       ...payload,
-      isMoveSearchLoading: false
+      isMoveSearchLoading: false,
+      isMoveList: false
     }),
     [MovesAction.UPDATE_SORT_INDEX_SUCCESS]: (state, { payload }) => ({
       ...state,
@@ -137,6 +143,14 @@ export const moveReducer = handleActions(
     [MovesAction.ADD_TAGS_SUCCESS]: (state, { payload }) => ({
       ...state,
       ...payload
+    }),
+    [MovesAction.VIDEO_FULLSCREEN_REQ]: (state, { payload }) => ({
+      ...state,
+      isFullScreenMode: true
+    }),
+    [MovesAction.VIDEO_FULLSCREEN_EXIT]: (state, { payload }) => ({
+      ...state,
+      isFullScreenMode: false
     })
   },
   initialState

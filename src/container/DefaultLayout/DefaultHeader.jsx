@@ -27,6 +27,7 @@ import AllSearchComponent from "../../components/AllSearch";
 import CreateSetComponent from "../../components/Sets/createSet";
 import searchArrow from "../../assets/img/back-search.png";
 import { DebounceInput } from "react-debounce-input";
+import WebmView from "../../components/Sets/SetDetails/WebmView";
 
 class DefaultHeader extends React.Component {
   constructor(props) {
@@ -35,12 +36,14 @@ class DefaultHeader extends React.Component {
       isUserLoggedIn: false,
       path: "",
       search: "",
-      open: false
+      open: false,
+      showVideo: ""
     };
   }
 
   componentDidMount = () => {
     const temp = this.props.history.location.pathname;
+    document.addEventListener("mousedown", this.handleClickOutside);
     if (localStorage.getItem("token")) {
       this.setState({
         isUserLoggedIn: true,
@@ -53,6 +56,18 @@ class DefaultHeader extends React.Component {
       });
     }
   };
+  handleClickOutside = event => {
+    if (this.wrapperRef && !this.wrapperRef.contains(event.target)) {
+      this.setState({
+        search: ""
+      });
+    }
+  };
+
+  setWrapperRef = node => {
+    this.wrapperRef = node;
+  };
+
   componentDidUpdate = ({ location }) => {
     const temp = this.props.location.pathname;
     if (location !== this.props.location) {
@@ -152,6 +167,26 @@ class DefaultHeader extends React.Component {
       search: ""
     });
   };
+
+  handleVideoModal = moveURL => {
+    console.log(">>>>>>>", moveURL);
+    
+    // const { modelInfoReducer } = this.props;
+    // const { modelDetails } = modelInfoReducer;
+    // this.setState(
+    //   {
+    //     showVideo: moveURL
+    //   },
+    //   () => {
+    //     this.props.modelOperate({
+    //       modelDetails: {
+    //         isVideoModalOpenReq: !modelDetails.isVideoModalOpenReq
+    //       }
+    //     });
+    //   }
+    // );
+  };
+
   /*  */
   render() {
     const {
@@ -176,9 +211,10 @@ class DefaultHeader extends React.Component {
       signupModelOpen,
       forgotPasswordModalOpen,
       createFolderModalOpen,
-      createSetOpen
+      createSetOpen,
+      isVideoModalOpenReq
     } = modelDetails;
-    const { path, search, open } = this.state;
+    const { path, search, open, showVideo } = this.state;
     const { isLoginSuccess } = loginReducer;
     const profiledata =
       profileInfoReducer && profileInfoReducer.profileInfo
@@ -226,7 +262,7 @@ class DefaultHeader extends React.Component {
                     <i className="fa fa-bars" aria-hidden="true"></i>
                   </div>
                   <NavbarBrand className="mr-lg-5" to="/" tag={Link}>
-                    <h3 className="mb-0 header-title">Deep Play</h3>
+                    <h3 className="mb-0 header-title">DeepPlay</h3>
                   </NavbarBrand>
                   {isLoggedIn || isLoginSuccess ? (
                     <Nav className="navbar-nav align-items-center nav-main-section flex-fill creat-option">
@@ -327,8 +363,10 @@ class DefaultHeader extends React.Component {
                                   searchData={searchData}
                                   isSearchLoading={isSearchLoading}
                                   searchAllSet={this.searchAllSet}
+                                  setWrapperRef={this.setWrapperRef}
                                   searchAllFolder={this.searchAllFolder}
                                   searchAllMove={this.searchAllMove}
+                                  handleMoveSearch={this.handleVideoModal}
                                   handleSearchEmpty={() =>
                                     this.setState({
                                       search: ""
@@ -487,15 +525,33 @@ class DefaultHeader extends React.Component {
                 </Navbar>
               </>
             ) : (
-              <Navbar
-                className="navbar-main d-flex justify-content-center"
-                // expand="lg"
-                id="navbar-main"
-              >
-                <NavbarBrand className="m-0" to="/" tag={Link}>
-                  <h3 className="mb-0 header-title ">Deep Play</h3>
-                </NavbarBrand>
-              </Navbar>
+              <div className="theme-container">
+                <Navbar
+                  className="navbar-main d-flex navbar-main header-navbar"
+                  // expand="lg"
+                  id="navbar-main"
+                >
+                  <NavbarBrand className="m-0" to="/" tag={Link}>
+                    <h3 className="mb-0 header-title ">DeepPlay</h3>
+                  </NavbarBrand>
+                  <div className="nav-main-section">
+                    <React.Fragment>
+                      <span
+                        onClick={this.handleLoginModel}
+                        className="nav-link-inner--text pr-4 cusror_pointer"
+                      >
+                        Sign in
+                      </span>
+                      <span
+                        onClick={this.handleSignupModel}
+                        className="nav-link-inner--text pr-2 cusror_pointer"
+                      >
+                        Sign up
+                      </span>
+                    </React.Fragment>
+                  </div>
+                </Navbar>
+              </div>
             )}
           </div>
         </header>
@@ -527,6 +583,14 @@ class DefaultHeader extends React.Component {
           modal={createSetOpen}
           handleOpen={this.handleSetModal}
           createSet={this.createSet}
+        />
+        <WebmView
+          isVideoModalOpen={isVideoModalOpenReq}
+          handleVideoModal={this.handleVideoModal}
+          video={showVideo}
+          videoData={showVideo}
+          movesOfSet={[showVideo]}
+          {...this.props}
         />
       </>
     );

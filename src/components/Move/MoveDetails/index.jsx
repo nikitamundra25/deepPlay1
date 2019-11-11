@@ -24,7 +24,8 @@ import {
   createAnotherMoveRequest,
   removeVideoLocalServerRequest,
   addTagsInTagModalRequest,
-  getTagListRequest
+  getTagListRequest,
+  createSetRequest
 } from "../../../actions";
 import "./index.scss";
 import Loader from "components/comman/Loader/Loader";
@@ -36,6 +37,7 @@ import closeBtn from "../../../assets/img/close-img.png";
 import MoveSuccessModal from "./moveSuccessModal";
 import qs from "query-string";
 import { AppRoutes } from "../../../config/AppRoutes";
+import CreateSetComponent from "../../Sets/createSet";
 
 // core components
 class MoveDetails extends React.Component {
@@ -47,10 +49,7 @@ class MoveDetails extends React.Component {
       isPaste: false,
       tags: [],
       videoDuration: [],
-      selectSetOptions: {
-        label: "Type to select sets",
-        value: ""
-      },
+      selectSetOptions: null,
       title: "",
       description: "",
       isUpdateDescription: false,
@@ -70,7 +69,7 @@ class MoveDetails extends React.Component {
     this.props.getMoveDetailsRequest({ moveId: moveId[3] });
     this.props.getAllSetRequest({ isSetNoLimit: false });
     this.props.getTagListRequest();
-    const { recentSetAdded } = this.props.setReducer;    
+    const { recentSetAdded } = this.props.setReducer;
     if (recentSetAdded) {
       this.setState({
         selectSetOptions: {
@@ -85,7 +84,12 @@ class MoveDetails extends React.Component {
     });
   };
 
-  componentDidUpdate = ({ modelInfoReducer, location, moveReducer }) => {
+  componentDidUpdate = ({
+    modelInfoReducer,
+    location,
+    moveReducer,
+    setReducer
+  }) => {
     const path = this.props.location.pathname;
     const moveId = path.split("/");
     const prevQuery = location.pathname.split("/");
@@ -113,38 +117,51 @@ class MoveDetails extends React.Component {
     }
 
     if (moveReducer.moveDetails !== this.props.moveReducer.moveDetails) {
-      const {
-        title,
-        description,
-        tags,
-        setId
-      } = this.props.moveReducer.moveDetails;
-      const { allSetList } = this.props.setReducer;
-      let selectOption;  
-      if (allSetList && allSetList.length) {
-        // eslint-disable-next-line
-        allSetList.map(data => { 
-          if (setId) {   
-            if (setId === data._id) {
-              selectOption = {
-                label: data.title,
-                value: data._id
-              };
+      if (this.props.moveReducer.moveDetails) {
+        const {
+          title,
+          description,
+          tags,
+          setId
+        } = this.props.moveReducer.moveDetails;
+        const { allSetList } = this.props.setReducer;
+        let selectOption;
+        if (allSetList && allSetList.length) {
+          // eslint-disable-next-line
+          allSetList.map(data => {
+            if (setId) {
+              if (setId === data._id) {
+                selectOption = {
+                  label: data.title,
+                  value: data._id
+                };
+              }
             }
-            
-          }
+          });
+        }
+        this.setState({
+          title,
+          description,
+          tags,
+          selectSetOptions: selectOption
+            ? selectOption
+            : {
+                label: "Type to select sets",
+                value: ""
+              }
         });
       }
+    }
+    if (
+      this.props.setReducer &&
+      this.props.setReducer.recentSetAdded !== setReducer.recentSetAdded
+    ) {
+      const { recentSetAdded } = this.props.setReducer;
       this.setState({
-        title,
-        description,
-        tags,
-        selectSetOptions: selectOption
-          ? selectOption
-          : {
-              label: "Type to select sets",
-              value: ""
-            }
+        selectSetOptions: {
+          label: recentSetAdded.title,
+          value: recentSetAdded._id
+        }
       });
     }
   };
@@ -220,12 +237,6 @@ class MoveDetails extends React.Component {
         tags: []
       });
     }
-    // if (actionMeta.action === 'create-option') {
-    //   const tags = tagsList.push(newValue)
-    //   this.props.addNewTagToList(tags)
-    // }
-    console.log(`action: ${actionMeta.action}`);
-
     if (actionMeta.action === "create-option") {
       this.props.addTagsInTagModalRequest({
         tags: newValue[newValue.length - 1]
@@ -233,6 +244,7 @@ class MoveDetails extends React.Component {
     }
     console.groupEnd();
   };
+
   handleChange = e => {
     const { name, value } = e.target;
     this.setState({
@@ -274,8 +286,10 @@ class MoveDetails extends React.Component {
       description: ""
     });
   };
+
   handleInputChange = e => {
-    if (e && e.value) {
+    console.log("eeeeeeeeeee", e);
+    if (e && e.value && e.label !== "+ Create New Set") {
       this.setState({
         selectSetOptions: {
           label: e.label,
@@ -283,14 +297,34 @@ class MoveDetails extends React.Component {
         },
         errors: ""
       });
+    } else if (e && e.label === "+ Create New Set") {
+      this.handleSetModal();
     } else {
       this.setState({
-        selectSetOptions: {
-          label: "Type to select sets",
-          value: ""
-        }
+        selectSetOptions: null,
+        errors: ""
       });
+      this.props.getAllSetRequest({ isSetNoLimit: false });
     }
+  };
+
+  onBlur = () => {
+    this.props.getAllSetRequest({ isSetNoLimit: false });
+  };
+
+  handleSetModal = () => {
+    const { modelInfoReducer } = this.props;
+    const { modelDetails } = modelInfoReducer;
+    this.props.modelOperate({
+      modelDetails: {
+        createSetModalOpen: !modelDetails.createSetModalOpen
+      }
+    });
+    this.props.getAllSetRequest({ isSetNoLimit: false });
+  };
+
+  onCreateSet = data => {
+    this.props.onSetsCreation(data);
   };
 
   handleSetDetails = id => {
@@ -306,9 +340,18 @@ class MoveDetails extends React.Component {
    *
    */
   render() {
-    const { setReducer, moveReducer, modelInfoReducer } = this.props;
+    const {
+      setReducer,
+      moveReducer,
+      modelInfoReducer,
+      getAllSetRequest
+    } = this.props;
     const { modelDetails } = modelInfoReducer;
-    const { isDescriptionModalOpen, isMoveSuccessModal } = modelDetails;
+    const {
+      isDescriptionModalOpen,
+      isMoveSuccessModal,
+      createSetModalOpen
+    } = modelDetails;
     const { moveDetails, isSavingWebM, tagsList, moveUrlDetails } = moveReducer;
     const { frames, videoMetaData } = moveDetails || {};
     const {
@@ -329,19 +372,7 @@ class MoveDetails extends React.Component {
         <div className="create-set-section step-2 ">
           <Card className="w-100">
             <CardBody className="p-0">
-              {!isSavingWebM ? (
-                <div>
-                  <span
-                    onClick={() => {
-                      this.props.redirectTo("/move");
-                    }}
-                    className={"cursor_pointer back-arrow"}
-                  >
-                    {" "}
-                    <i className="fas fa-long-arrow-alt-left" /> Back
-                  </span>
-                </div>
-              ) : null}
+              {!isSavingWebM ? <div></div> : null}
               {isSavingWebM ? (
                 <div>
                   <VideoLoader fullLoader={true} />
@@ -376,7 +407,9 @@ class MoveDetails extends React.Component {
                           handleTagChange={this.handleTagChange}
                           tags={tags}
                           setId={moveDetails ? moveDetails.setId : null}
+                          getAllSetRequest={getAllSetRequest}
                           tagsList={tagsList}
+                          onBlur={this.onBlur}
                           ref={this.videoDetails}
                         />
                       </>
@@ -476,6 +509,13 @@ class MoveDetails extends React.Component {
             moveUrlDetails={moveUrlDetails}
             createAnother={this.createAnother}
           />
+          <CreateSetComponent
+            modal={createSetModalOpen}
+            handleOpen={this.handleSetModal}
+            createSet={this.onCreateSet}
+            fromMoveDetailsPage={true}
+            setDetails=""
+          />
         </div>
       </>
     );
@@ -497,7 +537,10 @@ const mapDispatchToProps = dispatch => ({
   removeVideoLocalServerRequest: data =>
     dispatch(removeVideoLocalServerRequest(data)),
   addTagsInTagModalRequest: data => dispatch(addTagsInTagModalRequest(data)),
-  getTagListRequest: () => dispatch(getTagListRequest())
+  getTagListRequest: () => dispatch(getTagListRequest()),
+  onSetsCreation: data => {
+    dispatch(createSetRequest(data));
+  }
 });
 export default connect(
   mapStateToProps,

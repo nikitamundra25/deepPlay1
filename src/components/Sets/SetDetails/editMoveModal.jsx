@@ -128,7 +128,7 @@ class EditMoveModal extends React.Component {
         >
           <ModalHeader>
             <span className="custom-title" id="exampleModalLabel">
-              Edit Move
+              Edit Move Details
             </span>
             <button
               aria-label="Close"
@@ -195,6 +195,7 @@ class EditMoveModal extends React.Component {
                 ADD TAGS
               </Label>
               <CreatableSelect
+               classNamePrefix="react_select"
                 isMulti
                 onChange={this.handleTagChange}
                 value={tags}

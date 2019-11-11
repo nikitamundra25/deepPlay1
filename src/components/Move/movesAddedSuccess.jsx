@@ -38,7 +38,7 @@ class MoveAddedSuccess extends React.Component {
                 </p>
                 <div className="text-center mt-4">
                   <Button className="btn-line-black" color=" ">Yes create another</Button>
-                  <Button className="btn-black" color=" ">No i'am done</Button>
+                  <Button className="btn-black" color=" "> No, i am done</Button>
                 </div>
               </CardBody>
             </div>

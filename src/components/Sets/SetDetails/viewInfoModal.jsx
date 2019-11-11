@@ -45,29 +45,29 @@ class ViewInfoModal extends React.Component {
                         </span>
                       </>
                     ) : null}
-                  </div>
-                  <div class="info-wrap">
-                    {" "}
-                    {videoData.description ? (
-                      <>
-                        <span class="info-heading">Description </span>
-                        <span className="info-content">
-                          <span className="colon-wrap">: </span>
-                          {videoData.description}
-                        </span>
-                      </>
-                    ) : null}
-                  </div>
+                  </div>{" "}
+                  {videoData.description ? (
+                    <div class="info-wrap">
+                      <span class="info-heading">Description </span>
+                      <span className="info-content">
+                        <span className="colon-wrap">: </span>
+                        {videoData.description}
+                      </span>
+                    </div>
+                  ) : null}
                 </span>
-                <div class="info-wrap">
-                  <span className="info-heading"> Source URL</span>
-                  <a href={videoData.sourceUrl ? videoData.sourceUrl : null}>
-                    <span className="info-content">
-                      <span className="colon-wrap cursor_pointer">: </span>
-                      {videoData.sourceUrl ? videoData.sourceUrl : null}{" "}
-                    </span>
-                  </a>
-                </div>
+
+                {videoData.isYoutubeUrl ? (
+                  <div class="info-wrap">
+                    <span className="info-heading"> Source URL</span>
+                    <a href={videoData.sourceUrl ? videoData.sourceUrl : null}>
+                      <span className="info-content">
+                        <span className="colon-wrap cursor_pointer">: </span>
+                        {videoData.sourceUrl ? videoData.sourceUrl : null}{" "}
+                      </span>
+                    </a>
+                  </div>
+                ) : null}
 
                 <div class="info-wrap">
                   {" "}

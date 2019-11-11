@@ -11,7 +11,7 @@ class VideoDetails extends React.Component {
     super(props);
     this.state = {};
   }
-  
+
   getDetails = () => {
     const { tags, selectSetOptions } = this.props;
     return {
@@ -20,22 +20,44 @@ class VideoDetails extends React.Component {
     };
   };
 
+  loadSets = (input, callback) => {
+    if (input.length > 1) {
+      this.props.getAllSetRequest({
+        search: input,
+        callback,
+        isSetNoLimit: false
+      });
+    } else {
+      this.props.getAllSetRequest({ isSetNoLimit: false });
+    }
+  };
+
   render() {
     const { selectSetOptions, setReducer, tags, errors, tagsList } = this.props;
-    console.log("selectSetOptions",selectSetOptions);
-    
     const { recentSetAdded, allSetList } = setReducer;
     let recentAddedSet,
       defaultSetoptions = [];
     if (allSetList && allSetList.length) {
       allSetList.map(data => {
         const defaultSetoptionsValue = {
-          label: data.title,
+          label:
+            data && data.isCopy
+              ? `Copy of ${data.title}${
+                  data.copyIndex > 0 ? `(${data.copyIndex})` : ""
+                }`
+              : data.title,
           value: data._id
         };
+
         defaultSetoptions.push(defaultSetoptionsValue);
+
         return true;
       });
+      const addNewOption = {
+        label: "+ Create New Set",
+        value: ""
+      };
+      defaultSetoptions.push(addNewOption);
     }
     if (recentSetAdded && recentSetAdded.value) {
       recentAddedSet = {
@@ -65,6 +87,7 @@ class VideoDetails extends React.Component {
                 onChange={this.props.handleTagChange}
               /> */}
               <CreatableSelect
+               classNamePrefix="react_select"
                 isMulti
                 onChange={this.props.handleTagChange}
                 value={tags}
@@ -79,21 +102,32 @@ class VideoDetails extends React.Component {
             <InputGroup>
               <div className="w-100 search-select-wrap">
                 <AsyncSelect
+                  classNamePrefix="react_select"
                   loadOptions={this.loadSets}
-                  isClearable={selectSetOptions.value ? true : false}
+                  isClearable={
+                    selectSetOptions && selectSetOptions.value ? true : false
+                  }
                   defaultOptions={defaultSetoptions}
+                  onBlur={this.props.onBlur}
+                  placeholder="Type to select sets"
                   className={
                     errors && errors.setId
                       ? "is-invalid form-control search-input-wrap"
                       : ""
                   }
                   onChange={e => this.props.handleInputChange(e)}
-                  value={recentAddedSet ? recentAddedSet.title : selectSetOptions}
+                  value={
+                    recentAddedSet &&
+                    recentAddedSet.label &&
+                    recentAddedSet.value
+                      ? recentAddedSet
+                      : selectSetOptions
+                  }
                 />
                 <FormFeedback>
                   {errors &&
                   errors.setId &&
-                  (selectSetOptions.value === "" || recentAddedSet.value === "")
+                  (selectSetOptions === null || recentAddedSet.value === "")
                     ? errors.setId
                     : null}
                 </FormFeedback>

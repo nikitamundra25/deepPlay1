@@ -43,32 +43,7 @@ class SampleSet extends React.Component {
       videoIndex: -1
     };
   }
-  // handleVideoHoverLeave = () => {
-  //   this.setState({
-  //     isSelectVideo: false
-  //   });
-  // };
-
-  // handleVideoPlay = index => {
-  //   let myVideo = document.getElementById(`webm-video-${index}`);
-  //   myVideo.play();
-  // };
-  // handleVideoPause = index => {
-  //   let myVideo = document.getElementById(`webm-video-${index}`);
-  //   myVideo.pause();
-  // };
-  // handleShowVideo = videoIndex => {
-  //   this.setState({
-  //     showVideoIndex: videoIndex
-  //   });
-  // };
-
-  // handleVideoHover = index => {
-  //   this.setState({
-  //     isSelectVideo: true,
-  //     videoIndex: index
-  //   });
-  // };
+ 
   render() {
     return (
       <Container>
