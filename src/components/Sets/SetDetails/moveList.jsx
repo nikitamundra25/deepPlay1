@@ -577,7 +577,12 @@ class MoveList extends React.Component {
                                       >
                                         <div className="play-list-block">
                                           <div
-                                            className="play-sub-block"
+                                        className={`play-sub-block ${
+                                              isVideoChecked &&
+                                              selectedMoves[index]
+                                                ? "video-full-selection"
+                                                : ""
+                                            }`}
                                             onMouseOver={() =>
                                               this.handleVideoHover(index)
                                             }

@@ -293,6 +293,12 @@ class DefaultHeader extends React.Component {
                                 }
                                 onClick={this.openSearch}
                               ></div>
+                              {/* <div
+                                className={
+                                  !open ? "tranprent-layer" : "tranprent-layer"
+                                }
+                                onClick={this.openSearch}
+                              ></div> */}
 
                               <span
                                 className={
