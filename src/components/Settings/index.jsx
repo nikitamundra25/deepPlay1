@@ -72,7 +72,7 @@ class SettingComponent extends Component {
   handleChange = e => {
     const { name, value } = e.target;
     this.setState({
-      [name]: value.replace(/[^\w\s]|[0-9]/gi, "").trim()
+      [name]: value.replace(/[^\w\s]|[0-9]|[_]/gi, "").trim()
     });
   };
 

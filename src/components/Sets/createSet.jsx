@@ -38,11 +38,13 @@ class CreateSetComponent extends React.Component {
 
   componentDidUpdate(prevProps) {
     if (prevProps.setDetails !== this.props.setDetails) {
-      const { title, description } = this.props.setDetails;
-      this.setState({
-        title,
-        description
-      });
+      if (this.props.setDetails) {
+        const { title, description } = this.props.setDetails;
+        this.setState({
+          title,
+          description
+        });
+      }
     }
     if (prevProps.modal !== this.props.modal) {
       if (this.props.setDetails) {
@@ -85,13 +87,14 @@ class CreateSetComponent extends React.Component {
       });
       return;
     }
-    const { setDetails, folderId } = this.props;
+    const { setDetails, folderId, fromMoveDetailsPage } = this.props;
     const data = {
       setId: setDetails ? setDetails._id : "",
       title: this.state.title,
       description: this.state.description,
-      folderId: folderId ? folderId : "",
-      addMove: name === "addMove" ? true : false
+      folderId: folderId ? folderId : null,
+      addMove: name === "addMove" ? true : false,
+      fromMoveDetailsPage: fromMoveDetailsPage ? true : false
     };
     await this.props.createSet(data);
     this.setState({
@@ -112,7 +115,6 @@ class CreateSetComponent extends React.Component {
   render() {
     const { modal, handleOpen, setDetails } = this.props;
     const { title, description, errors } = this.state;
-
     return (
       <div>
         <Modal
@@ -181,7 +183,7 @@ class CreateSetComponent extends React.Component {
             >
               {setDetails ? "Update Set" : "Create Set"}
             </Button>
-            {!setDetails ? (
+            {setDetails !== "" ? (
               <Button
                 type="button"
                 onClick={() => this.onCreateSet("addMove")}

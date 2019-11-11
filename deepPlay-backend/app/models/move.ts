@@ -25,7 +25,8 @@ const moveSchema: Mongoose.Schema = new Schema({
     default: null
   },
   moveURL: {
-    type: String
+    type: String,
+    default: null
   },
   tags: {
     type: [Object],
@@ -49,6 +50,9 @@ const moveSchema: Mongoose.Schema = new Schema({
   isStarred: {
     type: Boolean,
     default: false
+  },
+  objectId: {
+    type: Number
   },
   setId: {
     type: Schema.Types.ObjectId,

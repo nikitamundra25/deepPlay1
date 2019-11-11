@@ -28,7 +28,7 @@
       top: -18px;
     }
   }
-  &.selected-check-box{
+  &.selected-check-box {
     &.custom-control {
       &.custom-checkbox {
         left: auto;
@@ -57,8 +57,8 @@
 }
 
 .video-thumbnail-sub-block {
-  .play-list-img{
-    overflow: unset;
+  .play-list-img {
+    // overflow: unset;
   }
 }
 .selected-moves {
@@ -77,14 +77,14 @@
   // background: #f1f1f1;
   // box-shadow: 0px 0px 1px 1px rgba(58, 55, 55, 0.2);
   // margin: 15px 0px;
-  
+
   .btn {
     border: 1px solid #ababab;
     transform: none;
     background: #000;
     color: #fff;
     padding: 15px 35px;
-    &:hover{
+    &:hover {
       background: rgba(46, 46, 46, 1);
       color: #fff;
     }
@@ -92,11 +92,46 @@
       padding: 1px 8px;
     }
   }
-  
 }
 .video-effect {
   z-index: 1;
 }
-.video-full-selection{
-  border: 2px dashed #4995ff;
+div[data-react-beautiful-dnd-droppable] {
+  @media (max-width: 1024px) {
+    flex-wrap: wrap;
+  }
+}
+div[data-react-beautiful-dnd-drag-handle] {
+  -ms-flex: 0 0 25%;
+  flex: 0 0 25%;
+  max-width: 25%;
+  @media (max-width: 1199px) {
+    -ms-flex: 0 0 25%;
+    flex: 0 0 25%;
+    max-width: 25%;
+  }
+  @media (max-width: 1024px) {
+    -ms-flex: 0 0 50%;
+    flex: 0 0 50%;
+    max-width: 50%;
+  }
+  @media (max-width: 991px) {
+    -ms-flex: 0 0 50%;
+    flex: 0 0 50%;
+    max-width: 50%;
+  }
+  @media (max-width: 767px) {
+    -ms-flex: 0 0 50%;
+    flex: 0 0 50%;
+    max-width: 50%;
+  }
+  @media (max-width: 480px) {
+    -ms-flex: 0 0 100%;
+    flex: 0 0 100%;
+    max-width: 100%;
+  }
+}
+.play-list-tile {
+  width: 100%;
+  padding: 0px 15px;
 }

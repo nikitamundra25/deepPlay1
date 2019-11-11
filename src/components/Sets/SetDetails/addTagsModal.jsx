@@ -70,7 +70,7 @@ class AddTagModal extends React.Component {
               color=" "
               className="btn btn-black"
             >
-              Add Tags
+              Save Tags
             </Button>
           </ModalFooter>
         </Modal>

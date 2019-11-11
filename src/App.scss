@@ -28,7 +28,8 @@ $source: "hurmegeosans-no2-400";
 @font-face {
   font-family: "hurmegeosans-no2-400";
   src: url("/public/assets/font/hurmegeosans-no2-400.eot");
-  src: url("/assets/font/hurmegeosans/hurmegeosans-no2-400.eot?#iefix") format("embedded-opentype"),
+  src: url("/assets/font/hurmegeosans/hurmegeosans-no2-400.eot?#iefix")
+      format("embedded-opentype"),
     url("/assets/font/hurmegeosans/hurmegeosans-no2-400.woff2") format("woff2");
   font-weight: normal;
   font-style: normal;
@@ -1788,8 +1789,11 @@ a {
   }
 }
 .play-list-tile {
-  width: 25%;
+  width: 300px;
   padding: 0px 15px;
+}
+.create-move-ele {
+  width: 1200px;
 }
 .loader-no-height {
   .loader-wrap {
@@ -2485,3 +2489,14 @@ a {
 }
 // media query end
 // Please don't write other css in the bottom of media query
+.videos-move-wrap {
+  .dl-list {
+    display: flex !important;
+  }
+  .dl-item {
+    width: 25%;
+  }
+  .play-list-tile {
+    width: 100%;
+  }
+}

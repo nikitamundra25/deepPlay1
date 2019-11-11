@@ -128,7 +128,7 @@ class EditMoveModal extends React.Component {
         >
           <ModalHeader>
             <span className="custom-title" id="exampleModalLabel">
-              Edit Move
+              Edit Move Details
             </span>
             <button
               aria-label="Close"

@@ -270,7 +270,12 @@ const deleteMoveLogic = createLogic({
         toastId = toast.success(result.messages[0]);
       }
       if (!action.payload.isSearch) {
-        dispatch(getMovesOfSetRequest({ setId: action.payload.setId }));
+        dispatch(
+          getMovesOfSetRequest({
+            setId: action.payload.setId,
+            isMoveList: true
+          })
+        );
         dispatch(getSetDetailsRequest({ setId: action.payload.setId }));
       } else {
         dispatch(getMoveBySearchRequest({ search: action.payload.isSearch }));
@@ -317,7 +322,8 @@ const transferMoveLogic = createLogic({
           getMovesOfSetRequest({
             setId: action.payload.previousSetId,
             page: 1,
-            isInfiniteScroll: false
+            isInfiniteScroll: false,
+            isMoveList: true
           })
         );
         dispatch(getSetDetailsRequest({ setId: action.payload.previousSetId }));
@@ -398,7 +404,8 @@ const searchMoveLogic = createLogic({
     } else {
       dispatch(
         searchMoveSuccess({
-          searchMoveResult: result.data.data
+          movesOfSet: result.data.data,
+          totalMoves: result.data.totalMoves
         })
       );
       done();
