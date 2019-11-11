@@ -25,7 +25,8 @@ const moveSchema: Mongoose.Schema = new Schema({
     default: null
   },
   moveURL: {
-    type: String
+    type: String,
+    default: null
   },
   tags: {
     type: [Object],
