@@ -99,7 +99,9 @@ class SetDetails extends React.Component {
     }
     if (moveReducer.movesOfSet !== this.props.moveReducer.movesOfSet) {
       this.setState({
-        moveListItem: this.props.moveReducer.movesOfSet
+        moveListItem: this.props.moveReducer
+          ? this.props.moveReducer.movesOfSet
+          : []
       });
     }
   };
@@ -334,7 +336,14 @@ class SetDetails extends React.Component {
       folderId,
       moveListItem
     } = this.state;
-
+    const temp = moveListItem;
+    let stemp = [];
+    if (temp && temp.length) {
+      temp.map((key, i) => {
+        stemp.push({ ...key, id: i });
+        return true;
+      });
+    }
     return (
       <>
         <div className="set-main-section">
@@ -452,7 +461,8 @@ class SetDetails extends React.Component {
                     moveCount={setDetails ? setDetails.moveCount : 0}
                     isStarred={this.isStarred}
                     deleteMove={this.deleteMove}
-                    movesOfSet={moveListItem}
+                    //  movesOfSet={moveListItem}
+                    movesOfSet={stemp}
                     handleVideoModal={this.handleVideoModal}
                     allSetList={allSetList}
                     setIdPathName={setIdPathName}

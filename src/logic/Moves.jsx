@@ -404,7 +404,8 @@ const searchMoveLogic = createLogic({
     } else {
       dispatch(
         searchMoveSuccess({
-          searchMoveResult: result.data.data
+          movesOfSet: result.data.data,
+          totalMoves: result.data.totalMoves
         })
       );
       done();

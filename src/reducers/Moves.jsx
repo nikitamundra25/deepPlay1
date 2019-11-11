@@ -83,12 +83,14 @@ export const moveReducer = handleActions(
     }),
     [MovesAction.SEARCH_MOVE_REQUEST]: (state, { payload }) => ({
       ...state,
-      isMoveSearchLoading: true
+      isMoveSearchLoading: true,
+      isMoveList: true
     }),
     [MovesAction.SEARCH_MOVE_SUCCESS]: (state, { payload }) => ({
       ...state,
       ...payload,
-      isMoveSearchLoading: false
+      isMoveSearchLoading: false,
+      isMoveList: false
     }),
     [MovesAction.UPDATE_SORT_INDEX_SUCCESS]: (state, { payload }) => ({
       ...state,

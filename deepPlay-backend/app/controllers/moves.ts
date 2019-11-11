@@ -263,7 +263,7 @@ const createMove = async (req: Request, res: Response): Promise<any> => {
 
     await moveResult.save();
     return res.status(200).json({
-      message: "Created new move",
+      message: "Move has been created successfully.",
       moveId: moveResult._id,
       videoUrl: moveUrl,
       moveData: moveResult,
@@ -743,15 +743,25 @@ const transferMove = async (req: Request, res: Response): Promise<any> => {
 //-----------------------Filter move details-----------------------
 const filterMove = async (req: Request, res: Response): Promise<any> => {
   try {
-    const { query } = req;
-    const { search, setId } = query;
-    let searchData: Document | any | null;
+    const { query, currentUser } = req;
+    const { search, setId, page, limit } = query;
+    let searchData: Document | any | null, totalMoves: Number | any | null;
+    const pageNumber: number = ((parseInt(page) || 1) - 1) * (limit || 20);
+    const limitNumber: number = parseInt(limit) || 20;
+
+    let headToken: Request | any = currentUser;
+    if (!headToken.id) {
+      res.status(400).json({
+        message: "User id not found"
+      });
+    }
     let condition: any = {
       $and: []
     };
     condition.$and.push({
       isDeleted: false,
-      setId: setId
+      setId: setId,
+      userId: headToken.id
     });
 
     if (search) {
@@ -768,18 +778,21 @@ const filterMove = async (req: Request, res: Response): Promise<any> => {
             }
           },
           {
-            "tags.label": {
-              $regex: new RegExp(search.trim(), "i")
-            }
+            "tags.label": search.trim()
           }
         ]
       });
-      searchData = await MoveModel.find(condition);
+      searchData = await MoveModel.find(condition)
+        .skip(pageNumber)
+        .limit(limitNumber);
+
+      totalMoves = await MoveModel.count(condition);
     }
 
     return res.status(200).json({
       message: "Move has been searched successfully",
-      data: searchData
+      data: searchData,
+      totalMoves: totalMoves
     });
   } catch (error) {
     console.log(error);
@@ -981,8 +994,8 @@ const getMoveBySearch = async (req: Request, res: Response): Promise<any> => {
         message: "User id not found"
       });
     }
-    const pageNumber: number = ((parseInt(page) || 1) - 1) * (limit || 8);
-    const limitNumber: number = parseInt(limit) || 8;
+    const pageNumber: number = ((parseInt(page) || 1) - 1) * (limit || 20);
+    const limitNumber: number = parseInt(limit) || 20;
     let movesData: Document | any,
       moveList: Document | any | null,
       totalMoves: Document | any | null;
