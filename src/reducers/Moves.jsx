@@ -23,7 +23,8 @@ const initialState = {
   isMoveStarLoading: {
     index: 0,
     loading: false
-  }
+  },
+  isVideoFromSearch: false
 };
 
 export const moveReducer = handleActions(
@@ -151,6 +152,10 @@ export const moveReducer = handleActions(
     [MovesAction.VIDEO_FULLSCREEN_EXIT]: (state, { payload }) => ({
       ...state,
       isFullScreenMode: false
+    }),
+    [MovesAction.VIDEODATA_FROM_SEARCH]: (state, { payload }) => ({
+      ...state,
+      isVideoFromSearch: true
     })
   },
   initialState

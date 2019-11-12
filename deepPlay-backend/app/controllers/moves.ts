@@ -182,9 +182,6 @@ const downloadYoutubeVideo = async (
 /**
  *
  */
-/**
- *
- */
 const getVideoFrames = async (videoName: string): Promise<any> => {
   let videoURL: string;
   if (IsProductionMode) {
@@ -202,29 +199,80 @@ const getVideoFrames = async (videoName: string): Promise<any> => {
   const dirName: string = videoURL;
   const video = await new ffmpeg(videoURL);
   const videoDuration = (video.metadata.duration as any).seconds;
-  console.log(dirName, "dirName");
+  console.log("dirName", videoDuration);
   return await new Promise((resolve, reject) => {
-    video.fnExtractFrameToJPG(
-      `${dirName.split(".")[0]}_frames`,
-      {
-        start_time: 0,
-        every_n_percentage: 10
-      },
-      (error: any, file: any) => {
-        console.log(error);
-        if (error) {
-          reject(error);
+    if (videoDuration <= 100) {
+      console.log("Inside smallest Video");
+      
+      video.fnExtractFrameToJPG(
+        `${dirName.split(".")[0]}_frames`,
+        {
+          start_time: 0,
+          every_n_frames: 80
+        },
+        (error: any, file: any) => {
+          console.log(error);
+          if (error) {
+            reject(error);
+          }
+          console.log("====================================");
+          console.log(file);
+          console.log("====================================");
+          const frames: string[] = (file as any).map((f: string) => {
+            const fArray = f.split("/");
+            return `${fArray[fArray.length - 2]}/${fArray[fArray.length - 1]}`;
+          });
+          resolve({ frames, videoMetaData: video.metadata, videoName });
         }
-        console.log("====================================");
-        console.log(file);
-        console.log("====================================");
-        const frames: string[] = (file as any).map((f: string) => {
-          const fArray = f.split("/");
-          return `${fArray[fArray.length - 2]}/${fArray[fArray.length - 1]}`;
-        });
-        resolve({ frames, videoMetaData: video.metadata, videoName });
-      }
-    );
+      );
+    } else if (videoDuration <= 500) {
+      console.log("inside first ");
+
+      video.fnExtractFrameToJPG(
+        `${dirName.split(".")[0]}_frames`,
+        {
+          start_time: 0,
+          every_n_seconds: 20
+        },
+        (error: any, file: any) => {
+          console.log(error);
+          if (error) {
+            reject(error);
+          }
+          console.log("====================================");
+          console.log(file);
+          console.log("====================================");
+          const frames: string[] = (file as any).map((f: string) => {
+            const fArray = f.split("/");
+            return `${fArray[fArray.length - 2]}/${fArray[fArray.length - 1]}`;
+          });
+          resolve({ frames, videoMetaData: video.metadata, videoName });
+        }
+      );
+    } else {
+      console.log("Inside Feeee Video");
+      video.fnExtractFrameToJPG(
+        `${dirName.split(".")[0]}_frames`,
+        {
+          start_time: 0,
+          every_n_percentage: 10
+        },
+        (error: any, file: any) => {
+          console.log(error);
+          if (error) {
+            reject(error);
+          }
+          console.log("====================================");
+          console.log(file);
+          console.log("====================================");
+          const frames: string[] = (file as any).map((f: string) => {
+            const fArray = f.split("/");
+            return `${fArray[fArray.length - 2]}/${fArray[fArray.length - 1]}`;
+          });
+          resolve({ frames, videoMetaData: video.metadata, videoName });
+        }
+      );
+    }
   });
 };
 /*  */
