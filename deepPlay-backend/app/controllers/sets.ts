@@ -207,7 +207,8 @@ const getAllSetById = async (req: Request, res: Response): Promise<void> => {
         const setData = result[index];
         moveCount = await MoveModel.count({
           setId: setData._id,
-          isDeleted: false
+          isDeleted: false,
+          moveURL: { $ne: null }
         });
 
         let data: any = await MoveModel.find({
@@ -329,11 +330,13 @@ const getSetsForFolder = async (req: Request, res: Response): Promise<void> => {
         const setData = result[index];
         moveCount = await MoveModel.count({
           setId: setData._id,
-          isDeleted: false
+          isDeleted: false,
+          moveURL: { $ne: null }
         });
         let data: any = await MoveModel.find({
           setId: setData._id,
-          isDeleted: false
+          isDeleted: false,
+          moveURL: { $ne: null }
         })
           .sort({ updatedAt: -1 })
           .limit(1);
@@ -469,7 +472,8 @@ const getSetDetailsById = async (
     if (result) {
       moveCount = await MoveModel.count({
         setId: Mongoose.Types.ObjectId(result._id),
-        isDeleted: false
+        isDeleted: false,
+        moveURL: { $ne: null }
       });
       const SetResult: any = {
         ...result._doc,
@@ -533,12 +537,14 @@ const publicUrlsetDetails = async (
           const setData = result[index];
           moveCount = await MoveModel.count({
             setId: setData._id,
-            isDeleted: false
+            isDeleted: false,
+            moveURL: { $ne: null }
           });
 
           let data: any = await MoveModel.find({
             setId: setData._id,
-            isDeleted: false
+            isDeleted: false,
+            moveURL: { $ne: null }
           })
             .sort({ updatedAt: -1 })
             .limit(1);
@@ -612,7 +618,8 @@ const publicAccessSetInfoById = async (
 
       const moveCount: Document | any = await MoveModel.count({
         setId: result._id,
-        isDeleted: false
+        isDeleted: false,
+        moveURL: { $ne: null }
       });
 
       setResult = {

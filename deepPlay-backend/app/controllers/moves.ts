@@ -307,7 +307,8 @@ const getMoveBySetId = async (req: Request, res: Response): Promise<any> => {
     } else {
       const moveListData: Document | any = await MoveModel.find({
         setId: query.setId,
-        isDeleted: false
+        isDeleted: false,
+        moveURL: { $ne: null }
       }).sort({ sortIndex: 1 });
 
       let isRepetedSortIndex: Boolean = false
@@ -799,7 +800,8 @@ const filterMove = async (req: Request, res: Response): Promise<any> => {
     condition.$and.push({
       isDeleted: false,
       setId: setId,
-      userId: headToken.id
+      userId: headToken.id,
+      moveURL: { $ne: null }
     });
 
     if (search) {
@@ -1045,7 +1047,8 @@ const getMoveBySearch = async (req: Request, res: Response): Promise<any> => {
             $regex: new RegExp(search.trim(), "i")
           },
           isDeleted: false,
-          isStarred: true
+          isStarred: true,
+          moveURL: { $ne: null }
         })
           .populate({
             path: "setId",
@@ -1060,7 +1063,8 @@ const getMoveBySearch = async (req: Request, res: Response): Promise<any> => {
             $regex: new RegExp(search.trim(), "i")
           },
           isDeleted: false,
-          userId: headToken.id
+          userId: headToken.id,
+          moveURL: { $ne: null }
         })
           .populate({
             path: "setId",
@@ -1080,7 +1084,8 @@ const getMoveBySearch = async (req: Request, res: Response): Promise<any> => {
         title: {
           $regex: new RegExp(search.trim(), "i")
         },
-        isDeleted: false
+        isDeleted: false,
+        moveURL: { $ne: null }
       });
     }
     return res.status(200).json({
