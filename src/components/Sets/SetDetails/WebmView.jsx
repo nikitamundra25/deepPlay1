@@ -48,6 +48,7 @@ class WebmView extends Component {
    */
   componentDidUpdate = ({ isVideoModalOpen, videoData, isFullScreenMode }) => {
     if (isFullScreenMode !== this.props.isFullScreenMode) {
+      console.log("this.props.isFullScreenMode", this.props.isFullScreenMode);
       const videoFullScreen = true;
       this.video = document.getElementById("webm-video");
       this.video.addEventListener("volumechange", () => {
@@ -105,8 +106,6 @@ class WebmView extends Component {
     if (videoData !== this.props.videoData) {
       this.video = document.getElementById("webm-video");
       this.customVideo = document.getElementById("custom_video_control");
-      console.log("this.customVideo", this.customVideo);
-
       this.video.addEventListener("timeupdate", () => {
         const currentVideoTime = parseFloat(this.video.currentTime).toFixed(2);
         this.setState({
@@ -228,11 +227,14 @@ class WebmView extends Component {
   /**
    *
    */
-  handleMoveDelete = async id => {
+  handleMoveDelete = async (id, setId) => {
     const data = {
-      moveId: id,
+      moveId: [id],
       isDeleted: true,
-      setId: this.props.setIdPathName
+      setId: this.props.setIdPathName ? this.props.setIdPathName : setId,
+      fromMoveSearch: this.props.fromMoveSearch
+        ? this.props.fromMoveSearch
+        : null
     };
     const { value } = await ConfirmBox({
       text: "You want to remove this move! "
@@ -486,7 +488,10 @@ class WebmView extends Component {
                         <DropdownItem
                           onClick={() =>
                             videoData
-                              ? this.handleMoveDelete(videoData._id)
+                              ? this.handleMoveDelete(
+                                  videoData._id,
+                                  videoData.setId
+                                )
                               : this.handleMoveDelete(video._id)
                           }
                         >

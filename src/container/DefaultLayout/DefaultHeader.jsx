@@ -97,7 +97,9 @@ class DefaultHeader extends React.Component {
       }
     });
   };
-
+  deleteMove = data => {
+    this.props.deleteMoveRequest(data);
+  };
   handleSetModal = () => {
     const { modelInfoReducer } = this.props;
     const { modelDetails } = modelInfoReducer;
@@ -169,24 +171,35 @@ class DefaultHeader extends React.Component {
   };
 
   handleVideoModal = moveURL => {
-    console.log(">>>>>>>", moveURL);
-    
-    // const { modelInfoReducer } = this.props;
-    // const { modelDetails } = modelInfoReducer;
-    // this.setState(
-    //   {
-    //     showVideo: moveURL
-    //   },
-    //   () => {
-    //     this.props.modelOperate({
-    //       modelDetails: {
-    //         isVideoModalOpenReq: !modelDetails.isVideoModalOpenReq
-    //       }
-    //     });
-    //   }
-    // );
+    const { modelInfoReducer } = this.props;
+    const { modelDetails } = modelInfoReducer;
+    console.log("moveURLmoveURL", moveURL, moveURL.length);
+
+    this.setState(
+      {
+        showVideo: moveURL
+      },
+      () => {
+        this.props.modelOperate({
+          modelDetails: {
+            isVideoModalOpenReq: !modelDetails.isVideoModalOpenReq
+          }
+        });
+      }
+    );
+    this.props.videoFullscreenExit();
+    this.props.getSetList({ isSetNoLimit: false });
   };
 
+  isStarred = data => {
+    this.props.isStarredRequest(data);
+  };
+
+  addTagstoMove = data => {
+    const moveVideo = data.videoData;
+    moveVideo.tags = data.tags;
+    this.props.addTagsRequest({ data: data, moveVideo: moveVideo });
+  };
   /*  */
   render() {
     const {
@@ -202,7 +215,15 @@ class DefaultHeader extends React.Component {
       isLoggedIn,
       routePath,
       allSearchReducer,
-      shareLinkReducer
+      shareLinkReducer,
+      videoData,
+      getTagListRequest,
+      allSetList,
+      tagsList,
+      loadVideoDataRequest,
+      isFullScreenMode,
+      videoFullscreenReq,
+      videoFullscreenExit
     } = this.props;
     const { modelDetails } = modelInfoReducer;
     const { isShareableUrl } = shareLinkReducer;
@@ -584,14 +605,30 @@ class DefaultHeader extends React.Component {
           handleOpen={this.handleSetModal}
           createSet={this.createSet}
         />
-        <WebmView
-          isVideoModalOpen={isVideoModalOpenReq}
-          handleVideoModal={this.handleVideoModal}
-          video={showVideo}
-          videoData={showVideo}
-          movesOfSet={[showVideo]}
-          {...this.props}
-        />
+        {showVideo && showVideo.length ? (
+          <WebmView
+            isVideoModalOpen={isVideoModalOpenReq}
+            handleVideoModal={this.handleVideoModal}
+            video={showVideo}
+            videoData={videoData}
+            showVideo={showVideo && showVideo.length ? showVideo[0] : null}
+            movesOfSet={[showVideo]}
+            deleteMove={this.deleteMove}
+            isStarred={this.isStarred}
+            getTagListRequest={getTagListRequest}
+            addTagstoMove={this.addTagstoMove}
+            allSetList={allSetList}
+            fromMoveSearch={true}
+            tagsList={tagsList}
+            editMove={data => this.props.updateMoveRequest(data)}
+            loadVideoDataRequest={loadVideoDataRequest}
+            transferMove={this.props.transferMove}
+            isFullScreenMode={isFullScreenMode}
+            videoFullscreenReq={videoFullscreenReq}
+            videoFullscreenExit={videoFullscreenExit}
+            {...this.props}
+          />
+        ) : null}
       </>
     );
   }

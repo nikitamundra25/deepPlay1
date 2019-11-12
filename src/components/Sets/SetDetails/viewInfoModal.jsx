@@ -36,9 +36,9 @@ class ViewInfoModal extends React.Component {
               <div className="content-heading-tile d-flex flex-column ">
                 <span className="content-title justify-content-between">
                   <div class="info-wrap">
-                    {videoData.title ? (
+                    {videoData ? (
                       <>
-                        <span class="info-heading">Title </span>
+                        <span className="info-heading">Title </span>
                         <span className="info-content">
                           <span className="colon-wrap">: </span>{" "}
                           {videoData.title}

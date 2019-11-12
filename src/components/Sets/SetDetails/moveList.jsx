@@ -69,8 +69,6 @@ class MoveList extends React.Component {
    */
   componentDidUpdate = prevProps => {
     if (prevProps.movesOfSet !== this.props.movesOfSet) {
-      console.log("moveofSet", this.state.search);
-      console.log("inside condition");
       this.setState({
         moveofSetList: this.props.movesOfSet
       });
@@ -453,6 +451,14 @@ class MoveList extends React.Component {
       [name]: value
     });
   };
+
+  // shouldComponentUpdate = (nextProps, nextState) =>{
+  //   if (this.props.number === nextProps.number) {
+  //     return false;
+  //   } else {
+  //     return true; 
+  //   }
+  // }
 
   render() {
     const {
