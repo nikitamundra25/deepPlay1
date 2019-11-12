@@ -15,7 +15,8 @@ import {
   getMoveBySearchSuccess,
   getMoveBySearchRequest,
   starredMovesSuccess,
-  getTagListSuccess
+  getTagListSuccess,
+  getAllSetRequest
 } from "../actions";
 import { AppRoutes } from "../config/AppRoutes";
 import { toast } from "react-toastify";
@@ -276,7 +277,16 @@ const deleteMoveLogic = createLogic({
             isMoveList: true
           })
         );
+        dispatch(
+          modelOpenRequest({
+            modelDetails: {
+              isVideoModalOpenReq: false,
+              isVideoModalOpen: false
+            }
+          })
+        );
         dispatch(getSetDetailsRequest({ setId: action.payload.setId }));
+        dispatch(getAllSetRequest({ isSetNoLimit: false }));
       } else {
         dispatch(getMoveBySearchRequest({ search: action.payload.isSearch }));
       }
@@ -552,7 +562,8 @@ const editMoveLogic = createLogic({
         modelOpenRequest({
           modelDetails: {
             editMoveModalOpen: false,
-            isVideoModalOpen: false
+            isVideoModalOpen: false,
+            isVideoModalOpenReq: false
           }
         })
       );

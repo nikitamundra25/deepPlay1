@@ -14,7 +14,10 @@ class AllSearchComponent extends React.Component {
       page: 1
     };
   }
-
+  handleMoveSearch = movelist => {
+    this.props.handleSearchEmpty();
+    this.props.handleMoveSearch(movelist);
+  };
   render() {
     const { searchData, isSearchLoading, profiledata } = this.props;
     let folderList, setList, movelist;
@@ -219,16 +222,17 @@ class AllSearchComponent extends React.Component {
                       return (
                         <div
                           key={index}
-                          onClick={() => {
-                            this.props.redirectTo(
-                              AppRoutes.MOVE_DETAILS.url.replace(
-                                ":id",
-                                moveData._id
-                              )
-                            );
-                            this.props.handleSearchEmpty();
-                          }}
-                          // onClick={() => this.props.handleMoveSearch(movelist)}
+                          // onClick={() => {
+                          //   this.props.redirectTo(
+                          //     AppRoutes.MOVE_DETAILS.url.replace(
+                          //       ":id",
+                          //       moveData._id
+                          //     )
+                          //   );
+                          //   this.props.handleSearchEmpty();
+                          // }}
+                          //  onClick={() => this.props.handleMoveSearch(movelist)}
+                          onClick={() => this.handleMoveSearch(movelist)}
                           className="cursor_pointer searched-tile"
                         >
                           <div className="searhed-img-main-wrap">

@@ -15,7 +15,18 @@ import {
   profileRequest,
   createFolderRequest,
   createSetRequest,
-  allSearchRequest
+  allSearchRequest,
+  loadVideoDataRequest,
+  deleteMovesRequest,
+  starredMovesRequest,
+  getTagListRequest,
+  addTagsInTagModalRequest,
+  updateMoveRequest,
+  getAllSetRequest,
+  transferMovesRequest,
+  addTagsRequest,
+  videoFullscreenReq,
+  videoFullscreenExit
 } from "../../actions/index.jsx";
 import { AppRoutes } from "../../config/AppRoutes";
 
@@ -50,6 +61,7 @@ class DefaultLayout extends React.Component {
   handleSetting = () => {
     this.props.redirectTo(AppRoutes.SETTINGS.url);
   };
+
   /*
   /*  
   */
@@ -66,8 +78,23 @@ class DefaultLayout extends React.Component {
       profileInfoReducer,
       allSearchRequest,
       allSearchReducer,
-      shareLinkReducer
+      shareLinkReducer,
+      moveReducer,
+      loadVideoDataRequest,
+      deleteMovesRequest,
+      starredMovesRequest,
+      getTagListRequest,
+      addTagsInTagModalRequest,
+      updateMoveRequest,
+      allSetList,
+      getSetList,
+      transferMovesRequest,
+      addTagsRequest,
+      videoFullscreenReq,
+      videoFullscreenExit
     } = this.props;
+    const { videoData, tagsList, isFullScreenMode } = moveReducer;
+
     let isLoggedIn;
 
     if (localStorage.getItem("token")) {
@@ -96,6 +123,21 @@ class DefaultLayout extends React.Component {
             allSearchRequest={allSearchRequest}
             allSearchReducer={allSearchReducer}
             shareLinkReducer={shareLinkReducer}
+            videoData={videoData}
+            isFullScreenMode={isFullScreenMode}
+            allSetList={allSetList}
+            videoFullscreenReq={videoFullscreenReq}
+            videoFullscreenExit={videoFullscreenExit}
+            loadVideoDataRequest={loadVideoDataRequest}
+            deleteMoveRequest={data => deleteMovesRequest(data)}
+            isStarredRequest={data => starredMovesRequest(data)}
+            getTagListRequest={() => getTagListRequest()}
+            addTagsInTagModalRequest={() => addTagsInTagModalRequest()}
+            updateMoveRequest={data => updateMoveRequest(data)}
+            getSetList={data => getSetList(data)}
+            transferMove={data => transferMovesRequest(data)}
+            addTagsRequest={data => addTagsRequest(data)}
+            tagsList={tagsList}
             {...this.props}
           />
         ) : null}
@@ -222,7 +264,9 @@ const mapStateToProps = state => ({
   loginReducer: state.loginReducer,
   profileInfoReducer: state.profileInfoReducer,
   allSearchReducer: state.allSearchReducer,
-  shareLinkReducer: state.shareLinkReducer
+  shareLinkReducer: state.shareLinkReducer,
+  moveReducer: state.moveReducer,
+  allSetList: state.setReducer.allSetList
 });
 const mapDispatchToProps = dispatch => ({
   modelOperate: data => dispatch(modelOpenRequest(data)),
@@ -234,7 +278,30 @@ const mapDispatchToProps = dispatch => ({
   getProfile: () => dispatch(profileRequest()),
   onFolderCreation: data => dispatch(createFolderRequest(data)),
   allSearchRequest: data => dispatch(allSearchRequest(data)),
-  onSetsCreation: data => dispatch(createSetRequest(data))
+  onSetsCreation: data => dispatch(createSetRequest(data)),
+  loadVideoDataRequest: data => dispatch(loadVideoDataRequest(data)),
+  deleteMoveRequest: data => dispatch(deleteMovesRequest(data)),
+  isStarredRequest: data => dispatch(starredMovesRequest(data)),
+  getTagListRequest: () => {
+    dispatch(getTagListRequest());
+  },
+  addTagsInTagModalRequest: data => {
+    dispatch(addTagsInTagModalRequest(data));
+  },
+  updateMoveRequest: data => {
+    dispatch(updateMoveRequest(data));
+  },
+  getSetList: data => {
+    dispatch(getAllSetRequest(data));
+  },
+  transferMovesRequest: data => dispatch(transferMovesRequest(data)),
+  addTagsRequest: data => dispatch(addTagsRequest(data)),
+  videoFullscreenReq: data => {
+    dispatch(videoFullscreenReq(data));
+  },
+  videoFullscreenExit: data => {
+    dispatch(videoFullscreenExit(data));
+  }
 });
 export default connect(
   mapStateToProps,
