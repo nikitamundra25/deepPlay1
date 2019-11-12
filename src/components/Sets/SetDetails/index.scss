@@ -65,6 +65,7 @@
   background: #fff;
   padding: 9px 0px 12px 8px;
 }
+
 .selected-detail-page {
   background: transparent;
   padding: 0px;
@@ -73,6 +74,8 @@
   top: -75px;
   left: 50%;
   transform: translateX(-50%);
+  transition:all 0.5s;
+  z-index: 99;
   // padding: 8px 12px 12px 8px;
   // background: #f1f1f1;
   // box-shadow: 0px 0px 1px 1px rgba(58, 55, 55, 0.2);
@@ -91,6 +94,12 @@
     &.move-close-btn {
       padding: 1px 8px;
     }
+  }
+}
+.sticky-header{
+  .selected-detail-page{
+    position: fixed;
+    top:15px!important;
   }
 }
 .video-effect {
