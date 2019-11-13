@@ -343,6 +343,28 @@ const deleteFolder = async (req: Request, res: Response): Promise<void> => {
         $set: { isDeleted: true }
       }
     );
+    const includSet: Document | any = await SetModel.find({
+      folderId: query.id
+    })
+    if (includSet) {
+      for (let index = 0; index < includSet.length; index++) {
+        const setData = includSet[index];
+        const includeMove = await MoveModel.find({
+          setId: setData._id
+        })
+        if (includeMove) {
+          for (let index = 0; index < includeMove.length; index++) {
+            const moveData = includeMove[index];
+            await MoveModel.findByIdAndUpdate(moveData._id, {
+              isDeleted: true
+            })
+          }
+        }
+        await SetModel.findByIdAndUpdate(setData._id, {
+          isDeleted: true
+        })
+      }
+    }
     const result1: any = await FolderModel.find({ _id: query.id });
     const stemp = result1.length ? result1[0].objectId : null;
     if (stemp) {
