@@ -85,9 +85,16 @@ class TransferToModal extends React.Component {
   };
 
   render() {
-    const { handleOpen, modal, folderId, AllFolders } = this.props;
-    const { selectFolderOptions, errors } = this.state;
+    const {
+      handleOpen,
+      modal,
+      folderId,
+      AllFolders,
+      transferMove
+    } = this.props;
+    console.log("transferMovetransferMove", transferMove);
 
+    const { selectFolderOptions, errors } = this.state;
     const defaultFolderList = [];
     let list = [];
     if (AllFolders && AllFolders.length) {
@@ -149,12 +156,10 @@ class TransferToModal extends React.Component {
                 isClearable={selectFolderOptions.value ? true : false}
                 defaultOptions={defaultFolderList}
                 noOptionsMessage={() =>
-                  this.props.transferMove
-                    ? "No set available"
-                    : "No folder available"
+                  transferMove ? "No set available" : "No folder available"
                 }
                 placeholder={
-                  this.props.transferMove
+                  transferMove
                     ? "Select set from list"
                     : "Select folder from list"
                 }

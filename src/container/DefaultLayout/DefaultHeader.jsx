@@ -254,7 +254,6 @@ class DefaultHeader extends React.Component {
         : profiledata
         ? profiledata.profileImage
         : "";
-    console.log("videoDatavideoData", videoData);
 
     return (
       <>

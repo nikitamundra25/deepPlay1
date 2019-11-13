@@ -514,6 +514,8 @@ class MoveList extends React.Component {
     const location = this.props.location;
     const isStarred = location.search.split("=");
     const serachContent = location.search.split("search");
+    console.log("selectedMoveIds", selectedMoveIds);
+    console.log("selectedMoves", selectedMoves);
 
     return (
       <section className="play-list-collection set-detail-section set-detail-editble">
@@ -667,12 +669,8 @@ class MoveList extends React.Component {
                       </div>
                     </div>
                   </div>
-                  <ListManager
-                    items={moveofSetList}
-                    direction="horizontal"
-                    maxItems={4}
-                    render={video => {
-                      let index = video.id;
+                  {selectedMoveIds && selectedMoveIds.length ? (
+                    moveofSetList.map((video, index) => {
                       return (
                         <MoveListDetails
                           index={index}
@@ -694,9 +692,39 @@ class MoveList extends React.Component {
                           handleVideoModal={this.props.handleVideoModal}
                         />
                       );
-                    }}
-                    onDragEnd={this.reorderList}
-                  />
+                    })
+                  ) : (
+                    <ListManager
+                      items={moveofSetList}
+                      direction="horizontal"
+                      maxItems={4}
+                      render={video => {
+                        let index = video.id;
+                        return (
+                          <MoveListDetails
+                            index={index}
+                            isVideoChecked={isVideoChecked}
+                            selectedMoves={selectedMoves}
+                            handleShowVideo={this.props.handleShowVideo}
+                            handleVideoHover={this.handleVideoHover}
+                            handleVideoPause={this.handleVideoPause}
+                            handleVideoHoverLeave={this.handleVideoHoverLeave}
+                            handleVideoPlay={this.handleVideoPlay}
+                            handleMovesSelect={this.handleMovesSelect}
+                            isMarkingStar={isMarkingStar}
+                            video={video}
+                            isSelectVideo={isSelectVideo}
+                            videoIndex={videoIndex}
+                            isVideoModalOpen={isVideoModalOpen}
+                            handleStarred={this.handleStarred}
+                            handleVideoCheckBox={this.handleVideoCheckBox}
+                            handleVideoModal={this.props.handleVideoModal}
+                          />
+                        );
+                      }}
+                      onDragEnd={this.reorderList}
+                    />
+                  )}
                 </div>
               ) : (
                 <Col>
