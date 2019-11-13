@@ -1,23 +1,8 @@
 import React from "react";
-import {
-  Row,
-  Col,
-  Button,
-  ButtonGroup,
-  FormGroup,
-  InputGroup,
-  Input
-} from "reactstrap";
-import addPlusIc from "../../../assets/img/add_plus.png";
+import { Input } from "reactstrap";
 import starIc from "../../../assets/img/star.svg";
-import TransferToModal from "../../Folders/FolderDetails/transferTo";
-import InfiniteScroll from "react-infinite-scroll-component";
 import "./index.scss";
-import Loader from "components/comman/Loader/Loader";
 import blankStar from "../../../assets/img/star-line.svg";
-import addTag from "../../../assets/img/set-detail-ic/add-tag.svg";
-import transfer from "../../../assets/img/set-detail-ic/transfer.svg";
-import remove from "../../../assets/img/set-detail-ic/remove.svg";
 
 class MoveListDetails extends React.Component {
   render() {
@@ -25,22 +10,25 @@ class MoveListDetails extends React.Component {
       index,
       isVideoChecked,
       selectedMoves,
+      video,
+      handleVideoHoverLeave,
       handleVideoHover,
       handleVideoPause,
-      handleVideoHoverLeave,
       handleVideoPlay,
-      handleMovesSelect,
       isMarkingStar,
-      video,
+      isVideoModalOpen,
+      handleMovesSelect,
       isSelectVideo,
-      videoIndex
+      videoIndex,
+      handleVideoCheckBox,
+      handleStarred
     } = this.props;
     return (
       <div className="play-list-tile cursor_pointer">
         <div
           onClick={() => this.props.handleShowVideo(index)}
           onMouseLeave={() => {
-           handleVideoHoverLeave();
+            handleVideoHoverLeave();
           }}
           key={index}
         >
@@ -112,22 +100,25 @@ class MoveListDetails extends React.Component {
                     isSelectVideo &&
                     videoIndex === index ? (
                       <span
-                        onClick={() => {
-                          this.setState(
-                            {
-                              isVideoModalOpen: false
-                            },
-                            () =>
-                              this.handleVideoCheckBox(true, index, video._id)
-                          );
-                        }}
+                        // onClick={() => {
+                        //   this.setState(
+                        //     {
+                        //       isVideoModalOpen: false
+                        //     },
+                        //     () =>
+                        //       this.handleVideoCheckBox(true, index, video._id)
+                        //   );
+                        // }}
+                        onClick={() =>
+                          handleVideoCheckBox(true, index, video._id)
+                        }
                         className="plus-ic-wrap custom-control custom-checkbox"
                       >
                         <Input
                           className="custom-control-input"
                           id={`selected-video-${index}`}
                           onChange={e =>
-                            this.handleMovesSelect(null, e, index, video._id)
+                            handleMovesSelect(null, e, index, video._id)
                           }
                           type="checkbox"
                           checked={selectedMoves[index] ? true : false}
@@ -163,7 +154,7 @@ class MoveListDetails extends React.Component {
                 />
               </div>
               <div
-                onMouseLeave={() => this.props.closePopOver(index, show)}
+                // onMouseLeave={() => this.props.closePopOver(index, show)}
                 // onDoubleClick={() =>
                 //   this.onDoubleClick(
                 //     index,
@@ -202,7 +193,7 @@ class MoveListDetails extends React.Component {
                 <div
                   className="star-wrap"
                   onClick={() =>
-                    this.handleStarred(video._id, video.isStarred, index)
+                    handleStarred(video._id, video.isStarred, index)
                   }
                 >
                   {video.isStarred ? (
