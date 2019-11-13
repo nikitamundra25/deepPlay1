@@ -147,7 +147,8 @@ const sharedLinkFolderDetailsLogic = createLogic({
           })
         );
       } else {
-        dispatch(redirectTo({ path: "/public-access-denied" }));
+        // dispatch(redirectTo({ path: "/public-access-denied" }));
+        dispatch(sharedFolderInfoSuccess({ accessDenied: true }));
       }
       done();
       return;
@@ -187,7 +188,7 @@ const getPublicUrlSetsDetailsLogic = createLogic({
           })
         );
       } else {
-        dispatch(redirectTo({ path: "/public-access-denied" }));
+        dispatch(publicUrlSetDetailsSuccess({ accessDenied: true }));
       }
       done();
       return;
@@ -229,7 +230,7 @@ const sharedLinkSetDetailsLogic = createLogic({
           })
         );
       } else {
-        dispatch(redirectTo({ path: "/public-access-denied" }));
+        dispatch(sharedSetInfoSuccess({ accessDenied: true }));
       }
       done();
       return;
@@ -266,16 +267,18 @@ const getPublicUrlMoveDetailsLogic = createLogic({
           })
         );
       } else {
-        dispatch(redirectTo({ path: "/public-access-denied" }));
+        dispatch(publicUrlMoveDetailsSuccess({ accessDenied: true }));
       }
       done();
       return;
     } else {
       dispatch(hideLoader());
       dispatch(
-        publicUrlMoveDetailsSuccess({ publicUrlmoveDetails: result.data.data,
+        publicUrlMoveDetailsSuccess({
+          publicUrlmoveDetails: result.data.data,
           totalMoves: result.data.totalMoves,
-          isInfiniteScroll: action.payload.isInfiniteScroll })
+          isInfiniteScroll: action.payload.isInfiniteScroll
+        })
       );
       done();
     }

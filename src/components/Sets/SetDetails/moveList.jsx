@@ -58,35 +58,31 @@ class MoveList extends React.Component {
         index: -1,
         isChanging: false
       },
-      backgroundClass:""
+      backgroundClass: ""
     };
   }
-  
- componentDidMount() {
-  window.addEventListener('scroll', this.listenScrollEvent)
 
- 
-}
-listenScrollEvent = e => {
-  // if(testDiv){
-  //   testDiv.childNodes[0].style.top=testDiv.offsetTop;
-  //   console.log(testDiv.offsetTop, "------------------------------------------------------------------------------------------");
-  // }
-  if (window.scrollY > 180) {
-    var testDiv = document.getElementById("get-sticky-header");
-     this.setState({ backgroundClass: "sticky-header" })
-  } else {
-     this.setState({ backgroundClass: "" })
+  componentDidMount() {
+    window.addEventListener("scroll", this.listenScrollEvent);
   }
-}
+  listenScrollEvent = e => {
+    // if(testDiv){
+    //   testDiv.childNodes[0].style.top=testDiv.offsetTop;
+    //   console.log(testDiv.offsetTop, "------------------------------------------------------------------------------------------");
+    // }
+    if (window.scrollY > 180) {
+      // var testDiv = document.getElementById("get-sticky-header");
+      this.setState({ backgroundClass: "sticky-header" });
+    } else {
+      this.setState({ backgroundClass: "" });
+    }
+  };
   handleVideoHoverLeave = () => {
     this.setState({
       isSelectVideo: false
     });
   };
 
-
-  
   componentDidUpdate = prevProps => {
     if (prevProps.movesOfSet !== this.props.movesOfSet) {
       this.setState({
@@ -476,7 +472,7 @@ listenScrollEvent = e => {
   //   if (this.props.number === nextProps.number) {
   //     return false;
   //   } else {
-  //     return true; 
+  //     return true;
   //   }
   // }
 
@@ -588,66 +584,67 @@ listenScrollEvent = e => {
             >
               {selectedMoveIds && selectedMoveIds.length ? (
                 <div className={` ${backgroundClass}`} id="get-sticky-header">
-                <div className={"selected-moves selected-detail-page"}>
-                  <div
-                    className={
-                      "d-flex justify-content-between align-items-center "
-                    }
-                  >
-                    {/* <div className="content-title">
+                  <div className={"selected-moves selected-detail-page"}>
+                    <div
+                      className={
+                        "d-flex justify-content-between align-items-center "
+                      }
+                    >
+                      {/* <div className="content-title">
                       Selected Moves:{" "}
                       {selectedMoveIds && selectedMoveIds.length
                         ? selectedMoveIds.length
                         : 0}
                     </div> */}
-                    <div className="content-title ">
-                      <span className={"d-flex"}>
-                        <ButtonGroup size="lg">
-                          <Button
-                            onClick={() => this.openAddTagsModal()}
-                            className=" "
-                            color=" "
-                          >
-                            <img src={addTag} alt="" className="mr-1" /> Add
-                            tags
-                          </Button>
-                          <Button
-                            onClick={() => this.openTransferToModal()}
-                            className=" "
-                            color=" "
-                          >
-                            <img src={transfer} alt="" className="mr-1" />{" "}
-                            Transfer
-                          </Button>
-                          <Button
-                            onClick={() => this.handleMoveDelete()}
-                            className=" "
-                            color=" "
-                          >
-                            <img src={remove} alt="" className="mr-1" /> Remove
-                          </Button>
-                          <Button
-                            color=" "
-                            className="btn-black"
-                            onClick={() =>
-                              this.setState({
-                                selectedMoves: [],
-                                selectedMoveIds: [],
-                                isVideoChecked: false,
-                                isVideoModalOpen: true
-                              })
-                            }
-                          >
-                            <i
-                              className="fa fa-times fa-lg"
-                              aria-hidden="true"
-                            />
-                          </Button>
-                        </ButtonGroup>
-                      </span>
+                      <div className="content-title ">
+                        <span className={"d-flex"}>
+                          <ButtonGroup size="lg">
+                            <Button
+                              onClick={() => this.openAddTagsModal()}
+                              className=" "
+                              color=" "
+                            >
+                              <img src={addTag} alt="" className="mr-1" /> Add
+                              tags
+                            </Button>
+                            <Button
+                              onClick={() => this.openTransferToModal()}
+                              className=" "
+                              color=" "
+                            >
+                              <img src={transfer} alt="" className="mr-1" />{" "}
+                              Transfer
+                            </Button>
+                            <Button
+                              onClick={() => this.handleMoveDelete()}
+                              className=" "
+                              color=" "
+                            >
+                              <img src={remove} alt="" className="mr-1" />{" "}
+                              Remove
+                            </Button>
+                            <Button
+                              color=" "
+                              className="btn-black"
+                              onClick={() =>
+                                this.setState({
+                                  selectedMoves: [],
+                                  selectedMoveIds: [],
+                                  isVideoChecked: false,
+                                  isVideoModalOpen: true
+                                })
+                              }
+                            >
+                              <i
+                                className="fa fa-times fa-lg"
+                                aria-hidden="true"
+                              />
+                            </Button>
+                          </ButtonGroup>
+                        </span>
+                      </div>
                     </div>
                   </div>
-                </div>
                 </div>
               ) : null}
 
@@ -686,8 +683,7 @@ listenScrollEvent = e => {
                             <div className="play-list-block">
                               <div
                                 className={`play-sub-block ${
-                                  isVideoChecked &&
-                                  selectedMoves[index]
+                                  isVideoChecked && selectedMoves[index]
                                     ? "video-full-selection"
                                     : ""
                                 }`}

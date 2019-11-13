@@ -343,6 +343,7 @@ const getMoveBySetId = async (req: Request, res: Response): Promise<any> => {
     if (query.isStarred === "true") {
       movesData = await MoveModel.find({
         setId: query.setId,
+        userId: headToken.id,
         isDeleted: false,
         isStarred: true
       })
@@ -353,6 +354,7 @@ const getMoveBySetId = async (req: Request, res: Response): Promise<any> => {
     } else {
       const moveListData: Document | any = await MoveModel.find({
         setId: query.setId,
+        userId: headToken.id,
         isDeleted: false,
         moveURL: { $ne: null }
       }).sort({ sortIndex: 1 });
@@ -385,6 +387,7 @@ const getMoveBySetId = async (req: Request, res: Response): Promise<any> => {
 
       movesData = await MoveModel.find({
         setId: query.setId,
+        userId: headToken.id,
         isDeleted: false,
         moveURL: { $ne: null }
       })
@@ -401,6 +404,7 @@ const getMoveBySetId = async (req: Request, res: Response): Promise<any> => {
     if (query.isStarred === "true") {
       totalMoves = await MoveModel.count({
         setId: query.setId,
+        userId: headToken.id,
         isDeleted: false,
         isStarred: true,
         moveURL: { $ne: null }
@@ -408,6 +412,7 @@ const getMoveBySetId = async (req: Request, res: Response): Promise<any> => {
     } else {
       totalMoves = await MoveModel.count({
         setId: query.setId,
+        userId: headToken.id,
         isDeleted: false,
         moveURL: { $ne: null }
       });
@@ -455,13 +460,13 @@ const publicUrlMoveDetails = async (
 ): Promise<any> => {
   try {
     const { query } = req;
-    const { setId, isPublic, fromFolder, page, limit } = query;
+    const { setId, isPublic, fromFolder, page, limit, userId } = query;
     const decryptedSetId = decrypt(setId);
+    const decryptedUserId = decrypt(userId);
     let result: Document | any | null, totalMove: Document | any | null;
     let temp: Document | any | null, movesData: Document | any;
     const pageNumber: number = ((parseInt(page) || 1) - 1) * (limit || 20);
     const limitNumber: number = parseInt(limit) || 20;
-
     if (fromFolder) {
       temp = {
         isPublic: true
@@ -476,6 +481,7 @@ const publicUrlMoveDetails = async (
     if (temp.isPublic) {
       result = await MoveModel.find({
         setId: decryptedSetId,
+        userId: decryptedUserId,
         isDeleted: false,
         moveURL: { $ne: null }
       })
@@ -485,6 +491,7 @@ const publicUrlMoveDetails = async (
 
       totalMove = await MoveModel.count({
         setId: decryptedSetId,
+        userId: decryptedUserId,
         isDeleted: false,
         moveURL: { $ne: null }
       });
@@ -781,6 +788,7 @@ const deleteMove = async (req: Request, res: Response): Promise<any> => {
         objectIds = [...objectIds, result[0].objectId];
       }
     }
+
     if (objectIds) {
       index.deleteObjects(objectIds, (err: string, content: any) => {
         if (err) throw err;
