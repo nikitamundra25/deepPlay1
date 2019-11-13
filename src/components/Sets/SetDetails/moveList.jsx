@@ -57,16 +57,36 @@ class MoveList extends React.Component {
       isMarkingStar: {
         index: -1,
         isChanging: false
-      }
+      },
+      backgroundClass:""
     };
   }
+  
+ componentDidMount() {
+  window.addEventListener('scroll', this.listenScrollEvent)
+
+ 
+}
+listenScrollEvent = e => {
+  // if(testDiv){
+  //   testDiv.childNodes[0].style.top=testDiv.offsetTop;
+  //   console.log(testDiv.offsetTop, "------------------------------------------------------------------------------------------");
+  // }
+  if (window.scrollY > 180) {
+    var testDiv = document.getElementById("get-sticky-header");
+     this.setState({ backgroundClass: "sticky-header" })
+  } else {
+     this.setState({ backgroundClass: "" })
+  }
+}
   handleVideoHoverLeave = () => {
     this.setState({
       isSelectVideo: false
     });
   };
-  /*
-   */
+
+
+  
   componentDidUpdate = prevProps => {
     if (prevProps.movesOfSet !== this.props.movesOfSet) {
       this.setState({
@@ -490,14 +510,15 @@ class MoveList extends React.Component {
       // doubleClickIndex,
       // doubleClick,
       // title
-      isMarkingStar
+      isMarkingStar,
+      backgroundClass
     } = this.state;
     const location = this.props.location;
     const isStarred = location.search.split("=");
     const serachContent = location.search.split("search");
 
     return (
-      <section className="play-list-collection set-detail-section">
+      <section className="play-list-collection set-detail-section set-detail-editble">
         <InfiniteScroll
           dataLength={moveofSetList.length} //This is important field to render the next data
           next={() => {
@@ -566,6 +587,7 @@ class MoveList extends React.Component {
               } `}
             >
               {selectedMoveIds && selectedMoveIds.length ? (
+                <div className={` ${backgroundClass}`} id="get-sticky-header">
                 <div className={"selected-moves selected-detail-page"}>
                   <div
                     className={
@@ -626,6 +648,7 @@ class MoveList extends React.Component {
                     </div>
                   </div>
                 </div>
+                </div>
               ) : null}
 
               {!isMoveSearchLoading && !isMoveListLoading ? (
@@ -662,7 +685,12 @@ class MoveList extends React.Component {
                           >
                             <div className="play-list-block">
                               <div
-                                className="play-sub-block"
+                                className={`play-sub-block ${
+                                  isVideoChecked &&
+                                  selectedMoves[index]
+                                    ? "video-full-selection"
+                                    : ""
+                                }`}
                                 onMouseOver={() => this.handleVideoHover(index)}
                                 onMouseLeave={() => {
                                   this.handleVideoPause(index);
