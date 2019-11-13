@@ -138,7 +138,7 @@ const downloadYoutubeVideo = async (
           ytdl(body.url).pipe(
             (videoStream = fs.createWriteStream(originalVideoPath))
           );
-          videoStream.on("close", async function () {
+          videoStream.on("close", async function() {
             const {
               frames: framesArray,
               videoMetaData,
@@ -203,7 +203,6 @@ const getVideoFrames = async (videoName: string): Promise<any> => {
   return await new Promise((resolve, reject) => {
     if (videoDuration <= 100) {
       console.log("Inside smallest Video");
-      
       video.fnExtractFrameToJPG(
         `${dirName.split(".")[0]}_frames`,
         {
@@ -227,7 +226,6 @@ const getVideoFrames = async (videoName: string): Promise<any> => {
       );
     } else if (videoDuration <= 500) {
       console.log("inside first ");
-
       video.fnExtractFrameToJPG(
         `${dirName.split(".")[0]}_frames`,
         {
@@ -359,25 +357,29 @@ const getMoveBySetId = async (req: Request, res: Response): Promise<any> => {
         moveURL: { $ne: null }
       }).sort({ sortIndex: 1 });
 
-      let isRepetedSortIndex: Boolean = false
+      let isRepetedSortIndex: Boolean = false;
       if (moveListData && moveListData.length) {
         for (let index = 0; index < moveListData.length; index++) {
           const element = moveListData[index].sortIndex;
-          const check = moveListData.filter((item: any) => item.sortIndex === element)
+          const check = moveListData.filter(
+            (item: any) => item.sortIndex === element
+          );
           if (check && check.length > 1) {
-            isRepetedSortIndex = true
+            isRepetedSortIndex = true;
           }
         }
       }
-      let num: number = 0
+      let num: number = 0;
       if (isRepetedSortIndex) {
         for (let index = 0; index < moveListData.length; index++) {
-          await MoveModel.updateOne({
-            _id: moveListData[index]._id
-          }, {
-            sortIndex: ++num
-          })
-
+          await MoveModel.updateOne(
+            {
+              _id: moveListData[index]._id
+            },
+            {
+              sortIndex: ++num
+            }
+          );
         }
       }
 
@@ -455,7 +457,7 @@ const publicUrlMoveDetails = async (
     const { query } = req;
     const { setId, isPublic, fromFolder, page, limit } = query;
     const decryptedSetId = decrypt(setId);
-    let result: Document | any | null, totalMove: Document | any | null
+    let result: Document | any | null, totalMove: Document | any | null;
     let temp: Document | any | null, movesData: Document | any;
     const pageNumber: number = ((parseInt(page) || 1) - 1) * (limit || 20);
     const limitNumber: number = parseInt(limit) || 20;
@@ -485,8 +487,7 @@ const publicUrlMoveDetails = async (
         setId: decryptedSetId,
         isDeleted: false,
         moveURL: { $ne: null }
-      })
-
+      });
     } else {
       return res.status(400).json({
         message: {
@@ -569,7 +570,7 @@ const updateMoveDetailsAndTrimVideo = async (
 
       const fileName = `${
         result.videoUrl.split(".")[0]
-        }_clip_${moment().unix()}.webm`;
+      }_clip_${moment().unix()}.webm`;
       let videoFileMain: String | any, videoOriginalFile: String | any;
       if (IsProductionMode) {
         videoFileMain = path.join(__dirname, `${fileName}`);
@@ -741,7 +742,7 @@ const isStarredMove = async (req: Request, res: Response): Promise<any> => {
     return res.status(200).json({
       message: `Move has been ${
         isStarred === "true" ? "starred" : "Unstarred"
-        } successfully!`
+      } successfully!`
     });
   } catch (error) {
     console.log(error);

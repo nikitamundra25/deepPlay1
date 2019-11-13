@@ -95,6 +95,8 @@ class SetSharedLink extends React.Component {
   };
 
   handleLoadmoreRequest = setIdPathName => {
+    // let parsed = qs.parse(this.props.location.search);
+    // console.log("parsedparsed", parsed);
     const pageLimit = this.state.page;
     this.setState({
       page: pageLimit + 1
@@ -296,7 +298,4 @@ const mapDispatchToProps = dispatch => ({
   modelOperate: data => dispatch(modelOpenRequest(data)),
   loadVideoDataRequest: data => dispatch(loadVideoDataRequest(data))
 });
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(SetSharedLink);
+export default connect(mapStateToProps, mapDispatchToProps)(SetSharedLink);
