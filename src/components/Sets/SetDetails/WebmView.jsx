@@ -517,14 +517,10 @@ class WebmView extends Component {
                           View Info
                         </DropdownItem>
                         <DropdownItem
-                          onClick={() =>
-                            videoData
-                              ? this.openTransferToModal(
-                                videoData._id,
-                                videoData.setId
-                              )
-                              : this.openTransferToModal(video._id, video.setId)
-                          }
+                          onClick={() => this.openTransferToModal(
+                            videoData._id,
+                            videoData.setId
+                          )}
                         >
                           Transfer
                         </DropdownItem>

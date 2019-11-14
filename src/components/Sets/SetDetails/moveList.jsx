@@ -78,6 +78,8 @@ class MoveList extends React.Component {
       prevProps.isMoveStarLoading.loading !==
         this.props.isMoveStarLoading.loading
     ) {
+      console.log("this.props.movesOfSet[this.props.isMoveStarLoading.index].isStarred",this.props.movesOfSet[this.props.isMoveStarLoading.index].isStarred);
+      
       if (
         this.props.movesOfSet &&
         this.props.movesOfSet.length &&
