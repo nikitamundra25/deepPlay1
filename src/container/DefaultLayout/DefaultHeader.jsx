@@ -259,14 +259,6 @@ class DefaultHeader extends React.Component {
       <>
         <header className="header-global theme-header dashboard-header">
           <div className="theme-container">
-            {/* <Navbar
-              className="navbar-main d-flex justify-content-center"
-              // expand="lg"
-              id="navbar-main"
-            > */}
-            {/* <NavbarBrand className="mr-lg-5" to="/" tag={Link}>
-                <h3 className="mb-0 header-title">Deep Play</h3>
-              </NavbarBrand> */}
             {path !== AppRoutes.FOLDER_SHARED_LINK.url &&
             path !== AppRoutes.SET_SHARED_LINK.url &&
             path !== AppRoutes.ALL_SET_SHARED_LINK.url &&
