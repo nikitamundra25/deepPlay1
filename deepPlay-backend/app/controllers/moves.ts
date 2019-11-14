@@ -910,6 +910,12 @@ const addTagsInMove = async (req: Request, res: Response): Promise<any> => {
         message: "MoveId not found"
       });
     }
+    for (let index = 0; index < moveId.length; index++) {
+      const element = moveId;
+      console.log("element", element);
+      let temp: any = await MoveModel.find({ _id: element }, { tags: 1 });
+      console.log("temp", temp[0].tags);
+    }
 
     await MoveModel.updateMany(
       { _id: { $in: moveId } },
