@@ -721,12 +721,17 @@ class MoveList extends React.Component {
                       </div>
                     </div>
                   </div>
+                  <div>
+
+                  </div>
                   {selectedMoveIds && selectedMoveIds.length ? (
               <div className="select-focus-wrap"></div>
             ) : null}
+            <div className="edit-view-wrap">
                   {(selectedMoveIds && selectedMoveIds.length) ? (
                     movesOfSet.map((video, index) => {
                       return (
+                        <div>
                         <MoveListDetails
                           index={index}
                           isVideoChecked={isVideoChecked}
@@ -746,6 +751,7 @@ class MoveList extends React.Component {
                           handleVideoCheckBox={this.handleVideoCheckBox}
                           handleVideoModal={this.props.handleVideoModal}
                         />
+                        </div>
                       );
                     })
                   ) : (
@@ -780,6 +786,7 @@ class MoveList extends React.Component {
                         onDragEnd={this.reorderList}
                       />
                     )}
+                </div>
                 </div>
               ) : (
                   <Col>
