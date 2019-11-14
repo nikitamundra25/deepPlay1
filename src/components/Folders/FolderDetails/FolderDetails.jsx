@@ -33,7 +33,7 @@ import AddSetModal from "./addSet";
 import TransferToModal from "./transferTo";
 import { ConfirmBox } from "../../../helper/SweetAleart";
 import SharableLinkModal from "../../comman/shareableLink/SharableLink";
-import emptySetIc from "../../../assets/img/empty-sets.png";
+import emptySetIc from "../../../assets/img/play-list-ic.svg";
 import { AppRoutes } from "../../../config/AppRoutes";
 import Loader from "../../comman/Loader/Loader";
 import FolderModal from "../createFolderModal";

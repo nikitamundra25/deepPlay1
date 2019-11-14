@@ -68,12 +68,13 @@ class MoveList extends React.Component {
  
 }
 listenScrollEvent = e => {
-  // if(testDiv){
-  //   testDiv.childNodes[0].style.top=testDiv.offsetTop;
-  //   console.log(testDiv.offsetTop, "------------------------------------------------------------------------------------------");
-  // }
+  var testDiv = document.getElementById("select-scroll");
+  console.log(testDiv);
+  if(testDiv){
+    // testDiv.style.top=testDiv.offsetTop;
+    console.log(testDiv.offsetTop, "------------------------------------------------------------------------------------------");
+  }
   if (window.scrollY > 180) {
-    var testDiv = document.getElementById("get-sticky-header");
      this.setState({ backgroundClass: "sticky-header" })
   } else {
      this.setState({ backgroundClass: "" })
@@ -570,9 +571,7 @@ listenScrollEvent = e => {
                 )}
               </div>
             </Col>
-            {selectedMoveIds && selectedMoveIds.length ? (
-              <div className="select-focus-wrap"></div>
-            ) : null}
+     
             <div
               className={`video-thumbnail-block  ${
                 selectedMoveIds && selectedMoveIds.length
@@ -646,8 +645,8 @@ listenScrollEvent = e => {
               ) : null}
 
               {!isMoveSearchLoading && !isMoveListLoading ? (
-                <div className="video-thumbnail-sub-block  video-thumb-edit-view with-move">
-                  <div className="play-list-tile create-move-ele">
+                <div className="video-thumbnail-sub-block  video-thumb-edit-view with-move" id="select-scroll">
+                  <div className="play-list-tile create-move-element">
                     <div
                       className="play-list-block  d-flex h-100 cursor_pointer"
                       onClick={this.props.handleMoveAdd}
@@ -662,6 +661,9 @@ listenScrollEvent = e => {
                       </div>
                     </div>
                   </div>
+                  {selectedMoveIds && selectedMoveIds.length ? (
+              <div className="select-focus-wrap"></div>
+            ) : null}
                   <ListManager
                     items={moveofSetList}
                     direction="horizontal"

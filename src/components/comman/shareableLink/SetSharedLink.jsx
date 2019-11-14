@@ -14,7 +14,7 @@ import "slick-carousel/slick/slick-theme.css";
 import qs from "query-string";
 import Loader from "../Loader/Loader";
 import WebmView from "../../Sets/SetDetails/WebmView";
-import emptySetIc from "../../../assets/img/empty-sets.png";
+import emptySetIc from "../../../assets/img/play-list-ic.svg";
 import InfiniteScroll from "react-infinite-scroll-component";
 
 // core components
