@@ -5,16 +5,13 @@ import {
   Button,
   ButtonGroup,
   FormGroup,
-  InputGroup,
-  Input
+  InputGroup
 } from "reactstrap";
 import addPlusIc from "../../../assets/img/add_plus.png";
-import starIc from "../../../assets/img/star.svg";
 import TransferToModal from "../../Folders/FolderDetails/transferTo";
 import InfiniteScroll from "react-infinite-scroll-component";
 import "./index.scss";
 import Loader from "components/comman/Loader/Loader";
-import blankStar from "../../../assets/img/star-line.svg";
 import AddTagModal from "./addTagsModal";
 import { ConfirmBox } from "helper/SweetAleart";
 import { DebounceInput } from "react-debounce-input";
@@ -90,31 +87,45 @@ class MoveList extends React.Component {
         moveofSetList: this.props.movesOfSet
       });
     }
+
     if (
       prevProps.isMoveStarLoading &&
       prevProps.isMoveStarLoading.loading !==
         this.props.isMoveStarLoading.loading
     ) {
-      if (
-        this.props.movesOfSet &&
-        this.props.movesOfSet.length &&
-        !this.props.movesOfSet[this.props.isMoveStarLoading.index].isStarred
-      ) {
-        this.setState({
-          isMarkingStar: {
-            index: this.props.isMoveStarLoading.index,
-            isChanging: true
-          }
-        });
-      } else {
-        this.setState({
-          isMarkingStar: {
-            index: this.props.isMoveStarLoading.index,
-            isChanging: false
-          }
-        });
-      }
+      this.setState({
+        isMarkingStar: {
+          index: this.props.isMoveStarLoading.index,
+          isChanging: true
+        }
+      });
     }
+
+    // if (
+    //   prevProps.isMoveStarLoading &&
+    //   prevProps.isMoveStarLoading.loading !==
+    //     this.props.isMoveStarLoading.loading
+    // ) {
+    //   if (
+    //     this.props.movesOfSet &&
+    //     this.props.movesOfSet.length &&
+    //     !this.props.movesOfSet[this.props.isMoveStarLoading.index].isStarred
+    //   ) {
+    //     this.setState({
+    //       isMarkingStar: {
+    //         index: this.props.isMoveStarLoading.index,
+    //         isChanging: true
+    //       }
+    //     });
+    //   } else {
+    //     this.setState({
+    //       isMarkingStar: {
+    //         index: this.props.isMoveStarLoading.index,
+    //         isChanging: false
+    //       }
+    //     });
+    //   }
+    // }
   };
 
   /*
@@ -189,12 +200,12 @@ class MoveList extends React.Component {
     const pathName = location.pathname.split("/");
     const { selectedMoveIds } = this.state;
     let moveofSetList = [...this.state.moveofSetList];
-    // const starDiv = document.getElementsByClassName("star-mark")[index];
+    const starDiv = document.getElementsByClassName("star-mark")[index];
     if (isStarred) {
       moveofSetList[index].isStarred = false;
-      // starDiv.classList.remove("isStarred");
+      starDiv.classList.remove("isStarred");
     } else {
-      // starDiv.classList.add("isStarred");
+      starDiv.classList.add("isStarred");
       moveofSetList[index].isStarred = true;
     }
     const data = {
@@ -470,6 +481,16 @@ class MoveList extends React.Component {
     });
   };
 
+  handleSelectAll = () => {
+    const moveList = this.state.moveofSetList;
+    let temp = [];
+    if (moveList && moveList.length) {
+      moveList.map((list, index) => {
+        temp.push(list._id);
+        return true;
+      });
+    }
+  };
   // shouldComponentUpdate = (nextProps, nextState) =>{
   //   if (this.props.number === nextProps.number) {
   //     return false;
@@ -480,7 +501,6 @@ class MoveList extends React.Component {
 
   render() {
     const {
-      show,
       modelInfoReducer,
       allSetList,
       setIdPathName,
@@ -514,8 +534,6 @@ class MoveList extends React.Component {
     const location = this.props.location;
     const isStarred = location.search.split("=");
     const serachContent = location.search.split("search");
-    console.log("selectedMoveIds", selectedMoveIds);
-    console.log("selectedMoves", selectedMoves);
 
     return (
       <section className="play-list-collection set-detail-section set-detail-editble">
@@ -603,6 +621,14 @@ class MoveList extends React.Component {
                       <div className="content-title ">
                         <span className={"d-flex"}>
                           <ButtonGroup size="lg">
+                            <Button
+                              onClick={() => this.handleSelectAll()}
+                              className=" "
+                              color=" "
+                            >
+                              <img src={addTag} alt="" className="mr-1" />{" "}
+                              Select all
+                            </Button>
                             <Button
                               onClick={() => this.openAddTagsModal()}
                               className=" "

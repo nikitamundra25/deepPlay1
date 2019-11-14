@@ -114,7 +114,8 @@ class UploadImage extends Component {
                               />
 
                               <div className="upload-heading">
-                                Drag a profile photo here{" "}
+                                Click here to upload a profile image or drag
+                                your image{" "}
                               </div>
                             </div>
                           </div>

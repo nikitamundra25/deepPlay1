@@ -23,8 +23,15 @@ class MoveListDetails extends React.Component {
       handleVideoCheckBox,
       handleStarred
     } = this.props;
+
     return (
-      <div className="play-list-tile cursor_pointer">
+      <div
+        className={
+          isVideoChecked
+            ? "play-list-tile-select cursor_pointer"
+            : "play-list-tile cursor_pointer"
+        }
+      >
         <div
           onClick={() => this.props.handleShowVideo(index)}
           onMouseLeave={() => {

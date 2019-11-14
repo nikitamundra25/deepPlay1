@@ -74,7 +74,7 @@
   top: -75px;
   left: 50%;
   transform: translateX(-50%);
-  transition:all 0.5s;
+  transition: all 0.5s;
   z-index: 99;
   // padding: 8px 12px 12px 8px;
   // background: #f1f1f1;
@@ -96,10 +96,10 @@
     }
   }
 }
-.sticky-header{
-  .selected-detail-page{
+.sticky-header {
+  .selected-detail-page {
     position: fixed;
-    top:15px!important;
+    top: 15px !important;
   }
 }
 .video-effect {
@@ -142,5 +142,9 @@ div[data-react-beautiful-dnd-drag-handle] {
 }
 .play-list-tile {
   width: 100%;
+  padding: 0px 15px;
+}
+.play-list-tile-select {
+  width: 25%;
   padding: 0px 15px;
 }

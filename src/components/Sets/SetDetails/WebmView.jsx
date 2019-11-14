@@ -418,7 +418,6 @@ class WebmView extends Component {
       videoData,
       tagsList
     } = this.props;
-    console.log(">>>", allSetList);
 
     const { modelDetails } = modelInfoReducer;
     const {
