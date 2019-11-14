@@ -138,7 +138,7 @@ const downloadYoutubeVideo = async (
           ytdl(body.url).pipe(
             (videoStream = fs.createWriteStream(originalVideoPath))
           );
-          videoStream.on("close", async function() {
+          videoStream.on("close", async function () {
             const {
               frames: framesArray,
               videoMetaData,
@@ -577,7 +577,7 @@ const updateMoveDetailsAndTrimVideo = async (
 
       const fileName = `${
         result.videoUrl.split(".")[0]
-      }_clip_${moment().unix()}.webm`;
+        }_clip_${moment().unix()}.webm`;
       let videoFileMain: String | any, videoOriginalFile: String | any;
       if (IsProductionMode) {
         videoFileMain = path.join(__dirname, `${fileName}`);
@@ -749,7 +749,7 @@ const isStarredMove = async (req: Request, res: Response): Promise<any> => {
     return res.status(200).json({
       message: `Move has been ${
         isStarred === "true" ? "starred" : "Unstarred"
-      } successfully!`
+        } successfully!`
     });
   } catch (error) {
     console.log(error);
@@ -905,53 +905,53 @@ const addTagsInMove = async (req: Request, res: Response): Promise<any> => {
     const { body } = req;
     const { data } = body;
     const { tags, moveId, fromMoveList } = data;
-    let tagArrList: Document | any = [];
     if (!moveId) {
       res.status(400).json({
         message: "MoveId not found"
       });
     }
     for (let index = 0; index < moveId.length; index++) {
-      const element = moveId;
-      console.log("element", element);
-      let temp: Document | any = await MoveModel.find(
-        { _id: element },
-        { tags: 1 }
-      );
-      let tagArr: Document | any = temp[0].tags;
-      for (let index = 0; index < tagArr.length; index++) {
-        const oldTag: String | any | null =
-          tagArr && tagArr.length ? tagArr[index].label : "";
-        console.log("oldTag", oldTag);
-        tagArrList = [...tagArrList, oldTag];
-        for (let index = 0; index < tags.length; index++) {
-          const newTag: Document | any | null = tags[index];
-          console.log("newTag", newTag);
-          if (oldTag !== newTag) {
-            console.log("Not  exist");
-            tagArrList = [...tagArrList, newTag];
+      const moveid = moveId[index];
+      const result: Document | null | any = await MoveModel.findById(moveid, { tags: 1 })
+      const tagArr: Document | any | null = result.tags
+      if (tagArr && tagArr.length) {
+        let TagArray: any = []
+        for (let index = 0; index < tagArr.length; index++) {
+          const oldTags = tagArr[index];
+          for (let j = 0; j < tags.length; j++) {
+            const newTags = tags[j];
+            if (oldTags.label !== newTags.label) {
+              TagArray.push(
+                oldTags,
+                newTags
+              )
+            }
           }
-          console.log("tagArrList", tagArrList);
         }
+        console.log("TagArray", TagArray);
+        await MoveModel.updateOne(
+          { _id: moveid },
+          {
+            $set: {
+              tags: TagArray
+            }
+          }
+        );
+      } else {
+        console.log("This is else condition");
+        
+        await MoveModel.updateOne(
+          { _id: moveid },
+          {
+            $set: {
+              tags: tags
+            }
+          }
+        );
       }
-      await MoveModel.updateOne(
-        { _id: element },
-        {
-          $set: {
-            tags: tagArrList
-          }
-        }
-      );
+
     }
 
-    // await MoveModel.updateMany(
-    //   { _id: { $in: moveId } },
-    //   {
-    //     $set: {
-    //       tags: tags
-    //     }
-    //   }
-    // );
     if (fromMoveList) {
       return res.status(200).json({
         message: "Tags have been updated successfully"
