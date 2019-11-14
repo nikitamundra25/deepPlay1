@@ -138,7 +138,7 @@ const downloadYoutubeVideo = async (
           ytdl(body.url).pipe(
             (videoStream = fs.createWriteStream(originalVideoPath))
           );
-          videoStream.on("close", async function () {
+          videoStream.on("close", async function() {
             const {
               frames: framesArray,
               videoMetaData,
@@ -182,9 +182,6 @@ const downloadYoutubeVideo = async (
 /**
  *
  */
-/**
- *
- */
 const getVideoFrames = async (videoName: string): Promise<any> => {
   let videoURL: string;
   if (IsProductionMode) {
@@ -202,29 +199,78 @@ const getVideoFrames = async (videoName: string): Promise<any> => {
   const dirName: string = videoURL;
   const video = await new ffmpeg(videoURL);
   const videoDuration = (video.metadata.duration as any).seconds;
-  console.log(dirName, "dirName");
+  console.log("dirName", videoDuration);
   return await new Promise((resolve, reject) => {
-    video.fnExtractFrameToJPG(
-      `${dirName.split(".")[0]}_frames`,
-      {
-        start_time: 0,
-        every_n_percentage: 10
-      },
-      (error: any, file: any) => {
-        console.log(error);
-        if (error) {
-          reject(error);
+    if (videoDuration <= 100) {
+      console.log("Inside smallest Video");
+      video.fnExtractFrameToJPG(
+        `${dirName.split(".")[0]}_frames`,
+        {
+          start_time: 0,
+          every_n_frames: 80
+        },
+        (error: any, file: any) => {
+          console.log(error);
+          if (error) {
+            reject(error);
+          }
+          console.log("====================================");
+          console.log(file);
+          console.log("====================================");
+          const frames: string[] = (file as any).map((f: string) => {
+            const fArray = f.split("/");
+            return `${fArray[fArray.length - 2]}/${fArray[fArray.length - 1]}`;
+          });
+          resolve({ frames, videoMetaData: video.metadata, videoName });
         }
-        console.log("====================================");
-        console.log(file);
-        console.log("====================================");
-        const frames: string[] = (file as any).map((f: string) => {
-          const fArray = f.split("/");
-          return `${fArray[fArray.length - 2]}/${fArray[fArray.length - 1]}`;
-        });
-        resolve({ frames, videoMetaData: video.metadata, videoName });
-      }
-    );
+      );
+    } else if (videoDuration <= 500) {
+      console.log("inside first ");
+      video.fnExtractFrameToJPG(
+        `${dirName.split(".")[0]}_frames`,
+        {
+          start_time: 0,
+          every_n_seconds: 20
+        },
+        (error: any, file: any) => {
+          console.log(error);
+          if (error) {
+            reject(error);
+          }
+          console.log("====================================");
+          console.log(file);
+          console.log("====================================");
+          const frames: string[] = (file as any).map((f: string) => {
+            const fArray = f.split("/");
+            return `${fArray[fArray.length - 2]}/${fArray[fArray.length - 1]}`;
+          });
+          resolve({ frames, videoMetaData: video.metadata, videoName });
+        }
+      );
+    } else {
+      console.log("Inside Feeee Video");
+      video.fnExtractFrameToJPG(
+        `${dirName.split(".")[0]}_frames`,
+        {
+          start_time: 0,
+          every_n_percentage: 10
+        },
+        (error: any, file: any) => {
+          console.log(error);
+          if (error) {
+            reject(error);
+          }
+          console.log("====================================");
+          console.log(file);
+          console.log("====================================");
+          const frames: string[] = (file as any).map((f: string) => {
+            const fArray = f.split("/");
+            return `${fArray[fArray.length - 2]}/${fArray[fArray.length - 1]}`;
+          });
+          resolve({ frames, videoMetaData: video.metadata, videoName });
+        }
+      );
+    }
   });
 };
 /*  */
@@ -297,6 +343,7 @@ const getMoveBySetId = async (req: Request, res: Response): Promise<any> => {
     if (query.isStarred === "true") {
       movesData = await MoveModel.find({
         setId: query.setId,
+        userId: headToken.id,
         isDeleted: false,
         isStarred: true
       })
@@ -307,33 +354,40 @@ const getMoveBySetId = async (req: Request, res: Response): Promise<any> => {
     } else {
       const moveListData: Document | any = await MoveModel.find({
         setId: query.setId,
-        isDeleted: false
+        userId: headToken.id,
+        isDeleted: false,
+        moveURL: { $ne: null }
       }).sort({ sortIndex: 1 });
 
-      let isRepetedSortIndex: Boolean = false
+      let isRepetedSortIndex: Boolean = false;
       if (moveListData && moveListData.length) {
         for (let index = 0; index < moveListData.length; index++) {
           const element = moveListData[index].sortIndex;
-          const check = moveListData.filter((item: any) => item.sortIndex === element)
+          const check = moveListData.filter(
+            (item: any) => item.sortIndex === element
+          );
           if (check && check.length > 1) {
-            isRepetedSortIndex = true
+            isRepetedSortIndex = true;
           }
         }
       }
-      let num: number = 0
+      let num: number = 0;
       if (isRepetedSortIndex) {
         for (let index = 0; index < moveListData.length; index++) {
-          await MoveModel.updateOne({
-            _id: moveListData[index]._id
-          }, {
-            sortIndex: ++num
-          })
-
+          await MoveModel.updateOne(
+            {
+              _id: moveListData[index]._id
+            },
+            {
+              sortIndex: ++num
+            }
+          );
         }
       }
 
       movesData = await MoveModel.find({
         setId: query.setId,
+        userId: headToken.id,
         isDeleted: false,
         moveURL: { $ne: null }
       })
@@ -350,6 +404,7 @@ const getMoveBySetId = async (req: Request, res: Response): Promise<any> => {
     if (query.isStarred === "true") {
       totalMoves = await MoveModel.count({
         setId: query.setId,
+        userId: headToken.id,
         isDeleted: false,
         isStarred: true,
         moveURL: { $ne: null }
@@ -357,6 +412,7 @@ const getMoveBySetId = async (req: Request, res: Response): Promise<any> => {
     } else {
       totalMoves = await MoveModel.count({
         setId: query.setId,
+        userId: headToken.id,
         isDeleted: false,
         moveURL: { $ne: null }
       });
@@ -404,13 +460,13 @@ const publicUrlMoveDetails = async (
 ): Promise<any> => {
   try {
     const { query } = req;
-    const { setId, isPublic, fromFolder, page, limit } = query;
+    const { setId, isPublic, fromFolder, page, limit, userId } = query;
     const decryptedSetId = decrypt(setId);
-    let result: Document | any | null, totalMove: Document | any | null
+    const decryptedUserId = decrypt(userId);
+    let result: Document | any | null, totalMove: Document | any | null;
     let temp: Document | any | null, movesData: Document | any;
     const pageNumber: number = ((parseInt(page) || 1) - 1) * (limit || 20);
     const limitNumber: number = parseInt(limit) || 20;
-
     if (fromFolder) {
       temp = {
         isPublic: true
@@ -425,6 +481,7 @@ const publicUrlMoveDetails = async (
     if (temp.isPublic) {
       result = await MoveModel.find({
         setId: decryptedSetId,
+        userId: decryptedUserId,
         isDeleted: false,
         moveURL: { $ne: null }
       })
@@ -434,10 +491,10 @@ const publicUrlMoveDetails = async (
 
       totalMove = await MoveModel.count({
         setId: decryptedSetId,
+        userId: decryptedUserId,
         isDeleted: false,
         moveURL: { $ne: null }
-      })
-
+      });
     } else {
       return res.status(400).json({
         message: {
@@ -520,7 +577,7 @@ const updateMoveDetailsAndTrimVideo = async (
 
       const fileName = `${
         result.videoUrl.split(".")[0]
-        }_clip_${moment().unix()}.webm`;
+      }_clip_${moment().unix()}.webm`;
       let videoFileMain: String | any, videoOriginalFile: String | any;
       if (IsProductionMode) {
         videoFileMain = path.join(__dirname, `${fileName}`);
@@ -692,7 +749,7 @@ const isStarredMove = async (req: Request, res: Response): Promise<any> => {
     return res.status(200).json({
       message: `Move has been ${
         isStarred === "true" ? "starred" : "Unstarred"
-        } successfully!`
+      } successfully!`
     });
   } catch (error) {
     console.log(error);
@@ -731,6 +788,7 @@ const deleteMove = async (req: Request, res: Response): Promise<any> => {
         objectIds = [...objectIds, result[0].objectId];
       }
     }
+
     if (objectIds) {
       index.deleteObjects(objectIds, (err: string, content: any) => {
         if (err) throw err;
@@ -799,7 +857,8 @@ const filterMove = async (req: Request, res: Response): Promise<any> => {
     condition.$and.push({
       isDeleted: false,
       setId: setId,
-      userId: headToken.id
+      userId: headToken.id,
+      moveURL: { $ne: null }
     });
 
     if (search) {
@@ -1045,7 +1104,8 @@ const getMoveBySearch = async (req: Request, res: Response): Promise<any> => {
             $regex: new RegExp(search.trim(), "i")
           },
           isDeleted: false,
-          isStarred: true
+          isStarred: true,
+          moveURL: { $ne: null }
         })
           .populate({
             path: "setId",
@@ -1060,7 +1120,8 @@ const getMoveBySearch = async (req: Request, res: Response): Promise<any> => {
             $regex: new RegExp(search.trim(), "i")
           },
           isDeleted: false,
-          userId: headToken.id
+          userId: headToken.id,
+          moveURL: { $ne: null }
         })
           .populate({
             path: "setId",
@@ -1080,7 +1141,8 @@ const getMoveBySearch = async (req: Request, res: Response): Promise<any> => {
         title: {
           $regex: new RegExp(search.trim(), "i")
         },
-        isDeleted: false
+        isDeleted: false,
+        moveURL: { $ne: null }
       });
     }
     return res.status(200).json({

@@ -46,11 +46,19 @@ class LoginComponent extends React.Component {
     const { name, value } = e.target;
     if (name === "email") {
       this.setState({
-        [name]: value.trim()
+        [name]: value.trim(),
+        errors: {
+          ...this.state.errors,
+          [name]: null
+        }
       });
     } else {
       this.setState({
-        [name]: value
+        [name]: value,
+        errors: {
+          ...this.state.errors,
+          [name]: null
+        }
       });
     }
   };
@@ -173,7 +181,7 @@ class LoginComponent extends React.Component {
               </CardHeader>
               <CardBody className="px-lg-5">
                 <div className="text-center login-heading mb-4 auth-subheading">
-                 <span> Or sign in with credentials</span>
+                  <span> Or sign in with credentials</span>
                 </div>
                 <Form onSubmit={this.handleLoginRequest}>
                   <FormGroup className="mb-3">

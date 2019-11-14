@@ -199,7 +199,7 @@ class MoveComponent extends React.Component {
                   {isVideoDownloading ? (
                     <div className="url-update-wrap text-center download-process-container">
                       <Progress animated value={100} />
-                      <h5>Please wait while we upload video for you.</h5>
+                      <h5>Please wait while we upload your video.</h5>
                       <p>
                         Please do not refresh or close this page while we are
                         processing.

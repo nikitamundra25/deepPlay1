@@ -23,7 +23,8 @@ const initialState = {
   isMoveStarLoading: {
     index: 0,
     loading: false
-  }
+  },
+  isVideoFromSearch: false
 };
 
 export const moveReducer = handleActions(
@@ -44,7 +45,7 @@ export const moveReducer = handleActions(
     }),
     [MovesAction.GET_MOVES_OF_SET_REQUEST]: (state, { payload }) => ({
       ...state,
-      isMoveofSetLoading: false,
+      isMoveofSetLoading: true,
       isMoveList: payload.isMoveList ? true : false
     }),
     [MovesAction.GET_MOVES_OF_SET_SUCCESS]: (state, { payload }) => ({
@@ -107,7 +108,7 @@ export const moveReducer = handleActions(
     }),
     [MovesAction.GET_MOVE_BY_SEARCH_REQUEST]: (state, { payload }) => ({
       ...state,
-      isMoveofSetLoading: false
+      isMoveofSetLoading: true
     }),
     [MovesAction.GET_MOVE_BY_SEARCH_SUCCESS]: (state, { payload }) => ({
       ...state,
@@ -151,6 +152,10 @@ export const moveReducer = handleActions(
     [MovesAction.VIDEO_FULLSCREEN_EXIT]: (state, { payload }) => ({
       ...state,
       isFullScreenMode: false
+    }),
+    [MovesAction.VIDEODATA_FROM_SEARCH]: (state, { payload }) => ({
+      ...state,
+      isVideoFromSearch: true
     })
   },
   initialState

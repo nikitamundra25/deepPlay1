@@ -137,7 +137,7 @@ a {
   min-height: 74px;
   background-color: $blackcolor;
   color: $whiteColor;
-  z-index: 99;
+  z-index: 103;
   position: relative;
   width: 100%;
   top: 0px;
@@ -285,8 +285,8 @@ a {
     }
   }
   &.set-detail-section {
-    &:not(.set-detail-editble){
-      .play-list-tile{
+    &:not(.set-detail-editble) {
+      .play-list-tile {
         width: 25%;
       }
     }
@@ -294,7 +294,7 @@ a {
       border: 2px dashed transparent;
       background: #fff;
       box-shadow: 0px 0px 5px 0px #ccc;
-      &.video-full-selection{
+      &.video-full-selection {
         border: 2px solid #4995ff;
       }
     }
@@ -333,6 +333,9 @@ a {
       .tooltip-btn-wrap {
         top: 10px;
         width: 10px;
+      }
+      .play-list-tile-select{
+        z-index: 102;
       }
       &.with-move{
         .add-play-list-block{
@@ -2216,6 +2219,20 @@ a {
 .big-tool-tip {
   z-index: 99;
 }
+.videos-move-wrap {
+  .dl-list {
+    display: flex !important;
+  }
+  .dl-item {
+    width: 25%;
+  }
+  .play-list-tile {
+    width: 100%;
+  }
+}
+.videos-loading{
+  width: 30px;
+}
 
 // media query start
 @media (max-width: 1199px) {
@@ -2240,13 +2257,15 @@ a {
     position: absolute !important;
     left: auto !important;
   }
-  .play-list-collection{
-  &.set-detail-section {
-    &:not(.set-detail-editble){
-      .play-list-tile{
-        width: 33.33%;
+  .play-list-collection {
+    &.set-detail-section {
+      &:not(.set-detail-editble) {
+        .play-list-tile {
+          width: 33.33%;
+        }
       }
-    }}}
+    }
+  }
 }
 @media (max-width: 1024px) {
   .content-with-img {
@@ -2307,14 +2326,19 @@ a {
 .video-thumbnail-block {
   z-index: 9;
 }
+.reset-header-background {
+  background: #000;
+}
 @media (max-width: 991px) {
-  .play-list-collection{
+  .play-list-collection {
     &.set-detail-section {
-      &:not(.set-detail-editble){
-        .play-list-tile{
+      &:not(.set-detail-editble) {
+        .play-list-tile {
           width: 50%;
         }
-      }}}
+      }
+    }
+  }
   .theme-header {
     min-height: 60px;
     .navbar-main.navbar {
@@ -2541,14 +2565,3 @@ a {
 }
 // media query end
 // Please don't write other css in the bottom of media query
-.videos-move-wrap {
-  .dl-list {
-    display: flex !important;
-  }
-  .dl-item {
-    width: 25%;
-  }
-  .play-list-tile {
-    width: 100%;
-  }
-}

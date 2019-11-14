@@ -39,7 +39,8 @@ export const MovesAction = {
   GET_TAG_LIST_REQUEST: "Get Tags List Request",
   GET_TAG_LIST_SUCCESS: "Get Tags List Success",
   VIDEO_FULLSCREEN_REQ: "Video Fullscreen Request",
-  VIDEO_FULLSCREEN_EXIT: "Video Fullscreen Exit"
+  VIDEO_FULLSCREEN_EXIT: "Video Fullscreen Exit",
+  VIDEODATA_FROM_SEARCH: "Video data from search"
 };
 
 export const downloadYoutubeVideoRequest = createAction(
@@ -149,3 +150,5 @@ export const videoFullscreenReq = createAction(
 export const videoFullscreenExit = createAction(
   MovesAction.VIDEO_FULLSCREEN_EXIT
 );
+
+export const videoDataFromSearch = createAction(MovesAction.VIDEODATA_FROM_SEARCH);

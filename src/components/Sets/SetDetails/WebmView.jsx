@@ -46,49 +46,57 @@ class WebmView extends Component {
   /**
    *
    */
-  componentDidUpdate = ({ isVideoModalOpen, videoData, isFullScreenMode }) => {
+  componentDidUpdate = ({
+    isVideoModalOpen,
+    videoData,
+    isFullScreenMode,
+    isVideoFromSearch
+  }) => {
     if (isFullScreenMode !== this.props.isFullScreenMode) {
+      console.log("this.props.isFullScreenMode", this.props.isFullScreenMode);
       const videoFullScreen = true;
       this.video = document.getElementById("webm-video");
-      this.video.addEventListener("volumechange", () => {
-        if (
-          (this.video.volume === 0 || this.video.volume === 1) &&
-          this.video.muted
-        ) {
-          this.setState({
-            isMuted: true,
-            audioSpeed: 0
-          });
-        } else {
-          this.setState({
-            isMuted: false,
-            audioSpeed: this.video.volume
-          });
-        }
-      });
-      this.video.addEventListener("pause", () => {
-        this.setState({
-          isPlaying: false
-        });
-      });
-      this.video.addEventListener("play", () => {
-        this.setState({
-          isPlaying: true
-        });
-      });
-      if (this.props.isFullScreenMode && videoFullScreen) {
-        let isVideoScreenChange = false;
-        this.video.addEventListener("webkitfullscreenchange", () => {
-          console.log("function");
-          this.setState({
-            isFullScreenMode: false
-          });
-          if (!isVideoScreenChange) {
-            this.props.videoFullscreenExit();
+      if (this.video) {
+        this.video.addEventListener("volumechange", () => {
+          if (
+            (this.video.volume === 0 || this.video.volume === 1) &&
+            this.video.muted
+          ) {
+            this.setState({
+              isMuted: true,
+              audioSpeed: 0
+            });
+          } else {
+            this.setState({
+              isMuted: false,
+              audioSpeed: this.video.volume
+            });
           }
         });
+        this.video.addEventListener("pause", () => {
+          this.setState({
+            isPlaying: false
+          });
+        });
+        this.video.addEventListener("play", () => {
+          this.setState({
+            isPlaying: true
+          });
+        });
+        if (this.props.isFullScreenMode && videoFullScreen) {
+          let isVideoScreenChange = false;
+          this.video.addEventListener("webkitfullscreenchange", () => {
+            console.log("function");
+            this.setState({
+              isFullScreenMode: false
+            });
+            if (!isVideoScreenChange) {
+              this.props.videoFullscreenExit();
+            }
+          });
+        }
+        this.video.controls = false;
       }
-      this.video.controls = false;
     }
     if (isVideoModalOpen !== this.props.isVideoModalOpen) {
       this.props.loadVideoDataRequest(this.props.showVideo);
@@ -105,40 +113,83 @@ class WebmView extends Component {
     if (videoData !== this.props.videoData) {
       this.video = document.getElementById("webm-video");
       this.customVideo = document.getElementById("custom_video_control");
-      console.log("this.customVideo", this.customVideo);
-
-      this.video.addEventListener("timeupdate", () => {
-        const currentVideoTime = parseFloat(this.video.currentTime).toFixed(2);
-        this.setState({
-          currentTime: currentVideoTime
+      if (this.video) {
+        console.log("videoDurationvideoDurationvideoDuration", this.video);
+        this.video.addEventListener("timeupdate", () => {
+          const currentVideoTime = parseFloat(
+            this.video ? this.video.currentTime : 0
+          ).toFixed(2);
+          this.setState({
+            currentTime: currentVideoTime
+          });
         });
-      });
-      this.video.addEventListener("ended", () => {
-        this.setState({
-          isPlaying: true
+        this.video.addEventListener("ended", () => {
+          this.setState({
+            isPlaying: true
+          });
         });
-      });
 
-      this.video.load();
-      let timeDuration = [];
-      this.video.onloadeddata = () => {
-        const { duration, videoHeight, videoWidth } = this.video;
-        for (let index = 0; index < duration; index = index + duration / 20) {
-          timeDuration.push(index);
-        }
-        const data = {
-          timeDuration: timeDuration,
-          videoMaxDuration: duration
+        this.video.load();
+        let timeDuration = [];
+        this.video.onloadeddata = () => {
+          const { duration, videoHeight, videoWidth } = this.video;
+          for (let index = 0; index < duration; index = index + duration / 20) {
+            timeDuration.push(index);
+          }
+          const data = {
+            timeDuration: timeDuration,
+            videoMaxDuration: duration
+          };
+          this.setState({
+            videoDuration: data,
+            videoDimentions: {
+              videoHeight,
+              videoWidth
+            },
+            isPlaying: true
+          });
         };
-        this.setState({
-          videoDuration: data,
-          videoDimentions: {
-            videoHeight,
-            videoWidth
-          },
-          isPlaying: true
+      }
+    }
+    if (isVideoFromSearch !== this.props.isVideoFromSearch) {
+      this.video = document.getElementById("webm-video");
+      this.customVideo = document.getElementById("custom_video_control");
+      if (this.video) {
+        this.video.addEventListener("timeupdate", () => {
+          const currentVideoTime = parseFloat(this.video.currentTime).toFixed(
+            2
+          );
+          this.setState({
+            currentTime: currentVideoTime
+          });
         });
-      };
+        this.video.addEventListener("ended", () => {
+          this.setState({
+            isPlaying: true
+          });
+        });
+
+        this.video.load();
+        let timeDuration = [];
+        this.video.onloadeddata = () => {
+          const { duration, videoHeight, videoWidth } = this.video;
+          for (let index = 0; index < duration; index = index + duration / 20) {
+            timeDuration.push(index);
+          }
+          const data = {
+            timeDuration: timeDuration,
+            videoMaxDuration: duration
+          };
+          this.setState({
+            videoDuration: data,
+            videoDimentions: {
+              videoHeight,
+              videoWidth
+            },
+            isPlaying: true
+          });
+        };
+      }
     }
   };
   /**
@@ -228,11 +279,14 @@ class WebmView extends Component {
   /**
    *
    */
-  handleMoveDelete = async id => {
+  handleMoveDelete = async (id, setId) => {
     const data = {
-      moveId: id,
+      moveId: [id],
       isDeleted: true,
-      setId: this.props.setIdPathName
+      setId: this.props.setIdPathName ? this.props.setIdPathName : setId,
+      fromMoveSearch: this.props.fromMoveSearch
+        ? this.props.fromMoveSearch
+        : null
     };
     const { value } = await ConfirmBox({
       text: "You want to remove this move! "
@@ -364,6 +418,7 @@ class WebmView extends Component {
       videoData,
       tagsList
     } = this.props;
+
     const { modelDetails } = modelInfoReducer;
     const {
       transferToModalOpenReq,
@@ -486,7 +541,10 @@ class WebmView extends Component {
                         <DropdownItem
                           onClick={() =>
                             videoData
-                              ? this.handleMoveDelete(videoData._id)
+                              ? this.handleMoveDelete(
+                                  videoData._id,
+                                  videoData.setId
+                                )
                               : this.handleMoveDelete(video._id)
                           }
                         >
@@ -578,7 +636,9 @@ class WebmView extends Component {
                       <div className="video-time-wrap control-tile">
                         {SecondsToMMSS(parseInt(currentTime))} /{" "}
                         {SecondsToMMSS(
-                          parseInt(videoDuration.videoMaxDuration)
+                          parseInt(
+                            videoDuration ? videoDuration.videoMaxDuration : 0
+                          )
                         )}
                       </div>
                       <div className="volume-up-down control-tile">
