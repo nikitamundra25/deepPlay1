@@ -52,6 +52,13 @@ class HomePage extends React.Component {
       this.props.changeHeaderRequest();
     }
   };
+  constructor(props) 
+  { 
+      super(props); 
+      this.state = {
+        onPlaying: false
+      }
+    }
 
   handleDashboardOpen = () => {
     this.props.redirectTo(AppRoutes.DASHBOARD.url);
@@ -89,6 +96,15 @@ class HomePage extends React.Component {
       }
     });
   };
+  videoPlayHandler = () => {
+    const videoPlay =document.getElementById("webm-video-0");
+    this.setState({onPlaying: !this.state.onPlaying});
+    if(this.state.onPlaying == true){
+      videoPlay.pause();
+    }else{
+      videoPlay.play();
+    }
+  }
   /*
    */
   render() {
@@ -140,6 +156,11 @@ class HomePage extends React.Component {
 
               {/* videos */}
               <div className="videos-wrap d-flex justify-content-center align-items-center">
+              <span onClick={this.videoPlayHandler}>
+                {this.state.onPlaying ? <span> </span> : null
+
+                }
+              </span>
                 <video width="100%" id="webm-video-0">
                   <source
                     src="https://s3.amazonaws.com/hope.bucket/moves/1571752097935_deep-play.webm"

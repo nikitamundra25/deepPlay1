@@ -313,7 +313,7 @@ a {
       }
       &.with-move{
         .add-play-list-block{
-          min-height: unset;
+          min-height: 130px;
           padding: 10px 15px;
         }
       }
@@ -1329,8 +1329,8 @@ a {
     }
   }
   &.right-btn-tip .btn-group {
-    right: -15px;
-    top: -25px;
+    right: -14px;
+    top: -31px;
 
     &::before {
       position: absolute;
@@ -1343,7 +1343,8 @@ a {
     border: none;
     color: #fff;
     line-height: 120%;
-    font-weight: normal;
+    font-weight: normal; 
+    padding: 0.50rem 0.50rem; 
   }
 }
 .content-with-tip {

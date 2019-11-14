@@ -652,11 +652,11 @@ listenScrollEvent = e => {
                       className="play-list-block  d-flex h-100 cursor_pointer"
                       onClick={this.props.handleMoveAdd}
                     >
-                      <div className="add-play-list-block d-flex w-100 justify-content-center align-items-center text-center">
+                      <div className="add-play-list-block d-flex w-100 justify-content-center align-items-center text-center flex-column">
                         <div className="font-dark-bold add-img">
                           <img src={addPlusIc} alt="" />
                         </div>
-                        <Button color={" "} className="fill-btn btn ml-4">
+                        <Button color={" "} className="fill-btn btn mt-3">
                           Create Now
                         </Button>
                       </div>
