@@ -46,7 +46,12 @@ class WebmView extends Component {
   /**
    *
    */
-  componentDidUpdate = ({ isVideoModalOpen, videoData, isFullScreenMode, isVideoFromSearch }) => {
+  componentDidUpdate = ({
+    isVideoModalOpen,
+    videoData,
+    isFullScreenMode,
+    isVideoFromSearch
+  }) => {
     if (isFullScreenMode !== this.props.isFullScreenMode) {
       console.log("this.props.isFullScreenMode", this.props.isFullScreenMode);
       const videoFullScreen = true;
@@ -111,7 +116,9 @@ class WebmView extends Component {
       if (this.video) {
         console.log("videoDurationvideoDurationvideoDuration", this.video);
         this.video.addEventListener("timeupdate", () => {
-          const currentVideoTime = parseFloat(this.video ? this.video.currentTime : 0).toFixed(2);
+          const currentVideoTime = parseFloat(
+            this.video ? this.video.currentTime : 0
+          ).toFixed(2);
           this.setState({
             currentTime: currentVideoTime
           });
@@ -141,15 +148,17 @@ class WebmView extends Component {
             },
             isPlaying: true
           });
-        }
-      };
+        };
+      }
     }
     if (isVideoFromSearch !== this.props.isVideoFromSearch) {
       this.video = document.getElementById("webm-video");
       this.customVideo = document.getElementById("custom_video_control");
       if (this.video) {
         this.video.addEventListener("timeupdate", () => {
-          const currentVideoTime = parseFloat(this.video.currentTime).toFixed(2);
+          const currentVideoTime = parseFloat(this.video.currentTime).toFixed(
+            2
+          );
           this.setState({
             currentTime: currentVideoTime
           });
@@ -179,8 +188,8 @@ class WebmView extends Component {
             },
             isPlaying: true
           });
-        }
-      };
+        };
+      }
     }
   };
   /**
@@ -409,6 +418,7 @@ class WebmView extends Component {
       videoData,
       tagsList
     } = this.props;
+
     const { modelDetails } = modelInfoReducer;
     const {
       transferToModalOpenReq,
@@ -484,11 +494,11 @@ class WebmView extends Component {
                               videoData ? videoData._id : video._id
                             )
                           }
-                        // onClick={() =>
-                        //   this.props.onEditMove(
-                        //     videoData ? videoData._id : video._id
-                        //   )
-                        // }
+                          // onClick={() =>
+                          //   this.props.onEditMove(
+                          //     videoData ? videoData._id : video._id
+                          //   )
+                          // }
                         >
                           Edit Move Details
                         </DropdownItem>
@@ -517,10 +527,14 @@ class WebmView extends Component {
                           View Info
                         </DropdownItem>
                         <DropdownItem
-                          onClick={() => this.openTransferToModal(
-                            videoData._id,
-                            videoData.setId
-                          )}
+                          onClick={() =>
+                            videoData
+                              ? this.openTransferToModal(
+                                  videoData._id,
+                                  videoData.setId
+                                )
+                              : this.openTransferToModal(video._id, video.setId)
+                          }
                         >
                           Transfer
                         </DropdownItem>
@@ -528,9 +542,9 @@ class WebmView extends Component {
                           onClick={() =>
                             videoData
                               ? this.handleMoveDelete(
-                                videoData._id,
-                                videoData.setId
-                              )
+                                  videoData._id,
+                                  videoData.setId
+                                )
                               : this.handleMoveDelete(video._id)
                           }
                         >
@@ -580,15 +594,15 @@ class WebmView extends Component {
                         videoData && videoData.moveURL
                           ? videoData.moveURL
                           : moveURL
-                        }`}
+                      }`}
                       type="video/webm"
                     />
                   </video>
                 ) : (
-                    <div className="video-loader">
-                      <Loader videoLoader={true} />
-                    </div>
-                  )}
+                  <div className="video-loader">
+                    <Loader videoLoader={true} />
+                  </div>
+                )}
                 <div className={"controls"}>
                   <div className="control-background-wrap"></div>
                   <InputRange
@@ -611,18 +625,20 @@ class WebmView extends Component {
                             <i className={"fa fa-pause"}></i>
                           </span>
                         ) : (
-                            <span
-                              onClick={this.playVideo}
-                              className={"cursor_pointer"}
-                            >
-                              <i className={"fa fa-play"}></i>
-                            </span>
-                          )}
+                          <span
+                            onClick={this.playVideo}
+                            className={"cursor_pointer"}
+                          >
+                            <i className={"fa fa-play"}></i>
+                          </span>
+                        )}
                       </div>
                       <div className="video-time-wrap control-tile">
                         {SecondsToMMSS(parseInt(currentTime))} /{" "}
                         {SecondsToMMSS(
-                          parseInt(videoDuration ? videoDuration.videoMaxDuration : 0)
+                          parseInt(
+                            videoDuration ? videoDuration.videoMaxDuration : 0
+                          )
                         )}
                       </div>
                       <div className="volume-up-down control-tile">
@@ -633,11 +649,11 @@ class WebmView extends Component {
                             audioSpeed > 0.6 ? (
                               <i className="fas fa-volume-up"></i>
                             ) : (
-                                <i class="fas fa-volume-down"></i>
-                              )
+                              <i class="fas fa-volume-down"></i>
+                            )
                           ) : (
-                                <i class="fas fa-volume-mute"></i>
-                              )}
+                            <i class="fas fa-volume-mute"></i>
+                          )}
                         </span>
                       </div>
                       <div className="volume-range cursor_pointer control-tile">
@@ -660,7 +676,7 @@ class WebmView extends Component {
                       <div className="speed-wrap control-tile">
                         <UncontrolledDropdown
                           className="header-dropdown custom-dropdown"
-                        // direction="auto"
+                          // direction="auto"
                         >
                           <DropdownToggle
                             color={" "}
@@ -732,13 +748,13 @@ class WebmView extends Component {
                           <i className="fas fa-expand" />
                         </span>
                       ) : (
-                          <span
-                            onClick={() => this.handleVideoResizeScreen()}
-                            className="control-tile cursor_pointer"
-                          >
-                            <i className="fa fa-arrows-alt" aria-hidden="true" />
-                          </span>
-                        )}
+                        <span
+                          onClick={() => this.handleVideoResizeScreen()}
+                          className="control-tile cursor_pointer"
+                        >
+                          <i className="fa fa-arrows-alt" aria-hidden="true" />
+                        </span>
+                      )}
                     </div>
                   </div>
                 </div>
