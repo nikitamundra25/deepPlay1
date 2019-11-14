@@ -44,7 +44,7 @@ class MoveList extends React.Component {
       moveToTransfer: "",
       isVideoModalOpen: true,
       setId: "",
-      moveofSetList: this.props.movesOfSet,
+      moveofSetList: "",
       search: "",
       tags: [],
       moveIdToAddTag: "",
@@ -63,13 +63,21 @@ class MoveList extends React.Component {
   componentDidMount() {
     window.addEventListener("scroll", this.listenScrollEvent);
   }
+  /*
+  /*  
+  */
+  shouldComponentUpdate = () => {
+    if (this.props.isMoveStarLoading.loading) {
+      console.log("return false;return false;return false;return false;");
+      return false;
+    }
+    return true
+  }
+  /*
+  /*  
+  */
   listenScrollEvent = e => {
-    // if(testDiv){
-    //   testDiv.childNodes[0].style.top=testDiv.offsetTop;
-    //   console.log(testDiv.offsetTop, "------------------------------------------------------------------------------------------");
-    // }
     if (window.scrollY > 180) {
-      // var testDiv = document.getElementById("get-sticky-header");
       this.setState({ backgroundClass: "sticky-header" });
     } else {
       this.setState({ backgroundClass: "" });
@@ -82,16 +90,10 @@ class MoveList extends React.Component {
   };
 
   componentDidUpdate = prevProps => {
-    if (prevProps.movesOfSet !== this.props.movesOfSet) {
-      this.setState({
-        moveofSetList: this.props.movesOfSet
-      });
-    }
-
     if (
       prevProps.isMoveStarLoading &&
       prevProps.isMoveStarLoading.loading !==
-        this.props.isMoveStarLoading.loading
+      this.props.isMoveStarLoading.loading
     ) {
       this.setState({
         isMarkingStar: {
@@ -151,7 +153,34 @@ class MoveList extends React.Component {
       selectedMoveIds
     });
   };
-
+  /*
+   */
+  handleSelectAll = () => {
+    const moveList = this.props.movesOfSet;
+    const selectedMoves = [...this.state.selectedMoves];
+    let selectedMoveIds = [...this.state.selectedMoveIds];
+    if (moveList && moveList.length) {
+      moveList.map((list, index) => {
+        selectedMoveIds.push(list._id);
+        selectedMoves[index] = true;
+        return true;
+      });
+    }
+    this.setState({
+      isVideoChecked: true,
+      isVideoModalOpen: false,
+      selectedMoves,
+      selectedMoveIds
+    });
+  };
+  handleUnselectAll = () =>{
+    this.setState({
+      isVideoChecked: false,
+      isVideoModalOpen: false,
+      selectedMoves: [],
+      selectedMoveIds: []
+    });
+  }
   /*
    */
   handleMovesSelect = (valueCheck, e, index, moveId) => {
@@ -199,20 +228,21 @@ class MoveList extends React.Component {
     const location = this.props.location;
     const pathName = location.pathname.split("/");
     const { selectedMoveIds } = this.state;
-    let moveofSetList = [...this.state.moveofSetList];
+    let moveofSetList = this.props.movesOfSet;
+    let listData = moveofSetList
     const starDiv = document.getElementsByClassName("star-mark")[index];
     if (isStarred) {
-      moveofSetList[index].isStarred = false;
+      listData[index].isStarred = false;
       starDiv.classList.remove("isStarred");
     } else {
       starDiv.classList.add("isStarred");
-      moveofSetList[index].isStarred = true;
+      listData[index].isStarred = true;
     }
     const data = {
       moveId: selectedMoveIds.length ? selectedMoveIds : id,
       isStarred: isStarred ? false : true,
       setId: pathName[3],
-      moveofSetList: moveofSetList,
+      moveofSetList: listData,
       index
     };
     this.props.isStarred(data);
@@ -379,15 +409,8 @@ class MoveList extends React.Component {
     if (destinationIndex === sourceIndex) {
       return;
     }
-    const list = this.state.moveofSetList;
+    const list = this.props.movesOfSet;
     const items = reorder(list, sourceIndex, destinationIndex);
-    this.setState({
-      moveofSetList: items,
-      isMarkingStar: {
-        index: -1,
-        isChanging: false
-      }
-    });
     const data = {
       setId: this.props.setIdPathName,
       // moveId: draggableId,
@@ -480,17 +503,6 @@ class MoveList extends React.Component {
       [name]: value
     });
   };
-
-  handleSelectAll = () => {
-    const moveList = this.state.moveofSetList;
-    let temp = [];
-    if (moveList && moveList.length) {
-      moveList.map((list, index) => {
-        temp.push(list._id);
-        return true;
-      });
-    }
-  };
   // shouldComponentUpdate = (nextProps, nextState) =>{
   //   if (this.props.number === nextProps.number) {
   //     return false;
@@ -507,7 +519,9 @@ class MoveList extends React.Component {
       isMoveSearchLoading,
       totalMoves,
       tagsList,
-      isMoveListLoading
+      isMoveListLoading,
+      movesOfSet,
+      isMoveStarLoading
     } = this.props;
     const { modelDetails } = modelInfoReducer;
     const { transferToModalOpen, addTagModalOpen } = modelDetails;
@@ -520,7 +534,6 @@ class MoveList extends React.Component {
       setId,
       moveToTransfer,
       isVideoModalOpen,
-      moveofSetList,
       search,
       moveIdToAddTag,
       tags,
@@ -538,11 +551,11 @@ class MoveList extends React.Component {
     return (
       <section className="play-list-collection set-detail-section set-detail-editble">
         <InfiniteScroll
-          dataLength={moveofSetList.length} //This is important field to render the next data
+          dataLength={movesOfSet.length} //This is important field to render the next data
           next={() => {
             this.handleLoadmoreRequest(setIdPathName);
           }}
-          hasMore={totalMoves !== moveofSetList.length ? true : false}
+          hasMore={totalMoves !== movesOfSet.length ? true : false}
           loader={<Loader />}
         >
           <Row className={"m-0"}>
@@ -602,7 +615,7 @@ class MoveList extends React.Component {
                 selectedMoveIds && selectedMoveIds.length
                   ? "select-focus-event"
                   : null
-              } `}
+                } `}
             >
               {selectedMoveIds && selectedMoveIds.length ? (
                 <div className={` ${backgroundClass}`} id="get-sticky-header">
@@ -622,12 +635,21 @@ class MoveList extends React.Component {
                         <span className={"d-flex"}>
                           <ButtonGroup size="lg">
                             <Button
-                              onClick={() => this.handleSelectAll()}
+                              onClick={
+                                () => 
+                                selectedMoveIds.length >= movesOfSet.length?
+                                this.handleUnselectAll():
+                                this.handleSelectAll()
+                              }
                               className=" "
                               color=" "
                             >
                               <img src={addTag} alt="" className="mr-1" />{" "}
-                              Select all
+                              {
+                                selectedMoveIds.length >= movesOfSet.length?
+                                "Unselect all":
+                                "Select all"
+                              }
                             </Button>
                             <Button
                               onClick={() => this.openAddTagsModal()}
@@ -695,8 +717,8 @@ class MoveList extends React.Component {
                       </div>
                     </div>
                   </div>
-                  {selectedMoveIds && selectedMoveIds.length ? (
-                    moveofSetList.map((video, index) => {
+                  {(selectedMoveIds && selectedMoveIds.length) ? (
+                    movesOfSet.map((video, index) => {
                       return (
                         <MoveListDetails
                           index={index}
@@ -720,43 +742,43 @@ class MoveList extends React.Component {
                       );
                     })
                   ) : (
-                    <ListManager
-                      items={moveofSetList}
-                      direction="horizontal"
-                      maxItems={4}
-                      render={video => {
-                        let index = video.id;
-                        return (
-                          <MoveListDetails
-                            index={index}
-                            isVideoChecked={isVideoChecked}
-                            selectedMoves={selectedMoves}
-                            handleShowVideo={this.props.handleShowVideo}
-                            handleVideoHover={this.handleVideoHover}
-                            handleVideoPause={this.handleVideoPause}
-                            handleVideoHoverLeave={this.handleVideoHoverLeave}
-                            handleVideoPlay={this.handleVideoPlay}
-                            handleMovesSelect={this.handleMovesSelect}
-                            isMarkingStar={isMarkingStar}
-                            video={video}
-                            isSelectVideo={isSelectVideo}
-                            videoIndex={videoIndex}
-                            isVideoModalOpen={isVideoModalOpen}
-                            handleStarred={this.handleStarred}
-                            handleVideoCheckBox={this.handleVideoCheckBox}
-                            handleVideoModal={this.props.handleVideoModal}
-                          />
-                        );
-                      }}
-                      onDragEnd={this.reorderList}
-                    />
-                  )}
+                      <ListManager
+                        items={movesOfSet}
+                        direction="horizontal"
+                        maxItems={4}
+                        render={video => {
+                          let index = video.id;
+                          return (
+                            <MoveListDetails
+                              index={index}
+                              isVideoChecked={isVideoChecked}
+                              selectedMoves={selectedMoves}
+                              handleShowVideo={this.props.handleShowVideo}
+                              handleVideoHover={this.handleVideoHover}
+                              handleVideoPause={this.handleVideoPause}
+                              handleVideoHoverLeave={this.handleVideoHoverLeave}
+                              handleVideoPlay={this.handleVideoPlay}
+                              handleMovesSelect={this.handleMovesSelect}
+                              isMarkingStar={isMarkingStar}
+                              video={video}
+                              isSelectVideo={isSelectVideo}
+                              videoIndex={videoIndex}
+                              isVideoModalOpen={isVideoModalOpen}
+                              handleStarred={this.handleStarred}
+                              handleVideoCheckBox={this.handleVideoCheckBox}
+                              handleVideoModal={this.props.handleVideoModal}
+                            />
+                          );
+                        }}
+                        onDragEnd={this.reorderList}
+                      />
+                    )}
                 </div>
               ) : (
-                <Col>
-                  <Loader />
-                </Col>
-              )}
+                  <Col>
+                    <Loader />
+                  </Col>
+                )}
             </div>
           </Row>
           <TransferToModal
@@ -778,7 +800,7 @@ class MoveList extends React.Component {
             addTagstoMove={this.addTagstoMove}
             handleTagChange={this.handleTagChange}
             moveIndexToAddTag={moveIndexToAddTag}
-            moveofSetList={moveofSetList}
+            moveofSetList={movesOfSet}
             fromMoveList={true}
           />
         </InfiniteScroll>

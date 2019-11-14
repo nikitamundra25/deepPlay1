@@ -3,6 +3,7 @@ import { Input } from "reactstrap";
 import starIc from "../../../assets/img/star.svg";
 import "./index.scss";
 import blankStar from "../../../assets/img/star-line.svg";
+import videoLoading from "../../../assets/img/icons/videoLoading.svg"
 
 class MoveListDetails extends React.Component {
   render() {
@@ -149,6 +150,7 @@ class MoveListDetails extends React.Component {
                   <video
                     width={"100%"}
                     id={`webm-video-${index}`}
+                    poster={videoLoading}
                     muted={true}
                     loop
                   >
