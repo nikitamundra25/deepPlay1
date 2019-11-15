@@ -173,7 +173,7 @@ class MoveList extends React.Component {
       selectedMoveIds
     });
   };
-  handleUnselectAll = () =>{
+  handleUnselectAll = () => {
     this.setState({
       isVideoChecked: false,
       isVideoModalOpen: false,
@@ -521,7 +521,6 @@ class MoveList extends React.Component {
       tagsList,
       isMoveListLoading,
       movesOfSet,
-      isMoveStarLoading
     } = this.props;
     const { modelDetails } = modelInfoReducer;
     const { transferToModalOpen, addTagModalOpen } = modelDetails;
@@ -636,19 +635,19 @@ class MoveList extends React.Component {
                           <ButtonGroup size="lg">
                             <Button
                               onClick={
-                                () => 
-                                selectedMoveIds.length >= movesOfSet.length?
-                                this.handleUnselectAll():
-                                this.handleSelectAll()
+                                () =>
+                                  selectedMoveIds.length >= movesOfSet.length ?
+                                    this.handleUnselectAll() :
+                                    this.handleSelectAll()
                               }
                               className=" "
                               color=" "
                             >
                               <img src={addTag} alt="" className="mr-1" />{" "}
                               {
-                                selectedMoveIds.length >= movesOfSet.length?
-                                "Unselect all":
-                                "Select all"
+                                selectedMoveIds.length >= movesOfSet.length ?
+                                  "Unselect all" :
+                                  "Select all"
                               }
                             </Button>
                             <Button
