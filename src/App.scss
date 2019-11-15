@@ -2250,6 +2250,12 @@ a {
   z-index: 9;
   display: flex;
   flex-wrap: wrap;
+  &>div{
+    width: 100%;
+  }
+  &>.play-list-tile-select{
+    width: 25%;
+  }
 }
 
 // media query start
@@ -2286,6 +2292,9 @@ a {
   }
 }
 @media (max-width: 1024px) {
+  .edit-view-wrap>.play-list-tile-select{
+    width: 50%;
+  }
   .content-with-img {
     align-items: flex-start;
     .cotent-text-tile {
