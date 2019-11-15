@@ -6,7 +6,6 @@
     "outDir": "./dist",
     "strict": true,
     "esModuleInterop": true,
-    "typeRoots": ["./types"],
-    "downlevelIteration": true
+    "typeRoots": ["./types"]
   }
 }

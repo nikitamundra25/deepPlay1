@@ -138,7 +138,7 @@ const downloadYoutubeVideo = async (
           ytdl(body.url).pipe(
             (videoStream = fs.createWriteStream(originalVideoPath))
           );
-          videoStream.on("close", async function() {
+          videoStream.on("close", async function () {
             const {
               frames: framesArray,
               videoMetaData,
@@ -577,7 +577,7 @@ const updateMoveDetailsAndTrimVideo = async (
 
       const fileName = `${
         result.videoUrl.split(".")[0]
-      }_clip_${moment().unix()}.webm`;
+        }_clip_${moment().unix()}.webm`;
       let videoFileMain: String | any, videoOriginalFile: String | any;
       if (IsProductionMode) {
         videoFileMain = path.join(__dirname, `${fileName}`);
@@ -749,7 +749,7 @@ const isStarredMove = async (req: Request, res: Response): Promise<any> => {
     return res.status(200).json({
       message: `Move has been ${
         isStarred === "true" ? "starred" : "Unstarred"
-      } successfully!`
+        } successfully!`
     });
   } catch (error) {
     console.log(error);
@@ -917,17 +917,13 @@ const addTagsInMove = async (req: Request, res: Response): Promise<any> => {
       });
       const tagArr: Document | any | null = result.tags;
       if (tagArr && tagArr.length) {
-        let TagArray: { label: string }[] = [];
-        const distinctTags: any[] = Array(
-          new Set(tagArr.map((d: { label: string }) => d.label))
-        );
-        console.log("==========================>>>>", distinctTags);
-        TagArray = [...TagArray, ...distinctTags];
+        let oldTagArray: { label: string }[] = tagArr;
+        var array3 = oldTagArray.concat(tags.filter((item: any) => oldTagArray.findIndex((tag:any) => tag.label === item.label) < 0)) 
         await MoveModel.updateOne(
           { _id: moveid },
           {
             $set: {
-              tags: distinctTags[0].Set
+              tags: array3
             }
           }
         );
