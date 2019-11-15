@@ -11,7 +11,8 @@ import {
   CardBody,
   CardTitle,
   CardHeader,
-  ButtonGroup
+  ButtonGroup,
+  FormFeedback
 } from "reactstrap";
 import Validator from "js-object-validation";
 import Swal from "sweetalert2";
@@ -72,7 +73,11 @@ class SettingComponent extends Component {
   handleChange = e => {
     const { name, value } = e.target;
     this.setState({
-      [name]: value.replace(/[^\w\s]|[0-9]|[_]/gi, "").trim()
+      [name]: value.replace(/[^\w\s]|[0-9]|[_]/gi, "").trim(),
+      errors: {
+        ...this.state.errors,
+        [name]: null
+      }
     });
   };
 
@@ -189,6 +194,7 @@ class SettingComponent extends Component {
       splitedImage[0] === "uploads"
         ? `${AppConfig.API_ENDPOINT}${this.state.file}`
         : this.state.file;
+
     return (
       <div>
         <div className="setting-section">
@@ -294,15 +300,15 @@ class SettingComponent extends Component {
                               type="text"
                               disabled={isDisabled}
                               onChange={this.handleChange}
+                              className={errors.firstName ? "is-invalid" : ""}
                               value={firstName}
                               name="firstName"
                             />
-                            {errors.firstName && !firstName ? (
-                              <p style={{ color: "red" }}>
-                                {" "}
-                                {errors.firstName}{" "}
-                              </p>
-                            ) : null}
+                            <FormFeedback>
+                              {errors.firstName || !firstName
+                                ? errors.firstName
+                                : null}
+                            </FormFeedback>
                           </FormGroup>
                         </Col>
                         <Col md="6">
@@ -313,16 +319,16 @@ class SettingComponent extends Component {
                               placeholder="Doe"
                               type="text"
                               disabled={isDisabled}
+                              className={errors.lastName ? "is-invalid" : ""}
                               onChange={this.handleChange}
                               value={lastName}
                               name="lastName"
                             />
-                            {errors.lastName && !lastName ? (
-                              <p style={{ color: "red" }}>
-                                {" "}
-                                {errors.lastName}{" "}
-                              </p>
-                            ) : null}
+                            <FormFeedback>
+                              {errors.lastName || !lastName
+                                ? errors.lastName
+                                : null}
+                            </FormFeedback>
                           </FormGroup>
                         </Col>
                       </Row>

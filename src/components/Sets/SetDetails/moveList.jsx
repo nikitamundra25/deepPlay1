@@ -630,21 +630,18 @@ class MoveList extends React.Component {
                         <span className={"d-flex"}>
                           <ButtonGroup size="lg">
                             <Button
-                              onClick={
-                                () =>
-                                  selectedMoveIds.length >= movesOfSet.length ?
-                                    this.handleUnselectAll() :
-                                    this.handleSelectAll()
+                              onClick={() =>
+                                selectedMoveIds.length >= movesOfSet.length
+                                  ? this.handleUnselectAll()
+                                  : this.handleSelectAll()
                               }
                               className=" "
                               color=" "
                             >
                               <img src={addTag} alt="" className="mr-1" />{" "}
-                              {
-                                selectedMoveIds.length >= movesOfSet.length ?
-                                  "Unselect all" :
-                                  "Select all"
-                              }
+                              {selectedMoveIds.length >= movesOfSet.length
+                                ? "Unselect all"
+                                : "Select all"}
                             </Button>
                             <Button
                               onClick={() => this.openAddTagsModal()}

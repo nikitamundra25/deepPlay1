@@ -100,13 +100,16 @@ class MoveDetails extends React.Component {
     const prevDescriptionModal = prevmodelDetails.isDescriptionModalOpen;
     const newModelInfoReducer = this.props.modelInfoReducer;
     const { modelDetails } = newModelInfoReducer;
-    if (
-      prevDescriptionModal !== modelDetails.isDescriptionModalOpen &&
-      this.state.description !== ""
-    ) {
-      this.setState({
-        isUpdateDescription: true
-      });
+    if (prevDescriptionModal !== modelDetails.isDescriptionModalOpen) {
+      if (this.state.description !== null) {
+        this.setState({
+          isUpdateDescription: true
+        });
+      } else {
+        this.setState({
+          isUpdateDescription: false
+        });
+      }
     }
     if (prevQuery && currQuery && prevQuery[3] && currQuery[3]) {
       if (prevQuery[3] !== currQuery[3]) {
@@ -495,7 +498,6 @@ class MoveDetails extends React.Component {
                 onClick={this.handleDesriptionModal}
                 color=" "
                 className="btn btn-black"
-                disabled={!description}
               >
                 {isUpdateDescription ? "Update description" : "Add Description"}
               </Button>

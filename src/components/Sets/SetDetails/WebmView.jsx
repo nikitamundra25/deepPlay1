@@ -775,7 +775,7 @@ class WebmView extends Component {
         <AddTagModal
           modal={addTagModalOpenReq}
           handleOpen={this.openAddTagsModal}
-          moveIdToAddTag={moveIdToAddTags ? [moveIdToAddTags] : video._id}
+          moveIdToAddTag={moveIdToAddTags ? moveIdToAddTags : video._id}
           addTagstoMove={data => this.props.addTagstoMove(data)}
           tagsList={tagsList}
           handleTagChange={this.handleTagChange}

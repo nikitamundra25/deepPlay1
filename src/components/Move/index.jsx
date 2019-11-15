@@ -131,11 +131,11 @@ class MoveComponent extends React.Component {
     let files = e.target.files;
     if (files.length) {
       const fileType = files ? files[0].type.split("/") : "";
-      if (fileType[0] !== "video") {
+      if (fileType[1] !== "mp4" && fileType[1] !== "webm") {
         await ConfirmBox({
           title: "Oops...",
           text:
-            "Unsupported file type!! We accept only video type (mp4, 3gp, ogv,wmv, webm, mpeg, m4v, ogm, mov, asx, mpeg, avi)",
+            "Unsupported file type!! We accept only video type of mp4 & webm.",
           type: "error",
           showCancelButton: false,
           confirmButtonText: "Okay"
@@ -190,7 +190,7 @@ class MoveComponent extends React.Component {
                     </span>
                   </div>
                   <span className="content-title creat-set-title">
-                    {isVideoDownloading ? "Preparing WebM" : "Create a move"}
+                    {isVideoDownloading ? "Preparing Move" : "Create a move"}
                   </span>
                 </div>
               </CardHeader>
@@ -276,8 +276,7 @@ class MoveComponent extends React.Component {
                         <FormGroup>
                           <FormGroup className="flex-fill flex-column ">
                             <Label className="mb-3 set-wrap ">
-                              Upload video file from your system (mp4, 3gp, ogv,
-                              wmv, webm, mpeg etc..){" "}
+                              Upload video file from your system (mp4, webm){" "}
                             </Label>
                           </FormGroup>
                           <Label
@@ -290,7 +289,7 @@ class MoveComponent extends React.Component {
                           <CustomInput
                             onChange={this.handleVideoFileSelect}
                             type="file"
-                            accept="video/mp4,video/x-m4v,video/*,video/ogg"
+                            accept="video/mp4,video/webm"
                             disabled={false}
                             className={fileErr ? "is-invalid d-none" : "d-none"}
                             id="videoUpload"
@@ -316,7 +315,4 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch => ({
   downloadVideo: data => dispatch(downloadYoutubeVideoRequest(data))
 });
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(MoveComponent);
+export default connect(mapStateToProps, mapDispatchToProps)(MoveComponent);

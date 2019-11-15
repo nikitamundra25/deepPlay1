@@ -56,7 +56,7 @@ class FolderComponent extends React.Component {
 
   onHandleDelete = async id => {
     const { value } = await ConfirmBox({
-      text: "You want to delete this folder!"
+      text: "You want to remove this folder!"
     });
     if (value) {
       this.props.onDelete(id);
@@ -198,11 +198,19 @@ class FolderComponent extends React.Component {
                             </div>
                             <div className="d-flex img-tile-wrap cursor_pointer">
                               <div className="cotent-img-tile">
-                                {
-                                  folder.setCount ? <img src={fileFolderIc} alt="" className="folder-ic" /> :
-                                    <img src={emptyFolderIc} alt="" className="folder-ic" />
-                                }
-
+                                {folder.setCount ? (
+                                  <img
+                                    src={fileFolderIc}
+                                    alt=""
+                                    className="folder-ic"
+                                  />
+                                ) : (
+                                  <img
+                                    src={emptyFolderIc}
+                                    alt=""
+                                    className="folder-ic"
+                                  />
+                                )}
                               </div>
                             </div>
                           </div>
@@ -228,7 +236,7 @@ class FolderComponent extends React.Component {
                                   }
                                   color=" "
                                 >
-                                  Delete
+                                  Remove
                                 </Button>
                               </ButtonGroup>
                             ) : null}

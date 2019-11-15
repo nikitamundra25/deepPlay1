@@ -190,7 +190,7 @@ class CreateSetComponent extends React.Component {
                 color=" "
                 className="btn btn-black"
               >
-                Add a Move
+                {setDetails ? "Update & Add Move" : "Add a Move"}
               </Button>
             ) : (
               ""
@@ -213,7 +213,4 @@ const mapDispatchToProps = dispatch => ({
   getSetDetailsRequest: data => dispatch(getSetDetailsRequest(data)),
   UpdateSetRequest: data => dispatch(UpdateSetRequest(data))
 });
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(CreateSetComponent);
+export default connect(mapStateToProps, mapDispatchToProps)(CreateSetComponent);
