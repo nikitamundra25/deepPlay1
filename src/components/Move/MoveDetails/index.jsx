@@ -12,7 +12,8 @@ import {
   ModalFooter,
   Input,
   Button,
-  FormGroup
+  FormGroup,
+  FormFeedback
 } from "reactstrap";
 import VideoView from "./videoView";
 import VideoDetails from "./videoDetails";
@@ -58,7 +59,8 @@ class MoveDetails extends React.Component {
         max: 15
       },
       videoMaxDuration: 0,
-      isEdit: false
+      isEdit: false,
+      descError: ""
     };
     this.videoDetails = React.createRef();
   }
@@ -247,8 +249,13 @@ class MoveDetails extends React.Component {
 
   handleChange = e => {
     const { name, value } = e.target;
+    const error =
+      value && value.length === 500
+        ? "Description cannot have more than 500 characters"
+        : "";
     this.setState({
-      [name]: value
+      [name]: value,
+      descError: error ? error : null
     });
   };
   /**
@@ -364,8 +371,10 @@ class MoveDetails extends React.Component {
       isUpdateDescription,
       videoDuration,
       videoMaxDuration,
-      isEdit
+      isEdit,
+      descError
     } = this.state;
+    console.log("isUpdateDescription", isUpdateDescription);
 
     return (
       <>
@@ -469,12 +478,15 @@ class MoveDetails extends React.Component {
                   type="textarea"
                   placeholder="Enter a description (optional)"
                   name="description"
-                  className={"form-control"}
-                  maxLength={"250"}
+                  className={
+                    descError ? "form-control is-invalid" : "form-control"
+                  }
+                  maxLength={"500"}
                   onChange={this.handleChange}
                   value={description}
                   rows={3}
                 />
+                <FormFeedback>{descError ? descError : null}</FormFeedback>
               </FormGroup>
             </ModalBody>
             <ModalFooter>
