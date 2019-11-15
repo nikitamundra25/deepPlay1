@@ -262,7 +262,7 @@ class SetSharedLink extends React.Component {
 
                                       <div
                                         className="blur-img"
-                                        style={{ background: "#000" }}
+                                        // style={{ background: "" }}
                                       />
                                     </div>
 

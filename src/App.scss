@@ -793,6 +793,11 @@ a {
     border-right: 0.4em solid transparent;
     border-left: 0.4em solid transparent;
   }
+  &.user-header-profile{
+    .dropdown-menu{
+      top: 130% !important;
+    }
+  }
 }
 .user-back-img-wrap {
   background-size: cover;
@@ -1001,7 +1006,7 @@ a {
   }
   .custom-video-player {
     text-align: center;
-    background: #000;
+    background: #e6ebf1;
     margin: 0px auto;
     video {
       width: auto;

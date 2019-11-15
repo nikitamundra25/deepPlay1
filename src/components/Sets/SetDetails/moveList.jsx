@@ -603,7 +603,7 @@ class MoveList extends React.Component {
                           value={search}
                           className={"form-control"}
                           autoComplete="off"
-                          placeholder="Type to filter moves"
+                          placeholder="Type to filter"
                           debounceTimeout={300}
                           onChange={event => this.handleInputChange(event)}
                         />
@@ -716,7 +716,7 @@ class MoveList extends React.Component {
                           <img src={addPlusIc} alt="" />
                         </div>
                         <Button color={" "} className="fill-btn btn mt-4">
-                          Create Now
+                          Create New Move
                         </Button>
                       </div>
                     </div>
