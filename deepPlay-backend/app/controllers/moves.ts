@@ -912,34 +912,22 @@ const addTagsInMove = async (req: Request, res: Response): Promise<any> => {
     }
     for (let index = 0; index < moveId.length; index++) {
       const moveid = moveId[index];
-      const result: Document | null | any = await MoveModel.findById(moveid, { tags: 1 })
-      const tagArr: Document | any | null = result.tags
+      const result: Document | null | any = await MoveModel.findById(moveid, {
+        tags: 1
+      });
+      const tagArr: Document | any | null = result.tags;
       if (tagArr && tagArr.length) {
-        let TagArray: any = []
-        for (let index = 0; index < tagArr.length; index++) {
-          const oldTags = tagArr[index];
-          for (let j = 0; j < tags.length; j++) {
-            const newTags = tags[j];
-            if (oldTags.label !== newTags.label) {
-              TagArray.push(
-                oldTags,
-                newTags
-              )
-            }
-          }
-        }
-        console.log("TagArray", TagArray);
+        let oldTagArray: { label: string }[] = tagArr;
+        var array3 = oldTagArray.concat(tags.filter((item: any) => oldTagArray.findIndex((tag:any) => tag.label === item.label) < 0)) 
         await MoveModel.updateOne(
           { _id: moveid },
           {
             $set: {
-              tags: TagArray
+              tags: array3
             }
           }
         );
       } else {
-        console.log("This is else condition");
-        
         await MoveModel.updateOne(
           { _id: moveid },
           {
@@ -949,7 +937,6 @@ const addTagsInMove = async (req: Request, res: Response): Promise<any> => {
           }
         );
       }
-
     }
 
     if (fromMoveList) {
@@ -962,7 +949,7 @@ const addTagsInMove = async (req: Request, res: Response): Promise<any> => {
       });
     } else {
       return res.status(200).json({
-        message: "Tags have been added for this move successfully"
+        message: "Tags have been updated for this move successfully"
       });
     }
   } catch (error) {

@@ -71,8 +71,8 @@ class MoveList extends React.Component {
       console.log("return false;return false;return false;return false;");
       return false;
     }
-    return true
-  }
+    return true;
+  };
   /*
   /*  
   */
@@ -93,7 +93,7 @@ class MoveList extends React.Component {
     if (
       prevProps.isMoveStarLoading &&
       prevProps.isMoveStarLoading.loading !==
-      this.props.isMoveStarLoading.loading
+        this.props.isMoveStarLoading.loading
     ) {
       this.setState({
         isMarkingStar: {
@@ -180,10 +180,12 @@ class MoveList extends React.Component {
       selectedMoves: [],
       selectedMoveIds: []
     });
-  }
+  };
   /*
    */
+
   handleMovesSelect = (valueCheck, e, index, moveId) => {
+    console.log("moveId", moveId);
     let checked;
     if (e && e.target && valueCheck === null) {
       checked = !e.target.checked;
@@ -229,7 +231,7 @@ class MoveList extends React.Component {
     const pathName = location.pathname.split("/");
     const { selectedMoveIds } = this.state;
     let moveofSetList = this.props.movesOfSet;
-    let listData = moveofSetList
+    let listData = moveofSetList;
     const starDiv = document.getElementsByClassName("star-mark")[index];
     if (isStarred) {
       listData[index].isStarred = false;
@@ -296,8 +298,9 @@ class MoveList extends React.Component {
     const { selectedMoveIds } = this.state;
     const { modelDetails } = modelInfoReducer;
     this.props.getTagListRequest();
+    let temp = [...new Set(selectedMoveIds.map(a => a))];
     this.setState({
-      moveIdToAddTag: selectedMoveIds.length ? selectedMoveIds : id,
+      moveIdToAddTag: temp.length ? temp : id,
       tags: tags ? tags : "",
       moveIndexToAddTag: index
     });
@@ -503,13 +506,6 @@ class MoveList extends React.Component {
       [name]: value
     });
   };
-  // shouldComponentUpdate = (nextProps, nextState) =>{
-  //   if (this.props.number === nextProps.number) {
-  //     return false;
-  //   } else {
-  //     return true;
-  //   }
-  // }
 
   render() {
     const {
@@ -520,7 +516,7 @@ class MoveList extends React.Component {
       totalMoves,
       tagsList,
       isMoveListLoading,
-      movesOfSet,
+      movesOfSet
     } = this.props;
     const { modelDetails } = modelInfoReducer;
     const { transferToModalOpen, addTagModalOpen } = modelDetails;
@@ -614,7 +610,7 @@ class MoveList extends React.Component {
                 selectedMoveIds && selectedMoveIds.length
                   ? "select-focus-event"
                   : null
-                } `}
+              } `}
             >
               {selectedMoveIds && selectedMoveIds.length ? (
                 <div className={` ${backgroundClass}`} id="get-sticky-header">
@@ -716,7 +712,7 @@ class MoveList extends React.Component {
                       </div>
                     </div>
                   </div>
-                  {(selectedMoveIds && selectedMoveIds.length) ? (
+                  {selectedMoveIds && selectedMoveIds.length ? (
                     movesOfSet.map((video, index) => {
                       return (
                         <MoveListDetails
@@ -741,43 +737,43 @@ class MoveList extends React.Component {
                       );
                     })
                   ) : (
-                      <ListManager
-                        items={movesOfSet}
-                        direction="horizontal"
-                        maxItems={4}
-                        render={video => {
-                          let index = video.id;
-                          return (
-                            <MoveListDetails
-                              index={index}
-                              isVideoChecked={isVideoChecked}
-                              selectedMoves={selectedMoves}
-                              handleShowVideo={this.props.handleShowVideo}
-                              handleVideoHover={this.handleVideoHover}
-                              handleVideoPause={this.handleVideoPause}
-                              handleVideoHoverLeave={this.handleVideoHoverLeave}
-                              handleVideoPlay={this.handleVideoPlay}
-                              handleMovesSelect={this.handleMovesSelect}
-                              isMarkingStar={isMarkingStar}
-                              video={video}
-                              isSelectVideo={isSelectVideo}
-                              videoIndex={videoIndex}
-                              isVideoModalOpen={isVideoModalOpen}
-                              handleStarred={this.handleStarred}
-                              handleVideoCheckBox={this.handleVideoCheckBox}
-                              handleVideoModal={this.props.handleVideoModal}
-                            />
-                          );
-                        }}
-                        onDragEnd={this.reorderList}
-                      />
-                    )}
+                    <ListManager
+                      items={movesOfSet}
+                      direction="horizontal"
+                      maxItems={4}
+                      render={video => {
+                        let index = video.id;
+                        return (
+                          <MoveListDetails
+                            index={index}
+                            isVideoChecked={isVideoChecked}
+                            selectedMoves={selectedMoves}
+                            handleShowVideo={this.props.handleShowVideo}
+                            handleVideoHover={this.handleVideoHover}
+                            handleVideoPause={this.handleVideoPause}
+                            handleVideoHoverLeave={this.handleVideoHoverLeave}
+                            handleVideoPlay={this.handleVideoPlay}
+                            handleMovesSelect={this.handleMovesSelect}
+                            isMarkingStar={isMarkingStar}
+                            video={video}
+                            isSelectVideo={isSelectVideo}
+                            videoIndex={videoIndex}
+                            isVideoModalOpen={isVideoModalOpen}
+                            handleStarred={this.handleStarred}
+                            handleVideoCheckBox={this.handleVideoCheckBox}
+                            handleVideoModal={this.props.handleVideoModal}
+                          />
+                        );
+                      }}
+                      onDragEnd={this.reorderList}
+                    />
+                  )}
                 </div>
               ) : (
-                  <Col>
-                    <Loader />
-                  </Col>
-                )}
+                <Col>
+                  <Loader />
+                </Col>
+              )}
             </div>
           </Row>
           <TransferToModal
