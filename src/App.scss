@@ -2246,6 +2246,11 @@ a {
 .videos-loading{
   width: 30px;
 }
+.edit-view-wrap{
+  z-index: 9;
+  display: flex;
+  flex-wrap: wrap;
+}
 
 // media query start
 @media (max-width: 1199px) {
@@ -2334,7 +2339,7 @@ a {
   right: 0;
   bottom: 0;
   background: rgba(255, 255, 255, 0.64);
-  z-index: 8;
+  z-index: 9;
 }
 .video-thumbnail-block {
   z-index: 9;
