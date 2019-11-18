@@ -95,7 +95,7 @@ class Set extends React.Component {
       description: list.description,
       isDeleted: list.isDeleted,
       isPublic: list.isPublic,
-      folderId: list.folderId && list.folderId._id ? list.folderId._id : "",
+      folderId: list.folderId && list.folderId._id ? list.folderId._id : null,
       sharableLink: list.sharableLink,
       status: list.status,
       userId: list.userId,

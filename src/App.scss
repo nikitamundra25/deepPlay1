@@ -137,7 +137,7 @@ a {
   min-height: 74px;
   background-color: $blackcolor;
   color: $whiteColor;
-  z-index: 99;
+  z-index: 103;
   position: relative;
   width: 100%;
   top: 0px;
@@ -197,7 +197,9 @@ a {
     border: 2px solid $textColor;
   }
 }
-
+.text-link {
+  color: #1439a2;
+}
 .home-video-section {
   margin-bottom: 80px;
   margin-top: 80px;
@@ -220,6 +222,29 @@ a {
     font-size: 55px;
     padding-left: 8px;
     color: $videoAddBannerBack;
+  }
+  &.video-add-banner{
+    border:none;
+    background: none;
+    .play-ic-wrap{
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      background: rgba(0, 0, 0, 0.61);
+      transform: translate(-50%, -50%);
+      z-index: 9;
+      transform:all 0.5s;
+    }
+    .play-ic-wrap.pause-wrap{
+      display: none;
+    
+    }
+    &:hover{
+      .play-ic-wrap.pause-wrap{
+        display: flex;
+        padding: 0px;
+      }
+    }
   }
 }
 .theme-container {
@@ -262,10 +287,18 @@ a {
     }
   }
   &.set-detail-section {
+    &:not(.set-detail-editble) {
+      .play-list-tile {
+        width: 25%;
+      }
+    }
     .play-sub-block {
-      border: none;
+      border: 2px dashed transparent;
       background: #fff;
       box-shadow: 0px 0px 5px 0px #ccc;
+      &.video-full-selection {
+        border: 2px solid #4995ff;
+      }
     }
     .blur-img {
       filter: unset;
@@ -302,6 +335,23 @@ a {
       .tooltip-btn-wrap {
         top: 10px;
         width: 10px;
+      }
+      .play-list-tile-select{
+        z-index: 102;
+      }
+      &.with-move{
+        .add-play-list-block{
+          min-height: 130px;
+          padding: 10px 15px;
+        }
+      }
+      .video-thumb-edit-view > *{
+       
+        width:100%;
+      }
+      
+      .play-sub-block{
+       
       }
     }
   }
@@ -364,7 +414,7 @@ a {
     width: 210px;
     bottom: 0px;
     top: 0px;
-    z-index: 9;
+    z-index: 102;
     .dashboard-left-wrap {
       height: 100%;
       display: block;
@@ -745,6 +795,11 @@ a {
     border-right: 0.4em solid transparent;
     border-left: 0.4em solid transparent;
   }
+  &.user-header-profile{
+    .dropdown-menu{
+      top: 130% !important;
+    }
+  }
 }
 .user-back-img-wrap {
   background-size: cover;
@@ -953,7 +1008,7 @@ a {
   }
   .custom-video-player {
     text-align: center;
-    background: #000;
+    background: #e6ebf1;
     margin: 0px auto;
     video {
       width: auto;
@@ -1284,6 +1339,9 @@ a {
     margin-top: 0px;
     padding-top: 0px;
   }
+  .input-group-text{
+    background-color: transparent;
+  }
 }
 .tooltip-btn-wrap {
   position: absolute;
@@ -1312,8 +1370,8 @@ a {
     }
   }
   &.right-btn-tip .btn-group {
-    right: -15px;
-    top: -25px;
+    right: -14px;
+    top: -31px;
 
     &::before {
       position: absolute;
@@ -1326,7 +1384,8 @@ a {
     border: none;
     color: #fff;
     line-height: 120%;
-    font-weight: normal;
+    font-weight: normal; 
+    padding: 0.50rem 0.50rem; 
   }
 }
 .content-with-tip {
@@ -2175,6 +2234,32 @@ a {
 .big-tool-tip {
   z-index: 99;
 }
+.videos-move-wrap {
+  .dl-list {
+    display: flex !important;
+  }
+  .dl-item {
+    width: 25%;
+  }
+  .play-list-tile {
+    width: 100%;
+  }
+}
+.videos-loading{
+  width: 30px;
+}
+.edit-view-wrap{
+  z-index: 9;
+  display: flex;
+  flex-wrap: wrap;
+  &>div{
+    width: 100%;
+  }
+  &>.play-list-tile-select{
+    width: 25%;
+  }
+}
+
 // media query start
 @media (max-width: 1199px) {
   .custom-video-model {
@@ -2198,8 +2283,20 @@ a {
     position: absolute !important;
     left: auto !important;
   }
+  .play-list-collection {
+    &.set-detail-section {
+      &:not(.set-detail-editble) {
+        .play-list-tile {
+          width: 33.33%;
+        }
+      }
+    }
+  }
 }
 @media (max-width: 1024px) {
+  .edit-view-wrap>.play-list-tile-select{
+    width: 50%;
+  }
   .content-with-img {
     align-items: flex-start;
     .cotent-text-tile {
@@ -2253,12 +2350,24 @@ a {
   right: 0;
   bottom: 0;
   background: rgba(255, 255, 255, 0.64);
-  z-index: 8;
+  z-index: 9;
 }
 .video-thumbnail-block {
   z-index: 9;
 }
+.reset-header-background {
+  background: #000;
+}
 @media (max-width: 991px) {
+  .play-list-collection {
+    &.set-detail-section {
+      &:not(.set-detail-editble) {
+        .play-list-tile {
+          width: 50%;
+        }
+      }
+    }
+  }
   .theme-header {
     min-height: 60px;
     .navbar-main.navbar {
@@ -2485,14 +2594,3 @@ a {
 }
 // media query end
 // Please don't write other css in the bottom of media query
-.videos-move-wrap {
-  .dl-list {
-    display: flex !important;
-  }
-  .dl-item {
-    width: 25%;
-  }
-  .play-list-tile {
-    width: 100%;
-  }
-}

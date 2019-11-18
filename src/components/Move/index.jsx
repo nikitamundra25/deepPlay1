@@ -33,7 +33,7 @@ class MoveComponent extends React.Component {
       fileErr: ""
     };
   }
-
+  componentDidMount = () => {};
   handleChange = e => {
     e.preventDefault();
     const { name, value } = e.target;
@@ -131,11 +131,11 @@ class MoveComponent extends React.Component {
     let files = e.target.files;
     if (files.length) {
       const fileType = files ? files[0].type.split("/") : "";
-      if (fileType[0] !== "video") {
+      if (fileType[1] !== "mp4" && fileType[1] !== "webm") {
         await ConfirmBox({
           title: "Oops...",
           text:
-            "Unsupported file type!! We accept only video type (mp4, 3gp, ogv,wmv, webm, mpeg, m4v, ogm, mov, asx, mpeg, avi)",
+            "Unsupported file type!! We accept only video type of mp4 & webm.",
           type: "error",
           showCancelButton: false,
           confirmButtonText: "Okay"
@@ -171,6 +171,9 @@ class MoveComponent extends React.Component {
     const { errors, url, fileErr } = this.state;
     const { moveReducer } = this.props;
     const { isVideoDownloading } = moveReducer;
+    const location = window.location.href;
+    const stemp = location.split("?");
+    console.log("location", stemp[1]);
 
     return (
       <>
@@ -179,18 +182,20 @@ class MoveComponent extends React.Component {
             <div className="set-content-block w-100">
               <CardHeader className="border-bottom pt-4 pb-2">
                 <div className="content-header set-header d-flex ">
-                  <div
-                    onClick={() => {
-                      window.history.back();
-                    }}
-                  >
-                    <span className="cursor_pointer back-arrow create-move-back">
-                      {" "}
-                      <i className="fas fa-long-arrow-alt-left"></i> Back
-                    </span>
-                  </div>
+                  {stemp[1] ? (
+                    <div
+                      onClick={() => {
+                        window.history.back();
+                      }}
+                    >
+                      <span className="cursor_pointer back-arrow create-move-back">
+                        {" "}
+                        <i className="fas fa-long-arrow-alt-left"></i> Back
+                      </span>
+                    </div>
+                  ) : null}
                   <span className="content-title creat-set-title">
-                    {isVideoDownloading ? "Preparing WebM" : "Create a move"}
+                    {isVideoDownloading ? "Preparing Move" : "Create a move"}
                   </span>
                 </div>
               </CardHeader>
@@ -199,7 +204,7 @@ class MoveComponent extends React.Component {
                   {isVideoDownloading ? (
                     <div className="url-update-wrap text-center download-process-container">
                       <Progress animated value={100} />
-                      <h5>Please wait while we upload video for you.</h5>
+                      <h5>Please wait while we upload your video.</h5>
                       <p>
                         Please do not refresh or close this page while we are
                         processing.
@@ -276,8 +281,7 @@ class MoveComponent extends React.Component {
                         <FormGroup>
                           <FormGroup className="flex-fill flex-column ">
                             <Label className="mb-3 set-wrap ">
-                              Upload video file from your system (mp4, 3gp, ogv,
-                              wmv, webm, mpeg etc..){" "}
+                              Upload video file from your system (mp4, webm){" "}
                             </Label>
                           </FormGroup>
                           <Label
@@ -290,7 +294,7 @@ class MoveComponent extends React.Component {
                           <CustomInput
                             onChange={this.handleVideoFileSelect}
                             type="file"
-                            accept="video/mp4,video/x-m4v,video/*,video/ogg"
+                            accept="video/mp4,video/webm"
                             disabled={false}
                             className={fileErr ? "is-invalid d-none" : "d-none"}
                             id="videoUpload"
@@ -316,7 +320,4 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch => ({
   downloadVideo: data => dispatch(downloadYoutubeVideoRequest(data))
 });
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(MoveComponent);
+export default connect(mapStateToProps, mapDispatchToProps)(MoveComponent);

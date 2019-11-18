@@ -12,7 +12,8 @@ import {
   ModalFooter,
   Input,
   Button,
-  FormGroup
+  FormGroup,
+  FormFeedback
 } from "reactstrap";
 import VideoView from "./videoView";
 import VideoDetails from "./videoDetails";
@@ -58,7 +59,8 @@ class MoveDetails extends React.Component {
         max: 15
       },
       videoMaxDuration: 0,
-      isEdit: false
+      isEdit: false,
+      descError: ""
     };
     this.videoDetails = React.createRef();
   }
@@ -98,13 +100,16 @@ class MoveDetails extends React.Component {
     const prevDescriptionModal = prevmodelDetails.isDescriptionModalOpen;
     const newModelInfoReducer = this.props.modelInfoReducer;
     const { modelDetails } = newModelInfoReducer;
-    if (
-      prevDescriptionModal !== modelDetails.isDescriptionModalOpen &&
-      this.state.description !== ""
-    ) {
-      this.setState({
-        isUpdateDescription: true
-      });
+    if (prevDescriptionModal !== modelDetails.isDescriptionModalOpen) {
+      if (this.state.description !== null) {
+        this.setState({
+          isUpdateDescription: true
+        });
+      } else {
+        this.setState({
+          isUpdateDescription: false
+        });
+      }
     }
     if (prevQuery && currQuery && prevQuery[3] && currQuery[3]) {
       if (prevQuery[3] !== currQuery[3]) {
@@ -182,7 +187,7 @@ class MoveDetails extends React.Component {
     const { moveDetails, isSavingWebM } = moveReducer;
     let parsed = qs.parse(this.props.location.search);
     logger(isSavingWebM);
-    const { _id: moveId } = moveDetails;
+    const { _id: moveId, frames } = moveDetails;
     const { timer, title, description } = this.state;
     const { tags, setId } = this.videoDetails.current.getDetails();
     if (!setId) {
@@ -201,6 +206,8 @@ class MoveDetails extends React.Component {
       setId,
       title: title,
       description: description,
+      frames:
+        frames && frames.length ? (frames[3] ? frames[3] : frames[1]) : [],
       isEdit: parsed.isEdit ? true : false
     });
   };
@@ -247,8 +254,13 @@ class MoveDetails extends React.Component {
 
   handleChange = e => {
     const { name, value } = e.target;
+    const error =
+      value && value.length === 500
+        ? "Description cannot have more than 500 characters"
+        : "";
     this.setState({
-      [name]: value
+      [name]: value,
+      descError: error ? error : null
     });
   };
   /**
@@ -288,7 +300,6 @@ class MoveDetails extends React.Component {
   };
 
   handleInputChange = e => {
-    console.log("eeeeeeeeeee", e);
     if (e && e.value && e.label !== "+ Create New Set") {
       this.setState({
         selectSetOptions: {
@@ -364,7 +375,8 @@ class MoveDetails extends React.Component {
       isUpdateDescription,
       videoDuration,
       videoMaxDuration,
-      isEdit
+      isEdit,
+      descError
     } = this.state;
 
     return (
@@ -469,12 +481,15 @@ class MoveDetails extends React.Component {
                   type="textarea"
                   placeholder="Enter a description (optional)"
                   name="description"
-                  className={"form-control"}
-                  maxLength={"250"}
+                  className={
+                    descError ? "form-control is-invalid" : "form-control"
+                  }
+                  maxLength={"500"}
                   onChange={this.handleChange}
                   value={description}
                   rows={3}
                 />
+                <FormFeedback>{descError ? descError : null}</FormFeedback>
               </FormGroup>
             </ModalBody>
             <ModalFooter>
@@ -483,7 +498,6 @@ class MoveDetails extends React.Component {
                 onClick={this.handleDesriptionModal}
                 color=" "
                 className="btn btn-black"
-                disabled={!description}
               >
                 {isUpdateDescription ? "Update description" : "Add Description"}
               </Button>

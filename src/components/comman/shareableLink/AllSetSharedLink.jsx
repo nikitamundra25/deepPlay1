@@ -7,7 +7,7 @@ import {
   redirectTo
 } from "../../../actions";
 import "./index.scss";
-import emptySetIc from "../../../assets/img/empty-sets.png";
+import emptySetIc from "../../../assets/img/play-list-ic.svg";
 import PaginationHelper from "helper/Pagination";
 import { AppConfig } from "../../../config/Appconfig";
 import { AppRoutes } from "../../../config/AppRoutes";

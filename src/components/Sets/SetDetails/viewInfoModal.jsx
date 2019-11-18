@@ -5,7 +5,7 @@ import moment from "moment";
 // core components
 class ViewInfoModal extends React.Component {
   render() {
-    const { modal, handleOpen, videoData, videoDimentions } = this.props;
+    const { modal, handleOpen, videoData, videoDimentions, video } = this.props;
 
     return (
       <div>
@@ -36,9 +36,9 @@ class ViewInfoModal extends React.Component {
               <div className="content-heading-tile d-flex flex-column ">
                 <span className="content-title justify-content-between">
                   <div class="info-wrap">
-                    {videoData.title ? (
+                    {videoData ? (
                       <>
-                        <span class="info-heading">Title </span>
+                        <span className="info-heading">Title </span>
                         <span className="info-content">
                           <span className="colon-wrap">: </span>{" "}
                           {videoData.title}
@@ -60,7 +60,12 @@ class ViewInfoModal extends React.Component {
                 {videoData.isYoutubeUrl ? (
                   <div class="info-wrap">
                     <span className="info-heading"> Source URL</span>
-                    <a href={videoData.sourceUrl ? videoData.sourceUrl : null}>
+                    <a
+                      className="text-link"
+                      href={videoData.sourceUrl ? videoData.sourceUrl : null}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
                       <span className="info-content">
                         <span className="colon-wrap cursor_pointer">: </span>
                         {videoData.sourceUrl ? videoData.sourceUrl : null}{" "}
@@ -103,7 +108,9 @@ class ViewInfoModal extends React.Component {
                   <span className="info-content">
                     <span className="colon-wrap">: </span>
                     {moment(
-                      videoData.createdAt ? videoData.createdAt : null
+                      videoData.createdAt
+                        ? videoData.createdAt
+                        : video.createdAt
                     ).format("l")}{" "}
                   </span>
                 </div>

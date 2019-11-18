@@ -207,12 +207,14 @@ const getAllSetById = async (req: Request, res: Response): Promise<void> => {
         const setData = result[index];
         moveCount = await MoveModel.count({
           setId: setData._id,
-          isDeleted: false
+          isDeleted: false,
+          moveURL: { $ne: null }
         });
 
         let data: any = await MoveModel.find({
           setId: setData._id,
-          isDeleted: false
+          isDeleted: false,
+          moveURL: { $ne: null }
         })
           .sort({ updatedAt: -1 })
           .limit(1);
@@ -265,12 +267,14 @@ const getRecentSetById = async (req: Request, res: Response): Promise<void> => {
         const setData = result[index];
         moveCount = await MoveModel.count({
           setId: setData._id,
-          isDeleted: false
+          isDeleted: false,
+          moveURL: { $ne: null }
         });
 
         let data: any = await MoveModel.find({
           setId: setData._id,
-          isDeleted: false
+          isDeleted: false,
+          moveURL: { $ne: null }
         })
           .sort({ updatedAt: -1 })
           .limit(1);
@@ -329,11 +333,13 @@ const getSetsForFolder = async (req: Request, res: Response): Promise<void> => {
         const setData = result[index];
         moveCount = await MoveModel.count({
           setId: setData._id,
-          isDeleted: false
+          isDeleted: false,
+          moveURL: { $ne: null }
         });
         let data: any = await MoveModel.find({
           setId: setData._id,
-          isDeleted: false
+          isDeleted: false,
+          moveURL: { $ne: null }
         })
           .sort({ updatedAt: -1 })
           .limit(1);
@@ -406,26 +412,40 @@ const deleteSet = async (req: Request, res: Response): Promise<void> => {
         message: "Set id not found"
       });
     }
+    let moveObjectIds: Document | any = [];
     const result: Document | any = await SetModel.findByIdAndUpdate(body.id, {
       $set: { isDeleted: true }
     });
 
-    const result1: any = await SetModel.find({ _id: body.id });
-    const stemp: Number |any = result1.length ? result1[0].objectId : null;
+    const result1: any = await SetModel.findOne({ _id: body.id });
+    const stemp: Number | any = result1 ? result1.objectId : null;
 
+    const includeMove: Document | any | null = await MoveModel.find({
+      setId: result1._id
+    });
+
+    if (includeMove) {
+      for (let index = 0; index < includeMove.length; index++) {
+        const moveData = includeMove[index];
+        await MoveModel.findByIdAndUpdate(moveData._id, {
+          isDeleted: true
+        });
+        if (moveData.objectId) {
+          moveObjectIds.push(moveData.objectId);
+        }
+      }
+    }
     if (stemp) {
       index.deleteObject(stemp, (err: string, content: any) => {
         if (err) throw err;
       });
     }
-    await MoveModel.updateMany(
-      { setId: { $in: body.id } },
-      {
-        $set: {
-          isDeleted: true
-        }
-      }
-    );
+
+    if (moveObjectIds.length) {
+      index.deleteObjects(moveObjectIds, (err: string, content: any) => {
+        if (err) throw err;
+      });
+    }
 
     res.status(200).json({
       data: result[0],
@@ -469,7 +489,8 @@ const getSetDetailsById = async (
     if (result) {
       moveCount = await MoveModel.count({
         setId: Mongoose.Types.ObjectId(result._id),
-        isDeleted: false
+        isDeleted: false,
+        moveURL: { $ne: null }
       });
       const SetResult: any = {
         ...result._doc,
@@ -500,10 +521,11 @@ const publicUrlsetDetails = async (
 ): Promise<any> => {
   try {
     const { query } = req;
-    const { folderId, isPublic, limit, page } = query;
+    const { folderId, isPublic, limit, page, userId } = query;
     const decryptedFolderId = decrypt(folderId);
-    const pageNumber: number = ((parseInt(page) || 1) - 1) * (limit || 10);
-    const limitNumber: number = parseInt(limit) || 10;
+    const decryptedUserId = decrypt(userId);
+    const pageNumber: number = ((parseInt(page) || 1) - 1) * (limit || 20);
+    const limitNumber: number = parseInt(limit) || 20;
     let result: Document | any | null,
       moveCount: Document | any,
       setResult: any = [],
@@ -516,6 +538,7 @@ const publicUrlsetDetails = async (
     if (temp.isPublic) {
       result = await SetModel.find({
         folderId: decryptedFolderId,
+        userId: decryptedUserId,
         isDeleted: false
       })
         .populate({
@@ -533,15 +556,19 @@ const publicUrlsetDetails = async (
           const setData = result[index];
           moveCount = await MoveModel.count({
             setId: setData._id,
-            isDeleted: false
+            userId: decryptedUserId,
+            isDeleted: false,
+            moveURL: { $ne: null }
           });
 
           let data: any = await MoveModel.find({
             setId: setData._id,
-            isDeleted: false
+            userId: decryptedUserId,
+            isDeleted: false,
+            moveURL: { $ne: null }
           })
             .sort({ updatedAt: -1 })
-            .limit(1);
+            .limit(limitNumber);
 
           setResult.push({
             ...setData._doc,
@@ -552,6 +579,7 @@ const publicUrlsetDetails = async (
       }
       count = await SetModel.find({
         folderId: decryptedFolderId,
+        userId: decryptedUserId,
         isDeleted: false
       }).count();
     } else {
@@ -612,7 +640,8 @@ const publicAccessSetInfoById = async (
 
       const moveCount: Document | any = await MoveModel.count({
         setId: result._id,
-        isDeleted: false
+        isDeleted: false,
+        moveURL: { $ne: null }
       });
 
       setResult = {

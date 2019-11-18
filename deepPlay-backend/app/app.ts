@@ -41,11 +41,9 @@ app.use("/api/v1", router);
  *
  */
 app.get("/", (req: express.Request, res: express.Response) => {
-  console.log("req", req.query);
   return res.sendFile(path.join(__dirname, "public", "index.html"));
 });
 app.get("/*", (req: express.Request, res: express.Response) => {
-  console.log("req", req.query);
   return res.sendFile(path.join(__dirname, "public", "index.html"));
 });
 

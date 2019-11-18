@@ -9,7 +9,8 @@ const initialState = {
   publicUrlMoveDetails: [],
   isMoveDetailsLoading: false,
   totalSets: 0,
-  isShareableUrl: false
+  isShareableUrl: false,
+  accessDenied: false
 };
 export const shareLinkReducer = handleActions(
   {
@@ -65,11 +66,12 @@ export const shareLinkReducer = handleActions(
       { payload }
     ) => ({
       ...state,
+      ...payload,
       publicUrlmoveDetails: payload.isInfiniteScroll
         ? [...state.publicUrlmoveDetails, ...payload.publicUrlmoveDetails]
         : payload.publicUrlmoveDetails,
       isMoveDetailsLoading: false,
-      isShareableUrl: true,
+      isShareableUrl: true
     }),
     [SharableLinkAction.IS_CHANGE_HEADER_REQUEST]: (state, { payload }) => ({
       ...state,
