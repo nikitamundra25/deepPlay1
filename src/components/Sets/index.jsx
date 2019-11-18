@@ -192,25 +192,26 @@ class SetComponent extends React.Component {
                             className="d-flex img-tile-wrap cursor_pointer"
                             onClick={() => this.handleSetDetails(setList._id)}
                           >
-                            <div className="cotent-img-tile">
-                              {setList.recentlyAddMoveImg ? (
+                            {setList.recentlyAddMoveImg ? (
+                              <div className="cotent-img-tile">
                                 <video width={"100%"} id="webm-video">
                                   <source
                                     src={`${setList.recentlyAddMoveImg}`}
                                     type="video/webm"
                                   />
                                 </video>
-                              ) : (
-                                <div className={""}>
-                                  <img
-                                    src={emptyImg}
-                                    alt=""
-                                    width="60"
-                                    height="60"
-                                  />
-                                </div>
-                              )}
-                            </div>
+                              </div>
+                            ) : (
+                              <div className={""}>
+                                <img
+                                  src={emptyImg}
+                                  alt=""
+                                  width="60"
+                                  height="60"
+                                />
+                              </div>
+                            )}
+
                             {/* <div
                             className="cotent-img-tile "
                             style={{

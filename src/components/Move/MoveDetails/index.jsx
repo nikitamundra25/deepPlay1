@@ -206,7 +206,8 @@ class MoveDetails extends React.Component {
       setId,
       title: title,
       description: description,
-      frames:frames && frames.length?frames[3]?frames[3]:frames[1]:[],
+      frames:
+        frames && frames.length ? (frames[3] ? frames[3] : frames[1]) : [],
       isEdit: parsed.isEdit ? true : false
     });
   };
@@ -377,7 +378,7 @@ class MoveDetails extends React.Component {
       isEdit,
       descError
     } = this.state;
-  
+
     return (
       <>
         <div className="create-set-section step-2 ">
