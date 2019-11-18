@@ -66,16 +66,6 @@ class MoveList extends React.Component {
   /*
   /*  
   */
-  shouldComponentUpdate = () => {
-    if (this.props.isMoveStarLoading.loading) {
-      console.log("return false;return false;return false;return false;");
-      return false;
-    }
-    return true;
-  };
-  /*
-  /*  
-  */
   listenScrollEvent = e => {
     if (window.scrollY > 180) {
       this.setState({ backgroundClass: "sticky-header" });
