@@ -53,9 +53,7 @@ class WebmView extends Component {
     isVideoFromSearch
   }) => {
     if (isFullScreenMode !== this.props.isFullScreenMode) {
-      console.log("this.props.isFullScreenMode", this.props.isFullScreenMode);
       const videoFullScreen = true;
-      this.video = document.getElementById("webm-video");
       if (this.video) {
         this.video.addEventListener("volumechange", () => {
           if (
@@ -73,6 +71,7 @@ class WebmView extends Component {
             });
           }
         });
+
         this.video.addEventListener("pause", () => {
           this.setState({
             isPlaying: false
@@ -83,10 +82,10 @@ class WebmView extends Component {
             isPlaying: true
           });
         });
+
         if (this.props.isFullScreenMode && videoFullScreen) {
           let isVideoScreenChange = false;
           this.video.addEventListener("webkitfullscreenchange", () => {
-            console.log("function");
             this.setState({
               isFullScreenMode: false
             });
@@ -95,6 +94,7 @@ class WebmView extends Component {
             }
           });
         }
+
         this.video.controls = false;
       }
     }
@@ -444,7 +444,6 @@ class WebmView extends Component {
       tags,
       isFullScreenMode
     } = this.state;
-    console.log("videoData", videoData);
 
     return (
       <>

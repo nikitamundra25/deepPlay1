@@ -421,6 +421,13 @@ class MoveList extends React.Component {
       sourceIndex: sourceIndex,
       movesOfSet: items
     };
+    
+    this.setState({
+      isMarkingStar: {
+        index: -1,
+        isChanging: false
+      }
+    });
     this.props.updateSortIndexRequest(data);
   };
 
@@ -710,40 +717,11 @@ class MoveList extends React.Component {
                     </div>
                   </div>
                   {selectedMoveIds && selectedMoveIds.length ? (
-              <div className="select-focus-wrap"></div>
-            ) : null}
+                    <div className="select-focus-wrap"></div>
+                  ) : null}
                   <div className="edit-view-wrap">
-                  {selectedMoveIds && selectedMoveIds.length ? (
-                    movesOfSet.map((video, index) => {
-                      return (
-                        <MoveListDetails
-                          index={index}
-                          isVideoChecked={isVideoChecked}
-                          selectedMoves={selectedMoves}
-                          handleShowVideo={this.props.handleShowVideo}
-                          handleVideoHover={this.handleVideoHover}
-                          handleVideoPause={this.handleVideoPause}
-                          handleVideoHoverLeave={this.handleVideoHoverLeave}
-                          handleVideoPlay={this.handleVideoPlay}
-                          handleMovesSelect={this.handleMovesSelect}
-                          isMarkingStar={isMarkingStar}
-                          video={video}
-                          isSelectVideo={isSelectVideo}
-                          videoIndex={videoIndex}
-                          isVideoModalOpen={isVideoModalOpen}
-                          handleStarred={this.handleStarred}
-                          handleVideoCheckBox={this.handleVideoCheckBox}
-                          handleVideoModal={this.props.handleVideoModal}
-                        />
-                      );
-                    })
-                  ) : (
-                    <ListManager
-                      items={movesOfSet}
-                      direction="horizontal"
-                      maxItems={4}
-                      render={video => {
-                        let index = video.id;
+                    {selectedMoveIds && selectedMoveIds.length ? (
+                      movesOfSet.map((video, index) => {
                         return (
                           <MoveListDetails
                             index={index}
@@ -765,11 +743,40 @@ class MoveList extends React.Component {
                             handleVideoModal={this.props.handleVideoModal}
                           />
                         );
-                      }}
-                      onDragEnd={this.reorderList}
-                    />
-                  )}
-                </div>
+                      })
+                    ) : (
+                      <ListManager
+                        items={movesOfSet}
+                        direction="horizontal"
+                        maxItems={4}
+                        render={video => {
+                          let index = video.id;
+                          return (
+                            <MoveListDetails
+                              index={index}
+                              isVideoChecked={isVideoChecked}
+                              selectedMoves={selectedMoves}
+                              handleShowVideo={this.props.handleShowVideo}
+                              handleVideoHover={this.handleVideoHover}
+                              handleVideoPause={this.handleVideoPause}
+                              handleVideoHoverLeave={this.handleVideoHoverLeave}
+                              handleVideoPlay={this.handleVideoPlay}
+                              handleMovesSelect={this.handleMovesSelect}
+                              isMarkingStar={isMarkingStar}
+                              video={video}
+                              isSelectVideo={isSelectVideo}
+                              videoIndex={videoIndex}
+                              isVideoModalOpen={isVideoModalOpen}
+                              handleStarred={this.handleStarred}
+                              handleVideoCheckBox={this.handleVideoCheckBox}
+                              handleVideoModal={this.props.handleVideoModal}
+                            />
+                          );
+                        }}
+                        onDragEnd={this.reorderList}
+                      />
+                    )}
+                  </div>
                 </div>
               ) : (
                 <Col>

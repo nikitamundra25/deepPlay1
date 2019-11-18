@@ -6,6 +6,7 @@ import moment from "moment";
 class ViewInfoModal extends React.Component {
   render() {
     const { modal, handleOpen, videoData, videoDimentions, video } = this.props;
+
     return (
       <div>
         <Modal
@@ -107,7 +108,9 @@ class ViewInfoModal extends React.Component {
                   <span className="info-content">
                     <span className="colon-wrap">: </span>
                     {moment(
-                      videoData.createdAt ? videoData.createdAt : null
+                      videoData.createdAt
+                        ? videoData.createdAt
+                        : video.createdAt
                     ).format("l")}{" "}
                   </span>
                 </div>
