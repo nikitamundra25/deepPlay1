@@ -46,7 +46,7 @@ class MoveListDetails extends React.Component {
                 isVideoChecked && selectedMoves[index]
                   ? "video-full-selection"
                   : ""
-              }`}
+                }`}
               onMouseOver={() => handleVideoHover(index)}
               onMouseLeave={() => {
                 handleVideoPause(index);
@@ -57,12 +57,12 @@ class MoveListDetails extends React.Component {
                 onClick={
                   isVideoChecked && !isVideoModalOpen
                     ? () =>
-                        handleMovesSelect(
-                          !selectedMoves[index],
-                          null,
-                          index,
-                          video._id
-                        )
+                      handleMovesSelect(
+                        !selectedMoves[index],
+                        null,
+                        index,
+                        video._id
+                      )
                     : null
                 }
                 className={
@@ -81,8 +81,8 @@ class MoveListDetails extends React.Component {
                   {video.isStarred ? (
                     <img src={starIc} alt={"star"} className="w-100" />
                   ) : (
-                    <img className="w-100" src={blankStar} alt={"star"} />
-                  )}
+                      <img className="w-100" src={blankStar} alt={"star"} />
+                    )}
                 </div>
 
                 {isVideoChecked ? (
@@ -102,43 +102,43 @@ class MoveListDetails extends React.Component {
                     />
                   </span>
                 ) : (
-                  <>
-                    {" "}
-                    {!isVideoChecked &&
-                    isSelectVideo &&
-                    videoIndex === index ? (
-                      <span
-                        // onClick={() => {
-                        //   this.setState(
-                        //     {
-                        //       isVideoModalOpen: false
-                        //     },
-                        //     () =>
-                        //       this.handleVideoCheckBox(true, index, video._id)
-                        //   );
-                        // }}
-                        onClick={() =>
-                          handleVideoCheckBox(true, index, video._id)
-                        }
-                        className="plus-ic-wrap custom-control custom-checkbox"
-                      >
-                        <Input
-                          className="custom-control-input"
-                          id={`selected-video-${index}`}
-                          onChange={e =>
-                            handleMovesSelect(null, e, index, video._id)
-                          }
-                          type="checkbox"
-                          checked={selectedMoves[index] ? true : false}
-                        />
-                        <label
-                          className="custom-control-label"
-                          htmlFor={`selected-video-${index}`}
-                        />
-                      </span>
-                    ) : null}
-                  </>
-                )}
+                    <>
+                      {" "}
+                      {!isVideoChecked &&
+                        isSelectVideo &&
+                        videoIndex === index ? (
+                          <span
+                            // onClick={() => {
+                            //   this.setState(
+                            //     {
+                            //       isVideoModalOpen: false
+                            //     },
+                            //     () =>
+                            //       this.handleVideoCheckBox(true, index, video._id)
+                            //   );
+                            // }}
+                            onClick={() =>
+                              handleVideoCheckBox(true, index, video._id)
+                            }
+                            className="plus-ic-wrap custom-control custom-checkbox"
+                          >
+                            <Input
+                              className="custom-control-input"
+                              id={`selected-video-${index}`}
+                              onChange={e =>
+                                handleMovesSelect(null, e, index, video._id)
+                              }
+                              type="checkbox"
+                              checked={selectedMoves[index] ? true : false}
+                            />
+                            <label
+                              className="custom-control-label"
+                              htmlFor={`selected-video-${index}`}
+                            />
+                          </span>
+                        ) : null}
+                    </>
+                  )}
                 <div
                   className={"video-effect"}
                   onClick={
@@ -150,7 +150,7 @@ class MoveListDetails extends React.Component {
                   <video
                     width={"100%"}
                     id={`webm-video-${index}`}
-                    poster={videoLoading}
+                    poster={video.videoThumbnail ? video.videoThumbnail : videoLoading}
                     muted={true}
                     loop
                   >
@@ -159,7 +159,7 @@ class MoveListDetails extends React.Component {
                 </div>
                 <div
                   className="blur-img"
-                  // style={{ background: "#000" }}
+                // style={{ background: "#000" }}
                 />
               </div>
               <div
@@ -208,8 +208,8 @@ class MoveListDetails extends React.Component {
                   {video.isStarred ? (
                     <img src={starIc} alt={"star"} className="w-100" />
                   ) : (
-                    <img className="w-100" src={blankStar} alt={"star"} />
-                  )}
+                      <img className="w-100" src={blankStar} alt={"star"} />
+                    )}
                 </div>
               </div>
             </div>

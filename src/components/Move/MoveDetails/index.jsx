@@ -184,7 +184,7 @@ class MoveDetails extends React.Component {
     const { moveDetails, isSavingWebM } = moveReducer;
     let parsed = qs.parse(this.props.location.search);
     logger(isSavingWebM);
-    const { _id: moveId } = moveDetails;
+    const { _id: moveId, frames } = moveDetails;
     const { timer, title, description } = this.state;
     const { tags, setId } = this.videoDetails.current.getDetails();
     if (!setId) {
@@ -203,6 +203,7 @@ class MoveDetails extends React.Component {
       setId,
       title: title,
       description: description,
+      frames:frames && frames.length?frames[3]?frames[3]:frames[1]:[],
       isEdit: parsed.isEdit ? true : false
     });
   };
@@ -295,7 +296,6 @@ class MoveDetails extends React.Component {
   };
 
   handleInputChange = e => {
-    console.log("eeeeeeeeeee", e);
     if (e && e.value && e.label !== "+ Create New Set") {
       this.setState({
         selectSetOptions: {
