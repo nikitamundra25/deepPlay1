@@ -52,6 +52,12 @@ class HomePage extends React.Component {
       this.props.changeHeaderRequest();
     }
   };
+  constructor(props) {
+    super(props);
+    this.state = {
+      onPlaying: false
+    }
+  }
 
   handleDashboardOpen = () => {
     this.props.redirectTo(AppRoutes.DASHBOARD.url);
@@ -89,6 +95,15 @@ class HomePage extends React.Component {
       }
     });
   };
+  videoPlayHandler = () => {
+    const videoPlay = document.getElementById("webm-video-0");
+    this.setState({ onPlaying: !this.state.onPlaying });
+    if (this.state.onPlaying === true) {
+      videoPlay.pause();
+    } else {
+      videoPlay.play();
+    }
+  }
   /*
    */
   render() {
@@ -140,12 +155,28 @@ class HomePage extends React.Component {
 
               {/* videos */}
               <div className="videos-wrap d-flex justify-content-center align-items-center">
-                <video width="100%" id="webm-video-0">
+                <div className="d-flex video-add-banner with-home-videos justify-content-center align-items-center">
+          
+                  {this.state.onPlaying ? 
+                   <span onClick={this.videoPlayHandler} className="play-ic-wrap pause-wrap">
+                   <i className="fa fa-pause" aria-hidden="true"></i> 
+                   </span>
+                       
+                   :
+                   <span onClick={this.videoPlayHandler} className="play-ic-wrap">
+                   <i className="fa fa-play" aria-hidden="true"></i> 
+                   </span>
+                  }
+               
+                  <video width="100%" id="webm-video-0">
                   <source
                     src="https://s3.amazonaws.com/hope.bucket/moves/1571752097935_deep-play.webm"
                     type="video/webm"
                   />
                 </video>
+                </div>
+              
+              
               </div>
             </Col>
           </Row>

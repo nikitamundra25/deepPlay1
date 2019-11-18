@@ -710,6 +710,10 @@ class MoveList extends React.Component {
                     </div>
                   </div>
                   {selectedMoveIds && selectedMoveIds.length ? (
+              <div className="select-focus-wrap"></div>
+            ) : null}
+                  <div className="edit-view-wrap">
+                  {selectedMoveIds && selectedMoveIds.length ? (
                     movesOfSet.map((video, index) => {
                       return (
                         <MoveListDetails
@@ -765,6 +769,7 @@ class MoveList extends React.Component {
                       onDragEnd={this.reorderList}
                     />
                   )}
+                </div>
                 </div>
               ) : (
                 <Col>

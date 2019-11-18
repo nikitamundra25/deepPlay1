@@ -199,7 +199,6 @@ const getVideoFrames = async (videoName: string): Promise<any> => {
   const dirName: string = videoURL;
   const video = await new ffmpeg(videoURL);
   const videoDuration = (video.metadata.duration as any).seconds;
-  console.log("dirName", videoDuration);
   return await new Promise((resolve, reject) => {
     if (videoDuration <= 100) {
       console.log("Inside smallest Video");
@@ -305,8 +304,6 @@ const createMove = async (req: Request, res: Response): Promise<any> => {
       videoName,
       isYoutubeUrl: false
     });
-    console.log("moveResult", moveResult);
-
     await moveResult.save();
     return res.status(200).json({
       message: "Move has been created successfully.",
@@ -525,14 +522,17 @@ const updateMoveDetailsAndTrimVideo = async (
 ): Promise<any> => {
   try {
     const { body } = req;
-    const { timer, moveId, title, description, tags, setId } = body;
+    const { timer, moveId, title, description, tags, setId, frames } = body;
     const result: Document | null | any = await MoveModel.findById(moveId);
+    const thumbnailPath: any[] = frames.split("8000")
     if (result) {
-      let videoFile: String | any;
+      let videoFile: String | any, videoThumbnail: String | any
       if (IsProductionMode) {
         videoFile = path.join(__dirname, result.videoUrl);
+        videoThumbnail = path.join(__dirname, thumbnailPath[1]);
       } else {
         videoFile = path.join(__basedir, "..", result.videoUrl);
+        videoThumbnail = path.join(__basedir, "..", thumbnailPath[1]);
       }
       // cloudinary.v2.uploader.upload(
       //   videoFile,
@@ -574,7 +574,6 @@ const updateMoveDetailsAndTrimVideo = async (
       //     }
       //   }
       // );
-
       const fileName = `${
         result.videoUrl.split(".")[0]
       }_clip_${moment().unix()}.webm`;
@@ -608,6 +607,11 @@ const updateMoveDetailsAndTrimVideo = async (
             "deep-play.webm",
             "moves"
           );
+          const s3VideoThumbnailUrl = await s3BucketUpload(
+            videoThumbnail,
+            "deep-play.jpeg",
+            "moves-thumbnail"
+          );
           let moveDataForAlgolia: Document | any;
           /* Add items to algolia */
           moveDataForAlgolia = {
@@ -626,6 +630,7 @@ const updateMoveDetailsAndTrimVideo = async (
                 seconds: duration
               }
             },
+            videoThumbnail: s3VideoThumbnailUrl,
             searchType: "move"
           };
           let temp: any;
@@ -638,7 +643,8 @@ const updateMoveDetailsAndTrimVideo = async (
               await MoveModel.updateOne(
                 { _id: result._id },
                 {
-                  objectId: temp
+                  objectId: temp,
+                  videoThumbnail: s3VideoThumbnailUrl
                 }
               );
             }

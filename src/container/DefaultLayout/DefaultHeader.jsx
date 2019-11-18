@@ -397,7 +397,7 @@ class DefaultHeader extends React.Component {
                     </Nav>
                   ) : null}
                   <Nav
-                    className="navbar-nav align-items-center nav-main-section user-section"
+                    className="navbar-nav align-items-center nav-main-section user-section user-header-profile"
                     navbar
                   >
                     {!(isLoggedIn || isLoginSuccess) ? (

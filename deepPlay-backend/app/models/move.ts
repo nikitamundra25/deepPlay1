@@ -24,6 +24,10 @@ const moveSchema: Mongoose.Schema = new Schema({
     type: String,
     default: null
   },
+  videoThumbnail:{
+    type: String,
+    default: null
+  },
   moveURL: {
     type: String,
     default: null

@@ -11,7 +11,7 @@ import {
 } from "reactstrap";
 import { AppRoutes } from "../../config/AppRoutes";
 import "./index.scss";
-import emptySetIc from "../../assets/img/empty-sets.png";
+import emptySetIc from "../../assets/img/play-list-ic.svg";
 import Loader from "../comman/Loader/Loader";
 import PaginationHelper from "helper/Pagination";
 import qs from "query-string";

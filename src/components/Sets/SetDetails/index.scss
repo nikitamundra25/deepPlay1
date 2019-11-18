@@ -71,11 +71,11 @@
   padding: 0px;
   position: absolute;
   z-index: 9;
-  top: -75px;
+  top: 70px;
   left: 50%;
   transform: translateX(-50%);
   transition: all 0.5s;
-  z-index: 99;
+  z-index: 103;
   // padding: 8px 12px 12px 8px;
   // background: #f1f1f1;
   // box-shadow: 0px 0px 1px 1px rgba(58, 55, 55, 0.2);
@@ -143,10 +143,18 @@ div[data-react-beautiful-dnd-drag-handle] {
 .play-list-tile {
   width: 100%;
   padding: 0px 15px;
+  z-index: 99;
+  position: relative;
+  
+}
+.create-move-element{
+  z-index: 0;
 }
 .play-list-tile-select {
   width: 25%;
+  
   padding: 0px 15px;
+
 }
 .full-video-mode {
   width: 100% !important;

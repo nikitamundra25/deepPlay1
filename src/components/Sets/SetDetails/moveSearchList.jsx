@@ -483,7 +483,6 @@ class MoveSearchList extends React.Component {
                       </div>
                     </div>
                   </div>
-
                   {!isMoveSearchLoading ? (
                     moveofSetList.map((video, index) => {
                       return (
@@ -755,6 +754,7 @@ class MoveSearchList extends React.Component {
       </section>
     );
   }
+
 }
 
 export default MoveSearchList;
