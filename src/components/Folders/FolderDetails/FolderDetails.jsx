@@ -398,7 +398,7 @@ class RecentFolderComponent extends React.Component {
                               </span>
                             </div>
                             <span className={"text-capitalize"}>
-                              {list.description ? list.description : ""}
+                              <small>{list.description ? list.description : ""}</small>
                             </span>
                             <div className="content-number-tile">
                               {" "}
