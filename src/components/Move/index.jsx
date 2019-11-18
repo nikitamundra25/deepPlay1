@@ -33,7 +33,7 @@ class MoveComponent extends React.Component {
       fileErr: ""
     };
   }
-
+  componentDidMount = () => {};
   handleChange = e => {
     e.preventDefault();
     const { name, value } = e.target;
@@ -171,6 +171,9 @@ class MoveComponent extends React.Component {
     const { errors, url, fileErr } = this.state;
     const { moveReducer } = this.props;
     const { isVideoDownloading } = moveReducer;
+    const location = window.location.href;
+    const stemp = location.split("?");
+    console.log("location", stemp[1]);
 
     return (
       <>
@@ -179,16 +182,18 @@ class MoveComponent extends React.Component {
             <div className="set-content-block w-100">
               <CardHeader className="border-bottom pt-4 pb-2">
                 <div className="content-header set-header d-flex ">
-                  <div
-                    onClick={() => {
-                      window.history.back();
-                    }}
-                  >
-                    <span className="cursor_pointer back-arrow create-move-back">
-                      {" "}
-                      <i className="fas fa-long-arrow-alt-left"></i> Back
-                    </span>
-                  </div>
+                  {stemp[1] ? (
+                    <div
+                      onClick={() => {
+                        window.history.back();
+                      }}
+                    >
+                      <span className="cursor_pointer back-arrow create-move-back">
+                        {" "}
+                        <i className="fas fa-long-arrow-alt-left"></i> Back
+                      </span>
+                    </div>
+                  ) : null}
                   <span className="content-title creat-set-title">
                     {isVideoDownloading ? "Preparing Move" : "Create a move"}
                   </span>

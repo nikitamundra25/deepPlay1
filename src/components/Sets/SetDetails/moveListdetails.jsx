@@ -4,7 +4,6 @@ import starIc from "../../../assets/img/star.svg";
 import "./index.scss";
 import blankStar from "../../../assets/img/star-line.svg";
 import videoLoading from "../../../assets/img/icons/videoLoading.svg";
-import { ListManager } from "react-beautiful-dnd-grid";
 
 class MoveListDetails extends React.Component {
   render() {
@@ -140,35 +139,26 @@ class MoveListDetails extends React.Component {
                     ) : null}
                   </>
                 )}
-                <ListManager
-                  items={[video]}
-                  direction="horizontal"
-                  maxItems={4}
-                  render={video => {
-                    let index = video.id;
-                    return (
-                      <div
-                        className={"video-effect"}
-                        onClick={
-                          !isVideoChecked && isVideoModalOpen
-                            ? () => this.props.handleVideoModal(video, index)
-                            : null
-                        }
-                      >
-                        <video
-                          width={"100%"}
-                          id={`webm-video-${index}`}
-                          poster={videoLoading}
-                          muted={true}
-                          loop
-                        >
-                          <source src={`${video.moveURL}`} type="video/webm" />
-                        </video>
-                      </div>
-                    );
-                  }}
-                  
-                />
+
+                <div
+                  className={"video-effect"}
+                  onClick={
+                    !isVideoChecked && isVideoModalOpen
+                      ? () => this.props.handleVideoModal(video, index)
+                      : null
+                  }
+                >
+                  <video
+                    width={"100%"}
+                    id={`webm-video-${index}`}
+                    poster={videoLoading}
+                    muted={true}
+                    loop
+                  >
+                    <source src={`${video.moveURL}`} type="video/webm" />
+                  </video>
+                </div>
+
                 <div
                   className="blur-img"
                   // style={{ background: "#000" }}

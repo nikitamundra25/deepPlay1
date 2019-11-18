@@ -63,6 +63,8 @@ class ViewInfoModal extends React.Component {
                     <a
                       className="text-link"
                       href={videoData.sourceUrl ? videoData.sourceUrl : null}
+                      target="_blank"
+                      rel="noopener noreferrer"
                     >
                       <span className="info-content">
                         <span className="colon-wrap cursor_pointer">: </span>

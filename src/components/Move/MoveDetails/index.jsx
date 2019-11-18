@@ -377,8 +377,7 @@ class MoveDetails extends React.Component {
       isEdit,
       descError
     } = this.state;
-    console.log("isUpdateDescription", isUpdateDescription);
-
+  
     return (
       <>
         <div className="create-set-section step-2 ">

@@ -234,7 +234,7 @@ class FolderSharedLink extends React.Component {
                   <div className="banner-text">
                     <h1 className="banner-heading">Oops !</h1>
                     <p className="banner-subheading mt-4 mt-0 h3 font-weight-bold">
-                      Public access denied...
+                      Access denied...
                     </p>
                     <p className="banner-content  mt-0 ">
                       You didn't have permission to access this page. Maybe our
