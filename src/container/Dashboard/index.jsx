@@ -17,7 +17,7 @@ import {
 } from "../../actions";
 import emptyFolderIc from "../../assets/img/empty-folder.png";
 import fileFolderIc from "../../assets/img/file-folder.png";
-import emptySetIc from "../../assets/img/empty-sets.png";
+import emptySetIc from "../../assets/img/play-list-ic.svg";
 import Loader from "../../components/comman/Loader/Loader";
 import emptyImg from "../../assets/img/empty-img.svg";
 // import defaultProfileImage from "../../assets/img/profile-ic.png";

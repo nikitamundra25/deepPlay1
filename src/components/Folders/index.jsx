@@ -264,7 +264,7 @@ class FolderComponent extends React.Component {
                                 onClick={this.handleFolderModel}
                               >
                                 <i className="fas fa-plus mr-1"></i>
-                                Folder
+                               Create New Folder 
                               </Button>
                             </div>
                           </CardBody>

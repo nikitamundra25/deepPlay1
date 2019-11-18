@@ -14,7 +14,7 @@ import "slick-carousel/slick/slick-theme.css";
 import qs from "query-string";
 import Loader from "../Loader/Loader";
 import WebmView from "../../Sets/SetDetails/WebmView";
-import emptySetIc from "../../../assets/img/empty-sets.png";
+import emptySetIc from "../../../assets/img/play-list-ic.svg";
 import InfiniteScroll from "react-infinite-scroll-component";
 import imgNotfound from "../../../assets/img/404.svg";
 import { Link } from "react-router-dom";
@@ -262,7 +262,7 @@ class SetSharedLink extends React.Component {
 
                                       <div
                                         className="blur-img"
-                                        style={{ background: "#000" }}
+                                        // style={{ background: "" }}
                                       />
                                     </div>
 

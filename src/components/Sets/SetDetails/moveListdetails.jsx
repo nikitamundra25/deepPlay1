@@ -3,7 +3,7 @@ import { Input } from "reactstrap";
 import starIc from "../../../assets/img/star.svg";
 import "./index.scss";
 import blankStar from "../../../assets/img/star-line.svg";
-import videoLoading from "../../../assets/img/icons/videoLoading.svg"
+import videoLoading from "../../../assets/img/loder/new-resize.gif";
 
 class MoveListDetails extends React.Component {
   render() {
@@ -81,8 +81,8 @@ class MoveListDetails extends React.Component {
                   {video.isStarred ? (
                     <img src={starIc} alt={"star"} className="w-100" />
                   ) : (
-                      <img className="w-100" src={blankStar} alt={"star"} />
-                    )}
+                    null
+                  )}
                 </div>
 
                 {isVideoChecked ? (

@@ -3,7 +3,7 @@ import emptyFolderIc from "../../assets/img/empty-folder.png";
 import Loader from "../comman/Loader/Loader";
 import { AppRoutes } from "../../config/AppRoutes";
 import emptyFoldeIc from "../../assets/img/empty-folder.png";
-import emptySetIc from "../../assets/img/empty-sets.png";
+import emptySetIc from "../../assets/img/play-list-ic.svg";
 import emptyMoveIc from "../../assets/img/empty-moves.png";
 import "./index.scss";
 // core components
