@@ -444,7 +444,7 @@ class WebmView extends Component {
       tags,
       isFullScreenMode
     } = this.state;
-    console.log("isFullScreenMode", this.props.isFullScreenMode);
+    console.log("videoData", videoData);
 
     return (
       <>
@@ -793,6 +793,7 @@ class WebmView extends Component {
           modal={viewInfoModalOpen}
           handleOpen={this.openViewInfoModal}
           videoData={videoData}
+          video={this.props.video}
           videoDimentions={videoDimentions}
         />
         <EditMoveModal
