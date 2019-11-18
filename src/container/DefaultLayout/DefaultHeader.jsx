@@ -139,7 +139,8 @@ class DefaultHeader extends React.Component {
     this.setState({
       search: value
     });
-    if (value === "") {
+    const value1 = value.trimStart();
+    if (!value1) {
       return;
     } else {
       this.props.allSearchRequest({ search: value });

@@ -157,6 +157,7 @@ class MoveListDetails extends React.Component {
                     <source src={`${video.moveURL}`} type="video/webm" />
                   </video>
                 </div>
+
                 <div
                   className="blur-img"
                 // style={{ background: "#000" }}

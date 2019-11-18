@@ -60,7 +60,12 @@ class ViewInfoModal extends React.Component {
                 {videoData.isYoutubeUrl ? (
                   <div class="info-wrap">
                     <span className="info-heading"> Source URL</span>
-                    <a href={videoData.sourceUrl ? videoData.sourceUrl : null}>
+                    <a
+                      className="text-link"
+                      href={videoData.sourceUrl ? videoData.sourceUrl : null}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
                       <span className="info-content">
                         <span className="colon-wrap cursor_pointer">: </span>
                         {videoData.sourceUrl ? videoData.sourceUrl : null}{" "}

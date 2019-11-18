@@ -444,6 +444,8 @@ class WebmView extends Component {
       tags,
       isFullScreenMode
     } = this.state;
+    console.log("isFullScreenMode", this.props.isFullScreenMode);
+
     return (
       <>
         <Modal
@@ -581,7 +583,11 @@ class WebmView extends Component {
                     width={"100%"}
                     id="webm-video"
                     muted={isMuted}
-                    className="video-loading-tag"
+                    className={
+                      this.props.isFullScreenMode
+                        ? "full-video-mode video-loading-tag"
+                        : "video-loading-tag"
+                    }
                     loop
                     // preload="auto"
                     autoPlay
@@ -775,7 +781,7 @@ class WebmView extends Component {
         <AddTagModal
           modal={addTagModalOpenReq}
           handleOpen={this.openAddTagsModal}
-          moveIdToAddTag={moveIdToAddTags ? [moveIdToAddTags] : video._id}
+          moveIdToAddTag={moveIdToAddTags ? moveIdToAddTags : video._id}
           addTagstoMove={data => this.props.addTagstoMove(data)}
           tagsList={tagsList}
           handleTagChange={this.handleTagChange}

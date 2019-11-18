@@ -412,26 +412,40 @@ const deleteSet = async (req: Request, res: Response): Promise<void> => {
         message: "Set id not found"
       });
     }
+    let moveObjectIds: Document | any = [];
     const result: Document | any = await SetModel.findByIdAndUpdate(body.id, {
       $set: { isDeleted: true }
     });
 
-    const result1: any = await SetModel.find({ _id: body.id });
-    const stemp: Number | any = result1.length ? result1[0].objectId : null;
+    const result1: any = await SetModel.findOne({ _id: body.id });
+    const stemp: Number | any = result1 ? result1.objectId : null;
 
+    const includeMove: Document | any | null = await MoveModel.find({
+      setId: result1._id
+    });
+
+    if (includeMove) {
+      for (let index = 0; index < includeMove.length; index++) {
+        const moveData = includeMove[index];
+        await MoveModel.findByIdAndUpdate(moveData._id, {
+          isDeleted: true
+        });
+        if (moveData.objectId) {
+          moveObjectIds.push(moveData.objectId);
+        }
+      }
+    }
     if (stemp) {
       index.deleteObject(stemp, (err: string, content: any) => {
         if (err) throw err;
       });
     }
-    await MoveModel.updateMany(
-      { setId: { $in: body.id } },
-      {
-        $set: {
-          isDeleted: true
-        }
-      }
-    );
+
+    if (moveObjectIds.length) {
+      index.deleteObjects(moveObjectIds, (err: string, content: any) => {
+        if (err) throw err;
+      });
+    }
 
     res.status(200).json({
       data: result[0],

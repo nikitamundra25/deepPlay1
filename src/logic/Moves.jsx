@@ -172,7 +172,8 @@ const completeVideoEditingLogic = createLogic({
         dispatch(
           modelOpenRequest({
             modelDetails: {
-              isMoveSuccessModal: true
+              isMoveSuccessModal: true,
+              createSetModalOpen: false
             }
           })
         );
