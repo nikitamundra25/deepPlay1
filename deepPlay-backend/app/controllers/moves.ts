@@ -524,15 +524,23 @@ const updateMoveDetailsAndTrimVideo = async (
     const { body } = req;
     const { timer, moveId, title, description, tags, setId, frames } = body;
     const result: Document | null | any = await MoveModel.findById(moveId);
-    const thumbnailPath: any[] = frames.split("8000");
+    console.log("frames", frames);
+    let thumbnailPath: any[] | undefined;
+    if (frames && frames.length) {
+      thumbnailPath = frames.split("8000");
+    }
     if (result) {
       let videoFile: String | any, videoThumbnail: String | any;
       if (IsProductionMode) {
         videoFile = path.join(__dirname, result.videoUrl);
-        videoThumbnail = path.join(__dirname, thumbnailPath[1]);
+        if (thumbnailPath && thumbnailPath.length) {
+          videoThumbnail = path.join(__dirname, thumbnailPath[1]);
+        }
       } else {
         videoFile = path.join(__basedir, "..", result.videoUrl);
-        videoThumbnail = path.join(__basedir, "..", thumbnailPath[1]);
+        if (thumbnailPath && thumbnailPath.length) {
+          videoThumbnail = path.join(__basedir, "..", thumbnailPath[1]);
+        }
       }
       // cloudinary.v2.uploader.upload(
       //   videoFile,
@@ -607,11 +615,14 @@ const updateMoveDetailsAndTrimVideo = async (
             "deep-play.webm",
             "moves"
           );
-          const s3VideoThumbnailUrl = await s3BucketUpload(
-            videoThumbnail,
-            "deep-play.jpeg",
-            "moves-thumbnail"
-          );
+          let s3VideoThumbnailUrl: any | null;
+          if (videoThumbnail) {
+            s3VideoThumbnailUrl = await s3BucketUpload(
+              videoThumbnail,
+              "deep-play.jpeg",
+              "moves-thumbnail"
+            );
+          }
           let moveDataForAlgolia: Document | any;
           /* Add items to algolia */
           moveDataForAlgolia = {
@@ -631,7 +642,7 @@ const updateMoveDetailsAndTrimVideo = async (
                 seconds: duration
               }
             },
-            videoThumbnail: s3VideoThumbnailUrl,
+            videoThumbnail: s3VideoThumbnailUrl ? s3VideoThumbnailUrl : null,
             searchType: "move"
           };
           let temp: any;
@@ -646,6 +657,8 @@ const updateMoveDetailsAndTrimVideo = async (
                 {
                   objectId: temp,
                   videoThumbnail: s3VideoThumbnailUrl
+                    ? s3VideoThumbnailUrl
+                    : null
                 }
               );
             }
