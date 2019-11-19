@@ -37,8 +37,12 @@ class FrameDetails extends Component {
                 const rightContainer = document.getElementById(
                   "right-container"
                 );
-                const leftCount = document.getElementsByClassName("input-range__label--min");
-                const rightCount = document.getElementsByClassName("input-range__label--max");
+                const leftCount = document.getElementsByClassName(
+                  "input-range__label--min"
+                );
+                const rightCount = document.getElementsByClassName(
+                  "input-range__label--max"
+                );
                 // get width for left and right container
                 const leftWidth = newChild.childNodes[1].style.left;
                 const rightWidth = newChild.childNodes[2].style.left;
@@ -149,12 +153,11 @@ class FrameDetails extends Component {
             maxValue={maxValue}
             minValue={0}
             formatLabel={(val, type) => {
-              console.log("fasdfasd", type, type === "min");
               return type === "min"
                 ? `${SecondsToMMSS(time.min >= 0 ? time.min : 0)}`
                 : type === "max"
-                  ? `${SecondsToMMSS(time.max >= 0 ? time.max : 0)}`
-                  : null;
+                ? `${SecondsToMMSS(time.max >= 0 ? time.max : 0)}`
+                : null;
             }}
             value={time}
             onChange={this.labelValueChange}
@@ -216,19 +219,18 @@ class FrameDetails extends Component {
             md={"6"}
             className="text-right d-flex align-items-end justify-content-end"
           >
-           <Button
+            <Button
               color={"default"}
               className={"btn-line-black btn url-upload-btn mr-3"}
               onClick={() => {
                 window.history.back();
               }}
             >
-            Back
+              Back
             </Button>
             <Button
               color={"default"}
               className={"btn-black btn url-upload-btn"}
-            
               onClick={this.props.completeEditing}
             >
               Finish

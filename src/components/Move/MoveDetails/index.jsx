@@ -101,7 +101,7 @@ class MoveDetails extends React.Component {
     const newModelInfoReducer = this.props.modelInfoReducer;
     const { modelDetails } = newModelInfoReducer;
     if (prevDescriptionModal !== modelDetails.isDescriptionModalOpen) {
-      if (this.state.description !== null) {
+      if (this.state.description) {
         this.setState({
           isUpdateDescription: true
         });
@@ -456,7 +456,7 @@ class MoveDetails extends React.Component {
           >
             <ModalHeader>
               <span className="custom-title" id="exampleModalLabel">
-                Description
+                {isUpdateDescription ? "Update description" : "Add Description"}
               </span>
               <button
                 aria-label="Close"

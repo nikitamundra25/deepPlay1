@@ -6,6 +6,12 @@ import moment from "moment";
 class ViewInfoModal extends React.Component {
   render() {
     const { modal, handleOpen, videoData, videoDimentions, video } = this.props;
+    console.log(">>>>>>", videoData.startTime);
+    console.log(
+      "https://www.youtube.com/watch?v=_UCJSB0r9a4&feature=youtu.be&t=2m34s"
+    );
+    let temp = "";
+    let stemp = "";
 
     return (
       <div>
@@ -60,15 +66,27 @@ class ViewInfoModal extends React.Component {
                 {videoData.isYoutubeUrl ? (
                   <div class="info-wrap">
                     <span className="info-heading"> Source URL</span>
+                    <span className="d-none">
+                      {videoData.sourceUrl
+                        ? (temp = videoData.sourceUrl.split("/"))
+                        : null}
+                      {temp ? (stemp = temp[4].split("?")) : null}
+                    </span>
                     <a
                       className="text-link"
-                      href={videoData.sourceUrl ? videoData.sourceUrl : null}
+                      href={
+                        videoData.sourceUrl
+                          ? `https://www.youtube.com/watch?v=${stemp[0]}&feature=youtu.be&t=${videoData.startTime}m`
+                          : null
+                      }
                       target="_blank"
                       rel="noopener noreferrer"
                     >
                       <span className="info-content">
                         <span className="colon-wrap cursor_pointer">: </span>
-                        {videoData.sourceUrl ? videoData.sourceUrl : null}{" "}
+                        {videoData.sourceUrl
+                          ? `https://www.youtube.com/watch?v=${stemp[0]}&feature=youtu.be&t=${videoData.startTime}m`
+                          : null}{" "}
                       </span>
                     </a>
                   </div>

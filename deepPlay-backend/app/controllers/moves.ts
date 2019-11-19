@@ -524,9 +524,9 @@ const updateMoveDetailsAndTrimVideo = async (
     const { body } = req;
     const { timer, moveId, title, description, tags, setId, frames } = body;
     const result: Document | null | any = await MoveModel.findById(moveId);
-    const thumbnailPath: any[] = frames.split("8000")
+    const thumbnailPath: any[] = frames.split("8000");
     if (result) {
-      let videoFile: String | any, videoThumbnail: String | any
+      let videoFile: String | any, videoThumbnail: String | any;
       if (IsProductionMode) {
         videoFile = path.join(__dirname, result.videoUrl);
         videoThumbnail = path.join(__dirname, thumbnailPath[1]);
@@ -619,6 +619,7 @@ const updateMoveDetailsAndTrimVideo = async (
             moveURL: s3VideoUrl,
             title,
             description,
+            startTime: timer.min ? timer.min : 0,
             tags,
             setId,
             userId: result.userId,
@@ -660,6 +661,7 @@ const updateMoveDetailsAndTrimVideo = async (
               description,
               tags,
               setId,
+              startTime: timer.min ? timer.min : 0,
               videoMetaData: {
                 ...result.videoMetaData,
                 duration: {
