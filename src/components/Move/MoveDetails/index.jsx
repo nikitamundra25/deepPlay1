@@ -199,6 +199,8 @@ class MoveDetails extends React.Component {
       return;
     }
     logger(this.state, moveId);
+    console.log("Whenever",frames, frames.length);
+    
     this.props.completeVideoEditing({
       timer,
       moveId,
@@ -207,7 +209,7 @@ class MoveDetails extends React.Component {
       title: title,
       description: description,
       frames:
-        frames && frames.length ? (frames[3] ? frames[3] : frames[1]) : [],
+        frames && frames.length ? (frames[3] ? frames[3] : frames[0]) : [],
       isEdit: parsed.isEdit ? true : false
     });
   };

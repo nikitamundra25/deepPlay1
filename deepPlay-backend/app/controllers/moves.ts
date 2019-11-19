@@ -138,7 +138,7 @@ const downloadYoutubeVideo = async (
           ytdl(body.url).pipe(
             (videoStream = fs.createWriteStream(originalVideoPath))
           );
-          videoStream.on("close", async function() {
+          videoStream.on("close", async function () {
             const {
               frames: framesArray,
               videoMetaData,
@@ -524,11 +524,16 @@ const updateMoveDetailsAndTrimVideo = async (
     const { body } = req;
     const { timer, moveId, title, description, tags, setId, frames } = body;
     const result: Document | null | any = await MoveModel.findById(moveId);
-    const thumbnailPath: any[] = frames.split("8000")
+    console.log("frames", frames);
+    let thumbnailPath: any[]
+    if (frames && frames.length) {
+      thumbnailPath = frames.split("8000")
+    }
     if (result) {
       let videoFile: String | any, videoThumbnail: String | any
       if (IsProductionMode) {
         videoFile = path.join(__dirname, result.videoUrl);
+        
         videoThumbnail = path.join(__dirname, thumbnailPath[1]);
       } else {
         videoFile = path.join(__basedir, "..", result.videoUrl);
@@ -576,7 +581,7 @@ const updateMoveDetailsAndTrimVideo = async (
       // );
       const fileName = `${
         result.videoUrl.split(".")[0]
-      }_clip_${moment().unix()}.webm`;
+        }_clip_${moment().unix()}.webm`;
       let videoFileMain: String | any, videoOriginalFile: String | any;
       if (IsProductionMode) {
         videoFileMain = path.join(__dirname, `${fileName}`);
@@ -755,7 +760,7 @@ const isStarredMove = async (req: Request, res: Response): Promise<any> => {
     return res.status(200).json({
       message: `Move has been ${
         isStarred === "true" ? "starred" : "Unstarred"
-      } successfully!`
+        } successfully!`
     });
   } catch (error) {
     console.log(error);
