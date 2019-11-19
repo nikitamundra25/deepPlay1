@@ -2,17 +2,14 @@ import React from "react";
 import { Modal, ModalHeader, ModalBody } from "reactstrap";
 import closeBtn from "../../../assets/img/close-img.png";
 import moment from "moment";
+import { SecondsToHHMMSS } from "../../../helper/Time";
 // core components
 class ViewInfoModal extends React.Component {
   render() {
     const { modal, handleOpen, videoData, videoDimentions, video } = this.props;
-    console.log(">>>>>>", videoData.startTime);
-    console.log(
-      "https://www.youtube.com/watch?v=_UCJSB0r9a4&feature=youtu.be&t=2m34s"
-    );
     let temp = "";
     let stemp = "";
-
+    let splitTime = "";
     return (
       <div>
         <Modal
@@ -71,12 +68,20 @@ class ViewInfoModal extends React.Component {
                         ? (temp = videoData.sourceUrl.split("/"))
                         : null}
                       {temp ? (stemp = temp[4].split("?")) : null}
+                      {videoData.startTime > 0
+                        ? (splitTime = SecondsToHHMMSS(
+                            videoData.startTime
+                          ).split(":"))
+                        : null}
+                      {console.log("splitTime", splitTime)}
                     </span>
                     <a
                       className="text-link"
                       href={
                         videoData.sourceUrl
-                          ? `https://www.youtube.com/watch?v=${stemp[0]}&feature=youtu.be&t=${videoData.startTime}m`
+                          ? splitTime
+                            ? `https://www.youtube.com/watch?v=${stemp[0]}&feature=youtu.be&t=${splitTime[0]}h${splitTime[1]}m${splitTime[2]}s`
+                            : `https://www.youtube.com/watch?v=${stemp[0]}&feature=youtu.be`
                           : null
                       }
                       target="_blank"
@@ -85,8 +90,10 @@ class ViewInfoModal extends React.Component {
                       <span className="info-content">
                         <span className="colon-wrap cursor_pointer">: </span>
                         {videoData.sourceUrl
-                          ? `https://www.youtube.com/watch?v=${stemp[0]}&feature=youtu.be&t=${videoData.startTime}m`
-                          : null}{" "}
+                          ? splitTime
+                            ? `https://www.youtube.com/watch?v=${stemp[0]}&feature=youtu.be&t=${splitTime[0]}h${splitTime[1]}m${splitTime[2]}s`
+                            : `https://www.youtube.com/watch?v=${stemp[0]}&feature=youtu.be`
+                          : null}
                       </span>
                     </a>
                   </div>

@@ -524,7 +524,6 @@ const updateMoveDetailsAndTrimVideo = async (
     const { body } = req;
     const { timer, moveId, title, description, tags, setId, frames } = body;
     const result: Document | null | any = await MoveModel.findById(moveId);
-    console.log("frames", frames);
     let thumbnailPath: any[] | undefined;
     if (frames && frames.length) {
       thumbnailPath = frames.split("8000");
@@ -631,10 +630,13 @@ const updateMoveDetailsAndTrimVideo = async (
             title,
             description,
             startTime: timer.min ? timer.min : 0,
+            sourceUrl: result.sourceUrl ? result.sourceUrl : null,
             tags,
             setId,
+            isYoutubeUrl: result.isYoutubeUrl ? result.isYoutubeUrl : false,
             userId: result.userId,
             isDeleted: result.isDeleted,
+            createdAt: result.createdAt,
             videoMetaData: {
               ...result.videoMetaData,
               duration: {

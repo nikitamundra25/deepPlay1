@@ -474,26 +474,35 @@ class DefaultHeader extends React.Component {
                           </DropdownToggle>
                           <DropdownMenu>
                             {SidebarComponent.map((item, index) => {
-                              return (
-                                <DropdownItem
-                                  onClick={() =>
-                                    this.props.redirectTo(item.url)
-                                  }
-                                  key={index}
-                                  active={routePath === item.url ? true : false}
-                                >
-                                  <div className="dropdown-img">
-                                    <img
-                                      src={item.iconUrl}
-                                      alt={item.iconUrl}
-                                      width="20"
-                                    />{" "}
-                                  </div>
-                                  <div className="dropdown-txt">
-                                    {item.name}
-                                  </div>
-                                </DropdownItem>
-                              );
+                              if (
+                                item.name !== "Set" &&
+                                item.name !== "Folder"
+                              ) {
+                                return (
+                                  <DropdownItem
+                                    onClick={() =>
+                                      this.props.redirectTo(item.url)
+                                    }
+                                    key={index}
+                                    active={
+                                      routePath === item.url ? true : false
+                                    }
+                                  >
+                                    <div className="dropdown-img">
+                                      <img
+                                        src={item.iconUrl}
+                                        alt={item.iconUrl}
+                                        width="20"
+                                      />{" "}
+                                    </div>
+                                    <div className="dropdown-txt">
+                                      {item.name}
+                                    </div>
+                                  </DropdownItem>
+                                );
+                              } else {
+                                return null;
+                              }
                             })}
 
                             <DropdownItem onClick={e => logoutRequest(e)}>
