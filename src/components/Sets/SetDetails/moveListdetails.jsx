@@ -3,7 +3,7 @@ import { Input } from "reactstrap";
 import starIc from "../../../assets/img/star.svg";
 import "./index.scss";
 import blankStar from "../../../assets/img/star-line.svg";
-import videoLoading from "../../../assets/img/loder/new-resize.gif";
+import videoLoading from "../../../assets/img/icons/video-poster.png";
 
 class MoveListDetails extends React.Component {
   render() {
