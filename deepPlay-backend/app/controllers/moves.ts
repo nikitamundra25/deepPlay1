@@ -138,7 +138,7 @@ const downloadYoutubeVideo = async (
           ytdl(body.url).pipe(
             (videoStream = fs.createWriteStream(originalVideoPath))
           );
-          videoStream.on("close", async function() {
+          videoStream.on("close", async function () {
             const {
               frames: framesArray,
               videoMetaData,
@@ -200,76 +200,28 @@ const getVideoFrames = async (videoName: string): Promise<any> => {
   const video = await new ffmpeg(videoURL);
   const videoDuration = (video.metadata.duration as any).seconds;
   return await new Promise((resolve, reject) => {
-    if (videoDuration <= 100) {
-      console.log("Inside smallest Video");
-      video.fnExtractFrameToJPG(
-        `${dirName.split(".")[0]}_frames`,
-        {
-          start_time: 0,
-          every_n_frames: 80
-        },
-        (error: any, file: any) => {
-          console.log(error);
-          if (error) {
-            reject(error);
-          }
-          console.log("====================================");
-          console.log(file);
-          console.log("====================================");
-          const frames: string[] = (file as any).map((f: string) => {
-            const fArray = f.split("/");
-            return `${fArray[fArray.length - 2]}/${fArray[fArray.length - 1]}`;
-          });
-          resolve({ frames, videoMetaData: video.metadata, videoName });
+    console.log("Inside Feeee Video");
+    video.fnExtractFrameToJPG(
+      `${dirName.split(".")[0]}_frames`,
+      {
+        start_time: 0,
+        every_n_percentage: 10
+      },
+      (error: any, file: any) => {
+        console.log(error);
+        if (error) {
+          reject(error);
         }
-      );
-    } else if (videoDuration <= 500) {
-      console.log("inside first ");
-      video.fnExtractFrameToJPG(
-        `${dirName.split(".")[0]}_frames`,
-        {
-          start_time: 0,
-          every_n_seconds: 20
-        },
-        (error: any, file: any) => {
-          console.log(error);
-          if (error) {
-            reject(error);
-          }
-          console.log("====================================");
-          console.log(file);
-          console.log("====================================");
-          const frames: string[] = (file as any).map((f: string) => {
-            const fArray = f.split("/");
-            return `${fArray[fArray.length - 2]}/${fArray[fArray.length - 1]}`;
-          });
-          resolve({ frames, videoMetaData: video.metadata, videoName });
-        }
-      );
-    } else {
-      console.log("Inside Feeee Video");
-      video.fnExtractFrameToJPG(
-        `${dirName.split(".")[0]}_frames`,
-        {
-          start_time: 0,
-          every_n_percentage: 10
-        },
-        (error: any, file: any) => {
-          console.log(error);
-          if (error) {
-            reject(error);
-          }
-          console.log("====================================");
-          console.log(file);
-          console.log("====================================");
-          const frames: string[] = (file as any).map((f: string) => {
-            const fArray = f.split("/");
-            return `${fArray[fArray.length - 2]}/${fArray[fArray.length - 1]}`;
-          });
-          resolve({ frames, videoMetaData: video.metadata, videoName });
-        }
-      );
-    }
+        console.log("====================================");
+        console.log(file);
+        console.log("====================================");
+        const frames: string[] = (file as any).map((f: string) => {
+          const fArray = f.split("/");
+          return `${fArray[fArray.length - 2]}/${fArray[fArray.length - 1]}`;
+        });
+        resolve({ frames, videoMetaData: video.metadata, videoName });
+      }
+    );
   });
 };
 /*  */
@@ -542,49 +494,9 @@ const updateMoveDetailsAndTrimVideo = async (
           videoThumbnail = path.join(__basedir, "..", thumbnailPath[1]);
         }
       }
-      // cloudinary.v2.uploader.upload(
-      //   videoFile,
-      //   {
-      //     start_offset: timer.min,
-      //     end_offset: timer.max,
-      //     resource_type: "video",
-      //     format: "webm",
-      //     eager_async: true,
-      //   },
-      //   async function(error: any, moveData: any) {
-      //     if (error) {
-      //       console.log(">>>>>>>>>>>Error", error);
-      //       return res.status(400).json({
-      //         responsecode: 400,
-      //         message: error.message
-      //       });
-      //     } else {
-      //       console.log(">>>>>>>>>>>Success", result);
-
-      //       fs.unlinkSync(videoFile);
-      //       await MoveModel.updateOne(
-      //         {
-      //           _id: result._id
-      //         },
-      //         {
-      //           moveURL: moveData.url,
-      //           title,
-      //           description,
-      //           tags,
-      //           setId
-      //         }
-      //       );
-      //       return res.status(200).json({
-      //         responsecode: 200,
-      //         data: result,
-      //         setId: setId
-      //       });
-      //     }
-      //   }
-      // );
       const fileName = `${
         result.videoUrl.split(".")[0]
-      }_clip_${moment().unix()}.webm`;
+        }_clip_${moment().unix()}.webm`;
       let videoFileMain: String | any, videoOriginalFile: String | any;
       if (IsProductionMode) {
         videoFileMain = path.join(__dirname, `${fileName}`);
@@ -773,7 +685,7 @@ const isStarredMove = async (req: Request, res: Response): Promise<any> => {
     return res.status(200).json({
       message: `Move has been ${
         isStarred === "true" ? "starred" : "Unstarred"
-      } successfully!`
+        } successfully!`
     });
   } catch (error) {
     console.log(error);
@@ -1015,48 +927,6 @@ const updateMoveIndex = async (req: Request, res: Response): Promise<any> => {
         { $set: { sortIndex: index + 1 } }
       );
     }
-
-    // await MoveModel.updateOne(
-    //   { setId: setId, _id: moveId },
-    //   { $set: { sortIndex: sortIndex } }
-    // );
-
-    // let result = await MoveModel.find({
-    //   _id: { $ne: moveId },
-    //   setId: setId,
-    //   isDeleted: false,
-    //   sortIndex: { $gte: sortIndex }
-    // }).sort({ sortIndex: 1 });
-
-    // let result_data = await MoveModel.find({
-    //   _id: { $ne: moveId },
-    //   setId: setId,
-    //   isDeleted: false,
-    //   sortIndex: { $lt: sortIndex }
-    // }).sort({ sortIndex: -1 });
-
-    // if (result && result.length) {
-    //   for (let index = 0; index < result.length; index++) {
-    //     if (result[index]._id !== moveId) {
-    //       await MoveModel.updateOne(
-    //         { setId: setId, _id: result[index]._id },
-    //         { $set: { sortIndex: ++num } }
-    //       );
-    //     }
-    //   }
-    // }
-
-    // if (result_data && result_data.length) {
-    //   for (let index = 0; index < result_data.length; index++) {
-    //     if (result_data[index]._id !== moveId) {
-    //       await MoveModel.updateOne(
-    //         { setId: setId, _id: result_data[index]._id },
-    //         { $set: { sortIndex: --num1 } }
-    //       );
-    //     }
-    //   }
-    // }
-
     const resp: Document | any | null = await MoveModel.find({
       setId: setId,
       isDeleted: false,
