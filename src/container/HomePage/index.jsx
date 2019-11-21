@@ -158,27 +158,27 @@ class HomePage extends React.Component {
               {/* videos */}
               <div className="videos-wrap d-flex justify-content-center align-items-center">
                 <div className="d-flex video-add-banner with-home-videos justify-content-center align-items-center">
-          
-                  {this.state.onPlaying ? 
-                   <span onClick={this.videoPlayHandler} className="play-ic-wrap pause-wrap">
-                 <img src={pauseIc} />
-                   </span>
-                       
-                   :
-                   <span onClick={this.videoPlayHandler} className="play-ic-wrap">
-                <img src={playIc} />
-                   </span>
+
+                  {this.state.onPlaying ?
+                    <span onClick={this.videoPlayHandler} className="play-ic-wrap pause-wrap">
+                      <img src={pauseIc} alt={"img"} />
+                    </span>
+
+                    :
+                    <span onClick={this.videoPlayHandler} className="play-ic-wrap">
+                      <img src={playIc} alt={"img"} />
+                    </span>
                   }
-               
+
                   <video width="100%" id="webm-video-0">
-                  <source
-                    src="https://s3.amazonaws.com/hope.bucket/moves/1571752097935_deep-play.webm"
-                    type="video/webm"
-                  />
-                </video>
+                    <source
+                      src="https://s3.amazonaws.com/hope.bucket/moves/1571752097935_deep-play.webm"
+                      type="video/webm"
+                    />
+                  </video>
                 </div>
-              
-              
+
+
               </div>
             </Col>
           </Row>
