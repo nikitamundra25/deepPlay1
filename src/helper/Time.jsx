@@ -17,13 +17,13 @@ export const SecondsToMMSS = secs => {
   return `${pad(minutes)}:${pad(secs)}`;
 };
 
-export const SecondsToMMSSMM = (secs, type) => {
-  var milliseconds = parseInt((secs % 1000) / 100),
-    seconds = Math.floor((secs / 1000) % 60),
-    minutes = Math.floor((secs / (1000 * 60)) % 60),
-    minutes = minutes < 10 ? "0" + minutes : minutes;
-  seconds = seconds < 10 ? "0" + seconds : seconds;
-  console.log("secssecssecs", milliseconds, secs);
+// export const SecondsToMMSSMM = (secs, type) => {
+//   var milliseconds = parseInt((secs % 1000) / 100),
+//     seconds = Math.floor((secs / 1000) % 60),
+//     minutes = Math.floor((secs / (1000 * 60)) % 60),
+//     minutes = minutes < 10 ? "0" + minutes : minutes;
+//   seconds = seconds < 10 ? "0" + seconds : seconds;
+//   console.log("secssecssecs", milliseconds, secs);
 
-  return `${pad(minutes)}:${pad(seconds)}:${pad(milliseconds)}`;
-};
+//   return `${pad(minutes)}:${pad(seconds)}:${pad(milliseconds)}`;
+// };
