@@ -56,6 +56,7 @@ class DefaultHeader extends React.Component {
       });
     }
   };
+  
   handleClickOutside = event => {
     if (this.wrapperRef && !this.wrapperRef.contains(event.target)) {
       this.setState({
@@ -162,6 +163,7 @@ class DefaultHeader extends React.Component {
       search: ""
     });
   };
+
   searchAllMove = () => {
     this.props.redirectTo(
       AppRoutes.MOVE_SEAECH_ALL.url + `?search=${this.state.search}`
@@ -200,6 +202,7 @@ class DefaultHeader extends React.Component {
     moveVideo.tags = data.tags;
     this.props.addTagsRequest({ data: data, moveVideo: moveVideo });
   };
+
   /*  */
   render() {
     const {

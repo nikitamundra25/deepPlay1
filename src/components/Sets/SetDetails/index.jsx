@@ -278,6 +278,21 @@ class SetDetails extends React.Component {
     }
   };
 
+  editMove = data => {
+    if (data.fromMoveList) {
+      const moveList = [...data.moveofSetList];
+      moveList.map((key, i) => {
+        // eslint-disable-next-line
+        if (data.moveId === key._id) {
+          return (moveList[i].title = data.title);
+        } else {
+          return null;
+        }
+      });
+      this.props.updateMoveRequest({ data: data, moveList: moveList });
+    }
+  };
+
   // Transfer sets to particular folder
   folderToTransfer = async data => {
     const payload = {
@@ -488,7 +503,7 @@ class SetDetails extends React.Component {
                       this.props.addTagsInTagModalRequest(data)
                     }
                     getTagListRequest={() => this.props.getTagListRequest()}
-                    editMove={data => this.props.updateMoveRequest(data)}
+                    editMove={this.editMove}
                     {...this.props}
                   />
                 </div>

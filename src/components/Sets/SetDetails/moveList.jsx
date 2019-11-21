@@ -371,44 +371,7 @@ class MoveList extends React.Component {
     }
   };
 
-  //Drag & drop move items
-  // onDragEnd = result => {
-  //   const { source, destination, draggableId } = result;
-  //   // dropped outside the list
-  //   console.log("###########Destination####", destination);
-  //   console.log("!!!!!!!!!!!!!!!Source", source);
-
-  //   if (!destination) {
-  //     return;
-  //   }
-  //   if (
-  //     destination.droppableId === source.droppableId &&
-  //     source.index === destination.index
-  //   ) {
-  //     return;
-  //   }
-  //   const items = reorder(
-  //     this.state.moveofSetList,
-  //     source.index,
-  //     destination.index
-  //   );
-
-  //   this.setState({
-  //     moveofSetList: items
-  //   });
-  //   const data = {
-  //     setId: this.props.setIdPathName,
-  //     moveId: draggableId,
-  //     sortIndex: destination.index,
-  //     sourceIndex: source.index,
-  //     movesOfSet: items
-  //   };
-  //   this.props.updateSortIndexRequest(data);
-  // };
-
   reorderList = (sourceIndex, destinationIndex) => {
-    console.log("insideeeeeeee", sourceIndex, destinationIndex);
-
     if (destinationIndex === sourceIndex) {
       return;
     }
@@ -442,7 +405,6 @@ class MoveList extends React.Component {
         tags: []
       });
     }
-    console.log(`action: ${actionMeta.action}`);
     if (actionMeta.action === "create-option") {
       this.props.addTagsInTagModalRequest({
         tags: newValue[newValue.length - 1]
@@ -496,14 +458,19 @@ class MoveList extends React.Component {
       doubleClickIndex: -1,
       title: ""
     });
-    const data = {
-      moveId: videoData._id,
-      title: this.state.title,
-      description: videoData.description,
-      tags: videoData.tags,
-      setId: videoData.setId._id
-    };
-    this.props.editMove(data);
+
+    if (this.state.title !== null) {
+      const data = {
+        moveId: videoData._id,
+        title: this.state.title,
+        description: videoData.description,
+        tags: videoData.tags,
+        setId: videoData.setId._id,
+        moveofSetList: this.props.movesOfSet,
+        fromMoveList: true
+      };
+      this.props.editMove(data);
+    }
   };
 
   handleChange = e => {

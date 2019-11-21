@@ -156,6 +156,10 @@ export const moveReducer = handleActions(
     [MovesAction.VIDEODATA_FROM_SEARCH]: (state, { payload }) => ({
       ...state,
       isVideoFromSearch: true
+    }),
+    [MovesAction.UPDATE_MOVE_SUCCESS]: (state, { payload }) => ({
+      ...state,
+      ...payload
     })
   },
   initialState

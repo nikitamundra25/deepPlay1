@@ -23,6 +23,7 @@ import { toast } from "react-toastify";
 import { logger } from "helper/Logger";
 import { completeVideoEditingSuccess } from "actions/Moves";
 import { addTagsSuccess } from "actions/Moves";
+import { updateMoveSuccess } from "actions/Moves";
 let toastId = null;
 
 //  Download video
@@ -150,7 +151,7 @@ const completeVideoEditingLogic = createLogic({
 
     dispatch(
       completeVideoEditingSuccess({
-        isSavingWebM: true,
+        isSavingWebM: true
         // movesOfSet: arrData
       })
     );
@@ -555,7 +556,7 @@ const editMoveLogic = createLogic({
       "PUT",
       true,
       undefined,
-      action.payload
+      action.payload.data
     );
     if (result.isError) {
       if (!toast.isActive(toastId)) {
@@ -567,6 +568,11 @@ const editMoveLogic = createLogic({
       if (!toast.isActive(toastId)) {
         toastId = toast.success(result.messages[0]);
       }
+      if (action.payload.data.fromMoveList) {
+        dispatch(updateMoveSuccess({ movesOfSet: action.payload.moveList }));
+      } else {
+        dispatch(updateMoveSuccess({ videoData: action.payload.moveVideo }));
+      }
       dispatch(
         modelOpenRequest({
           modelDetails: {
@@ -576,7 +582,7 @@ const editMoveLogic = createLogic({
           }
         })
       );
-      dispatch(getMovesOfSetRequest({ setId: action.payload.setId }));
+      // dispatch(getMovesOfSetRequest({ setId: action.payload.setId }));
       done();
     }
   }
