@@ -2,6 +2,8 @@ import React from "react";
 import { connect } from "react-redux";
 import { AppRoutes } from "../../config/AppRoutes";
 import { Row, Col, Button, Container } from "reactstrap";
+import pauseIc from "../../assets/img/icons/pause.svg"
+import playIc from "../../assets/img/icons/play.svg"
 import {
   modelOpenRequest,
   loginRequest,
@@ -159,12 +161,12 @@ class HomePage extends React.Component {
           
                   {this.state.onPlaying ? 
                    <span onClick={this.videoPlayHandler} className="play-ic-wrap pause-wrap">
-                   <i className="fa fa-pause" aria-hidden="true"></i> 
+                 <img src={pauseIc} />
                    </span>
                        
                    :
                    <span onClick={this.videoPlayHandler} className="play-ic-wrap">
-                   <i className="fa fa-play" aria-hidden="true"></i> 
+                <img src={playIc} />
                    </span>
                   }
                

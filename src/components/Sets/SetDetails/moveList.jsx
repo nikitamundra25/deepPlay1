@@ -608,9 +608,7 @@ class MoveList extends React.Component {
                 )}
               </div>
             </Col>
-            {selectedMoveIds && selectedMoveIds.length ? (
-              <div className="select-focus-wrap"></div>
-            ) : null}
+         
             <div
               className={`video-thumbnail-block  ${
                 selectedMoveIds && selectedMoveIds.length
@@ -704,7 +702,7 @@ class MoveList extends React.Component {
 
               {!isMoveSearchLoading && !isMoveListLoading ? (
                 <div className="video-thumbnail-sub-block  video-thumb-edit-view">
-                  <div className="play-list-tile create-move-ele">
+                  <div className="play-list-tile create-move-element">
                     <div
                       className="play-list-block  d-flex h-100 cursor_pointer"
                       onClick={this.props.handleMoveAdd}

@@ -212,16 +212,19 @@ a {
   background: $videoAddBannerBack;
   border: 2px dashed $videoAddBannerBorder;
   .play-ic-wrap {
-    width: 90px;
-    height: 90px;
+    width: 60px;
+    height: 60px;
     display: flex;
     align-items: center;
     justify-content: center;
     background: $blackcolor;
     border-radius: 50%;
     font-size: 55px;
-    padding-left: 8px;
+    padding-left: 2px;
     color: $videoAddBannerBack;
+    img{
+      width: 20px;
+    }
   }
   &.video-add-banner{
     border:none;
