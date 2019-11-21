@@ -77,6 +77,7 @@ class MoveListDetails extends React.Component {
                     : `play-list-img blur-img-wrap checked-wrap`
                 }
               >
+                <div className="video-move-layer"></div>
                 <div
                   className={
                     isMarkingStar.isChanging && isMarkingStar.index === index
