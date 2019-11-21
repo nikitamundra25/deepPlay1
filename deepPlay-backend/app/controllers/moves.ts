@@ -525,7 +525,7 @@ const updateMoveDetailsAndTrimVideo = async (
     const { timer, moveId, title, description, tags, setId, frames } = body;
     const result: Document | null | any = await MoveModel.findById(moveId);
     console.log("frames", frames);
-    let thumbnailPath: any[]
+    let thumbnailPath: any[] = []
     if (frames && frames.length) {
       thumbnailPath = frames.split("8000")
     }
