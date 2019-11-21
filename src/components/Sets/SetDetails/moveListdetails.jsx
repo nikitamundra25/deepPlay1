@@ -1,5 +1,5 @@
 import React from "react";
-import { Input } from "reactstrap";
+import { Input, FormGroup } from "reactstrap";
 import starIc from "../../../assets/img/star.svg";
 import "./index.scss";
 import blankStar from "../../../assets/img/star-line.svg";
@@ -22,7 +22,13 @@ class MoveListDetails extends React.Component {
       isSelectVideo,
       videoIndex,
       handleVideoCheckBox,
-      handleStarred
+      handleStarred,
+      title,
+      doubleClick,
+      doubleClickIndex,
+      onDoubleClick,
+      handleonBlur,
+      handleChange
     } = this.props;
 
     return (
@@ -46,7 +52,7 @@ class MoveListDetails extends React.Component {
                 isVideoChecked && selectedMoves[index]
                   ? "video-full-selection"
                   : ""
-                }`}
+              }`}
               onMouseOver={() => handleVideoHover(index)}
               onMouseLeave={() => {
                 handleVideoPause(index);
@@ -57,12 +63,12 @@ class MoveListDetails extends React.Component {
                 onClick={
                   isVideoChecked && !isVideoModalOpen
                     ? () =>
-                      handleMovesSelect(
-                        !selectedMoves[index],
-                        null,
-                        index,
-                        video._id
-                      )
+                        handleMovesSelect(
+                          !selectedMoves[index],
+                          null,
+                          index,
+                          video._id
+                        )
                     : null
                 }
                 className={
@@ -80,9 +86,7 @@ class MoveListDetails extends React.Component {
                 >
                   {video.isStarred ? (
                     <img src={starIc} alt={"star"} className="w-100" />
-                  ) : (
-                    null
-                  )}
+                  ) : null}
                 </div>
 
                 {isVideoChecked ? (
@@ -102,43 +106,43 @@ class MoveListDetails extends React.Component {
                     />
                   </span>
                 ) : (
-                    <>
-                      {" "}
-                      {!isVideoChecked &&
-                        isSelectVideo &&
-                        videoIndex === index ? (
-                          <span
-                            // onClick={() => {
-                            //   this.setState(
-                            //     {
-                            //       isVideoModalOpen: false
-                            //     },
-                            //     () =>
-                            //       this.handleVideoCheckBox(true, index, video._id)
-                            //   );
-                            // }}
-                            onClick={() =>
-                              handleVideoCheckBox(true, index, video._id)
-                            }
-                            className="plus-ic-wrap custom-control custom-checkbox"
-                          >
-                            <Input
-                              className="custom-control-input"
-                              id={`selected-video-${index}`}
-                              onChange={e =>
-                                handleMovesSelect(null, e, index, video._id)
-                              }
-                              type="checkbox"
-                              checked={selectedMoves[index] ? true : false}
-                            />
-                            <label
-                              className="custom-control-label"
-                              htmlFor={`selected-video-${index}`}
-                            />
-                          </span>
-                        ) : null}
-                    </>
-                  )}
+                  <>
+                    {" "}
+                    {!isVideoChecked &&
+                    isSelectVideo &&
+                    videoIndex === index ? (
+                      <span
+                        // onClick={() => {
+                        //   this.setState(
+                        //     {
+                        //       isVideoModalOpen: false
+                        //     },
+                        //     () =>
+                        //       this.handleVideoCheckBox(true, index, video._id)
+                        //   );
+                        // }}
+                        onClick={() =>
+                          handleVideoCheckBox(true, index, video._id)
+                        }
+                        className="plus-ic-wrap custom-control custom-checkbox"
+                      >
+                        <Input
+                          className="custom-control-input"
+                          id={`selected-video-${index}`}
+                          onChange={e =>
+                            handleMovesSelect(null, e, index, video._id)
+                          }
+                          type="checkbox"
+                          checked={selectedMoves[index] ? true : false}
+                        />
+                        <label
+                          className="custom-control-label"
+                          htmlFor={`selected-video-${index}`}
+                        />
+                      </span>
+                    ) : null}
+                  </>
+                )}
                 <div
                   className={"video-effect"}
                   onClick={
@@ -150,8 +154,11 @@ class MoveListDetails extends React.Component {
                   <video
                     width={"100%"}
                     id={`webm-video-${index}`}
-                    poster={video.videoThumbnail ? video.videoThumbnail : videoLoading}
+                    poster={
+                      video.videoThumbnail ? video.videoThumbnail : videoLoading
+                    }
                     muted={true}
+                    draggable="true"
                     loop
                   >
                     <source src={`${video.moveURL}`} type="video/webm" />
@@ -160,45 +167,32 @@ class MoveListDetails extends React.Component {
 
                 <div
                   className="blur-img"
-                // style={{ background: "#000" }}
+                  // style={{ background: "#000" }}
                 />
               </div>
               <div
                 // onMouseLeave={() => this.props.closePopOver(index, show)}
-                // onDoubleClick={() =>
-                //   this.onDoubleClick(
-                //     index,
-                //     video.title
-                //   )
-                // }
+                onDoubleClick={() => onDoubleClick(index, video.title)}
                 className="play-list-text"
               >
                 <div className="text-capitalize play-list-heading h6 m-0">
-                  {/* {doubleClick &&
-                              doubleClickIndex === index ? (
-                                <FormGroup>
-                                  <Input
-                                    id="title"
-                                    type="text"
-                                    placeholder="Enter a title"
-                                    name="title"
-                                    onChange={
-                                      this.handleChange
-                                    }
-                                    value={title}
-                                    onBlur={() =>
-                                      this.handleonBlur(
-                                        video,
-                                        index
-                                      )
-                                    }
-                                  />
-                                </FormGroup>
-                              ) : (
-                                video.title || "unnamed"
-                              )} */}
+                  {doubleClick && doubleClickIndex === index ? (
+                    <FormGroup>
+                      <Input
+                        id="title"
+                        type="text"
+                        placeholder="Enter a title"
+                        name="title"
+                        onChange={handleChange}
+                        value={title}
+                        onBlur={() => handleonBlur(video, index)}
+                      />
+                    </FormGroup>
+                  ) : (
+                    video.title || "unnamed"
+                  )}
 
-                  {video.title || "unnamed"}
+                  {/* {video.title || "unnamed"} */}
                 </div>
                 <div
                   className="star-wrap"
@@ -209,8 +203,8 @@ class MoveListDetails extends React.Component {
                   {video.isStarred ? (
                     <img src={starIc} alt={"star"} className="w-100" />
                   ) : (
-                      <img className="w-100" src={blankStar} alt={"star"} />
-                    )}
+                    <img className="w-100" src={blankStar} alt={"star"} />
+                  )}
                 </div>
               </div>
             </div>

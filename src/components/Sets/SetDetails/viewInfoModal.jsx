@@ -73,7 +73,6 @@ class ViewInfoModal extends React.Component {
                             videoData.startTime
                           ).split(":"))
                         : null}
-                      {console.log("splitTime", splitTime)}
                     </span>
                     <a
                       className="text-link"

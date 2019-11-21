@@ -503,7 +503,7 @@ class WebmView extends Component {
                         >
                           Edit Move Details
                         </DropdownItem>
-                        <DropdownItem
+                        {/* <DropdownItem
                           onClick={() =>
                             this.handleStarred(
                               videoData ? videoData._id : video._id,
@@ -514,7 +514,7 @@ class WebmView extends Component {
                           {videoData && videoData.isStarred
                             ? "Unstar"
                             : "Mark Star"}
-                        </DropdownItem>
+                        </DropdownItem> */}
                         <DropdownItem
                           onClick={() =>
                             videoData

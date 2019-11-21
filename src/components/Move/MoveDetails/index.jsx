@@ -199,8 +199,6 @@ class MoveDetails extends React.Component {
       return;
     }
     logger(this.state, moveId);
-    console.log("Whenever",frames, frames.length);
-    
     this.props.completeVideoEditing({
       timer,
       moveId,
@@ -388,9 +386,7 @@ class MoveDetails extends React.Component {
             <CardBody className="p-0">
               {!isSavingWebM ? <div></div> : null}
               {isSavingWebM ? (
-                <div>
-                  <VideoLoader fullLoader={true} />
-                </div>
+                <div>{<VideoLoader fullLoader={true} />}</div>
               ) : (
                 <>
                   <Row className={"mt-3"}>

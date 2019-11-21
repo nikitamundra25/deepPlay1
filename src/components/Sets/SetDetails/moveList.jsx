@@ -140,7 +140,11 @@ class MoveList extends React.Component {
       isVideoChecked: true,
       isVideoModalOpen: false,
       selectedMoves,
-      selectedMoveIds
+      selectedMoveIds,
+      isMarkingStar: {
+        index: -1,
+        isChanging: false
+      }
     });
   };
   /*
@@ -175,7 +179,6 @@ class MoveList extends React.Component {
    */
 
   handleMovesSelect = (valueCheck, e, index, moveId) => {
-    console.log("moveId", moveId);
     let checked;
     if (e && e.target && valueCheck === null) {
       checked = !e.target.checked;
@@ -197,9 +200,14 @@ class MoveList extends React.Component {
         isVideoModalOpen: true
       });
     }
+
     this.setState({
       selectedMoves,
-      selectedMoveIds
+      selectedMoveIds,
+      isMarkingStar: {
+        index: -1,
+        isChanging: false
+      }
     });
   };
   /*
@@ -399,6 +407,8 @@ class MoveList extends React.Component {
   // };
 
   reorderList = (sourceIndex, destinationIndex) => {
+    console.log("insideeeeeeee", sourceIndex, destinationIndex);
+
     if (destinationIndex === sourceIndex) {
       return;
     }
@@ -411,7 +421,6 @@ class MoveList extends React.Component {
       sourceIndex: sourceIndex,
       movesOfSet: items
     };
-    
     this.setState({
       isMarkingStar: {
         index: -1,
@@ -530,9 +539,9 @@ class MoveList extends React.Component {
       moveIdToAddTag,
       tags,
       moveIndexToAddTag,
-      // doubleClickIndex,
-      // doubleClick,
-      // title
+      doubleClickIndex,
+      doubleClick,
+      title,
       isMarkingStar,
       backgroundClass
     } = this.state;
@@ -672,7 +681,11 @@ class MoveList extends React.Component {
                                   selectedMoves: [],
                                   selectedMoveIds: [],
                                   isVideoChecked: false,
-                                  isVideoModalOpen: true
+                                  isVideoModalOpen: true,
+                                  isMarkingStar: {
+                                    index: -1,
+                                    isChanging: false
+                                  }
                                 })
                               }
                             >
@@ -760,6 +773,13 @@ class MoveList extends React.Component {
                               handleStarred={this.handleStarred}
                               handleVideoCheckBox={this.handleVideoCheckBox}
                               handleVideoModal={this.props.handleVideoModal}
+                              title={title}
+                              onDoubleClick={this.onDoubleClick}
+                              doubleClickIndex={doubleClickIndex}
+                              doubleClick={doubleClick}
+                              handleonBlur={this.handleonBlur}
+                              handleChange={this.handleChange}
+                              reorderList={this.reorderList}
                             />
                           );
                         }}
