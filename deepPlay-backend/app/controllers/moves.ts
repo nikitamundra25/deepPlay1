@@ -138,7 +138,7 @@ const downloadYoutubeVideo = async (
           ytdl(body.url).pipe(
             (videoStream = fs.createWriteStream(originalVideoPath))
           );
-          videoStream.on("close", async function () {
+          videoStream.on("close", async function() {
             const {
               frames: framesArray,
               videoMetaData,
@@ -527,17 +527,20 @@ const updateMoveDetailsAndTrimVideo = async (
     console.log("frames", frames);
     let thumbnailPath: any[] = []
     if (frames && frames.length) {
-      thumbnailPath = frames.split("8000")
+      thumbnailPath = frames.split("8000");
     }
     if (result) {
-      let videoFile: String | any, videoThumbnail: String | any
+      let videoFile: String | any, videoThumbnail: String | any;
       if (IsProductionMode) {
         videoFile = path.join(__dirname, result.videoUrl);
-        
-        videoThumbnail = path.join(__dirname, thumbnailPath[1]);
+        if (thumbnailPath && thumbnailPath.length) {
+          videoThumbnail = path.join(__dirname, thumbnailPath[1]);
+        }
       } else {
         videoFile = path.join(__basedir, "..", result.videoUrl);
-        videoThumbnail = path.join(__basedir, "..", thumbnailPath[1]);
+        if (thumbnailPath && thumbnailPath.length) {
+          videoThumbnail = path.join(__basedir, "..", thumbnailPath[1]);
+        }
       }
       // cloudinary.v2.uploader.upload(
       //   videoFile,
@@ -581,7 +584,7 @@ const updateMoveDetailsAndTrimVideo = async (
       // );
       const fileName = `${
         result.videoUrl.split(".")[0]
-        }_clip_${moment().unix()}.webm`;
+      }_clip_${moment().unix()}.webm`;
       let videoFileMain: String | any, videoOriginalFile: String | any;
       if (IsProductionMode) {
         videoFileMain = path.join(__dirname, `${fileName}`);
@@ -612,11 +615,14 @@ const updateMoveDetailsAndTrimVideo = async (
             "deep-play.webm",
             "moves"
           );
-          const s3VideoThumbnailUrl = await s3BucketUpload(
-            videoThumbnail,
-            "deep-play.jpeg",
-            "moves-thumbnail"
-          );
+          let s3VideoThumbnailUrl: any | null;
+          if (videoThumbnail) {
+            s3VideoThumbnailUrl = await s3BucketUpload(
+              videoThumbnail,
+              "deep-play.jpeg",
+              "moves-thumbnail"
+            );
+          }
           let moveDataForAlgolia: Document | any;
           /* Add items to algolia */
           moveDataForAlgolia = {
@@ -624,10 +630,14 @@ const updateMoveDetailsAndTrimVideo = async (
             moveURL: s3VideoUrl,
             title,
             description,
+            startTime: timer.min ? timer.min : 0,
+            sourceUrl: result.sourceUrl ? result.sourceUrl : null,
             tags,
             setId,
+            isYoutubeUrl: result.isYoutubeUrl ? result.isYoutubeUrl : false,
             userId: result.userId,
             isDeleted: result.isDeleted,
+            createdAt: result.createdAt,
             videoMetaData: {
               ...result.videoMetaData,
               duration: {
@@ -635,7 +645,7 @@ const updateMoveDetailsAndTrimVideo = async (
                 seconds: duration
               }
             },
-            videoThumbnail: s3VideoThumbnailUrl,
+            videoThumbnail: s3VideoThumbnailUrl ? s3VideoThumbnailUrl : null,
             searchType: "move"
           };
           let temp: any;
@@ -650,6 +660,8 @@ const updateMoveDetailsAndTrimVideo = async (
                 {
                   objectId: temp,
                   videoThumbnail: s3VideoThumbnailUrl
+                    ? s3VideoThumbnailUrl
+                    : null
                 }
               );
             }
@@ -665,6 +677,7 @@ const updateMoveDetailsAndTrimVideo = async (
               description,
               tags,
               setId,
+              startTime: timer.min ? timer.min : 0,
               videoMetaData: {
                 ...result.videoMetaData,
                 duration: {
@@ -760,7 +773,7 @@ const isStarredMove = async (req: Request, res: Response): Promise<any> => {
     return res.status(200).json({
       message: `Move has been ${
         isStarred === "true" ? "starred" : "Unstarred"
-        } successfully!`
+      } successfully!`
     });
   } catch (error) {
     console.log(error);

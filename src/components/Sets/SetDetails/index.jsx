@@ -262,7 +262,11 @@ class SetDetails extends React.Component {
         // eslint-disable-next-line
         return data.moveId.map(k => {
           if (k === key._id) {
-            moveList[i].tags = data.tags;
+            moveList[i].tags = key.tags.concat(
+              data.tags.filter(
+                item => key.tags.findIndex(tag => tag.label === item.label) < 0
+              )
+            );
           }
         });
       });
@@ -583,7 +587,4 @@ const mapDispatchToProps = dispatch => ({
     dispatch(videoFullscreenExit(data));
   }
 });
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(SetDetails);
+export default connect(mapStateToProps, mapDispatchToProps)(SetDetails);

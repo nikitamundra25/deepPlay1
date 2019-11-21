@@ -2,11 +2,14 @@ import React from "react";
 import { Modal, ModalHeader, ModalBody } from "reactstrap";
 import closeBtn from "../../../assets/img/close-img.png";
 import moment from "moment";
+import { SecondsToHHMMSS } from "../../../helper/Time";
 // core components
 class ViewInfoModal extends React.Component {
   render() {
     const { modal, handleOpen, videoData, videoDimentions, video } = this.props;
-
+    let temp = "";
+    let stemp = "";
+    let splitTime = "";
     return (
       <div>
         <Modal
@@ -60,15 +63,36 @@ class ViewInfoModal extends React.Component {
                 {videoData.isYoutubeUrl ? (
                   <div class="info-wrap">
                     <span className="info-heading"> Source URL</span>
+                    <span className="d-none">
+                      {videoData.sourceUrl
+                        ? (temp = videoData.sourceUrl.split("/"))
+                        : null}
+                      {temp ? (stemp = temp[4].split("?")) : null}
+                      {videoData.startTime > 0
+                        ? (splitTime = SecondsToHHMMSS(
+                            videoData.startTime
+                          ).split(":"))
+                        : null}
+                    </span>
                     <a
                       className="text-link"
-                      href={videoData.sourceUrl ? videoData.sourceUrl : null}
+                      href={
+                        videoData.sourceUrl
+                          ? splitTime
+                            ? `https://www.youtube.com/watch?v=${stemp[0]}&feature=youtu.be&t=${splitTime[0]}h${splitTime[1]}m${splitTime[2]}s`
+                            : `https://www.youtube.com/watch?v=${stemp[0]}&feature=youtu.be`
+                          : null
+                      }
                       target="_blank"
                       rel="noopener noreferrer"
                     >
                       <span className="info-content">
                         <span className="colon-wrap cursor_pointer">: </span>
-                        {videoData.sourceUrl ? videoData.sourceUrl : null}{" "}
+                        {videoData.sourceUrl
+                          ? splitTime
+                            ? `https://www.youtube.com/watch?v=${stemp[0]}&feature=youtu.be&t=${splitTime[0]}h${splitTime[1]}m${splitTime[2]}s`
+                            : `https://www.youtube.com/watch?v=${stemp[0]}&feature=youtu.be`
+                          : null}
                       </span>
                     </a>
                   </div>

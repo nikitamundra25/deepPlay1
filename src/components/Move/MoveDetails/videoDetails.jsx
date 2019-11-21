@@ -87,7 +87,7 @@ class VideoDetails extends React.Component {
                 onChange={this.props.handleTagChange}
               /> */}
               <CreatableSelect
-               classNamePrefix="react_select"
+                classNamePrefix="react_select"
                 isMulti
                 onChange={this.props.handleTagChange}
                 value={tags}
@@ -127,7 +127,8 @@ class VideoDetails extends React.Component {
                 <FormFeedback>
                   {errors &&
                   errors.setId &&
-                  (selectSetOptions === null || recentAddedSet.value === "")
+                  selectSetOptions &&
+                  selectSetOptions.value === ""
                     ? errors.setId
                     : null}
                 </FormFeedback>

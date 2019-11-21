@@ -24,7 +24,7 @@ const moveSchema: Mongoose.Schema = new Schema({
     type: String,
     default: null
   },
-  videoThumbnail:{
+  videoThumbnail: {
     type: String,
     default: null
   },
@@ -54,6 +54,10 @@ const moveSchema: Mongoose.Schema = new Schema({
   isStarred: {
     type: Boolean,
     default: false
+  },
+  startTime: {
+    type: Number,
+    default: 0
   },
   objectId: {
     type: Number

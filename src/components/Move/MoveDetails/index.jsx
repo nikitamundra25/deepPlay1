@@ -101,7 +101,7 @@ class MoveDetails extends React.Component {
     const newModelInfoReducer = this.props.modelInfoReducer;
     const { modelDetails } = newModelInfoReducer;
     if (prevDescriptionModal !== modelDetails.isDescriptionModalOpen) {
-      if (this.state.description !== null) {
+      if (this.state.description) {
         this.setState({
           isUpdateDescription: true
         });
@@ -199,8 +199,6 @@ class MoveDetails extends React.Component {
       return;
     }
     logger(this.state, moveId);
-    console.log("Whenever",frames, frames.length);
-    
     this.props.completeVideoEditing({
       timer,
       moveId,
@@ -388,9 +386,7 @@ class MoveDetails extends React.Component {
             <CardBody className="p-0">
               {!isSavingWebM ? <div></div> : null}
               {isSavingWebM ? (
-                <div>
-                  <VideoLoader fullLoader={true} />
-                </div>
+                <div>{<VideoLoader fullLoader={true} />}</div>
               ) : (
                 <>
                   <Row className={"mt-3"}>
@@ -458,7 +454,7 @@ class MoveDetails extends React.Component {
           >
             <ModalHeader>
               <span className="custom-title" id="exampleModalLabel">
-                Description
+                {isUpdateDescription ? "Update description" : "Add Description"}
               </span>
               <button
                 aria-label="Close"

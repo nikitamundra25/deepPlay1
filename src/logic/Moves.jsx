@@ -140,10 +140,18 @@ const getMovesDetailsByIdLogic = createLogic({
 // completed video editing and send for final update
 const completeVideoEditingLogic = createLogic({
   type: MovesAction.UPDATE_VIDEO_SETTINGS,
-  async process({ action }, dispatch, done) {
+  async process({ action, getState }, dispatch, done) {
+    // let temp = getState().moveReducer.movesOfSet;
+    // console.log("temp", temp);
+    // let stemp = { loading: true, setId: action.payload.setId };
+    // let arrData = [];
+    // arrData = [...temp, stemp];
+    // console.log("stempstemp", arrData);
+
     dispatch(
       completeVideoEditingSuccess({
-        isSavingWebM: true
+        isSavingWebM: true,
+        // movesOfSet: arrData
       })
     );
     let api = new ApiHelper();
