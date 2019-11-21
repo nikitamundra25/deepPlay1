@@ -2594,3 +2594,14 @@ a {
 }
 // media query end
 // Please don't write other css in the bottom of media query
+.video-move-layer{
+  z-index: 2;
+  position: absolute;
+  // background: #ccc;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  width: 100%;
+  height: 100%;
+}

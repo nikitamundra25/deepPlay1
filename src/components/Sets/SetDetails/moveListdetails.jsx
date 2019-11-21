@@ -76,8 +76,15 @@ class MoveListDetails extends React.Component {
                     ? `play-list-img blur-img-wrap checked-wrap video-select`
                     : `play-list-img blur-img-wrap checked-wrap`
                 }
+            
               >
-                <div className="video-move-layer"></div>
+                <div className="video-move-layer"
+                    onClick={
+                      !isVideoChecked && isVideoModalOpen
+                        ? () => this.props.handleVideoModal(video, index)
+                        : null
+                    }
+                ></div>
                 <div
                   className={
                     isMarkingStar.isChanging && isMarkingStar.index === index
@@ -146,11 +153,7 @@ class MoveListDetails extends React.Component {
                 )}
                 <div
                   className={"video-effect"}
-                  onClick={
-                    !isVideoChecked && isVideoModalOpen
-                      ? () => this.props.handleVideoModal(video, index)
-                      : null
-                  }
+                 
                 >
                   <video
                     width={"100%"}
