@@ -282,7 +282,6 @@ class SetDetails extends React.Component {
     if (data.fromMoveList) {
       const moveList = [...data.moveofSetList];
       moveList.map((key, i) => {
-        // eslint-disable-next-line
         if (data.moveId === key._id) {
           return (moveList[i].title = data.title);
         } else {
@@ -290,6 +289,11 @@ class SetDetails extends React.Component {
         }
       });
       this.props.updateMoveRequest({ data: data, moveList: moveList });
+    } else {
+      const moveVideo = data.videoData;
+      moveVideo.title = data.title;
+      moveVideo.description = data.description;
+      this.props.updateMoveRequest({ data: data, moveVideo: moveVideo });
     }
   };
 
@@ -460,7 +464,7 @@ class SetDetails extends React.Component {
                   videoFullscreenExit={videoFullscreenExit}
                   // addTagsInTagModalRequest={addTagsInTagModalRequest}
                   tagsList={tagsList}
-                  editMove={data => this.props.updateMoveRequest(data)}
+                  editMove={this.editMove}
                   addTagsInTagModalRequest={data =>
                     this.props.addTagsInTagModalRequest(data)
                   }

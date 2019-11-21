@@ -53,6 +53,7 @@ const downloadVideoLogic = createLogic({
           videoUrl: ""
         })
       );
+
       done();
       return;
     } else {
@@ -123,8 +124,13 @@ const getMovesDetailsByIdLogic = createLogic({
       undefined
     );
     if (result.isError) {
-      toast.error(result.messages[0]);
+      // toast.error(result.messages[0]);
       dispatch(getMoveDetailsSuccess({ moveDetails: "" }));
+      dispatch(
+        redirectTo({
+          path: `${AppRoutes.MOVE.url}`
+        })
+      );
       done();
       return;
     } else {
@@ -576,9 +582,9 @@ const editMoveLogic = createLogic({
       dispatch(
         modelOpenRequest({
           modelDetails: {
-            editMoveModalOpen: false,
-            isVideoModalOpen: false,
-            isVideoModalOpenReq: false
+            editMoveModalOpen: false
+            // isVideoModalOpen: false,
+            // isVideoModalOpenReq: false
           }
         })
       );

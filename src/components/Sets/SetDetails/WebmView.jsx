@@ -7,7 +7,9 @@ import {
   Modal,
   ModalBody,
   UncontrolledTooltip,
-  ModalHeader
+  ModalHeader,
+  FormGroup,
+  Input
 } from "reactstrap";
 import { logger } from "helper/Logger";
 import InputRange from "react-input-range";
@@ -40,6 +42,9 @@ class WebmView extends Component {
       videoDimentions: {},
       moveIdToAddTags: "",
       moveIdToEdit: "",
+      doubleClickIndex: -1,
+      title: " ",
+      doubleClick: false,
       tags: []
     };
   }
@@ -406,6 +411,40 @@ class WebmView extends Component {
     console.groupEnd();
   };
 
+  onDoubleClick = title => {
+    this.setState({
+      doubleClick: true,
+      title: title
+    });
+  };
+
+  handleonBlur = videoData => {
+    this.setState({
+      doubleClick: false,
+      title: ""
+    });
+
+    if (this.state.title !== "") {
+      const data = {
+        moveId: videoData._id,
+        title: this.state.title,
+        description: videoData.description,
+        tags: videoData.tags,
+        setId: videoData.setId._id,
+        videoData: videoData,
+        fromMoveList: false
+      };
+      this.props.editMove(data);
+    }
+  };
+
+  handleChange = e => {
+    const { name, value } = e.target;
+    this.setState({
+      [name]: value
+    });
+  };
+
   render() {
     const {
       video,
@@ -442,7 +481,9 @@ class WebmView extends Component {
       moveIdToAddTags,
       moveIdToEdit,
       tags,
-      isFullScreenMode
+      isFullScreenMode,
+      doubleClick,
+      title
     } = this.state;
 
     return (
@@ -467,11 +508,27 @@ class WebmView extends Component {
           </ModalHeader>
           <ModalBody>
             <div className="video-slider-text">
-              <div className="video-slider-title font-weight-bold">
-                {" "}
-                {videoData && videoData.title
-                  ? videoData.title
-                  : "Unnamed"}{" "}
+              <div
+                className="video-slider-title font-weight-bold"
+                onDoubleClick={() => this.onDoubleClick(videoData.title)}
+              >
+                {doubleClick ? (
+                  <FormGroup>
+                    <Input
+                      id="title"
+                      type="text"
+                      placeholder="Enter a title"
+                      name="title"
+                      onChange={this.handleChange}
+                      value={title}
+                      onBlur={() => this.handleonBlur(videoData)}
+                    />
+                  </FormGroup>
+                ) : videoData && videoData.title ? (
+                  videoData.title
+                ) : (
+                  "Unnamed"
+                )}
               </div>
               {!isShareable ? (
                 <div className="video-slider-dropDown">
@@ -495,11 +552,11 @@ class WebmView extends Component {
                               videoData ? videoData._id : video._id
                             )
                           }
-                        // onClick={() =>
-                        //   this.props.onEditMove(
-                        //     videoData ? videoData._id : video._id
-                        //   )
-                        // }
+                          // onClick={() =>
+                          //   this.props.onEditMove(
+                          //     videoData ? videoData._id : video._id
+                          //   )
+                          // }
                         >
                           Edit Move Details
                         </DropdownItem>
@@ -531,9 +588,9 @@ class WebmView extends Component {
                           onClick={() =>
                             videoData
                               ? this.openTransferToModal(
-                                videoData._id,
-                                videoData.setId
-                              )
+                                  videoData._id,
+                                  videoData.setId
+                                )
                               : this.openTransferToModal(video._id, video.setId)
                           }
                         >
@@ -543,9 +600,9 @@ class WebmView extends Component {
                           onClick={() =>
                             videoData
                               ? this.handleMoveDelete(
-                                videoData._id,
-                                videoData.setId
-                              )
+                                  videoData._id,
+                                  videoData.setId
+                                )
                               : this.handleMoveDelete(video._id)
                           }
                         >
@@ -599,15 +656,15 @@ class WebmView extends Component {
                         videoData && videoData.moveURL
                           ? videoData.moveURL
                           : moveURL
-                        }`}
+                      }`}
                       type="video/webm"
                     />
                   </video>
                 ) : (
-                    <div className="video-loader">
-                      <Loader videoLoader={true} />
-                    </div>
-                  )}
+                  <div className="video-loader">
+                    <Loader videoLoader={true} />
+                  </div>
+                )}
                 <div className={"controls"}>
                   <div className="control-background-wrap"></div>
                   <InputRange
@@ -630,13 +687,13 @@ class WebmView extends Component {
                             <i className={"fa fa-pause"}></i>
                           </span>
                         ) : (
-                            <span
-                              onClick={this.playVideo}
-                              className={"cursor_pointer"}
-                            >
-                              <i className={"fa fa-play"}></i>
-                            </span>
-                          )}
+                          <span
+                            onClick={this.playVideo}
+                            className={"cursor_pointer"}
+                          >
+                            <i className={"fa fa-play"}></i>
+                          </span>
+                        )}
                       </div>
                       <div className="video-time-wrap control-tile">
                         {SecondsToMMSS(parseInt(currentTime))} /{" "}
@@ -654,11 +711,11 @@ class WebmView extends Component {
                             audioSpeed > 0.6 ? (
                               <i className="fas fa-volume-up"></i>
                             ) : (
-                                <i class="fas fa-volume-down"></i>
-                              )
+                              <i class="fas fa-volume-down"></i>
+                            )
                           ) : (
-                                <i class="fas fa-volume-mute"></i>
-                              )}
+                            <i class="fas fa-volume-mute"></i>
+                          )}
                         </span>
                       </div>
                       <div className="volume-range cursor_pointer control-tile">
@@ -678,50 +735,48 @@ class WebmView extends Component {
                           />
                         </div>
                       </div>
-                      {
-                        isFullScreenMode ?
-                          <div className={"video-slider-btn ml-4 cursor_pointer"}>
-                            <div className={"d-flex justify-content-between"}>
-                              {videoIndex > 0 ? (
-                                <div
-                                  onClick={() => this.handlePreviousVideoPlay()}
-                                  className="cursor_pointer left-arrow-wrap"
+                      {isFullScreenMode ? (
+                        <div className={"video-slider-btn ml-4 cursor_pointer"}>
+                          <div className={"d-flex justify-content-between"}>
+                            {videoIndex > 0 ? (
+                              <div
+                                onClick={() => this.handlePreviousVideoPlay()}
+                                className="cursor_pointer left-arrow-wrap"
+                              >
+                                <span id={"previous-video"}>
+                                  <i className="fas fa-step-backward" />
+                                </span>
+                                <UncontrolledTooltip
+                                  placement="top"
+                                  target="previous-video"
                                 >
-                                  <span id={"previous-video"}>
-                                    <i className="fas fa-step-backward" />
-                                  </span>
-                                  <UncontrolledTooltip
-                                    placement="top"
-                                    target="previous-video"
-                                  >
-                                    Previous video
-                                  </UncontrolledTooltip>
-                                </div>
-                              ) : null}
-                              {videoIndex < movesOfSet.length - 1 ? (
-                                <div
-                                  onClick={() => this.handleNextVideoPlay()}
-                                  className="right-arrow-wrap cursor_pointer"
+                                  Previous video
+                                </UncontrolledTooltip>
+                              </div>
+                            ) : null}
+                            {videoIndex < movesOfSet.length - 1 ? (
+                              <div
+                                onClick={() => this.handleNextVideoPlay()}
+                                className="right-arrow-wrap cursor_pointer"
+                              >
+                                <span id={"next-video"}>
+                                  <i className="fas fa-step-forward" />
+                                </span>
+                                <UncontrolledTooltip
+                                  placement="top"
+                                  target="next-video"
                                 >
-                                  <span id={"next-video"}>
-                                    <i className="fas fa-step-forward" />
-                                  </span>
-                                  <UncontrolledTooltip
-                                    placement="top"
-                                    target="next-video"
-                                  >
-                                    Next video
-                                  </UncontrolledTooltip>
-                                </div>
-                              ) : null}
-                            </div>
-                          </div> :
-                          null
-                      }
+                                  Next video
+                                </UncontrolledTooltip>
+                              </div>
+                            ) : null}
+                          </div>
+                        </div>
+                      ) : null}
                       <div className="speed-wrap control-tile">
                         <UncontrolledDropdown
                           className="header-dropdown custom-dropdown"
-                        // direction="auto"
+                          // direction="auto"
                         >
                           <DropdownToggle
                             color={" "}
@@ -793,17 +848,44 @@ class WebmView extends Component {
                           <i className="fas fa-expand" />
                         </span>
                       ) : (
-                          <span
-                            onClick={() => this.handleVideoResizeScreen()}
-                            className="control-tile cursor_pointer"
-                          >
-                            <i className="fa fa-arrows-alt" aria-hidden="true" />
-                          </span>
-                        )}
+                        <span
+                          onClick={() => this.handleVideoResizeScreen()}
+                          className="control-tile cursor_pointer"
+                        >
+                          <i className="fa fa-arrows-alt" aria-hidden="true" />
+                        </span>
+                      )}
                     </div>
                   </div>
                 </div>
               </div>
+            </div>
+            <div className="pt-3 d-flex">
+              {videoData && videoData.tags && videoData.tags.length ? (
+                <>
+                  <div className="font-weight-bold">
+                    {" "}
+                    <i className="fa fa-tags" aria-hidden="true" /> Tags :
+                  </div>
+                  <div className={"pl-2 pb-3"}>
+                    {videoData.tags.map(tags => {
+                      return <span className="video-tags"> {tags.value} </span>;
+                    })}
+                  </div>
+                </>
+              ) : null}
+            </div>
+            <div className="mt-2">
+              {videoData && videoData.description ? (
+                <div>
+                  <span className="font-weight-bold pr-2">
+                    {" "}
+                    <i className="fas fa-comment-alt pr-1" aria-hidden="true" />
+                    Description :
+                  </span>
+                  <span>{videoData.description}</span>
+                </div>
+              ) : null}
             </div>
           </ModalBody>
         </Modal>
