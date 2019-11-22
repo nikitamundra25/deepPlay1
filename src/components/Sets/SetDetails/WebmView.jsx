@@ -874,12 +874,14 @@ class WebmView extends Component {
               </div>
             </div>
             <div className="text-right pr-4">
-              <span
-                className="cursor_pointer"
-                onClick={() => this.openAddTagsModal(videoData._id, "edit")}
-              >
-                Edit
-              </span>
+              {videoData && videoData.tags && videoData.tags.length ? (
+                <span
+                  className="cursor_pointer"
+                  onClick={() => this.openAddTagsModal(videoData._id, "edit")}
+                >
+                  Edit
+                </span>
+              ) : null}
             </div>
             <div className="pt-3 d-flex">
               {videoData && videoData.tags && videoData.tags.length ? (

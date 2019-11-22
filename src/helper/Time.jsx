@@ -17,10 +17,9 @@ export const SecondsToMMSS = secs => {
   return `${pad(minutes)}:${pad(secs)}`;
 };
 
-export const SecondsToMMSSMM = secs => {
-  var milliseconds = (secs % 1000) / 100,
-    seconds = (secs / 1000) % 60,
-    minutes = Math.floor(seconds / 60);
-
+export const SecondsToMMSSMM = milliseconds => {
+  var seconds = Math.floor(milliseconds / 1000) % 60,
+    minutes = Math.floor((milliseconds - seconds) / 1000 / 60);
+  console.log("time", minutes, seconds, milliseconds);
   return `${pad(minutes)}:${pad(seconds)}:${pad(milliseconds)}`;
 };

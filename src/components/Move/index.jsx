@@ -89,9 +89,6 @@ class MoveComponent extends React.Component {
     if (!this.state.isPaste) {
       e.preventDefault();
     }
-    // this.setState({
-    //   errors: {}
-    // });
     try {
       if (!this.state.url) {
         this.setState({
