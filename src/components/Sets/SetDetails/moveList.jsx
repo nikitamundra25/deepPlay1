@@ -575,7 +575,7 @@ class MoveList extends React.Component {
                 )}
               </div>
             </Col>
-         
+
             <div
               className={`video-thumbnail-block  ${
                 selectedMoveIds && selectedMoveIds.length

@@ -14,15 +14,15 @@ import {
 import { logger } from "helper/Logger";
 import InputRange from "react-input-range";
 import { SecondsToMMSS } from "helper/Time";
-import TransferMoveModal from "../../comman/TransferModal.jsx";
+import TransferMoveModal from "../TransferModal.jsx";
 import Loader from "../../comman/Loader/Loader";
 import closeBtn from "../../../assets/img/close-img.png";
-import ViewInfoModal from "./viewInfoModal";
-import AddTagModal from "./addTagsModal";
-import EditMoveModal from "./editMoveModal";
+import ViewInfoModal from "../../Sets/SetDetails/viewInfoModal";
+import AddTagModal from "../../Sets/SetDetails/addTagsModal";
+import EditMoveModal from "../../Sets/SetDetails/editMoveModal";
 import { ConfirmBox } from "helper/SweetAleart";
 
-class WebmView extends Component {
+class WebmSearch extends Component {
   video;
   constructor(props) {
     super(props);
@@ -47,8 +47,7 @@ class WebmView extends Component {
       doubleClick: false,
       tags: [],
       edit: false,
-      description: "",
-      error: ""
+      description: ""
     };
   }
   /**
@@ -158,14 +157,17 @@ class WebmView extends Component {
         };
       }
     }
+
     if (isVideoFromSearch !== this.props.isVideoFromSearch) {
       this.video = document.getElementById("webm-video");
+
       this.customVideo = document.getElementById("custom_video_control");
       if (this.video) {
         this.video.addEventListener("timeupdate", () => {
           const currentVideoTime = parseFloat(this.video.currentTime).toFixed(
             2
           );
+
           this.setState({
             currentTime: currentVideoTime
           });
@@ -178,6 +180,7 @@ class WebmView extends Component {
 
         this.video.load();
         let timeDuration = [];
+
         this.video.onloadeddata = () => {
           const { duration, videoHeight, videoWidth } = this.video;
           for (let index = 0; index < duration; index = index + duration / 20) {
@@ -187,6 +190,7 @@ class WebmView extends Component {
             timeDuration: timeDuration,
             videoMaxDuration: duration
           };
+
           this.setState({
             videoDuration: data,
             videoDimentions: {
@@ -312,7 +316,7 @@ class WebmView extends Component {
     });
     this.props.modelOperate({
       modelDetails: {
-        transferMoveModalOpen: !modelDetails.transferMoveModalOpen
+        transferMoveModalOpenReq: !modelDetails.transferMoveModalOpenReq
       }
     });
   };
@@ -444,13 +448,8 @@ class WebmView extends Component {
 
   handleChange = e => {
     const { name, value } = e.target;
-    const error =
-      value && value.length > 250
-        ? "Description cannot have more than 250 characters"
-        : "";
     this.setState({
-      [name]: value,
-      error
+      [name]: value
     });
   };
 
@@ -473,7 +472,7 @@ class WebmView extends Component {
       viewInfoModalOpen,
       addTagModalOpenReq,
       editMoveModalOpen,
-      transferMoveModalOpen
+      transferMoveModalOpenReq
     } = modelDetails;
     const { moveURL } = video;
     const {
@@ -495,8 +494,7 @@ class WebmView extends Component {
       doubleClick,
       title,
       description,
-      edit,
-      error
+      edit
     } = this.state;
 
     return (
@@ -912,7 +910,7 @@ class WebmView extends Component {
         </Modal>
 
         <TransferMoveModal
-          modal={transferMoveModalOpen}
+          modal={transferMoveModalOpenReq}
           setList={allSetList}
           moveToTransfer={moveToTransfer}
           setId={setId}
@@ -934,7 +932,6 @@ class WebmView extends Component {
           edit={edit}
           description={description}
           handleChange={this.handleChange}
-          error={error}
         />
         <ViewInfoModal
           modal={viewInfoModalOpen}
@@ -954,4 +951,4 @@ class WebmView extends Component {
     );
   }
 }
-export default WebmView;
+export default WebmSearch;

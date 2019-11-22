@@ -80,7 +80,8 @@ export const moveReducer = handleActions(
     }),
     [MovesAction.LOAD_VIDEO_DATA_REQUEST]: (state, { payload }) => ({
       ...state,
-      videoData: payload
+      videoData: payload,
+      isVideoFromSearch: false
     }),
     [MovesAction.SEARCH_MOVE_REQUEST]: (state, { payload }) => ({
       ...state,

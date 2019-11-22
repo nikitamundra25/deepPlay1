@@ -138,7 +138,7 @@ const downloadYoutubeVideo = async (
           ytdl(body.url).pipe(
             (videoStream = fs.createWriteStream(originalVideoPath))
           );
-          videoStream.on("close", async function () {
+          videoStream.on("close", async function() {
             const {
               frames: framesArray,
               videoMetaData,
@@ -477,7 +477,7 @@ const updateMoveDetailsAndTrimVideo = async (
     const { timer, moveId, title, description, tags, setId, frames } = body;
     const result: Document | null | any = await MoveModel.findById(moveId);
     console.log("frames", frames);
-    let thumbnailPath: any[] = []
+    let thumbnailPath: any[] = [];
     if (frames && frames.length) {
       thumbnailPath = frames.split("8000");
     }
@@ -496,7 +496,7 @@ const updateMoveDetailsAndTrimVideo = async (
       }
       const fileName = `${
         result.videoUrl.split(".")[0]
-        }_clip_${moment().unix()}.webm`;
+      }_clip_${moment().unix()}.webm`;
       let videoFileMain: String | any, videoOriginalFile: String | any;
       if (IsProductionMode) {
         videoFileMain = path.join(__dirname, `${fileName}`);
@@ -685,7 +685,7 @@ const isStarredMove = async (req: Request, res: Response): Promise<any> => {
     return res.status(200).json({
       message: `Move has been ${
         isStarred === "true" ? "starred" : "Unstarred"
-        } successfully!`
+      } successfully!`
     });
   } catch (error) {
     console.log(error);
@@ -840,7 +840,7 @@ const addTagsInMove = async (req: Request, res: Response): Promise<any> => {
   try {
     const { body } = req;
     const { data } = body;
-    const { tags, moveId, fromMoveList } = data;
+    const { tags, moveId, fromMoveList, description, edit } = data;
     if (!moveId) {
       res.status(400).json({
         message: "MoveId not found"
@@ -886,7 +886,8 @@ const addTagsInMove = async (req: Request, res: Response): Promise<any> => {
         { _id: moveId },
         {
           $set: {
-            tags: tags
+            tags: tags,
+            description: description
           }
         }
       );
@@ -895,9 +896,13 @@ const addTagsInMove = async (req: Request, res: Response): Promise<any> => {
       return res.status(200).json({
         message: "Tags have been updated successfully"
       });
-    } else if (!fromMoveList) {
+    } else if (!fromMoveList && !edit) {
       return res.status(200).json({
         message: "Tags have been updated for this move successfully"
+      });
+    } else if (edit) {
+      return res.status(200).json({
+        message: "Move details have been updated successfully"
       });
     } else {
       return res.status(200).json({

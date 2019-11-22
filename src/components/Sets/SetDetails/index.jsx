@@ -274,6 +274,7 @@ class SetDetails extends React.Component {
     } else {
       const moveVideo = data.videoData;
       moveVideo.tags = data.tags;
+      moveVideo.description = data.description;
       this.props.addTagsRequest({ data: data, moveVideo: moveVideo });
     }
   };
