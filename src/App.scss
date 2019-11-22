@@ -199,9 +199,9 @@ a {
 }
 
 .home-video-section {
-  margin-bottom: 80px;
-  margin-top: 80px;
-  padding-bottom: 80px;
+  margin-bottom: 40px;
+  margin-top: 60px;
+  padding-bottom: 60px;
   border-bottom: 2px dashed $videoAddBannerBack;
 }
 .video-add-banner {
@@ -1110,7 +1110,7 @@ a {
       padding: 6px;
       height: auto;
       border-color: #fff;
-      border-radius: 2px 0px 0px 2px;
+      border-radius: 2px 2px 2px 2px;
       &:focus {
         box-shadow: none;
         border-color: #fff;

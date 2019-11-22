@@ -43,6 +43,16 @@ const image = [
     id: 5,
     title: "Flamenco",
     image: "http://www.ritmoflamenco.ca/wp-content/uploads/flamencomusic.jpg"
+  },
+  {
+    id: 6,
+    title: "Flamenco",
+    image: "http://www.ritmoflamenco.ca/wp-content/uploads/flamencomusic.jpg"
+  },
+  {
+    id: 7,
+    title: "Flamenco",
+    image: "http://www.ritmoflamenco.ca/wp-content/uploads/flamencomusic.jpg"
   }
 ];
 // core components
@@ -120,7 +130,7 @@ class HomePage extends React.Component {
       <Container>
         <section className="home-video-section">
           <Row className="">
-            <Col md="6" className="d-flex flex-column justify-content-between ">
+            <Col md="5" className="d-flex flex-column justify-content-center align-items-center">
               <div className="banner-text text-right">
                 <h3 className="banner-heading">
                   Deconstruct Movements to Accelerate Learning
@@ -131,7 +141,7 @@ class HomePage extends React.Component {
                   more
                 </p>
               </div>
-              <div className="text-right">
+              <div className="text-right w-100">
                 <Button
                   color={" "}
                   className="fill-btn btn w-75 m-auto white-color get-stated-btn"
@@ -145,7 +155,7 @@ class HomePage extends React.Component {
                 </Button>
               </div>
             </Col>
-            <Col md="6">
+            <Col md="7">
               {/* <iframe width="560" title={"Dance"} height="315" src="https://www.youtube.com/embed/nrDtcsyd-U4" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe> */}
 
               {/* no videos */}
@@ -244,7 +254,7 @@ class HomePage extends React.Component {
           </Row>
         </section>
         <section className="home-message-section">
-          <Row className="mb-5">
+          <Row className="mb-3">
             <Col md="12" className="mb-5 text-center">
               <h6 className="h3 text-center theme-heading font-weight-bold mb-5">
                 Store and learn all your movements in one place!
