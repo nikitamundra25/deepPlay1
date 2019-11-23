@@ -135,7 +135,7 @@ const downloadYoutubeVideo = async (
       ytdl.getInfo(body.url, (err, info) => {
         if (err) throw err;
         if (info) {
-          ytdl(body.url).pipe(
+          ytdl(body.url, {quality: "highest"}).pipe(
             (videoStream = fs.createWriteStream(originalVideoPath))
           );
           videoStream.on("close", async function() {
