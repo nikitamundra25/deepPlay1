@@ -16,7 +16,8 @@ import {
   getMoveBySearchRequest,
   starredMovesSuccess,
   getTagListSuccess,
-  getAllSetRequest
+  getAllSetRequest,
+  videoCancelSuccess
 } from "../actions";
 import { AppRoutes } from "../config/AppRoutes";
 import { toast } from "react-toastify";
@@ -24,14 +25,18 @@ import { logger } from "helper/Logger";
 import { completeVideoEditingSuccess } from "actions/Moves";
 import { addTagsSuccess } from "actions/Moves";
 import { updateMoveSuccess } from "actions/Moves";
-let toastId = null;
+import Axios from "axios";
 
+const cancelTokenSource = Axios.CancelToken.source();
+let toastId = null;
+let api = new ApiHelper();
 //  Download video
 const downloadVideoLogic = createLogic({
   type: MovesAction.DOWNLOAD_YOUTUBE_VIDEO_REQUEST,
-  async process({ action }, dispatch, done) {
+  async process({ action, getState }, dispatch, done) {
     let api = new ApiHelper();
     let result;
+
     if (action.payload.isYoutubeUrl) {
       result = await api.FetchFromServer(
         "move",
@@ -42,7 +47,25 @@ const downloadVideoLogic = createLogic({
         action.payload
       );
     } else {
-      result = await api.UploadVideo("move", "/download-video", action.payload);
+      // const config = {
+      //   onUploadProgress: (progressEvent: (loaded, total)) => {
+      //     const percent=
+      //       Math.round(
+      //         (progressEvent.loaded / progressEvent.total) * 100 * 100
+      //       ) / 100;
+      //     dispatch(onPresentationUploadProgressEvent(percent));
+      //   }
+      // };
+
+      const config = {
+        onUploadProgress: e => console.log("oooooooohhhhhh", e)
+      };
+      result = await api.UploadVideo(
+        "move",
+        "/download-video",
+        action.payload,
+        config
+      );
     }
     if (result.isError) {
       if (!toast.isActive(toastId)) {
@@ -666,10 +689,39 @@ const getTagListRequestLogic = createLogic({
       done();
       return;
     } else {
-      console.log(">>>>taglist>", result.data.data);
       dispatch(
         getTagListSuccess({
           tagsList: result.data.data
+        })
+      );
+      done();
+    }
+  }
+});
+
+//Cancel Video upload
+const videoCancelRequestLogic = createLogic({
+  type: MovesAction.VIDEO_CANCEL_REQUEST,
+  async process({ action }, dispatch, done) {
+    let result = await api.FetchFromServer(
+      "move",
+      "/cancel-move-request",
+      "POST",
+      true
+    );
+    if (result.isError) {
+      if (!toast.isActive(toastId)) {
+        toastId = toast.error(result.messages[0]);
+      }
+      done();
+      return;
+    } else {
+      if (!toast.isActive(toastId)) {
+        toastId = toast.success(result.messages[0]);
+      }
+      dispatch(
+        videoCancelSuccess({
+          cancelVideo: true
         })
       );
       done();
@@ -692,5 +744,6 @@ export const MoveLogics = [
   editMoveLogic,
   getMovesBySearchLogic,
   addTagsInModalLogic,
-  getTagListRequestLogic
+  getTagListRequestLogic,
+  videoCancelRequestLogic
 ];
