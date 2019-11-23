@@ -1153,6 +1153,67 @@ const getTagListByUserId = async (
     });
   }
 };
+/*
+/*  
+*/
+const cancelCreateMovRequest = async (req: Request, res: Response) => {
+  try {
+    let dirPath: string | any
+    if (IsProductionMode) {
+      dirPath = path.join(
+        __dirname,
+        "uploads",
+        "youtube-videos"
+      );
+    } else {
+      dirPath = path.join(
+        __basedir,
+        "../uploads",
+        "youtube-videos"
+      );
+    }
+    fs.readdir(dirPath, (err, files) => {
+      if (err) throw err;
+      for (const file of files) {
+        const isDir: any[] = file.split("video")
+        console.log("sfsfssfsf", isDir);
+        if (isDir[1]) {
+          if (IsProductionMode) {
+            const folderPath = path.join(
+              __dirname,
+              "uploads",
+              "youtube-videos",
+              file
+            );
+            fs.rmdirSync(folderPath)
+          } else {
+            const folderPath = path.join(
+              __basedir,
+              "../uploads",
+              "youtube-videos",
+              file
+            );
+            fs.rmdirSync(folderPath)
+          }
+        }else{
+          fs.unlink(path.join(dirPath, file), err => {
+            if (err) throw err;
+          });
+        }
+      }
+    });
+
+    return res.status(200).json({
+      message: "Move Request Canceled successfully!",
+      success: true
+    })
+  } catch (error) {
+    console.log(error);
+    res.status(500).send({
+      message: error.message
+    });
+  }
+}
 export {
   downloadVideo,
   getMoveBySetId,
@@ -1172,5 +1233,6 @@ export {
   updateMove,
   getMoveBySearch,
   addTags,
-  getTagListByUserId
+  getTagListByUserId,
+  cancelCreateMovRequest
 };
