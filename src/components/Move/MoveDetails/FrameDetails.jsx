@@ -148,8 +148,10 @@ class FrameDetails extends Component {
     const { min, max } = time;
     const { videoMetaData } = this.props;
     const { duration } = videoMetaData || {};
-
-    if (max - min === AppConfig.MAX_VIDEO_LENGTH || max - min === 1) {
+    if (
+      parseInt(max) - parseInt(min) === AppConfig.MAX_VIDEO_LENGTH ||
+      parseInt(max) - parseInt(min) === 1
+    ) {
       if (e.keyCode === 38) {
         if (SecondsToMMSSMM(max + 0.001) <= SecondsToMMSSMM(duration.seconds)) {
           let changeValue = {

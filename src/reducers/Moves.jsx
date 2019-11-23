@@ -25,7 +25,8 @@ const initialState = {
     index: 0,
     loading: false
   },
-  isVideoFromSearch: false
+  isVideoFromSearch: false,
+  cancelVideo: false
 };
 
 export const moveReducer = handleActions(
@@ -171,6 +172,11 @@ export const moveReducer = handleActions(
       ...state,
       isVideoSelected: false
     }),
+    [MovesAction.VIDEO_CANCEL_SUCCESS]: (state, { payload }) => ({
+      ...state,
+      ...payload,
+      isVideoDownloading: false
+    })
   },
   initialState
 );

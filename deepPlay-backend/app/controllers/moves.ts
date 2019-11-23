@@ -1163,26 +1163,17 @@ const getTagListByUserId = async (
 */
 const cancelCreateMovRequest = async (req: Request, res: Response) => {
   try {
-    let dirPath: string | any
+    let dirPath: string | any;
     if (IsProductionMode) {
-      dirPath = path.join(
-        __dirname,
-        "uploads",
-        "youtube-videos"
-      );
+      dirPath = path.join(__dirname, "uploads", "youtube-videos");
     } else {
-      dirPath = path.join(
-        __basedir,
-        "../uploads",
-        "youtube-videos"
-      );
+      dirPath = path.join(__basedir, "../uploads", "youtube-videos");
     }
     fs.readdir(dirPath, (err, files) => {
       if (err) throw err;
       for (const file of files) {
-        const isDir: any[] = file.split("video")
-        console.log("sfsfssfsf", isDir);
-        if (isDir[1]) {
+        const isDir: any[] = file.split("frames");
+        if (isDir[1] !== undefined) {
           if (IsProductionMode) {
             const folderPath = path.join(
               __dirname,
@@ -1190,7 +1181,15 @@ const cancelCreateMovRequest = async (req: Request, res: Response) => {
               "youtube-videos",
               file
             );
-            fs.rmdirSync(folderPath)
+            fs.readdir(folderPath, (err, files) => {
+              if (files && files.length) {
+                fs.unlink(path.join(folderPath, file), err => {
+                  if (err) throw err;
+                });
+              } else {
+                fs.rmdirSync(folderPath);
+              }
+            });
           } else {
             const folderPath = path.join(
               __basedir,
@@ -1198,9 +1197,19 @@ const cancelCreateMovRequest = async (req: Request, res: Response) => {
               "youtube-videos",
               file
             );
-            fs.rmdirSync(folderPath)
+            fs.readdir(folderPath, (err, files) => {
+              if (files && files.length) {
+                for (const file of files) {
+                fs.unlink(path.join(folderPath, file), err => {
+                  if (err) throw err;
+                });
+              }
+              } else {
+                fs.rmdirSync(folderPath);
+              }
+            });
           }
-        }else{
+        } else {
           fs.unlink(path.join(dirPath, file), err => {
             if (err) throw err;
           });
@@ -1211,14 +1220,14 @@ const cancelCreateMovRequest = async (req: Request, res: Response) => {
     return res.status(200).json({
       message: "Move Request Canceled successfully!",
       success: true
-    })
+    });
   } catch (error) {
     console.log(error);
     res.status(500).send({
       message: error.message
     });
   }
-}
+};
 export {
   downloadVideo,
   getMoveBySetId,
