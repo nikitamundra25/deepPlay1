@@ -27,7 +27,7 @@ import AllSearchComponent from "../../components/AllSearch";
 import CreateSetComponent from "../../components/Sets/createSet";
 import searchArrow from "../../assets/img/back-search.png";
 import { DebounceInput } from "react-debounce-input";
-import WebmView from "../../components/Sets/SetDetails/WebmView";
+import WebmSearch from "../../components/comman/WebmSearch";
 
 class DefaultHeader extends React.Component {
   constructor(props) {
@@ -56,7 +56,7 @@ class DefaultHeader extends React.Component {
       });
     }
   };
-  
+
   handleClickOutside = event => {
     if (this.wrapperRef && !this.wrapperRef.contains(event.target)) {
       this.setState({
@@ -98,9 +98,11 @@ class DefaultHeader extends React.Component {
       }
     });
   };
+
   deleteMove = data => {
     this.props.deleteMoveRequest(data);
   };
+
   handleSetModal = () => {
     const { modelInfoReducer } = this.props;
     const { modelDetails } = modelInfoReducer;
@@ -611,7 +613,7 @@ class DefaultHeader extends React.Component {
           createSet={this.createSet}
         />
         {showVideo && showVideo.length ? (
-          <WebmView
+          <WebmSearch
             isVideoModalOpen={isVideoModalOpenReq}
             handleVideoModal={this.handleVideoModal}
             video={showVideo}

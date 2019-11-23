@@ -20,6 +20,7 @@ import transfer from "../../../assets/img/set-detail-ic/transfer.svg";
 import remove from "../../../assets/img/set-detail-ic/remove.svg";
 import { ListManager } from "react-beautiful-dnd-grid";
 import MoveListDetails from "./moveListdetails";
+import videoLoading from "../../../assets/img/icons/video-poster.png";
 
 // a little function to help us with reordering the result
 const reorder = (list, startIndex, endIndex) => {
@@ -56,7 +57,8 @@ class MoveList extends React.Component {
         index: -1,
         isChanging: false
       },
-      backgroundClass: ""
+      backgroundClass: "",
+      isLoadImage: false
     };
   }
 
@@ -105,6 +107,25 @@ class MoveList extends React.Component {
       console.log("selected-moves selected-detail-page", this.scrollClass, height);
     }
 
+    if (prevProps.movesOfSet !== this.props.movesOfSet) {
+      // eslint-disable-next-line
+      this.props.movesOfSet.map((key, index) => {
+        this.myVideo = document.getElementById(`webm-video-${index}`);
+        if (this.myVideo) {
+          this.myVideo.onloadstart = event => {
+            this.setState({
+              isLoadImage: false
+            });
+          };
+          this.myVideo.oncanplay = event => {
+            this.setState({
+              isLoadImage: false
+            });
+            this.myVideo.getAttribute("poster", videoLoading);
+          };
+        }
+      });
+    }
     // if (
     //   prevProps.isMoveStarLoading &&
     //   prevProps.isMoveStarLoading.loading !==
@@ -523,11 +544,13 @@ class MoveList extends React.Component {
       doubleClick,
       title,
       isMarkingStar,
-      backgroundClass
+      backgroundClass,
+      isLoadImage
     } = this.state;
     const location = this.props.location;
     const isStarred = location.search.split("=");
     const serachContent = location.search.split("search");
+    console.log("isLoadImage", isLoadImage);
 
     return (
       <section className="play-list-collection set-detail-section set-detail-editble">
@@ -713,48 +736,50 @@ class MoveList extends React.Component {
                             handleStarred={this.handleStarred}
                             handleVideoCheckBox={this.handleVideoCheckBox}
                             handleVideoModal={this.props.handleVideoModal}
+                            isLoadImage={isLoadImage}
                           />
                         );
                       })
                     ) : (
-                        <ListManager
-                          items={movesOfSet}
-                          direction="horizontal"
-                          maxItems={4}
-                          render={video => {
-                            let index = video.id;
-                            return (
-                              <MoveListDetails
-                                index={index}
-                                isVideoChecked={isVideoChecked}
-                                selectedMoves={selectedMoves}
-                                handleShowVideo={this.props.handleShowVideo}
-                                handleVideoHover={this.handleVideoHover}
-                                handleVideoPause={this.handleVideoPause}
-                                handleVideoHoverLeave={this.handleVideoHoverLeave}
-                                handleVideoPlay={this.handleVideoPlay}
-                                handleMovesSelect={this.handleMovesSelect}
-                                isMarkingStar={isMarkingStar}
-                                video={video}
-                                isSelectVideo={isSelectVideo}
-                                videoIndex={videoIndex}
-                                isVideoModalOpen={isVideoModalOpen}
-                                handleStarred={this.handleStarred}
-                                handleVideoCheckBox={this.handleVideoCheckBox}
-                                handleVideoModal={this.props.handleVideoModal}
-                                title={title}
-                                onDoubleClick={this.onDoubleClick}
-                                doubleClickIndex={doubleClickIndex}
-                                doubleClick={doubleClick}
-                                handleonBlur={this.handleonBlur}
-                                handleChange={this.handleChange}
-                                reorderList={this.reorderList}
-                              />
-                            );
-                          }}
-                          onDragEnd={this.reorderList}
-                        />
-                      )}
+                      <ListManager
+                        items={movesOfSet}
+                        direction="horizontal"
+                        maxItems={4}
+                        render={video => {
+                          let index = video.id;
+                          return (
+                            <MoveListDetails
+                              index={index}
+                              isVideoChecked={isVideoChecked}
+                              selectedMoves={selectedMoves}
+                              handleShowVideo={this.props.handleShowVideo}
+                              handleVideoHover={this.handleVideoHover}
+                              handleVideoPause={this.handleVideoPause}
+                              handleVideoHoverLeave={this.handleVideoHoverLeave}
+                              handleVideoPlay={this.handleVideoPlay}
+                              handleMovesSelect={this.handleMovesSelect}
+                              isMarkingStar={isMarkingStar}
+                              video={video}
+                              isSelectVideo={isSelectVideo}
+                              videoIndex={videoIndex}
+                              isVideoModalOpen={isVideoModalOpen}
+                              handleStarred={this.handleStarred}
+                              handleVideoCheckBox={this.handleVideoCheckBox}
+                              handleVideoModal={this.props.handleVideoModal}
+                              title={title}
+                              onDoubleClick={this.onDoubleClick}
+                              doubleClickIndex={doubleClickIndex}
+                              doubleClick={doubleClick}
+                              handleonBlur={this.handleonBlur}
+                              handleChange={this.handleChange}
+                              reorderList={this.reorderList}
+                              isLoadImage={isLoadImage}
+                            />
+                          );
+                        }}
+                        onDragEnd={this.reorderList}
+                      />
+                    )}
                   </div>
                 </div>
               ) : (

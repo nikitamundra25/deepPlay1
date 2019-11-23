@@ -338,12 +338,16 @@ const transferMoveLogic = createLogic({
         modelOpenRequest({
           modelDetails: {
             transferToModalOpen: false,
-            transferToModalOpenReq: false
+            transferToModalOpenReq: false,
+            transferMoveModalOpen: false,
+            isVideoModalOpen: false,
+            isVideoModalOpenReq: false,
+            transferMoveModalOpenReq: false
           }
         })
       );
 
-      if (!action.payload.isSearch) {
+      if (!action.payload.fromMoveSearch || !action.payload.isSearch) {
         dispatch(
           getMovesOfSetRequest({
             setId: action.payload.previousSetId,

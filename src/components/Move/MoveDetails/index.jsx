@@ -255,8 +255,8 @@ class MoveDetails extends React.Component {
   handleChange = e => {
     const { name, value } = e.target;
     const error =
-      value && value.length === 500
-        ? "Description cannot have more than 500 characters"
+      value && value.length > 250
+        ? "Description cannot have more than 250 characters"
         : "";
     this.setState({
       [name]: value,
