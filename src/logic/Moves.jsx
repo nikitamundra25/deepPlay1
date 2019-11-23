@@ -701,7 +701,7 @@ const getTagListRequestLogic = createLogic({
 const videoCancelRequestLogic = createLogic({
   type: MovesAction.VIDEO_CANCEL_REQUEST,
   async process({ action }, dispatch, done) {
-    api.cancelRequest();
+    api.cancelRequest("cancel");
     let result = await api.FetchFromServer(
       "move",
       "/cancel-move-request",
