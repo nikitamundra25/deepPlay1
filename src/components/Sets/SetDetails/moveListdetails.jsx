@@ -28,7 +28,8 @@ class MoveListDetails extends React.Component {
       doubleClickIndex,
       onDoubleClick,
       handleonBlur,
-      handleChange
+      handleChange,
+      isLoadImage
     } = this.props;
 
     return (
@@ -76,14 +77,14 @@ class MoveListDetails extends React.Component {
                     ? `play-list-img blur-img-wrap checked-wrap video-select`
                     : `play-list-img blur-img-wrap checked-wrap`
                 }
-            
               >
-                <div className="video-move-layer"
-                    onClick={
-                      !isVideoChecked && isVideoModalOpen
-                        ? () => this.props.handleVideoModal(video, index)
-                        : null
-                    }
+                <div
+                  className="video-move-layer"
+                  onClick={
+                    !isVideoChecked && isVideoModalOpen
+                      ? () => this.props.handleVideoModal(video, index)
+                      : null
+                  }
                 ></div>
                 <div
                   className={
@@ -151,10 +152,7 @@ class MoveListDetails extends React.Component {
                     ) : null}
                   </>
                 )}
-                <div
-                  className={"video-effect"}
-                 
-                >
+                <div className={"video-effect"}>
                   <video
                     width={"100%"}
                     id={`webm-video-${index}`}
@@ -164,6 +162,7 @@ class MoveListDetails extends React.Component {
                     muted={true}
                     draggable="true"
                     loop
+                    className={isLoadImage ? "load-class" : ""}
                   >
                     <source src={`${video.moveURL}`} type="video/webm" />
                   </video>

@@ -3,7 +3,11 @@ import InputRange from "react-input-range";
 import { AppConfig } from "config/Appconfig";
 import { Input, Row, Col, FormGroup, Label, Button } from "reactstrap";
 import { orderBy } from "natural-orderby";
-import { SecondsToHHMMSS, SecondsToMMSS, SecondsToMMSSMM } from "helper/Time";
+import {
+  SecondsToHHMMSS,
+  //  SecondsToMMSS,
+  SecondsToMMSSMM
+} from "helper/Time";
 import { logger } from "helper/Logger";
 
 class FrameDetails extends Component {
@@ -147,10 +151,10 @@ class FrameDetails extends Component {
 
     if (max - min === AppConfig.MAX_VIDEO_LENGTH || max - min === 1) {
       if (e.keyCode === 38) {
-        if (SecondsToMMSS(max + 1) <= SecondsToMMSS(duration.seconds)) {
+        if (SecondsToMMSSMM(max + 0.001) <= SecondsToMMSSMM(duration.seconds)) {
           let changeValue = {
-            min: min + 1,
-            max: max + 1
+            min: min + 0.001,
+            max: max + 0.001
           };
           this.setState(
             {
@@ -164,8 +168,8 @@ class FrameDetails extends Component {
       } else if (e.keyCode === 40) {
         if (min > 0) {
           let changeValue = {
-            min: min - 1,
-            max: max - 1
+            min: min - 0.001,
+            max: max - 0.001
           };
           this.setState(
             {
@@ -189,9 +193,11 @@ class FrameDetails extends Component {
     } else {
       if (name === "from") {
         if (e.keyCode === 38) {
-          if (SecondsToMMSS(max + 1) <= SecondsToMMSS(duration.seconds)) {
+          if (
+            SecondsToMMSSMM(max + 0.001) <= SecondsToMMSSMM(duration.seconds)
+          ) {
             let changeValue = {
-              min: min + 1,
+              min: min + 0.001,
               max: max
             };
             this.setState(
@@ -206,7 +212,7 @@ class FrameDetails extends Component {
         } else if (e.keyCode === 40) {
           if (min > 0) {
             let changeValue = {
-              min: min - 1,
+              min: min - 0.001,
               max: max
             };
             this.setState(
@@ -221,10 +227,12 @@ class FrameDetails extends Component {
         }
       } else {
         if (e.keyCode === 38) {
-          if (SecondsToMMSS(max + 1) <= SecondsToMMSS(duration.seconds)) {
+          if (
+            SecondsToMMSSMM(max + 0.001) <= SecondsToMMSSMM(duration.seconds)
+          ) {
             let changeValue = {
               min: min,
-              max: max + 1
+              max: max + 0.001
             };
             this.setState(
               {
@@ -239,7 +247,7 @@ class FrameDetails extends Component {
           if (min > 0) {
             let changeValue = {
               min: min,
-              max: max - 1
+              max: max - 0.001
             };
             this.setState(
               {
@@ -274,9 +282,9 @@ class FrameDetails extends Component {
             minValue={0}
             formatLabel={(val, type) => {
               return type === "min"
-                ? `${SecondsToMMSS(time.min >= 0 ? time.min : 0)}`
+                ? `${SecondsToMMSSMM(time.min >= 0 ? time.min : 0)}`
                 : type === "max"
-                ? `${SecondsToMMSS(time.max >= 0 ? time.max : 0)}`
+                ? `${SecondsToMMSSMM(time.max >= 0 ? time.max : 0)}`
                 : null;
             }}
             value={time}
@@ -304,7 +312,7 @@ class FrameDetails extends Component {
                   <Label>Trim From: </Label>
                   <Input
                     type="text"
-                    value={SecondsToMMSS(time.min)}
+                    value={SecondsToMMSSMM(time.min)}
                     // onChange={e =>
                     //   this.labelValueChange({
                     //     ...time,
@@ -322,7 +330,7 @@ class FrameDetails extends Component {
                   <Label>Trim to: </Label>
                   <Input
                     type={"text"}
-                    value={SecondsToMMSS(time.max)}
+                    value={SecondsToMMSSMM(time.max)}
                     // onChange={e =>
                     //   this.labelValueChange({
                     //     ...time,
