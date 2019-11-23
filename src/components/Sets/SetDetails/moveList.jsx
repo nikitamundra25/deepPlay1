@@ -68,6 +68,9 @@ class MoveList extends React.Component {
   /*
   /*  
   */
+  componentDidUpdate = ({ isVideoSelected }) => {
+
+  }
   listenScrollEvent = e => {
     if (window.scrollY > 180) {
       this.setState({ backgroundClass: "sticky-header" });
@@ -85,7 +88,7 @@ class MoveList extends React.Component {
     if (
       prevProps.isMoveStarLoading &&
       prevProps.isMoveStarLoading.loading !==
-        this.props.isMoveStarLoading.loading
+      this.props.isMoveStarLoading.loading
     ) {
       this.setState({
         isMarkingStar: {
@@ -93,6 +96,15 @@ class MoveList extends React.Component {
           isChanging: true
         }
       });
+    }
+    if (prevProps.isVideoSelected !== this.props.isVideoSelected) {
+      this.scrollClass = document.getElementsByClassName("selected-moves selected-detail-page")
+      var body = document.body,
+        html = document.documentElement;
+
+      var height = Math.max(body.scrollHeight, body.offsetHeight,
+        html.clientHeight, html.scrollHeight, html.offsetHeight);
+      console.log("selected-moves selected-detail-page", this.scrollClass, height);
     }
 
     if (prevProps.movesOfSet !== this.props.movesOfSet) {
@@ -157,6 +169,7 @@ class MoveList extends React.Component {
     selectedMoves[index] = checked;
     let selectedMoveIds = [...this.state.selectedMoveIds];
     selectedMoveIds.push(moveId);
+    this.props.videoSelectRequest()
     this.setState({
       isVideoChecked: true,
       isVideoModalOpen: false,
@@ -189,6 +202,7 @@ class MoveList extends React.Component {
     });
   };
   handleUnselectAll = () => {
+    this.props.videoUnSelectRequest()
     this.setState({
       isVideoChecked: false,
       isVideoModalOpen: false,
@@ -221,7 +235,6 @@ class MoveList extends React.Component {
         isVideoModalOpen: true
       });
     }
-
     this.setState({
       selectedMoves,
       selectedMoveIds,
@@ -604,7 +617,7 @@ class MoveList extends React.Component {
                 selectedMoveIds && selectedMoveIds.length
                   ? "select-focus-event"
                   : null
-              } `}
+                } `}
             >
               {selectedMoveIds && selectedMoveIds.length ? (
                 <div className={` ${backgroundClass}`} id="get-sticky-header">
@@ -665,16 +678,7 @@ class MoveList extends React.Component {
                               color=" "
                               className="btn-black"
                               onClick={() =>
-                                this.setState({
-                                  selectedMoves: [],
-                                  selectedMoveIds: [],
-                                  isVideoChecked: false,
-                                  isVideoModalOpen: true,
-                                  isMarkingStar: {
-                                    index: -1,
-                                    isChanging: false
-                                  }
-                                })
+                                this.handleUnselectAll()
                               }
                             >
                               <i
@@ -779,10 +783,10 @@ class MoveList extends React.Component {
                   </div>
                 </div>
               ) : (
-                <Col>
-                  <Loader />
-                </Col>
-              )}
+                  <Col>
+                    <Loader />
+                  </Col>
+                )}
             </div>
           </Row>
           <TransferToModal

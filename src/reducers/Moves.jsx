@@ -20,6 +20,7 @@ const initialState = {
   isCreatingAnotherMove: false,
   videoOriginalFile: "",
   videoFileMain: "",
+  isVideoSelected: false,
   isMoveStarLoading: {
     index: 0,
     loading: false
@@ -161,7 +162,15 @@ export const moveReducer = handleActions(
     [MovesAction.UPDATE_MOVE_SUCCESS]: (state, { payload }) => ({
       ...state,
       ...payload
-    })
+    }),
+    [MovesAction.VIDEO_SELECT_REQUEST]: (state, { payload }) => ({
+      ...state,
+      isVideoSelected: true
+    }),
+    [MovesAction.VIDEO_UNSELECT_REQUEST]: (state, { payload }) => ({
+      ...state,
+      isVideoSelected: false
+    }),
   },
   initialState
 );

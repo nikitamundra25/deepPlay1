@@ -32,7 +32,9 @@ import {
   getTagListRequest,
   addTagsInTagModalRequest,
   videoFullscreenReq,
-  videoFullscreenExit
+  videoFullscreenExit,
+  videoSelectRequest,
+  videoUnSelectRequest
 } from "../../../actions";
 import SharableLinkModal from "../../comman/shareableLink/SharableLink";
 import { AppRoutes } from "../../../config/AppRoutes";
@@ -327,7 +329,9 @@ class SetDetails extends React.Component {
       getAllFolders,
       updateSortIndexRequest,
       videoFullscreenReq,
-      videoFullscreenExit
+      videoFullscreenExit,
+      videoSelectRequest,
+      videoUnSelectRequest
     } = this.props;
     const { setDetails } = setReducer;
     const { modelDetails } = modelInfoReducer;
@@ -341,7 +345,8 @@ class SetDetails extends React.Component {
       isMoveStarLoading,
       tagsList,
       isFullScreenMode,
-      isMoveList
+      isMoveList,
+      isVideoSelected
     } = moveReducer;
     const { userEncryptedInfo } = shareLinkReducer;
     const {
@@ -377,10 +382,10 @@ class SetDetails extends React.Component {
                 {setDetails
                   ? setDetails && setDetails.isCopy
                     ? `Copy of ${setDetails.title} ${
-                        setDetails.copyIndex > 0
-                          ? `(${setDetails.copyIndex})`
-                          : ""
-                      }`
+                    setDetails.copyIndex > 0
+                      ? `(${setDetails.copyIndex})`
+                      : ""
+                    }`
                     : setDetails.title
                   : "MySets"}
               </div>
@@ -486,6 +491,7 @@ class SetDetails extends React.Component {
                     isStarred={this.isStarred}
                     deleteMove={this.deleteMove}
                     //  movesOfSet={moveListItem}
+                    isVideoSelected={isVideoSelected}
                     movesOfSet={stemp}
                     handleVideoModal={this.handleVideoModal}
                     allSetList={allSetList}
@@ -504,6 +510,8 @@ class SetDetails extends React.Component {
                     updateSortIndexRequest={updateSortIndexRequest}
                     searchMove={data => this.props.searchMoveRequest(data)}
                     isMoveStarLoading={isMoveStarLoading}
+                    videoSelectRequest={videoSelectRequest}
+                    videoUnSelectRequest={videoUnSelectRequest}
                     addTagsInTagModalRequest={data =>
                       this.props.addTagsInTagModalRequest(data)
                     }
@@ -515,12 +523,12 @@ class SetDetails extends React.Component {
               </Card>
             </>
           ) : (
-            <Row>
-              <Col md="12">
-                <Loader />
-              </Col>
-            </Row>
-          )}
+              <Row>
+                <Col md="12">
+                  <Loader />
+                </Col>
+              </Row>
+            )}
         </div>
         <SharableLinkModal
           modal={sharableLinkModalOpen}
@@ -605,6 +613,12 @@ const mapDispatchToProps = dispatch => ({
   },
   videoFullscreenExit: data => {
     dispatch(videoFullscreenExit(data));
-  }
+  },
+  videoSelectRequest: data => {
+    dispatch(videoSelectRequest(data))
+  },
+  videoUnSelectRequest: data => {
+    dispatch(videoUnSelectRequest(data))
+  },
 });
 export default connect(mapStateToProps, mapDispatchToProps)(SetDetails);
