@@ -25,9 +25,7 @@ import { logger } from "helper/Logger";
 import { completeVideoEditingSuccess } from "actions/Moves";
 import { addTagsSuccess } from "actions/Moves";
 import { updateMoveSuccess } from "actions/Moves";
-import Axios from "axios";
 
-const cancelTokenSource = Axios.CancelToken.source();
 let toastId = null;
 let api = new ApiHelper();
 //  Download video
@@ -703,6 +701,7 @@ const getTagListRequestLogic = createLogic({
 const videoCancelRequestLogic = createLogic({
   type: MovesAction.VIDEO_CANCEL_REQUEST,
   async process({ action }, dispatch, done) {
+    api.cancelRequest();
     let result = await api.FetchFromServer(
       "move",
       "/cancel-move-request",

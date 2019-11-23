@@ -6,6 +6,9 @@ import { SuccessHandlerHelper } from "./SuccessHandlerHelper";
 /**
  * ApiHelper Class - For making Api Requests
  */
+let CancelToken = Axios.CancelToken;
+let cancel;
+
 export class ApiHelper {
   _portalGateway;
   _apiVersion;
@@ -38,7 +41,8 @@ export class ApiHelper {
     method,
     authenticated = false,
     queryOptions = undefined,
-    body = undefined
+    body = undefined,
+    cancelToken
   ) {
     let url = this._portalGateway + this._apiVersion + service + endpoint;
     let headers = { "Content-Type": "application/json" };
@@ -55,7 +59,10 @@ export class ApiHelper {
         data: body,
         headers: headers,
         params: queryOptions,
-        cancelToken: this.cancelToken
+        cancelToken: new CancelToken(function executor(c) {
+          // An executor function receives a cancel function as a parameter
+          cancel = c;
+        })
       });
 
       if (response.ok === false || response.status !== 200) {
@@ -134,6 +141,6 @@ export class ApiHelper {
    * Cancels the last request.
    */
   cancelRequest = () => {
-    this.source.cancel("Operation canceled by the user.");
+    cancel && cancel();
   };
 }
