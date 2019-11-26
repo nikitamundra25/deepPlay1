@@ -473,10 +473,40 @@ const updateMoveDetailsAndTrimVideo = async (
   res: Response
 ): Promise<any> => {
   try {
-    const { body } = req;
+    const { body, currentUser } = req;
+    let headToken: Request | any = currentUser;
     const { timer, moveId, title, description, tags, setId, frames } = body;
     const result: Document | null | any = await MoveModel.findById(moveId);
-    console.log("frames", frames);
+    const temp: Document | null | any = await SetModel.findById(setId);
+    const setData = temp.isVideoProcessing;
+    setData.push({ isLoading: true, index: temp.isVideoProcessing.length });
+    const resp: Document | null | any = await SetModel.updateOne(
+      {
+        _id: setId
+      },
+      {
+        isVideoProcessing: setData
+      }
+    );
+
+    await MoveModel.updateOne(
+      {
+        _id: result._id
+      },
+      {
+        title,
+        description,
+        tags,
+        startTime: timer.min ? timer.min : 0,
+        sourceUrl: result.sourceUrl ? result.sourceUrl : null,
+        isYoutubeUrl: result.isYoutubeUrl ? result.isYoutubeUrl : false,
+        setId,
+        videoMetaData: {},
+        isMoveProcessing: true,
+        moveURL: ""
+      }
+    );
+
     let thumbnailPath: any[] = [];
     if (frames && frames.length) {
       thumbnailPath = frames.split("8000");
@@ -589,6 +619,7 @@ const updateMoveDetailsAndTrimVideo = async (
               description,
               tags,
               setId,
+              isMoveProcessing: false,
               startTime: timer.min ? timer.min : 0,
               videoMetaData: {
                 ...result.videoMetaData,
@@ -597,6 +628,18 @@ const updateMoveDetailsAndTrimVideo = async (
                   seconds: duration
                 }
               }
+            }
+          );
+
+          const stemp: Document | null | any = await SetModel.findById(setId);
+          const setData1 = stemp.isVideoProcessing;
+          setData1.pop();
+          await SetModel.updateOne(
+            {
+              _id: setId
+            },
+            {
+              isVideoProcessing: setData1
             }
           );
           return res.status(200).json({
@@ -1200,10 +1243,10 @@ const cancelCreateMovRequest = async (req: Request, res: Response) => {
             fs.readdir(folderPath, (err, files) => {
               if (files && files.length) {
                 for (const file of files) {
-                fs.unlink(path.join(folderPath, file), err => {
-                  if (err) throw err;
-                });
-              }
+                  fs.unlink(path.join(folderPath, file), err => {
+                    if (err) throw err;
+                  });
+                }
               } else {
                 fs.rmdirSync(folderPath);
               }

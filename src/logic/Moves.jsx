@@ -17,7 +17,8 @@ import {
   starredMovesSuccess,
   getTagListSuccess,
   getAllSetRequest,
-  videoCancelSuccess
+  videoCancelSuccess,
+  removeVideoLocalServerRequest
 } from "../actions";
 import { AppRoutes } from "../config/AppRoutes";
 import { toast } from "react-toastify";
@@ -169,19 +170,6 @@ const getMovesDetailsByIdLogic = createLogic({
 const completeVideoEditingLogic = createLogic({
   type: MovesAction.UPDATE_VIDEO_SETTINGS,
   async process({ action, getState }, dispatch, done) {
-    // let temp = getState().moveReducer.movesOfSet;
-    // console.log("temp", temp);
-    // let stemp = { loading: true, setId: action.payload.setId };
-    // let arrData = [];
-    // arrData = [...temp, stemp];
-    // console.log("stempstemp", arrData);
-
-    dispatch(
-      completeVideoEditingSuccess({
-        isSavingWebM: true
-        // movesOfSet: arrData
-      })
-    );
     let api = new ApiHelper();
     let result = await api.FetchFromServer(
       "move",
@@ -208,7 +196,7 @@ const completeVideoEditingLogic = createLogic({
         dispatch(
           modelOpenRequest({
             modelDetails: {
-              isMoveSuccessModal: true,
+              isMoveSuccessModal: false,
               createSetModalOpen: false
             }
           })
@@ -226,6 +214,17 @@ const completeVideoEditingLogic = createLogic({
           }
         })
       );
+      
+      let temp = getState().moveReducer.isMoveDone;
+      if (temp) {
+        dispatch(
+          removeVideoLocalServerRequest({
+            videoOriginalFile: result.data.videoOriginalFile,
+            videoFileMain: result.data.videoFileMain,
+            setId: result.data.setId
+          })
+        );
+      }
       done();
     }
   }
@@ -410,13 +409,6 @@ const createAnotherMoveLogic = createLogic({
         toastId = toast.success(result.messages[0]);
       }
       dispatch(
-        modelOpenRequest({
-          modelDetails: {
-            isMoveSuccessModal: false
-          }
-        })
-      );
-      dispatch(
         redirectTo({
           path: `${AppRoutes.MOVE_DETAILS.url.replace(
             ":id",
@@ -427,6 +419,13 @@ const createAnotherMoveLogic = createLogic({
       dispatch(
         createAnotherMoveSuccess({
           moveDetails: result.data
+        })
+      );
+      dispatch(
+        modelOpenRequest({
+          modelDetails: {
+            isMoveSuccessModal: false
+          }
         })
       );
       done();
@@ -701,7 +700,7 @@ const getTagListRequestLogic = createLogic({
 const videoCancelRequestLogic = createLogic({
   type: MovesAction.VIDEO_CANCEL_REQUEST,
   async process({ action }, dispatch, done) {
-    api.cancelRequest();
+    api.cancelRequest("cancel");
     let result = await api.FetchFromServer(
       "move",
       "/cancel-move-request",

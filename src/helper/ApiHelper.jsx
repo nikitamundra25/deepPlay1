@@ -80,7 +80,7 @@ export class ApiHelper {
         return {
           isError: true,
           error: "Request cancelled",
-          messages: ["Request cancelled"]
+          messages: err.message === "cancel" ? [] : ["Request cancelled"]
         };
       } else {
         const errorHelper = new ErrorHandlerHelper(err.response);
@@ -140,7 +140,7 @@ export class ApiHelper {
   /**
    * Cancels the last request.
    */
-  cancelRequest = () => {
-    cancel && cancel();
+  cancelRequest = err => {
+    cancel && cancel(err);
   };
 }

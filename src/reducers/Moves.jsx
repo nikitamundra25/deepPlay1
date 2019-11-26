@@ -26,7 +26,8 @@ const initialState = {
     loading: false
   },
   isVideoFromSearch: false,
-  cancelVideo: false
+  cancelVideo: false,
+  isMoveDone: false
 };
 
 export const moveReducer = handleActions(
@@ -69,6 +70,10 @@ export const moveReducer = handleActions(
       ...state,
       moveDetails: payload.moveDetails,
       isMoveDetailsLoading: false
+    }),
+    [MovesAction.UPDATE_VIDEO_SETTINGS]: (state, { payload }) => ({
+      ...state,
+      isSavingWebM: true
     }),
     [MovesAction.UPDATE_VIDEO_SETTINGS_SUCCESS]: (state, { payload }) => ({
       ...state,
@@ -176,6 +181,10 @@ export const moveReducer = handleActions(
       ...state,
       ...payload,
       isVideoDownloading: false
+    }),
+    [MovesAction.I_AM_DONE_REQUEST]: (state, { payload }) => ({
+      ...state,
+      isMoveDone: true
     })
   },
   initialState

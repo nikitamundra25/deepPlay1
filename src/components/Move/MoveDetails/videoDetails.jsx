@@ -46,7 +46,8 @@ class VideoDetails extends React.Component {
                   data.copyIndex > 0 ? `(${data.copyIndex})` : ""
                 }`
               : data.title,
-          value: data._id
+          value: data._id,
+          moveCount: data.moveCount
         };
 
         defaultSetoptions.push(defaultSetoptionsValue);
