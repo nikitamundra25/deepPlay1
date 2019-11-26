@@ -160,12 +160,12 @@ class FolderSharedLink extends React.Component {
                               {list.recentlyAddMoveImg ? (
                                 <div className="d-flex img-tile-wrap cursor_pointer">
                                   <div className="cotent-img-tile">
-                                    <video width={"100%"} id="webm-video">
-                                      <source
-                                        src={`${list.recentlyAddMoveImg}`}
-                                        type="video/webm"
-                                      />
-                                    </video>
+                                    <img
+                                      src={`${list.recentlyAddMoveImg}`}
+                                      alt=""
+                                      width="100%"
+                                      height="100%"
+                                    />
                                   </div>
                                 </div>
                               ) : null}

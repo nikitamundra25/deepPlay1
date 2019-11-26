@@ -1,6 +1,6 @@
 import React from "react";
 import { ModalHeader, Modal, ModalBody, Button } from "reactstrap";
-//import { AppConfig } from "../../../config/Appconfig";
+import { AppConfig } from "../../../config/Appconfig";
 // core components
 class MoveSuccessModal extends React.Component {
   constructor(props) {
@@ -25,7 +25,8 @@ class MoveSuccessModal extends React.Component {
     const {
       isMoveSuccessModal,
       moveUrlDetails,
-      isCreatingAnotherMove
+      isCreatingAnotherMove,
+      moveDetails
     } = this.props;
     //const { isPlaying } = this.state
     return (
@@ -48,7 +49,9 @@ class MoveSuccessModal extends React.Component {
                 <div className="set-content-block w-100">
                   <div className="d-flex vieos-add-section video-add-banner justify-content-center align-items-center">
                     <video width={"100%"} autoPlay loop id={"video-trimmer"}>
-                      <source src={`${moveUrlDetails.s3VideoUrl}`} />
+                      <source
+                        src={`${AppConfig.API_ENDPOINT}${moveDetails.videoUrl}`}
+                      />
                     </video>
                   </div>
                   <p className="font-weight-bold my-3 text-center h5 mb">

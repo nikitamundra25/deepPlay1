@@ -222,7 +222,7 @@ const getAllSetById = async (req: Request, res: Response): Promise<void> => {
         setResult.push({
           ...setData._doc,
           moveCount: moveCount,
-          recentlyAddMoveImg: data.length ? data[0].moveURL : null
+          recentlyAddMoveImg: data[0] ? data[0].videoThumbnail : ""
         });
       }
     }
@@ -282,7 +282,7 @@ const getRecentSetById = async (req: Request, res: Response): Promise<void> => {
         setResult.push({
           ...setData._doc,
           moveCount: moveCount,
-          recentlyAddMoveImg: data.length ? data[0].moveURL : null
+          recentlyAddMoveImg: data[0] ? data[0].videoThumbnail : ""
         });
       }
     }
@@ -347,7 +347,7 @@ const getSetsForFolder = async (req: Request, res: Response): Promise<void> => {
         setResult.push({
           ...setData._doc,
           moveCount: moveCount,
-          recentlyAddMoveImg: data.length ? data[0].moveURL : null
+          recentlyAddMoveImg: data[0] ? data[0].videoThumbnail : ""
         });
       }
     }
@@ -573,7 +573,7 @@ const publicUrlsetDetails = async (
           setResult.push({
             ...setData._doc,
             moveCount: moveCount,
-            recentlyAddMoveImg: data.length ? data[0].moveURL : null
+            recentlyAddMoveImg: data[0] ? data[0].videoThumbnail : ""
           });
         }
       }

@@ -531,6 +531,7 @@ class MoveDetails extends React.Component {
             redirectToSetDetails={this.redirectToSetDetails}
             handleSetDetails={this.handleSetDetails}
             moveUrlDetails={moveUrlDetails}
+            moveDetails={moveDetails}
             createAnother={this.createAnother}
             isCreatingAnotherMove={isCreatingAnotherMove}
           />
