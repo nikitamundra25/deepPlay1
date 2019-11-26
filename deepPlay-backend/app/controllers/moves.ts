@@ -515,7 +515,9 @@ const updateMoveDetailsAndTrimVideo = async (
       let videoFile: String | any, videoThumbnail: String | any;
       if (IsProductionMode) {
         console.log("In Production Mode");
+        console.log(result.videoUrl,"videoName")
         videoFile = path.join(__dirname, result.videoUrl);
+        console.log(videoFile,"videoFile")
         if (thumbnailPath && thumbnailPath.length) {
           videoThumbnail = path.join(__dirname, thumbnailPath[1]);
         }
