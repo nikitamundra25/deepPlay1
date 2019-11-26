@@ -15,7 +15,19 @@ import {
   profileRequest,
   createFolderRequest,
   createSetRequest,
-  allSearchRequest
+  allSearchRequest,
+  loadVideoDataRequest,
+  deleteMovesRequest,
+  starredMovesRequest,
+  getTagListRequest,
+  addTagsInTagModalRequest,
+  updateMoveRequest,
+  getAllSetRequest,
+  transferMovesRequest,
+  addTagsRequest,
+  videoFullscreenReq,
+  videoFullscreenExit,
+  videoDataFromSearch
 } from "../../actions/index.jsx";
 import { AppRoutes } from "../../config/AppRoutes";
 
@@ -34,7 +46,8 @@ class DefaultLayout extends React.Component {
       pathname !== "/folder/shared/link" &&
       pathname !== "/set/shared/link" &&
       pathname !== "/all/set/shared/link" &&
-      pathname !== "/404"
+      pathname !== "/404" &&
+      pathname !== "/public-access-denied"
     ) {
       this.props.redirectTo("/");
     }
@@ -49,6 +62,7 @@ class DefaultLayout extends React.Component {
   handleSetting = () => {
     this.props.redirectTo(AppRoutes.SETTINGS.url);
   };
+
   /*
   /*  
   */
@@ -64,8 +78,25 @@ class DefaultLayout extends React.Component {
       forgotPasswordRequest,
       profileInfoReducer,
       allSearchRequest,
-      allSearchReducer
+      allSearchReducer,
+      shareLinkReducer,
+      moveReducer,
+      loadVideoDataRequest,
+      deleteMovesRequest,
+      starredMovesRequest,
+      getTagListRequest,
+      addTagsInTagModalRequest,
+      updateMoveRequest,
+      allSetList,
+      getSetList,
+      transferMovesRequest,
+      addTagsRequest,
+      videoFullscreenReq,
+      videoFullscreenExit,
+      videoDataFromSearch
     } = this.props;
+    const { videoData, tagsList, isFullScreenMode, isVideoFromSearch } = moveReducer;
+
     let isLoggedIn;
 
     if (localStorage.getItem("token")) {
@@ -93,6 +124,24 @@ class DefaultLayout extends React.Component {
             isLoggedIn={isLoggedIn}
             allSearchRequest={allSearchRequest}
             allSearchReducer={allSearchReducer}
+            shareLinkReducer={shareLinkReducer}
+            videoData={videoData}
+            isFullScreenMode={isFullScreenMode}
+            allSetList={allSetList}
+            videoFullscreenReq={videoFullscreenReq}
+            videoFullscreenExit={videoFullscreenExit}
+            loadVideoDataRequest={loadVideoDataRequest}
+            deleteMoveRequest={data => deleteMovesRequest(data)}
+            isStarredRequest={data => starredMovesRequest(data)}
+            getTagListRequest={() => getTagListRequest()}
+            addTagsInTagModalRequest={() => addTagsInTagModalRequest()}
+            updateMoveRequest={data => updateMoveRequest(data)}
+            getSetList={data => getSetList(data)}
+            transferMove={data => transferMovesRequest(data)}
+            addTagsRequest={data => addTagsRequest(data)}
+            tagsList={tagsList}
+            videoDataFromSearch={videoDataFromSearch}
+            isVideoFromSearch={isVideoFromSearch}
             {...this.props}
           />
         ) : null}
@@ -100,12 +149,13 @@ class DefaultLayout extends React.Component {
           <div
             className={
               routePath !== "/" &&
-              routePath !== "/sample-set" &&
-              routePath !== "/resetPassword" &&
-              routePath !== "/folder/shared/link" &&
-              routePath !== "/set/shared/link" &&
-              routePath !== "/all/set/shared/link" &&
-              routePath !== "/404"
+                routePath !== "/sample-set" &&
+                routePath !== "/resetPassword" &&
+                routePath !== "/folder/shared/link" &&
+                routePath !== "/set/shared/link" &&
+                routePath !== "/all/set/shared/link" &&
+                routePath !== "/404" &&
+                routePath !== "/public-access-denied"
                 ? "dashboard-full-section"
                 : ""
             }
@@ -115,96 +165,99 @@ class DefaultLayout extends React.Component {
                 routePath !== "/" && routePath !== "/sample-set"
                   ? "dashboard-container-wrap "
                   : " "
-              }`}
+                }`}
             >
               <div
                 className={`theme-container ${
                   routePath !== "/" && routePath !== "/sample-set"
                     ? "dashboard-container "
                     : "home-container"
-                }`}
+                  }`}
               >
                 {isLoggedIn &&
-                (routePath !== "/" &&
-                  routePath !== "/sample-set" &&
-                  routePath !== "/resetPassword" &&
-                  routePath !== "/folder/shared/link" &&
-                  routePath !== "/set/shared/link" &&
-                  routePath !== "/all/set/shared/link" &&
-                  routePath !== "/404") ? (
-                  <div className="ct-sidebar app-sidebar">
-                    <DefaultSidebar
-                      profileInfoReducer={profileInfoReducer}
-                      handleSetting={this.handleSetting}
-                    />
-                  </div>
-                ) : null}
-                {isLoggedIn &&
-                (routePath !== "/" &&
-                  routePath !== "/sample-set" &&
-                  routePath !== "/resetPassword" &&
-                  routePath !== "/folder/shared/link" &&
-                  routePath !== "/set/shared/link" &&
-                  routePath !== "/all/set/shared/link" &&
-                  routePath !== "/404") ? (
-                  <div className="dashboard-right-wrap">
-                    <div className="dashboard-right-section">
-                      <Suspense fallback={""}>
-                        <Switch>
-                          {routes.map((route, idx) => {
-                            return route.component ? (
-                              <Route
-                                key={idx}
-                                path={route.path}
-                                exact={route.exact}
-                                name={route.name}
-                                render={props => (
-                                  <route.component {...props} {...this.props} />
-                                )}
-                              />
-                            ) : null;
-                          })}
-                        </Switch>
-                      </Suspense>
+                  (routePath !== "/" &&
+                    routePath !== "/sample-set" &&
+                    routePath !== "/resetPassword" &&
+                    routePath !== "/folder/shared/link" &&
+                    routePath !== "/set/shared/link" &&
+                    routePath !== "/all/set/shared/link" &&
+                    routePath !== "/404" &&
+                    routePath !== "/public-access-denied") ? (
+                    <div className="ct-sidebar app-sidebar">
+                      <DefaultSidebar
+                        profileInfoReducer={profileInfoReducer}
+                        handleSetting={this.handleSetting}
+                      />
                     </div>
-                  </div>
-                ) : (
-                  <Suspense fallback={""}>
-                    <Switch>
-                      {routes.map((route, idx) => {
-                        return route.component ? (
-                          <Route
-                            key={idx}
-                            path={route.path}
-                            exact={route.exact}
-                            name={route.name}
-                            render={props => (
-                              <route.component {...props} {...this.props} />
-                            )}
-                          />
-                        ) : null;
-                      })}
-                    </Switch>
-                  </Suspense>
-                )}
+                  ) : null}
+                {isLoggedIn &&
+                  (routePath !== "/" &&
+                    routePath !== "/sample-set" &&
+                    routePath !== "/resetPassword" &&
+                    routePath !== "/folder/shared/link" &&
+                    routePath !== "/set/shared/link" &&
+                    routePath !== "/all/set/shared/link" &&
+                    routePath !== "/404" &&
+                    routePath !== "/public-access-denied") ? (
+                    <div className="dashboard-right-wrap">
+                      <div className="dashboard-right-section">
+                        <Suspense fallback={""}>
+                          <Switch>
+                            {routes.map((route, idx) => {
+                              return route.component ? (
+                                <Route
+                                  key={idx}
+                                  path={route.path}
+                                  exact={route.exact}
+                                  name={route.name}
+                                  render={props => (
+                                    <route.component {...props} {...this.props} />
+                                  )}
+                                />
+                              ) : null;
+                            })}
+                          </Switch>
+                        </Suspense>
+                      </div>
+                    </div>
+                  ) : (
+                    <Suspense fallback={""}>
+                      <Switch>
+                        {routes.map((route, idx) => {
+                          return route.component ? (
+                            <Route
+                              key={idx}
+                              path={route.path}
+                              exact={route.exact}
+                              name={route.name}
+                              render={props => (
+                                <route.component {...props} {...this.props} />
+                              )}
+                            />
+                          ) : null;
+                        })}
+                      </Switch>
+                    </Suspense>
+                  )}
               </div>
             </div>
           </div>
         </>
         {isLoggedIn &&
-        (routePath !== "/" &&
-          routePath !== "/sample-set" &&
-          routePath !== "/resetPassword" &&
-          routePath !== "/folder/shared/link" &&
-          routePath !== "/set/shared/link" &&
-          routePath !== "/all/set/shared/link" &&
-          routePath !== "/404") ? null : routePath !== "/resetPassword" &&
-          routePath !== "/folder/shared/link" &&
-          routePath !== "/all/set/shared/link" &&
-          routePath !== "/set/shared/link" &&
-          routePath !== "/404" ? (
-          <DefaultFooter />
-        ) : null}
+          (routePath !== "/" &&
+            routePath !== "/sample-set" &&
+            routePath !== "/resetPassword" &&
+            routePath !== "/folder/shared/link" &&
+            routePath !== "/set/shared/link" &&
+            routePath !== "/all/set/shared/link" &&
+            routePath !== "/404") ? null : routePath !== "/resetPassword" &&
+              routePath !== "/folder/shared/link" &&
+              routePath !== "/all/set/shared/link" &&
+              routePath !== "/set/shared/link" &&
+              routePath !== "/404" &&
+              routePath !== "/public-access-denied" ? (
+              <DefaultFooter />
+            ) : null}
       </>
     );
   }
@@ -214,7 +267,10 @@ const mapStateToProps = state => ({
   modelInfoReducer: state.modelInfoReducer,
   loginReducer: state.loginReducer,
   profileInfoReducer: state.profileInfoReducer,
-  allSearchReducer: state.allSearchReducer
+  allSearchReducer: state.allSearchReducer,
+  shareLinkReducer: state.shareLinkReducer,
+  moveReducer: state.moveReducer,
+  allSetList: state.setReducer.allSetList
 });
 const mapDispatchToProps = dispatch => ({
   modelOperate: data => dispatch(modelOpenRequest(data)),
@@ -226,7 +282,33 @@ const mapDispatchToProps = dispatch => ({
   getProfile: () => dispatch(profileRequest()),
   onFolderCreation: data => dispatch(createFolderRequest(data)),
   allSearchRequest: data => dispatch(allSearchRequest(data)),
-  onSetsCreation: data => dispatch(createSetRequest(data))
+  onSetsCreation: data => dispatch(createSetRequest(data)),
+  loadVideoDataRequest: data => dispatch(loadVideoDataRequest(data)),
+  deleteMoveRequest: data => dispatch(deleteMovesRequest(data)),
+  isStarredRequest: data => dispatch(starredMovesRequest(data)),
+  getTagListRequest: () => {
+    dispatch(getTagListRequest());
+  },
+  addTagsInTagModalRequest: data => {
+    dispatch(addTagsInTagModalRequest(data));
+  },
+  updateMoveRequest: data => {
+    dispatch(updateMoveRequest(data));
+  },
+  getSetList: data => {
+    dispatch(getAllSetRequest(data));
+  },
+  transferMovesRequest: data => dispatch(transferMovesRequest(data)),
+  addTagsRequest: data => dispatch(addTagsRequest(data)),
+  videoFullscreenReq: data => {
+    dispatch(videoFullscreenReq(data));
+  },
+  videoFullscreenExit: data => {
+    dispatch(videoFullscreenExit(data));
+  },
+  videoDataFromSearch: data => {
+    dispatch(videoDataFromSearch(data))
+  }
 });
 export default connect(
   mapStateToProps,

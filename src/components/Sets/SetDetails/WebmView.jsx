@@ -5,21 +5,29 @@ import {
   DropdownMenu,
   DropdownItem,
   Modal,
-  ModalBody
+  ModalBody,
+  UncontrolledTooltip,
+  ModalHeader,
+  FormGroup,
+  Input
 } from "reactstrap";
 import { logger } from "helper/Logger";
 import InputRange from "react-input-range";
-import { SecondsToHHMMSS } from "helper/Time";
-import TransferToModal from "../../Folders/FolderDetails/transferTo";
-import Loader from "../../comman/Loader/Loader"
-//import emptySetIc from "../../../assets/img/empty-sets.png";
+import { SecondsToMMSS } from "helper/Time";
+import TransferMoveModal from "../../comman/TransferModal.jsx";
+import Loader from "../../comman/Loader/Loader";
+import closeBtn from "../../../assets/img/close-img.png";
+import ViewInfoModal from "./viewInfoModal";
+import AddTagModal from "./addTagsModal";
+import EditMoveModal from "./editMoveModal";
+import { ConfirmBox } from "helper/SweetAleart";
 
 class WebmView extends Component {
   video;
   constructor(props) {
     super(props);
     this.state = {
-      isPlaying: false,
+      isPlaying: true,
       currentTime: 0,
       exactCurrentTime: 0,
       audioSpeed: 5,
@@ -31,68 +39,171 @@ class WebmView extends Component {
       videoIndex: -1,
       isVideoLoading: false,
       videoDuration: {},
+      videoDimentions: {},
+      moveIdToAddTags: "",
+      moveIdToEdit: "",
+      doubleClickIndex: -1,
+      title: " ",
+      doubleClick: false,
+      tags: [],
+      edit: false,
+      description: "",
+      error: ""
     };
   }
   /**
    *
    */
-  componentDidUpdate = ({ isVideoModalOpen, showVideo, videoData }) => {
-    if (isVideoModalOpen !== this.props.isVideoModalOpen && showVideo !== this.props.showVideo) {
+  componentDidUpdate = ({
+    isVideoModalOpen,
+    videoData,
+    isFullScreenMode,
+    isVideoFromSearch
+  }) => {
+    if (isFullScreenMode !== this.props.isFullScreenMode) {
+      const videoFullScreen = true;
+      if (this.video) {
+        this.video.addEventListener("volumechange", () => {
+          if (
+            (this.video.volume === 0 || this.video.volume === 1) &&
+            this.video.muted
+          ) {
+            this.setState({
+              isMuted: true,
+              audioSpeed: 0
+            });
+          } else {
+            this.setState({
+              isMuted: false,
+              audioSpeed: this.video.volume
+            });
+          }
+        });
 
+        this.video.addEventListener("pause", () => {
+          this.setState({
+            isPlaying: false
+          });
+        });
+        this.video.addEventListener("play", () => {
+          this.setState({
+            isPlaying: true
+          });
+        });
+
+        if (this.props.isFullScreenMode && videoFullScreen) {
+          let isVideoScreenChange = false;
+          this.video.addEventListener("webkitfullscreenchange ", () => {
+            this.setState({
+              isFullScreenMode: false
+            });
+            if (!isVideoScreenChange) {
+              this.props.videoFullscreenExit();
+            }
+          });
+        }
+        this.video.controls = false;
+      }
     }
     if (isVideoModalOpen !== this.props.isVideoModalOpen) {
-      this.props.loadVideoDataRequest(this.props.showVideo)
+      this.props.loadVideoDataRequest(this.props.showVideo);
       this.setState({
-        videoIndex: this.props.showVideoIndex
-      })
+        videoIndex: this.props.showVideoIndex,
+        isPlaying: true,
+        currentTime: 0,
+        exactCurrentTime: 0,
+        audioSpeed: 5,
+        isMuted: false,
+        playBackSpeed: 1
+      });
     }
     if (videoData !== this.props.videoData) {
       this.video = document.getElementById("webm-video");
-      this.video.addEventListener("timeupdate", () => {
-        const currentVideoTime = parseFloat(this.video.currentTime).toFixed(2);
-        this.setState({
-          currentTime: currentVideoTime
+      this.customVideo = document.getElementById("custom_video_control");
+      if (this.video) {
+        this.video.addEventListener("timeupdate", () => {
+          const currentVideoTime = parseFloat(
+            this.video ? this.video.currentTime : 0
+          ).toFixed(2);
+          this.setState({
+            currentTime: currentVideoTime
+          });
         });
-      });
-      this.video.addEventListener("ended", () => {
-        this.setState({
-          isPlaying: false
+        this.video.addEventListener("ended", () => {
+          this.setState({
+            isPlaying: true
+          });
         });
-      });
-      this.video.load();
-      this.video.addEventListener('loadeddata', () => {
-        this.setState({
-          isVideoLoading: false
-        })
-      })
-      this.video.onloadstart = () => {
-        this.setState({
-          isVideoLoading: true
-        })
-      }
-      let timeDuration = []
-      this.video.onloadeddata = () => {
-        const { duration } = this.video
-        for (let index = 0; index < duration; index = index + duration / 20) {
-          timeDuration.push(index)
-        }
-        const data = {
-          timeDuration: timeDuration,
-          videoMaxDuration: duration
-        }
-        this.setState({
-          videoDuration: data,
-          isPlaying: false,
-        })
-      }
 
+        this.video.load();
+        let timeDuration = [];
+        this.video.onloadeddata = () => {
+          const { duration, videoHeight, videoWidth } = this.video;
+          for (let index = 0; index < duration; index = index + duration / 20) {
+            timeDuration.push(index);
+          }
+          const data = {
+            timeDuration: timeDuration,
+            videoMaxDuration: duration
+          };
+          this.setState({
+            videoDuration: data,
+            videoDimentions: {
+              videoHeight,
+              videoWidth
+            },
+            isPlaying: true
+          });
+        };
+      }
     }
+    if (isVideoFromSearch !== this.props.isVideoFromSearch) {
+      this.video = document.getElementById("webm-video");
+      this.customVideo = document.getElementById("custom_video_control");
+      if (this.video) {
+        this.video.addEventListener("timeupdate", () => {
+          const currentVideoTime = parseFloat(this.video.currentTime).toFixed(
+            2
+          );
+          this.setState({
+            currentTime: currentVideoTime
+          });
+        });
+        this.video.addEventListener("ended", () => {
+          this.setState({
+            isPlaying: true
+          });
+        });
 
-  }
+        this.video.load();
+        let timeDuration = [];
+        this.video.onloadeddata = () => {
+          const { duration, videoHeight, videoWidth } = this.video;
+          for (let index = 0; index < duration; index = index + duration / 20) {
+            timeDuration.push(index);
+          }
+          const data = {
+            timeDuration: timeDuration,
+            videoMaxDuration: duration
+          };
+          this.setState({
+            videoDuration: data,
+            videoDimentions: {
+              videoHeight,
+              videoWidth
+            },
+            isPlaying: true
+          });
+        };
+      }
+    }
+  };
   /**
    *
    */
   labelValueChange = value => {
+    this.video = document.getElementById("webm-video");
+    this.video.currentTime = value;
     this.setState({
       currentTime: value
     });
@@ -139,6 +250,32 @@ class WebmView extends Component {
   /**
    *
    */
+  handleVideoFullScreen = () => {
+    this.customVideo = document.getElementById("custom_video_control");
+    if (this.customVideo.mozRequestFullScreen) {
+      this.customVideo.mozRequestFullScreen();
+    } else if (this.customVideo.webkitRequestFullScreen) {
+      this.props.videoFullscreenReq();
+      this.customVideo.webkitRequestFullScreen();
+      this.setState({
+        isFullScreenMode: true
+      });
+    }
+  };
+  handleVideoResizeScreen = () => {
+    this.customVideo = document.getElementById("webm-video");
+    if (this.customVideo.mozCancelFullScreen) {
+      document.mozCancelFullScreen();
+    } else if (this.customVideo.webkitExitFullscreen) {
+      document.exitFullscreen();
+      this.setState({
+        isFullScreenMode: false
+      });
+    }
+  };
+  /**
+   *
+   */
   handleSpeed = speed => {
     this.video.playbackRate = speed;
     this.setState({
@@ -148,13 +285,21 @@ class WebmView extends Component {
   /**
    *
    */
-  handleMoveDelete = id => {
+  handleMoveDelete = async (id, setId) => {
     const data = {
-      moveId: id,
+      moveId: [id],
       isDeleted: true,
-      setId: this.props.setIdPathName
+      setId: this.props.setIdPathName ? this.props.setIdPathName : setId,
+      fromMoveSearch: this.props.fromMoveSearch
+        ? this.props.fromMoveSearch
+        : null
     };
-    this.props.deleteMove(data);
+    const { value } = await ConfirmBox({
+      text: "You want to remove this move! "
+    });
+    if (value) {
+      this.props.deleteMove(data);
+    }
   };
 
   openTransferToModal = (id, setId) => {
@@ -166,7 +311,7 @@ class WebmView extends Component {
     });
     this.props.modelOperate({
       modelDetails: {
-        transferToModalOpenReq: !modelDetails.transferToModalOpenReq
+        transferMoveModalOpen: !modelDetails.transferMoveModalOpen
       }
     });
   };
@@ -176,29 +321,160 @@ class WebmView extends Component {
   };
 
   handlePreviousVideoPlay = () => {
-    const { movesOfSet } = this.props
-    const { videoIndex } = this.state
-    this.props.loadVideoDataRequest(movesOfSet[videoIndex - 1])
+    const { movesOfSet } = this.props;
+    const { videoIndex } = this.state;
+    this.props.loadVideoDataRequest(movesOfSet[videoIndex - 1]);
     this.setState({
       videoIndex: videoIndex - 1
-    })
-  }
+    });
+  };
   handleNextVideoPlay = () => {
-    const { movesOfSet } = this.props
-    const { videoIndex } = this.state
-    this.props.loadVideoDataRequest(movesOfSet[videoIndex + 1])
+    const { movesOfSet } = this.props;
+    const { videoIndex } = this.state;
+    this.props.loadVideoDataRequest(movesOfSet[videoIndex + 1]);
     this.setState({
       videoIndex: videoIndex + 1
-    })
-  }
+    });
+  };
+
+  openViewInfoModal = () => {
+    const { modelInfoReducer } = this.props;
+    const { modelDetails } = modelInfoReducer;
+    this.props.modelOperate({
+      modelDetails: {
+        viewInfoModalOpen: !modelDetails.viewInfoModalOpen
+      }
+    });
+  };
+
+  handleStarred = (id, isStarred) => {
+    const videoData = this.props.videoData;
+    if (isStarred) {
+      videoData.isStarred = false;
+    } else {
+      videoData.isStarred = true;
+    }
+    const data = {
+      moveId: id,
+      isStarred: isStarred ? false : true,
+      setId: this.props.setIdPathName,
+      videoData: videoData
+    };
+    this.props.isStarred(data);
+  };
+
+  openAddTagsModal = (id, name) => {
+    const { modelInfoReducer, videoData } = this.props;
+    const { modelDetails } = modelInfoReducer;
+    this.props.getTagListRequest();
+    this.setState({
+      moveIdToAddTags: id,
+      tags: videoData.tags ? videoData.tags : [],
+      edit: name === "edit" ? true : false,
+      description: videoData ? videoData.description : null
+    });
+    this.props.modelOperate({
+      modelDetails: {
+        addTagModalOpenReq: !modelDetails.addTagModalOpenReq
+      }
+    });
+  };
+
+  editMoveModalOpen = id => {
+    const { modelInfoReducer } = this.props;
+    const { modelDetails } = modelInfoReducer;
+    this.setState({
+      moveIdToEdit: id
+    });
+    this.props.modelOperate({
+      modelDetails: {
+        editMoveModalOpen: !modelDetails.editMoveModalOpen
+      }
+    });
+  };
+
+  handleTagChange = (newValue, actionMeta) => {
+    //const { tagsList } = this.props.moveReducer
+    console.log(newValue);
+    if (newValue) {
+      this.setState({
+        tags: newValue
+      });
+    } else {
+      this.setState({
+        tags: []
+      });
+    }
+    console.log(`action: ${actionMeta.action}`);
+    if (actionMeta.action === "create-option") {
+      this.props.addTagsInTagModalRequest({
+        tags: newValue[newValue.length - 1]
+      });
+    }
+    console.groupEnd();
+  };
+
+  onDoubleClick = title => {
+    this.setState({
+      doubleClick: true,
+      title: title
+    });
+  };
+
+  handleonBlur = videoData => {
+    this.setState({
+      doubleClick: false,
+      title: ""
+    });
+
+    if (this.state.title !== "") {
+      const data = {
+        moveId: videoData._id,
+        title: this.state.title,
+        description: videoData.description,
+        tags: videoData.tags,
+        setId: videoData.setId._id,
+        videoData: videoData,
+        fromMoveList: false
+      };
+      this.props.editMove(data);
+    }
+  };
+
+  handleChange = e => {
+    const { name, value } = e.target;
+    const error =
+      value && value.length > 250
+        ? "Description cannot have more than 250 characters"
+        : "";
+    this.setState({
+      [name]: value,
+      error
+    });
+  };
 
   render() {
-    const { video, allSetList, modelInfoReducer, isVideoModalOpen, handleVideoModal, movesOfSet, videoData } = this.props;
+    const {
+      video,
+      allSetList,
+      modelInfoReducer,
+      isVideoModalOpen,
+      handleVideoModal,
+      movesOfSet,
+      isShareable,
+      videoData,
+      tagsList,
+      fromMoveSearch
+    } = this.props;
+
     const { modelDetails } = modelInfoReducer;
-    const { transferToModalOpenReq } = modelDetails;
-    const { moveURL, videoMetaData, title } = video;
-    const { duration } = videoMetaData || {};
-    const { seconds: videoLength } = duration || {};
+    const {
+      viewInfoModalOpen,
+      addTagModalOpenReq,
+      editMoveModalOpen,
+      transferMoveModalOpen
+    } = modelDetails;
+    const { moveURL } = video;
     const {
       isPlaying,
       currentTime,
@@ -209,7 +485,17 @@ class WebmView extends Component {
       moveToTransfer,
       videoIndex,
       videoDuration,
-      isVideoLoading
+      isVideoLoading,
+      videoDimentions,
+      moveIdToAddTags,
+      moveIdToEdit,
+      tags,
+      isFullScreenMode,
+      doubleClick,
+      title,
+      description,
+      edit,
+      error
     } = this.state;
 
     return (
@@ -219,69 +505,178 @@ class WebmView extends Component {
           isOpen={isVideoModalOpen}
           toggle={handleVideoModal}
         >
+          <ModalHeader>
+            <button
+              aria-label="Close"
+              className="close"
+              data-dismiss="modal"
+              type="button"
+              onClick={handleVideoModal}
+            >
+              <span aria-hidden="true">
+                <img src={closeBtn} alt="close-ic" />
+              </span>
+            </button>
+          </ModalHeader>
           <ModalBody>
             <div className="video-slider-text">
-              <div className="video-slider-title"> {videoData ? videoData.title : title} </div>
-              <div className="video-slider-dropDown">
-                <div>
-                  <UncontrolledDropdown
-                    className="header-dropdown  custom-dropdown"
-                    direction="left"
-                  >
-                    <DropdownToggle color={" "}>
-                      <span id="edit" className="cursor_pointer ml-4">
-                        <i class="fa fa-ellipsis-v" aria-hidden="true"></i>
-                      </span>
-                    </DropdownToggle>
-                    <DropdownMenu>
-                      <DropdownItem onClick={() => this.props.onEditMove(videoData ? videoData._id : video._id)}>Edit</DropdownItem>
-                      <DropdownItem>View Info</DropdownItem>
-                      <DropdownItem onClick={() =>
-                        videoData ?
-                          this.openTransferToModal(videoData._id, videoData.setId) :
-                          this.openTransferToModal(video._id, video.setId)
-                      }>Tranfer</DropdownItem>
-                      <DropdownItem onClick={() =>
-                        videoData ?
-                          this.handleMoveDelete(videoData._id) :
-                          this.handleMoveDelete(video._id)}>Delete</DropdownItem>
-                    </DropdownMenu>
-                  </UncontrolledDropdown>
-                </div>
+              <div
+                className="video-slider-title font-weight-bold"
+                onDoubleClick={() => this.onDoubleClick(videoData.title)}
+              >
+                {doubleClick ? (
+                  <FormGroup>
+                    <Input
+                      id="title"
+                      type="text"
+                      placeholder="Enter a title"
+                      name="title"
+                      onChange={this.handleChange}
+                      value={title}
+                      onBlur={() => this.handleonBlur(videoData)}
+                    />
+                  </FormGroup>
+                ) : videoData && videoData.title ? (
+                  videoData.title
+                ) : (
+                  "Unnamed"
+                )}
               </div>
-            </div>
-            <div className="video-slider-img">
-              <div className="custom-video-player">
-                <div className="videos-arrows-wrap">
-                  {
-                    videoIndex > 0 ?
-                      <div onClick={
-                        () => this.handlePreviousVideoPlay()
-                      } className="cursor_pointer left-arrow-wrap">
-                        <i className="fa fa-angle-left" aria-hidden="true" />
-                      </div> :
-                      null
-                  }
-                  {
-                    videoIndex < (movesOfSet.length - 1) ?
-                      <div onClick={() => this.handleNextVideoPlay()} className="right-arrow-wrap cursor_pointer">
-                        <i className="fa fa-angle-right" aria-hidden="true" />
-                      </div> :
-                      null
-                  }
+              {!isShareable ? (
+                <div className="video-slider-dropDown">
+                  <div>
+                    <UncontrolledDropdown
+                      className="header-dropdown custom-dropdown dropdown-with-tip"
+                      direction="left"
+                    >
+                      <DropdownToggle color={" "}>
+                        <span id="edit" className="cursor_pointer ml-4">
+                          <i
+                            className="fa fa-ellipsis-v"
+                            aria-hidden="true"
+                          ></i>
+                        </span>
+                      </DropdownToggle>
+                      <DropdownMenu>
+                        <DropdownItem
+                          onClick={() =>
+                            this.editMoveModalOpen(
+                              videoData ? videoData._id : video._id
+                            )
+                          }
+                          // onClick={() =>
+                          //   this.props.onEditMove(
+                          //     videoData ? videoData._id : video._id
+                          //   )
+                          // }
+                        >
+                          Edit Move Details
+                        </DropdownItem>
+                        {/* <DropdownItem
+                          onClick={() =>
+                            this.handleStarred(
+                              videoData ? videoData._id : video._id,
+                              videoData.isStarred
+                            )
+                          }
+                        >
+                          {videoData && videoData.isStarred
+                            ? "Unstar"
+                            : "Mark Star"}
+                        </DropdownItem> */}
+                        <DropdownItem
+                          onClick={() =>
+                            videoData
+                              ? this.openAddTagsModal(videoData._id)
+                              : this.openAddTagsModal(video._id)
+                          }
+                        >
+                          Add Tags
+                        </DropdownItem>
+                        <DropdownItem onClick={this.openViewInfoModal}>
+                          View Info
+                        </DropdownItem>
+                        <DropdownItem
+                          onClick={() =>
+                            videoData
+                              ? this.openTransferToModal(
+                                  videoData._id,
+                                  videoData.setId
+                                )
+                              : this.openTransferToModal(video._id, video.setId)
+                          }
+                        >
+                          Transfer
+                        </DropdownItem>
+                        <DropdownItem
+                          onClick={() =>
+                            videoData
+                              ? this.handleMoveDelete(
+                                  videoData._id,
+                                  videoData.setId
+                                )
+                              : this.handleMoveDelete(video._id)
+                          }
+                        >
+                          Remove
+                        </DropdownItem>
+                      </DropdownMenu>
+                    </UncontrolledDropdown>
+                  </div>
                 </div>
-                {
-                  !isVideoLoading ?
-                    <video width={"100%"} id="webm-video" muted={isMuted} className="video-loading-tag">
-                      <source
-                        src={`${videoData && videoData.moveURL ? videoData.moveURL : moveURL}`}
-                        type="video/webm"
-                      />
-                    </video> :
-                    <div className="video-loader">
-                    <Loader videoLoader={true} />
+              ) : null}
+            </div>
+            <div className="video-slider-img pb-3">
+              <div className="custom-video-player" id="custom_video_control">
+                <div className="videos-arrows-wrap">
+                  {videoIndex > 0 ? (
+                    <div
+                      onClick={() => this.handlePreviousVideoPlay()}
+                      className="cursor_pointer left-arrow-wrap"
+                    >
+                      <i className="fa fa-angle-left" aria-hidden="true" />
                     </div>
-                }
+                  ) : null}
+                  {videoIndex < movesOfSet.length - 1 ? (
+                    <div
+                      onClick={() => this.handleNextVideoPlay()}
+                      className="right-arrow-wrap cursor_pointer"
+                    >
+                      <i className="fa fa-angle-right" aria-hidden="true" />
+                    </div>
+                  ) : null}
+                </div>
+                {!isVideoLoading ? (
+                  <video
+                    width={"100%"}
+                    id="webm-video"
+                    muted={isMuted}
+                    className={
+                      this.props.isFullScreenMode
+                        ? "full-video-mode video-loading-tag"
+                        : "video-loading-tag"
+                    }
+                    loop
+                    // preload="auto"
+                    autoPlay
+                    disablecontrols="true"
+                    disablepictureinpicture="true"
+                    controlsList="nodownload"
+                  >
+                    <source
+                      src={`${
+                        videoData && videoData.moveURL
+                          ? videoData.moveURL
+                          : moveURL
+                      }`}
+                      type="video/webm"
+                    />
+                  </video>
+                ) : (
+                  <div className="video-loader">
+                    <Loader videoLoader={true} />
+                  </div>
+                )}
                 <div className={"controls"}>
                   <div className="control-background-wrap"></div>
                   <InputRange
@@ -304,31 +699,35 @@ class WebmView extends Component {
                             <i className={"fa fa-pause"}></i>
                           </span>
                         ) : (
-                            <span
-                              onClick={this.playVideo}
-                              className={"cursor_pointer"}
-                            >
-                              <i className={"fa fa-play"}></i>
-                            </span>
-                          )}
+                          <span
+                            onClick={this.playVideo}
+                            className={"cursor_pointer"}
+                          >
+                            <i className={"fa fa-play"}></i>
+                          </span>
+                        )}
                       </div>
                       <div className="video-time-wrap control-tile">
-                        {SecondsToHHMMSS(parseInt(currentTime))} /{" "}
-                        {SecondsToHHMMSS(videoLength)}
+                        {SecondsToMMSS(parseInt(currentTime))} /{" "}
+                        {SecondsToMMSS(
+                          parseInt(
+                            videoDuration ? videoDuration.videoMaxDuration : 0
+                          )
+                        )}
                       </div>
                       <div className="volume-up-down control-tile">
                         <span onClick={this.toggleMute}>
                           {isMuted ? (
-                            <i class="fas fa-volume-mute"></i>
+                            <i className="fas fa-volume-mute"></i>
                           ) : audioSpeed ? (
                             audioSpeed > 0.6 ? (
-                              <i class="fas fa-volume-up"></i>
+                              <i className="fas fa-volume-up"></i>
                             ) : (
-                                <i class="fas fa-volume-down"></i>
-                              )
+                              <i class="fas fa-volume-down"></i>
+                            )
                           ) : (
-                                <i class="fas fa-volume-mute"></i>
-                              )}
+                            <i class="fas fa-volume-mute"></i>
+                          )}
                         </span>
                       </div>
                       <div className="volume-range cursor_pointer control-tile">
@@ -348,69 +747,212 @@ class WebmView extends Component {
                           />
                         </div>
                       </div>
+                      {isFullScreenMode ? (
+                        <div className={"video-slider-btn ml-4 cursor_pointer"}>
+                          <div className={"d-flex justify-content-between"}>
+                            {videoIndex > 0 ? (
+                              <div
+                                onClick={() => this.handlePreviousVideoPlay()}
+                                className="cursor_pointer left-arrow-wrap"
+                              >
+                                <span id={"previous-video"}>
+                                  <i className="fas fa-step-backward" />
+                                </span>
+                                <UncontrolledTooltip
+                                  placement="top"
+                                  target="previous-video"
+                                >
+                                  Previous video
+                                </UncontrolledTooltip>
+                              </div>
+                            ) : null}
+                            {videoIndex < movesOfSet.length - 1 ? (
+                              <div
+                                onClick={() => this.handleNextVideoPlay()}
+                                className="right-arrow-wrap cursor_pointer"
+                              >
+                                <span id={"next-video"}>
+                                  <i className="fas fa-step-forward" />
+                                </span>
+                                <UncontrolledTooltip
+                                  placement="top"
+                                  target="next-video"
+                                >
+                                  Next video
+                                </UncontrolledTooltip>
+                              </div>
+                            ) : null}
+                          </div>
+                        </div>
+                      ) : null}
                       <div className="speed-wrap control-tile">
                         <UncontrolledDropdown
                           className="header-dropdown custom-dropdown"
-                        // direction="auto"
+                          // direction="auto"
                         >
-                          <DropdownToggle color={" "}>
+                          <DropdownToggle
+                            color={" "}
+                            className="ml-2"
+                            id="playback-speed-wrap"
+                          >
                             <span
                               id="playback-speed"
-                              className="cursor_pointer ml-4"
+                              className="cursor_pointer  text-white d-flex align-items-center"
                             >
-                              {playBackSpeed !== 1 ? `${playBackSpeed}x` : null}{" "}
-                              <i className="fa fa-clock-o" aria-hidden="true"></i>
+                              <span>
+                                {playBackSpeed !== 1
+                                  ? `${playBackSpeed}x`
+                                  : null}{" "}
+                              </span>
+                              <i
+                                className="fa fa-clock-o"
+                                aria-hidden="true"
+                              ></i>
                             </span>
                           </DropdownToggle>
+                          <UncontrolledTooltip
+                            placement="top"
+                            target="playback-speed-wrap"
+                          >
+                            Playback speed
+                          </UncontrolledTooltip>
                           <DropdownMenu>
+                            <DropdownItem
+                              active={playBackSpeed === 0.25}
+                              onClick={() => this.handleSpeed(0.25)}
+                            >
+                              0.25
+                            </DropdownItem>
                             <DropdownItem
                               active={playBackSpeed === 0.5}
                               onClick={() => this.handleSpeed(0.5)}
                             >
                               0.5
-                          </DropdownItem>
+                            </DropdownItem>
                             <DropdownItem
                               active={playBackSpeed === 1}
                               onClick={() => this.handleSpeed(1)}
                             >
-                              1
-                          </DropdownItem>
+                              Normal
+                            </DropdownItem>
                             <DropdownItem
                               active={playBackSpeed === 1.5}
                               onClick={() => this.handleSpeed(1.5)}
                             >
                               1.5
-                          </DropdownItem>
+                            </DropdownItem>
                             <DropdownItem
                               active={playBackSpeed === 2}
                               onClick={() => this.handleSpeed(2)}
                             >
                               2
-                        </DropdownItem>
+                            </DropdownItem>
                           </DropdownMenu>
                         </UncontrolledDropdown>
                       </div>
                     </div>
-                    <div className="control-left-block"></div>
+                    <div className="control-right-block">
+                      {!isFullScreenMode ? (
+                        <span
+                          onClick={() => this.handleVideoFullScreen()}
+                          className="control-tile cursor_pointer"
+                        >
+                          <i className="fas fa-expand" />
+                        </span>
+                      ) : (
+                        <span
+                          onClick={() => this.handleVideoResizeScreen()}
+                          className="control-tile cursor_pointer"
+                        >
+                          <i className="fa fa-arrows-alt" aria-hidden="true" />
+                        </span>
+                      )}
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
+            <div className="text-right pr-4">
+              {videoData && videoData.tags && videoData.tags.length ? (
+                <span
+                  className="cursor_pointer"
+                  onClick={() => this.openAddTagsModal(videoData._id, "edit")}
+                >
+                  Edit
+                </span>
+              ) : null}
+            </div>
+            <div className="pt-3 d-flex">
+              {videoData && videoData.tags && videoData.tags.length ? (
+                <>
+                  <div className="font-weight-bold">
+                    {" "}
+                    <i className="fa fa-tags" aria-hidden="true" /> Tags :
+                  </div>
+                  <div className={"pl-2 pb-3"}>
+                    {videoData.tags.map(tags => {
+                      return <span className="video-tags"> {tags.value} </span>;
+                    })}
+                  </div>
+                </>
+              ) : null}
+            </div>
+            <div className="mt-2">
+              {videoData && videoData.description ? (
+                <div>
+                  <span className="font-weight-bold pr-2">
+                    {" "}
+                    <i className="fas fa-comment-alt pr-1" aria-hidden="true" />
+                    Description :
+                  </span>
+                  <span>{videoData.description}</span>
+                </div>
+              ) : null}
+            </div>
           </ModalBody>
         </Modal>
-        <TransferToModal
-          modal={transferToModalOpenReq}
-          AllFolders={allSetList}
+
+        <TransferMoveModal
+          modal={transferMoveModalOpen}
+          setList={allSetList}
           moveToTransfer={moveToTransfer}
-          handleFolderModel={this.handleFolderModel}
-          folderId={setId}
+          setId={setId}
           transferMove={true}
           handleOpen={this.openTransferToModal}
           handleMove={this.handleMoveTransfer}
+          fromMoveSearch={fromMoveSearch}
+        />
+        <AddTagModal
+          modal={addTagModalOpenReq}
+          handleOpen={this.openAddTagsModal}
+          moveIdToAddTag={moveIdToAddTags ? moveIdToAddTags : video._id}
+          addTagstoMove={data => this.props.addTagstoMove(data)}
+          tagsList={tagsList}
+          handleTagChange={this.handleTagChange}
+          tags={tags}
+          videoData={videoData}
+          fromMoveList={false}
+          edit={edit}
+          description={description}
+          handleChange={this.handleChange}
+          error={error}
+        />
+        <ViewInfoModal
+          modal={viewInfoModalOpen}
+          handleOpen={this.openViewInfoModal}
+          videoData={videoData}
+          video={this.props.video}
+          videoDimentions={videoDimentions}
+        />
+        <EditMoveModal
+          modal={editMoveModalOpen}
+          handleOpen={this.editMoveModalOpen}
+          videoData={videoData}
+          moveIdToEdit={moveIdToEdit}
+          editMove={data => this.props.editMove(data)}
         />
       </>
     );
   }
 }
-
 export default WebmView;

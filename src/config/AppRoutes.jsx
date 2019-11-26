@@ -88,5 +88,15 @@ export const AppRoutes = {
     url: "/sample-set",
     name: "Sample Set",
     exact: true
+  },
+  MOVE_SEAECH_ALL: {
+    url: "/move-search-all",
+    name: "Move Search All",
+    exact: true
+  },
+  NON_PUBLIC_ACCESS: {
+    url: "/public-access-denied",
+    name: "Public Access Denied",
+    exact: true
   }
 };

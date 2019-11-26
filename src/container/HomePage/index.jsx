@@ -2,24 +2,64 @@ import React from "react";
 import { connect } from "react-redux";
 import { AppRoutes } from "../../config/AppRoutes";
 import { Row, Col, Button, Container } from "reactstrap";
+import pauseIc from "../../assets/img/icons/pause.svg";
+import playIc from "../../assets/img/icons/play.svg";
 import {
   modelOpenRequest,
   loginRequest,
   socialLoginRequest,
-  forgotPasswordRequest
+  forgotPasswordRequest,
+  changeHeaderRequest
 } from "../../actions";
 // import Login from "../Auth/Login"
 // import ForgotPassword from "../Auth/ForgotPassword";
 // import { UncontrolledDropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap';
-const homePageImage = [
-  "https://images.pexels.com/photos/67636/rose-blue-flower-rose-blooms-67636.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500",
-  "https://p.bigstockphoto.com/GeFvQkBbSLaMdpKXF1Zv_bigstock-Aerial-View-Of-Blue-Lakes-And--227291596.jpg",
-  "https://images.pexels.com/photos/462118/pexels-photo-462118.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500",
-  "https://helpx.adobe.com/content/dam/help/en/stock/how-to/visual-reverse-image-search/jcr_content/main-pars/image/visual-reverse-image-search-v2_intro.jpg",
-  "https://i.pinimg.com/originals/26/94/93/269493fbeb10e31ad3867248e3f68b94.jpg"
+
+const image = [
+  {
+    id: 1,
+    title: "Rumba",
+    image:
+      "https://www.rushlake-media.com/wp-content/uploads/2018/11/victor-Anastacia-1080p.jpg"
+  },
+  {
+    id: 2,
+    title: "Zumba",
+    image:
+      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQmW2LRpRoa11a0iFmo5cbyagU92VXVAtLqZt1Y4sT0dQ1jMfUeUQ"
+  },
+  {
+    id: 3,
+    title: "Tango",
+    image:
+      "https://static.wixstatic.com/media/727c8f_9d251f742b3c44538dbf2f2c7552192d~mv2_d_1600_1200_s_2.jpg"
+  },
+  {
+    id: 4,
+    title: "Ballroom Dancing",
+    image: "https://vistapointe.net/images/ballroom-dancing-wallpaper-5.jpg"
+  },
+  {
+    id: 5,
+    title: "Flamenco",
+    image: "http://www.ritmoflamenco.ca/wp-content/uploads/flamencomusic.jpg"
+  }
 ];
 // core components
 class HomePage extends React.Component {
+  componentDidMount = () => {
+    const path = this.props.location.pathname;
+    if (path === "/") {
+      this.props.changeHeaderRequest();
+    }
+  };
+  constructor(props) {
+    super(props);
+    this.state = {
+      onPlaying: false
+    };
+  }
+
   handleDashboardOpen = () => {
     this.props.redirectTo(AppRoutes.DASHBOARD.url);
   };
@@ -56,6 +96,15 @@ class HomePage extends React.Component {
       }
     });
   };
+  videoPlayHandler = () => {
+    const videoPlay = document.getElementById("webm-video-0");
+    this.setState({ onPlaying: !this.state.onPlaying });
+    if (this.state.onPlaying === true) {
+      videoPlay.pause();
+    } else {
+      videoPlay.play();
+    }
+  };
   /*
    */
   render() {
@@ -71,7 +120,7 @@ class HomePage extends React.Component {
         <section className="home-video-section">
           <Row className="">
             <Col md="6" className="d-flex flex-column justify-content-between ">
-              <div className="banner-text">
+              <div className="banner-text text-right">
                 <h3 className="banner-heading">
                   Deconstruct Movements to Accelerate Learning
                 </h3>
@@ -81,7 +130,7 @@ class HomePage extends React.Component {
                   more
                 </p>
               </div>
-              <div className="text-center">
+              <div className="text-right">
                 <Button
                   color={" "}
                   className="fill-btn btn w-75 m-auto white-color get-stated-btn"
@@ -97,10 +146,40 @@ class HomePage extends React.Component {
             </Col>
             <Col md="6">
               {/* <iframe width="560" title={"Dance"} height="315" src="https://www.youtube.com/embed/nrDtcsyd-U4" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe> */}
-              <div className="d-flex video-add-banner justify-content-center align-items-center">
+
+              {/* no videos */}
+              {/* <div className="d-flex video-add-banner justify-content-center align-items-center">
                 <span className="play-ic-wrap">
                   <i className="fa fa-play" aria-hidden="true"></i>
                 </span>
+              </div> */}
+
+              {/* videos */}
+              <div className="videos-wrap d-flex justify-content-center align-items-center">
+                <div className="d-flex video-add-banner with-home-videos justify-content-center align-items-center">
+                  {this.state.onPlaying ? (
+                    <span
+                      onClick={this.videoPlayHandler}
+                      className="play-ic-wrap pause-wrap"
+                    >
+                      <img src={pauseIc} alt={"img"} />
+                    </span>
+                  ) : (
+                    <span
+                      onClick={this.videoPlayHandler}
+                      className="play-ic-wrap"
+                    >
+                      <img src={playIc} alt={"img"} />
+                    </span>
+                  )}
+
+                  <video width="100%" id="webm-video-0">
+                    <source
+                      src="https://s3.amazonaws.com/hope.bucket/moves/1571752097935_deep-play.webm"
+                      type="video/webm"
+                    />
+                  </video>
+                </div>
               </div>
             </Col>
           </Row>
@@ -112,7 +191,7 @@ class HomePage extends React.Component {
                 Explore Sample Sets
               </h6>
             </Col>
-            <Col md="4">
+            <Col md="4" lg="3">
               <div className="play-list-block  d-flex h-100">
                 <div className="add-play-list-block d-flex  justify-content-center align-items-center text-center flex-column">
                   <div className="h4 font-dark-bold">
@@ -133,9 +212,9 @@ class HomePage extends React.Component {
                 </div>
               </div>
             </Col>
-            {homePageImage.map((images, index) => {
+            {image.map((images, index) => {
               return (
-                <Col md="4" key={index}>
+                <Col md="4" lg="3" key={index}>
                   <div className="play-list-block ">
                     <div
                       className="play-sub-block cursor_pointer"
@@ -144,16 +223,18 @@ class HomePage extends React.Component {
                       }
                     >
                       <div className="play-list-img blur-img-wrap">
-                        <img src={images} alt={""} />
+                        <img src={images.image} alt={""} />
                         <div
                           className="blur-img"
-                          style={{ backgroundImage: 'url("' + images + '")' }}
+                          style={{
+                            backgroundImage: 'url("' + images.image + '")'
+                          }}
                         ></div>
                       </div>
 
                       <div className="play-list-text">
                         <div className="play-list-heading h6 ">
-                          Salsa Footwork
+                          {images.title}
                         </div>
                       </div>
                     </div>
@@ -208,9 +289,7 @@ const mapDispatchToProps = dispatch => ({
   modelOpenRequest: data => dispatch(modelOpenRequest(data)),
   loginRequest: data => dispatch(loginRequest(data)),
   forgotPasswordRequest: data => dispatch(forgotPasswordRequest(data)),
-  socialLoginRequest: data => dispatch(socialLoginRequest(data))
+  socialLoginRequest: data => dispatch(socialLoginRequest(data)),
+  changeHeaderRequest: () => dispatch(changeHeaderRequest())
 });
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(HomePage);
+export default connect(mapStateToProps, mapDispatchToProps)(HomePage);

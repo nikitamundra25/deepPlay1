@@ -23,8 +23,9 @@ const login = async (req: Request, res: Response): Promise<any> => {
   try {
     const { body } = req;
     const { email, password } = body;
+    const Email: string = email.toLowerCase();
     const result: Document | null | any = await UserModel.findOne({
-      email,
+      email: Email,
       isDeleted: false
     }).select("firstName lastName email password");
     if (result === null) {
@@ -80,7 +81,8 @@ const adminLogin = async (req: Request, res: Response): Promise<any> => {
     }).select("firstName lastName email password");
     if (result === null) {
       return res.status(400).json({
-        message: "Email Address is not Registred with us. Please try to login with registered email address."
+        message:
+          "Email Address is not Registred with us. Please try to login with registered email address."
       });
     }
     if (result.password) {
@@ -129,14 +131,15 @@ const signup = async (req: Request, res: Response): Promise<any> => {
     });
     if (result) {
       return res.status(400).json({
-        message: "This Email Address is already regisred with us. Please try to register with another Email Address.",
+        message:
+          "This Email Address is already regisred with us. Please try to register with another Email Address.",
         success: false
       });
     } else {
       const userData: IUser = {
         firstName: body.firstName,
         lastName: body.lastName,
-        email: body.email,
+        email: body.email.toLowerCase(),
         password: body.password,
         salt: "",
         loggedInIp: "",
@@ -167,7 +170,7 @@ const signup = async (req: Request, res: Response): Promise<any> => {
       });
       await emailVar.sendEmail(body.email);
       return res.status(200).json({
-        message: "User added successfully.",
+        message: "Thank you for Signing Up!",
         token: token,
         userData: userResult,
         success: true
@@ -274,12 +277,14 @@ const userForgotPassword = async (
     }
     const { body } = req;
     const { email } = body;
+    const email_check: string = email.toLowerCase();
     const result: Document | null | any = await UserModel.findOne({
-      email: email
+      email: email_check
     });
     if (result === null) {
       return res.status(400).json({
-        message: "Email Address is not Registred with us. Please try with registered email address."
+        message:
+          "Email Address is not Registred with us. Please try with registered email address."
       });
     }
     const encryptedUserId = encrypt(result.id);
@@ -386,7 +391,7 @@ const userResetpassword = async (req: Request, res: Response): Promise<any> => {
     if (!userData.verifyToken) {
       return res.status(400).json({
         responsecode: 400,
-        message: "Your session has been expired.",
+        message: "Your password reset link has been expired.",
         success: false
       });
     }
@@ -448,7 +453,7 @@ const updateAdminPassword = async (
       message: "Password updated successfully."
     });
   } catch (error) {
-    console.log(error)
+    console.log(error);
     res.status(500).json({
       message: error.message ? error.message : "Unexpected error occure.",
       success: false

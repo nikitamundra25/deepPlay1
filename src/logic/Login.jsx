@@ -12,7 +12,8 @@ import {
   changePasswordSuccess,
   changePasswordAction,
   forgotPasswordFailed,
-  changePasswordFailed
+  changePasswordFailed,
+  loginFailed
 } from "../actions";
 //import { logger } from "helper/Logger";
 import { toast } from "react-toastify";
@@ -37,7 +38,7 @@ const loginLogic = createLogic({
       if (!toast.isActive(toastId)) {
         toastId = toast.error(result.messages[0]);
       }
-      dispatch(loginSuccess({ isLoginSuccess: false }));
+      dispatch(loginFailed({ isLoginSuccess: false }));
       done();
       return;
     } else {
@@ -55,7 +56,7 @@ const loginLogic = createLogic({
         })
       );
       dispatch(loginSuccess({ isLoginSuccess: true }));
-      window.location.href = AppRoutes.DASHBOARD.url;
+      dispatch(redirectTo({ path: AppRoutes.DASHBOARD.url }));
       done();
     }
   }
@@ -67,8 +68,8 @@ const logOutLogic = createLogic({
   type: loginAction.LOGOUT_REQUEST,
   async process({ action }, dispatch, done) {
     dispatch(logoutSuccess({ isLoginSuccess: false }));
+    dispatch(redirectTo({ path: AppRoutes.HOME_PAGE.url }));
     localStorage.removeItem("token");
-    window.location.href = AppRoutes.HOME_PAGE.url;
     done();
   }
 });
@@ -89,6 +90,7 @@ const socialLoginLogic = createLogic({
     );
     if (result.isError || !result.data.userData) {
       toast.error(result.messages[0]);
+      dispatch(loginFailed({ isLoginSuccess: false }));
       done();
       return;
     } else {
@@ -104,7 +106,7 @@ const socialLoginLogic = createLogic({
         })
       );
       dispatch(loginSuccess({ isLoginSuccess: true }));
-      window.location.href = AppRoutes.DASHBOARD.url;
+      dispatch(redirectTo({ path: AppRoutes.DASHBOARD.url }));
       done();
     }
   }
@@ -218,7 +220,6 @@ const verifyAccountAccessLogic = createLogic({
       dispatch(logoutRequest());
     }
     localStorage.setItem("token", user);
-
     dispatch(
       redirectTo({
         path: AppRoutes.DASHBOARD.url

@@ -1,11 +1,12 @@
 import React from "react";
-import { Row, Col, Card, CardHeader, Container } from "reactstrap";
+import { Row, Col, Card, CardHeader, Container, Button } from "reactstrap";
 import { connect } from "react-redux";
 import {
   sharedFolderInfoRequest,
   publicUrlSetDetailsRequest,
   shareableLinkRequest,
-  redirectTo
+  redirectTo,
+  encryptSetRequest
 } from "../../../actions";
 import emptyFolderIc from "../../../assets/img/empty-folder.png";
 import qs from "query-string";
@@ -15,6 +16,9 @@ import PaginationHelper from "helper/Pagination";
 import { AppConfig } from "../../../config/Appconfig";
 import "./index.scss";
 import Loader from "../Loader/Loader";
+import imgNotfound from "../../../assets/img/404.svg";
+import { Link } from "react-router-dom";
+
 // core components
 
 class FolderSharedLink extends React.Component {
@@ -66,10 +70,9 @@ class FolderSharedLink extends React.Component {
 
   handleSetDetails = id => {
     let parsed = qs.parse(this.props.location.search);
-    this.props.shareableLink({
+    this.props.encryptSetRequest({
       setId: id,
-      linkOf: "set",
-      publicAccess: "set",
+      userId: parsed.userId,
       isPublic: parsed.isPublic,
       fromFolder: true
     });
@@ -81,12 +84,20 @@ class FolderSharedLink extends React.Component {
     const {
       decryptedDetails,
       isSetDetailsLoading,
-      totalSets
+      totalSets,
+      accessDenied
     } = shareLinkReducer;
+    const token = localStorage.getItem("token");
+    let isLoggedIn = false;
+    if (token) {
+      isLoggedIn = true;
+    } else {
+      isLoggedIn = false;
+    }
 
     return (
       <div className={"dashboard-full-section without-sidebar"}>
-        <div className="p-3">
+        {/* <div className="p-3">
           <span
             onClick={() => {
               window.history.back();
@@ -96,110 +107,159 @@ class FolderSharedLink extends React.Component {
             {" "}
             <i className="fas fa-long-arrow-alt-left" /> Back
           </span>
-        </div>
-        <Container>
-          {/* <div className="text-center h3">
+        </div> */}
+        {!accessDenied ? (
+          <Container>
+            {/* <div className="text-center h3">
             <b> Folder Details</b>
           </div>{" "} */}
-          <div className="content-header mt-3">
-            <span className="content-title">
-              <div className="main-title">
-                {decryptedDetails ? decryptedDetails.title : "MyFolder"}
-              </div>
-              <div className="sub-title">
-                {" "}
-                {decryptedDetails ? decryptedDetails.description : ""}
-              </div>
-              <div className="sub-title">
-                Total sets: {totalSets ? totalSets : 0}
-              </div>
-            </span>
-          </div>
+            <div className="content-header mt-3">
+              <span className="content-title">
+                <div className="main-title">
+                  {decryptedDetails ? decryptedDetails.title : "MyFolder"}
+                </div>
+                <div className="sub-title">
+                  {" "}
+                  {decryptedDetails ? decryptedDetails.description : ""}
+                </div>
+                <div className="sub-title">
+                  Total sets: {totalSets ? totalSets : 0}
+                </div>
+              </span>
+            </div>
 
-          <Row className="set-wrap">
-            {!isSetDetailsLoading ? (
-              setListItem && setListItem.length ? (
-                // eslint-disable-next-line
-                setListItem.map((list, i) => {
-                  return (
-                    <Col
-                      md="6"
-                      key={i}
-                      onClick={() => this.handleSetDetails(list._id)}
-                      className={"cursor_pointer"}
-                    >
-                      <div className="tile-wrap card">
-                        <div className="cotent-tile d-flex content-with-img">
-                          <div className="cotent-text-tile">
-                            <div className="content-heading-tile">
-                              <span>{list.title}</span>
-                            </div>
-                            <div className="content-heading-tile">
-                              {" "}
-                              {list.description}
-                            </div>
+            <Row className="set-wrap">
+              {!isSetDetailsLoading ? (
+                setListItem && setListItem.length ? (
+                  // eslint-disable-next-line
+                  setListItem.map((list, i) => {
+                    return (
+                      <Col
+                        md="6"
+                        key={i}
+                        onClick={() => this.handleSetDetails(list._id)}
+                        className={"cursor_pointer"}
+                      >
+                        <div className="tile-wrap card">
+                          <div className="cotent-tile ">
+                            <div className="d-flex content-with-img w-100">
+                              <div className="cotent-text-tile">
+                                <div className="content-heading-tile">
+                                  <span>{list.title}</span>
+                                </div>
+                                <div className="content-heading-tile">
+                                  {" "}
+                                  {list.description}
+                                </div>
 
-                            <div className="content-number-tile">
-                              {" "}
-                              {list.moveCount} items
+                                <div className="content-number-tile">
+                                  {" "}
+                                  {list.moveCount} items
+                                </div>
+                              </div>
+                              {list.recentlyAddMoveImg ? (
+                                <div className="d-flex img-tile-wrap cursor_pointer">
+                                  <div className="cotent-img-tile">
+                                    <img
+                                      src={`${list.recentlyAddMoveImg}`}
+                                      alt=""
+                                      width="100%"
+                                      height="100%"
+                                    />
+                                  </div>
+                                </div>
+                              ) : null}
                             </div>
                           </div>
-                          <div
-                            className="cotent-img-tile"
-                            style={{
-                              backgroundImage:
-                                'url("' +
-                                "https://res.cloudinary.com/fleetnation/image/private/c_fit,w_1120/g_south,l_text:style_gothic2:%C2%A9%20Nikita%20Buida,o_20,y_10/g_center,l_watermark4,o_25,y_50/v1469756538/dd3acf4nzzavkv4rf2ji.jpg" +
-                                '")'
-                            }}
-                          ></div>
                         </div>
+                      </Col>
+                    );
+                  })
+                ) : (
+                  <>
+                    <Col>
+                      <div className="create-set-section w-100 empty-folder-section">
+                        <Card className="set-content-wrap empty-folder-card mb-4">
+                          <div className="set-content-block w-100 empty-folder-wrap">
+                            <CardHeader className="empty-folder-header ">
+                              <img src={emptyFolderIc} alt={"Images"} />
+                              <div className="content-header set-header">
+                                <span className="content-title">
+                                  {" "}
+                                  <h3>This folder has no Sets yet</h3>
+                                  {/* <p>Organize your Sets for you or your students</p> */}
+                                </span>
+                              </div>
+                            </CardHeader>
+                          </div>
+                        </Card>
                       </div>
                     </Col>
-                  );
-                })
+                  </>
+                )
               ) : (
-                <>
-                <Col>
-                  <div className="create-set-section w-100 empty-folder-section">
-                    <Card className="set-content-wrap empty-folder-card">
-                      <div className="set-content-block w-100 empty-folder-wrap">
-                        <CardHeader className="empty-folder-header ">
-                          <img src={emptyFolderIc} alt={"Images"} />
-                          <div className="content-header set-header">
-                            <span className="content-title">
-                              {" "}
-                              <h3>This folder has no Sets yet</h3>
-                              {/* <p>Organize your Sets for you or your students</p> */}
-                            </span>
-                          </div>
-                        </CardHeader>
-                      </div>
-                    </Card>
+                <Col sm={12} className="loader-col">
+                  <Loader />
+                </Col>
+              )}
+            </Row>
+            {totalSets && !isSetDetailsLoading ? (
+              <div className={"d-flex justify-content-center pt-3"}>
+                <PaginationHelper
+                  totalRecords={totalSets}
+                  currentPage={page}
+                  onPageChanged={page => {
+                    this.setState({ page });
+                    this.onPageChange(page);
+                  }}
+                  pageLimit={AppConfig.ITEMS_PER_PAGE}
+                />
+              </div>
+            ) : null}
+          </Container>
+        ) : (
+          <Container>
+            <Card className="home-video-section my-4 py-5">
+              <Row className="">
+                <Col md="6">
+                  {/* <iframe width="560" title={"Dance"} height="315" src="https://www.youtube.com/embed/nrDtcsyd-U4" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe> */}
+                  <div className="d-flex video-add-banner justify-content-center align-items-center">
+                    <img src={imgNotfound} alt={""} className="w-100" />
                   </div>
-                  </Col>
-                </>
-              )
-            ) : (
-              <Col sm={12} className="loader-col">
-                <Loader />
-              </Col>
-            )}
-          </Row>
-          {totalSets && !isSetDetailsLoading ? (
-            <div className={"d-flex justify-content-center pt-3"}>
-              <PaginationHelper
-                totalRecords={totalSets}
-                currentPage={page}
-                onPageChanged={page => {
-                  this.setState({ page });
-                  this.onPageChange(page);
-                }}
-                pageLimit={AppConfig.ITEMS_PER_PAGE}
-              />
-            </div>
-          ) : null}
-        </Container>
+                </Col>
+                <Col
+                  md="6"
+                  className="d-flex flex-column justify-content-between "
+                >
+                  <div className="banner-text">
+                    <h1 className="banner-heading">Oops !</h1>
+                    <p className="banner-subheading mt-4 mt-0 h3 font-weight-bold">
+                      Access denied...
+                    </p>
+                    <p className="banner-content  mt-0 ">
+                      You didn't have permission to access this page. Maybe our
+                      FAQ or Community can help?
+                    </p>
+                  </div>
+                  <div className="text-left">
+                    <Link to={"/"}>
+                      <Button
+                        className="fill-btn btn w-75 m-auto white-color get-stated-btn"
+                        onClick={
+                          isLoggedIn
+                            ? this.handleDashboardOpen
+                            : this.handleLoginModalOpen
+                        }
+                      >
+                        Back To Home page
+                      </Button>
+                    </Link>
+                  </div>
+                </Col>
+              </Row>
+            </Card>
+          </Container>
+        )}
       </div>
     );
   }
@@ -218,10 +278,10 @@ const mapDispatchToProps = dispatch => ({
   },
   onGoPage: data => {
     dispatch(redirectTo({ path: data }));
+  },
+  encryptSetRequest: data => {
+    dispatch(encryptSetRequest(data));
   }
 });
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(FolderSharedLink);
+export default connect(mapStateToProps, mapDispatchToProps)(FolderSharedLink);

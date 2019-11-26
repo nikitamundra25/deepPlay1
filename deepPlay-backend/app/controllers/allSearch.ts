@@ -20,21 +20,25 @@ const allSearchModule = async (req: Request, res: Response): Promise<any> => {
     condition.$and.push({
       isDeleted: false
     });
-
-    index.search(search,
-      {
-        filters: filterData,
-      },
-      (err: string, hits: Object | any) => {
-        if (err) throw err;
-        console.log("FFFFFFFFFFFFFFFFFF", hits);
-
-        return res.status(200).json({
-          data: hits.hits,
-          message: "This is algolia search data"
-        });
-      }
-    );
+    if (search !== "") {
+      index.search(search,
+        {
+          filters: filterData,
+        },
+        (err: string, hits: Object | any) => {
+          if (err) throw err;
+          return res.status(200).json({
+            data: hits.hits,
+            message: "This is algolia search data"
+          });
+        }
+      );
+    } else {
+      return res.status(200).json({
+        data: [],
+        message: "This is algolia search data"
+      });
+    }
   } catch (error) {
     console.log(error);
     res.status(500).send({

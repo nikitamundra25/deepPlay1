@@ -11,7 +11,7 @@ class DefaultFooter extends React.Component {
             <Row className=" align-items-center justify-content-md-between">
               <Col md="6">
                 <div className=" copyright">
-                  © {new Date().getFullYear()} <b>DEEP PLAY</b>
+                  © {new Date().getFullYear()} <b>DeepPlay</b>
                 </div>
               </Col>
               <Col md="6">

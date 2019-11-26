@@ -18,6 +18,18 @@ const createFolder = async (req: Request, res: Response): Promise<any> => {
       });
     }
     const headToken: Request | any = currentUser;
+
+    const countFolderCopy: Document | any | null = await FolderModel.count({
+      title: body.title,
+      description: body.description ? body.description : "",
+      status: body.status ? body.status : true,
+      userId: body.userId ? body.userId : headToken.id,
+      sharableLink: body.sharableLink ? body.sharableLink : "",
+      isPublic: body.isPublic ? body.isPublic : true,
+      isDeleted: body.isDeleted ? body.isDeleted : false,
+      isCopy: true
+    });
+
     const folderData: IFolder = {
       title: body.title,
       description: body.description ? body.description : "",
@@ -26,7 +38,8 @@ const createFolder = async (req: Request, res: Response): Promise<any> => {
       sharableLink: body.sharableLink ? body.sharableLink : "",
       isPublic: body.isPublic ? body.isPublic : true,
       isDeleted: body.isDeleted ? body.isDeleted : false,
-      isCopy: body.isCopy ? true : false
+      isCopy: body.isCopy ? true : false,
+      copyIndex: countFolderCopy && body.isCopy ? countFolderCopy : 0
     };
     const Result: Document | any = new FolderModel(folderData);
     await Result.save();
@@ -49,7 +62,8 @@ const createFolder = async (req: Request, res: Response): Promise<any> => {
             status: true,
             userId: headToken.id,
             isCopy: element.isCopy,
-            isDeleted: element.isDeleted
+            isDeleted: element.isDeleted,
+            copyIndex: element.copyIndex
           };
           const setData: Document | any = new SetModel(newSetData);
           await setData.save();
@@ -71,7 +85,11 @@ const createFolder = async (req: Request, res: Response): Promise<any> => {
                 sharableLink: moveElement.sharableLink,
                 status: true,
                 setId: setId,
-                moveURL: moveElement.moveURL
+                moveURL: moveElement.moveURL,
+                sourceUrl: moveElement.sourceUrl ? moveElement.sourceUrl : null,
+                isYoutubeUrl: moveElement.isYoutubeUrl
+                  ? moveElement.isYoutubeUrl
+                  : false
               };
               const moveData: Document | any = new MoveModel(newMoveData);
               await moveData.save();
@@ -87,13 +105,24 @@ const createFolder = async (req: Request, res: Response): Promise<any> => {
       ...Result._doc,
       searchType: "folder"
     };
-    index.addObjects([folderDataForAlgolia], (err: string, content: string) => {
-      if (err) {
-        console.error(err);
-      } else {
-        console.log("##################", content);
+    let temp: any;
+
+    index.addObjects(
+      [folderDataForAlgolia],
+      async (err: string, content: any) => {
+        if (err) {
+          console.error(err);
+        } else {
+          temp = content.objectIDs[0];
+          await FolderModel.updateOne(
+            { _id: Result._id },
+            {
+              objectId: temp
+            }
+          );
+        }
       }
-    });
+    );
     /*  */
     res.status(200).json({
       Result,
@@ -314,6 +343,54 @@ const deleteFolder = async (req: Request, res: Response): Promise<void> => {
         $set: { isDeleted: true }
       }
     );
+    const includSet: Document | any = await SetModel.find({
+      folderId: query.id,
+      isDeleted: false
+    });
+
+    let setObjectIds: Document | any = [];
+
+    if (includSet) {
+      for (let index = 0; index < includSet.length; index++) {
+        const setData = includSet[index];
+        const includeMove: Document | any | null = await MoveModel.find({
+          setId: setData._id
+        });
+        if (setData.objectId) {
+          setObjectIds.push(setData.objectId);
+        }
+
+        if (includeMove) {
+          for (let index = 0; index < includeMove.length; index++) {
+            const moveData = includeMove[index];
+            await MoveModel.findByIdAndUpdate(moveData._id, {
+              isDeleted: true
+            });
+            if (moveData.objectId) {
+              setObjectIds.push(moveData.objectId);
+            }
+          }
+        }
+        await SetModel.findByIdAndUpdate(setData._id, {
+          isDeleted: true
+        });
+      }
+    }
+    const result1: any = await FolderModel.find({ _id: query.id });
+    const stemp = result1.length ? result1[0].objectId : null;
+    if (stemp) {
+      index.deleteObject(stemp, (err: string, content: any) => {
+        if (err) throw err;
+      });
+    }
+    console.log("setObjectIds", setObjectIds);
+
+    if (setObjectIds.length) {
+      index.deleteObjects(setObjectIds, (err: string, content: any) => {
+        if (err) throw err;
+      });
+    }
+
     res.status(200).json({
       data: result,
       message: "Folder has been deleted successfully"
@@ -467,6 +544,36 @@ const sharableLink = async (req: Request, res: Response): Promise<any> => {
   }
 };
 
+//-------------------Encrpt setId when user click on folder to set--------------------
+const encryptSetIdShareLink = async (
+  req: Request,
+  res: Response
+): Promise<any> => {
+  try {
+    const { query } = req;
+    const { userId, setId } = query;
+
+    let encryptedSetId: String;
+    let data: Document | any;
+    encryptedSetId = encrypt(setId);
+    data = {
+      encryptedUserId: userId,
+      encryptedSetId: encryptedSetId
+    };
+
+    return res.status(200).json({
+      responsecode: 200,
+      data: data,
+      success: true
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).send({
+      message: error.message
+    });
+  }
+};
+
 //-----Decrypt userId & folderId to get folderDetails for shared link-----------------
 const publicUrlFolderInfo = async (
   req: Request,
@@ -525,6 +632,21 @@ const updateFolder = async (req: Request, res: Response): Promise<any> => {
       $set: { ...updateFolder, updatedAt: Date.now() }
     });
 
+    const result1: any = await FolderModel.find({ _id: id });
+    const stemp = result1.length ? result1[0].objectId : null;
+    if (stemp) {
+      index.partialUpdateObject(
+        {
+          title: title,
+          description: description,
+          objectID: stemp
+        },
+        (err: string, content: any) => {
+          if (err) throw err;
+          console.log(content);
+        }
+      );
+    }
     return res.status(200).json({
       message: "Folder details updated successfully."
     });
@@ -579,5 +701,6 @@ export {
   sharableLink,
   publicUrlFolderInfo,
   updateFolder,
-  updateFolderStatus
+  updateFolderStatus,
+  encryptSetIdShareLink
 };

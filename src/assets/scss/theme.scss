@@ -104,5 +104,27 @@
 
 @import "react/react-differences.scss";
 @import "../../App.scss";
-
-
+@font-face {
+    font-family: "hurmegeosans-no2-400";
+    src: url("../font/hurmegeosans/hurmegeosans-no2-400.eot");
+    src: url("../font/hurmegeosans/hurmegeosans-no2-400.eot?#iefix") format("embedded-opentype"),
+      url("../font/hurmegeosans/hurmegeosans-no2-400.woff2") format("woff2");
+    font-weight: normal;
+    font-style: normal;
+  }
+@font-face {
+    font-family: "hurmegeosans-no2-600";
+    src: url("../font/hurmegeosans/hurmegeosans-no2-600.eot");
+    src: url("../font/hurmegeosans/hurmegeosans-no2-600.eot?#iefix") format("embedded-opentype"),
+      url("../font/hurmegeosans/hurmegeosans-no2-600.woff2") format("woff2");
+    font-weight: normal;
+    font-style: normal;
+  }
+@font-face {
+    font-family: "hurmegeosans-no2-700";
+    src: url("../font/hurmegeosans/hurmegeosans-no2-700.eot");
+    src: url("../font/hurmegeosans/hurmegeosans-no2-700.eot?#iefix") format("embedded-opentype"),
+      url("../font/hurmegeosans/hurmegeosans-no2-700.woff2") format("woff2");
+    font-weight: normal;
+    font-style: normal;
+  }

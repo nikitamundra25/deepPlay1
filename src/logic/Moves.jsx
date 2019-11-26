@@ -9,20 +9,33 @@ import {
   getMoveDetailsSuccess,
   modelOpenRequest,
   searchMoveSuccess,
-  getSetDetailsRequest
+  getSetDetailsRequest,
+  updateSortIndexSuccess,
+  createAnotherMoveSuccess,
+  getMoveBySearchSuccess,
+  getMoveBySearchRequest,
+  starredMovesSuccess,
+  getTagListSuccess,
+  getAllSetRequest,
+  videoCancelSuccess,
+  removeVideoLocalServerRequest
 } from "../actions";
 import { AppRoutes } from "../config/AppRoutes";
 import { toast } from "react-toastify";
 import { logger } from "helper/Logger";
 import { completeVideoEditingSuccess } from "actions/Moves";
-let toastId = null;
+import { addTagsSuccess } from "actions/Moves";
+import { updateMoveSuccess } from "actions/Moves";
 
+let toastId = null;
+let api = new ApiHelper();
 //  Download video
 const downloadVideoLogic = createLogic({
   type: MovesAction.DOWNLOAD_YOUTUBE_VIDEO_REQUEST,
-  async process({ action }, dispatch, done) {
+  async process({ action, getState }, dispatch, done) {
     let api = new ApiHelper();
     let result;
+
     if (action.payload.isYoutubeUrl) {
       result = await api.FetchFromServer(
         "move",
@@ -33,7 +46,25 @@ const downloadVideoLogic = createLogic({
         action.payload
       );
     } else {
-      result = await api.UploadVideo("move", "/download-video", action.payload);
+      // const config = {
+      //   onUploadProgress: (progressEvent: (loaded, total)) => {
+      //     const percent=
+      //       Math.round(
+      //         (progressEvent.loaded / progressEvent.total) * 100 * 100
+      //       ) / 100;
+      //     dispatch(onPresentationUploadProgressEvent(percent));
+      //   }
+      // };
+
+      const config = {
+        onUploadProgress: e => console.log("oooooooohhhhhh", e)
+      };
+      result = await api.UploadVideo(
+        "move",
+        "/download-video",
+        action.payload,
+        config
+      );
     }
     if (result.isError) {
       if (!toast.isActive(toastId)) {
@@ -44,6 +75,7 @@ const downloadVideoLogic = createLogic({
           videoUrl: ""
         })
       );
+
       done();
       return;
     } else {
@@ -89,7 +121,7 @@ const getMovesOfSetLogic = createLogic({
     } else {
       dispatch(
         getMovesOfSetSuccess({
-          showLoader: false,
+          // showLoader: false,
           movesOfSet: result.data.movesData,
           totalMoves: result.data.totalMoves,
           isInfiniteScroll: action.payload.isInfiniteScroll
@@ -114,8 +146,13 @@ const getMovesDetailsByIdLogic = createLogic({
       undefined
     );
     if (result.isError) {
-      toast.error(result.messages[0]);
+      // toast.error(result.messages[0]);
       dispatch(getMoveDetailsSuccess({ moveDetails: "" }));
+      dispatch(
+        redirectTo({
+          path: `${AppRoutes.MOVE.url}`
+        })
+      );
       done();
       return;
     } else {
@@ -132,12 +169,7 @@ const getMovesDetailsByIdLogic = createLogic({
 // completed video editing and send for final update
 const completeVideoEditingLogic = createLogic({
   type: MovesAction.UPDATE_VIDEO_SETTINGS,
-  async process({ action }, dispatch, done) {
-    dispatch(
-      completeVideoEditingSuccess({
-        isSavingWebM: true
-      })
-    );
+  async process({ action, getState }, dispatch, done) {
     let api = new ApiHelper();
     let result = await api.FetchFromServer(
       "move",
@@ -164,7 +196,8 @@ const completeVideoEditingLogic = createLogic({
         dispatch(
           modelOpenRequest({
             modelDetails: {
-              isMoveSuccessModal: true
+              isMoveSuccessModal: false,
+              createSetModalOpen: false
             }
           })
         );
@@ -174,10 +207,24 @@ const completeVideoEditingLogic = createLogic({
           isSavingWebM: false,
           moveUrlDetails: {
             moveURL: result.data.data.videoUrl,
-            setId: result.data.setId
+            setId: result.data.setId,
+            videoOriginalFile: result.data.videoOriginalFile,
+            videoFileMain: result.data.videoFileMain,
+            s3VideoUrl: result.data.s3VideoUrl
           }
         })
       );
+      
+      let temp = getState().moveReducer.isMoveDone;
+      if (temp) {
+        dispatch(
+          removeVideoLocalServerRequest({
+            videoOriginalFile: result.data.videoOriginalFile,
+            videoFileMain: result.data.videoFileMain,
+            setId: result.data.setId
+          })
+        );
+      }
       done();
     }
   }
@@ -196,7 +243,11 @@ const starMoveLogic = createLogic({
       "/starred-move",
       "PUT",
       true,
-      action.payload
+      {
+        moveId: action.payload ? action.payload.moveId : null,
+        isStarred: action.payload ? action.payload.isStarred : false,
+        setId: action.payload ? action.payload.setId : null
+      }
     );
     if (result.isError) {
       if (!toast.isActive(toastId)) {
@@ -205,10 +256,29 @@ const starMoveLogic = createLogic({
       done();
       return;
     } else {
-      if (!toast.isActive(toastId)) {
-        toastId = toast.success(result.messages[0]);
+      // if (!toast.isActive(toastId)) {
+      //   toastId = toast.success(result.messages[0]);
+      // }
+      if (action.payload.isSearch) {
+        dispatch(getMoveBySearchRequest({ search: action.payload.isSearch }));
       }
-      dispatch(getMovesOfSetRequest({ setId: action.payload.setId }));
+      if (action.payload && action.payload.moveofSetList) {
+        dispatch(
+          starredMovesSuccess({
+            moveofSetList: action.payload.moveofSetList,
+            index: action.payload.index
+          })
+        );
+      } else {
+        if (!toast.isActive(toastId)) {
+          toastId = toast.success(result.messages[0]);
+        }
+        dispatch(
+          starredMovesSuccess({
+            videoData: action.payload.videoData
+          })
+        );
+      }
       done();
     }
   }
@@ -236,7 +306,26 @@ const deleteMoveLogic = createLogic({
       if (!toast.isActive(toastId)) {
         toastId = toast.success(result.messages[0]);
       }
-      dispatch(getMovesOfSetRequest({ setId: action.payload.setId }));
+      if (!action.payload.isSearch) {
+        dispatch(
+          getMovesOfSetRequest({
+            setId: action.payload.setId,
+            isMoveList: true
+          })
+        );
+        dispatch(
+          modelOpenRequest({
+            modelDetails: {
+              isVideoModalOpenReq: false,
+              isVideoModalOpen: false
+            }
+          })
+        );
+        dispatch(getSetDetailsRequest({ setId: action.payload.setId }));
+        dispatch(getAllSetRequest({ isSetNoLimit: false }));
+      } else {
+        dispatch(getMoveBySearchRequest({ search: action.payload.isSearch }));
+      }
       done();
     }
   }
@@ -269,12 +358,28 @@ const transferMoveLogic = createLogic({
         modelOpenRequest({
           modelDetails: {
             transferToModalOpen: false,
-            transferToModalOpenReq: false
+            transferToModalOpenReq: false,
+            transferMoveModalOpen: false,
+            isVideoModalOpen: false,
+            isVideoModalOpenReq: false,
+            transferMoveModalOpenReq: false
           }
         })
       );
-      dispatch(getMovesOfSetRequest({ setId: action.payload.previousSetId, page: 1, isInfiniteScroll: false }));
-      dispatch(getSetDetailsRequest({ setId: action.payload.previousSetId }));
+
+      if (!action.payload.fromMoveSearch || !action.payload.isSearch) {
+        dispatch(
+          getMovesOfSetRequest({
+            setId: action.payload.previousSetId,
+            page: 1,
+            isInfiniteScroll: false,
+            isMoveList: true
+          })
+        );
+        dispatch(getSetDetailsRequest({ setId: action.payload.previousSetId }));
+      } else {
+        dispatch(getMoveBySearchRequest({ search: action.payload.isSearch }));
+      }
       done();
     }
   }
@@ -304,18 +409,23 @@ const createAnotherMoveLogic = createLogic({
         toastId = toast.success(result.messages[0]);
       }
       dispatch(
-        modelOpenRequest({
-          modelDetails: {
-            isMoveSuccessModal: false
-          }
-        })
-      );
-      dispatch(
         redirectTo({
           path: `${AppRoutes.MOVE_DETAILS.url.replace(
             ":id",
             result.data.moveId
           )}`
+        })
+      );
+      dispatch(
+        createAnotherMoveSuccess({
+          moveDetails: result.data
+        })
+      );
+      dispatch(
+        modelOpenRequest({
+          modelDetails: {
+            isMoveSuccessModal: false
+          }
         })
       );
       done();
@@ -344,7 +454,272 @@ const searchMoveLogic = createLogic({
     } else {
       dispatch(
         searchMoveSuccess({
-          searchMoveResult: result.data.data
+          movesOfSet: result.data.data,
+          totalMoves: result.data.totalMoves
+        })
+      );
+      done();
+    }
+  }
+});
+
+//Add Tags
+const addTagsLogic = createLogic({
+  type: MovesAction.ADD_TAGS_REQUEST,
+  async process({ action }, dispatch, done) {
+    let api = new ApiHelper();
+    let result = await api.FetchFromServer(
+      "move",
+      "/add-tags-move",
+      "PUT",
+      true,
+      undefined,
+      {
+        data: action.payload.data
+      }
+    );
+    if (result.isError) {
+      if (!toast.isActive(toastId)) {
+        toastId = toast.error(result.messages[0]);
+      }
+      done();
+      return;
+    } else {
+      if (!toast.isActive(toastId)) {
+        toastId = toast.success(result.messages[0]);
+      }
+      if (action.payload.data.fromMoveList) {
+        dispatch(addTagsSuccess({ movesOfSet: action.payload.moveList }));
+      } else {
+        dispatch(addTagsSuccess({ videoData: action.payload.moveVideo }));
+      }
+      dispatch(
+        modelOpenRequest({
+          modelDetails: {
+            addTagModalOpen: false,
+            addTagModalOpenReq: false
+          }
+        })
+      );
+      done();
+    }
+  }
+});
+
+//Update sort index
+const updateSortIndexLogic = createLogic({
+  type: MovesAction.UPDATE_SORT_INDEX_REQUEST,
+  async process({ action }, dispatch, done) {
+    let api = new ApiHelper();
+    let result = await api.FetchFromServer(
+      "move",
+      "/sort-index-update",
+      "PUT",
+      true,
+      undefined,
+      action.payload
+    );
+    if (result.isError) {
+      if (!toast.isActive(toastId)) {
+        toastId = toast.error(result.messages[0]);
+      }
+      done();
+      return;
+    } else {
+      dispatch(
+        updateSortIndexSuccess({
+          movesOfSet: result.data.data
+        })
+      );
+      done();
+    }
+  }
+});
+
+const removeVideoLocalServerLogic = createLogic({
+  type: MovesAction.REMOVE_VIDEO_LOCAL_SERVER_REQUEST,
+  async process({ action }, dispatch, done) {
+    let api = new ApiHelper();
+    let result = await api.FetchFromServer(
+      "move",
+      "/remove-local-video",
+      "POST",
+      true,
+      undefined,
+      action.payload
+    );
+    if (result.isError) {
+      if (!toast.isActive(toastId)) {
+        toastId = toast.error(result.messages[0]);
+      }
+      done();
+      return;
+    } else {
+      // dispatch(
+      //   redirectTo({
+      //     path: `${AppRoutes.SET_DETAILS.url.replace(
+      //       ":id",
+      //       action.payload.setId
+      //     )}`
+      //   })
+      // );
+      dispatch(
+        modelOpenRequest({
+          modelDetails: {
+            isMoveSuccessModal: false
+          }
+        })
+      );
+      done();
+    }
+  }
+});
+
+//Edit moves
+const editMoveLogic = createLogic({
+  type: MovesAction.UPDATE_MOVE_REQUEST,
+  async process({ action }, dispatch, done) {
+    let api = new ApiHelper();
+    let result = await api.FetchFromServer(
+      "move",
+      "/update-move",
+      "PUT",
+      true,
+      undefined,
+      action.payload.data
+    );
+    if (result.isError) {
+      if (!toast.isActive(toastId)) {
+        toastId = toast.error(result.messages[0]);
+      }
+      done();
+      return;
+    } else {
+      if (!toast.isActive(toastId)) {
+        toastId = toast.success(result.messages[0]);
+      }
+      if (action.payload.data.fromMoveList) {
+        dispatch(updateMoveSuccess({ movesOfSet: action.payload.moveList }));
+      } else {
+        dispatch(updateMoveSuccess({ videoData: action.payload.moveVideo }));
+      }
+      dispatch(
+        modelOpenRequest({
+          modelDetails: {
+            editMoveModalOpen: false
+            // isVideoModalOpen: false,
+            // isVideoModalOpenReq: false
+          }
+        })
+      );
+      // dispatch(getMovesOfSetRequest({ setId: action.payload.setId }));
+      done();
+    }
+  }
+});
+
+// Get Moves By Search
+const getMovesBySearchLogic = createLogic({
+  type: MovesAction.GET_MOVE_BY_SEARCH_REQUEST,
+  async process({ action }, dispatch, done) {
+    let api = new ApiHelper();
+    let result = await api.FetchFromServer(
+      "move",
+      "/get-move-by-search",
+      "GET",
+      true,
+      action.payload,
+      undefined
+    );
+    if (result.isError) {
+      toast.error(result.messages[0]);
+      done();
+      return;
+    } else {
+      dispatch(
+        getMoveBySearchSuccess({
+          showLoader: false,
+          movesOfSet: result.data.movesData,
+          totalMoves: result.data.totalMoves,
+          isInfiniteScroll: action.payload.isInfiniteScroll
+        })
+      );
+      done();
+    }
+  }
+});
+
+//Add Tags In TagModal
+const addTagsInModalLogic = createLogic({
+  type: MovesAction.ADD_TAGS_IN_TAGMODAL_REQUEST,
+  async process({ action }, dispatch, done) {
+    let api = new ApiHelper();
+    let result = await api.FetchFromServer(
+      "move",
+      "/add-tags",
+      "PUT",
+      true,
+      undefined,
+      action.payload
+    );
+    if (result.isError) {
+      done();
+      return;
+    } else {
+      done();
+    }
+  }
+});
+
+// Get Tags List
+const getTagListRequestLogic = createLogic({
+  type: MovesAction.GET_TAG_LIST_REQUEST,
+  async process({ action }, dispatch, done) {
+    let api = new ApiHelper();
+    let result = await api.FetchFromServer(
+      "move",
+      "/get-tag-list",
+      "GET",
+      true
+    );
+    if (result.isError) {
+      done();
+      return;
+    } else {
+      dispatch(
+        getTagListSuccess({
+          tagsList: result.data.data
+        })
+      );
+      done();
+    }
+  }
+});
+
+//Cancel Video upload
+const videoCancelRequestLogic = createLogic({
+  type: MovesAction.VIDEO_CANCEL_REQUEST,
+  async process({ action }, dispatch, done) {
+    api.cancelRequest("cancel");
+    let result = await api.FetchFromServer(
+      "move",
+      "/cancel-move-request",
+      "POST",
+      true
+    );
+    if (result.isError) {
+      if (!toast.isActive(toastId)) {
+        toastId = toast.error(result.messages[0]);
+      }
+      done();
+      return;
+    } else {
+      if (!toast.isActive(toastId)) {
+        toastId = toast.success(result.messages[0]);
+      }
+      dispatch(
+        videoCancelSuccess({
+          cancelVideo: true
         })
       );
       done();
@@ -360,5 +735,13 @@ export const MoveLogics = [
   deleteMoveLogic,
   transferMoveLogic,
   createAnotherMoveLogic,
-  searchMoveLogic
+  searchMoveLogic,
+  addTagsLogic,
+  updateSortIndexLogic,
+  removeVideoLocalServerLogic,
+  editMoveLogic,
+  getMovesBySearchLogic,
+  addTagsInModalLogic,
+  getTagListRequestLogic,
+  videoCancelRequestLogic
 ];

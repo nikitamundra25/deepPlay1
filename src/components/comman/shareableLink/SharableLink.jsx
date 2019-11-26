@@ -130,6 +130,27 @@ class SharableLinkModal extends React.Component {
                   </InputGroup>
                 </div>
               </FormGroup>
+            </Form>
+          </div>
+        </ModalBody>
+        {shareComponent !== "yourSets" ? (
+          <ModalFooter className="justify-content-start">
+            <div className="form-inline w-100 justify-content-between">
+              <div className="d-flex">
+                <span className="font-14">
+                  <b>Enable Public Access Link </b>
+                </span>
+                <label className="custom-toggle sharable-toggle custom-toggle-wrap ml-2">
+                  <input
+                    type="checkbox"
+                    name="toggle"
+                    onChange={this.handlePublicAccess}
+                    checked={isPublic ? isPublic : false}
+                    // disabled={copied ? true : false}
+                  />
+                  <span className="custom-toggle-slider rounded-circle" />
+                </label>
+              </div>
               <div className=" d-flex justify-content-center ">
                 <CopyToClipboard
                   text={pathUrl}
@@ -139,31 +160,12 @@ class SharableLinkModal extends React.Component {
                     color=" "
                     type="button"
                     disabled={copied}
-                    className=" btn-black "
+                    className=" btn-black footer-full-btn"
                   >
                     {copied ? "Copied" : " Copy Link"}
                   </Button>
                 </CopyToClipboard>
               </div>
-            </Form>
-          </div>
-        </ModalBody>
-        {shareComponent !== "yourSets" ? (
-          <ModalFooter className="justify-content-start">
-            <div className="form-inline w-100">
-              <span className="font-14">
-                <b>Enable Public Access Link </b>
-              </span>
-              <label className="custom-toggle sharable-toggle ml-auto custom-toggle-wrap">
-                <input
-                  type="checkbox"
-                  name="toggle"
-                  onChange={this.handlePublicAccess}
-                  checked={isPublic ? isPublic : false}
-                  disabled={copied ? true : false}
-                />
-                <span className="custom-toggle-slider rounded-circle" />
-              </label>
             </div>
           </ModalFooter>
         ) : (

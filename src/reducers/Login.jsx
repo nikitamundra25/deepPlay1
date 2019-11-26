@@ -18,7 +18,18 @@ export const loginReducer = handleActions(
     }),
     [loginAction.LOGIN_SUCCESS]: (state, { payload }) => ({
       ...state,
-      isLoginRequest: false
+      isLoginRequest: false,
+      isLoginSuccess: true
+    }),
+    [loginAction.LOGIN_FAILED]: (state, { payload }) => ({
+      ...state,
+      isLoginRequest: false,
+      isLoginSuccess: false
+    }),
+    [loginAction.LOGOUT_SUCCESS]: (state, { payload }) => ({
+      ...state,
+      isLoginRequest: false,
+      isLoginSuccess: false
     }),
     [signupActions.SIGNUP_REQUEST]: (state, { payload }) => ({
       ...state,
@@ -26,7 +37,13 @@ export const loginReducer = handleActions(
     }),
     [signupActions.SIGNUP_SUCCESS]: (state, { payload }) => ({
       ...state,
-      isSignupLoading: false
+      isSignupLoading: false,
+      isLoginSuccess: true
+    }),
+    [signupActions.SIGNUP_FAILED]: (state, { payload }) => ({
+      ...state,
+      isSignupLoading: false,
+      isLoginSuccess: false
     }),
     [loginAction.FORGET_PASSWORD_REQUEST]: (state, { payload }) => ({
       ...state,

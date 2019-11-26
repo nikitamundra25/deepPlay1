@@ -1,4 +1,4 @@
-import { DBHost, DBName, DBProtocol } from "./config";
+import { DBHost, DBName, DBProtocol, Port } from "./config";
 import Mongoose from "mongoose";
 import express from "express";
 import bodyParser from "body-parser";
@@ -41,18 +41,16 @@ app.use("/api/v1", router);
  *
  */
 app.get("/", (req: express.Request, res: express.Response) => {
-  console.log("req", req.query);
   return res.sendFile(path.join(__dirname, "public", "index.html"));
 });
 app.get("/*", (req: express.Request, res: express.Response) => {
-  console.log("req", req.query);
   return res.sendFile(path.join(__dirname, "public", "index.html"));
 });
 
 /**
  *
  */
-const port: number = Number(process.env.PORT) || 8000;
+const port: number = Number(process.env.PORT) || Port;
 /**
  *
  */

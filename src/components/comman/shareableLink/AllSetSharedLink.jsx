@@ -7,7 +7,7 @@ import {
   redirectTo
 } from "../../../actions";
 import "./index.scss";
-import emptySetIc from "../../../assets/img/empty-sets.png";
+import emptySetIc from "../../../assets/img/play-list-ic.svg";
 import PaginationHelper from "helper/Pagination";
 import { AppConfig } from "../../../config/Appconfig";
 import { AppRoutes } from "../../../config/AppRoutes";
@@ -78,7 +78,7 @@ class AllSetSharedLink extends React.Component {
         <Container>
           <div className="content-header mt-3 mb-3">
             <span className="content-title">
-              <div className="main-title"> {" Your Sets"}</div>
+              <div className="main-title"> {"  Sets"}</div>
               <div className="sub-title">
                 Total sets {totalSets ? totalSets : "0"}
               </div>
@@ -97,7 +97,8 @@ class AllSetSharedLink extends React.Component {
                       className={"cursor_pointer"}
                     >
                       <div className="tile-wrap card">
-                        <div className="cotent-tile d-flex content-with-img">
+                        <div className="cotent-tile d-flex">
+                        <div className="d-flex content-with-img w-100">
                           <div className="cotent-text-tile">
                             <div className="content-heading-tile">
                               <span
@@ -125,7 +126,10 @@ class AllSetSharedLink extends React.Component {
                                 "https://res.cloudinary.com/fleetnation/image/private/c_fit,w_1120/g_south,l_text:style_gothic2:%C2%A9%20Nikita%20Buida,o_20,y_10/g_center,l_watermark4,o_25,y_50/v1469756538/dd3acf4nzzavkv4rf2ji.jpg" +
                                 '")'
                             }}
-                          ></div>
+                          >
+
+                          </div>
+                          </div>
                         </div>
                       </div>
                     </Col>
@@ -135,7 +139,7 @@ class AllSetSharedLink extends React.Component {
                 <>
                   <Col>
                     <div className="create-set-section w-100 empty-folder-section">
-                      <Card className="set-content-wrap empty-folder-card">
+                      <Card className="set-content-wrap empty-folder-card ">
                         <div className="set-content-block w-100 empty-folder-wrap">
                           <CardHeader className="empty-folder-header ">
                             <img src={emptySetIc} alt={"Images"} />

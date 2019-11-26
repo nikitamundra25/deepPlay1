@@ -3,6 +3,7 @@ import { createAction } from 'redux-actions';
 export const signupActions = {
     SIGNUP_REQUEST: "Signup Requested!",
     SIGNUP_SUCCESS: "Signup Success!",
+    SIGNUP_FAILED: "Signup Failed!",
     FORGET_PASSWORD_REQUEST: "Forget Password Started!",
     VALIDATE_RESET_REQUEST: "Reset Token Validation Started!",
     RESET_PASSSWORD_REQUEST: "Reset Password Started!",
@@ -10,3 +11,4 @@ export const signupActions = {
 
 export const signupRequest = createAction(signupActions.SIGNUP_REQUEST);
 export const signupSuccess = createAction(signupActions.SIGNUP_SUCCESS);
+export const signupFailed = createAction(signupActions.SIGNUP_FAILED);

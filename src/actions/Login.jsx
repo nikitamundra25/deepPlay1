@@ -3,6 +3,7 @@ import { createAction } from "redux-actions";
 export const loginAction = {
   LOGIN_REQUEST: "Login Requested!",
   LOGIN_SUCCESS: "Login Success!",
+  LOGIN_FAILED: "Login Failed!",
   LOGOUT_REQUEST: "Logout Started!",
   LOGOUT_SUCCESS: "Logout Success!",
   SOCIAL_LOGIN_REQUEST: "Social login Requested",
@@ -46,4 +47,7 @@ export const socialLoginSuccess = createAction(
 
 export const verifyWorkspaceLogin = createAction(
   loginAction.VERIFY_WORKSPACE_LOGIN
+);
+export const loginFailed = createAction(
+  loginAction.LOGIN_FAILED
 );

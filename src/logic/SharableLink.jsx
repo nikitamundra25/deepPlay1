@@ -10,7 +10,8 @@ import {
   redirectTo,
   publicUrlSetDetailsSuccess,
   sharedSetInfoSuccess,
-  publicUrlMoveDetailsSuccess
+  publicUrlMoveDetailsSuccess,
+  encryptSetSuccess
 } from "../actions";
 import { toast } from "react-toastify";
 import { AppConfig } from "../config/Appconfig";
@@ -88,6 +89,39 @@ const shareLinkLogic = createLogic({
   }
 });
 
+//Get encrypted info of setId  encrypt-set
+const setIdEncryptShareLink = createLogic({
+  type: SharableLinkAction.SHAREABLE_LINK_ENCRYPT_SET_REQUEST,
+  async process({ action }, dispatch, done) {
+    let api = new ApiHelper();
+    dispatch(showLoader());
+    let result = await api.FetchFromServer(
+      "folder",
+      "/encrypt-set",
+      "GET",
+      true,
+      action.payload
+    );
+    if (result.isError) {
+      dispatch(hideLoader());
+      toast.error(result.messages[0]);
+      done();
+      return;
+    } else {
+      dispatch(hideLoader());
+      dispatch(encryptSetSuccess({ userEncryptedInfo: result.data.data }));
+      dispatch(
+        redirectTo({
+          path:
+            AppRoutes.SET_SHARED_LINK.url +
+            `?userId=${result.data.data.encryptedUserId}&setId=${result.data.data.encryptedSetId}&isPublic=${action.payload.isPublic}&fromFolder=${action.payload.fromFolder}`
+        })
+      );
+    }
+    done();
+  }
+});
+
 // get folder details by id of shared link [public access folder component]
 const sharedLinkFolderDetailsLogic = createLogic({
   type: SharableLinkAction.GET_PUBLIC_URL_FOR_FOLDER_REQUEST,
@@ -113,13 +147,13 @@ const sharedLinkFolderDetailsLogic = createLogic({
           })
         );
       } else {
-        dispatch(redirectTo({ path: "/404" }));
+        // dispatch(redirectTo({ path: "/public-access-denied" }));
+        dispatch(sharedFolderInfoSuccess({ accessDenied: true }));
       }
       done();
       return;
     } else {
       dispatch(hideLoader());
-      dispatch(redirectTo({ path: "/404" }));
       dispatch(sharedFolderInfoSuccess({ decryptedDetails: result.data.data }));
       done();
     }
@@ -154,7 +188,7 @@ const getPublicUrlSetsDetailsLogic = createLogic({
           })
         );
       } else {
-        dispatch(redirectTo({ path: "/404" }));
+        dispatch(publicUrlSetDetailsSuccess({ accessDenied: true }));
       }
       done();
       return;
@@ -196,7 +230,7 @@ const sharedLinkSetDetailsLogic = createLogic({
           })
         );
       } else {
-        dispatch(redirectTo({ path: "/404" }));
+        dispatch(sharedSetInfoSuccess({ accessDenied: true }));
       }
       done();
       return;
@@ -218,7 +252,7 @@ const getPublicUrlMoveDetailsLogic = createLogic({
       "move",
       "/public-url-move-details",
       "GET",
-      true,
+      false,
       action.payload
     );
     if (result.isError) {
@@ -233,14 +267,18 @@ const getPublicUrlMoveDetailsLogic = createLogic({
           })
         );
       } else {
-        dispatch(redirectTo({ path: "/404" }));
+        dispatch(publicUrlMoveDetailsSuccess({ accessDenied: true }));
       }
       done();
       return;
     } else {
       dispatch(hideLoader());
       dispatch(
-        publicUrlMoveDetailsSuccess({ publicUrlmoveDetails: result.data.data })
+        publicUrlMoveDetailsSuccess({
+          publicUrlmoveDetails: result.data.data,
+          totalMoves: result.data.totalMoves,
+          isInfiniteScroll: action.payload.isInfiniteScroll
+        })
       );
       done();
     }
@@ -252,5 +290,6 @@ export const SharableLinkLogics = [
   sharedLinkFolderDetailsLogic,
   getPublicUrlSetsDetailsLogic,
   sharedLinkSetDetailsLogic,
-  getPublicUrlMoveDetailsLogic
+  getPublicUrlMoveDetailsLogic,
+  setIdEncryptShareLink
 ];

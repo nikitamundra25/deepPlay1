@@ -28,6 +28,11 @@ const allSetSharedLink = React.lazy(() =>
   import("./components/comman/shareableLink/AllSetSharedLink")
 );
 const sampleSet = React.lazy(() => import("./components/SampleSet"));
+const moveSearchAll = React.lazy(() =>
+  import("./components/Sets/SetDetails/moveSearch")
+);   
+const publicAccessDenied = React.lazy(() => import("./components/comman/shareableLink/nonPublicAccess404"));
+
 const routes = [
   {
     path: AppRoutes.HOME_PAGE.url,
@@ -130,6 +135,18 @@ const routes = [
     name: AppRoutes.SAMPLE_SET.name,
     exact: AppRoutes.SAMPLE_SET.exact,
     component: sampleSet
+  },
+  {
+    path: AppRoutes.MOVE_SEAECH_ALL.url,
+    name: AppRoutes.MOVE_SEAECH_ALL.name,
+    exact: AppRoutes.MOVE_SEAECH_ALL.exact,
+    component: moveSearchAll
+  },
+  {
+    path: AppRoutes.NON_PUBLIC_ACCESS.url,
+    name: AppRoutes.NON_PUBLIC_ACCESS.name,
+    exact: AppRoutes.NON_PUBLIC_ACCESS.exact,
+    component: publicAccessDenied
   }
 ];
 

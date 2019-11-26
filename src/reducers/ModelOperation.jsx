@@ -13,11 +13,18 @@ const initialAuthState = {
     createSetOpen: false,
     transferToModalOpen: false,
     transferToModalOpenReq: false,
+    transferMoveModalOpen: false,
+    transferMoveModalOpenReq: false,
     sharableLinkModalOpen: false,
     createSetModalOpen: false,
     isDescriptionModalOpen: false,
     isMoveSuccessModal: false,
-    isVideoModalOpen: false
+    isVideoModalOpen: false,
+    isVideoModalOpenReq: false,
+    addTagModalOpen: false,
+    viewInfoModalOpen: false,
+    addTagModalOpenReq: false,
+    editMoveModalOpen: false
   }
 };
 

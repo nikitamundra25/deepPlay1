@@ -8,7 +8,9 @@ const initialState = {
   isSetDetailsLoading: false,
   publicUrlMoveDetails: [],
   isMoveDetailsLoading: false,
-  totalSets: 0
+  totalSets: 0,
+  isShareableUrl: false,
+  accessDenied: false
 };
 export const shareLinkReducer = handleActions(
   {
@@ -21,7 +23,8 @@ export const shareLinkReducer = handleActions(
       { payload }
     ) => ({
       ...state,
-      ...payload
+      ...payload,
+      isShareableUrl: true
     }),
     [SharableLinkAction.PUBLIC_URL_SET_DETAILS_REQUEST]: (
       state,
@@ -29,7 +32,8 @@ export const shareLinkReducer = handleActions(
     ) => ({
       ...state,
       ...payload,
-      isSetDetailsLoading: true
+      isSetDetailsLoading: true,
+      isShareableUrl: true
     }),
     [SharableLinkAction.PUBLIC_URL_SET_DETAILS_SUCCESS]: (
       state,
@@ -37,14 +41,16 @@ export const shareLinkReducer = handleActions(
     ) => ({
       ...state,
       ...payload,
-      isSetDetailsLoading: false
+      isSetDetailsLoading: false,
+      isShareableUrl: true
     }),
     [SharableLinkAction.GET_PUBLIC_URL_FOR_SET_SUCCESS]: (
       state,
       { payload }
     ) => ({
       ...state,
-      ...payload
+      ...payload,
+      isShareableUrl: true
     }),
     [SharableLinkAction.PUBLIC_URL_MOVE_DETAILS_REQUEST]: (
       state,
@@ -52,7 +58,8 @@ export const shareLinkReducer = handleActions(
     ) => ({
       ...state,
       ...payload,
-      isMoveDetailsLoading: true
+      isMoveDetailsLoading: false,
+      isShareableUrl: true
     }),
     [SharableLinkAction.PUBLIC_URL_MOVE_DETAILS_SUCCESS]: (
       state,
@@ -60,7 +67,15 @@ export const shareLinkReducer = handleActions(
     ) => ({
       ...state,
       ...payload,
-      isMoveDetailsLoading: false
+      publicUrlmoveDetails: payload.isInfiniteScroll
+        ? [...state.publicUrlmoveDetails, ...payload.publicUrlmoveDetails]
+        : payload.publicUrlmoveDetails,
+      isMoveDetailsLoading: false,
+      isShareableUrl: true
+    }),
+    [SharableLinkAction.IS_CHANGE_HEADER_REQUEST]: (state, { payload }) => ({
+      ...state,
+      isShareableUrl: false
     })
   },
   initialState

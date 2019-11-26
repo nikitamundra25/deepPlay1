@@ -13,8 +13,11 @@ import {
   InputGroup,
   Container,
   CardHeader,
-  FormFeedback
+  FormFeedback,
+  Navbar,
+  NavbarBrand
 } from "reactstrap";
+import { Link } from "react-dom";
 import Validator from "js-object-validation";
 import { logger } from "../../helper/Logger";
 import {
@@ -84,23 +87,31 @@ class ResetPasswordComponent extends React.Component {
     const { password, confirmPassword, errors } = this.state;
     return (
       <div className="forgot-password-wrap">
-        <Container >
-          <div className={"text-center"}>
-            <h2
-              className={"cursor_pointer"}
-              onClick={() => this.props.redirectTo("/")}
-            >
-              Deep Play
-              </h2>
-          </div>
+        <div className="theme-container reset-header-background">
+          <Navbar
+            className="d-flex navbar-main header-navbar"
+            // expand="lg"
+            id="navbar-main"
+          >
+            <NavbarBrand className="m-0" to="/" tag={Link}>
+              <h3
+                className="mb-0 text-white cursor_pointer"
+                onClick={() => this.props.redirectTo("/")}
+              >
+                DeepPlay
+              </h3>
+            </NavbarBrand>
+          </Navbar>
+        </div>
+        <Container>
           <div className="dashboard-full-section without-sidebar">
-            <Row >
+            <Row>
               <Col md={12} className={"mx-auto"}>
                 <Card className="mb-5 p-0 shadow">
                   <CardHeader className={"text-center"}>
                     <h4 className="my-4">Reset Password</h4>
                   </CardHeader>
-                  <CardBody >
+                  <CardBody>
                     <Form onSubmit={this.resetPassword}>
                       <FormGroup>
                         <InputGroup className="">
@@ -123,12 +134,12 @@ class ResetPasswordComponent extends React.Component {
                         </InputGroup>
                       </FormGroup>
                       <FormGroup>
-                        <InputGroup >
+                        <InputGroup>
                           <InputGroupAddon addonType="prepend">
-                          <InputGroupText>
+                            <InputGroupText>
                               <i className="ni ni-lock-circle-open" />
                             </InputGroupText>
-                                </InputGroupAddon>
+                          </InputGroupAddon>
                           <Input
                             placeholder="Confirm Password"
                             onChange={this.handleInputChange}
@@ -147,7 +158,11 @@ class ResetPasswordComponent extends React.Component {
                         </InputGroup>
                       </FormGroup>
                       <div className="text-center">
-                        <Button className="my-4 btn-black" color=" " type="submit">
+                        <Button
+                          className="my-4 btn-black"
+                          color=" "
+                          type="submit"
+                        >
                           Reset Password
                         </Button>
                       </div>
@@ -158,7 +173,6 @@ class ResetPasswordComponent extends React.Component {
             </Row>
           </div>
         </Container>
-
       </div>
     );
   }

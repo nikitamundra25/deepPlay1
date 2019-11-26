@@ -1,36 +1,26 @@
 import React from "react";
 import { connect } from "react-redux";
-import {
-  Card,
-  CardBody,
-  Container,
-  Col,
-  CardHeader,
-  Button,
-  Row,
-  ButtonGroup
-} from "reactstrap";
+import { Container, Col, Row, Card, CardHeader, Button } from "reactstrap";
 import {
   sharedSetInfoRequest,
-  publicUrlMoveDetailsRequest
+  publicUrlMoveDetailsRequest,
+  modelOpenRequest,
+  loadVideoDataRequest,
+  videoFullscreenReq,
+  videoFullscreenExit
 } from "../../../actions";
-import Slider from "react-slick";
-import { AppConfig } from "../../../config/Appconfig";
 import "./index.scss";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
-import emptySetIc from "../../../assets/img/empty-sets.png";
 //import { AppRoutes } from "../../../config/AppRoutes";
 import qs from "query-string";
 import Loader from "../Loader/Loader";
-
-var settings = {
-  dots: true,
-  infinite: true,
-  speed: 500,
-  slidesToShow: 1,
-  slidesToScroll: 1
-};
+import WebmView from "../../Sets/SetDetails/WebmView";
+import emptySetIc from "../../../assets/img/play-list-ic.svg";
+import InfiniteScroll from "react-infinite-scroll-component";
+import imgNotfound from "../../../assets/img/404.svg";
+import { Link } from "react-router-dom";
+import videoLoading from "../../../assets/img/icons/video-poster.png";
 
 // core components
 class SetSharedLink extends React.Component {
@@ -38,7 +28,13 @@ class SetSharedLink extends React.Component {
     super(props);
     this.state = {
       moveListItem: [],
-      showVideoIndex: 0
+      isSelectVideo: false,
+      videoIndex: -1,
+      page: 1,
+      isVideoModalOpen: true,
+      setId: "",
+      showVideoIndex: -1,
+      showVideo: {}
     };
   }
   componentDidMount() {
@@ -59,7 +55,11 @@ class SetSharedLink extends React.Component {
       });
     }
   }
-
+  handleVideoHoverLeave = () => {
+    this.setState({
+      isSelectVideo: false
+    });
+  };
   handleVideoPlay = index => {
     let myVideo = document.getElementById(`webm-video-${index}`);
     myVideo.play();
@@ -74,199 +74,316 @@ class SetSharedLink extends React.Component {
       showVideoIndex: videoIndex
     });
   };
+  handleVideoHover = index => {
+    this.setState({
+      isSelectVideo: true,
+      videoIndex: index
+    });
+  };
+
+  handleVideoModal = (moveURL, index) => {
+    const { modelInfoReducer } = this.props;
+    const { modelDetails } = modelInfoReducer;
+    this.setState(
+      {
+        showVideo: moveURL,
+        showVideoIndex: index
+      },
+      () => {
+        this.props.modelOperate({
+          modelDetails: {
+            isVideoModalOpen: !modelDetails.isVideoModalOpen
+          }
+        });
+      }
+    );
+    this.props.videoFullscreenExit();
+  };
+
+  handleLoadmoreRequest = setIdPathName => {
+    let parsed = qs.parse(this.props.location.search);
+    console.log("parsedparsed", parsed.userId);
+    const pageLimit = this.state.page;
+    this.setState({
+      page: pageLimit + 1
+    });
+    const pageCount = pageLimit + 1;
+    this.props.publicUrlSetDetails({
+      setId: setIdPathName,
+      userId: parsed.userId,
+      page: pageCount,
+      isInfiniteScroll: true
+    });
+  };
 
   render() {
-    const { shareLinkReducer } = this.props;
-    const { moveListItem } = this.state;
-    const { decryptedSetDetails, isMoveDetailsLoading } = shareLinkReducer;
-
+    const {
+      shareLinkReducer,
+      modelInfoReducer,
+      loadVideoDataRequest,
+      moveReducer,
+      videoFullscreenReq,
+      videoFullscreenExit
+    } = this.props;
+    const { modelDetails } = modelInfoReducer;
+    const { isVideoModalOpen } = modelDetails;
+    const { videoData, isFullScreenMode } = moveReducer;
+    const { moveListItem, showVideo, showVideoIndex } = this.state;
+    const {
+      decryptedSetDetails,
+      isMoveDetailsLoading,
+      accessDenied
+    } = shareLinkReducer;
+    let parsed = qs.parse(this.props.location.search);
+    const token = localStorage.getItem("token");
+    let isLoggedIn = false;
+    if (token) {
+      isLoggedIn = true;
+    } else {
+      isLoggedIn = false;
+    }
     return (
       <div className="dashboard-full-section without-sidebar">
-        <div className="p-3">
-          <span
-            onClick={() => {
-              window.history.back();
-            }}
-            className={"cursor_pointer back-arrow"}
-          >
-            {" "}
-            <i className="fas fa-long-arrow-alt-left" /> Back
-          </span>
-        </div>
-        <Container>
-          <div className="content-header mt-3 mb-3">
-            <span className="content-title">
-              <div className="main-title">
-                {" "}
-                {decryptedSetDetails ? decryptedSetDetails.title : "No Title "}
+        {!accessDenied ? (
+          <>
+            {parsed.fromFolder ? (
+              <div className="p-3">
+                <span
+                  onClick={() => {
+                    window.history.back();
+                  }}
+                  className={"cursor_pointer back-arrow"}
+                >
+                  {" "}
+                  <i className="fas fa-long-arrow-alt-left" /> Back
+                </span>
               </div>
-              <div className="sub-title">
-                {decryptedSetDetails ? decryptedSetDetails.moveCount : 0} Moves
+            ) : null}
+            <Container>
+              <div className="content-header mt-3 mb-3">
+                <span className="content-title">
+                  <div className="main-title">
+                    {" "}
+                    {decryptedSetDetails
+                      ? decryptedSetDetails.title
+                      : "No Title "}
+                  </div>
+                  <div className="sub-title">
+                    {decryptedSetDetails ? decryptedSetDetails.moveCount : 0}{" "}
+                    Moves
+                  </div>
+                </span>
               </div>
-            </span>
-          </div>
-          {!isMoveDetailsLoading ? (
-            <>
-              <Card className="w-100 mb-4">
-                <div className={"d-flex justify-content-center"}>
-                  <Col md={"10"}>
-                    <Slider {...settings}>
-                      {moveListItem && moveListItem.length ? (
-                        moveListItem.map((video, index) => {
-                          return (
-                            <div className="w-100">
-                              <div className="video-slider-title">
-                                {" "}
-                                title of webM{" "}
-                              </div>
-                              <div className="video-slider-img ">
-                                <video width={"100%"} controls>
-                                  <source
-                                    src={`${AppConfig.API_ENDPOINT}${video.videoUrl}`}
-                                    type="video/mp4"
-                                  />
-                                </video>
-                              </div>
-                            </div>
-                          );
-                        })
-                      ) : (
-                        <div className="create-set-section mt-2 w-100">
-                          <div className="set-content-wrap w-100">
-                            <div className="set-content-block w-100 empty-folder-wrap">
-                              <CardHeader className="empty-folder-header">
-                                <img src={emptySetIc} alt={"Folder"} />
-                                <div className="content-header set-header">
-                                  <span className="content-title">
-                                    {" "}
-                                    <h3>You haven't created any set yet</h3>
-                                    <p>No move availabe for this set</p>
-                                  </span>
-                                </div>
-                              </CardHeader>
-                              <CardBody className="">
-                                <div className="create-set-tile"></div>
-                                {/* <div className="text-center">
-                                  <Button
-                                    color=" "
-                                    type="button"
-                                    className="btn-black btn mt-3 folder-create-btn"
-                                    onClick={() =>
-                                      this.props.redirectTo(
-                                        AppRoutes.CREATE_SET.url
-                                      )
+
+              {!isMoveDetailsLoading ? (
+                <>
+                  {moveListItem && moveListItem.length ? (
+                    <WebmView
+                      movesOfSet={moveListItem}
+                      isVideoModalOpen={isVideoModalOpen}
+                      handleVideoModal={this.handleVideoModal}
+                      video={moveListItem[moveListItem.length - 1]}
+                      showVideo={showVideo}
+                      videoData={videoData}
+                      showVideoIndex={showVideoIndex}
+                      loadVideoDataRequest={loadVideoDataRequest}
+                      isFullScreenMode={isFullScreenMode}
+                      videoFullscreenReq={videoFullscreenReq}
+                      videoFullscreenExit={videoFullscreenExit}
+                      isShareable={true}
+                      {...this.props}
+                    />
+                  ) : null}
+                  <section className="play-list-collection set-detail-section">
+                    <InfiniteScroll
+                      dataLength={moveListItem.length} //This is important field to render the next data
+                      next={() => {
+                        this.handleLoadmoreRequest(parsed.setId);
+                      }}
+                      hasMore={
+                        decryptedSetDetails.moveCount !== moveListItem.length
+                          ? true
+                          : false
+                      }
+                      loader={<h4>Loading...</h4>}
+                    >
+                      <Row>
+                        <Col md="12">
+                          <div class="content-header mt-3 mb-2">
+                            <span class="content-title">
+                              {" "}
+                              Moves in this set (
+                              {decryptedSetDetails.moveCount || 0})
+                            </span>
+                          </div>
+                        </Col>
+                        {moveListItem.length ? (
+                          moveListItem.map((video, index) => {
+                            return (
+                              <div
+                                onClick={() => this.handleShowVideo(index)}
+                                onMouseLeave={() => {
+                                  this.handleVideoHoverLeave();
+                                }}
+                                className="play-list-tile cursor_pointer"
+                                key={index}
+                              >
+                                <div
+                                  className="play-list-block"
+                                  onMouseOver={() =>
+                                    this.handleVideoHover(index)
+                                  }
+                                  onMouseLeave={() => {
+                                    this.handleVideoPause(index);
+                                  }}
+                                >
+                                  <div
+                                    className="play-sub-block"
+                                    onMouseLeave={() =>
+                                      this.handleVideoPause(index)
                                     }
                                   >
-                                    <i className="fas fa-plus mr-1"></i>
-                                    Create a Set
-                                  </Button>
-                                </div> */}
-                              </CardBody>
-                            </div>
-                          </div>
-                        </div>
-                      )}
-                    </Slider>
-                  </Col>
-                </div>
-              </Card>
-              <section className="play-list-collection set-detail-section">
-                <Row>
-                  <Col md="12">
-                    <div class="content-header mt-3 mb-2">
-                      <span class="content-title">Moves in this set</span>
-                      <div className="set-detail-right-section">
-                        <ButtonGroup size="sm" className="mr-2">
-                          <Button
-                            // onClick={() => this.OnCreateSetCopy(list)}
-                            className="active"
-                          >
-                            All
-                          </Button>
-                          <Button>Starred</Button>
-                        </ButtonGroup>
-                      </div>
-                    </div>
-                  </Col>
-                  {/* <div className="play-list-tile">
-                    <div className="play-list-block  d-flex h-100 ">
-                      <div className="add-play-list-block d-flex w-100 justify-content-center align-items-center text-center flex-column">
-                        <div className="h5 font-dark-bold add-img">
-                          <img src={addPlusIc} alt="" />
-                        </div>
-                        <Button color={" "} className="fill-btn btn mt-4">
-                          {" "}
-                          Create Now
-                        </Button>
-                      </div>
-                    </div>
-                  </div> */}
-                  {moveListItem.map((video, index) => {
-                    return (
-                      <div
-                        onClick={() => this.handleShowVideo(index)}
-                        className="play-list-tile cursor_pointer"
-                        key={index}
-                      >
-                        <div className="play-list-block">
-                          <div
-                            className="play-sub-block"
-                            onMouseLeave={() => this.handleVideoPause(index)}
-                          >
-                            <div
-                              onMouseOver={() => this.handleVideoPlay(index)}
-                              className="play-list-img blur-img-wrap checked-wrap"
-                            >
-                              <video
-                                width={"100%"}
-                                id={`webm-video-${index}`}
-                                muted={false}
-                              >
-                                <source
-                                  src={`${AppConfig.IMAGE_ENDPOINT}${video.moveURL}`}
-                                  type="video/webm"
-                                />
-                              </video>
-                              <div
-                                className="blur-img"
-                                style={{ background: "#000" }}
-                              />
-                            </div>
+                                    <div
+                                      onMouseOver={() =>
+                                        this.handleVideoPlay(index)
+                                      }
+                                      className="play-list-img blur-img-wrap checked-wrap"
+                                      onClick={
+                                        !isVideoModalOpen
+                                          ? () =>
+                                              this.handleVideoModal(
+                                                video,
+                                                index
+                                              )
+                                          : null
+                                      }
+                                    >
+                                      <video
+                                        width={"100%"}
+                                        id={`webm-video-${index}`}
+                                        muted={true}
+                                      >
+                                        <source
+                                          poster={
+                                            video.videoThumbnail
+                                              ? video.videoThumbnail
+                                              : videoLoading
+                                          }
+                                          src={`${video.moveURL}`}
+                                          loop
+                                          type="video/webm"
+                                        />
+                                      </video>
 
-                            <div className="play-list-text">
-                              <div className="text-capitalize play-list-heading h6 m-0">
-                                {video.title || "unnamed"}
+                                      <div
+                                        className="blur-img"
+                                        // style={{ background: "" }}
+                                      />
+                                    </div>
+
+                                    <div className="play-list-text">
+                                      <div className="text-capitalize play-list-heading h6 m-0">
+                                        {video.title || "unnamed"}
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
                               </div>
-                            </div>
+                            );
+                          })
+                        ) : (
+                          <div className="create-set-section w-100 empty-folder-section sjp">
+                            <Card className="set-content-wrap empty-folder-card">
+                              <div className="set-content-block w-100 empty-folder-wrap">
+                                <CardHeader className="empty-folder-header">
+                                  <img src={emptySetIc} alt={"Folder"} />
+                                  <div className="content-header set-header">
+                                    <span className="content-title">
+                                      {" "}
+                                      <h3>No moves available for this set.</h3>
+                                    </span>
+                                  </div>
+                                </CardHeader>
+                              </div>
+                            </Card>
                           </div>
-                        </div>
-                      </div>
-                    );
-                  })}
+                        )}
+                      </Row>
+                    </InfiniteScroll>
+                  </section>
+                </>
+              ) : (
+                <Row>
+                  <Col sm={12} className="loader-col">
+                    <Loader />
+                  </Col>
                 </Row>
-              </section>
-            </>
-          ) : (
-            <Row>
-              <Col sm={12} className="loader-col">
-                <Loader />
-              </Col>
-            </Row>
-          )}
-        </Container>
+              )}
+            </Container>
+          </>
+        ) : (
+          <Container>
+            <Card className="home-video-section my-4 py-5">
+              <Row className="">
+                <Col md="6">
+                  {/* <iframe width="560" title={"Dance"} height="315" src="https://www.youtube.com/embed/nrDtcsyd-U4" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe> */}
+                  <div className="d-flex video-add-banner justify-content-center align-items-center">
+                    <img src={imgNotfound} alt={""} className="w-100" />
+                  </div>
+                </Col>
+                <Col
+                  md="6"
+                  className="d-flex flex-column justify-content-between "
+                >
+                  <div className="banner-text">
+                    <h1 className="banner-heading">Oops !</h1>
+                    <p className="banner-subheading mt-4 mt-0 h3 font-weight-bold">
+                      Access denied...
+                    </p>
+                    <p className="banner-content  mt-0 ">
+                      You didn't have permission to access this page. Maybe our
+                      FAQ or Community can help?
+                    </p>
+                  </div>
+                  <div className="text-left">
+                    <Link to={"/"}>
+                      <Button
+                        className="fill-btn btn w-75 m-auto white-color get-stated-btn"
+                        onClick={
+                          isLoggedIn
+                            ? this.handleDashboardOpen
+                            : this.handleLoginModalOpen
+                        }
+                      >
+                        Back To Home page
+                      </Button>
+                    </Link>
+                  </div>
+                </Col>
+              </Row>
+            </Card>
+          </Container>
+        )}
       </div>
     );
   }
 }
 
 const mapStateToProps = state => ({
-  shareLinkReducer: state.shareLinkReducer
+  shareLinkReducer: state.shareLinkReducer,
+  modelInfoReducer: state.modelInfoReducer,
+  moveReducer: state.moveReducer
 });
 const mapDispatchToProps = dispatch => ({
   encryptedQuery: data => dispatch(sharedSetInfoRequest(data)),
-  publicUrlSetDetails: data => dispatch(publicUrlMoveDetailsRequest(data))
+  publicUrlSetDetails: data => dispatch(publicUrlMoveDetailsRequest(data)),
+  modelOperate: data => dispatch(modelOpenRequest(data)),
+  loadVideoDataRequest: data => dispatch(loadVideoDataRequest(data)),
+  videoFullscreenReq: data => {
+    dispatch(videoFullscreenReq(data));
+  },
+  videoFullscreenExit: data => {
+    dispatch(videoFullscreenExit(data));
+  }
 });
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(SetSharedLink);
+export default connect(mapStateToProps, mapDispatchToProps)(SetSharedLink);

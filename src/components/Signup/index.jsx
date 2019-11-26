@@ -118,6 +118,16 @@ class SignupComponent extends React.Component {
         roleType: checked
       });
     }
+    if (name === "firstName" || name === "lastName") {
+      this.setState({
+        [name]: value.replace(/[^\w\s]|[0-9]|[_]/gi, "").trim(),
+        errors: {
+          ...this.state.errors,
+          [name]: null
+        }
+      });
+      return;
+    }
     if (name === "password") {
       let res = value.match(/^(?:[0-9]+[a-z]|[a-z]+[0-9])[a-z0-9]*$/i);
       if (res) {
@@ -237,7 +247,7 @@ class SignupComponent extends React.Component {
 
               <CardBody className="px-lg-5">
                 <div className="text-center login-heading mb-4 auth-subheading">
-                  Sign up with email
+                  <span> Sign up with email</span>
                 </div>
                 <Form role="form" onSubmit={this.handleSignupRequest}>
                   <FormGroup>
@@ -257,7 +267,7 @@ class SignupComponent extends React.Component {
                         // invalid={errors.firstName}
                       />
                       <FormFeedback>
-                        {errors.firstName && !firstName
+                        {errors.firstName || !firstName
                           ? errors.firstName
                           : null}
                       </FormFeedback>
@@ -279,7 +289,7 @@ class SignupComponent extends React.Component {
                         type="text"
                       />
                       <FormFeedback>
-                        {errors.lastName && !lastName ? errors.lastName : null}
+                        {errors.lastName || !lastName ? errors.lastName : null}
                       </FormFeedback>
                     </InputGroup>
                   </FormGroup>
@@ -394,7 +404,7 @@ class SignupComponent extends React.Component {
                       onClick={this.props.handleLoginModal}
                       type="button"
                     >
-                      Already have an account? Login
+                      Already have an account? Sign in
                     </Button>
                   </div>
                 </Form>

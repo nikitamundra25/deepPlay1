@@ -11,7 +11,8 @@ import {
   CardBody,
   CardTitle,
   CardHeader,
-  ButtonGroup
+  ButtonGroup,
+  FormFeedback
 } from "reactstrap";
 import Validator from "js-object-validation";
 import Swal from "sweetalert2";
@@ -72,7 +73,11 @@ class SettingComponent extends Component {
   handleChange = e => {
     const { name, value } = e.target;
     this.setState({
-      [name]: value
+      [name]: value.replace(/[^\w\s]|[0-9]|[_]/gi, "").trim(),
+      errors: {
+        ...this.state.errors,
+        [name]: null
+      }
     });
   };
 
@@ -185,15 +190,17 @@ class SettingComponent extends Component {
     const { modelDetails } = modelInfoReducer;
     const { uploadImageModalOpen } = modelDetails;
     const splitedImage = this.state.file.split("/");
-    const ProfileImage = splitedImage[0] === "uploads"
-    ? `${AppConfig.API_ENDPOINT}${this.state.file}`
-    : this.state.file
+    const ProfileImage =
+      splitedImage[0] === "uploads"
+        ? `${AppConfig.API_ENDPOINT}${this.state.file}`
+        : this.state.file;
+
     return (
       <div>
         <div className="setting-section">
           <div className="page-body">
             <div className="content-header ">
-              <span className="content-title">SETTINGS</span>
+              <span className="content-title">Settings</span>
             </div>
             {!isprofileInfoLoading ? (
               <>
@@ -213,25 +220,24 @@ class SettingComponent extends Component {
                         <span className="text-profile">Edit Profile</span>
                       </Button>
                     ) : (
-                        <ButtonGroup>
-                          <Button
-                            color=" "
-                            className="dashboard-right-content btn-black "
-                            onClick={this.onSaveData}
-                          >
-                            {/* <i className="profile-ic fa fa-pencil-square-o"></i> */}
-                            <span className="text-profile"> Update Info</span>
-
-                          </Button>
-                          <Button
-                            color=" "
-                            className="dashboard-right-content btn-line-black ml-2"
-                            onClick={this.handlecancel}
-                          >
-                            Cancel
+                      <ButtonGroup>
+                        <Button
+                          color=" "
+                          className="dashboard-right-content btn-black "
+                          onClick={this.onSaveData}
+                        >
+                          {/* <i className="profile-ic fa fa-pencil-square-o"></i> */}
+                          <span className="text-profile"> Update Info</span>
                         </Button>
-                        </ButtonGroup>
-                      )}
+                        <Button
+                          color=" "
+                          className="dashboard-right-content btn-line-black ml-2"
+                          onClick={this.handlecancel}
+                        >
+                          Cancel
+                        </Button>
+                      </ButtonGroup>
+                    )}
                   </CardHeader>
                   <CardBody>
                     <div className="profile-wrap">
@@ -248,28 +254,20 @@ class SettingComponent extends Component {
                             //   className="w-100"
                             // />
                             <div
-                                        style={{
-                                          backgroundImage:
-                                            'url("' +
-                                            ProfileImage
-                                            +
-                                            '")'
-                                        }}
-                                        className="user-back-img-wrap"
-                                      ></div>
+                              style={{
+                                backgroundImage: 'url("' + ProfileImage + '")'
+                              }}
+                              className="user-back-img-wrap"
+                            ></div>
                           ) : (
                             <div
-                            style={{
-                              backgroundImage:
-                                'url("' +
-                                profileIcon
-                                +
-                                '")'
-                            }}
-                            className="user-back-img-wrap"
-                          ></div>
-                              // <img alt="" src={profileIcon} className="w-100" />
-                            )}
+                              style={{
+                                backgroundImage: 'url("' + profileIcon + '")'
+                              }}
+                              className="user-back-img-wrap"
+                            ></div>
+                            // <img alt="" src={profileIcon} className="w-100" />
+                          )}
                           {!isDisabled ? (
                             <span
                               className="changeProfile"
@@ -278,8 +276,8 @@ class SettingComponent extends Component {
                               Change Profile
                             </span>
                           ) : (
-                              ""
-                            )}
+                            ""
+                          )}
                         </div>
                         {imgError ? (
                           <div className="text-danger"> {imgError} </div>
@@ -302,15 +300,15 @@ class SettingComponent extends Component {
                               type="text"
                               disabled={isDisabled}
                               onChange={this.handleChange}
+                              className={errors.firstName ? "is-invalid" : ""}
                               value={firstName}
                               name="firstName"
                             />
-                            {errors.firstName && !firstName ? (
-                              <p style={{ color: "red" }}>
-                                {" "}
-                                {errors.firstName}{" "}
-                              </p>
-                            ) : null}
+                            <FormFeedback>
+                              {errors.firstName || !firstName
+                                ? errors.firstName
+                                : null}
+                            </FormFeedback>
                           </FormGroup>
                         </Col>
                         <Col md="6">
@@ -321,16 +319,16 @@ class SettingComponent extends Component {
                               placeholder="Doe"
                               type="text"
                               disabled={isDisabled}
+                              className={errors.lastName ? "is-invalid" : ""}
                               onChange={this.handleChange}
                               value={lastName}
                               name="lastName"
                             />
-                            {errors.lastName && !lastName ? (
-                              <p style={{ color: "red" }}>
-                                {" "}
-                                {errors.lastName}{" "}
-                              </p>
-                            ) : null}
+                            <FormFeedback>
+                              {errors.lastName || !lastName
+                                ? errors.lastName
+                                : null}
+                            </FormFeedback>
                           </FormGroup>
                         </Col>
                       </Row>
@@ -446,7 +444,7 @@ class SettingComponent extends Component {
                               <Button
                                 color="danger"
                                 type="button"
-                                className="btn-btn-save"
+                                className="btn-btn-save mb-2"
                                 onClick={this.handleDelete}
                               >
                                 Delete Account
@@ -460,12 +458,12 @@ class SettingComponent extends Component {
                 </Card>
               </>
             ) : (
-                <Row>
-                  <Col sm={12} className="loader-col">
-                    <Loader />
-                  </Col>
-                </Row>
-              )}
+              <Row>
+                <Col sm={12} className="loader-col">
+                  <Loader />
+                </Col>
+              </Row>
+            )}
           </div>
         </div>
         <UploadImage

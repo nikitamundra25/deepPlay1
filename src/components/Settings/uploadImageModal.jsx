@@ -25,7 +25,7 @@ class UploadImage extends Component {
       if (file[x].size > 10000000) {
         await ConfirmBox({
           text: "",
-          title: "Maximum allowed size for image is 10mb",
+          title: "You can upload Image Size up to 10MB",
           showCancelButton: false,
           confirmButtonText: "Ok"
         });
@@ -114,7 +114,8 @@ class UploadImage extends Component {
                               />
 
                               <div className="upload-heading">
-                                Drag a profile photo here{" "}
+                                Click here to upload a profile image or drag
+                                your image{" "}
                               </div>
                             </div>
                           </div>

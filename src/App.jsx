@@ -11,6 +11,7 @@ import { mode, EnviornmentTypes } from "./config/Appconfig";
 import arrLogic from "./logic/index.jsx";
 import AppReducer from "./reducers/index.jsx";
 import AppRoutes from "./routes/";
+import Loader from "./components/comman/Loader/Loader";
 import "react-toastify/dist/ReactToastify.css";
 import "assets/css/argon-design-system-react.min.css";
 import "assets/css/argon-design-system-react.css.map";
@@ -35,7 +36,7 @@ class App extends Component {
     return (
       <Provider store={store}>
         <Router history={history}>
-          <React.Suspense fallback={""}>
+          <React.Suspense fallback={<Loader fullLoader={true} />}>
             <AppRoutes />
           </React.Suspense>
         </Router>

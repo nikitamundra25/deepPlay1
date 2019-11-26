@@ -55,24 +55,31 @@ class VideoView extends React.Component {
   /**
    *
    */
-  componentDidUpdate({ timer: oldTimer }) {
+  componentDidUpdate({ timer: oldTimer, moveReducer }) {
+    const prevMoveData = moveReducer.isCreatingAnotherMove;
+    const newMoveData = this.props.moveReducer
+      ? this.props.moveReducer.isCreatingAnotherMove
+      : null;
     const { timer } = this.props;
     const { max: oldMax, min: oldMin } = oldTimer || {};
     const { max, min } = timer || {};
     if (this.video && (min !== oldMin || max !== oldMax)) {
       this.video.currentTime = min;
     }
+    if (prevMoveData !== newMoveData) {
+      this.video.load();
+    }
   }
   /**
    *
    */
   render() {
-    const { moveReducer, description, title } = this.props;
+    const { moveReducer, description, title, isEdit } = this.props;
     const { moveDetails } = moveReducer;
 
     return (
       <>
-        <Col md={"6"}>
+        <Col lg={"6"}>
           <FormGroup className="flex-fill flex-column video-title-wrap">
             <div className=" w-100">
               <InputGroup className={"move-title-wrap"}>
@@ -106,15 +113,23 @@ class VideoView extends React.Component {
           </FormGroup>
           {moveDetails && moveDetails.videoUrl ? (
             <>
-              <video width={"100%"} autoPlay loop id={"video-trimmer"} muted>
-                <source
-                  src={`${AppConfig.API_ENDPOINT}${moveDetails.videoUrl}`}
-                />
-              </video>
+              {
+                !isEdit ?
+                  <video width={"100%"} autoPlay loop id={"video-trimmer"} muted={false}>
+                    <source
+                      src={`${AppConfig.API_ENDPOINT}${moveDetails.videoUrl}`}
+                    />
+                  </video> :
+                  <video width={"100%"} autoPlay loop id={"video-trimmer"} muted={false}>
+                    <source
+                      src={`${moveDetails.moveURL}`}
+                    />
+                  </video>
+              }
             </>
           ) : (
-            <span>No video available for trimming</span>
-          )}
+              <span>No video available for trimming</span>
+            )}
         </Col>
       </>
     );

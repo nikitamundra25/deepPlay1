@@ -26,13 +26,15 @@ import {
   deleteFolderRequest,
   updateFolderRequest,
   redirectTo,
-  getAllSetRequest
+  getAllSetRequest,
+  deleteSetRequest
 } from "../../../actions";
 import AddSetModal from "./addSet";
 import TransferToModal from "./transferTo";
 import { ConfirmBox } from "../../../helper/SweetAleart";
 import SharableLinkModal from "../../comman/shareableLink/SharableLink";
-import emptySetIc from "../../../assets/img/empty-sets.png";
+import emptySetIc from "../../../assets/img/play-list-ic.svg";
+import emptyImg from "../../../assets/img/empty-img.svg";
 import { AppRoutes } from "../../../config/AppRoutes";
 import Loader from "../../comman/Loader/Loader";
 import FolderModal from "../createFolderModal";
@@ -141,15 +143,14 @@ class RecentFolderComponent extends React.Component {
     let data;
     data = {
       isFolderAdd: name === "add" ? true : false,
-      setId: id,
-      folderId: pathName[3],
-      previousFolderId: pathName[3]
+      id,
+      folderId: pathName[3]
     };
     const { value } = await ConfirmBox({
       text: "You want to remove Set from this folder!"
     });
     if (value) {
-      this.props.manageSets(data);
+      this.props.onDeleteSets(data);
     }
   };
 
@@ -177,8 +178,9 @@ class RecentFolderComponent extends React.Component {
       description: list.description,
       isDeleted: list.isDeleted,
       isPublic: list.isPublic,
-      folderId: list.folderId,
+      folderId: list.folderId && list.folderId._id ? list.folderId._id : null,
       sharableLink: list.sharableLink,
+      copyOfSetId: list._id,
       status: list.status,
       userId: list.userId,
       isCopy: true
@@ -299,7 +301,16 @@ class RecentFolderComponent extends React.Component {
           <span className="content-title">
             <div className="main-title">
               {" "}
-              {folderDetails ? folderDetails.title : "MyFolder"}
+              {folderDetails
+                ? folderDetails && folderDetails.isCopy
+                  ? `Copy of ${folderDetails.title} ${
+                      folderDetails.copyIndex > 0
+                        ? `(${folderDetails.copyIndex})`
+                        : ""
+                    }`
+                  : folderDetails.title
+                : "MyFolder"}
+              {/* {folderDetails ? folderDetails.title : "MyFolder"} */}
             </div>
             <div className="sub-title">
               {folderDetails ? folderDetails.description : ""}
@@ -308,13 +319,13 @@ class RecentFolderComponent extends React.Component {
               Total sets: {totalSetsInFolder ? totalSetsInFolder : 0}
             </div>
           </span>
-          <div>
+          <div className="d-flex  justify-content-center align-items-between">
             <span
               className="dashboard-right-content cursor_pointer ml-4"
               onClick={this.openAddSetModel}
               id="move"
             >
-              <i className="fas fa-plus-circle icon-font"></i>
+              <i className="fas fa-plus icon-font"></i>
             </span>
             <UncontrolledTooltip placement="top" target="move">
               Add Sets
@@ -330,25 +341,25 @@ class RecentFolderComponent extends React.Component {
               Get Shareable Link
             </UncontrolledTooltip>
             <UncontrolledDropdown className="header-dropdown  ">
-              <DropdownToggle color={" "}>
-                <span id="edit" className="cursor_pointer ml-4">
+              <DropdownToggle color={" "} className="mr-0">
+                <span id="edit" className="cursor_pointer ml-4 mr-0">
                   <i className="fas fa-sliders-h icon-font"></i>
                 </span>
               </DropdownToggle>
               <DropdownMenu>
                 <DropdownItem onClick={this.handleFolderModel}>
-                  Edit
+                  Edit Folder Details
                 </DropdownItem>
                 <DropdownItem
                   onClick={() => this.handleDeleteFolder(folderDetails._id)}
                 >
-                  Delete
+                  Delete Folder
                 </DropdownItem>
               </DropdownMenu>
             </UncontrolledDropdown>
 
             <UncontrolledTooltip placement="top" target="edit">
-              Edit & Delete
+              Edit & Delete Folder details
             </UncontrolledTooltip>
           </div>
         </div>{" "}
@@ -363,47 +374,65 @@ class RecentFolderComponent extends React.Component {
                       className="tile-wrap card"
                       onMouseLeave={() => this.closePopOver()}
                     >
-                      <div className="cotent-tile d-flex content-with-tip content-with-img">
+                      <div className="cotent-tile d-flex content-with-tip ">
                         <div
-                          className="cotent-text-tile cursor_pointer text-capitalize"
+                          className="d-flex  content-with-img w-100 cursor_pointer"
                           onClick={() => this.handleSetDetails(list._id)}
                         >
-                          <div className="content-heading-tile d-flex">
-                            {" "}
-                            <span
-                              // onClick={() => this.handleSetDetails(list._id)}
-                              className={"text-capitalize"}
-                            >
-                              <span>
-                                {list.isCopy
-                                  ? `Copy of ${list.title}`
-                                  : list.title}{" "}
+                          <div className="cotent-text-tile text-capitalize">
+                            <div className="content-heading-tile d-flex">
+                              {" "}
+                              <span
+                                // onClick={() => this.handleSetDetails(list._id)}
+                                className={"text-capitalize"}
+                              >
+                                <span>
+                                  {list.isCopy
+                                    ? `Copy of ${list.title} ${
+                                        list.copyIndex > 0
+                                          ? `(${list.copyIndex})`
+                                          : ""
+                                      }`
+                                    : list.title}
+                                </span>
                               </span>
+                            </div>
+                            <span className={"text-capitalize"}>
+                              <small>
+                                {list.description ? list.description : ""}
+                              </small>
                             </span>
+                            <div className="content-number-tile">
+                              {" "}
+                              {list.moveCount ? list.moveCount : 0} moves
+                            </div>
                           </div>
-                          <span className={"text-capitalize"}>
-                            {list.description ? list.description : ""}
-                          </span>
-                          <div className="content-number-tile">
-                            {" "}
-                            {list.moveCount ? list.moveCount : 0} items
-                          </div>
-                        </div>
-                        {list.recentlyAddMoveImg ? (
+
                           <div
                             className="d-flex img-tile-wrap cursor_pointer"
                             onClick={() => this.handleSetDetails(list._id)}
                           >
-                            <div className="cotent-img-tile">
-                              <video width={"100%"} id="webm-video">
-                                <source
+                            {list.recentlyAddMoveImg ? (
+                              <div className="cotent-img-tile">
+                                <img
                                   src={`${list.recentlyAddMoveImg}`}
-                                  type="video/webm"
+                                  alt=""
+                                  width="100%"
+                                  height="100%"
                                 />
-                              </video>
-                            </div>
+                              </div>
+                            ) : (
+                              <div className={""}>
+                                <img
+                                  src={emptyImg}
+                                  alt=""
+                                  width="60"
+                                  height="60"
+                                />
+                              </div>
+                            )}
                           </div>
-                        ) : null}
+                        </div>
                         <div
                           onMouseOver={() => this.showPopOver(i, show)}
                           className={"tooltip-btn-wrap right-btn-tip"}
@@ -572,7 +601,10 @@ const mapDispatchToProps = dispatch => ({
   onGoPage: data => {
     dispatch(redirectTo({ path: data }));
   },
-  getAllSetRequest: data => dispatch(getAllSetRequest(data))
+  getAllSetRequest: data => dispatch(getAllSetRequest(data)),
+  onDeleteSets: data => {
+    dispatch(deleteSetRequest(data));
+  }
 });
 
 export default connect(

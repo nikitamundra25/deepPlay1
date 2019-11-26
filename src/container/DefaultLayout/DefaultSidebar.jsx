@@ -20,30 +20,46 @@ class DefaultSidebar extends React.Component {
       profiledata && profiledata.profileImage
         ? profiledata.profileImage.split("/")
         : [];
-    const ProfileImage = splitedImage[0] === "uploads"
-      ? `${AppConfig.API_ENDPOINT}${profiledata ? profiledata.profileImage : ""}`
-      : profiledata ? profiledata.profileImage : ""
+    const ProfileImage =
+      splitedImage[0] === "uploads"
+        ? `${AppConfig.API_ENDPOINT}${
+            profiledata ? profiledata.profileImage : ""
+          }`
+        : profiledata
+        ? profiledata.profileImage
+        : "";
     return (
       <div className="dashboard-left-wrap cutom-scroll">
         <div className="dashboard-left">
           <ul className="list-group list-group-flush">
             {SidebarComponent.map((items, index) => {
-              return (
-                <React.Fragment key={index}>
-                  <li>
-                    <NavLink
-                      className={`list-group-item list-${index}`}
-                      activeClassName="active"
-                      aria-current="page"
-                      to={items.url}
-                    >
-                      {/* <i className={items.icon} /> */}
-                      <img src={items.iconUrl} alt={items.iconUrl} width="20" />
-                      <span className="side-bar-text"> {items.name}</span>
-                    </NavLink>
-                  </li>
-                </React.Fragment>
-              );
+              if (
+                items.name !== "Change Password" &&
+                items.name !== "Settings"
+              ) {
+                return (
+                  <React.Fragment key={index}>
+                    <li>
+                      <NavLink
+                        className={`list-group-item list-${index}`}
+                        activeClassName="active"
+                        aria-current="page"
+                        to={items.url}
+                      >
+                        {/* <i className={items.icon} /> */}
+                        <img
+                          src={items.iconUrl}
+                          alt={items.iconUrl}
+                          width="20"
+                        />
+                        <span className="side-bar-text"> {items.name}</span>
+                      </NavLink>
+                    </li>
+                  </React.Fragment>
+                );
+              } else {
+                return null;
+              }
             })}
           </ul>
         </div>
@@ -51,17 +67,14 @@ class DefaultSidebar extends React.Component {
           <div className="profile-img-tile">
             <div className={profiledata ? "user-profile-img" : "profile-img"}>
               {profiledata && profiledata.profileImage ? (
-                    <div
-                    style={{
-                      backgroundImage:
-                        'url("' +
-                        ProfileImage
-                        +
-                        '")'
-                    }}
-                    className="user-back-img-wrap"
-                  ></div>
-               // <img
+                <div
+                  style={{
+                    backgroundImage: 'url("' + ProfileImage + '")'
+                  }}
+                  className="user-back-img-wrap"
+                ></div>
+              ) : (
+                // <img
                 //   src={
                 //     splitedImage[0] === "uploads"
                 //       ? `${AppConfig.API_ENDPOINT}${profiledata.profileImage}`
@@ -70,19 +83,14 @@ class DefaultSidebar extends React.Component {
                 //   className="w-100"
                 //   alt={"img"}
                 // />
-              ) : (
-                  // <img src={defaultProfileImage} className="w-100" alt={"img"} />
-                  <div
+                // <img src={defaultProfileImage} className="w-100" alt={"img"} />
+                <div
                   style={{
-                    backgroundImage:
-                      'url("' +
-                      defaultProfileImage
-                      +
-                      '")'
+                    backgroundImage: 'url("' + defaultProfileImage + '")'
                   }}
                   className="user-back-img-wrap"
                 ></div>
-                )}
+              )}
             </div>
           </div>
           <div className="profile-text-tile color-black">
@@ -97,9 +105,9 @@ class DefaultSidebar extends React.Component {
             </div>
             <div className={"text-center"}>
               {profiledata
-                ? profiledata.roleType
+                ? profiledata.roleType !== "Unclassified"
                   ? profiledata.roleType
-                  : ""
+                  : null
                 : ""}
             </div>
           </div>

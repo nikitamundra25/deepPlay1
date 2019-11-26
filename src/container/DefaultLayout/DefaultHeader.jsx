@@ -13,8 +13,7 @@ import {
   Col,
   InputGroupAddon,
   FormGroup,
-  InputGroup,
-  Input
+  InputGroup
 } from "reactstrap";
 import Login from "../Auth/Login/index.jsx";
 import Signup from "../Auth/Signup/index.jsx";
@@ -26,6 +25,9 @@ import logoutIcon from "../../assets/img/icons/logout.svg";
 import { AppConfig } from "../../config/Appconfig";
 import AllSearchComponent from "../../components/AllSearch";
 import CreateSetComponent from "../../components/Sets/createSet";
+import searchArrow from "../../assets/img/back-search.png";
+import { DebounceInput } from "react-debounce-input";
+import WebmSearch from "../../components/comman/WebmSearch";
 
 class DefaultHeader extends React.Component {
   constructor(props) {
@@ -33,12 +35,15 @@ class DefaultHeader extends React.Component {
     this.state = {
       isUserLoggedIn: false,
       path: "",
-      search: ""
+      search: "",
+      open: false,
+      showVideo: ""
     };
   }
 
   componentDidMount = () => {
     const temp = this.props.history.location.pathname;
+    document.addEventListener("mousedown", this.handleClickOutside);
     if (localStorage.getItem("token")) {
       this.setState({
         isUserLoggedIn: true,
@@ -52,6 +57,27 @@ class DefaultHeader extends React.Component {
     }
   };
 
+  handleClickOutside = event => {
+    if (this.wrapperRef && !this.wrapperRef.contains(event.target)) {
+      this.setState({
+        search: ""
+      });
+    }
+  };
+
+  setWrapperRef = node => {
+    this.wrapperRef = node;
+  };
+
+  componentDidUpdate = ({ location }) => {
+    const temp = this.props.location.pathname;
+    if (location !== this.props.location) {
+      this.setState({
+        isUserLoggedIn: false,
+        path: temp
+      });
+    }
+  };
   handleLoginModel = () => {
     const { modelInfoReducer } = this.props;
     const { modelDetails } = modelInfoReducer;
@@ -71,6 +97,10 @@ class DefaultHeader extends React.Component {
         loginModelOpen: false
       }
     });
+  };
+
+  deleteMove = data => {
+    this.props.deleteMoveRequest(data);
   };
 
   handleSetModal = () => {
@@ -93,6 +123,13 @@ class DefaultHeader extends React.Component {
     });
   };
 
+  openSearch = () => {
+    this.setState({
+      open: !this.state.open,
+      search: ""
+    });
+  };
+
   createFolder = data => {
     this.props.onFolderCreation(data);
   };
@@ -101,14 +138,73 @@ class DefaultHeader extends React.Component {
   };
   /*  */
   handleChange = e => {
-    const { name, value } = e.target;
+    const { value } = e.target;
     this.setState({
-      [name]: value
-    })
-    setTimeout(() => {
-      this.props.allSearchRequest({ search: value })
-    }, 500);
-  }
+      search: value
+    });
+    const value1 = value.trimStart();
+    if (!value1) {
+      return;
+    } else {
+      this.props.allSearchRequest({ search: value });
+    }
+  };
+
+  searchAllSet = () => {
+    this.props.redirectTo(AppRoutes.SETS.url + `?search=${this.state.search}`);
+    this.setState({
+      search: ""
+    });
+  };
+
+  searchAllFolder = () => {
+    this.props.redirectTo(
+      AppRoutes.FOLDERS.url + `?search=${this.state.search}`
+    );
+    this.setState({
+      search: ""
+    });
+  };
+
+  searchAllMove = () => {
+    this.props.redirectTo(
+      AppRoutes.MOVE_SEAECH_ALL.url + `?search=${this.state.search}`
+    );
+    this.setState({
+      search: ""
+    });
+  };
+
+  handleVideoModal = moveURL => {
+    const { modelInfoReducer } = this.props;
+    const { modelDetails } = modelInfoReducer;
+    this.setState(
+      {
+        showVideo: moveURL
+      },
+      () => {
+        this.props.modelOperate({
+          modelDetails: {
+            isVideoModalOpenReq: !modelDetails.isVideoModalOpenReq
+          }
+        });
+        this.props.videoDataFromSearch();
+      }
+    );
+    this.props.videoFullscreenExit();
+    this.props.getSetList({ isSetNoLimit: false });
+  };
+
+  isStarred = data => {
+    this.props.isStarredRequest(data);
+  };
+
+  addTagstoMove = data => {
+    const moveVideo = data.videoData;
+    moveVideo.tags = data.tags;
+    this.props.addTagsRequest({ data: data, moveVideo: moveVideo });
+  };
+
   /*  */
   render() {
     const {
@@ -123,17 +219,30 @@ class DefaultHeader extends React.Component {
       modelOpenRequest,
       isLoggedIn,
       routePath,
-      allSearchReducer
+      allSearchReducer,
+      shareLinkReducer,
+      videoData,
+      getTagListRequest,
+      allSetList,
+      tagsList,
+      loadVideoDataRequest,
+      isFullScreenMode,
+      videoFullscreenReq,
+      videoFullscreenExit,
+      isVideoFromSearch
     } = this.props;
     const { modelDetails } = modelInfoReducer;
+    const { isShareableUrl } = shareLinkReducer;
     const {
       loginModelOpen,
       signupModelOpen,
       forgotPasswordModalOpen,
       createFolderModalOpen,
-      createSetOpen
+      createSetOpen,
+      isVideoModalOpenReq
     } = modelDetails;
-    const { isUserLoggedIn, path, search } = this.state;
+    const { path, search, open, showVideo } = this.state;
+    const { isLoginSuccess } = loginReducer;
     const profiledata =
       profileInfoReducer && profileInfoReducer.profileInfo
         ? profileInfoReducer.profileInfo
@@ -143,271 +252,335 @@ class DefaultHeader extends React.Component {
         ? profiledata.profileImage.split("/")
         : [];
     const { searchData, isSearchLoading } = allSearchReducer;
-    const ProfileImage = splitedImage[0] === "uploads"
-      ? `${AppConfig.API_ENDPOINT}${profiledata ? profiledata.profileImage : ""}`
-      : profiledata ? profiledata.profileImage : ""
+    const ProfileImage =
+      splitedImage[0] === "uploads"
+        ? `${AppConfig.API_ENDPOINT}${
+            profiledata ? profiledata.profileImage : ""
+          }`
+        : profiledata
+        ? profiledata.profileImage
+        : "";
+
     return (
       <>
-        <header className="header-global theme-header ">
+        <header className="header-global theme-header dashboard-header">
           <div className="theme-container">
-            {/* <Navbar
-              className="navbar-main d-flex justify-content-center"
-              // expand="lg"
-              id="navbar-main"
-            > */}
-            {/* <NavbarBrand className="mr-lg-5" to="/" tag={Link}>
-                <h3 className="mb-0 header-title">Deep Play</h3>
-              </NavbarBrand> */}
             {path !== AppRoutes.FOLDER_SHARED_LINK.url &&
-              path !== AppRoutes.SET_SHARED_LINK.url &&
-              path !== AppRoutes.ALL_SET_SHARED_LINK.url &&
-              path !== "/404" ? (
-                <>
-                  <Navbar
-                    className="navbar-main header-navbar"
-                    // expand="lg"
-                    id="navbar-main"
-                  >
-                    <div className="header-bar-ic">
-                      <i class="fa fa-bars" aria-hidden="true"></i>
-                    </div>
-                    <NavbarBrand className="mr-lg-5" to="/" tag={Link}>
-                      <h3 className="mb-0 header-title">Deep Play</h3>
-                    </NavbarBrand>
-                    {isLoggedIn ? (
-                      <Nav className="navbar-nav align-items-center nav-main-section flex-fill creat-option">
-                        <div className="nav-inputs-wrap d-flex">
-                          <Col className="create-btn-wrap">
-                            <UncontrolledDropdown className="header-manu-wrap">
-                              <DropdownToggle
-                                caret
-                                color=" "
-                                className="nav-dropdown-btn"
-                              >
-                                <i className="fas fa-plus-square"></i><span className="dropdown-text"> &nbsp;
-                              Create</span>
-                              </DropdownToggle>
-                              <DropdownMenu>
-                                <DropdownItem></DropdownItem>
-                              </DropdownMenu>
+            path !== AppRoutes.SET_SHARED_LINK.url &&
+            path !== AppRoutes.ALL_SET_SHARED_LINK.url &&
+            path !== "/404" &&
+            path !== "/public-access-denied" &&
+            !isShareableUrl ? (
+              <>
+                <Navbar
+                  className="navbar-main header-navbar"
+                  // expand="lg"
+                  id="navbar-main"
+                >
+                  <div className="header-bar-ic">
+                    <i className="fa fa-bars" aria-hidden="true"></i>
+                  </div>
+                  <NavbarBrand className="mr-lg-5 pr-lg-1" to="/" tag={Link}>
+                    <h3 className="mb-0 header-title">DeepPlay</h3>
+                  </NavbarBrand>
+                  {isLoggedIn || isLoginSuccess ? (
+                    <Nav className="navbar-nav align-items-center nav-main-section flex-fill creat-option">
+                      <div className="nav-inputs-wrap d-flex">
+                        <Col className="create-btn-wrap">
+                          <UncontrolledDropdown className="header-manu-wrap">
+                            <DropdownToggle
+                              caret
+                              color=" "
+                              className="nav-dropdown-btn"
+                            >
+                              <i className="fas fa-plus-square"></i>
+                              <span className="dropdown-text">
+                                {" "}
+                                &nbsp; Create
+                              </span>
+                            </DropdownToggle>
+                            <DropdownMenu>
+                              <DropdownItem></DropdownItem>
+                            </DropdownMenu>
 
-                              <DropdownMenu>
-                                <DropdownItem
-                                  active={routePath === "/move" ? true : false}
-                                  onClick={() =>
-                                    this.props.redirectTo(AppRoutes.MOVE.url)
-                                  }
-                                >
-                                  Create Move
-                              </DropdownItem>
-                                <DropdownItem
-                                  // active={
-                                  //   routePath === "/create-set" ? true : false
-                                  // }
-                                  onClick={this.handleSetModal}
-                                >
-                                  Create Set
-                              </DropdownItem>
-                                <DropdownItem onClick={this.handleFolderModel}>
-                                  {" "}
-                                  Create Folder
-                              </DropdownItem>
-                              </DropdownMenu>
-                            </UncontrolledDropdown>
-                          </Col>
-                          <Col className="flex-fill header-search-main">
-                            <FormGroup className="mb-0 header-search-wrap ">
-                              <InputGroup className="">
-                                <InputGroupAddon addonType="prepend">
-                                  <span className="input-group-text">
-                                    <i
-                                      className="fa fa-search"
-                                      aria-hidden="true"
-                                    ></i>
-                                  </span>
-                                </InputGroupAddon>
-
-                                {/* input-open */}
-                                <span className="search-input ">
-                                  <Input placeholder="Search" onChange={this.handleChange} value={search} name={"search"} type="text" autoComplete="off" />
-                                </span>
-                                {
-                                  search ?
-                                    <AllSearchComponent
-                                      searchData={searchData}
-                                      isSearchLoading={isSearchLoading}
-                                      handleSearchEmpty={() => this.setState({
-                                        search: ""
-                                      })}
-                                      {...this.props}
-                                    /> :
-                                    null
+                            <DropdownMenu>
+                              <DropdownItem
+                                active={routePath === "/move" ? true : false}
+                                onClick={() =>
+                                  this.props.redirectTo(AppRoutes.MOVE.url)
                                 }
-                              </InputGroup>
-                            </FormGroup>
-                          </Col>
-                        </div>
-                      </Nav>
-                    ) : null}
-                    <Nav
-                      className="navbar-nav align-items-center nav-main-section user-section"
-                      navbar
-                    >
-                      {!isUserLoggedIn ? (
-                        <div className="nav-main-section">
-                          <React.Fragment>
-                            <span
-                              onClick={this.handleLoginModel}
-                              className="nav-link-inner--text pr-4 cusror_pointer"
-                            >
-                              Signin
-                          </span>
-                            <span
-                              onClick={this.handleSignupModel}
-                              className="nav-link-inner--text pr-2 cusror_pointer"
-                            >
-                              Signup
-                          </span>
-                          </React.Fragment>
-                        </div>
-                      ) : (
-                          <>
-                            <UncontrolledDropdown className="header-manu-wrap  dropdown-with-ic">
-                              <DropdownToggle
-                                tag="a"
-                                className="nav-link user-section"
-                                caret
                               >
-                                <div className="user-wrap">
+                                Create Move
+                              </DropdownItem>
+                              <DropdownItem
+                                // active={
+                                //   routePath === "/create-set" ? true : false
+                                // }
+                                onClick={this.handleSetModal}
+                              >
+                                Create Set
+                              </DropdownItem>
+                              <DropdownItem onClick={this.handleFolderModel}>
+                                {" "}
+                                Create Folder
+                              </DropdownItem>
+                            </DropdownMenu>
+                          </UncontrolledDropdown>
+                        </Col>
+                        <Col className="flex-fill header-search-main">
+                          <FormGroup className="mb-0 header-search-wrap ">
+                            <InputGroup className="">
+                              <InputGroupAddon addonType="prepend">
+                                <span
+                                  className="input-group-text header-input-group-text"
+                                  onClick={this.openSearch}
+                                >
+                                  <i
+                                    className="fa fa-search"
+                                    aria-hidden="true"
+                                  ></i>
+                                </span>
+                              </InputGroupAddon>
+
+                              <div
+                                className={
+                                  open ? "black-search-layer" : "d-none"
+                                }
+                                onClick={this.openSearch}
+                              ></div>
+
+                              <span
+                                className={
+                                  open
+                                    ? "search-input header-search-open "
+                                    : "search-input header-search-close"
+                                }
+                              >
+                                <span
+                                  onClick={this.openSearch}
+                                  className="search-arrow-wrap"
+                                >
+                                  <img
+                                    src={searchArrow}
+                                    alt=""
+                                    className="w-100"
+                                  />
+                                </span>
+                                <DebounceInput
+                                  minLength={2}
+                                  value={search}
+                                  className={"form-control"}
+                                  autoComplete="off"
+                                  placeholder="Search for set, folder, Move and More"
+                                  debounceTimeout={300}
+                                  onChange={event => this.handleChange(event)}
+                                />
+                              </span>
+                              {search ? (
+                                <AllSearchComponent
+                                  searhClose={this.openSearch}
+                                  searchData={searchData}
+                                  isSearchLoading={isSearchLoading}
+                                  searchAllSet={this.searchAllSet}
+                                  setWrapperRef={this.setWrapperRef}
+                                  searchAllFolder={this.searchAllFolder}
+                                  searchAllMove={this.searchAllMove}
+                                  handleMoveSearch={this.handleVideoModal}
+                                  handleSearchEmpty={() =>
+                                    this.setState({
+                                      search: ""
+                                    })
+                                  }
+                                  profiledata={profiledata}
+                                  {...this.props}
+                                />
+                              ) : null}
+                            </InputGroup>
+                          </FormGroup>
+                        </Col>
+                      </div>
+                    </Nav>
+                  ) : null}
+                  <Nav
+                    className="navbar-nav align-items-center nav-main-section user-section user-header-profile"
+                    navbar
+                  >
+                    {!(isLoggedIn || isLoginSuccess) ? (
+                      <div className="nav-main-section">
+                        <React.Fragment>
+                          <span
+                            onClick={this.handleLoginModel}
+                            className="nav-link-inner--text pr-4 cusror_pointer"
+                          >
+                            Sign in
+                          </span>
+                          <span
+                            onClick={this.handleSignupModel}
+                            className="nav-link-inner--text pr-2 cusror_pointer"
+                          >
+                            Sign up
+                          </span>
+                        </React.Fragment>
+                      </div>
+                    ) : (
+                      <>
+                        <UncontrolledDropdown className="header-manu-wrap  dropdown-with-ic">
+                          <DropdownToggle
+                            tag="a"
+                            className="nav-link user-section"
+                            caret
+                          >
+                            <div className="user-wrap">
+                              <div
+                                className={
+                                  profiledata
+                                    ? "user-img round-img"
+                                    : "user-img"
+                                }
+                              >
+                                {profiledata && profiledata.profileImage ? (
                                   <div
-                                    className={
-                                      profiledata
-                                        ? "user-img round-img"
-                                        : "user-img"
+                                    style={{
+                                      backgroundImage:
+                                        'url("' + ProfileImage + '")'
+                                    }}
+                                    className="user-back-img-wrap"
+                                  ></div>
+                                ) : (
+                                  // <img
+                                  //   src={
+
+                                  //   }
+                                  //   className="w-100 "
+                                  //   alt={"img"}
+                                  // />
+                                  // <img
+                                  //   src={profileImage}
+                                  //   className="w-100 "
+                                  //   alt={"img"}
+                                  // />
+                                  <div
+                                    style={{
+                                      backgroundImage:
+                                        'url("' + profileImageIc + '")'
+                                    }}
+                                    className="user-back-img-wrap"
+                                  ></div>
+                                )}
+                              </div>
+                              <div className="user-text">
+                                {profiledata
+                                  ? `${profiledata.firstName}${" "} ${
+                                      profiledata.lastName
+                                    }`
+                                  : ""}
+                              </div>
+                            </div>
+                          </DropdownToggle>
+                          <DropdownMenu>
+                            {SidebarComponent.map((item, index) => {
+                              if (
+                                item.name !== "Set" &&
+                                item.name !== "Folder"
+                              ) {
+                                return (
+                                  <DropdownItem
+                                    onClick={() =>
+                                      this.props.redirectTo(item.url)
+                                    }
+                                    key={index}
+                                    active={
+                                      routePath === item.url ? true : false
                                     }
                                   >
-                                    {profiledata && profiledata.profileImage ? (
-                                      <div
-                                        style={{
-                                          backgroundImage:
-                                            'url("' +
-                                            ProfileImage
-                                            +
-                                            '")'
-                                        }}
-                                        className="user-back-img-wrap"
-                                      ></div>
-                                      // <img
-                                      //   src={
+                                    <div className="dropdown-img">
+                                      <img
+                                        src={item.iconUrl}
+                                        alt={item.iconUrl}
+                                        width="20"
+                                      />{" "}
+                                    </div>
+                                    <div className="dropdown-txt">
+                                      {item.name}
+                                    </div>
+                                  </DropdownItem>
+                                );
+                              } else {
+                                return null;
+                              }
+                            })}
 
-                                      //   }
-                                      //   className="w-100 "
-                                      //   alt={"img"}
-                                      // />
-                                    ) : (
-                                        // <img
-                                        //   src={profileImage}
-                                        //   className="w-100 "
-                                        //   alt={"img"}
-                                        // />
-                                        <div
-                                        style={{
-                                          backgroundImage:
-                                            'url("' +
-                                            profileImageIc
-                                            +
-                                            '")'
-                                        }}
-                                        className="user-back-img-wrap"
-                                      ></div>
-                                      )}
-                                  </div>
-                                  <div className="user-text">
-                                    {profiledata
-                                      ? `${profiledata.firstName}${" "} ${
-                                      profiledata.lastName
-                                      }`
-                                      : ""}
-                                  </div>
-                                </div>
-                              </DropdownToggle>
-                              <DropdownMenu>
-                                {SidebarComponent.map((item, index) => {
-                                  return (
-                                    <DropdownItem
-                                      onClick={() =>
-                                        this.props.redirectTo(item.url)
-                                      }
-                                      key={index}
-                                      active={routePath === item.url ? true : false}
-                                    >
-                                      <div className="dropdown-img">
-                                        <img
-                                          src={item.iconUrl}
-                                          alt={item.iconUrl}
-                                          width="20"
-                                        />{" "}
-                                      </div>
-                                      <div className="dropdown-txt">
-                                        {item.name}
-                                      </div>
-                                    </DropdownItem>
-                                  );
-                                })}
-
-                                <DropdownItem onClick={e => logoutRequest(e)}>
-                                  <div className="dropdown-img">
-                                    <img
-                                      src={logoutIcon}
-                                      alt={"Logout"}
-                                      width="20"
-                                    />
-                                  </div>{" "}
-                                  <div className="dropdown-txt"> Log Out</div>
-                                </DropdownItem>
-                              </DropdownMenu>
-                            </UncontrolledDropdown>
-                            {/* <span onClick={e => logoutRequest(e)} className="nav-link-inner--text pr-4">Logout</span> */}
-                          </>
-                        )}
-                    </Nav>
-                    <UncontrolledCollapse
-                      navbar
-                      toggler="#navbar_global"
-                      className="justify-content-end"
-                    >
-                      <div className="navbar-collapse-header">
-                        <Row>
-                          <Col className="collapse-brand" xs="6">
-                            <Link to="/">
-                              <img
-                                alt="..."
-                                src={require("assets/img/brand/argon-react.png")}
-                              />
-                            </Link>
-                          </Col>
-                          <Col className="collapse-close" xs="6">
-                            <button className="navbar-toggler" id="navbar_global">
-                              <span />
-                              <span />
-                            </button>
-                          </Col>
-                        </Row>
-                      </div>
-                    </UncontrolledCollapse>
-                  </Navbar>
-                </>
-              ) : (
+                            <DropdownItem onClick={e => logoutRequest(e)}>
+                              <div className="dropdown-img">
+                                <img
+                                  src={logoutIcon}
+                                  alt={"Logout"}
+                                  width="20"
+                                />
+                              </div>{" "}
+                              <div className="dropdown-txt"> Log Out</div>
+                            </DropdownItem>
+                          </DropdownMenu>
+                        </UncontrolledDropdown>
+                        {/* <span onClick={e => logoutRequest(e)} className="nav-link-inner--text pr-4">Logout</span> */}
+                      </>
+                    )}
+                  </Nav>
+                  <UncontrolledCollapse
+                    navbar
+                    toggler="#navbar_global"
+                    className="justify-content-end"
+                  >
+                    <div className="navbar-collapse-header">
+                      <Row>
+                        <Col className="collapse-brand" xs="6">
+                          <Link to="/">
+                            <img
+                              alt="..."
+                              src={require("assets/img/brand/argon-react.png")}
+                            />
+                          </Link>
+                        </Col>
+                        <Col className="collapse-close" xs="6">
+                          <button className="navbar-toggler" id="navbar_global">
+                            <span />
+                            <span />
+                          </button>
+                        </Col>
+                      </Row>
+                    </div>
+                  </UncontrolledCollapse>
+                </Navbar>
+              </>
+            ) : (
+              <div className="theme-container">
                 <Navbar
-                  className="navbar-main d-flex justify-content-center"
+                  className="navbar-main d-flex navbar-main header-navbar"
                   // expand="lg"
                   id="navbar-main"
                 >
                   <NavbarBrand className="m-0" to="/" tag={Link}>
-                    <h3 className="mb-0 header-title ">Deep Play</h3>
+                    <h3 className="mb-0 header-title ">DeepPlay</h3>
                   </NavbarBrand>
+                  <div className="nav-main-section">
+                    <React.Fragment>
+                      <span
+                        onClick={this.handleLoginModel}
+                        className="nav-link-inner--text pr-4 cusror_pointer"
+                      >
+                        Sign in
+                      </span>
+                      <span
+                        onClick={this.handleSignupModel}
+                        className="nav-link-inner--text pr-2 cusror_pointer"
+                      >
+                        Sign up
+                      </span>
+                    </React.Fragment>
+                  </div>
                 </Navbar>
-              )}
+              </div>
+            )}
           </div>
         </header>
         <Login
@@ -439,6 +612,31 @@ class DefaultHeader extends React.Component {
           handleOpen={this.handleSetModal}
           createSet={this.createSet}
         />
+        {showVideo && showVideo.length ? (
+          <WebmSearch
+            isVideoModalOpen={isVideoModalOpenReq}
+            handleVideoModal={this.handleVideoModal}
+            video={showVideo}
+            videoData={videoData}
+            showVideo={showVideo && showVideo.length ? showVideo[0] : null}
+            movesOfSet={[showVideo]}
+            deleteMove={this.deleteMove}
+            isStarred={this.isStarred}
+            getTagListRequest={getTagListRequest}
+            addTagstoMove={this.addTagstoMove}
+            allSetList={allSetList}
+            fromMoveSearch={true}
+            tagsList={tagsList}
+            editMove={data => this.props.updateMoveRequest(data)}
+            loadVideoDataRequest={loadVideoDataRequest}
+            transferMove={this.props.transferMove}
+            isFullScreenMode={isFullScreenMode}
+            videoFullscreenReq={videoFullscreenReq}
+            videoFullscreenExit={videoFullscreenExit}
+            isVideoFromSearch={isVideoFromSearch}
+            {...this.props}
+          />
+        ) : null}
       </>
     );
   }

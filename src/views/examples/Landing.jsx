@@ -72,7 +72,7 @@ class Landing extends React.Component {
               <Container className="py-lg-md d-flex">
                 <div className="col px-0">
                   <Row>
-                    <Col lg="6">
+                    <Col md="6">
                       <h1 className="display-3 text-white">
                         A beautiful Design System{" "}
                         <span>completed with examples</span>
@@ -407,7 +407,7 @@ class Landing extends React.Component {
                     />
                   </div>
                 </Col>
-                <Col className="order-lg-1" lg="6">
+                <Col className="order-lg-1" md="6">
                   <div className="d-flex px-3">
                     <div>
                       <div className="icon icon-lg icon-shape bg-gradient-white shadow rounded-circle text-primary">

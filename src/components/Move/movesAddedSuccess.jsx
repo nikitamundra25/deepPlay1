@@ -28,7 +28,7 @@ class MoveAddedSuccess extends React.Component {
                 </div>
               </CardHeader>
               <CardBody className="">
-                <div className="d-flex vieos-add-section video-add-banner justify-content-center align-items-center">
+                <div className="d-flex vieos-add-section video-add-banner justify-content-center align-items-center ">
                   <span className="play-ic-wrap">
                     <i className="fa fa-play" aria-hidden="true"></i>
                   </span>
@@ -38,7 +38,7 @@ class MoveAddedSuccess extends React.Component {
                 </p>
                 <div className="text-center mt-4">
                   <Button className="btn-line-black" color=" ">Yes create another</Button>
-                  <Button className="btn-black" color=" ">No i'am done</Button>
+                  <Button className="btn-black" color=" "> No, i am done</Button>
                 </div>
               </CardBody>
             </div>

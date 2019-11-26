@@ -11,14 +11,14 @@ import {
 } from "reactstrap";
 import { AppRoutes } from "../../config/AppRoutes";
 import "./index.scss";
-import emptySetIc from "../../assets/img/empty-sets.png";
+import emptySetIc from "../../assets/img/play-list-ic.svg";
 import Loader from "../comman/Loader/Loader";
 import PaginationHelper from "helper/Pagination";
 import qs from "query-string";
 import { AppConfig } from "../../config/Appconfig";
 import SharableLinkModal from "components/comman/shareableLink/SharableLink";
 import CreateSetComponent from "../Sets/createSet";
-
+import emptyImg from "../../assets/img/empty-img.svg";
 // core components
 class SetComponent extends React.Component {
   constructor(props) {
@@ -100,28 +100,48 @@ class SetComponent extends React.Component {
   };
 
   render() {
-    const { setReducer, modelInfoReducer, userEncryptedInfo } = this.props;
+    const {
+      setReducer,
+      modelInfoReducer,
+      userEncryptedInfo,
+      location
+    } = this.props;
     const { allSetList, isSetListLoading, totalSets } = setReducer;
     const { modelDetails } = modelInfoReducer;
     const { sharableLinkModalOpen, createSetModalOpen } = modelDetails;
     const { show, setIndex, page } = this.state;
-
+    const lSearch = location.search;
+    const search = lSearch.split("=");
     return (
       <div className="set-main-section">
         <div className="content-header">
           <span className="content-title">
-            <div className="main-title"> {" Your Sets"}</div>
+            <div className="main-title"> {" Sets"}</div>
             <div className="sub-title">
               Total sets {totalSets ? totalSets : "0"}
             </div>
           </span>
-          <div>
+          <div className="d-flex  justify-content-center align-items-between">
+            {search && search[1] ? (
+              <>
+                <span
+                  id="reset"
+                  className={"cursor_pointer reset-search text-center"}
+                  onClick={this.props.handleResetSearch}
+                >
+                  <i className="fas fa-undo-alt"></i>
+                </span>
+                <UncontrolledTooltip placement="top" target="reset">
+                  Reset search results
+                </UncontrolledTooltip>
+              </>
+            ) : null}
             <span
               id="set"
               className={"cursor_pointer"}
               onClick={this.handleSetModal}
             >
-              <i className="fas fa-plus-circle icon-font"></i>
+              <i className="fas fa-plus icon-font"></i>
             </span>
             <UncontrolledTooltip placement="top" target="set">
               Create New Set
@@ -139,43 +159,61 @@ class SetComponent extends React.Component {
                       className="tile-wrap card"
                       onMouseLeave={() => this.closePopOver()}
                     >
-                      <div className="cotent-tile d-flex content-with-tip content-with-img">
+                      <div className="cotent-tile d-flex content-with-tip cursor_pointer">
                         <div
-                          className="cotent-text-tile cursor_pointer "
+                          className="d-flex content-with-img w-100"
                           onClick={() => this.handleSetDetails(setList._id)}
                         >
-                          <div className="content-heading-tile d-flex">
-                            {" "}
-                            <span
-                              // onClick={() => this.handleSetDetails(setList._id)}
-                              className={" text-capitalize"}
-                            >
-                              <span>
-                                {setList.isCopy
-                                  ? `Copy of ${setList.title}`
-                                  : setList.title}
+                          <div className="cotent-text-tile cursor_pointer ">
+                            <div className="content-heading-tile d-flex">
+                              {" "}
+                              <span
+                                // onClick={() => this.handleSetDetails(setList._id)}
+                                className={" text-capitalize"}
+                              >
+                                <span>
+                                  {setList.isCopy
+                                    ? `Copy of ${setList.title} ${
+                                        setList.copyIndex > 0
+                                          ? `(${setList.copyIndex})`
+                                          : ""
+                                      }`
+                                    : setList.title}
+                                </span>
                               </span>
-                            </span>
+                            </div>
+                            <small>
+                              {setList.description ? setList.description : ""}
+                            </small>
+                            <div className="content-number-tile">
+                              {" "}
+                              {setList.moveCount} moves
+                            </div>
                           </div>
-                          {setList.description ? setList.description : ""}
-                          <div className="content-number-tile">
-                            {" "}
-                            {setList.moveCount} moves
-                          </div>
-                        </div>
-                        {setList.recentlyAddMoveImg ? (
                           <div
                             className="d-flex img-tile-wrap cursor_pointer"
                             onClick={() => this.handleSetDetails(setList._id)}
                           >
-                            <div className="cotent-img-tile">
-                              <video width={"100%"} id="webm-video">
-                                <source
+                            {setList.recentlyAddMoveImg ? (
+                              <div className="cotent-img-tile">
+                                <img
                                   src={`${setList.recentlyAddMoveImg}`}
-                                  type="video/webm"
+                                  alt=""
+                                  width="100%"
+                                  height="100%"
                                 />
-                              </video>
-                            </div>
+                              </div>
+                            ) : (
+                              <div className={""}>
+                                <img
+                                  src={emptyImg}
+                                  alt=""
+                                  width="60"
+                                  height="60"
+                                />
+                              </div>
+                            )}
+
                             {/* <div
                             className="cotent-img-tile "
                             style={{
@@ -186,7 +224,7 @@ class SetComponent extends React.Component {
                             }}
                           /> */}
                           </div>
-                        ) : null}
+                        </div>
                         <div
                           onMouseOver={() => this.showPopOver(i, show)}
                           className="tooltip-btn-wrap right-btn-tip"
@@ -226,7 +264,7 @@ class SetComponent extends React.Component {
                                     )
                                   }
                                 >
-                                  Delete
+                                  Remove
                                 </Button>
                               </ButtonGroup>
                             ) : null}
@@ -263,7 +301,7 @@ class SetComponent extends React.Component {
                               onClick={this.handleSetModal}
                             >
                               <i className="fas fa-plus mr-1"></i>
-                              Create a Set
+                              Create New Set
                             </Button>
                           </div>
                         </CardBody>

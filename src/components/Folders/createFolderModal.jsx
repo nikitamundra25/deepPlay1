@@ -36,6 +36,22 @@ class FolderModal extends React.Component {
         description
       });
     }
+    if (prevProps.modal !== this.props.modal) {
+      if (this.props.folderDetails) {
+        const { title, description } = this.props.folderDetails;
+        this.setState({
+          title,
+          description,
+          errors: {}
+        });
+      } else {
+        this.setState({
+          title: "",
+          description: "",
+          errors: {}
+        });
+      }
+    }
   }
 
   handleChange = e => {
@@ -81,6 +97,15 @@ class FolderModal extends React.Component {
     this.props.createFolder(data);
   };
 
+  handleClose = () => {
+    this.setState({
+      errors: "",
+      title: "",
+      description: ""
+    });
+    this.props.handleOpen();
+  };
+
   render() {
     const { modal, handleOpen, folderDetails } = this.props;
     const { title, description, errors } = this.state;
@@ -102,7 +127,7 @@ class FolderModal extends React.Component {
               className="close"
               data-dismiss="modal"
               type="button"
-              onClick={handleOpen}
+              onClick={this.handleClose}
             >
               <span aria-hidden="true">
                 <img src={closeBtn} alt="close-ic" />
@@ -150,7 +175,6 @@ class FolderModal extends React.Component {
               onClick={this.onCreateFolder}
               color=" "
               className="btn btn-black"
-              disabled={!title}
             >
               {folderDetails ? "Update Folder" : "Create Folder"}
             </Button>

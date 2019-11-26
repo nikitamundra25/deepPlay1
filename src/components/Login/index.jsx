@@ -44,9 +44,23 @@ class LoginComponent extends React.Component {
 
   handleChange = e => {
     const { name, value } = e.target;
-    this.setState({
-      [name]: value
-    });
+    if (name === "email") {
+      this.setState({
+        [name]: value.trim(),
+        errors: {
+          ...this.state.errors,
+          [name]: null
+        }
+      });
+    } else {
+      this.setState({
+        [name]: value,
+        errors: {
+          ...this.state.errors,
+          [name]: null
+        }
+      });
+    }
   };
   /*
   /* 
@@ -167,7 +181,7 @@ class LoginComponent extends React.Component {
               </CardHeader>
               <CardBody className="px-lg-5">
                 <div className="text-center login-heading mb-4 auth-subheading">
-                  Or sign in with credentials
+                  <span> Or sign in with credentials</span>
                 </div>
                 <Form onSubmit={this.handleLoginRequest}>
                   <FormGroup className="mb-3">
@@ -183,7 +197,7 @@ class LoginComponent extends React.Component {
                         onChange={this.handleChange}
                         name={"email"}
                         value={email}
-                        type="email"
+                        type="text"
                         // title="Please Provide A Valid Email Address !"
                         // oninvalid={() =>
                         //   this.setCustomValidity("Enter User Name Here")
