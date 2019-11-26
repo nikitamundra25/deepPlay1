@@ -135,8 +135,11 @@ class MoveListDetails extends React.Component {
                             <Input
                               className="custom-control-input"
                               id={`selected-video-${index}`}
-                              onChange={e =>
-                                handleMovesSelect(null, e, index, video._id)
+                              onChange={
+                                !video.isMoveProcessing ?
+                                  e =>
+                                    handleMovesSelect(null, e, index, video._id) :
+                                  null
                               }
                               type="checkbox"
                               checked={selectedMoves[index] ? true : false}
@@ -175,7 +178,7 @@ class MoveListDetails extends React.Component {
               </div>
               <div
                 // onMouseLeave={() => this.props.closePopOver(index, show)}
-                onDoubleClick={() => onDoubleClick(index, video.title)}
+                onDoubleClick={!video.isMoveProcessing ? () => onDoubleClick(index, video.title) : null}
                 className="play-list-text"
               >
                 <div className="text-capitalize play-list-heading h6 m-0">
@@ -199,8 +202,9 @@ class MoveListDetails extends React.Component {
                 </div>
                 <div
                   className="star-wrap"
-                  onClick={() =>
-                    handleStarred(video._id, video.isStarred, index)
+                  onClick={!video.isMoveProcessing ? () =>
+                    handleStarred(video._id, video.isStarred, index) :
+                    null
                   }
                 >
                   {video.isStarred ? (

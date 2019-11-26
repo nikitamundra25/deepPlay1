@@ -99,6 +99,13 @@ class MoveList extends React.Component {
     }
     if (prevProps.isSavingWebM !== this.props.isSavingWebM) {
       console.log("inside isSavingWebM");
+      this.props.movesOfSet.map((key, index) => {
+        this.myVideo = document.getElementById(`webm-video-${index}`);
+        if (this.myVideo) {
+          this.myVideo.load();
+        }
+        return true
+      });
     }
     if (prevProps.isVideoSelected !== this.props.isVideoSelected) {
       this.scrollClass = document.getElementsByClassName(

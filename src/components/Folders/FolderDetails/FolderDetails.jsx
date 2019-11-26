@@ -415,7 +415,6 @@ class RecentFolderComponent extends React.Component {
                             {list.recentlyAddMoveImg ? (
                               <div className="cotent-img-tile">
                                 <img
-                                  src
                                   src={`${list.recentlyAddMoveImg}`}
                                   alt=""
                                   width="100%"

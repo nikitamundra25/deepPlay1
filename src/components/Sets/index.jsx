@@ -197,7 +197,6 @@ class SetComponent extends React.Component {
                             {setList.recentlyAddMoveImg ? (
                               <div className="cotent-img-tile">
                                 <img
-                                  src
                                   src={`${setList.recentlyAddMoveImg}`}
                                   alt=""
                                   width="100%"
