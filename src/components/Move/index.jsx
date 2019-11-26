@@ -13,12 +13,13 @@ import {
   InputGroup,
   UncontrolledTooltip,
   Form,
-  Progress
+  Progress,
+  Button
 } from "reactstrap";
 import "./index.scss";
 import { logger } from "helper/Logger";
 import { connect } from "react-redux";
-import { downloadYoutubeVideoRequest } from "../../actions";
+import { downloadYoutubeVideoRequest, videoCancelRequest } from "../../actions";
 import { ConfirmBox } from "../../helper/SweetAleart";
 
 // core components
@@ -33,7 +34,23 @@ class MoveComponent extends React.Component {
       fileErr: ""
     };
   }
+
   componentDidMount = () => {};
+
+  componentDidUpdate = ({ moveReducer }) => {
+    const { cancelVideo } = this.props.moveReducer;
+    if (
+      this.props.moveReducer &&
+      moveReducer.cancelVideo !== this.props.moveReducer.cancelVideo
+    ) {
+      if (cancelVideo) {
+        this.setState({
+          url: ""
+        });
+      }
+    }
+  };
+
   handleChange = e => {
     e.preventDefault();
     const { name, value } = e.target;
@@ -89,9 +106,6 @@ class MoveComponent extends React.Component {
     if (!this.state.isPaste) {
       e.preventDefault();
     }
-    // this.setState({
-    //   errors: {}
-    // });
     try {
       if (!this.state.url) {
         this.setState({
@@ -167,14 +181,16 @@ class MoveComponent extends React.Component {
     }
   };
 
+  handleCancel = () => {
+    this.props.videoCancelRequest();
+  };
+
   render() {
     const { errors, url, fileErr } = this.state;
     const { moveReducer } = this.props;
     const { isVideoDownloading } = moveReducer;
     const location = window.location.href;
     const stemp = location.split("?");
-    console.log("location", stemp[1]);
-
     return (
       <>
         <div className="create-set-section step-2 create-move-section">
@@ -209,6 +225,18 @@ class MoveComponent extends React.Component {
                         Please do not refresh or close this page while we are
                         processing.
                       </p>
+                      <div className={"text-center"}>-Or-</div>
+                      <p>
+                        Cancel video request by clicking bellow button.
+                      </p>
+                      <div>
+                        <Button
+                          className={"btn btn-black"}
+                          onClick={this.handleCancel}
+                        >
+                          Cancel
+                        </Button>
+                      </div>
                     </div>
                   ) : (
                     <Form
@@ -318,6 +346,7 @@ const mapStateToProps = state => ({
   moveReducer: state.moveReducer
 });
 const mapDispatchToProps = dispatch => ({
-  downloadVideo: data => dispatch(downloadYoutubeVideoRequest(data))
+  downloadVideo: data => dispatch(downloadYoutubeVideoRequest(data)),
+  videoCancelRequest: () => dispatch(videoCancelRequest())
 });
 export default connect(mapStateToProps, mapDispatchToProps)(MoveComponent);

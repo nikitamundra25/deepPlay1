@@ -64,7 +64,11 @@ const createSetLogic = createLogic({
             toastId = toast.success(result.messages[0]);
           }
           if (action.payload.addMove) {
-            dispatch(redirectTo({ path: AppRoutes.MOVE.url }));
+            dispatch(
+              redirectTo({
+                path: AppRoutes.MOVE.url + `?setId=${result.data.setResult._id}`
+              })
+            );
           }
           if (action.payload.folderId !== null) {
             dispatch(

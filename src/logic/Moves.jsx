@@ -16,21 +16,26 @@ import {
   getMoveBySearchRequest,
   starredMovesSuccess,
   getTagListSuccess,
-  getAllSetRequest
+  getAllSetRequest,
+  videoCancelSuccess,
+  removeVideoLocalServerRequest
 } from "../actions";
 import { AppRoutes } from "../config/AppRoutes";
 import { toast } from "react-toastify";
 import { logger } from "helper/Logger";
 import { completeVideoEditingSuccess } from "actions/Moves";
 import { addTagsSuccess } from "actions/Moves";
-let toastId = null;
+import { updateMoveSuccess } from "actions/Moves";
 
+let toastId = null;
+let api = new ApiHelper();
 //  Download video
 const downloadVideoLogic = createLogic({
   type: MovesAction.DOWNLOAD_YOUTUBE_VIDEO_REQUEST,
-  async process({ action }, dispatch, done) {
+  async process({ action, getState }, dispatch, done) {
     let api = new ApiHelper();
     let result;
+
     if (action.payload.isYoutubeUrl) {
       result = await api.FetchFromServer(
         "move",
@@ -41,7 +46,25 @@ const downloadVideoLogic = createLogic({
         action.payload
       );
     } else {
-      result = await api.UploadVideo("move", "/download-video", action.payload);
+      // const config = {
+      //   onUploadProgress: (progressEvent: (loaded, total)) => {
+      //     const percent=
+      //       Math.round(
+      //         (progressEvent.loaded / progressEvent.total) * 100 * 100
+      //       ) / 100;
+      //     dispatch(onPresentationUploadProgressEvent(percent));
+      //   }
+      // };
+
+      const config = {
+        onUploadProgress: e => console.log("oooooooohhhhhh", e)
+      };
+      result = await api.UploadVideo(
+        "move",
+        "/download-video",
+        action.payload,
+        config
+      );
     }
     if (result.isError) {
       if (!toast.isActive(toastId)) {
@@ -52,6 +75,7 @@ const downloadVideoLogic = createLogic({
           videoUrl: ""
         })
       );
+
       done();
       return;
     } else {
@@ -122,8 +146,13 @@ const getMovesDetailsByIdLogic = createLogic({
       undefined
     );
     if (result.isError) {
-      toast.error(result.messages[0]);
+      // toast.error(result.messages[0]);
       dispatch(getMoveDetailsSuccess({ moveDetails: "" }));
+      dispatch(
+        redirectTo({
+          path: `${AppRoutes.MOVE.url}`
+        })
+      );
       done();
       return;
     } else {
@@ -140,12 +169,7 @@ const getMovesDetailsByIdLogic = createLogic({
 // completed video editing and send for final update
 const completeVideoEditingLogic = createLogic({
   type: MovesAction.UPDATE_VIDEO_SETTINGS,
-  async process({ action }, dispatch, done) {
-    dispatch(
-      completeVideoEditingSuccess({
-        isSavingWebM: true
-      })
-    );
+  async process({ action, getState }, dispatch, done) {
     let api = new ApiHelper();
     let result = await api.FetchFromServer(
       "move",
@@ -172,7 +196,7 @@ const completeVideoEditingLogic = createLogic({
         dispatch(
           modelOpenRequest({
             modelDetails: {
-              isMoveSuccessModal: true,
+              isMoveSuccessModal: false,
               createSetModalOpen: false
             }
           })
@@ -190,6 +214,17 @@ const completeVideoEditingLogic = createLogic({
           }
         })
       );
+      
+      let temp = getState().moveReducer.isMoveDone;
+      if (temp) {
+        dispatch(
+          removeVideoLocalServerRequest({
+            videoOriginalFile: result.data.videoOriginalFile,
+            videoFileMain: result.data.videoFileMain,
+            setId: result.data.setId
+          })
+        );
+      }
       done();
     }
   }
@@ -323,12 +358,16 @@ const transferMoveLogic = createLogic({
         modelOpenRequest({
           modelDetails: {
             transferToModalOpen: false,
-            transferToModalOpenReq: false
+            transferToModalOpenReq: false,
+            transferMoveModalOpen: false,
+            isVideoModalOpen: false,
+            isVideoModalOpenReq: false,
+            transferMoveModalOpenReq: false
           }
         })
       );
 
-      if (!action.payload.isSearch) {
+      if (!action.payload.fromMoveSearch || !action.payload.isSearch) {
         dispatch(
           getMovesOfSetRequest({
             setId: action.payload.previousSetId,
@@ -370,13 +409,6 @@ const createAnotherMoveLogic = createLogic({
         toastId = toast.success(result.messages[0]);
       }
       dispatch(
-        modelOpenRequest({
-          modelDetails: {
-            isMoveSuccessModal: false
-          }
-        })
-      );
-      dispatch(
         redirectTo({
           path: `${AppRoutes.MOVE_DETAILS.url.replace(
             ":id",
@@ -387,6 +419,13 @@ const createAnotherMoveLogic = createLogic({
       dispatch(
         createAnotherMoveSuccess({
           moveDetails: result.data
+        })
+      );
+      dispatch(
+        modelOpenRequest({
+          modelDetails: {
+            isMoveSuccessModal: false
+          }
         })
       );
       done();
@@ -516,14 +555,14 @@ const removeVideoLocalServerLogic = createLogic({
       done();
       return;
     } else {
-      dispatch(
-        redirectTo({
-          path: `${AppRoutes.SET_DETAILS.url.replace(
-            ":id",
-            action.payload.setId
-          )}`
-        })
-      );
+      // dispatch(
+      //   redirectTo({
+      //     path: `${AppRoutes.SET_DETAILS.url.replace(
+      //       ":id",
+      //       action.payload.setId
+      //     )}`
+      //   })
+      // );
       dispatch(
         modelOpenRequest({
           modelDetails: {
@@ -547,7 +586,7 @@ const editMoveLogic = createLogic({
       "PUT",
       true,
       undefined,
-      action.payload
+      action.payload.data
     );
     if (result.isError) {
       if (!toast.isActive(toastId)) {
@@ -559,16 +598,21 @@ const editMoveLogic = createLogic({
       if (!toast.isActive(toastId)) {
         toastId = toast.success(result.messages[0]);
       }
+      if (action.payload.data.fromMoveList) {
+        dispatch(updateMoveSuccess({ movesOfSet: action.payload.moveList }));
+      } else {
+        dispatch(updateMoveSuccess({ videoData: action.payload.moveVideo }));
+      }
       dispatch(
         modelOpenRequest({
           modelDetails: {
-            editMoveModalOpen: false,
-            isVideoModalOpen: false,
-            isVideoModalOpenReq: false
+            editMoveModalOpen: false
+            // isVideoModalOpen: false,
+            // isVideoModalOpenReq: false
           }
         })
       );
-      dispatch(getMovesOfSetRequest({ setId: action.payload.setId }));
+      // dispatch(getMovesOfSetRequest({ setId: action.payload.setId }));
       done();
     }
   }
@@ -642,10 +686,40 @@ const getTagListRequestLogic = createLogic({
       done();
       return;
     } else {
-      console.log(">>>>taglist>", result.data.data);
       dispatch(
         getTagListSuccess({
           tagsList: result.data.data
+        })
+      );
+      done();
+    }
+  }
+});
+
+//Cancel Video upload
+const videoCancelRequestLogic = createLogic({
+  type: MovesAction.VIDEO_CANCEL_REQUEST,
+  async process({ action }, dispatch, done) {
+    api.cancelRequest("cancel");
+    let result = await api.FetchFromServer(
+      "move",
+      "/cancel-move-request",
+      "POST",
+      true
+    );
+    if (result.isError) {
+      if (!toast.isActive(toastId)) {
+        toastId = toast.error(result.messages[0]);
+      }
+      done();
+      return;
+    } else {
+      if (!toast.isActive(toastId)) {
+        toastId = toast.success(result.messages[0]);
+      }
+      dispatch(
+        videoCancelSuccess({
+          cancelVideo: true
         })
       );
       done();
@@ -668,5 +742,6 @@ export const MoveLogics = [
   editMoveLogic,
   getMovesBySearchLogic,
   addTagsInModalLogic,
-  getTagListRequestLogic
+  getTagListRequestLogic,
+  videoCancelRequestLogic
 ];

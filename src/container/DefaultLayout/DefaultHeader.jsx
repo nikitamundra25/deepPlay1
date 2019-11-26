@@ -27,7 +27,7 @@ import AllSearchComponent from "../../components/AllSearch";
 import CreateSetComponent from "../../components/Sets/createSet";
 import searchArrow from "../../assets/img/back-search.png";
 import { DebounceInput } from "react-debounce-input";
-import WebmView from "../../components/Sets/SetDetails/WebmView";
+import WebmSearch from "../../components/comman/WebmSearch";
 
 class DefaultHeader extends React.Component {
   constructor(props) {
@@ -56,6 +56,7 @@ class DefaultHeader extends React.Component {
       });
     }
   };
+
   handleClickOutside = event => {
     if (this.wrapperRef && !this.wrapperRef.contains(event.target)) {
       this.setState({
@@ -97,9 +98,11 @@ class DefaultHeader extends React.Component {
       }
     });
   };
+
   deleteMove = data => {
     this.props.deleteMoveRequest(data);
   };
+
   handleSetModal = () => {
     const { modelInfoReducer } = this.props;
     const { modelDetails } = modelInfoReducer;
@@ -162,6 +165,7 @@ class DefaultHeader extends React.Component {
       search: ""
     });
   };
+
   searchAllMove = () => {
     this.props.redirectTo(
       AppRoutes.MOVE_SEAECH_ALL.url + `?search=${this.state.search}`
@@ -200,6 +204,7 @@ class DefaultHeader extends React.Component {
     moveVideo.tags = data.tags;
     this.props.addTagsRequest({ data: data, moveVideo: moveVideo });
   };
+
   /*  */
   render() {
     const {
@@ -275,7 +280,7 @@ class DefaultHeader extends React.Component {
                   <div className="header-bar-ic">
                     <i className="fa fa-bars" aria-hidden="true"></i>
                   </div>
-                  <NavbarBrand className="mr-lg-5" to="/" tag={Link}>
+                  <NavbarBrand className="mr-lg-5 pr-lg-1" to="/" tag={Link}>
                     <h3 className="mb-0 header-title">DeepPlay</h3>
                   </NavbarBrand>
                   {isLoggedIn || isLoginSuccess ? (
@@ -474,26 +479,35 @@ class DefaultHeader extends React.Component {
                           </DropdownToggle>
                           <DropdownMenu>
                             {SidebarComponent.map((item, index) => {
-                              return (
-                                <DropdownItem
-                                  onClick={() =>
-                                    this.props.redirectTo(item.url)
-                                  }
-                                  key={index}
-                                  active={routePath === item.url ? true : false}
-                                >
-                                  <div className="dropdown-img">
-                                    <img
-                                      src={item.iconUrl}
-                                      alt={item.iconUrl}
-                                      width="20"
-                                    />{" "}
-                                  </div>
-                                  <div className="dropdown-txt">
-                                    {item.name}
-                                  </div>
-                                </DropdownItem>
-                              );
+                              if (
+                                item.name !== "Set" &&
+                                item.name !== "Folder"
+                              ) {
+                                return (
+                                  <DropdownItem
+                                    onClick={() =>
+                                      this.props.redirectTo(item.url)
+                                    }
+                                    key={index}
+                                    active={
+                                      routePath === item.url ? true : false
+                                    }
+                                  >
+                                    <div className="dropdown-img">
+                                      <img
+                                        src={item.iconUrl}
+                                        alt={item.iconUrl}
+                                        width="20"
+                                      />{" "}
+                                    </div>
+                                    <div className="dropdown-txt">
+                                      {item.name}
+                                    </div>
+                                  </DropdownItem>
+                                );
+                              } else {
+                                return null;
+                              }
                             })}
 
                             <DropdownItem onClick={e => logoutRequest(e)}>
@@ -599,7 +613,7 @@ class DefaultHeader extends React.Component {
           createSet={this.createSet}
         />
         {showVideo && showVideo.length ? (
-          <WebmView
+          <WebmSearch
             isVideoModalOpen={isVideoModalOpenReq}
             handleVideoModal={this.handleVideoModal}
             video={showVideo}

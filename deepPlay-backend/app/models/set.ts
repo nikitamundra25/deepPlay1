@@ -29,6 +29,10 @@ const setSchema: Mongoose.Schema = new Schema({
     type: Boolean,
     default: false
   },
+  isVideoProcessing: {
+    type: [Object],
+    default: []
+  },
   copyIndex: {
     type: Number
   },

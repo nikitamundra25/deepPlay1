@@ -1,11 +1,6 @@
 import React from "react";
-import {
-  ModalHeader,
-  Modal,
-  ModalBody,
-  Button
-} from "reactstrap";
-//import { AppConfig } from "../../../config/Appconfig";
+import { ModalHeader, Modal, ModalBody, Button } from "reactstrap";
+import { AppConfig } from "../../../config/Appconfig";
 // core components
 class MoveSuccessModal extends React.Component {
   constructor(props) {
@@ -22,12 +17,17 @@ class MoveSuccessModal extends React.Component {
     });
     this.video.load();
     this.video.play();
-  }
+  };
   /**
    *
    */
   render() {
-    const { isMoveSuccessModal, moveUrlDetails } = this.props;
+    const {
+      isMoveSuccessModal,
+      moveUrlDetails,
+      isCreatingAnotherMove,
+      moveDetails
+    } = this.props;
     //const { isPlaying } = this.state
     return (
       <>
@@ -43,21 +43,20 @@ class MoveSuccessModal extends React.Component {
               </span>
             </div>
           </ModalHeader>
-          <ModalBody >
+          <ModalBody>
             <div className="create-set-section step-2 ">
               <div className="w-100 set-content-wrap pt-0 mt-0 ">
                 <div className="set-content-block w-100">
-
                   <div className="d-flex vieos-add-section video-add-banner justify-content-center align-items-center">
                     <video width={"100%"} autoPlay loop id={"video-trimmer"}>
                       <source
-                        src={`${moveUrlDetails.s3VideoUrl}`}
+                        src={`${AppConfig.API_ENDPOINT}${moveDetails.videoUrl}`}
                       />
                     </video>
                   </div>
                   <p className="font-weight-bold my-3 text-center h5 mb">
                     Would you like to create another Move from the same video?
-                    </p>
+                  </p>
                   <div className="text-center ">
                     <Button
                       onClick={() =>
@@ -66,20 +65,21 @@ class MoveSuccessModal extends React.Component {
                       }
                       className="btn-line-black"
                       color=" "
+                      disabled={isCreatingAnotherMove}
                     >
-                      Yes, Create another
-                      </Button>
+                      {isCreatingAnotherMove
+                        ? "Please wait..."
+                        : "Yes, Create another"}
+                    </Button>
                     <Button
-                      onClick={() =>
-                        this.props.handleSetDetails(moveUrlDetails.setId)
-                      }
+                      onClick={() => this.props.redirectToSetDetails("done")}
                       className="btn-black"
                       color=" "
+                      disabled={isCreatingAnotherMove}
                     >
                       No, i am done
-                      </Button>
+                    </Button>
                   </div>
-
                 </div>
               </div>
             </div>

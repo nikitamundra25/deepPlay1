@@ -398,7 +398,9 @@ class RecentFolderComponent extends React.Component {
                               </span>
                             </div>
                             <span className={"text-capitalize"}>
-                              <small>{list.description ? list.description : ""}</small>
+                              <small>
+                                {list.description ? list.description : ""}
+                              </small>
                             </span>
                             <div className="content-number-tile">
                               {" "}
@@ -412,12 +414,12 @@ class RecentFolderComponent extends React.Component {
                           >
                             {list.recentlyAddMoveImg ? (
                               <div className="cotent-img-tile">
-                                <video width={"100%"} id="webm-video">
-                                  <source
-                                    src={`${list.recentlyAddMoveImg}`}
-                                    type="video/webm"
-                                  />
-                                </video>
+                                <img
+                                  src={`${list.recentlyAddMoveImg}`}
+                                  alt=""
+                                  width="100%"
+                                  height="100%"
+                                />
                               </div>
                             ) : (
                               <div className={""}>

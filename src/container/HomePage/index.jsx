@@ -2,6 +2,8 @@ import React from "react";
 import { connect } from "react-redux";
 import { AppRoutes } from "../../config/AppRoutes";
 import { Row, Col, Button, Container } from "reactstrap";
+import pauseIc from "../../assets/img/icons/pause.svg"
+import playIc from "../../assets/img/icons/play.svg"
 import {
   modelOpenRequest,
   loginRequest,
@@ -156,27 +158,27 @@ class HomePage extends React.Component {
               {/* videos */}
               <div className="videos-wrap d-flex justify-content-center align-items-center">
                 <div className="d-flex video-add-banner with-home-videos justify-content-center align-items-center">
-          
-                  {this.state.onPlaying ? 
-                   <span onClick={this.videoPlayHandler} className="play-ic-wrap pause-wrap">
-                   <i className="fa fa-pause" aria-hidden="true"></i> 
-                   </span>
-                       
-                   :
-                   <span onClick={this.videoPlayHandler} className="play-ic-wrap">
-                   <i className="fa fa-play" aria-hidden="true"></i> 
-                   </span>
+
+                  {this.state.onPlaying ?
+                    <span onClick={this.videoPlayHandler} className="play-ic-wrap pause-wrap">
+                      <img src={pauseIc} alt={"img"} />
+                    </span>
+
+                    :
+                    <span onClick={this.videoPlayHandler} className="play-ic-wrap">
+                      <img src={playIc} alt={"img"} />
+                    </span>
                   }
-               
+
                   <video width="100%" id="webm-video-0">
-                  <source
-                    src="https://s3.amazonaws.com/hope.bucket/moves/1571752097935_deep-play.webm"
-                    type="video/webm"
-                  />
-                </video>
+                    <source
+                      src="https://s3.amazonaws.com/hope.bucket/moves/1571752097935_deep-play.webm"
+                      type="video/webm"
+                    />
+                  </video>
                 </div>
-              
-              
+
+
               </div>
             </Col>
           </Row>

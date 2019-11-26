@@ -212,16 +212,19 @@ a {
   background: $videoAddBannerBack;
   border: 2px dashed $videoAddBannerBorder;
   .play-ic-wrap {
-    width: 90px;
-    height: 90px;
+    width: 60px;
+    height: 60px;
     display: flex;
     align-items: center;
     justify-content: center;
     background: $blackcolor;
     border-radius: 50%;
     font-size: 55px;
-    padding-left: 8px;
+    padding-left: 2px;
     color: $videoAddBannerBack;
+    img{
+      width: 20px;
+    }
   }
   &.video-add-banner{
     border:none;
@@ -2251,6 +2254,7 @@ a {
 .edit-view-wrap{
   z-index: 9;
   display: flex;
+  overflow: hidden;
   flex-wrap: wrap;
   &>div{
     width: 100%;
@@ -2594,3 +2598,14 @@ a {
 }
 // media query end
 // Please don't write other css in the bottom of media query
+.video-move-layer{
+  z-index: 2;
+  position: absolute;
+  // background: #ccc;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  width: 100%;
+  height: 100%;
+}

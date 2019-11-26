@@ -33,22 +33,33 @@ class DefaultSidebar extends React.Component {
         <div className="dashboard-left">
           <ul className="list-group list-group-flush">
             {SidebarComponent.map((items, index) => {
-              return (
-                <React.Fragment key={index}>
-                  <li>
-                    <NavLink
-                      className={`list-group-item list-${index}`}
-                      activeClassName="active"
-                      aria-current="page"
-                      to={items.url}
-                    >
-                      {/* <i className={items.icon} /> */}
-                      <img src={items.iconUrl} alt={items.iconUrl} width="20" />
-                      <span className="side-bar-text"> {items.name}</span>
-                    </NavLink>
-                  </li>
-                </React.Fragment>
-              );
+              if (
+                items.name !== "Change Password" &&
+                items.name !== "Settings"
+              ) {
+                return (
+                  <React.Fragment key={index}>
+                    <li>
+                      <NavLink
+                        className={`list-group-item list-${index}`}
+                        activeClassName="active"
+                        aria-current="page"
+                        to={items.url}
+                      >
+                        {/* <i className={items.icon} /> */}
+                        <img
+                          src={items.iconUrl}
+                          alt={items.iconUrl}
+                          width="20"
+                        />
+                        <span className="side-bar-text"> {items.name}</span>
+                      </NavLink>
+                    </li>
+                  </React.Fragment>
+                );
+              } else {
+                return null;
+              }
             })}
           </ul>
         </div>

@@ -344,9 +344,9 @@ const deleteFolder = async (req: Request, res: Response): Promise<void> => {
       }
     );
     const includSet: Document | any = await SetModel.find({
-      folderId: query.id
+      folderId: query.id,
+      isDeleted: false
     });
-    console.log("includSet", includSet);
 
     let setObjectIds: Document | any = [];
 
