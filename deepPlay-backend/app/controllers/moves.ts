@@ -91,7 +91,7 @@ const downloadVideo = async (req: Request, res: Response): Promise<any> => {
 };
 
 /* Title:- Download Video to local server
-Prams:- valid youtube video url 
+Prams:- valid youtube video url
 Created By:- Rishabh Bula*/
 
 const downloadYoutubeVideo = async (
@@ -509,9 +509,9 @@ const updateMoveDetailsAndTrimVideo = async (
 
     let thumbnailPath: any[] = [];
     if (frames && frames.length) {
-       if (IsProductionMode) {
+      if (IsProductionMode) {
         thumbnailPath = frames.split("8005");
-      }else{
+      } else {
         thumbnailPath = frames.split("8000");
       }
     }
@@ -1207,7 +1207,7 @@ const getTagListByUserId = async (
   }
 };
 /*
-/*  
+/*
 */
 const cancelCreateMovRequest = async (req: Request, res: Response) => {
   try {
