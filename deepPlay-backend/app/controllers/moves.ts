@@ -1,4 +1,4 @@
-import { Request, Response, response } from "express";
+import { Request, Response } from "express";
 import {
   CloudinaryAPIKey,
   CloudinaryAPISecretKey,
@@ -205,16 +205,13 @@ const getVideoFrames = async (videoName: string): Promise<any> => {
       `${dirName.split(".")[0]}_frames`,
       {
         start_time: 0,
-        every_n_percentage: 10
+        frame_rate: 20 / videoDuration
       },
       (error: any, file: any) => {
-        console.log(error);
         if (error) {
+          console.log(error);
           reject(error);
         }
-        console.log("====================================");
-        console.log(file);
-        console.log("====================================");
         const frames: string[] = (file as any).map((f: string) => {
           const fArray = f.split("/");
           return `${fArray[fArray.length - 2]}/${fArray[fArray.length - 1]}`;
