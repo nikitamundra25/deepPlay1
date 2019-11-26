@@ -555,14 +555,14 @@ const removeVideoLocalServerLogic = createLogic({
       done();
       return;
     } else {
-      dispatch(
-        redirectTo({
-          path: `${AppRoutes.SET_DETAILS.url.replace(
-            ":id",
-            action.payload.setId
-          )}`
-        })
-      );
+      // dispatch(
+      //   redirectTo({
+      //     path: `${AppRoutes.SET_DETAILS.url.replace(
+      //       ":id",
+      //       action.payload.setId
+      //     )}`
+      //   })
+      // );
       dispatch(
         modelOpenRequest({
           modelDetails: {
