@@ -1,13 +1,6 @@
 import React from "react";
 import { connect } from "react-redux";
-import {
-  Row,
-  Col,
-  Card,
-  CardBody,
-  CardHeader,
-  Button
-} from "reactstrap";
+import { Row, Col, Card, CardBody, CardHeader, Button } from "reactstrap";
 
 import { AppRoutes } from "../../config/AppRoutes";
 import {
@@ -61,7 +54,8 @@ class Dashboard extends React.Component {
         {!isRecentSetLoading && !isRecentFolderLoading ? (
           recentSets &&
           !recentSets.length &&
-          (recentFolders && !recentFolders.length) ? (
+          recentFolders &&
+          !recentFolders.length ? (
             <div className="create-set-section w-100 empty-folder-section">
               <Card className="set-content-wrap empty-folder-card">
                 <div className="set-content-block w-100 empty-folder-wrap">
@@ -157,12 +151,12 @@ class Dashboard extends React.Component {
                                 >
                                   <div className="cotent-img-tile">
                                     {set.recentlyAddMoveImg ? (
-                                      <video width={"100%"} id="webm-video">
-                                        <source
-                                          src={`${set.recentlyAddMoveImg}`}
-                                          type="video/webm"
-                                        />
-                                      </video>
+                                      <img
+                                        src={set.recentlyAddMoveImg}
+                                        alt=""
+                                        width="100%"
+                                        height="100%"
+                                      />
                                     ) : (
                                       <div className={""}>
                                         <img
@@ -378,7 +372,7 @@ class Dashboard extends React.Component {
             </>
           )
         ) : (
-          <div  className="loader-col">
+          <div className="loader-col">
             <Loader />
           </div>
         )}
@@ -405,7 +399,4 @@ const mapDispatchToProps = dispatch => ({
     dispatch(recentSetRequest());
   }
 });
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(Dashboard);
+export default connect(mapStateToProps, mapDispatchToProps)(Dashboard);
