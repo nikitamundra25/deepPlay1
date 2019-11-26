@@ -225,6 +225,10 @@ class MoveComponent extends React.Component {
                         Please do not refresh or close this page while we are
                         processing.
                       </p>
+                      <div className={"text-center"}>-Or-</div>
+                      <p>
+                        Cancel video request by clicking bellow button.
+                      </p>
                       <div>
                         <Button
                           className={"btn btn-black"}
