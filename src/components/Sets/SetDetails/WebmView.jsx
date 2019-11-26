@@ -60,6 +60,7 @@ class WebmView extends Component {
     isFullScreenMode,
     isVideoFromSearch
   }) => {
+   
     if (isFullScreenMode !== this.props.isFullScreenMode) {
       const videoFullScreen = true;
       if (this.video) {
