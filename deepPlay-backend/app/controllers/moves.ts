@@ -514,13 +514,10 @@ const updateMoveDetailsAndTrimVideo = async (
     if (result) {
       let videoFile: String | any, videoThumbnail: String | any;
       if (IsProductionMode) {
-        console.log("In Production Mode");
-        console.log(result.videoUrl, "videoName");
         videoFile = path.join(__dirname, result.videoUrl);
-        console.log(videoFile, "videoFile");
         if (thumbnailPath && thumbnailPath.length) {
-          console.log(thumbnailPath, "thumbnailPath");
-          videoThumbnail = path.join(__dirname, thumbnailPath[1]);
+          videoThumbnail = path.join(__dirname, thumbnailPath[0]);
+          console.log(videoThumbnail, "videoThumbnail");
         }
       } else {
         videoFile = path.join(__basedir, "..", result.videoUrl);
@@ -533,13 +530,11 @@ const updateMoveDetailsAndTrimVideo = async (
       }_clip_${moment().unix()}.webm`;
       let videoFileMain: String | any, videoOriginalFile: String | any;
       if (IsProductionMode) {
-        console.log(fileName, "fileName");
         videoFileMain = path.join(__dirname, `${fileName}`);
       } else {
         videoFileMain = path.join(__dirname, "..", `${fileName}`);
       }
       if (IsProductionMode) {
-        console.log(result.videoUrl, "result.videoUrl");
         videoOriginalFile = path.join(__dirname, `${result.videoUrl}`);
       } else {
         videoOriginalFile = path.join(__dirname, "..", `${result.videoUrl}`);
