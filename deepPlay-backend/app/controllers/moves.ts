@@ -509,14 +509,18 @@ const updateMoveDetailsAndTrimVideo = async (
 
     let thumbnailPath: any[] = [];
     if (frames && frames.length) {
-      thumbnailPath = frames.split("8000");
+       if (IsProductionMode) {
+        thumbnailPath = frames.split("8005");
+      }else{
+        thumbnailPath = frames.split("8000");
+      }
     }
     if (result) {
       let videoFile: String | any, videoThumbnail: String | any;
       if (IsProductionMode) {
         videoFile = path.join(__dirname, result.videoUrl);
         if (thumbnailPath && thumbnailPath.length) {
-          videoThumbnail = path.join(__dirname, thumbnailPath[0]);
+          videoThumbnail = path.join(__dirname, thumbnailPath[1]);
           console.log(videoThumbnail, "videoThumbnail");
         }
       } else {
