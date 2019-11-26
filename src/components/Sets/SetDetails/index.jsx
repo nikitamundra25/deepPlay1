@@ -346,7 +346,8 @@ class SetDetails extends React.Component {
       tagsList,
       isFullScreenMode,
       isMoveList,
-      isVideoSelected
+      isVideoSelected,
+      isSavingWebM
     } = moveReducer;
     const { userEncryptedInfo } = shareLinkReducer;
     const {
@@ -382,10 +383,10 @@ class SetDetails extends React.Component {
                 {setDetails
                   ? setDetails && setDetails.isCopy
                     ? `Copy of ${setDetails.title} ${
-                    setDetails.copyIndex > 0
-                      ? `(${setDetails.copyIndex})`
-                      : ""
-                    }`
+                        setDetails.copyIndex > 0
+                          ? `(${setDetails.copyIndex})`
+                          : ""
+                      }`
                     : setDetails.title
                   : "MySets"}
               </div>
@@ -517,18 +518,19 @@ class SetDetails extends React.Component {
                     }
                     getTagListRequest={() => this.props.getTagListRequest()}
                     editMove={this.editMove}
+                    isSavingWebM={isSavingWebM}
                     {...this.props}
                   />
                 </div>
               </Card>
             </>
           ) : (
-              <Row>
-                <Col md="12">
-                  <Loader />
-                </Col>
-              </Row>
-            )}
+            <Row>
+              <Col md="12">
+                <Loader />
+              </Col>
+            </Row>
+          )}
         </div>
         <SharableLinkModal
           modal={sharableLinkModalOpen}
@@ -615,10 +617,10 @@ const mapDispatchToProps = dispatch => ({
     dispatch(videoFullscreenExit(data));
   },
   videoSelectRequest: data => {
-    dispatch(videoSelectRequest(data))
+    dispatch(videoSelectRequest(data));
   },
   videoUnSelectRequest: data => {
-    dispatch(videoUnSelectRequest(data))
-  },
+    dispatch(videoUnSelectRequest(data));
+  }
 });
 export default connect(mapStateToProps, mapDispatchToProps)(SetDetails);

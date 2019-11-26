@@ -62,6 +62,10 @@ const moveSchema: Mongoose.Schema = new Schema({
   objectId: {
     type: Number
   },
+  isMoveProcessing: {
+    type: Boolean,
+    default: false
+  },
   setId: {
     type: Schema.Types.ObjectId,
     ref: "set"

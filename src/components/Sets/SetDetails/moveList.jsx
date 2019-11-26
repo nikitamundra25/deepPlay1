@@ -5,7 +5,7 @@ import {
   Button,
   ButtonGroup,
   FormGroup,
-  InputGroup
+  InputGroup,
 } from "reactstrap";
 import addPlusIc from "../../../assets/img/add_plus.png";
 import TransferToModal from "../../Folders/FolderDetails/transferTo";
@@ -58,7 +58,9 @@ class MoveList extends React.Component {
         isChanging: false
       },
       backgroundClass: "",
-      isLoadImage: false
+      isLoadImage: false,
+      isMoveLoadingCount: false,
+      moveLoadingCount: -1
     };
   }
 
@@ -68,9 +70,7 @@ class MoveList extends React.Component {
   /*
   /*  
   */
-  componentDidUpdate = ({ isVideoSelected }) => {
 
-  }
   listenScrollEvent = e => {
     if (window.scrollY > 180) {
       this.setState({ backgroundClass: "sticky-header" });
@@ -88,7 +88,7 @@ class MoveList extends React.Component {
     if (
       prevProps.isMoveStarLoading &&
       prevProps.isMoveStarLoading.loading !==
-      this.props.isMoveStarLoading.loading
+        this.props.isMoveStarLoading.loading
     ) {
       this.setState({
         isMarkingStar: {
@@ -97,14 +97,23 @@ class MoveList extends React.Component {
         }
       });
     }
+    if (prevProps.isSavingWebM !== this.props.isSavingWebM) {
+      console.log("inside isSavingWebM");
+    }
     if (prevProps.isVideoSelected !== this.props.isVideoSelected) {
-      this.scrollClass = document.getElementsByClassName("selected-moves selected-detail-page")
-      var body = document.body,
-        html = document.documentElement;
+      this.scrollClass = document.getElementsByClassName(
+        "selected-moves selected-detail-page"
+      );
+      // var body = document.body,
+      //   html = document.documentElement;
 
-      var height = Math.max(body.scrollHeight, body.offsetHeight,
-        html.clientHeight, html.scrollHeight, html.offsetHeight);
-      console.log("selected-moves selected-detail-page", this.scrollClass, height);
+      // var height = Math.max(
+      //   body.scrollHeight,
+      //   body.offsetHeight,
+      //   html.clientHeight,
+      //   html.scrollHeight,
+      //   html.offsetHeight
+      // );
     }
 
     if (prevProps.movesOfSet !== this.props.movesOfSet) {
@@ -125,7 +134,18 @@ class MoveList extends React.Component {
           };
         }
       });
+
+      /* console.log("upperrrrrrr");
+      if (this.props.isSavingWebM[0].index !== -1) {
+        console.log("happygd,jesgf");
+        this.setState({
+          isMoveLoadingCount: true,
+          moveLoadingCount:
+            this.props.isSavingWebM[0].index - this.props.movesOfSet.length
+        });
+      } */
     }
+
     // if (
     //   prevProps.isMoveStarLoading &&
     //   prevProps.isMoveStarLoading.loading !==
@@ -169,7 +189,7 @@ class MoveList extends React.Component {
     selectedMoves[index] = checked;
     let selectedMoveIds = [...this.state.selectedMoveIds];
     selectedMoveIds.push(moveId);
-    this.props.videoSelectRequest()
+    this.props.videoSelectRequest();
     this.setState({
       isVideoChecked: true,
       isVideoModalOpen: false,
@@ -202,7 +222,7 @@ class MoveList extends React.Component {
     });
   };
   handleUnselectAll = () => {
-    this.props.videoUnSelectRequest()
+    this.props.videoUnSelectRequest();
     this.setState({
       isVideoChecked: false,
       isVideoModalOpen: false,
@@ -523,7 +543,7 @@ class MoveList extends React.Component {
       totalMoves,
       tagsList,
       isMoveListLoading,
-      movesOfSet
+      movesOfSet,
     } = this.props;
     const { modelDetails } = modelInfoReducer;
     const { transferToModalOpen, addTagModalOpen } = modelDetails;
@@ -545,12 +565,13 @@ class MoveList extends React.Component {
       title,
       isMarkingStar,
       backgroundClass,
-      isLoadImage
+      isLoadImage,
+      isMoveLoadingCount,
+      moveLoadingCount
     } = this.state;
     const location = this.props.location;
     const isStarred = location.search.split("=");
     const serachContent = location.search.split("search");
-    console.log("isLoadImage", isLoadImage);
 
     return (
       <section className="play-list-collection set-detail-section set-detail-editble">
@@ -617,7 +638,7 @@ class MoveList extends React.Component {
                 selectedMoveIds && selectedMoveIds.length
                   ? "select-focus-event"
                   : null
-                } `}
+              } `}
             >
               {selectedMoveIds && selectedMoveIds.length ? (
                 <div className={` ${backgroundClass}`} id="get-sticky-header">
@@ -677,9 +698,7 @@ class MoveList extends React.Component {
                             <Button
                               color=" "
                               className="btn-black"
-                              onClick={() =>
-                                this.handleUnselectAll()
-                              }
+                              onClick={() => this.handleUnselectAll()}
                             >
                               <i
                                 className="fa fa-times fa-lg"
@@ -706,7 +725,7 @@ class MoveList extends React.Component {
                           <img src={addPlusIc} alt="" />
                         </div>
                         <Button color={" "} className="fill-btn btn mt-4">
-                          Create Now
+                          Create New
                         </Button>
                       </div>
                     </div>
@@ -737,6 +756,8 @@ class MoveList extends React.Component {
                             handleVideoCheckBox={this.handleVideoCheckBox}
                             handleVideoModal={this.props.handleVideoModal}
                             isLoadImage={isLoadImage}
+                            isMoveLoadingCount={isMoveLoadingCount}
+                            moveLoadingCount={moveLoadingCount}
                           />
                         );
                       })
@@ -783,10 +804,10 @@ class MoveList extends React.Component {
                   </div>
                 </div>
               ) : (
-                  <Col>
-                    <Loader />
-                  </Col>
-                )}
+                <Col>
+                  <Loader />
+                </Col>
+              )}
             </div>
           </Row>
           <TransferToModal

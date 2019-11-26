@@ -44,7 +44,8 @@ export const MovesAction = {
   VIDEO_SELECT_REQUEST: "Video Select Request",
   VIDEO_UNSELECT_REQUEST: "Video Unselect Request",
   VIDEO_CANCEL_REQUEST: "Video Cancel Request",
-  VIDEO_CANCEL_SUCCESS: "Video Cancel Success"
+  VIDEO_CANCEL_SUCCESS: "Video Cancel Success",
+  I_AM_DONE_REQUEST: "I Am Done Request"
 };
 
 export const downloadYoutubeVideoRequest = createAction(
@@ -172,3 +173,4 @@ export const videoCancelRequest = createAction(
 export const videoCancelSuccess = createAction(
   MovesAction.VIDEO_CANCEL_SUCCESS
 );
+export const noIAmDoneRequest = createAction(MovesAction.I_AM_DONE_REQUEST);

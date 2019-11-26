@@ -4,6 +4,7 @@ import starIc from "../../../assets/img/star.svg";
 import "./index.scss";
 import blankStar from "../../../assets/img/star-line.svg";
 import videoLoading from "../../../assets/img/icons/video-poster.png";
+import moveLoader from "../../../assets/img/loder/moveLoad.png";
 
 class MoveListDetails extends React.Component {
   render() {
@@ -157,7 +158,11 @@ class MoveListDetails extends React.Component {
                     width={"100%"}
                     id={`webm-video-${index}`}
                     poster={
-                      video.videoThumbnail ? video.videoThumbnail : videoLoading
+                      video.isMoveProcessing
+                        ? moveLoader
+                        : video.videoThumbnail
+                        ? video.videoThumbnail
+                        : videoLoading
                     }
                     muted={true}
                     draggable="true"
@@ -167,7 +172,6 @@ class MoveListDetails extends React.Component {
                     <source src={`${video.moveURL}`} type="video/webm" />
                   </video>
                 </div>
-
                 <div
                   className="blur-img"
                   // style={{ background: "#000" }}
