@@ -1,4 +1,4 @@
-import { Request, Response, response } from "express";
+import { Request, Response } from "express";
 import {
   CloudinaryAPIKey,
   CloudinaryAPISecretKey,
@@ -91,7 +91,7 @@ const downloadVideo = async (req: Request, res: Response): Promise<any> => {
 };
 
 /* Title:- Download Video to local server
-Prams:- valid youtube video url 
+Prams:- valid youtube video url
 Created By:- Rishabh Bula*/
 
 const downloadYoutubeVideo = async (
@@ -205,16 +205,13 @@ const getVideoFrames = async (videoName: string): Promise<any> => {
       `${dirName.split(".")[0]}_frames`,
       {
         start_time: 0,
-        every_n_percentage: 10
+        frame_rate: 20 / videoDuration
       },
       (error: any, file: any) => {
-        console.log(error);
         if (error) {
+          console.log(error);
           reject(error);
         }
-        console.log("====================================");
-        console.log(file);
-        console.log("====================================");
         const frames: string[] = (file as any).map((f: string) => {
           const fArray = f.split("/");
           return `${fArray[fArray.length - 2]}/${fArray[fArray.length - 1]}`;
@@ -509,9 +506,9 @@ const updateMoveDetailsAndTrimVideo = async (
 
     let thumbnailPath: any[] = [];
     if (frames && frames.length) {
-       if (IsProductionMode) {
+      if (IsProductionMode) {
         thumbnailPath = frames.split("8005");
-      }else{
+      } else {
         thumbnailPath = frames.split("8000");
       }
     }
@@ -1207,7 +1204,7 @@ const getTagListByUserId = async (
   }
 };
 /*
-/*  
+/*
 */
 const cancelCreateMovRequest = async (req: Request, res: Response) => {
   try {
