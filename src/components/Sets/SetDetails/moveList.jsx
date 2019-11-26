@@ -5,7 +5,7 @@ import {
   Button,
   ButtonGroup,
   FormGroup,
-  InputGroup,
+  InputGroup
 } from "reactstrap";
 import addPlusIc from "../../../assets/img/add_plus.png";
 import TransferToModal from "../../Folders/FolderDetails/transferTo";
@@ -104,7 +104,7 @@ class MoveList extends React.Component {
         if (this.myVideo) {
           this.myVideo.load();
         }
-        return true
+        return true;
       });
     }
     if (prevProps.isVideoSelected !== this.props.isVideoSelected) {
@@ -550,7 +550,7 @@ class MoveList extends React.Component {
       totalMoves,
       tagsList,
       isMoveListLoading,
-      movesOfSet,
+      movesOfSet
     } = this.props;
     const { modelDetails } = modelInfoReducer;
     const { transferToModalOpen, addTagModalOpen } = modelDetails;
@@ -732,7 +732,7 @@ class MoveList extends React.Component {
                           <img src={addPlusIc} alt="" />
                         </div>
                         <Button color={" "} className="fill-btn btn mt-4">
-                          Create New
+                          Create New Move
                         </Button>
                       </div>
                     </div>

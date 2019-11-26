@@ -359,7 +359,7 @@ class RecentFolderComponent extends React.Component {
             </UncontrolledDropdown>
 
             <UncontrolledTooltip placement="top" target="edit">
-              Edit & Delete
+              Edit & Delete Folder details
             </UncontrolledTooltip>
           </div>
         </div>{" "}

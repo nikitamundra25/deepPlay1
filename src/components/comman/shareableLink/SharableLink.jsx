@@ -130,7 +130,6 @@ class SharableLinkModal extends React.Component {
                   </InputGroup>
                 </div>
               </FormGroup>
-         
             </Form>
           </div>
         </ModalBody>
@@ -138,20 +137,19 @@ class SharableLinkModal extends React.Component {
           <ModalFooter className="justify-content-start">
             <div className="form-inline w-100 justify-content-between">
               <div className="d-flex">
-
-              <span className="font-14">
-                <b>Enable Public Access Link </b>
-              </span>
-              <label className="custom-toggle sharable-toggle custom-toggle-wrap ml-2">
-                <input
-                  type="checkbox"
-                  name="toggle"
-                  onChange={this.handlePublicAccess}
-                  checked={isPublic ? isPublic : false}
-                  disabled={copied ? true : false}
-                />
-                <span className="custom-toggle-slider rounded-circle" />
-              </label>
+                <span className="font-14">
+                  <b>Enable Public Access Link </b>
+                </span>
+                <label className="custom-toggle sharable-toggle custom-toggle-wrap ml-2">
+                  <input
+                    type="checkbox"
+                    name="toggle"
+                    onChange={this.handlePublicAccess}
+                    checked={isPublic ? isPublic : false}
+                    // disabled={copied ? true : false}
+                  />
+                  <span className="custom-toggle-slider rounded-circle" />
+                </label>
               </div>
               <div className=" d-flex justify-content-center ">
                 <CopyToClipboard
