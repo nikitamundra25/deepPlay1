@@ -102,7 +102,6 @@ class WebmView extends Component {
             }
           });
         }
-
         this.video.controls = false;
       }
     }

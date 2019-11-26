@@ -211,7 +211,7 @@ class MoveComponent extends React.Component {
                     </div>
                   ) : null}
                   <span className="content-title creat-set-title">
-                    {isVideoDownloading ? "Preparing Move" : "Create a move"}
+                    {isVideoDownloading ? "Preparing Move" : "Create New Move"}
                   </span>
                 </div>
               </CardHeader>
@@ -226,9 +226,7 @@ class MoveComponent extends React.Component {
                         processing.
                       </p>
                       <div className={"text-center"}>-Or-</div>
-                      <p>
-                        Cancel video request by clicking bellow button.
-                      </p>
+                      <p>Cancel video request by clicking bellow button.</p>
                       <div>
                         <Button
                           className={"btn btn-black"}
