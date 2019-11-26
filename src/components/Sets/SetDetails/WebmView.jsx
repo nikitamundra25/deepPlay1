@@ -93,7 +93,7 @@ class WebmView extends Component {
 
         if (this.props.isFullScreenMode && videoFullScreen) {
           let isVideoScreenChange = false;
-          this.video.addEventListener("webkitfullscreenchange", () => {
+          this.video.addEventListener("webkitfullscreenchange ", () => {
             this.setState({
               isFullScreenMode: false
             });
