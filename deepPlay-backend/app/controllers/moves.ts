@@ -135,7 +135,7 @@ const downloadYoutubeVideo = async (
       ytdl.getInfo(body.url, (err, info) => {
         if (err) throw err;
         if (info) {
-          ytdl(body.url, {quality: "highest"}).pipe(
+          ytdl(body.url, { quality: "highest" }).pipe(
             (videoStream = fs.createWriteStream(originalVideoPath))
           );
           videoStream.on("close", async function() {
@@ -515,10 +515,11 @@ const updateMoveDetailsAndTrimVideo = async (
       let videoFile: String | any, videoThumbnail: String | any;
       if (IsProductionMode) {
         console.log("In Production Mode");
-        console.log(result.videoUrl,"videoName")
+        console.log(result.videoUrl, "videoName");
         videoFile = path.join(__dirname, result.videoUrl);
-        console.log(videoFile,"videoFile")
+        console.log(videoFile, "videoFile");
         if (thumbnailPath && thumbnailPath.length) {
+          console.log(thumbnailPath, "thumbnailPath");
           videoThumbnail = path.join(__dirname, thumbnailPath[1]);
         }
       } else {
@@ -532,11 +533,13 @@ const updateMoveDetailsAndTrimVideo = async (
       }_clip_${moment().unix()}.webm`;
       let videoFileMain: String | any, videoOriginalFile: String | any;
       if (IsProductionMode) {
+        console.log(fileName, "fileName");
         videoFileMain = path.join(__dirname, `${fileName}`);
       } else {
         videoFileMain = path.join(__dirname, "..", `${fileName}`);
       }
       if (IsProductionMode) {
+        console.log(result.videoUrl, "result.videoUrl");
         videoOriginalFile = path.join(__dirname, `${result.videoUrl}`);
       } else {
         videoOriginalFile = path.join(__dirname, "..", `${result.videoUrl}`);
