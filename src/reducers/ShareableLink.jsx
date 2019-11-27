@@ -58,7 +58,7 @@ export const shareLinkReducer = handleActions(
     ) => ({
       ...state,
       ...payload,
-      isMoveDetailsLoading: false,
+      isMoveDetailsLoading: true,
       isShareableUrl: true
     }),
     [SharableLinkAction.PUBLIC_URL_MOVE_DETAILS_SUCCESS]: (

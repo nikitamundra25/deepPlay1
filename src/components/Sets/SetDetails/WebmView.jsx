@@ -262,6 +262,7 @@ class WebmView extends Component {
       });
     }
   };
+
   handleVideoResizeScreen = () => {
     this.customVideo = document.getElementById("webm-video");
     if (this.customVideo.mozCancelFullScreen) {
