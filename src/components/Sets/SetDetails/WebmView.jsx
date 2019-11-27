@@ -60,6 +60,7 @@ class WebmView extends Component {
     isFullScreenMode,
     isVideoFromSearch
   }) => {
+   
     if (isFullScreenMode !== this.props.isFullScreenMode) {
       const videoFullScreen = true;
       if (this.video) {
@@ -93,7 +94,8 @@ class WebmView extends Component {
 
         if (this.props.isFullScreenMode && videoFullScreen) {
           let isVideoScreenChange = false;
-          this.video.addEventListener("webkitfullscreenchange ", () => {
+          this.customVideo.addEventListener("fullscreenchange ", () => {
+            console.log("fasdfasdf");
             this.setState({
               isFullScreenMode: false
             });
@@ -491,14 +493,14 @@ class WebmView extends Component {
       moveIdToAddTags,
       moveIdToEdit,
       tags,
-      isFullScreenMode,
+      // isFullScreenMode,
       doubleClick,
       title,
       description,
       edit,
       error
     } = this.state;
-
+    const isFullScreenMode = document.fullscreenElement;
     return (
       <>
         <Modal
@@ -663,6 +665,7 @@ class WebmView extends Component {
                     disablecontrols="true"
                     disablepictureinpicture="true"
                     controlsList="nodownload"
+                    oncontextmenu="return false;"
                   >
                     <source
                       src={`${
