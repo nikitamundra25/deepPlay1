@@ -24,6 +24,10 @@ const moveSchema: Mongoose.Schema = new Schema({
     type: String,
     default: null
   },
+  videoThumbnail: {
+    type: String,
+    default: null
+  },
   moveURL: {
     type: String,
     default: null
@@ -51,8 +55,16 @@ const moveSchema: Mongoose.Schema = new Schema({
     type: Boolean,
     default: false
   },
+  startTime: {
+    type: Number,
+    default: 0
+  },
   objectId: {
     type: Number
+  },
+  isMoveProcessing: {
+    type: Boolean,
+    default: false
   },
   setId: {
     type: Schema.Types.ObjectId,

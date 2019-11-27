@@ -5,7 +5,9 @@ import {
   sharedSetInfoRequest,
   publicUrlMoveDetailsRequest,
   modelOpenRequest,
-  loadVideoDataRequest
+  loadVideoDataRequest,
+  videoFullscreenReq,
+  videoFullscreenExit
 } from "../../../actions";
 import "./index.scss";
 import "slick-carousel/slick/slick.css";
@@ -18,6 +20,7 @@ import emptySetIc from "../../../assets/img/play-list-ic.svg";
 import InfiniteScroll from "react-infinite-scroll-component";
 import imgNotfound from "../../../assets/img/404.svg";
 import { Link } from "react-router-dom";
+import videoLoading from "../../../assets/img/icons/video-poster.png";
 
 // core components
 class SetSharedLink extends React.Component {
@@ -94,6 +97,7 @@ class SetSharedLink extends React.Component {
         });
       }
     );
+    this.props.videoFullscreenExit();
   };
 
   handleLoadmoreRequest = setIdPathName => {
@@ -117,11 +121,13 @@ class SetSharedLink extends React.Component {
       shareLinkReducer,
       modelInfoReducer,
       loadVideoDataRequest,
-      moveReducer
+      moveReducer,
+      videoFullscreenReq,
+      videoFullscreenExit
     } = this.props;
     const { modelDetails } = modelInfoReducer;
     const { isVideoModalOpen } = modelDetails;
-    const { videoData } = moveReducer;
+    const { videoData, isFullScreenMode } = moveReducer;
     const { moveListItem, showVideo, showVideoIndex } = this.state;
     const {
       decryptedSetDetails,
@@ -181,6 +187,9 @@ class SetSharedLink extends React.Component {
                       videoData={videoData}
                       showVideoIndex={showVideoIndex}
                       loadVideoDataRequest={loadVideoDataRequest}
+                      isFullScreenMode={isFullScreenMode}
+                      videoFullscreenReq={videoFullscreenReq}
+                      videoFullscreenExit={videoFullscreenExit}
                       isShareable={true}
                       {...this.props}
                     />
@@ -255,7 +264,13 @@ class SetSharedLink extends React.Component {
                                         muted={true}
                                       >
                                         <source
+                                          poster={
+                                            video.videoThumbnail
+                                              ? video.videoThumbnail
+                                              : videoLoading
+                                          }
                                           src={`${video.moveURL}`}
+                                          loop
                                           type="video/webm"
                                         />
                                       </video>
@@ -323,7 +338,7 @@ class SetSharedLink extends React.Component {
                   <div className="banner-text">
                     <h1 className="banner-heading">Oops !</h1>
                     <p className="banner-subheading mt-4 mt-0 h3 font-weight-bold">
-                      Public access denied...
+                      Access denied...
                     </p>
                     <p className="banner-content  mt-0 ">
                       You didn't have permission to access this page. Maybe our
@@ -363,6 +378,12 @@ const mapDispatchToProps = dispatch => ({
   encryptedQuery: data => dispatch(sharedSetInfoRequest(data)),
   publicUrlSetDetails: data => dispatch(publicUrlMoveDetailsRequest(data)),
   modelOperate: data => dispatch(modelOpenRequest(data)),
-  loadVideoDataRequest: data => dispatch(loadVideoDataRequest(data))
+  loadVideoDataRequest: data => dispatch(loadVideoDataRequest(data)),
+  videoFullscreenReq: data => {
+    dispatch(videoFullscreenReq(data));
+  },
+  videoFullscreenExit: data => {
+    dispatch(videoFullscreenExit(data));
+  }
 });
 export default connect(mapStateToProps, mapDispatchToProps)(SetSharedLink);

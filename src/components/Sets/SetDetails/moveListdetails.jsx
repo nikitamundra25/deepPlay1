@@ -1,9 +1,10 @@
 import React from "react";
-import { Input } from "reactstrap";
+import { Input, FormGroup } from "reactstrap";
 import starIc from "../../../assets/img/star.svg";
 import "./index.scss";
 import blankStar from "../../../assets/img/star-line.svg";
 import videoLoading from "../../../assets/img/icons/video-poster.svg";
+import moveLoader from "../../../assets/img/loder/moveLoad.png";
 
 class MoveListDetails extends React.Component {
   render() {
@@ -22,7 +23,14 @@ class MoveListDetails extends React.Component {
       isSelectVideo,
       videoIndex,
       handleVideoCheckBox,
-      handleStarred
+      handleStarred,
+      title,
+      doubleClick,
+      doubleClickIndex,
+      onDoubleClick,
+      handleonBlur,
+      handleChange,
+      isLoadImage
     } = this.props;
 
     return (
@@ -34,10 +42,10 @@ class MoveListDetails extends React.Component {
         }
       >
         <div
-          onClick={() => this.props.handleShowVideo(index)}
-          onMouseLeave={() => {
+          onClick={!video.isMoveProcessing ? () => this.props.handleShowVideo(index) : null}
+          onMouseLeave={!video.isMoveProcessing ? () => {
             handleVideoHoverLeave();
-          }}
+          } : null}
           key={index}
         >
           <div className="play-list-block">
@@ -46,7 +54,7 @@ class MoveListDetails extends React.Component {
                 isVideoChecked && selectedMoves[index]
                   ? "video-full-selection"
                   : ""
-              }`}
+                }`}
               onMouseOver={() => handleVideoHover(index)}
               onMouseLeave={() => {
                 handleVideoPause(index);
@@ -55,15 +63,17 @@ class MoveListDetails extends React.Component {
               <div
                 onMouseOver={() => handleVideoPlay(index)}
                 onClick={
-                  isVideoChecked && !isVideoModalOpen
-                    ? () =>
+                  !video.isMoveProcessing ?
+                    isVideoChecked && !isVideoModalOpen
+                      ? () =>
                         handleMovesSelect(
                           !selectedMoves[index],
                           null,
                           index,
                           video._id
                         )
-                    : null
+                      : null :
+                    null
                 }
                 className={
                   isVideoChecked && selectedMoves[index]
@@ -71,6 +81,16 @@ class MoveListDetails extends React.Component {
                     : `play-list-img blur-img-wrap checked-wrap`
                 }
               >
+                <div
+                  className="video-move-layer"
+                  onClick={
+                    !video.isMoveProcessing ?
+                      !isVideoChecked && isVideoModalOpen
+                        ? () => this.props.handleVideoModal(video, index)
+                        : null :
+                      null
+                  }
+                ></div>
                 <div
                   className={
                     isMarkingStar.isChanging && isMarkingStar.index === index
@@ -80,9 +100,7 @@ class MoveListDetails extends React.Component {
                 >
                   {video.isStarred ? (
                     <img src={starIc} alt={"star"} className="w-100" />
-                  ) : (
-                    null
-                  )}
+                  ) : null}
                 </div>
 
                 {isVideoChecked ? (
@@ -90,8 +108,9 @@ class MoveListDetails extends React.Component {
                     <Input
                       className="custom-control-input"
                       id={`selected-video-${index}`}
-                      onChange={e =>
-                        handleMovesSelect(null, e, index, video._id)
+                      onChange={!video.isMoveProcessing ? e =>
+                        handleMovesSelect(null, e, index, video._id) :
+                        null
                       }
                       type="checkbox"
                       checked={selectedMoves[index] ? true : false}
@@ -102,114 +121,97 @@ class MoveListDetails extends React.Component {
                     />
                   </span>
                 ) : (
-                  <>
-                    {" "}
-                    {!isVideoChecked &&
-                    isSelectVideo &&
-                    videoIndex === index ? (
-                      <span
-                        // onClick={() => {
-                        //   this.setState(
-                        //     {
-                        //       isVideoModalOpen: false
-                        //     },
-                        //     () =>
-                        //       this.handleVideoCheckBox(true, index, video._id)
-                        //   );
-                        // }}
-                        onClick={() =>
-                          handleVideoCheckBox(true, index, video._id)
-                        }
-                        className="plus-ic-wrap custom-control custom-checkbox"
-                      >
-                        <Input
-                          className="custom-control-input"
-                          id={`selected-video-${index}`}
-                          onChange={e =>
-                            handleMovesSelect(null, e, index, video._id)
-                          }
-                          type="checkbox"
-                          checked={selectedMoves[index] ? true : false}
-                        />
-                        <label
-                          className="custom-control-label"
-                          htmlFor={`selected-video-${index}`}
-                        />
-                      </span>
-                    ) : null}
-                  </>
-                )}
-                <div
-                  className={"video-effect"}
-                  onClick={
-                    !isVideoChecked && isVideoModalOpen
-                      ? () => this.props.handleVideoModal(video, index)
-                      : null
-                  }
-                >
+                    <>
+                      {" "}
+                      {!isVideoChecked &&
+                        isSelectVideo &&
+                        videoIndex === index ? (
+                          <span
+                            onClick={() =>
+                              handleVideoCheckBox(true, index, video._id)
+                            }
+                            className="plus-ic-wrap custom-control custom-checkbox"
+                          >
+                            <Input
+                              className="custom-control-input"
+                              id={`selected-video-${index}`}
+                              onChange={
+                                !video.isMoveProcessing ?
+                                  e =>
+                                    handleMovesSelect(null, e, index, video._id) :
+                                  null
+                              }
+                              type="checkbox"
+                              checked={selectedMoves[index] ? true : false}
+                            />
+                            <label
+                              className="custom-control-label"
+                              htmlFor={`selected-video-${index}`}
+                            />
+                          </span>
+                        ) : null}
+                    </>
+                  )}
+                <div className={"video-effect"}>
                   <video
                     width={"100%"}
                     id={`webm-video-${index}`}
-                    poster={videoLoading}
+                    poster={
+                      video.isMoveProcessing
+                        ? moveLoader
+                        : video.videoThumbnail
+                          ? video.videoThumbnail
+                          : videoLoading
+                    }
                     muted={true}
+                    draggable="true"
                     loop
+                    className={isLoadImage ? "load-class" : ""}
                   >
                     <source src={`${video.moveURL}`} type="video/webm" />
                   </video>
                 </div>
                 <div
                   className="blur-img"
-                  // style={{ background: "#000" }}
+                // style={{ background: "#000" }}
                 />
               </div>
               <div
                 // onMouseLeave={() => this.props.closePopOver(index, show)}
-                // onDoubleClick={() =>
-                //   this.onDoubleClick(
-                //     index,
-                //     video.title
-                //   )
-                // }
+                onDoubleClick={!video.isMoveProcessing ? () => onDoubleClick(index, video.title) : null}
                 className="play-list-text"
               >
                 <div className="text-capitalize play-list-heading h6 m-0">
-                  {/* {doubleClick &&
-                              doubleClickIndex === index ? (
-                                <FormGroup>
-                                  <Input
-                                    id="title"
-                                    type="text"
-                                    placeholder="Enter a title"
-                                    name="title"
-                                    onChange={
-                                      this.handleChange
-                                    }
-                                    value={title}
-                                    onBlur={() =>
-                                      this.handleonBlur(
-                                        video,
-                                        index
-                                      )
-                                    }
-                                  />
-                                </FormGroup>
-                              ) : (
-                                video.title || "unnamed"
-                              )} */}
+                  {doubleClick && doubleClickIndex === index ? (
+                    <FormGroup>
+                      <Input
+                        id="title"
+                        type="text"
+                        placeholder="Enter a title"
+                        name="title"
+                        onChange={handleChange}
+                        value={title}
+                        onBlur={() => handleonBlur(video, index)}
+                      />
+                    </FormGroup>
+                  ) : (
+                      video.title || "unnamed"
+                    )}
 
-                  {video.title || "unnamed"}
+                  {/* {video.title || "unnamed"} */}
                 </div>
                 <div
                   className="star-wrap"
-                  onClick={() =>
-                    handleStarred(video._id, video.isStarred, index)
+                  onClick={!video.isMoveProcessing ? () =>
+                    handleStarred(video._id, video.isStarred, index) :
+                    null
                   }
                 >
                   {video.isStarred ? (
                     <img src={starIc} alt={"star"} className="w-100" />
                   ) : (
-                    <img className="w-100" src={blankStar} alt={"star"} />
-                  )}
+                      <img className="w-100" src={blankStar} alt={"star"} />
+                    )}
                 </div>
               </div>
             </div>

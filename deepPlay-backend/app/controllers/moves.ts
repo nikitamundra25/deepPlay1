@@ -1,4 +1,4 @@
-import { Request, Response, response } from "express";
+import { Request, Response } from "express";
 import {
   CloudinaryAPIKey,
   CloudinaryAPISecretKey,
@@ -91,7 +91,7 @@ const downloadVideo = async (req: Request, res: Response): Promise<any> => {
 };
 
 /* Title:- Download Video to local server
-Prams:- valid youtube video url 
+Prams:- valid youtube video url
 Created By:- Rishabh Bula*/
 
 const downloadYoutubeVideo = async (
@@ -135,7 +135,7 @@ const downloadYoutubeVideo = async (
       ytdl.getInfo(body.url, (err, info) => {
         if (err) throw err;
         if (info) {
-          ytdl(body.url).pipe(
+          ytdl(body.url, { quality: "highest" }).pipe(
             (videoStream = fs.createWriteStream(originalVideoPath))
           );
           videoStream.on("close", async function() {
@@ -199,78 +199,26 @@ const getVideoFrames = async (videoName: string): Promise<any> => {
   const dirName: string = videoURL;
   const video = await new ffmpeg(videoURL);
   const videoDuration = (video.metadata.duration as any).seconds;
-  console.log("dirName", videoDuration);
   return await new Promise((resolve, reject) => {
-    if (videoDuration <= 100) {
-      console.log("Inside smallest Video");
-      video.fnExtractFrameToJPG(
-        `${dirName.split(".")[0]}_frames`,
-        {
-          start_time: 0,
-          every_n_frames: 80
-        },
-        (error: any, file: any) => {
+    console.log("Inside Feeee Video");
+    video.fnExtractFrameToJPG(
+      `${dirName.split(".")[0]}_frames`,
+      {
+        start_time: 0,
+        frame_rate: 20 / videoDuration
+      },
+      (error: any, file: any) => {
+        if (error) {
           console.log(error);
-          if (error) {
-            reject(error);
-          }
-          console.log("====================================");
-          console.log(file);
-          console.log("====================================");
-          const frames: string[] = (file as any).map((f: string) => {
-            const fArray = f.split("/");
-            return `${fArray[fArray.length - 2]}/${fArray[fArray.length - 1]}`;
-          });
-          resolve({ frames, videoMetaData: video.metadata, videoName });
+          reject(error);
         }
-      );
-    } else if (videoDuration <= 500) {
-      console.log("inside first ");
-      video.fnExtractFrameToJPG(
-        `${dirName.split(".")[0]}_frames`,
-        {
-          start_time: 0,
-          every_n_seconds: 20
-        },
-        (error: any, file: any) => {
-          console.log(error);
-          if (error) {
-            reject(error);
-          }
-          console.log("====================================");
-          console.log(file);
-          console.log("====================================");
-          const frames: string[] = (file as any).map((f: string) => {
-            const fArray = f.split("/");
-            return `${fArray[fArray.length - 2]}/${fArray[fArray.length - 1]}`;
-          });
-          resolve({ frames, videoMetaData: video.metadata, videoName });
-        }
-      );
-    } else {
-      console.log("Inside Feeee Video");
-      video.fnExtractFrameToJPG(
-        `${dirName.split(".")[0]}_frames`,
-        {
-          start_time: 0,
-          every_n_percentage: 10
-        },
-        (error: any, file: any) => {
-          console.log(error);
-          if (error) {
-            reject(error);
-          }
-          console.log("====================================");
-          console.log(file);
-          console.log("====================================");
-          const frames: string[] = (file as any).map((f: string) => {
-            const fArray = f.split("/");
-            return `${fArray[fArray.length - 2]}/${fArray[fArray.length - 1]}`;
-          });
-          resolve({ frames, videoMetaData: video.metadata, videoName });
-        }
-      );
-    }
+        const frames: string[] = (file as any).map((f: string) => {
+          const fArray = f.split("/");
+          return `${fArray[fArray.length - 2]}/${fArray[fArray.length - 1]}`;
+        });
+        resolve({ frames, videoMetaData: video.metadata, videoName });
+      }
+    );
   });
 };
 /*  */
@@ -305,8 +253,6 @@ const createMove = async (req: Request, res: Response): Promise<any> => {
       videoName,
       isYoutubeUrl: false
     });
-    console.log("moveResult", moveResult);
-
     await moveResult.save();
     return res.status(200).json({
       message: "Move has been created successfully.",
@@ -524,57 +470,62 @@ const updateMoveDetailsAndTrimVideo = async (
   res: Response
 ): Promise<any> => {
   try {
-    const { body } = req;
-    const { timer, moveId, title, description, tags, setId } = body;
+    const { body, currentUser } = req;
+    let headToken: Request | any = currentUser;
+    const { timer, moveId, title, description, tags, setId, frames } = body;
     const result: Document | null | any = await MoveModel.findById(moveId);
+    const temp: Document | null | any = await SetModel.findById(setId);
+    const setData = temp.isVideoProcessing;
+    setData.push({ isLoading: true, index: temp.isVideoProcessing.length });
+    const resp: Document | null | any = await SetModel.updateOne(
+      {
+        _id: setId
+      },
+      {
+        isVideoProcessing: setData
+      }
+    );
+
+    await MoveModel.updateOne(
+      {
+        _id: result._id
+      },
+      {
+        title,
+        description,
+        tags,
+        startTime: timer.min ? timer.min : 0,
+        sourceUrl: result.sourceUrl ? result.sourceUrl : null,
+        isYoutubeUrl: result.isYoutubeUrl ? result.isYoutubeUrl : false,
+        setId,
+        videoMetaData: {},
+        isMoveProcessing: true,
+        moveURL: ""
+      }
+    );
+
+    let thumbnailPath: any[] = [];
+    if (frames && frames.length) {
+      if (IsProductionMode) {
+        thumbnailPath = frames.split("8005");
+      } else {
+        thumbnailPath = frames.split("8000");
+      }
+    }
     if (result) {
-      let videoFile: String | any;
+      let videoFile: String | any, videoThumbnail: String | any;
       if (IsProductionMode) {
         videoFile = path.join(__dirname, result.videoUrl);
+        if (thumbnailPath && thumbnailPath.length) {
+          videoThumbnail = path.join(__dirname, thumbnailPath[1]);
+          console.log(videoThumbnail, "videoThumbnail");
+        }
       } else {
         videoFile = path.join(__basedir, "..", result.videoUrl);
+        if (thumbnailPath && thumbnailPath.length) {
+          videoThumbnail = path.join(__basedir, "..", thumbnailPath[1]);
+        }
       }
-      // cloudinary.v2.uploader.upload(
-      //   videoFile,
-      //   {
-      //     start_offset: timer.min,
-      //     end_offset: timer.max,
-      //     resource_type: "video",
-      //     format: "webm",
-      //     eager_async: true,
-      //   },
-      //   async function(error: any, moveData: any) {
-      //     if (error) {
-      //       console.log(">>>>>>>>>>>Error", error);
-      //       return res.status(400).json({
-      //         responsecode: 400,
-      //         message: error.message
-      //       });
-      //     } else {
-      //       console.log(">>>>>>>>>>>Success", result);
-
-      //       fs.unlinkSync(videoFile);
-      //       await MoveModel.updateOne(
-      //         {
-      //           _id: result._id
-      //         },
-      //         {
-      //           moveURL: moveData.url,
-      //           title,
-      //           description,
-      //           tags,
-      //           setId
-      //         }
-      //       );
-      //       return res.status(200).json({
-      //         responsecode: 200,
-      //         data: result,
-      //         setId: setId
-      //       });
-      //     }
-      //   }
-      // );
-
       const fileName = `${
         result.videoUrl.split(".")[0]
       }_clip_${moment().unix()}.webm`;
@@ -608,6 +559,14 @@ const updateMoveDetailsAndTrimVideo = async (
             "deep-play.webm",
             "moves"
           );
+          let s3VideoThumbnailUrl: any | null;
+          if (videoThumbnail) {
+            s3VideoThumbnailUrl = await s3BucketUpload(
+              videoThumbnail,
+              "deep-play.jpeg",
+              "moves-thumbnail"
+            );
+          }
           let moveDataForAlgolia: Document | any;
           /* Add items to algolia */
           moveDataForAlgolia = {
@@ -615,10 +574,14 @@ const updateMoveDetailsAndTrimVideo = async (
             moveURL: s3VideoUrl,
             title,
             description,
+            startTime: timer.min ? timer.min : 0,
+            sourceUrl: result.sourceUrl ? result.sourceUrl : null,
             tags,
             setId,
+            isYoutubeUrl: result.isYoutubeUrl ? result.isYoutubeUrl : false,
             userId: result.userId,
             isDeleted: result.isDeleted,
+            createdAt: result.createdAt,
             videoMetaData: {
               ...result.videoMetaData,
               duration: {
@@ -626,6 +589,7 @@ const updateMoveDetailsAndTrimVideo = async (
                 seconds: duration
               }
             },
+            videoThumbnail: s3VideoThumbnailUrl ? s3VideoThumbnailUrl : null,
             searchType: "move"
           };
           let temp: any;
@@ -638,7 +602,10 @@ const updateMoveDetailsAndTrimVideo = async (
               await MoveModel.updateOne(
                 { _id: result._id },
                 {
-                  objectId: temp
+                  objectId: temp,
+                  videoThumbnail: s3VideoThumbnailUrl
+                    ? s3VideoThumbnailUrl
+                    : null
                 }
               );
             }
@@ -654,6 +621,8 @@ const updateMoveDetailsAndTrimVideo = async (
               description,
               tags,
               setId,
+              isMoveProcessing: false,
+              startTime: timer.min ? timer.min : 0,
               videoMetaData: {
                 ...result.videoMetaData,
                 duration: {
@@ -661,6 +630,18 @@ const updateMoveDetailsAndTrimVideo = async (
                   seconds: duration
                 }
               }
+            }
+          );
+
+          const stemp: Document | null | any = await SetModel.findById(setId);
+          const setData1 = stemp.isVideoProcessing;
+          setData1.pop();
+          await SetModel.updateOne(
+            {
+              _id: setId
+            },
+            {
+              isVideoProcessing: setData1
             }
           );
           return res.status(200).json({
@@ -904,52 +885,69 @@ const addTagsInMove = async (req: Request, res: Response): Promise<any> => {
   try {
     const { body } = req;
     const { data } = body;
-    const { tags, moveId, fromMoveList } = data;
+    const { tags, moveId, fromMoveList, description, edit } = data;
     if (!moveId) {
       res.status(400).json({
         message: "MoveId not found"
       });
     }
-    for (let index = 0; index < moveId.length; index++) {
-      const moveid = moveId[index];
-      const result: Document | null | any = await MoveModel.findById(moveid, {
-        tags: 1
-      });
-      const tagArr: Document | any | null = result.tags;
-      if (tagArr && tagArr.length) {
-        let TagArray: { label: string }[] = [];
-        const distinctTags: any[] = Array(
-          new Set(tagArr.map((d: { label: string }) => d.label))
-        );
-        console.log("==========================>>>>", distinctTags);
-        TagArray = [...TagArray, ...distinctTags];
-        await MoveModel.updateOne(
-          { _id: moveid },
-          {
-            $set: {
-              tags: distinctTags[0].Set
+    if (fromMoveList) {
+      for (let index = 0; index < moveId.length; index++) {
+        const moveid = moveId[index];
+        const result: Document | null | any = await MoveModel.findById(moveid, {
+          tags: 1
+        });
+        const tagArr: Document | any | null = result.tags;
+        if (tagArr && tagArr.length) {
+          let oldTagArray: { label: string }[] = tagArr;
+          var array3 = oldTagArray.concat(
+            tags.filter(
+              (item: any) =>
+                oldTagArray.findIndex((tag: any) => tag.label === item.label) <
+                0
+            )
+          );
+          await MoveModel.updateOne(
+            { _id: moveid },
+            {
+              $set: {
+                tags: array3
+              }
             }
-          }
-        );
-      } else {
-        await MoveModel.updateOne(
-          { _id: moveid },
-          {
-            $set: {
-              tags: tags
+          );
+        } else {
+          await MoveModel.updateOne(
+            { _id: moveid },
+            {
+              $set: {
+                tags: tags
+              }
             }
-          }
-        );
+          );
+        }
       }
+    } else {
+      await MoveModel.updateOne(
+        { _id: moveId },
+        {
+          $set: {
+            tags: tags,
+            description: description
+          }
+        }
+      );
     }
-
     if (fromMoveList) {
       return res.status(200).json({
         message: "Tags have been updated successfully"
       });
-    } else if (!fromMoveList) {
+    } else if (!fromMoveList && !edit) {
       return res.status(200).json({
         message: "Tags have been updated for this move successfully"
+      });
+    } else if (edit) {
+      return res.status(200).json({
+        message: "Move details have been updated successfully"
       });
     } else {
       return res.status(200).json({
@@ -979,48 +977,6 @@ const updateMoveIndex = async (req: Request, res: Response): Promise<any> => {
         { $set: { sortIndex: index + 1 } }
       );
     }
-
-    // await MoveModel.updateOne(
-    //   { setId: setId, _id: moveId },
-    //   { $set: { sortIndex: sortIndex } }
-    // );
-
-    // let result = await MoveModel.find({
-    //   _id: { $ne: moveId },
-    //   setId: setId,
-    //   isDeleted: false,
-    //   sortIndex: { $gte: sortIndex }
-    // }).sort({ sortIndex: 1 });
-
-    // let result_data = await MoveModel.find({
-    //   _id: { $ne: moveId },
-    //   setId: setId,
-    //   isDeleted: false,
-    //   sortIndex: { $lt: sortIndex }
-    // }).sort({ sortIndex: -1 });
-
-    // if (result && result.length) {
-    //   for (let index = 0; index < result.length; index++) {
-    //     if (result[index]._id !== moveId) {
-    //       await MoveModel.updateOne(
-    //         { setId: setId, _id: result[index]._id },
-    //         { $set: { sortIndex: ++num } }
-    //       );
-    //     }
-    //   }
-    // }
-
-    // if (result_data && result_data.length) {
-    //   for (let index = 0; index < result_data.length; index++) {
-    //     if (result_data[index]._id !== moveId) {
-    //       await MoveModel.updateOne(
-    //         { setId: setId, _id: result_data[index]._id },
-    //         { $set: { sortIndex: --num1 } }
-    //       );
-    //     }
-    //   }
-    // }
-
     const resp: Document | any | null = await MoveModel.find({
       setId: setId,
       isDeleted: false,
@@ -1247,6 +1203,76 @@ const getTagListByUserId = async (
     });
   }
 };
+/*
+/*
+*/
+const cancelCreateMovRequest = async (req: Request, res: Response) => {
+  try {
+    let dirPath: string | any;
+    if (IsProductionMode) {
+      dirPath = path.join(__dirname, "uploads", "youtube-videos");
+    } else {
+      dirPath = path.join(__basedir, "../uploads", "youtube-videos");
+    }
+    fs.readdir(dirPath, (err, files) => {
+      if (err) throw err;
+      for (const file of files) {
+        const isDir: any[] = file.split("frames");
+        if (isDir[1] !== undefined) {
+          if (IsProductionMode) {
+            const folderPath = path.join(
+              __dirname,
+              "uploads",
+              "youtube-videos",
+              file
+            );
+            fs.readdir(folderPath, (err, files) => {
+              if (files && files.length) {
+                fs.unlink(path.join(folderPath, file), err => {
+                  if (err) throw err;
+                });
+              } else {
+                fs.rmdirSync(folderPath);
+              }
+            });
+          } else {
+            const folderPath = path.join(
+              __basedir,
+              "../uploads",
+              "youtube-videos",
+              file
+            );
+            fs.readdir(folderPath, (err, files) => {
+              if (files && files.length) {
+                for (const file of files) {
+                  fs.unlink(path.join(folderPath, file), err => {
+                    if (err) throw err;
+                  });
+                }
+              } else {
+                fs.rmdirSync(folderPath);
+              }
+            });
+          }
+        } else {
+          fs.unlink(path.join(dirPath, file), err => {
+            if (err) throw err;
+          });
+        }
+      }
+    });
+
+    return res.status(200).json({
+      message: "Move Request Canceled successfully!",
+      success: true
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).send({
+      message: error.message
+    });
+  }
+};
 export {
   downloadVideo,
   getMoveBySetId,
@@ -1266,5 +1292,6 @@ export {
   updateMove,
   getMoveBySearch,
   addTags,
-  getTagListByUserId
+  getTagListByUserId,
+  cancelCreateMovRequest
 };

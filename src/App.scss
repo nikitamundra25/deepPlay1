@@ -197,7 +197,9 @@ a {
     border: 2px solid $textColor;
   }
 }
-
+.text-link {
+  color: #1439a2;
+}
 .home-video-section {
   margin-bottom: 40px;
   margin-top: 60px;
@@ -2252,6 +2254,7 @@ a {
 .edit-view-wrap{
   z-index: 9;
   display: flex;
+  overflow: hidden;
   flex-wrap: wrap;
   &>div{
     width: 100%;
@@ -2595,3 +2598,14 @@ a {
 }
 // media query end
 // Please don't write other css in the bottom of media query
+.video-move-layer{
+  z-index: 2;
+  position: absolute;
+  // background: #ccc;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  width: 100%;
+  height: 100%;
+}

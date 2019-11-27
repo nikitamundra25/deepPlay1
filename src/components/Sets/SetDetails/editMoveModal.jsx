@@ -100,8 +100,11 @@ class EditMoveModal extends React.Component {
         title: title,
         description: description,
         tags: tags,
-        setId: videoData.setId._id
+        setId: videoData.setId._id,
+        videoData: videoData,
+        fromMoveList: false
       };
+
       await this.props.editMove(data);
     } catch (error) {
       logger(error);

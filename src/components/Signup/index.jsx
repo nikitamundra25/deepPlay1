@@ -120,7 +120,11 @@ class SignupComponent extends React.Component {
     }
     if (name === "firstName" || name === "lastName") {
       this.setState({
-        [name]: value.replace(/[^\w\s]|[0-9]|[_]/gi, "").trim()
+        [name]: value.replace(/[^\w\s]|[0-9]|[_]/gi, "").trim(),
+        errors: {
+          ...this.state.errors,
+          [name]: null
+        }
       });
       return;
     }
@@ -243,7 +247,7 @@ class SignupComponent extends React.Component {
 
               <CardBody className="px-lg-5">
                 <div className="text-center login-heading mb-4 auth-subheading">
-                <span>  Sign up with email</span>
+                  <span> Sign up with email</span>
                 </div>
                 <Form role="form" onSubmit={this.handleSignupRequest}>
                   <FormGroup>

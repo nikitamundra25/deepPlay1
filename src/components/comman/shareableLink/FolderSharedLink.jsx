@@ -160,12 +160,12 @@ class FolderSharedLink extends React.Component {
                               {list.recentlyAddMoveImg ? (
                                 <div className="d-flex img-tile-wrap cursor_pointer">
                                   <div className="cotent-img-tile">
-                                    <video width={"100%"} id="webm-video">
-                                      <source
-                                        src={`${list.recentlyAddMoveImg}`}
-                                        type="video/webm"
-                                      />
-                                    </video>
+                                    <img
+                                      src={`${list.recentlyAddMoveImg}`}
+                                      alt=""
+                                      width="100%"
+                                      height="100%"
+                                    />
                                   </div>
                                 </div>
                               ) : null}
@@ -234,7 +234,7 @@ class FolderSharedLink extends React.Component {
                   <div className="banner-text">
                     <h1 className="banner-heading">Oops !</h1>
                     <p className="banner-subheading mt-4 mt-0 h3 font-weight-bold">
-                      Public access denied...
+                      Access denied...
                     </p>
                     <p className="banner-content  mt-0 ">
                       You didn't have permission to access this page. Maybe our

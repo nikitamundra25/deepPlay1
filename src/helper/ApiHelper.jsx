@@ -6,6 +6,9 @@ import { SuccessHandlerHelper } from "./SuccessHandlerHelper";
 /**
  * ApiHelper Class - For making Api Requests
  */
+let CancelToken = Axios.CancelToken;
+let cancel;
+
 export class ApiHelper {
   _portalGateway;
   _apiVersion;
@@ -38,7 +41,8 @@ export class ApiHelper {
     method,
     authenticated = false,
     queryOptions = undefined,
-    body = undefined
+    body = undefined,
+    cancelToken
   ) {
     let url = this._portalGateway + this._apiVersion + service + endpoint;
     let headers = { "Content-Type": "application/json" };
@@ -55,7 +59,10 @@ export class ApiHelper {
         data: body,
         headers: headers,
         params: queryOptions,
-        cancelToken: this.cancelToken
+        cancelToken: new CancelToken(function executor(c) {
+          // An executor function receives a cancel function as a parameter
+          cancel = c;
+        })
       });
 
       if (response.ok === false || response.status !== 200) {
@@ -73,7 +80,7 @@ export class ApiHelper {
         return {
           isError: true,
           error: "Request cancelled",
-          messages: ["Request cancelled"]
+          messages: err.message === "cancel" ? [] : ["Request cancelled"]
         };
       } else {
         const errorHelper = new ErrorHandlerHelper(err.response);
@@ -84,64 +91,56 @@ export class ApiHelper {
   }
   /**
    * Upload data in multipart.
-  */
-  async UploadVideo(
-    service,
-    endpoint,
-    body) {
+   */
+  async UploadVideo(service, endpoint, body, progressCallback) {
     let fd = new FormData();
+    console.log("progressCallback", progressCallback);
 
     for (const k in body) {
       if (body.hasOwnProperty(k)) {
         const element = body[k];
         if (k === "characteristic") {
-          fd.append(k, JSON.stringify(element))
+          fd.append(k, JSON.stringify(element));
         } else {
-          fd.append(k, element)
+          fd.append(k, element);
         }
       }
     }
+
     let url = this._apiVersion + service + endpoint;
-    let options = { method: "POST" }
-    options.headers = {}
-    const storageSession = localStorage.getItem('token');
+    let options = { method: "POST" };
+    options.headers = {};
+    const storageSession = localStorage.getItem("token");
     options.headers.Authorization = storageSession;
 
     try {
-      let response = await Axios.post(
-        `${this._portalGateway}${url}`,
-        fd,
-        {
-          headers: options.headers,
-        }
-      );
+      let response = await Axios.post(`${this._portalGateway}${url}`, fd, {
+        headers: options.headers,
+        onUploadProgress: progressCallback
+      });
 
       if (response.status < 200 || response.status >= 300) {
         let errorObject = {
           code: response.status,
-          response: response.data,
+          response: response.data
         };
 
         throw errorObject;
       }
-      const data = new SuccessHandlerHelper(
-        response.data,
-      );
+      const data = new SuccessHandlerHelper(response.data);
       return data.data;
     } catch (err) {
       if (Axios.isCancel(err)) {
-        console.log('%s Req Cancelled', err);
+        console.log("%s Req Cancelled", err);
       }
-      const errorHelper = new ErrorHandlerHelper(
-        err.response,
-      );
+      const errorHelper = new ErrorHandlerHelper(err.response);
       return errorHelper.error;
     }
-  };
+  }
   /**
    * Cancels the last request.
    */
-  cancelRequest = () => {
-    this.source.cancel("Operation canceled by the user.");
+  cancelRequest = err => {
+    cancel && cancel(err);
   };
 }

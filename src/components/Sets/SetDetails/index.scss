@@ -145,14 +145,39 @@ div[data-react-beautiful-dnd-drag-handle] {
   padding: 0px 15px;
   z-index: 99;
   position: relative;
-  
 }
-.create-move-element{
+.create-move-element {
   z-index: 0;
 }
 .play-list-tile-select {
   width: 25%;
-  
-  padding: 0px 15px;
 
+  padding: 0px 15px;
+}
+.full-video-mode {
+  width: 100% !important;
+}
+.video-tags {
+  background: #cccc;
+  border-radius: 20px;
+  padding: 4px 9px 7px 11px;
+  font-weight: 400;
+  margin-right: 5px;
+}
+.load-class {
+  border: 16px solid #f3f3f3; /* Light grey */
+  border-top: 16px solid #3498db; /* Blue */
+  border-radius: 50%;
+  width: 120px;
+  height: 120px;
+  animation: spin 2s linear infinite;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
 }

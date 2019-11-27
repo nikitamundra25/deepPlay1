@@ -20,11 +20,14 @@ const initialState = {
   isCreatingAnotherMove: false,
   videoOriginalFile: "",
   videoFileMain: "",
+  isVideoSelected: false,
   isMoveStarLoading: {
     index: 0,
     loading: false
   },
-  isVideoFromSearch: false
+  isVideoFromSearch: false,
+  cancelVideo: false,
+  isMoveDone: false
 };
 
 export const moveReducer = handleActions(
@@ -68,6 +71,10 @@ export const moveReducer = handleActions(
       moveDetails: payload.moveDetails,
       isMoveDetailsLoading: false
     }),
+    [MovesAction.UPDATE_VIDEO_SETTINGS]: (state, { payload }) => ({
+      ...state,
+      isSavingWebM: true
+    }),
     [MovesAction.UPDATE_VIDEO_SETTINGS_SUCCESS]: (state, { payload }) => ({
       ...state,
       ...payload,
@@ -80,7 +87,8 @@ export const moveReducer = handleActions(
     }),
     [MovesAction.LOAD_VIDEO_DATA_REQUEST]: (state, { payload }) => ({
       ...state,
-      videoData: payload
+      videoData: payload,
+      isVideoFromSearch: false
     }),
     [MovesAction.SEARCH_MOVE_REQUEST]: (state, { payload }) => ({
       ...state,
@@ -156,6 +164,27 @@ export const moveReducer = handleActions(
     [MovesAction.VIDEODATA_FROM_SEARCH]: (state, { payload }) => ({
       ...state,
       isVideoFromSearch: true
+    }),
+    [MovesAction.UPDATE_MOVE_SUCCESS]: (state, { payload }) => ({
+      ...state,
+      ...payload
+    }),
+    [MovesAction.VIDEO_SELECT_REQUEST]: (state, { payload }) => ({
+      ...state,
+      isVideoSelected: true
+    }),
+    [MovesAction.VIDEO_UNSELECT_REQUEST]: (state, { payload }) => ({
+      ...state,
+      isVideoSelected: false
+    }),
+    [MovesAction.VIDEO_CANCEL_SUCCESS]: (state, { payload }) => ({
+      ...state,
+      ...payload,
+      isVideoDownloading: false
+    }),
+    [MovesAction.I_AM_DONE_REQUEST]: (state, { payload }) => ({
+      ...state,
+      isMoveDone: true
     })
   },
   initialState

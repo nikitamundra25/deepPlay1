@@ -2,8 +2,8 @@ import React from "react";
 import { connect } from "react-redux";
 import { AppRoutes } from "../../config/AppRoutes";
 import { Row, Col, Button, Container } from "reactstrap";
-import pauseIc from "../../assets/img/icons/pause.svg"
-import playIc from "../../assets/img/icons/play.svg"
+import pauseIc from "../../assets/img/icons/pause.svg";
+import playIc from "../../assets/img/icons/play.svg";
 import {
   modelOpenRequest,
   loginRequest,
@@ -58,7 +58,6 @@ const image = [
 // core components
 class HomePage extends React.Component {
   componentDidMount = () => {
-    console.log("Currldfhfghocation", this.props.location);
     const path = this.props.location.pathname;
     if (path === "/") {
       this.props.changeHeaderRequest();
@@ -68,7 +67,7 @@ class HomePage extends React.Component {
     super(props);
     this.state = {
       onPlaying: false
-    }
+    };
   }
 
   handleDashboardOpen = () => {
@@ -110,12 +109,12 @@ class HomePage extends React.Component {
   videoPlayHandler = () => {
     const videoPlay = document.getElementById("webm-video-0");
     this.setState({ onPlaying: !this.state.onPlaying });
-    if (this.state.onPlaying == true) {
+    if (this.state.onPlaying === true) {
       videoPlay.pause();
     } else {
       videoPlay.play();
     }
-  }
+  };
   /*
    */
   render() {
@@ -168,27 +167,29 @@ class HomePage extends React.Component {
               {/* videos */}
               <div className="videos-wrap d-flex justify-content-center align-items-center">
                 <div className="d-flex video-add-banner with-home-videos justify-content-center align-items-center">
-          
-                  {this.state.onPlaying ? 
-                   <span onClick={this.videoPlayHandler} className="play-ic-wrap pause-wrap">
-                 <img src={pauseIc} />
-                   </span>
-                       
-                   :
-                   <span onClick={this.videoPlayHandler} className="play-ic-wrap">
-                <img src={playIc} />
-                   </span>
-                  }
-               
+                  {this.state.onPlaying ? (
+                    <span
+                      onClick={this.videoPlayHandler}
+                      className="play-ic-wrap pause-wrap"
+                    >
+                      <img src={pauseIc} alt={"img"} />
+                    </span>
+                  ) : (
+                    <span
+                      onClick={this.videoPlayHandler}
+                      className="play-ic-wrap"
+                    >
+                      <img src={playIc} alt={"img"} />
+                    </span>
+                  )}
+
                   <video width="100%" id="webm-video-0">
-                  <source
-                    src="https://s3.amazonaws.com/hope.bucket/moves/1571752097935_deep-play.webm"
-                    type="video/webm"
-                  />
-                </video>
+                    <source
+                      src="https://s3.amazonaws.com/hope.bucket/moves/1571752097935_deep-play.webm"
+                      type="video/webm"
+                    />
+                  </video>
                 </div>
-              
-              
               </div>
             </Col>
           </Row>
@@ -301,7 +302,4 @@ const mapDispatchToProps = dispatch => ({
   socialLoginRequest: data => dispatch(socialLoginRequest(data)),
   changeHeaderRequest: () => dispatch(changeHeaderRequest())
 });
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(HomePage);
+export default connect(mapStateToProps, mapDispatchToProps)(HomePage);

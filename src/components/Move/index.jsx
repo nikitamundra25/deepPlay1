@@ -13,12 +13,13 @@ import {
   InputGroup,
   UncontrolledTooltip,
   Form,
-  Progress
+  Progress,
+  Button
 } from "reactstrap";
 import "./index.scss";
 import { logger } from "helper/Logger";
 import { connect } from "react-redux";
-import { downloadYoutubeVideoRequest } from "../../actions";
+import { downloadYoutubeVideoRequest, videoCancelRequest } from "../../actions";
 import { ConfirmBox } from "../../helper/SweetAleart";
 
 // core components
@@ -33,6 +34,22 @@ class MoveComponent extends React.Component {
       fileErr: ""
     };
   }
+
+  componentDidMount = () => {};
+
+  componentDidUpdate = ({ moveReducer }) => {
+    const { cancelVideo } = this.props.moveReducer;
+    if (
+      this.props.moveReducer &&
+      moveReducer.cancelVideo !== this.props.moveReducer.cancelVideo
+    ) {
+      if (cancelVideo) {
+        this.setState({
+          url: ""
+        });
+      }
+    }
+  };
 
   handleChange = e => {
     e.preventDefault();
@@ -89,9 +106,6 @@ class MoveComponent extends React.Component {
     if (!this.state.isPaste) {
       e.preventDefault();
     }
-    // this.setState({
-    //   errors: {}
-    // });
     try {
       if (!this.state.url) {
         this.setState({
@@ -131,11 +145,11 @@ class MoveComponent extends React.Component {
     let files = e.target.files;
     if (files.length) {
       const fileType = files ? files[0].type.split("/") : "";
-      if (fileType[0] !== "video") {
+      if (fileType[1] !== "mp4" && fileType[1] !== "webm") {
         await ConfirmBox({
           title: "Oops...",
           text:
-            "Unsupported file type!! We accept only video type (mp4, 3gp, ogv,wmv, webm, mpeg, m4v, ogm, mov, asx, mpeg, avi)",
+            "Unsupported file type!! We accept only video type of mp4 & webm.",
           type: "error",
           showCancelButton: false,
           confirmButtonText: "Okay"
@@ -167,11 +181,16 @@ class MoveComponent extends React.Component {
     }
   };
 
+  handleCancel = () => {
+    this.props.videoCancelRequest();
+  };
+
   render() {
     const { errors, url, fileErr } = this.state;
     const { moveReducer } = this.props;
     const { isVideoDownloading } = moveReducer;
-
+    const location = window.location.href;
+    const stemp = location.split("?");
     return (
       <>
         <div className="create-set-section step-2 create-move-section">
@@ -179,18 +198,20 @@ class MoveComponent extends React.Component {
             <div className="set-content-block w-100">
               <CardHeader className="border-bottom pt-4 pb-2">
                 <div className="content-header set-header d-flex ">
-                  <div
-                    onClick={() => {
-                      window.history.back();
-                    }}
-                  >
-                    <span className="cursor_pointer back-arrow create-move-back">
-                      {" "}
-                      <i className="fas fa-long-arrow-alt-left"></i> Back
-                    </span>
-                  </div>
+                  {stemp[1] ? (
+                    <div
+                      onClick={() => {
+                        window.history.back();
+                      }}
+                    >
+                      <span className="cursor_pointer back-arrow create-move-back">
+                        {" "}
+                        <i className="fas fa-long-arrow-alt-left"></i> Back
+                      </span>
+                    </div>
+                  ) : null}
                   <span className="content-title creat-set-title">
-                    {isVideoDownloading ? "Preparing WebM" : "Create a move"}
+                    {isVideoDownloading ? "Preparing Move" : "Create New Move"}
                   </span>
                 </div>
               </CardHeader>
@@ -204,6 +225,16 @@ class MoveComponent extends React.Component {
                         Please do not refresh or close this page while we are
                         processing.
                       </p>
+                      <div className={"text-center"}>-Or-</div>
+                      <p>Cancel video request by clicking bellow button.</p>
+                      <div>
+                        <Button
+                          className={"btn btn-black"}
+                          onClick={this.handleCancel}
+                        >
+                          Cancel
+                        </Button>
+                      </div>
                     </div>
                   ) : (
                     <Form
@@ -276,8 +307,7 @@ class MoveComponent extends React.Component {
                         <FormGroup>
                           <FormGroup className="flex-fill flex-column ">
                             <Label className="mb-3 set-wrap ">
-                              Upload video file from your system (mp4, 3gp, ogv,
-                              wmv, webm, mpeg etc..){" "}
+                              Upload video file from your system (mp4, webm){" "}
                             </Label>
                           </FormGroup>
                           <Label
@@ -290,7 +320,7 @@ class MoveComponent extends React.Component {
                           <CustomInput
                             onChange={this.handleVideoFileSelect}
                             type="file"
-                            accept="video/mp4,video/x-m4v,video/*,video/ogg"
+                            accept="video/mp4,video/webm"
                             disabled={false}
                             className={fileErr ? "is-invalid d-none" : "d-none"}
                             id="videoUpload"
@@ -314,9 +344,7 @@ const mapStateToProps = state => ({
   moveReducer: state.moveReducer
 });
 const mapDispatchToProps = dispatch => ({
-  downloadVideo: data => dispatch(downloadYoutubeVideoRequest(data))
+  downloadVideo: data => dispatch(downloadYoutubeVideoRequest(data)),
+  videoCancelRequest: () => dispatch(videoCancelRequest())
 });
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(MoveComponent);
+export default connect(mapStateToProps, mapDispatchToProps)(MoveComponent);

@@ -3,7 +3,11 @@ import InputRange from "react-input-range";
 import { AppConfig } from "config/Appconfig";
 import { Input, Row, Col, FormGroup, Label, Button } from "reactstrap";
 import { orderBy } from "natural-orderby";
-import { SecondsToHHMMSS, SecondsToMMSS } from "helper/Time";
+import {
+  SecondsToHHMMSS,
+  //  SecondsToMMSS,
+  SecondsToMMSSMM
+} from "helper/Time";
 import { logger } from "helper/Logger";
 
 class FrameDetails extends Component {
@@ -16,12 +20,15 @@ class FrameDetails extends Component {
       }
     };
   }
+
   componentDidUpdate() {
     this.updateSlider();
   }
+
   /**
    *
    */
+
   updateSlider() {
     const containerEle = document.getElementById("video-controls");
     if (containerEle) {
@@ -37,8 +44,12 @@ class FrameDetails extends Component {
                 const rightContainer = document.getElementById(
                   "right-container"
                 );
-                const leftCount = document.getElementsByClassName("input-range__label--min");
-                const rightCount = document.getElementsByClassName("input-range__label--max");
+                const leftCount = document.getElementsByClassName(
+                  "input-range__label--min"
+                );
+                const rightCount = document.getElementsByClassName(
+                  "input-range__label--max"
+                );
                 // get width for left and right container
                 const leftWidth = newChild.childNodes[1].style.left;
                 const rightWidth = newChild.childNodes[2].style.left;
@@ -131,6 +142,128 @@ class FrameDetails extends Component {
 
     return options;
   };
+
+  handleKeyEvent = (e, name) => {
+    const { time } = this.state;
+    const { min, max } = time;
+    const { videoMetaData } = this.props;
+    const { duration } = videoMetaData || {};
+    if (
+      parseInt(max) - parseInt(min) === AppConfig.MAX_VIDEO_LENGTH ||
+      parseInt(max) - parseInt(min) === 1
+    ) {
+      if (e.keyCode === 38) {
+        if (SecondsToMMSSMM(max + 0.001) <= SecondsToMMSSMM(duration.seconds)) {
+          let changeValue = {
+            min: min + 0.001,
+            max: max + 0.001
+          };
+          this.setState(
+            {
+              time: changeValue
+            },
+            () => {
+              this.props.onTimerChange(this.state.time);
+            }
+          );
+        }
+      } else if (e.keyCode === 40) {
+        if (min > 0) {
+          let changeValue = {
+            min: min - 0.001,
+            max: max - 0.001
+          };
+          this.setState(
+            {
+              time: changeValue
+            },
+            () => {
+              this.props.onTimerChange(this.state.time);
+            }
+          );
+        }
+      } else {
+        this.setState(
+          {
+            time: time
+          },
+          () => {
+            this.props.onTimerChange(this.state.time);
+          }
+        );
+      }
+    } else {
+      if (name === "from") {
+        if (e.keyCode === 38) {
+          if (
+            SecondsToMMSSMM(max + 0.001) <= SecondsToMMSSMM(duration.seconds)
+          ) {
+            let changeValue = {
+              min: min + 0.001,
+              max: max
+            };
+            this.setState(
+              {
+                time: changeValue
+              },
+              () => {
+                this.props.onTimerChange(this.state.time);
+              }
+            );
+          }
+        } else if (e.keyCode === 40) {
+          if (min > 0) {
+            let changeValue = {
+              min: min - 0.001,
+              max: max
+            };
+            this.setState(
+              {
+                time: changeValue
+              },
+              () => {
+                this.props.onTimerChange(this.state.time);
+              }
+            );
+          }
+        }
+      } else {
+        if (e.keyCode === 38) {
+          if (
+            SecondsToMMSSMM(max + 0.001) <= SecondsToMMSSMM(duration.seconds)
+          ) {
+            let changeValue = {
+              min: min,
+              max: max + 0.001
+            };
+            this.setState(
+              {
+                time: changeValue
+              },
+              () => {
+                this.props.onTimerChange(this.state.time);
+              }
+            );
+          }
+        } else if (e.keyCode === 40) {
+          if (min > 0) {
+            let changeValue = {
+              min: min,
+              max: max - 0.001
+            };
+            this.setState(
+              {
+                time: changeValue
+              },
+              () => {
+                this.props.onTimerChange(this.state.time);
+              }
+            );
+          }
+        }
+      }
+    }
+  };
   /**
    *
    */
@@ -139,6 +272,7 @@ class FrameDetails extends Component {
     const { duration } = videoMetaData || {};
     const { seconds: maxValue } = duration || {};
     const { time } = this.state;
+
     return (
       <div className="fram-picker">
         <div className=" mt-5 video-controls " id={"video-controls"}>
@@ -149,12 +283,11 @@ class FrameDetails extends Component {
             maxValue={maxValue}
             minValue={0}
             formatLabel={(val, type) => {
-              console.log("fasdfasd", type, type === "min");
               return type === "min"
-                ? `${SecondsToMMSS(time.min >= 0 ? time.min : 0)}`
+                ? `${SecondsToMMSSMM(time.min >= 0 ? time.min : 0)}`
                 : type === "max"
-                  ? `${SecondsToMMSS(time.max >= 0 ? time.max : 0)}`
-                  : null;
+                ? `${SecondsToMMSSMM(time.max >= 0 ? time.max : 0)}`
+                : null;
             }}
             value={time}
             onChange={this.labelValueChange}
@@ -180,16 +313,17 @@ class FrameDetails extends Component {
                 <FormGroup inline className="m-0">
                   <Label>Trim From: </Label>
                   <Input
-                    type={"select"}
-                    value={time.min}
-                    onChange={e =>
-                      this.labelValueChange({
-                        ...time,
-                        min: parseInt(e.target.value)
-                      })
-                    }
+                    type="text"
+                    value={SecondsToMMSSMM(time.min)}
+                    // onChange={e =>
+                    //   this.labelValueChange({
+                    //     ...time,
+                    //     min: parseInt(e.target.value)
+                    //   })
+                    // }
+                    onKeyDown={e => this.handleKeyEvent(e, "from")}
                   >
-                    {this.renderOptions("min")}
+                    {/* {this.renderOptions("min")} */}
                   </Input>
                 </FormGroup>
               </Col>
@@ -197,38 +331,43 @@ class FrameDetails extends Component {
                 <FormGroup inline className="m-0">
                   <Label>Trim to: </Label>
                   <Input
-                    type={"select"}
-                    value={time.max}
-                    onChange={e =>
-                      this.labelValueChange({
-                        ...time,
-                        max: parseInt(e.target.value)
-                      })
-                    }
+                    type={"text"}
+                    value={SecondsToMMSSMM(time.max)}
+                    // onChange={e =>
+                    //   this.labelValueChange({
+                    //     ...time,
+                    //     max: parseInt(e.target.value)
+                    //   })
+                    // }
+                    onKeyDown={e => this.handleKeyEvent(e, "to")}
                   >
                     {this.renderOptions("max")}
                   </Input>
                 </FormGroup>
               </Col>
             </Row>
+            <Label>
+              <b>Tip:</b> Use the <i className="fas fa-arrow-up"></i> or{" "}
+              <i className="fas fa-arrow-down"></i> arrow keys for finer
+              adjustments
+            </Label>
           </Col>
           <Col
             md={"6"}
             className="text-right d-flex align-items-end justify-content-end"
           >
-           <Button
+            <Button
               color={"default"}
               className={"btn-line-black btn url-upload-btn mr-3"}
               onClick={() => {
                 window.history.back();
               }}
             >
-            Back
+              Back
             </Button>
             <Button
               color={"default"}
               className={"btn-black btn url-upload-btn"}
-            
               onClick={this.props.completeEditing}
             >
               Finish

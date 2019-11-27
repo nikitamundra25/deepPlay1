@@ -20,6 +20,7 @@ import transfer from "../../../assets/img/set-detail-ic/transfer.svg";
 import remove from "../../../assets/img/set-detail-ic/remove.svg";
 import { ListManager } from "react-beautiful-dnd-grid";
 import MoveListDetails from "./moveListdetails";
+import videoLoading from "../../../assets/img/icons/video-poster.png";
 
 // a little function to help us with reordering the result
 const reorder = (list, startIndex, endIndex) => {
@@ -56,7 +57,10 @@ class MoveList extends React.Component {
         index: -1,
         isChanging: false
       },
-      backgroundClass: ""
+      backgroundClass: "",
+      isLoadImage: false,
+      isMoveLoadingCount: false,
+      moveLoadingCount: -1
     };
   }
 
@@ -66,16 +70,7 @@ class MoveList extends React.Component {
   /*
   /*  
   */
-  shouldComponentUpdate = () => {
-    if (this.props.isMoveStarLoading.loading) {
-      console.log("return false;return false;return false;return false;");
-      return false;
-    }
-    return true;
-  };
-  /*
-  /*  
-  */
+
   listenScrollEvent = e => {
     if (window.scrollY > 180) {
       this.setState({ backgroundClass: "sticky-header" });
@@ -101,6 +96,61 @@ class MoveList extends React.Component {
           isChanging: true
         }
       });
+    }
+    if (prevProps.isSavingWebM !== this.props.isSavingWebM) {
+      console.log("inside isSavingWebM");
+      this.props.movesOfSet.map((key, index) => {
+        this.myVideo = document.getElementById(`webm-video-${index}`);
+        if (this.myVideo) {
+          this.myVideo.load();
+        }
+        return true;
+      });
+    }
+    if (prevProps.isVideoSelected !== this.props.isVideoSelected) {
+      this.scrollClass = document.getElementsByClassName(
+        "selected-moves selected-detail-page"
+      );
+      // var body = document.body,
+      //   html = document.documentElement;
+
+      // var height = Math.max(
+      //   body.scrollHeight,
+      //   body.offsetHeight,
+      //   html.clientHeight,
+      //   html.scrollHeight,
+      //   html.offsetHeight
+      // );
+    }
+
+    if (prevProps.movesOfSet !== this.props.movesOfSet) {
+      // eslint-disable-next-line
+      this.props.movesOfSet.map((key, index) => {
+        this.myVideo = document.getElementById(`webm-video-${index}`);
+        if (this.myVideo) {
+          this.myVideo.onloadstart = event => {
+            this.setState({
+              isLoadImage: false
+            });
+          };
+          this.myVideo.oncanplay = event => {
+            this.setState({
+              isLoadImage: false
+            });
+            this.myVideo.getAttribute("poster", videoLoading);
+          };
+        }
+      });
+
+      /* console.log("upperrrrrrr");
+      if (this.props.isSavingWebM[0].index !== -1) {
+        console.log("happygd,jesgf");
+        this.setState({
+          isMoveLoadingCount: true,
+          moveLoadingCount:
+            this.props.isSavingWebM[0].index - this.props.movesOfSet.length
+        });
+      } */
     }
 
     // if (
@@ -146,11 +196,16 @@ class MoveList extends React.Component {
     selectedMoves[index] = checked;
     let selectedMoveIds = [...this.state.selectedMoveIds];
     selectedMoveIds.push(moveId);
+    this.props.videoSelectRequest();
     this.setState({
       isVideoChecked: true,
       isVideoModalOpen: false,
       selectedMoves,
-      selectedMoveIds
+      selectedMoveIds,
+      isMarkingStar: {
+        index: -1,
+        isChanging: false
+      }
     });
   };
   /*
@@ -174,6 +229,7 @@ class MoveList extends React.Component {
     });
   };
   handleUnselectAll = () => {
+    this.props.videoUnSelectRequest();
     this.setState({
       isVideoChecked: false,
       isVideoModalOpen: false,
@@ -185,7 +241,6 @@ class MoveList extends React.Component {
    */
 
   handleMovesSelect = (valueCheck, e, index, moveId) => {
-    console.log("moveId", moveId);
     let checked;
     if (e && e.target && valueCheck === null) {
       checked = !e.target.checked;
@@ -209,7 +264,11 @@ class MoveList extends React.Component {
     }
     this.setState({
       selectedMoves,
-      selectedMoveIds
+      selectedMoveIds,
+      isMarkingStar: {
+        index: -1,
+        isChanging: false
+      }
     });
   };
   /*
@@ -373,41 +432,6 @@ class MoveList extends React.Component {
     }
   };
 
-  //Drag & drop move items
-  // onDragEnd = result => {
-  //   const { source, destination, draggableId } = result;
-  //   // dropped outside the list
-  //   console.log("###########Destination####", destination);
-  //   console.log("!!!!!!!!!!!!!!!Source", source);
-
-  //   if (!destination) {
-  //     return;
-  //   }
-  //   if (
-  //     destination.droppableId === source.droppableId &&
-  //     source.index === destination.index
-  //   ) {
-  //     return;
-  //   }
-  //   const items = reorder(
-  //     this.state.moveofSetList,
-  //     source.index,
-  //     destination.index
-  //   );
-
-  //   this.setState({
-  //     moveofSetList: items
-  //   });
-  //   const data = {
-  //     setId: this.props.setIdPathName,
-  //     moveId: draggableId,
-  //     sortIndex: destination.index,
-  //     sourceIndex: source.index,
-  //     movesOfSet: items
-  //   };
-  //   this.props.updateSortIndexRequest(data);
-  // };
-
   reorderList = (sourceIndex, destinationIndex) => {
     if (destinationIndex === sourceIndex) {
       return;
@@ -421,6 +445,12 @@ class MoveList extends React.Component {
       sourceIndex: sourceIndex,
       movesOfSet: items
     };
+    this.setState({
+      isMarkingStar: {
+        index: -1,
+        isChanging: false
+      }
+    });
     this.props.updateSortIndexRequest(data);
   };
 
@@ -436,7 +466,6 @@ class MoveList extends React.Component {
         tags: []
       });
     }
-    console.log(`action: ${actionMeta.action}`);
     if (actionMeta.action === "create-option") {
       this.props.addTagsInTagModalRequest({
         tags: newValue[newValue.length - 1]
@@ -490,14 +519,19 @@ class MoveList extends React.Component {
       doubleClickIndex: -1,
       title: ""
     });
-    const data = {
-      moveId: videoData._id,
-      title: this.state.title,
-      description: videoData.description,
-      tags: videoData.tags,
-      setId: videoData.setId._id
-    };
-    this.props.editMove(data);
+
+    if (this.state.title !== null) {
+      const data = {
+        moveId: videoData._id,
+        title: this.state.title,
+        description: videoData.description,
+        tags: videoData.tags,
+        setId: videoData.setId._id,
+        moveofSetList: this.props.movesOfSet,
+        fromMoveList: true
+      };
+      this.props.editMove(data);
+    }
   };
 
   handleChange = e => {
@@ -533,11 +567,14 @@ class MoveList extends React.Component {
       moveIdToAddTag,
       tags,
       moveIndexToAddTag,
-      // doubleClickIndex,
-      // doubleClick,
-      // title
+      doubleClickIndex,
+      doubleClick,
+      title,
       isMarkingStar,
-      backgroundClass
+      backgroundClass,
+      isLoadImage,
+      isMoveLoadingCount,
+      moveLoadingCount
     } = this.state;
     const location = this.props.location;
     const isStarred = location.search.split("=");
@@ -602,7 +639,7 @@ class MoveList extends React.Component {
                 )}
               </div>
             </Col>
-         
+
             <div
               className={`video-thumbnail-block  ${
                 selectedMoveIds && selectedMoveIds.length
@@ -628,21 +665,18 @@ class MoveList extends React.Component {
                         <span className={"d-flex"}>
                           <ButtonGroup size="lg">
                             <Button
-                              onClick={
-                                () =>
-                                  selectedMoveIds.length >= movesOfSet.length ?
-                                    this.handleUnselectAll() :
-                                    this.handleSelectAll()
+                              onClick={() =>
+                                selectedMoveIds.length >= movesOfSet.length
+                                  ? this.handleUnselectAll()
+                                  : this.handleSelectAll()
                               }
                               className=" "
                               color=" "
                             >
                               <img src={addTag} alt="" className="mr-1" />{" "}
-                              {
-                                selectedMoveIds.length >= movesOfSet.length ?
-                                  "Unselect all" :
-                                  "Select all"
-                              }
+                              {selectedMoveIds.length >= movesOfSet.length
+                                ? "Unselect all"
+                                : "Select all"}
                             </Button>
                             <Button
                               onClick={() => this.openAddTagsModal()}
@@ -671,14 +705,7 @@ class MoveList extends React.Component {
                             <Button
                               color=" "
                               className="btn-black"
-                              onClick={() =>
-                                this.setState({
-                                  selectedMoves: [],
-                                  selectedMoveIds: [],
-                                  isVideoChecked: false,
-                                  isVideoModalOpen: true
-                                })
-                              }
+                              onClick={() => this.handleUnselectAll()}
                             >
                               <i
                                 className="fa fa-times fa-lg"
@@ -705,46 +732,17 @@ class MoveList extends React.Component {
                           <img src={addPlusIc} alt="" />
                         </div>
                         <Button color={" "} className="fill-btn btn mt-4">
-                          Create Now
+                          Create New Move
                         </Button>
                       </div>
                     </div>
                   </div>
                   {selectedMoveIds && selectedMoveIds.length ? (
-              <div className="select-focus-wrap"></div>
-            ) : null}
+                    <div className="select-focus-wrap"></div>
+                  ) : null}
                   <div className="edit-view-wrap">
-                  {selectedMoveIds && selectedMoveIds.length ? (
-                    movesOfSet.map((video, index) => {
-                      return (
-                        <MoveListDetails
-                          index={index}
-                          isVideoChecked={isVideoChecked}
-                          selectedMoves={selectedMoves}
-                          handleShowVideo={this.props.handleShowVideo}
-                          handleVideoHover={this.handleVideoHover}
-                          handleVideoPause={this.handleVideoPause}
-                          handleVideoHoverLeave={this.handleVideoHoverLeave}
-                          handleVideoPlay={this.handleVideoPlay}
-                          handleMovesSelect={this.handleMovesSelect}
-                          isMarkingStar={isMarkingStar}
-                          video={video}
-                          isSelectVideo={isSelectVideo}
-                          videoIndex={videoIndex}
-                          isVideoModalOpen={isVideoModalOpen}
-                          handleStarred={this.handleStarred}
-                          handleVideoCheckBox={this.handleVideoCheckBox}
-                          handleVideoModal={this.props.handleVideoModal}
-                        />
-                      );
-                    })
-                  ) : (
-                    <ListManager
-                      items={movesOfSet}
-                      direction="horizontal"
-                      maxItems={4}
-                      render={video => {
-                        let index = video.id;
+                    {selectedMoveIds && selectedMoveIds.length ? (
+                      movesOfSet.map((video, index) => {
                         return (
                           <MoveListDetails
                             index={index}
@@ -764,13 +762,53 @@ class MoveList extends React.Component {
                             handleStarred={this.handleStarred}
                             handleVideoCheckBox={this.handleVideoCheckBox}
                             handleVideoModal={this.props.handleVideoModal}
+                            isLoadImage={isLoadImage}
+                            isMoveLoadingCount={isMoveLoadingCount}
+                            moveLoadingCount={moveLoadingCount}
                           />
                         );
-                      }}
-                      onDragEnd={this.reorderList}
-                    />
-                  )}
-                </div>
+                      })
+                    ) : (
+                      <ListManager
+                        items={movesOfSet}
+                        direction="horizontal"
+                        maxItems={4}
+                        render={video => {
+                          let index = video.id;
+                          return (
+                            <MoveListDetails
+                              index={index}
+                              isVideoChecked={isVideoChecked}
+                              selectedMoves={selectedMoves}
+                              handleShowVideo={this.props.handleShowVideo}
+                              handleVideoHover={this.handleVideoHover}
+                              handleVideoPause={this.handleVideoPause}
+                              handleVideoHoverLeave={this.handleVideoHoverLeave}
+                              handleVideoPlay={this.handleVideoPlay}
+                              handleMovesSelect={this.handleMovesSelect}
+                              isMarkingStar={isMarkingStar}
+                              video={video}
+                              isSelectVideo={isSelectVideo}
+                              videoIndex={videoIndex}
+                              isVideoModalOpen={isVideoModalOpen}
+                              handleStarred={this.handleStarred}
+                              handleVideoCheckBox={this.handleVideoCheckBox}
+                              handleVideoModal={this.props.handleVideoModal}
+                              title={title}
+                              onDoubleClick={this.onDoubleClick}
+                              doubleClickIndex={doubleClickIndex}
+                              doubleClick={doubleClick}
+                              handleonBlur={this.handleonBlur}
+                              handleChange={this.handleChange}
+                              reorderList={this.reorderList}
+                              isLoadImage={isLoadImage}
+                            />
+                          );
+                        }}
+                        onDragEnd={this.reorderList}
+                      />
+                    )}
+                  </div>
                 </div>
               ) : (
                 <Col>

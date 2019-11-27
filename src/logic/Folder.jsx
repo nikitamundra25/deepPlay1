@@ -134,7 +134,7 @@ const recentFolderLogic = createLogic({
       undefined,
       undefined
     );
-    if (result.isError) {
+    if (result.isError){
       if (!toast.isActive(toastId)) {
         toastId = toast.error(result.messages[0]);
       }

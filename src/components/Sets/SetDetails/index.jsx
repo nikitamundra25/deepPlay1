@@ -32,7 +32,9 @@ import {
   getTagListRequest,
   addTagsInTagModalRequest,
   videoFullscreenReq,
-  videoFullscreenExit
+  videoFullscreenExit,
+  videoSelectRequest,
+  videoUnSelectRequest
 } from "../../../actions";
 import SharableLinkModal from "../../comman/shareableLink/SharableLink";
 import { AppRoutes } from "../../../config/AppRoutes";
@@ -262,7 +264,11 @@ class SetDetails extends React.Component {
         // eslint-disable-next-line
         return data.moveId.map(k => {
           if (k === key._id) {
-            moveList[i].tags = data.tags;
+            moveList[i].tags = key.tags.concat(
+              data.tags.filter(
+                item => key.tags.findIndex(tag => tag.label === item.label) < 0
+              )
+            );
           }
         });
       });
@@ -270,7 +276,27 @@ class SetDetails extends React.Component {
     } else {
       const moveVideo = data.videoData;
       moveVideo.tags = data.tags;
+      moveVideo.description = data.description;
       this.props.addTagsRequest({ data: data, moveVideo: moveVideo });
+    }
+  };
+
+  editMove = data => {
+    if (data.fromMoveList) {
+      const moveList = [...data.moveofSetList];
+      moveList.map((key, i) => {
+        if (data.moveId === key._id) {
+          return (moveList[i].title = data.title);
+        } else {
+          return null;
+        }
+      });
+      this.props.updateMoveRequest({ data: data, moveList: moveList });
+    } else {
+      const moveVideo = data.videoData;
+      moveVideo.title = data.title;
+      moveVideo.description = data.description;
+      this.props.updateMoveRequest({ data: data, moveVideo: moveVideo });
     }
   };
 
@@ -303,7 +329,9 @@ class SetDetails extends React.Component {
       getAllFolders,
       updateSortIndexRequest,
       videoFullscreenReq,
-      videoFullscreenExit
+      videoFullscreenExit,
+      videoSelectRequest,
+      videoUnSelectRequest
     } = this.props;
     const { setDetails } = setReducer;
     const { modelDetails } = modelInfoReducer;
@@ -317,7 +345,9 @@ class SetDetails extends React.Component {
       isMoveStarLoading,
       tagsList,
       isFullScreenMode,
-      isMoveList
+      isMoveList,
+      isVideoSelected,
+      isSavingWebM
     } = moveReducer;
     const { userEncryptedInfo } = shareLinkReducer;
     const {
@@ -441,7 +471,7 @@ class SetDetails extends React.Component {
                   videoFullscreenExit={videoFullscreenExit}
                   // addTagsInTagModalRequest={addTagsInTagModalRequest}
                   tagsList={tagsList}
-                  editMove={data => this.props.updateMoveRequest(data)}
+                  editMove={this.editMove}
                   addTagsInTagModalRequest={data =>
                     this.props.addTagsInTagModalRequest(data)
                   }
@@ -462,6 +492,7 @@ class SetDetails extends React.Component {
                     isStarred={this.isStarred}
                     deleteMove={this.deleteMove}
                     //  movesOfSet={moveListItem}
+                    isVideoSelected={isVideoSelected}
                     movesOfSet={stemp}
                     handleVideoModal={this.handleVideoModal}
                     allSetList={allSetList}
@@ -480,11 +511,14 @@ class SetDetails extends React.Component {
                     updateSortIndexRequest={updateSortIndexRequest}
                     searchMove={data => this.props.searchMoveRequest(data)}
                     isMoveStarLoading={isMoveStarLoading}
+                    videoSelectRequest={videoSelectRequest}
+                    videoUnSelectRequest={videoUnSelectRequest}
                     addTagsInTagModalRequest={data =>
                       this.props.addTagsInTagModalRequest(data)
                     }
                     getTagListRequest={() => this.props.getTagListRequest()}
-                    editMove={data => this.props.updateMoveRequest(data)}
+                    editMove={this.editMove}
+                    isSavingWebM={isSavingWebM}
                     {...this.props}
                   />
                 </div>
@@ -581,9 +615,12 @@ const mapDispatchToProps = dispatch => ({
   },
   videoFullscreenExit: data => {
     dispatch(videoFullscreenExit(data));
+  },
+  videoSelectRequest: data => {
+    dispatch(videoSelectRequest(data));
+  },
+  videoUnSelectRequest: data => {
+    dispatch(videoUnSelectRequest(data));
   }
 });
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(SetDetails);
+export default connect(mapStateToProps, mapDispatchToProps)(SetDetails);

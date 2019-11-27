@@ -34,6 +34,7 @@ import TransferToModal from "./transferTo";
 import { ConfirmBox } from "../../../helper/SweetAleart";
 import SharableLinkModal from "../../comman/shareableLink/SharableLink";
 import emptySetIc from "../../../assets/img/play-list-ic.svg";
+import emptyImg from "../../../assets/img/empty-img.svg";
 import { AppRoutes } from "../../../config/AppRoutes";
 import Loader from "../../comman/Loader/Loader";
 import FolderModal from "../createFolderModal";
@@ -358,7 +359,7 @@ class RecentFolderComponent extends React.Component {
             </UncontrolledDropdown>
 
             <UncontrolledTooltip placement="top" target="edit">
-              Edit & Delete
+              Edit & Delete Folder details
             </UncontrolledTooltip>
           </div>
         </div>{" "}
@@ -397,28 +398,40 @@ class RecentFolderComponent extends React.Component {
                               </span>
                             </div>
                             <span className={"text-capitalize"}>
-                              {list.description ? list.description : ""}
+                              <small>
+                                {list.description ? list.description : ""}
+                              </small>
                             </span>
                             <div className="content-number-tile">
                               {" "}
                               {list.moveCount ? list.moveCount : 0} moves
                             </div>
                           </div>
-                          {list.recentlyAddMoveImg ? (
-                            <div
-                              className="d-flex img-tile-wrap cursor_pointer"
-                              onClick={() => this.handleSetDetails(list._id)}
-                            >
+
+                          <div
+                            className="d-flex img-tile-wrap cursor_pointer"
+                            onClick={() => this.handleSetDetails(list._id)}
+                          >
+                            {list.recentlyAddMoveImg ? (
                               <div className="cotent-img-tile">
-                                <video width={"100%"} id="webm-video">
-                                  <source
-                                    src={`${list.recentlyAddMoveImg}`}
-                                    type="video/webm"
-                                  />
-                                </video>
+                                <img
+                                  src={`${list.recentlyAddMoveImg}`}
+                                  alt=""
+                                  width="100%"
+                                  height="100%"
+                                />
                               </div>
-                            </div>
-                          ) : null}
+                            ) : (
+                              <div className={""}>
+                                <img
+                                  src={emptyImg}
+                                  alt=""
+                                  width="60"
+                                  height="60"
+                                />
+                              </div>
+                            )}
+                          </div>
                         </div>
                         <div
                           onMouseOver={() => this.showPopOver(i, show)}

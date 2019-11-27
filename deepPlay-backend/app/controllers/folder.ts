@@ -344,25 +344,36 @@ const deleteFolder = async (req: Request, res: Response): Promise<void> => {
       }
     );
     const includSet: Document | any = await SetModel.find({
-      folderId: query.id
-    })
+      folderId: query.id,
+      isDeleted: false
+    });
+
+    let setObjectIds: Document | any = [];
+
     if (includSet) {
       for (let index = 0; index < includSet.length; index++) {
         const setData = includSet[index];
-        const includeMove = await MoveModel.find({
+        const includeMove: Document | any | null = await MoveModel.find({
           setId: setData._id
-        })
+        });
+        if (setData.objectId) {
+          setObjectIds.push(setData.objectId);
+        }
+
         if (includeMove) {
           for (let index = 0; index < includeMove.length; index++) {
             const moveData = includeMove[index];
             await MoveModel.findByIdAndUpdate(moveData._id, {
               isDeleted: true
-            })
+            });
+            if (moveData.objectId) {
+              setObjectIds.push(moveData.objectId);
+            }
           }
         }
         await SetModel.findByIdAndUpdate(setData._id, {
           isDeleted: true
-        })
+        });
       }
     }
     const result1: any = await FolderModel.find({ _id: query.id });
@@ -372,6 +383,14 @@ const deleteFolder = async (req: Request, res: Response): Promise<void> => {
         if (err) throw err;
       });
     }
+    console.log("setObjectIds", setObjectIds);
+
+    if (setObjectIds.length) {
+      index.deleteObjects(setObjectIds, (err: string, content: any) => {
+        if (err) throw err;
+      });
+    }
+
     res.status(200).json({
       data: result,
       message: "Folder has been deleted successfully"
