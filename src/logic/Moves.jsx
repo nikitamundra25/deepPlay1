@@ -214,7 +214,7 @@ const completeVideoEditingLogic = createLogic({
           }
         })
       );
-      
+
       let temp = getState().moveReducer.isMoveDone;
       if (temp) {
         dispatch(
@@ -701,29 +701,15 @@ const videoCancelRequestLogic = createLogic({
   type: MovesAction.VIDEO_CANCEL_REQUEST,
   async process({ action }, dispatch, done) {
     api.cancelRequest("cancel");
-    let result = await api.FetchFromServer(
-      "move",
-      "/cancel-move-request",
-      "POST",
-      true
-    );
-    if (result.isError) {
-      if (!toast.isActive(toastId)) {
-        toastId = toast.error(result.messages[0]);
-      }
-      done();
-      return;
-    } else {
-      if (!toast.isActive(toastId)) {
-        toastId = toast.success(result.messages[0]);
-      }
-      dispatch(
-        videoCancelSuccess({
-          cancelVideo: true
-        })
-      );
-      done();
+    if (!toast.isActive(toastId)) {
+      toastId = toast.success("Move Request Canceled successfully!");
     }
+    dispatch(
+      videoCancelSuccess({
+        cancelVideo: true
+      })
+    );
+    done();
   }
 });
 export const MoveLogics = [
