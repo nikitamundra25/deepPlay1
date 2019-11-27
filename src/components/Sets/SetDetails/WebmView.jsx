@@ -60,7 +60,6 @@ class WebmView extends Component {
     isFullScreenMode,
     isVideoFromSearch
   }) => {
-   
     if (isFullScreenMode !== this.props.isFullScreenMode) {
       const videoFullScreen = true;
       if (this.video) {
@@ -95,7 +94,6 @@ class WebmView extends Component {
         if (this.props.isFullScreenMode && videoFullScreen) {
           let isVideoScreenChange = false;
           this.customVideo.addEventListener("fullscreenchange ", () => {
-            console.log("fasdfasdf");
             this.setState({
               isFullScreenMode: false
             });
@@ -266,16 +264,22 @@ class WebmView extends Component {
   };
 
   handleVideoResizeScreen = () => {
-    this.customVideo = document.getElementById("webm-video");
-    if (this.customVideo.mozCancelFullScreen) {
+    this.customVideo = document.getElementById("custom_video_control");
+    if (this.customVideo.mozRequestFullScreen) {
       document.mozCancelFullScreen();
     } else if (this.customVideo.webkitExitFullscreen) {
       document.exitFullscreen();
       this.setState({
         isFullScreenMode: false
       });
+    } else {
+      document.exitFullscreen();
+      this.setState({
+        isFullScreenMode: false
+      });
     }
   };
+
   /**
    *
    */
@@ -331,6 +335,7 @@ class WebmView extends Component {
       videoIndex: videoIndex - 1
     });
   };
+
   handleNextVideoPlay = () => {
     const { movesOfSet } = this.props;
     const { videoIndex } = this.state;
@@ -501,6 +506,7 @@ class WebmView extends Component {
       error
     } = this.state;
     const isFullScreenMode = document.fullscreenElement;
+
     return (
       <>
         <Modal
@@ -655,9 +661,9 @@ class WebmView extends Component {
                     id="webm-video"
                     muted={isMuted}
                     className={
-                      this.props.isFullScreenMode
-                        ? "full-video-mode video-loading-tag"
-                        : "video-loading-tag"
+                      isFullScreenMode
+                        ? "full-video-mode video-loading-tag cursor_pointer"
+                        : "video-loading-tag cursor_pointer"
                     }
                     loop
                     // preload="auto"
@@ -665,7 +671,8 @@ class WebmView extends Component {
                     disablecontrols="true"
                     disablepictureinpicture="true"
                     controlsList="nodownload"
-                    oncontextmenu="return false;"
+                    onContextMenu={(e)=> e.preventDefault()}
+                    onClick={isPlaying ? this.pauseVideo : this.playVideo}
                   >
                     <source
                       src={`${
@@ -741,7 +748,7 @@ class WebmView extends Component {
                           }}
                         >
                           <InputRange
-                            draggableTrack
+                            draggableTrack={false}
                             maxValue={1}
                             minValue={0}
                             step={0.1}

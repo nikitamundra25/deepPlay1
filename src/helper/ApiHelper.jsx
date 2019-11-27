@@ -116,7 +116,11 @@ export class ApiHelper {
     try {
       let response = await Axios.post(`${this._portalGateway}${url}`, fd, {
         headers: options.headers,
-        onUploadProgress: progressCallback
+        onUploadProgress: progressCallback,
+        cancelToken: new CancelToken(function executor(c) {
+          // An executor function receives a cancel function as a parameter
+          cancel = c;
+        })
       });
 
       if (response.status < 200 || response.status >= 300) {

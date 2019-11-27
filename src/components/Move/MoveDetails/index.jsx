@@ -216,7 +216,7 @@ class MoveDetails extends React.Component {
       title: title,
       description: description,
       frames:
-        frames && frames.length ? (frames[3] ? frames[3] : frames[0]) : [],
+        frames && frames.length ? (frames[5] ? frames[5] : frames[0]) : [],
       isEdit: parsed.isEdit ? true : false,
       setMoveCount
     });

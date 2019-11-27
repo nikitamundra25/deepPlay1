@@ -102,7 +102,6 @@ class SetSharedLink extends React.Component {
 
   handleLoadmoreRequest = setIdPathName => {
     let parsed = qs.parse(this.props.location.search);
-    console.log("parsedparsed", parsed.userId);
     const pageLimit = this.state.page;
     this.setState({
       page: pageLimit + 1
@@ -205,7 +204,7 @@ class SetSharedLink extends React.Component {
                           ? true
                           : false
                       }
-                      loader={<h4>Loading...</h4>}
+                      loader={<Loader />}
                     >
                       <Row>
                         <Col md="12">
@@ -262,6 +261,7 @@ class SetSharedLink extends React.Component {
                                         width={"100%"}
                                         id={`webm-video-${index}`}
                                         muted={true}
+                                        onContextMenu={e => e.preventDefault()}
                                       >
                                         <source
                                           poster={
