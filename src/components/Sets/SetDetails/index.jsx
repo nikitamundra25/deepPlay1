@@ -390,9 +390,9 @@ class SetDetails extends React.Component {
                     : setDetails.title
                   : "MySets"}
               </div>
-              <div className="sub-title">
+              {/* <div className="sub-title">
                 Total Move {setDetails ? `${setDetails.moveCount}` : 0}
-              </div>
+              </div> */}
             </span>
             <div className="d-flex  justify-content-center align-items-between">
               <span

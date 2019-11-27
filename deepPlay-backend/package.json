@@ -29,6 +29,7 @@
     "body-parser": "^1.18.3",
     "cloudinary": "^1.15.0",
     "cors": "^2.8.5",
+    "cron": "^1.7.2",
     "express": "^4.16.4",
     "express-validator": "^6.0.1",
     "ffmpeg": "0.0.4",
