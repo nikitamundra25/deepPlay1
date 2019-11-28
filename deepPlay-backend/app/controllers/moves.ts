@@ -204,7 +204,7 @@ const getVideoFrames = async (videoName: string): Promise<any> => {
       `${dirName.split(".")[0]}_frames`,
       {
         start_time: 0,
-         every_n_percentage: 10
+        frame_rate: 20 / videoDuration
       },
       (error: any, file: any) => {
         if (error) {
