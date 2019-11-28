@@ -555,7 +555,7 @@ const updateMoveDetailsAndTrimVideo = async (
           }
           const s3VideoUrl = await s3BucketUpload(
             videoFileMain,
-            "deep-play.webm",
+            "deep-play.mp4",
             "moves"
           );
           let s3VideoThumbnailUrl: any | null;
