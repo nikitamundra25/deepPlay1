@@ -384,7 +384,9 @@ class MoveSearchList extends React.Component {
                         All
                       </Button>
                       <Button
-                        className={isStarred[1] === "true" ? "active stared-active" : ""}
+                        className={
+                          isStarred[1] === "true" ? "active stared-active" : ""
+                        }
                         color=" "
                         onClick={this.handleShowStarred}
                       >
@@ -604,7 +606,11 @@ class MoveSearchList extends React.Component {
                                       width={"100%"}
                                       id={`webm-video-${index}`}
                                       muted={true}
+                                      draggable="true"
                                       playsinline
+                                      loop
+                                      autoPlay
+                                      onContextMenu={e => e.preventDefault()}
                                     >
                                       <source
                                         src={`${video.moveURL}`}
@@ -755,7 +761,6 @@ class MoveSearchList extends React.Component {
       </section>
     );
   }
-
 }
 
 export default MoveSearchList;

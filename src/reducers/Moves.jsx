@@ -48,7 +48,7 @@ export const moveReducer = handleActions(
     }),
     [MovesAction.GET_MOVES_OF_SET_REQUEST]: (state, { payload }) => ({
       ...state,
-      isMoveofSetLoading: true,
+      isMoveofSetLoading: payload.isInfiniteScroll ? false : true,
       isMoveList: payload.isMoveList ? true : false
     }),
     [MovesAction.GET_MOVES_OF_SET_SUCCESS]: (state, { payload }) => ({

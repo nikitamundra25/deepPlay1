@@ -18,7 +18,7 @@ import Loader from "../Loader/Loader";
 import WebmView from "../../Sets/SetDetails/WebmView";
 import emptySetIc from "../../../assets/img/play-list-ic.svg";
 import InfiniteScroll from "react-infinite-scroll-component";
-import imgNotfound from "../../../assets/img/404.svg";
+import imgNotfound from "../../../assets/img/icons/lock.svg";
 import { Link } from "react-router-dom";
 import videoLoading from "../../../assets/img/icons/video-poster.png";
 
@@ -102,7 +102,6 @@ class SetSharedLink extends React.Component {
 
   handleLoadmoreRequest = setIdPathName => {
     let parsed = qs.parse(this.props.location.search);
-    console.log("parsedparsed", parsed.userId);
     const pageLimit = this.state.page;
     this.setState({
       page: pageLimit + 1
@@ -205,7 +204,7 @@ class SetSharedLink extends React.Component {
                           ? true
                           : false
                       }
-                      loader={<h4>Loading...</h4>}
+                      loader={<Loader />}
                     >
                       <Row>
                         <Col md="12">
@@ -262,6 +261,7 @@ class SetSharedLink extends React.Component {
                                         width={"100%"}
                                         id={`webm-video-${index}`}
                                         muted={true}
+                                        onContextMenu={e => e.preventDefault()}
                                       >
                                         <source
                                           poster={
@@ -322,47 +322,55 @@ class SetSharedLink extends React.Component {
             </Container>
           </>
         ) : (
-          <Container>
-            <Card className="home-video-section my-4 py-5">
-              <Row className="">
-                <Col md="6">
-                  {/* <iframe width="560" title={"Dance"} height="315" src="https://www.youtube.com/embed/nrDtcsyd-U4" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe> */}
-                  <div className="d-flex video-add-banner justify-content-center align-items-center">
-                    <img src={imgNotfound} alt={""} className="w-100" />
-                  </div>
-                </Col>
-                <Col
-                  md="6"
-                  className="d-flex flex-column justify-content-between "
-                >
-                  <div className="banner-text">
-                    <h1 className="banner-heading">Oops !</h1>
-                    <p className="banner-subheading mt-4 mt-0 h3 font-weight-bold">
-                      Access denied...
-                    </p>
-                    <p className="banner-content  mt-0 ">
-                      You didn't have permission to access this page. Maybe our
-                      FAQ or Community can help?
-                    </p>
-                  </div>
-                  <div className="text-left">
-                    <Link to={"/"}>
-                      <Button
-                        className="fill-btn btn w-75 m-auto white-color get-stated-btn"
-                        onClick={
-                          isLoggedIn
-                            ? this.handleDashboardOpen
-                            : this.handleLoginModalOpen
-                        }
-                      >
-                        Back To Home page
-                      </Button>
-                    </Link>
-                  </div>
-                </Col>
-              </Row>
-            </Card>
-          </Container>
+          <div className="app flex-row pt-5">
+            <Container>
+              <Card className="home-video-section my-4 py-5">
+                <Row className="">
+                  <Col md="6">
+                    {/* <iframe width="560" title={"Dance"} height="315" src="https://www.youtube.com/embed/nrDtcsyd-U4" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe> */}
+                    <div className="d-flex video-add-banner justify-content-center align-items-center">
+                      <img
+                        src={imgNotfound}
+                        alt={""}
+                        className="w-100"
+                        width="200"
+                        height="250"
+                      />
+                    </div>
+                  </Col>
+                  <Col
+                    md="6"
+                    className="d-flex flex-column justify-content-between "
+                  >
+                    <div className="banner-text">
+                      <h1 className="banner-heading">Oops !</h1>
+                      <p className="banner-subheading mt-4 mt-0 h3 font-weight-bold">
+                        Access denied...
+                      </p>
+                      <p className="banner-content  mt-0 ">
+                        You didn't have permission to access this page. Maybe
+                        our FAQ or Community can help?
+                      </p>
+                    </div>
+                    <div className="text-left">
+                      <Link to={"/"}>
+                        <Button
+                          className="fill-btn btn w-75 m-auto white-color get-stated-btn"
+                          onClick={
+                            isLoggedIn
+                              ? this.handleDashboardOpen
+                              : this.handleLoginModalOpen
+                          }
+                        >
+                          Back To Home page
+                        </Button>
+                      </Link>
+                    </div>
+                  </Col>
+                </Row>
+              </Card>
+            </Container>
+          </div>
         )}
       </div>
     );

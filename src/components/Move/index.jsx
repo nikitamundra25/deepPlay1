@@ -226,7 +226,7 @@ class MoveComponent extends React.Component {
                         processing.
                       </p>
                       <div className={"text-center"}>-Or-</div>
-                      <p>Cancel video request by clicking bellow button.</p>
+                      <p>Cancel video request by clicking below button.</p>
                       <div>
                         <Button
                           className={"btn btn-black"}

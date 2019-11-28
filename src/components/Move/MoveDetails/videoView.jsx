@@ -113,23 +113,37 @@ class VideoView extends React.Component {
           </FormGroup>
           {moveDetails && moveDetails.videoUrl ? (
             <>
-              {
-                !isEdit ?
-                  <video width={"100%"} autoPlay loop id={"video-trimmer"} muted={false} playsinline>
-                    <source
-                      src={`${AppConfig.API_ENDPOINT}${moveDetails.videoUrl}`}
-                    />
-                  </video> :
-                  <video width={"100%"} autoPlay loop id={"video-trimmer"} muted={false} playsinline>
-                    <source
-                      src={`${moveDetails.moveURL}`}
-                    />
-                  </video>
-              }
+              {!isEdit ? (
+                <video
+                  width={"100%"}
+                  autoPlay
+                  loop
+                  id={"video-trimmer"}
+                  muted={false}
+                  playsinline
+                  onContextMenu={e => e.preventDefault()}
+                >
+                  <source
+                    src={`${AppConfig.API_ENDPOINT}${moveDetails.videoUrl}`}
+                  />
+                </video>
+              ) : (
+                <video
+                  width={"100%"}
+                  autoPlay
+                  loop
+                  id={"video-trimmer"}
+                  muted={false}
+                  playsinline
+                  onContextMenu={e => e.preventDefault()}
+                >
+                  <source src={`${moveDetails.moveURL}`} />
+                </video>
+              )}
             </>
           ) : (
-              <span>No video available for trimming</span>
-            )}
+            <span>No video available for trimming</span>
+          )}
         </Col>
       </>
     );
