@@ -139,23 +139,23 @@ const downloadYoutubeVideo = async (
             (videoStream = fs.createWriteStream(originalVideoPath))
           );
           videoStream.on("close", async function () {
-            const {
-              frames: framesArray,
-              videoMetaData,
-              videoName
-            } = await getVideoFrames(fileName);
-            delete videoMetaData.filename;
-            const frames = framesArray.map(
-              (frame: string) => `${ServerURL}/uploads/youtube-videos/${frame}`
-            );
+//             const {
+//               frames: framesArray,
+//               videoMetaData,
+//               videoName
+//             } = await getVideoFrames(fileName);
+//             delete videoMetaData.filename;
+//             const frames = framesArray.map(
+//               (frame: string) => `${ServerURL}/uploads/youtube-videos/${frame}`
+//             );
             const moveResult: Document | any = new MoveModel({
               videoUrl: videoURL,
               sourceUrl: body.url,
               isYoutubeUrl: true,
               userId: headToken.id,
-              frames: frames,
-              videoMetaData,
-              videoName,
+//               frames: frames,
+//               videoMetaData,
+//               videoName,
               setId: body.setId !== "undefined" ? body.setId : null
             });
             await moveResult.save();
