@@ -253,6 +253,8 @@ class WebmView extends Component {
    *
    */
   handleVideoFullScreen = () => {
+    console.log("insidee");
+
     this.customVideo = document.getElementById("custom_video_control");
     if (this.customVideo.mozRequestFullScreen) {
       this.customVideo.mozRequestFullScreen();
@@ -262,8 +264,16 @@ class WebmView extends Component {
       this.setState({
         isFullScreenMode: true
       });
+    } else if (this.customVideo.webkitEnterFullscreen) {
+      this.props.videoFullscreenReq();
+      console.log("insidee 1");
+      this.customVideo.webkitEnterFullscreen();
+      this.setState({
+        isFullScreenMode: true
+      });
     }
   };
+
   handleVideoResizeScreen = () => {
     this.customVideo = document.getElementById("webm-video");
     if (this.customVideo.mozCancelFullScreen) {
@@ -660,6 +670,7 @@ class WebmView extends Component {
                     }
                     loop
                     // preload="auto"
+                    playsinline
                     autoPlay
                     disablecontrols="true"
                     disablepictureinpicture="true"

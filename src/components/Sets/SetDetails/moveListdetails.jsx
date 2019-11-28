@@ -167,6 +167,7 @@ class MoveListDetails extends React.Component {
                     draggable="true"
                     loop
                     className={isLoadImage ? "load-class" : ""}
+                    playsinline
                   >
                     <source src={`${video.moveURL}`} type="video/webm" />
                   </video>

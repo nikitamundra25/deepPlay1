@@ -173,7 +173,7 @@ class HomePage extends React.Component {
                     </span>
                   )}
 
-                  <video width="100%" id="webm-video-0">
+                  <video width="100%" id="webm-video-0" playsinline>
                     <source
                       src="https://s3.amazonaws.com/hope.bucket/moves/1571752097935_deep-play.webm"
                       type="video/webm"

@@ -604,6 +604,7 @@ class MoveSearchList extends React.Component {
                                       width={"100%"}
                                       id={`webm-video-${index}`}
                                       muted={true}
+                                      playsinline
                                     >
                                       <source
                                         src={`${video.moveURL}`}
