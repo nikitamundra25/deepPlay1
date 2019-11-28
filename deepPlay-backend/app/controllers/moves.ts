@@ -108,7 +108,7 @@ const downloadYoutubeVideo = async (
     }
     let videoURL: string;
     const fileName = [
-      headToken.id + Date.now() + "deep_play_video" + ".webm"
+      headToken.id + Date.now() + "deep_play_video" + ".mp4"
     ].join("");
     let originalVideoPath: string = "";
     if (IsProductionMode) {
@@ -555,7 +555,7 @@ const updateMoveDetailsAndTrimVideo = async (
           }
           const s3VideoUrl = await s3BucketUpload(
             videoFileMain,
-            "deep-play.webm",
+            "deep-play.mp4",
             "moves"
           );
           let s3VideoThumbnailUrl: any | null;
