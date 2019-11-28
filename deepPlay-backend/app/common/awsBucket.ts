@@ -14,7 +14,7 @@ export const s3BucketUpload = async (videoRoute: any, fileName: any, folderPath:
     Bucket: s3Key.bucketName,
     Body: fs.createReadStream(videoRoute),
     Key: `${folderPath}/` + Date.now() + "_" + path.basename(fileName),
-    ContentType: folderPath === "moves"?"video/mp4":"image/jpeg",
+    ContentType: folderPath === "moves"?"video/webm":"image/jpeg",
     ContentDisposition: `inline; filename=${fileName}`,
     ACL: "public-read"
   };

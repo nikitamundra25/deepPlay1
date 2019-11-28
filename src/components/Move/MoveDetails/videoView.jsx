@@ -120,7 +120,6 @@ class VideoView extends React.Component {
                   loop
                   id={"video-trimmer"}
                   muted={false}
-                  controls={true}
                   playsinline
                   onContextMenu={e => e.preventDefault()}
                 >
@@ -135,7 +134,6 @@ class VideoView extends React.Component {
                   loop
                   id={"video-trimmer"}
                   muted={false}
-                  controls={true}
                   playsinline
                   onContextMenu={e => e.preventDefault()}
                 >
