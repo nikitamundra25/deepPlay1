@@ -43,7 +43,7 @@ class SampleSet extends React.Component {
       videoIndex: -1
     };
   }
- 
+
   render() {
     return (
       <Container>

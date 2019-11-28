@@ -18,7 +18,7 @@ import { IMoveCopy, IUpdateMove } from "../interfaces";
 import moment from "moment";
 import { s3BucketUpload } from "../common/awsBucket";
 import { algoliaAppId, algoliaAPIKey } from "../config/app";
-
+var CronJob = require("cron").CronJob;
 const algoliasearch = require("algoliasearch");
 const client = algoliasearch(algoliaAppId, algoliaAPIKey);
 const index = client.initIndex("deep_play_data");
@@ -138,7 +138,7 @@ const downloadYoutubeVideo = async (
           ytdl(body.url, { quality: "highest" }).pipe(
             (videoStream = fs.createWriteStream(originalVideoPath))
           );
-          videoStream.on("close", async function() {
+          videoStream.on("close", async function () {
             const {
               frames: framesArray,
               videoMetaData,
@@ -195,7 +195,6 @@ const getVideoFrames = async (videoName: string): Promise<any> => {
       videoName
     );
   }
-
   const dirName: string = videoURL;
   const video = await new ffmpeg(videoURL);
   const videoDuration = (video.metadata.duration as any).seconds;
@@ -528,7 +527,7 @@ const updateMoveDetailsAndTrimVideo = async (
       }
       const fileName = `${
         result.videoUrl.split(".")[0]
-      }_clip_${moment().unix()}.webm`;
+        }_clip_${moment().unix()}.webm`;
       let videoFileMain: String | any, videoOriginalFile: String | any;
       if (IsProductionMode) {
         videoFileMain = path.join(__dirname, `${fileName}`);
@@ -730,7 +729,7 @@ const isStarredMove = async (req: Request, res: Response): Promise<any> => {
     return res.status(200).json({
       message: `Move has been ${
         isStarred === "true" ? "starred" : "Unstarred"
-      } successfully!`
+        } successfully!`
     });
   } catch (error) {
     console.log(error);
@@ -1206,73 +1205,75 @@ const getTagListByUserId = async (
 /*
 /*
 */
-const cancelCreateMovRequest = async (req: Request, res: Response) => {
-  try {
-    let dirPath: string | any;
-    if (IsProductionMode) {
-      dirPath = path.join(__dirname, "uploads", "youtube-videos");
-    } else {
-      dirPath = path.join(__basedir, "../uploads", "youtube-videos");
-    }
-    fs.readdir(dirPath, (err, files) => {
-      if (err) throw err;
-      for (const file of files) {
-        const isDir: any[] = file.split("frames");
-        if (isDir[1] !== undefined) {
-          if (IsProductionMode) {
-            const folderPath = path.join(
-              __dirname,
-              "uploads",
-              "youtube-videos",
-              file
-            );
-            fs.readdir(folderPath, (err, files) => {
-              if (files && files.length) {
-                fs.unlink(path.join(folderPath, file), err => {
-                  if (err) throw err;
-                });
-              } else {
-                fs.rmdirSync(folderPath);
-              }
-            });
-          } else {
-            const folderPath = path.join(
-              __basedir,
-              "../uploads",
-              "youtube-videos",
-              file
-            );
-            fs.readdir(folderPath, (err, files) => {
-              if (files && files.length) {
-                for (const file of files) {
+
+//Running cron job to remove local server videos
+new CronJob(
+  "00 00 00 * * *",
+  async (req: Request, res: Response) => {
+    console.log("You will see this at midnight");
+    try {
+      let dirPath: string | any;
+      if (IsProductionMode) {
+        dirPath = path.join(__dirname, "uploads", "youtube-videos");
+      } else {
+        dirPath = path.join(__basedir, "../uploads", "youtube-videos");
+      }
+      fs.readdir(dirPath, (err, files) => {
+        if (err) throw err;
+        for (const file of files) {
+          const isDir: any[] = file.split("frames");
+          if (isDir[1] !== undefined) {
+            if (IsProductionMode) {
+              const folderPath = path.join(
+                __dirname,
+                "uploads",
+                "youtube-videos",
+                file
+              );
+              fs.readdir(folderPath, (err, files) => {
+                if (files && files.length) {
                   fs.unlink(path.join(folderPath, file), err => {
                     if (err) throw err;
                   });
+                } else {
+                  fs.rmdirSync(folderPath);
                 }
-              } else {
-                fs.rmdirSync(folderPath);
-              }
+              });
+            } else {
+              const folderPath = path.join(
+                __basedir,
+                "../uploads",
+                "youtube-videos",
+                file
+              );
+              fs.readdir(folderPath, (err, files) => {
+                if (files && files.length) {
+                  for (const file of files) {
+                    fs.unlink(path.join(folderPath, file), err => {
+                      if (err) throw err;
+                    });
+                  }
+                } else {
+                  fs.rmdirSync(folderPath);
+                }
+              });
+            }
+          } else {
+            fs.unlink(path.join(dirPath, file), err => {
+              if (err) throw err;
             });
           }
-        } else {
-          fs.unlink(path.join(dirPath, file), err => {
-            if (err) throw err;
-          });
         }
-      }
-    });
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  },
+  null,
+  true,
+  "America/Los_Angeles"
+);
 
-    return res.status(200).json({
-      message: "Move Request Canceled successfully!",
-      success: true
-    });
-  } catch (error) {
-    console.log(error);
-    res.status(500).send({
-      message: error.message
-    });
-  }
-};
 export {
   downloadVideo,
   getMoveBySetId,
@@ -1292,6 +1293,5 @@ export {
   updateMove,
   getMoveBySearch,
   addTags,
-  getTagListByUserId,
-  cancelCreateMovRequest
+  getTagListByUserId
 };

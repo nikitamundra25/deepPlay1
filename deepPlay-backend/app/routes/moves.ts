@@ -18,8 +18,7 @@ import {
   updateMove,
   getMoveBySearch,
   addTags,
-  getTagListByUserId,
-  cancelCreateMovRequest
+  getTagListByUserId
 } from "../controllers";
 import { ValidateAdminToken } from "../common";
 import { storageFile } from "../common/video";
@@ -64,5 +63,4 @@ MoveRouter.post(
 MoveRouter.put("/update-move", ValidateAdminToken, updateMove);
 MoveRouter.put("/add-tags", ValidateAdminToken, addTags);
 MoveRouter.get("/get-tag-list", ValidateAdminToken, getTagListByUserId);
-MoveRouter.post("/cancel-move-request", cancelCreateMovRequest )
 export default MoveRouter;

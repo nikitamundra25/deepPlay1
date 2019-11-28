@@ -18,17 +18,23 @@ export class ErrorHandlerHelper {
   }
 
   setError = () => {
-    this.error.code = this.rawError.code ? this.rawError.code : this.error.code;
+    const code =
+      this.rawError && this.rawError.code
+        ? this.rawError.code
+        : this.error.code;
+    this.error.code = code ? code : 400;
     this.error.timestamp = Date.now();
     this.error.messages = [];
     if (
+      this.rawError &&
       this.rawError.data &&
       typeof this.rawError.data === "object" &&
       this.rawError.data.message
     ) {
       if (
-        this.rawError.data.message === "Token has expired" ||
-        this.rawError.data.message === "Unauthorized, Invalid token!"
+        (this.rawError && this.rawError.data.message === "Token has expired") ||
+        (this.rawError &&
+          this.rawError.data.message === "Unauthorized, Invalid token!")
       ) {
         localStorage.removeItem("token");
         window.location.href = "/";
