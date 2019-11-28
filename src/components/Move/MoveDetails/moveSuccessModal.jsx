@@ -48,7 +48,7 @@ class MoveSuccessModal extends React.Component {
               <div className="w-100 set-content-wrap pt-0 mt-0 ">
                 <div className="set-content-block w-100">
                   <div className="d-flex vieos-add-section video-add-banner justify-content-center align-items-center">
-                    <video width={"100%"} autoPlay loop id={"video-trimmer"}>
+                    <video width={"100%"} autoPlay loop id={"video-trimmer"} playsinline>
                       <source
                         src={`${AppConfig.API_ENDPOINT}${moveDetails.videoUrl}`}
                       />

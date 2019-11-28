@@ -607,6 +607,7 @@ class MoveSearchList extends React.Component {
                                       id={`webm-video-${index}`}
                                       muted={true}
                                       draggable="true"
+                                      playsinline
                                       loop
                                       autoPlay
                                       onContextMenu={e => e.preventDefault()}
