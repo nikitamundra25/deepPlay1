@@ -108,7 +108,7 @@ const downloadYoutubeVideo = async (
     }
     let videoURL: string;
     const fileName = [
-      headToken.id + Date.now() + "deep_play_video" + ".webm"
+      headToken.id + Date.now() + "deep_play_video" + ".mp4"
     ].join("");
     let originalVideoPath: string = "";
     if (IsProductionMode) {
