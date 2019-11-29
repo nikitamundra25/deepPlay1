@@ -254,6 +254,8 @@ class WebmView extends Component {
    */
 
   handleVideoFullScreen = () => {
+    console.log("insidee");
+
     this.customVideo = document.getElementById("custom_video_control");
     if (this.customVideo.mozRequestFullScreen) {
       this.customVideo.mozRequestFullScreen();
@@ -699,6 +701,7 @@ class WebmView extends Component {
                     }
                     loop
                     // preload="auto"
+                    playsinline
                     autoPlay
                     disablecontrols="true"
                     disablepictureinpicture="true"

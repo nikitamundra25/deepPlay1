@@ -124,6 +124,7 @@ class VideoView extends React.Component {
                   loop
                   id={"video-trimmer"}
                   muted={false}
+                  playsinline
                   onContextMenu={e => e.preventDefault()}
                 >
                   <source
@@ -137,6 +138,7 @@ class VideoView extends React.Component {
                   loop
                   id={"video-trimmer"}
                   muted={false}
+                  playsinline
                   onContextMenu={e => e.preventDefault()}
                 >
                   <source src={`${moveDetails.moveURL}`} />

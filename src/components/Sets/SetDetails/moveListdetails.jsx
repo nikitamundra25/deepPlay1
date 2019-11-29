@@ -179,6 +179,7 @@ class MoveListDetails extends React.Component {
                     oncontextmenu="return false;"
                     loop
                     className={isLoadImage ? "load-class" : ""}
+                    playsinline
                   >
                     <source src={`${video.moveURL}`} type="video/webm" />
                   </video>
