@@ -1,12 +1,8 @@
 import { Request, Response } from "express";
 import {
-  CloudinaryAPIKey,
-  CloudinaryAPISecretKey,
-  CloudName,
   IsProductionMode,
   ServerURL
 } from "../config";
-import cloudinary from "cloudinary";
 import Mongoose, { Document } from "mongoose";
 import ytdl from "ytdl-core";
 import { MoveModel, SetModel, TagModel } from "../models";
@@ -23,18 +19,6 @@ const algoliasearch = require("algoliasearch");
 const client = algoliasearch(algoliaAppId, algoliaAPIKey);
 const index = client.initIndex("deep_play_data");
 const __basedir = path.join(__dirname, "../public");
-
-cloudinary.config({
-  cloud_name: CloudName,
-  api_key: CloudinaryAPIKey,
-  api_secret: CloudinaryAPISecretKey
-});
-
-var up_options = {
-  resource_type: "video",
-  eager: [{ format: "webM", video_codec: "h264:main:3.1", bit_rate: "3500k" }],
-  eager_async: true
-};
 
 /**
  * Title:- Download Video to local server

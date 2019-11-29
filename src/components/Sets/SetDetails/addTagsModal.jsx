@@ -120,7 +120,7 @@ class AddTagModal extends React.Component {
           <ModalFooter>
             <Button
               type="button"
-              // onClick={this.onhandleTags}
+              onClick={this.onhandleTags}
               color=" "
               className="btn btn-black"
             >
