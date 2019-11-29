@@ -539,6 +539,7 @@ const updateSortIndexLogic = createLogic({
 const removeVideoLocalServerLogic = createLogic({
   type: MovesAction.REMOVE_VIDEO_LOCAL_SERVER_REQUEST,
   async process({ action }, dispatch, done) {
+    
     let api = new ApiHelper();
     let result = await api.FetchFromServer(
       "move",

@@ -39,6 +39,7 @@ import MoveSuccessModal from "./moveSuccessModal";
 import qs from "query-string";
 import { AppRoutes } from "../../../config/AppRoutes";
 import CreateSetComponent from "../../Sets/createSet";
+import { toast } from "react-toastify";
 
 // core components
 class MoveDetails extends React.Component {
@@ -75,6 +76,7 @@ class MoveDetails extends React.Component {
     this.props.getAllSetRequest({ isSetNoLimit: false });
     this.props.getTagListRequest();
     const { recentSetAdded } = this.props.setReducer;
+
     if (recentSetAdded) {
       this.setState({
         selectSetOptions: {
@@ -130,8 +132,19 @@ class MoveDetails extends React.Component {
           title,
           description,
           tags,
-          setId
+          setId,
+          moveURL,
+          isMoveDone
         } = this.props.moveReducer.moveDetails;
+
+        if (
+          moveURL ||
+          isMoveDone ||
+          this.props.moveReducer.moveDetails === ""
+        ) {
+          window.history.back();
+          toast.warn("This move has already been created.");
+        }
         const { allSetList } = this.props.setReducer;
         let selectOption;
         if (allSetList && allSetList.length) {
@@ -239,9 +252,21 @@ class MoveDetails extends React.Component {
   createAnother = data => {
     const { moveReducer } = this.props;
     const { moveDetails } = moveReducer;
+    const {
+      frames,
+      videoMetaData,
+      videoName,
+      sourceUrl,
+      isYoutubeUrl
+    } = moveDetails;
     // this.handleMoveSuccessModal();
     this.props.createAnotherMoveRequest({
-      moveUrl: moveDetails.videoUrl
+      moveUrl: moveDetails.videoUrl,
+      frames: frames && frames.length && frames,
+      videoMetaData: videoMetaData,
+      sourceUrl,
+      isYoutubeUrl,
+      videoName: videoName
     });
   };
   /**
@@ -294,6 +319,11 @@ class MoveDetails extends React.Component {
    *
    */
   redirectToSetDetails = name => {
+    this.props.modelOperate({
+      modelDetails: {
+        isMoveSuccessModal: false
+      }
+    });
     const setId = this.state.selectSetOptions
       ? this.state.selectSetOptions.value
       : null;
