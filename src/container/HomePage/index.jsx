@@ -129,7 +129,7 @@ class HomePage extends React.Component {
       <Container>
         <section className="home-video-section">
           <Row className="">
-            <Col md="5" className="d-flex flex-column justify-content-center align-items-center">
+            <Col lg="5" md="6" className="d-flex flex-column justify-content-center align-items-center">
               <div className="banner-text text-right">
                 <h3 className="banner-heading">
                   Deconstruct Movements to Accelerate Learning
@@ -154,7 +154,7 @@ class HomePage extends React.Component {
                 </Button>
               </div>
             </Col>
-            <Col md="7">
+            <Col lg="7" md="6" className="d-flex justify-content-center align-items-center">
               {/* <iframe width="560" title={"Dance"} height="315" src="https://www.youtube.com/embed/nrDtcsyd-U4" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe> */}
 
               {/* no videos */}
@@ -166,7 +166,7 @@ class HomePage extends React.Component {
 
               {/* videos */}
               <div className="videos-wrap d-flex justify-content-center align-items-center">
-                <div className="d-flex video-add-banner with-home-videos justify-content-center align-items-center">
+                <div className="d-flex video-add-banner with-home-videos justify-content-center align-items-center position-relative">
                   {this.state.onPlaying ? (
                     <span
                       onClick={this.videoPlayHandler}

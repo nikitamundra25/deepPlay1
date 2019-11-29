@@ -257,6 +257,12 @@ a {
   margin-right: auto;
   margin-left: auto;
   max-width: 1600px;
+  min-height: calc(100vh - 120px);
+}
+header{
+  .theme-container{
+    min-height: unset;
+  }
 }
 .theme-heading {
   font-weight: bold;
@@ -624,17 +630,18 @@ a {
     display: flex;
     align-items: center;
     justify-content: center;
-
     &:hover {
       opacity: 1 !important;
     }
     span {
       color: #fff;
       font-size: 20px;
-      line-height: 17px;
+      height: 15px;
+    
       display: flex;
       align-items: center;
       justify-content: center;
+      
     }
     img {
       width: 70%;
@@ -2256,6 +2263,7 @@ a {
   display: flex;
   overflow: hidden;
   flex-wrap: wrap;
+  width: 100%;
   &>div{
     width: 100%;
   }
@@ -2363,6 +2371,15 @@ a {
   background: #000;
 }
 @media (max-width: 991px) {
+  .auth-user-model{
+  .auth-subheading{
+    &::before{
+      width: calc(100% + 44px);
+      left: 50%;
+      transform: translateX(-50%);
+    }
+   
+  }}
   .play-list-collection {
     &.set-detail-section {
       &:not(.set-detail-editble) {
@@ -2518,6 +2535,7 @@ a {
   .header-input-group-text {
     z-index: 9;
   }
+
 }
 @media (max-width: 767px) {
   body {
@@ -2608,4 +2626,9 @@ a {
   right: 0;
   width: 100%;
   height: 100%;
+}
+
+_::-webkit-full-page-media, _:future, :root .auth-user-model .modal-header .close span{
+  position: relative;
+  top: -4px;
 }
