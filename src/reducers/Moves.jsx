@@ -167,7 +167,8 @@ export const moveReducer = handleActions(
     }),
     [MovesAction.UPDATE_MOVE_SUCCESS]: (state, { payload }) => ({
       ...state,
-      ...payload
+      ...payload,
+      isMoveDone: false
     }),
     [MovesAction.VIDEO_SELECT_REQUEST]: (state, { payload }) => ({
       ...state,
