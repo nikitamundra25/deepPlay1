@@ -48,7 +48,8 @@ class WebmView extends Component {
       tags: [],
       edit: false,
       description: "",
-      error: ""
+      error: "",
+      errorTitle: ""
     };
   }
   /**
@@ -444,7 +445,7 @@ class WebmView extends Component {
       title: ""
     });
 
-    if (this.state.title !== "") {
+    if (this.state.title !== "" || this.state.errorTitle !== null) {
       const data = {
         moveId: videoData._id,
         title: this.state.title,
@@ -468,6 +469,24 @@ class WebmView extends Component {
       [name]: value,
       error
     });
+  };
+
+  handleChangeTitle = e => {
+    const { name, value } = e.target;
+    const error =
+      value && value.length > 50
+        ? "Title cannot have more than 50 characters"
+        : "";
+    if (error) {
+      this.setState({
+        errorTitle: error ? error : null
+      });
+    } else {
+      this.setState({
+        [name]: value,
+        errorTitle: null
+      });
+    }
   };
 
   render() {
@@ -512,7 +531,8 @@ class WebmView extends Component {
       title,
       description,
       edit,
-      error
+      error,
+      errorTitle
     } = this.state;
     const isFullScreenMode = document.fullscreenElement;
 
@@ -543,17 +563,20 @@ class WebmView extends Component {
                 onDoubleClick={() => this.onDoubleClick(videoData.title)}
               >
                 {doubleClick ? (
-                  <FormGroup>
-                    <Input
-                      id="title"
-                      type="text"
-                      placeholder="Enter a title"
-                      name="title"
-                      onChange={this.handleChange}
-                      value={title}
-                      onBlur={() => this.handleonBlur(videoData)}
-                    />
-                  </FormGroup>
+                  <>
+                    <FormGroup>
+                      <Input
+                        id="title"
+                        type="text"
+                        placeholder="Enter a title"
+                        name="title"
+                        onChange={this.handleChangeTitle}
+                        value={title}
+                        onBlur={() => this.handleonBlur(videoData)}
+                      />
+                    </FormGroup>
+                    {errorTitle ? errorTitle : null}
+                  </>
                 ) : videoData && videoData.title ? (
                   videoData.title
                 ) : (
@@ -893,7 +916,8 @@ class WebmView extends Component {
               </div>
             </div>
             <div className="text-right pr-4">
-              {videoData && videoData.tags && videoData.tags.length ? (
+              {(videoData && videoData.tags && videoData.tags.length) ||
+              (videoData && videoData.description) ? (
                 <span
                   className="cursor_pointer"
                   onClick={() => this.openAddTagsModal(videoData._id, "edit")}

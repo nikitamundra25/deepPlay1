@@ -6,7 +6,8 @@ import {
   InputGroup,
   InputGroupAddon,
   InputGroupText,
-  UncontrolledTooltip
+  UncontrolledTooltip,
+  FormFeedback
 } from "reactstrap";
 import { AppConfig } from "../../../config/Appconfig";
 import "./index.scss";
@@ -74,7 +75,7 @@ class VideoView extends React.Component {
    *
    */
   render() {
-    const { moveReducer, description, title, isEdit } = this.props;
+    const { moveReducer, description, title, isEdit, errorTitle } = this.props;
     const { moveDetails } = moveReducer;
 
     return (
@@ -85,13 +86,16 @@ class VideoView extends React.Component {
               <InputGroup className={"move-title-wrap"}>
                 <Input
                   id="title"
-                  className={"move-title"}
                   placeholder="Enter your title (optional)"
                   onChange={e => this.props.handleChange(e)}
                   type="text"
+                  className={
+                    errorTitle ? "is-invalid move-title" : "move-title"
+                  }
                   name="title"
                   value={title}
                 />
+                <FormFeedback> {errorTitle ? errorTitle : null} </FormFeedback>
                 <InputGroupAddon
                   addonType="prepend"
                   className="discription-btn-wrap"

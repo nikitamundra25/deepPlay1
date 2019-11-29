@@ -207,12 +207,11 @@ class MoveListDetails extends React.Component {
                           placeholder="Enter a title"
                           name="title"
                           onChange={handleChange}
-                          // className={errors.title ? "is-invalid" : ""}
                           value={title}
                           onBlur={() => handleonBlur(video, index)}
                         />
                       </FormGroup>
-                      {errors.title ? errors.title : null}
+                      {errors ? errors : null}
                     </>
                   ) : (
                     video.title || "unnamed"

@@ -99,7 +99,7 @@ class VideoDetails extends React.Component {
           </FormGroup>
           <FormGroup className="flex-fill flex-column mt-3">
             {/* add search-select class for search select design  */}
-            <Label className="mt-2">Select sets</Label>
+            <Label className="mt-2">Select sets <span className="text-danger">*</span></Label>
             <InputGroup>
               <div className="w-100 search-select-wrap">
                 <AsyncSelect

@@ -521,7 +521,7 @@ class MoveList extends React.Component {
       title: ""
     });
 
-    if (this.state.title !== null && this.state.errors === "") {
+    if (this.state.title !== null || this.state.errors !== null) {
       const data = {
         moveId: videoData._id,
         title: this.state.title,
@@ -539,12 +539,18 @@ class MoveList extends React.Component {
     const { name, value } = e.target;
     const error =
       value && value.length > 50
-        ? "Description cannot have more than 50 characters"
+        ? "Title cannot have more than 50 characters"
         : "";
-    this.setState({
-      [name]: value,
-      errors: error ? error : null
-    });
+    if (error) {
+      this.setState({
+        errors: error ? error : null
+      });
+    } else {
+      this.setState({
+        [name]: value,
+        errors: null
+      });
+    }
   };
 
   render() {
