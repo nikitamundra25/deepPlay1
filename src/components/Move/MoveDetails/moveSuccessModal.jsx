@@ -50,7 +50,11 @@ class MoveSuccessModal extends React.Component {
                   <div className="d-flex vieos-add-section video-add-banner justify-content-center align-items-center">
                     <video width={"100%"} autoPlay loop id={"video-trimmer"}>
                       <source
-                        src={`${AppConfig.API_ENDPOINT}${moveDetails.videoUrl}`}
+                        src={`${AppConfig.API_ENDPOINT}${
+                          moveDetails && moveDetails.videoUrl
+                            ? moveDetails.videoUrl
+                            : ""
+                        }`}
                       />
                     </video>
                   </div>

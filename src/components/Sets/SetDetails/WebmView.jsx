@@ -247,9 +247,11 @@ class WebmView extends Component {
       isMuted: !isMuted
     });
   };
+
   /**
    *
    */
+
   handleVideoFullScreen = () => {
     this.customVideo = document.getElementById("custom_video_control");
     if (this.customVideo.mozRequestFullScreen) {
@@ -257,6 +259,13 @@ class WebmView extends Component {
     } else if (this.customVideo.webkitRequestFullScreen) {
       this.props.videoFullscreenReq();
       this.customVideo.webkitRequestFullScreen();
+      this.setState({
+        isFullScreenMode: true
+      });
+    } else if (this.customVideo.webkitEnterFullscreen) {
+      this.props.videoFullscreenReq();
+      console.log("insidee 1");
+      this.customVideo.webkitEnterFullscreen();
       this.setState({
         isFullScreenMode: true
       });
@@ -671,7 +680,7 @@ class WebmView extends Component {
                     disablecontrols="true"
                     disablepictureinpicture="true"
                     controlsList="nodownload"
-                    onContextMenu={(e)=> e.preventDefault()}
+                    onContextMenu={e => e.preventDefault()}
                     onClick={isPlaying ? this.pauseVideo : this.playVideo}
                   >
                     <source

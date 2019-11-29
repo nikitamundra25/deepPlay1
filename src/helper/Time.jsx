@@ -19,11 +19,11 @@ export const SecondsToMMSS = secs => {
 
 export const SecondsToMMSSMM = timeInSeconds => {
   var pad = function(num, size) {
-      return ("000" + num).slice(size * -1);
+      return ("00" + num).slice(size * -1);
     },
     time = parseFloat(timeInSeconds).toFixed(3),
     minutes = Math.floor(time / 60) % 60,
     seconds = Math.floor(time - minutes * 60),
-    milliseconds = time.slice(-3);
-  return `${pad(minutes, 2)}:${pad(seconds, 2)}:${pad(milliseconds, 3)}`;
+    milliseconds = time.slice(2, -1);
+  return `${pad(minutes, 2)}:${pad(seconds, 2)}:${pad(milliseconds, 2)}`;
 };

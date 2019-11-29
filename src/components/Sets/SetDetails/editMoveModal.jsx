@@ -13,6 +13,12 @@ import {
 import "./index.scss";
 import closeBtn from "../../../assets/img/close-img.png";
 import { logger } from "helper/Logger";
+import {
+  CreateFolderValidations,
+  CreateFolderValidationsMessaages
+} from "../../../validations";
+import Validator from "js-object-validation";
+
 
 class EditMoveModal extends React.Component {
   constructor(props) {
@@ -86,11 +92,14 @@ class EditMoveModal extends React.Component {
     e.preventDefault();
     const { title, description, tags } = this.state;
     try {
-      if (!title) {
+      const { isValid, errors } = Validator(
+        this.state,
+        CreateFolderValidations,
+        CreateFolderValidationsMessaages
+      );
+      if (!isValid) {
         this.setState({
-          errors: {
-            title: "Title is required."
-          }
+          errors
         });
         return;
       }

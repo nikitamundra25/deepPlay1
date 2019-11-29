@@ -70,7 +70,7 @@ class MoveComponent extends React.Component {
             isYouTubeUrl: true
           },
           () => {
-            this.handleMoveUpload();
+            this.handleMoveUpload(e);
           }
         );
       } else {
@@ -177,7 +177,7 @@ class MoveComponent extends React.Component {
   onSubmitForm = e => {
     e.preventDefault();
     if (this.state.url && !this.state.errors) {
-      this.handleMoveUpload();
+      this.handleMoveUpload(e);
     }
   };
 

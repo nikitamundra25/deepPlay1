@@ -30,8 +30,10 @@ class MoveListDetails extends React.Component {
       onDoubleClick,
       handleonBlur,
       handleChange,
-      isLoadImage
+      isLoadImage,
+      errors
     } = this.props;
+    console.log("errors", errors);
 
     return (
       <div
@@ -197,17 +199,21 @@ class MoveListDetails extends React.Component {
               >
                 <div className="text-capitalize play-list-heading h6 m-0">
                   {doubleClick && doubleClickIndex === index ? (
-                    <FormGroup>
-                      <Input
-                        id="title"
-                        type="text"
-                        placeholder="Enter a title"
-                        name="title"
-                        onChange={handleChange}
-                        value={title}
-                        onBlur={() => handleonBlur(video, index)}
-                      />
-                    </FormGroup>
+                    <>
+                      <FormGroup>
+                        <Input
+                          id="title"
+                          type="text"
+                          placeholder="Enter a title"
+                          name="title"
+                          onChange={handleChange}
+                          // className={errors.title ? "is-invalid" : ""}
+                          value={title}
+                          onBlur={() => handleonBlur(video, index)}
+                        />
+                      </FormGroup>
+                      {errors.title ? errors.title : null}
+                    </>
                   ) : (
                     video.title || "unnamed"
                   )}
