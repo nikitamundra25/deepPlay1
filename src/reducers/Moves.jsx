@@ -116,7 +116,7 @@ export const moveReducer = handleActions(
     }),
     [MovesAction.GET_MOVE_BY_SEARCH_REQUEST]: (state, { payload }) => ({
       ...state,
-      isMoveofSetLoading: true
+      isMoveofSetLoading: payload.isInfiniteScroll ? false : true
     }),
     [MovesAction.GET_MOVE_BY_SEARCH_SUCCESS]: (state, { payload }) => ({
       ...state,

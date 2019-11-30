@@ -8,8 +8,6 @@ import {
   ModalBody,
   UncontrolledTooltip,
   ModalHeader,
-  FormGroup,
-  Input
 } from "reactstrap";
 import { logger } from "helper/Logger";
 import InputRange from "react-input-range";
@@ -21,6 +19,7 @@ import ViewInfoModal from "./viewInfoModal";
 import AddTagModal from "./addTagsModal";
 import EditMoveModal from "./editMoveModal";
 import { ConfirmBox } from "helper/SweetAleart";
+import { toast } from "react-toastify";
 
 class WebmView extends Component {
   video;
@@ -49,7 +48,6 @@ class WebmView extends Component {
       edit: false,
       description: "",
       error: "",
-      errorTitle: ""
     };
   }
   /**
@@ -441,23 +439,33 @@ class WebmView extends Component {
     });
   };
 
-  handleonBlur = videoData => {
-    this.setState({
-      doubleClick: false,
-      title: ""
-    });
+  handleonBlur = (e, videoData) => {
+    const value = e.target.textContent;
+    const error =
+      value && value.length > 50
+        ? "Title cannot have more than 50 characters"
+        : "";
+    if (error) {
+      toast.error("Title cannot have more than 50 characters");
+      return;
+    } else {
+      this.setState({
+        doubleClick: false,
+        title: ""
+      });
 
-    if (this.state.title !== "" || this.state.errorTitle !== null) {
-      const data = {
-        moveId: videoData._id,
-        title: this.state.title,
-        description: videoData.description,
-        tags: videoData.tags,
-        setId: videoData.setId._id,
-        videoData: videoData,
-        fromMoveList: false
-      };
-      this.props.editMove(data);
+      if (value !== "" || this.state.errorTitle !== null) {
+        const data = {
+          moveId: videoData._id,
+          title: value,
+          description: videoData.description,
+          tags: videoData.tags,
+          setId: videoData.setId._id,
+          videoData: videoData,
+          fromMoveList: false
+        };
+        this.props.editMove(data);
+      }
     }
   };
 
@@ -471,24 +479,6 @@ class WebmView extends Component {
       [name]: value,
       error
     });
-  };
-
-  handleChangeTitle = e => {
-    const { name, value } = e.target;
-    const error =
-      value && value.length > 50
-        ? "Title cannot have more than 50 characters"
-        : "";
-    if (error) {
-      this.setState({
-        errorTitle: error ? error : null
-      });
-    } else {
-      this.setState({
-        [name]: value,
-        errorTitle: null
-      });
-    }
   };
 
   render() {
@@ -530,11 +520,10 @@ class WebmView extends Component {
       tags,
       // isFullScreenMode,
       doubleClick,
-      title,
+      // title,
       description,
       edit,
       error,
-      errorTitle
     } = this.state;
     const isFullScreenMode = document.fullscreenElement;
 
@@ -561,10 +550,15 @@ class WebmView extends Component {
           <ModalBody>
             <div className="video-slider-text">
               <div
+                contenteditable={doubleClick ? "true" : "false"}
                 className="video-slider-title font-weight-bold"
                 onDoubleClick={() => this.onDoubleClick(videoData.title)}
+                onBlur={
+                  doubleClick ? e => this.handleonBlur(e, videoData) : null
+                }
               >
-                {doubleClick ? (
+                {videoData && videoData.title ? videoData.title : "Unnamed"}
+                {/* {doubleClick ? (
                   <>
                     <FormGroup>
                       <Input
@@ -583,7 +577,7 @@ class WebmView extends Component {
                   videoData.title
                 ) : (
                   "Unnamed"
-                )}
+                )} */}
               </div>
               {!isShareable ? (
                 <div className="video-slider-dropDown">

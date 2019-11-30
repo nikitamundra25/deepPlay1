@@ -1,5 +1,5 @@
 import React from "react";
-import { Input, FormGroup } from "reactstrap";
+import { Input } from "reactstrap";
 import starIc from "../../../assets/img/star.svg";
 import "./index.scss";
 import blankStar from "../../../assets/img/star-line.svg";
@@ -24,16 +24,12 @@ class MoveListDetails extends React.Component {
       videoIndex,
       handleVideoCheckBox,
       handleStarred,
-      title,
       doubleClick,
       doubleClickIndex,
       onDoubleClick,
       handleonBlur,
-      handleChange,
-      isLoadImage,
-      errors
+      isLoadImage
     } = this.props;
-    console.log("errors", errors);
 
     return (
       <div
@@ -189,17 +185,22 @@ class MoveListDetails extends React.Component {
                   // style={{ background: "#000" }}
                 />
               </div>
-              <div
-                // onMouseLeave={() => this.props.closePopOver(index, show)}
-                onDoubleClick={
-                  !video.isMoveProcessing
-                    ? () => onDoubleClick(index, video.title)
-                    : null
-                }
-                className="play-list-text"
-              >
-                <div className="text-capitalize play-list-heading h6 m-0">
-                  {doubleClick && doubleClickIndex === index ? (
+              <div className="play-list-text">
+                <div
+                  className="text-capitalize play-list-heading h6 m-0"
+                  contenteditable={
+                    doubleClick && doubleClickIndex === index ? "true" : "false"
+                  }
+                  onDoubleClick={
+                    !video.isMoveProcessing
+                      ? () => onDoubleClick(index, video.title)
+                      : null
+                  }
+                  onBlur={
+                    doubleClick ? e => handleonBlur(e, video, index) : null
+                  }
+                >
+                  {/* {doubleClick && doubleClickIndex === index ? (
                     <>
                       <FormGroup>
                         <Input
@@ -216,7 +217,8 @@ class MoveListDetails extends React.Component {
                     </>
                   ) : (
                     video.title || "unnamed"
-                  )}
+                  )} */}
+                  {video.title || "unnamed"}
                 </div>
                 <div
                   className="star-wrap"

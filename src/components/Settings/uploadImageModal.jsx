@@ -20,7 +20,8 @@ class UploadImage extends Component {
     }
   };
 
-  onSelectFile = async (file, index) => {
+  onSelectFi
+  le = async (file, index) => {
     for (let x = 0; x < file.length; x++) {
       if (file[x].size > 10000000) {
         await ConfirmBox({

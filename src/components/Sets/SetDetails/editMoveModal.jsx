@@ -19,7 +19,6 @@ import {
 } from "../../../validations";
 import Validator from "js-object-validation";
 
-
 class EditMoveModal extends React.Component {
   constructor(props) {
     super(props);
@@ -90,8 +89,8 @@ class EditMoveModal extends React.Component {
 
   handleEditMove = async e => {
     e.preventDefault();
-    const { title, description, tags } = this.state;
     try {
+      const { title, description, tags } = this.state;
       const { isValid, errors } = Validator(
         this.state,
         CreateFolderValidations,

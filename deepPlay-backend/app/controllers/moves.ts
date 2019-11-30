@@ -1113,12 +1113,12 @@ const getMoveBySearch = async (req: Request, res: Response): Promise<any> => {
           .limit(limitNumber)
           .sort({ sortIndex: 1 });
       }
-      console.log("movesData", movesData.length);
 
       moveList = await MoveModel.populate(movesData, {
         path: "setId.folderId",
         match: { isDeleted: false }
       });
+      
       totalMoves = await MoveModel.count({
         title: {
           $regex: new RegExp(search.trim(), "i")

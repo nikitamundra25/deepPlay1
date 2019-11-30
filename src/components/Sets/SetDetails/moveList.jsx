@@ -21,6 +21,7 @@ import remove from "../../../assets/img/set-detail-ic/remove.svg";
 import { ListManager } from "react-beautiful-dnd-grid";
 import MoveListDetails from "./moveListdetails";
 import videoLoading from "../../../assets/img/icons/video-poster.png";
+import { toast } from "react-toastify";
 
 // a little function to help us with reordering the result
 const reorder = (list, startIndex, endIndex) => {
@@ -61,12 +62,21 @@ class MoveList extends React.Component {
       isLoadImage: false,
       isMoveLoadingCount: false,
       moveLoadingCount: -1,
-      errors: ""
+      errors: "",
+      eleHeight: "",
+      windowHeight: ""
     };
   }
 
   componentDidMount() {
     window.addEventListener("scroll", this.listenScrollEvent);
+    const height = document.getElementById("video-thumbnail-block")
+      .clientHeight;
+    const windowHeight = window.innerHeight;
+    this.setState({
+      eleHeight: height,
+      windowHeight
+    });
   }
   /*
   /*  
@@ -79,6 +89,7 @@ class MoveList extends React.Component {
       this.setState({ backgroundClass: "" });
     }
   };
+
   handleVideoHoverLeave = () => {
     this.setState({
       isSelectVideo: false
@@ -386,7 +397,7 @@ class MoveList extends React.Component {
         setId: this.props.setIdPathName,
         page: 1,
         isInfiniteScroll: false,
-        isMoveList: true
+        isMoveList: true,
       });
       this.setState({
         page: 1,
@@ -514,24 +525,34 @@ class MoveList extends React.Component {
     });
   };
 
-  handleonBlur = videoData => {
-    this.setState({
-      doubleClick: false,
-      doubleClickIndex: -1,
-      title: ""
-    });
+  handleonBlur = (e, videoData, index) => {
+    const value = e.target.textContent;
+    const error =
+      value && value.length > 50
+        ? "Title cannot have more than 50 characters"
+        : "";
+    if (error) {
+      toast.error("Title cannot have more than 50 characters");
+      return;
+    } else {
+      this.setState({
+        doubleClick: false,
+        doubleClickIndex: -1,
+        title: ""
+      });
 
-    if (this.state.title !== null || this.state.errors !== null) {
-      const data = {
-        moveId: videoData._id,
-        title: this.state.title,
-        description: videoData.description,
-        tags: videoData.tags,
-        setId: videoData.setId._id,
-        moveofSetList: this.props.movesOfSet,
-        fromMoveList: true
-      };
-      this.props.editMove(data);
+      if (this.state.title !== null || this.state.errors !== null) {
+        const data = {
+          moveId: videoData._id,
+          title: value,
+          description: videoData.description,
+          tags: videoData.tags,
+          setId: videoData.setId._id,
+          moveofSetList: this.props.movesOfSet,
+          fromMoveList: true
+        };
+        this.props.editMove(data);
+      }
     }
   };
 
@@ -588,6 +609,8 @@ class MoveList extends React.Component {
       isMoveLoadingCount,
       moveLoadingCount,
       errors
+      // eleHeight,
+      // windowHeight
     } = this.state;
     const location = this.props.location;
     const isStarred = location.search.split("=");
@@ -659,6 +682,7 @@ class MoveList extends React.Component {
                   ? "select-focus-event"
                   : null
               } `}
+              id="video-thumbnail-block"
             >
               {selectedMoveIds && selectedMoveIds.length ? (
                 <div className={` ${backgroundClass}`} id="get-sticky-header">
@@ -750,6 +774,7 @@ class MoveList extends React.Component {
                       </div>
                     </div>
                   </div>
+
                   {selectedMoveIds && selectedMoveIds.length ? (
                     <div className="select-focus-wrap"></div>
                   ) : null}
