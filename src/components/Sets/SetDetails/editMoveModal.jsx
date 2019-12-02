@@ -12,7 +12,6 @@ import {
 } from "reactstrap";
 import "./index.scss";
 import closeBtn from "../../../assets/img/close-img.png";
-import { logger } from "helper/Logger";
 import {
   CreateFolderValidations,
   CreateFolderValidationsMessaages
@@ -66,37 +65,15 @@ class EditMoveModal extends React.Component {
     });
   };
 
-  // handleTagChange = (newValue, actionMeta) => {
-  //   //const { tagsList } = this.props.moveReducer
-  //   console.log(newValue);
-  //   if (newValue) {
-  //     this.setState({
-  //       tags: newValue
-  //     });
-  //   } else {
-  //     this.setState({
-  //       tags: []
-  //     });
-  //   }
-  //   console.log(`action: ${actionMeta.action}`);
-  //   if (actionMeta.action === "create-option") {
-  //     this.props.addTagsInTagModalRequest({
-  //       tags: newValue[newValue.length - 1]
-  //     });
-  //   }
-  //   console.groupEnd();
-  // };
-
   handleEditMove = async e => {
     e.preventDefault();
-    try {
-      const { title, description, tags } = this.state;
-      const dataMove = {
-        title,
-        description: description
-      };
+    const { title, description } = this.state;
+      const data = {
+        title: title? title: "",
+        description: description? description: ""
+      }
       const { isValid, errors } = Validator(
-        dataMove,
+        data,
         CreateFolderValidations,
         CreateFolderValidationsMessaages
       );
@@ -107,26 +84,16 @@ class EditMoveModal extends React.Component {
         return;
       }
       const { moveIdToEdit, videoData } = this.props;
-      const data = {
+      const propData = {
         moveId: moveIdToEdit,
         title: title,
         description: description,
-        tags: tags,
+        tags: this.state.tags,
         setId: videoData.setId._id,
         videoData: videoData,
         fromMoveList: false
       };
-
-      await this.props.editMove(data);
-    } catch (error) {
-      logger(error);
-    }
-
-    // await this.props.createSet(data);
-    // this.setState({
-    //   title: "",
-    //   description: ""
-    // });
+      await this.props.editMove(propData);
   };
 
   render() {
