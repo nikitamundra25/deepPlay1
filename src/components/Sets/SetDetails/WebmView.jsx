@@ -7,7 +7,7 @@ import {
   Modal,
   ModalBody,
   UncontrolledTooltip,
-  ModalHeader,
+  ModalHeader
 } from "reactstrap";
 import { logger } from "helper/Logger";
 import InputRange from "react-input-range";
@@ -47,7 +47,7 @@ class WebmView extends Component {
       tags: [],
       edit: false,
       description: "",
-      error: "",
+      error: ""
     };
   }
   /**
@@ -523,7 +523,7 @@ class WebmView extends Component {
       // title,
       description,
       edit,
-      error,
+      error
     } = this.state;
     const isFullScreenMode = document.fullscreenElement;
 

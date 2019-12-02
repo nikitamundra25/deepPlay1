@@ -51,9 +51,14 @@ class VideoDetails extends React.Component {
         };
 
         defaultSetoptions.push(defaultSetoptionsValue);
-
         return true;
       });
+      const addNewOption = {
+        label: "+ Create New Set",
+        value: ""
+      };
+      defaultSetoptions.push(addNewOption);
+    } else {
       const addNewOption = {
         label: "+ Create New Set",
         value: ""
@@ -99,7 +104,9 @@ class VideoDetails extends React.Component {
           </FormGroup>
           <FormGroup className="flex-fill flex-column mt-3">
             {/* add search-select class for search select design  */}
-            <Label className="mt-2">Select sets <span className="text-danger">*</span></Label>
+            <Label className="mt-2">
+              Select sets <span className="text-danger">*</span>
+            </Label>
             <InputGroup>
               <div className="w-100 search-select-wrap">
                 <AsyncSelect
