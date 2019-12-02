@@ -91,8 +91,12 @@ class EditMoveModal extends React.Component {
     e.preventDefault();
     try {
       const { title, description, tags } = this.state;
+      const dataMove = {
+        title,
+        description: description
+      };
       const { isValid, errors } = Validator(
-        this.state,
+        dataMove,
         CreateFolderValidations,
         CreateFolderValidationsMessaages
       );
