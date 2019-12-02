@@ -29,7 +29,7 @@ class WebmView extends Component {
       isPlaying: true,
       currentTime: 0,
       exactCurrentTime: 0,
-      audioSpeed: 5,
+      audioSpeed: 1,
       isMuted: false,
       playBackSpeed: 1,
       moveToTransfer: "",

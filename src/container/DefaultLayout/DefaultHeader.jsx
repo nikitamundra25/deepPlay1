@@ -316,17 +316,19 @@ class DefaultHeader extends React.Component {
                                   Create Move
                                 </DropdownItem>
                               ) : (
-                                <DropdownItem
-                                  active={routePath === "/move" ? true : false}
+                                <a
+                                  href={`${APP_URL}/move`}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
                                 >
-                                  <a
-                                    href={`${APP_URL}/move`}
-                                    target="_blank"
-                                    rel="noopener noreferrer"
+                                  <DropdownItem
+                                    active={
+                                      routePath === "/move" ? true : false
+                                    }
                                   >
                                     Create Move
-                                  </a>
-                                </DropdownItem>
+                                  </DropdownItem>
+                                </a>
                               )}
                               <DropdownItem
                                 // active={

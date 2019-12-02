@@ -172,10 +172,10 @@ class MoveListDetails extends React.Component {
                     }
                     muted={true}
                     draggable="true"
-                    oncontextmenu="return false;"
+                    onContextMenu={e => e.preventDefault()}
                     loop
                     className={isLoadImage ? "load-class" : ""}
-                    playsinline
+                    playsInline
                   >
                     <source src={`${video.moveURL}`} type="video/webm" />
                   </video>
@@ -187,8 +187,9 @@ class MoveListDetails extends React.Component {
               </div>
               <div className="play-list-text">
                 <div
+                  suppressContentEditableWarning={true}
                   className="text-capitalize play-list-heading h6 m-0"
-                  contenteditable={
+                  contentEditable={
                     doubleClick && doubleClickIndex === index ? "true" : "false"
                   }
                   onDoubleClick={
