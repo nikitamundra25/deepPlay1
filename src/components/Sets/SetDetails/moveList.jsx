@@ -60,7 +60,8 @@ class MoveList extends React.Component {
       backgroundClass: "",
       isLoadImage: false,
       isMoveLoadingCount: false,
-      moveLoadingCount: -1
+      moveLoadingCount: -1, 
+      stickyHeaderWidth:null,
     };
   }
 
@@ -72,10 +73,25 @@ class MoveList extends React.Component {
   */
 
   listenScrollEvent = e => {
-    if (window.scrollY > 180) {
-      this.setState({ backgroundClass: "sticky-header" });
-    } else {
-      this.setState({ backgroundClass: "" });
+    let offsetElemnt = document.getElementById("get-sticky-header");
+    let offsetElemntInner = document.getElementById("get-sticky-inner-header");
+    let offsetElemntSubInner = document.getElementById("get-sticky-sub-inner-header");
+    
+    if(offsetElemnt){
+      let offsetWidth = offsetElemnt.getBoundingClientRect();
+      if (offsetWidth.top+125 <= 1) {
+        
+        console.log(offsetWidth.top, offsetWidth.left, offsetElemntInner.getBoundingClientRect().left,offsetElemntInner.offsetWidth ,"offsetWidth---------");
+        
+        this.setState({
+          stickyHeaderWidth: offsetElemntInner.offsetWidth
+        })
+        offsetElemntInner.style.left=offsetElemntSubInner.getBoundingClientRect().left+"px";
+        this.setState({ backgroundClass: "sticky-header" });
+      } else {
+        offsetElemntInner.style.left=50+"%";
+        this.setState({ backgroundClass: "" });
+      }
     }
   };
   handleVideoHoverLeave = () => {
@@ -574,7 +590,8 @@ class MoveList extends React.Component {
       backgroundClass,
       isLoadImage,
       isMoveLoadingCount,
-      moveLoadingCount
+      moveLoadingCount,
+      stickyHeaderWidth
     } = this.state;
     const location = this.props.location;
     const isStarred = location.search.split("=");
@@ -649,7 +666,8 @@ class MoveList extends React.Component {
             >
               {selectedMoveIds && selectedMoveIds.length ? (
                 <div className={` ${backgroundClass}`} id="get-sticky-header">
-                  <div className={"selected-moves selected-detail-page"}>
+                  <div className="selected-moves-main" id="get-sticky-sub-inner-header" style={{width: stickyHeaderWidth}} ></div>
+                  <div className={"selected-moves selected-detail-page"} id="get-sticky-inner-header">
                     <div
                       className={
                         "d-flex justify-content-between align-items-center "
@@ -740,7 +758,7 @@ class MoveList extends React.Component {
                   {selectedMoveIds && selectedMoveIds.length ? (
                     <div className="select-focus-wrap"></div>
                   ) : null}
-                  <div className="edit-view-wrap">
+                  <div className="edit-view-wrap" id="edit-view-wrap">
                     {selectedMoveIds && selectedMoveIds.length ? (
                       movesOfSet.map((video, index) => {
                         return (

@@ -674,7 +674,7 @@ header{
   }
   &::before {
     border-color: rgba(0, 0, 0, 0.6);
-    background-color: $whiteColor;
+    background-color: #d6d6d6;
   }
 }
 .social-media-wrap {
@@ -938,8 +938,8 @@ header{
     color: #151515;
   }
   &:checked ~ .custom-control-label::before {
-    background-color: $blackcolor !important;
-    border-color: $blackcolor !important;
+      background-color: $blackcolor !important;
+      border-color: $blackcolor !important;
   }
   &:active ~ .custom-control-label::before {
     background-color: $blackcolor !important;
