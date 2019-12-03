@@ -1,6 +1,6 @@
 import { handleActions } from "redux-actions";
 
-import { MovesAction } from "../actions";
+import { MovesAction, loginAction } from "../actions";
 
 const initialState = {
   isVideoDownloading: false,
@@ -18,6 +18,7 @@ const initialState = {
   searchMoveResult: [],
   isMoveSearchLoading: false,
   isCreatingAnotherMove: false,
+  isSortIndexUpdate: false,
   videoOriginalFile: "",
   videoFileMain: "",
   isVideoSelected: false,
@@ -27,7 +28,8 @@ const initialState = {
   },
   isVideoFromSearch: false,
   cancelVideo: false,
-  isMoveDone: false
+  isMoveDone: false,
+  isIosDevice: false
 };
 
 export const moveReducer = handleActions(
@@ -101,9 +103,14 @@ export const moveReducer = handleActions(
       isMoveSearchLoading: false,
       isMoveList: false
     }),
+    [MovesAction.UPDATE_SORT_INDEX_REQUEST]: (state, { payload }) => ({
+      ...state,
+      isSortIndexUpdate: true
+    }),
     [MovesAction.UPDATE_SORT_INDEX_SUCCESS]: (state, { payload }) => ({
       ...state,
-      ...payload
+      ...payload,
+      isSortIndexUpdate: false
     }),
     [MovesAction.CREATE_ANOTHER_MOVE_REQUEST]: (state, { payload }) => ({
       ...state,
@@ -186,6 +193,10 @@ export const moveReducer = handleActions(
     [MovesAction.I_AM_DONE_REQUEST]: (state, { payload }) => ({
       ...state,
       isMoveDone: true
+    }),
+    [loginAction.DETECT_BROWSER_REQUEST]: (state, { payload }) => ({
+      ...state,
+      isIosDevice: true
     })
   },
   initialState

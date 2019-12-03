@@ -347,7 +347,9 @@ class SetDetails extends React.Component {
       isFullScreenMode,
       isMoveList,
       isVideoSelected,
-      isSavingWebM
+      isSavingWebM,
+      isSortIndexUpdate,
+      isIosDevice
     } = moveReducer;
     const { userEncryptedInfo } = shareLinkReducer;
     const {
@@ -469,6 +471,7 @@ class SetDetails extends React.Component {
                   isFullScreenMode={isFullScreenMode}
                   videoFullscreenReq={videoFullscreenReq}
                   videoFullscreenExit={videoFullscreenExit}
+                  isIosDevice={isIosDevice}
                   // addTagsInTagModalRequest={addTagsInTagModalRequest}
                   tagsList={tagsList}
                   editMove={this.editMove}
@@ -501,6 +504,7 @@ class SetDetails extends React.Component {
                     transferMove={this.transferMove}
                     handleMoveAdd={this.handleMoveAdd}
                     modelDetails={modelDetails}
+                    isSortIndexUpdate={isSortIndexUpdate}
                     searchMoveResult={searchMoveResult}
                     totalMoves={totalMoves}
                     modelOperate={modelOperate}
@@ -519,6 +523,7 @@ class SetDetails extends React.Component {
                     getTagListRequest={() => this.props.getTagListRequest()}
                     editMove={this.editMove}
                     isSavingWebM={isSavingWebM}
+                    isIosDevice={isIosDevice}
                     {...this.props}
                   />
                 </div>

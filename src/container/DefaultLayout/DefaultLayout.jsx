@@ -27,7 +27,8 @@ import {
   addTagsRequest,
   videoFullscreenReq,
   videoFullscreenExit,
-  videoDataFromSearch
+  videoDataFromSearch,
+  detectBrowserRequest
 } from "../../actions/index.jsx";
 import { AppRoutes } from "../../config/AppRoutes";
 
@@ -51,7 +52,20 @@ class DefaultLayout extends React.Component {
     ) {
       this.props.redirectTo("/");
     }
+
+    this.getMobileOperatingSystem();
   }
+
+  getMobileOperatingSystem = () => {
+    console.log("lookkk");
+    let userAgent = navigator.userAgent || navigator.vendor || window.opera;
+
+    // iOS detection from: http://stackoverflow.com/a/9039885/177710
+    if (/iPad|iPhone|iPod/.test(userAgent) && !window.MSStream) {
+      this.props.detectBrowserRequest();
+    }
+    return "browser";
+  };
 
   onFolderCreation = data => {
     this.props.onFolderCreation(data);
@@ -95,7 +109,12 @@ class DefaultLayout extends React.Component {
       videoFullscreenExit,
       videoDataFromSearch
     } = this.props;
-    const { videoData, tagsList, isFullScreenMode, isVideoFromSearch } = moveReducer;
+    const {
+      videoData,
+      tagsList,
+      isFullScreenMode,
+      isVideoFromSearch
+    } = moveReducer;
 
     let isLoggedIn;
 
@@ -149,13 +168,13 @@ class DefaultLayout extends React.Component {
           <div
             className={
               routePath !== "/" &&
-                routePath !== "/sample-set" &&
-                routePath !== "/resetPassword" &&
-                routePath !== "/folder/shared/link" &&
-                routePath !== "/set/shared/link" &&
-                routePath !== "/all/set/shared/link" &&
-                routePath !== "/404" &&
-                routePath !== "/public-access-denied"
+              routePath !== "/sample-set" &&
+              routePath !== "/resetPassword" &&
+              routePath !== "/folder/shared/link" &&
+              routePath !== "/set/shared/link" &&
+              routePath !== "/all/set/shared/link" &&
+              routePath !== "/404" &&
+              routePath !== "/public-access-denied"
                 ? "dashboard-full-section"
                 : ""
             }
@@ -165,99 +184,99 @@ class DefaultLayout extends React.Component {
                 routePath !== "/" && routePath !== "/sample-set"
                   ? "dashboard-container-wrap "
                   : " "
-                }`}
+              }`}
             >
               <div
                 className={`theme-container ${
                   routePath !== "/" && routePath !== "/sample-set"
                     ? "dashboard-container "
                     : "home-container"
-                  }`}
+                }`}
               >
                 {isLoggedIn &&
-                  (routePath !== "/" &&
-                    routePath !== "/sample-set" &&
-                    routePath !== "/resetPassword" &&
-                    routePath !== "/folder/shared/link" &&
-                    routePath !== "/set/shared/link" &&
-                    routePath !== "/all/set/shared/link" &&
-                    routePath !== "/404" &&
-                    routePath !== "/public-access-denied") ? (
-                    <div className="ct-sidebar app-sidebar">
-                      <DefaultSidebar
-                        profileInfoReducer={profileInfoReducer}
-                        handleSetting={this.handleSetting}
-                      />
-                    </div>
-                  ) : null}
+                routePath !== "/" &&
+                routePath !== "/sample-set" &&
+                routePath !== "/resetPassword" &&
+                routePath !== "/folder/shared/link" &&
+                routePath !== "/set/shared/link" &&
+                routePath !== "/all/set/shared/link" &&
+                routePath !== "/404" &&
+                routePath !== "/public-access-denied" ? (
+                  <div className="ct-sidebar app-sidebar">
+                    <DefaultSidebar
+                      profileInfoReducer={profileInfoReducer}
+                      handleSetting={this.handleSetting}
+                    />
+                  </div>
+                ) : null}
                 {isLoggedIn &&
-                  (routePath !== "/" &&
-                    routePath !== "/sample-set" &&
-                    routePath !== "/resetPassword" &&
-                    routePath !== "/folder/shared/link" &&
-                    routePath !== "/set/shared/link" &&
-                    routePath !== "/all/set/shared/link" &&
-                    routePath !== "/404" &&
-                    routePath !== "/public-access-denied") ? (
-                    <div className="dashboard-right-wrap">
-                      <div className="dashboard-right-section">
-                        <Suspense fallback={""}>
-                          <Switch>
-                            {routes.map((route, idx) => {
-                              return route.component ? (
-                                <Route
-                                  key={idx}
-                                  path={route.path}
-                                  exact={route.exact}
-                                  name={route.name}
-                                  render={props => (
-                                    <route.component {...props} {...this.props} />
-                                  )}
-                                />
-                              ) : null;
-                            })}
-                          </Switch>
-                        </Suspense>
-                      </div>
+                routePath !== "/" &&
+                routePath !== "/sample-set" &&
+                routePath !== "/resetPassword" &&
+                routePath !== "/folder/shared/link" &&
+                routePath !== "/set/shared/link" &&
+                routePath !== "/all/set/shared/link" &&
+                routePath !== "/404" &&
+                routePath !== "/public-access-denied" ? (
+                  <div className="dashboard-right-wrap">
+                    <div className="dashboard-right-section">
+                      <Suspense fallback={""}>
+                        <Switch>
+                          {routes.map((route, idx) => {
+                            return route.component ? (
+                              <Route
+                                key={idx}
+                                path={route.path}
+                                exact={route.exact}
+                                name={route.name}
+                                render={props => (
+                                  <route.component {...props} {...this.props} />
+                                )}
+                              />
+                            ) : null;
+                          })}
+                        </Switch>
+                      </Suspense>
                     </div>
-                  ) : (
-                    <Suspense fallback={""}>
-                      <Switch>
-                        {routes.map((route, idx) => {
-                          return route.component ? (
-                            <Route
-                              key={idx}
-                              path={route.path}
-                              exact={route.exact}
-                              name={route.name}
-                              render={props => (
-                                <route.component {...props} {...this.props} />
-                              )}
-                            />
-                          ) : null;
-                        })}
-                      </Switch>
-                    </Suspense>
-                  )}
+                  </div>
+                ) : (
+                  <Suspense fallback={""}>
+                    <Switch>
+                      {routes.map((route, idx) => {
+                        return route.component ? (
+                          <Route
+                            key={idx}
+                            path={route.path}
+                            exact={route.exact}
+                            name={route.name}
+                            render={props => (
+                              <route.component {...props} {...this.props} />
+                            )}
+                          />
+                        ) : null;
+                      })}
+                    </Switch>
+                  </Suspense>
+                )}
               </div>
             </div>
           </div>
         </>
         {isLoggedIn &&
-          (routePath !== "/" &&
-            routePath !== "/sample-set" &&
-            routePath !== "/resetPassword" &&
-            routePath !== "/folder/shared/link" &&
-            routePath !== "/set/shared/link" &&
-            routePath !== "/all/set/shared/link" &&
-            routePath !== "/404") ? null : routePath !== "/resetPassword" &&
-              routePath !== "/folder/shared/link" &&
-              routePath !== "/all/set/shared/link" &&
-              routePath !== "/set/shared/link" &&
-              routePath !== "/404" &&
-              routePath !== "/public-access-denied" ? (
-              <DefaultFooter />
-            ) : null}
+        routePath !== "/" &&
+        routePath !== "/sample-set" &&
+        routePath !== "/resetPassword" &&
+        routePath !== "/folder/shared/link" &&
+        routePath !== "/set/shared/link" &&
+        routePath !== "/all/set/shared/link" &&
+        routePath !== "/404" ? null : routePath !== "/resetPassword" &&
+          routePath !== "/folder/shared/link" &&
+          routePath !== "/all/set/shared/link" &&
+          routePath !== "/set/shared/link" &&
+          routePath !== "/404" &&
+          routePath !== "/public-access-denied" ? (
+          <DefaultFooter />
+        ) : null}
       </>
     );
   }
@@ -307,10 +326,10 @@ const mapDispatchToProps = dispatch => ({
     dispatch(videoFullscreenExit(data));
   },
   videoDataFromSearch: data => {
-    dispatch(videoDataFromSearch(data))
+    dispatch(videoDataFromSearch(data));
+  },
+  detectBrowserRequest: () => {
+    dispatch(detectBrowserRequest());
   }
 });
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(DefaultLayout);
+export default connect(mapStateToProps, mapDispatchToProps)(DefaultLayout);
