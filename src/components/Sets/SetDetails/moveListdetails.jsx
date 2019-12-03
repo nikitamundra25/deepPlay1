@@ -3,8 +3,8 @@ import { Input } from "reactstrap";
 import starIc from "../../../assets/img/star.svg";
 import "./index.scss";
 import blankStar from "../../../assets/img/star-line.svg";
-import videoLoading from "../../../assets/img/icons/video-poster.png";
-import moveLoader from "../../../assets/img/loder/moveLoad.png";
+import videoLoading from "../../../assets/img/icons/video-poster.svg";
+import moveLoader from "../../../assets/img/loder/moveLoad.gif";
 import VideoIndexLoader from "../../../assets/img/loder/indexLoader.svg";
 
 class MoveListDetails extends React.Component {

@@ -201,9 +201,9 @@ a {
   color: #1439a2;
 }
 .home-video-section {
-  margin-bottom: 80px;
-  margin-top: 80px;
-  padding-bottom: 80px;
+  margin-bottom: 40px;
+  margin-top: 60px;
+  padding-bottom: 60px;
   border-bottom: 2px dashed $videoAddBannerBack;
 }
 .video-add-banner {
@@ -256,6 +256,12 @@ a {
   margin-right: auto;
   margin-left: auto;
   max-width: 1600px;
+  min-height: calc(100vh - 120px);
+}
+header{
+  .theme-container{
+    min-height: unset;
+  }
 }
 .theme-heading {
   font-weight: bold;
@@ -491,6 +497,9 @@ a {
       border-radius: 50%;
       padding: 8px;
       color: #fff;
+      width: 30px;
+      height: 30px;
+      line-height: 14px;
     }
 
     color: $dashboardTextColor;
@@ -621,17 +630,18 @@ a {
     display: flex;
     align-items: center;
     justify-content: center;
-
     &:hover {
       opacity: 1 !important;
     }
     span {
       color: #fff;
       font-size: 20px;
-      line-height: 17px;
+      height: 15px;
+    
       display: flex;
       align-items: center;
       justify-content: center;
+      
     }
     img {
       width: 70%;
@@ -664,7 +674,7 @@ a {
   }
   &::before {
     border-color: rgba(0, 0, 0, 0.6);
-    background-color: $whiteColor;
+    background-color: #d6d6d6;
   }
 }
 .social-media-wrap {
@@ -928,8 +938,8 @@ a {
     color: #151515;
   }
   &:checked ~ .custom-control-label::before {
-    background-color: $blackcolor !important;
-    border-color: $blackcolor !important;
+      background-color: $blackcolor !important;
+      border-color: $blackcolor !important;
   }
   &:active ~ .custom-control-label::before {
     background-color: $blackcolor !important;
@@ -1104,12 +1114,12 @@ a {
     }
     input {
       max-width: 100%;
-      min-width: 248px;
+      min-width: 258px;
       font-size: 14px;
       padding: 6px;
       height: auto;
       border-color: #fff;
-      border-radius: 2px 0px 0px 2px;
+      border-radius: 2px 2px 2px 2px;
       &:focus {
         box-shadow: none;
         border-color: #fff;
@@ -1371,7 +1381,7 @@ a {
   }
   &.right-btn-tip .btn-group {
     right: -14px;
-    top: -31px;
+    top: -42px;
 
     &::before {
       position: absolute;
@@ -1385,7 +1395,8 @@ a {
     color: #fff;
     line-height: 120%;
     font-weight: normal;
-    padding: 0.5rem 0.5rem;
+    padding: 0.8em 0.8em;
+    font-size: 13px;
   }
 }
 .content-with-tip {
@@ -2253,7 +2264,8 @@ a {
   display: flex;
   overflow: hidden;
   flex-wrap: wrap;
-  & > div {
+  width: 100%;
+  &>div{
     width: 100%;
   }
   & > .play-list-tile-select {
@@ -2360,6 +2372,15 @@ a {
   background: #000;
 }
 @media (max-width: 991px) {
+  .auth-user-model{
+  .auth-subheading{
+    &::before{
+      width: calc(100% + 44px);
+      left: 50%;
+      transform: translateX(-50%);
+    }
+   
+  }}
   .play-list-collection {
     &.set-detail-section {
       &:not(.set-detail-editble) {
@@ -2434,8 +2455,12 @@ a {
   .play-list-tile {
     width: 50%;
   }
-  .create-btn-wrap {
+  .create-btn-wrap { 
     max-width: 160px;
+      i{
+        position: relative;
+        top: 2px;
+      }
   }
   .nav-main-section {
     .nav-inputs-wrap {
@@ -2515,6 +2540,7 @@ a {
   .header-input-group-text {
     z-index: 9;
   }
+
 }
 @media (max-width: 767px) {
   body {
@@ -2605,4 +2631,9 @@ a {
   right: 0;
   width: 100%;
   height: 100%;
+}
+
+_::-webkit-full-page-media, _:future, :root .auth-user-model .modal-header .close span{
+  position: relative;
+  top: -4px;
 }

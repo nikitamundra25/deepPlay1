@@ -65,16 +65,19 @@
   background: #fff;
   padding: 9px 0px 12px 8px;
 }
-
+.selected-moves-main{
+  margin:auto;
+  height: 1px;
+}
 .selected-detail-page {
   background: transparent;
   padding: 0px;
   position: absolute;
   z-index: 9;
-  top: 70px;
+  top: 125px;
   left: 50%;
   transform: translateX(-50%);
-  transition: all 0.5s;
+  transition: position .5s;
   z-index: 103;
   // padding: 8px 12px 12px 8px;
   // background: #f1f1f1;
@@ -100,6 +103,7 @@
   .selected-detail-page {
     position: fixed;
     top: 15px !important;
+    transform: none;
   }
 }
 .video-effect {
@@ -156,6 +160,7 @@ div[data-react-beautiful-dnd-drag-handle] {
 }
 .full-video-mode {
   width: 100% !important;
+  height: 100%!important;
 }
 .video-tags {
   background: #cccc;

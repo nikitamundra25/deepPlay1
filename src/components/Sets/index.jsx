@@ -191,7 +191,7 @@ class SetComponent extends React.Component {
                             </div>
                           </div>
                           <div
-                            className="d-flex img-tile-wrap cursor_pointer"
+                            className="d-flex img-tile-wrap cursor_pointer justify-content-center"
                             onClick={() => this.handleSetDetails(setList._id)}
                           >
                             {setList.recentlyAddMoveImg ? (
