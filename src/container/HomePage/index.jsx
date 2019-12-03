@@ -140,7 +140,7 @@ class HomePage extends React.Component {
                       : this.handleLoginModalOpen
                   }
                 >
-                  Get Stated
+                  Get Started
                 </Button>
               </div>
             </Col>
