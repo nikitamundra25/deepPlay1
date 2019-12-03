@@ -31,6 +31,7 @@ import {
   detectBrowserRequest
 } from "../../actions/index.jsx";
 import { AppRoutes } from "../../config/AppRoutes";
+import Loader from "components/comman/Loader/Loader";
 
 // core components
 class DefaultLayout extends React.Component {
@@ -240,7 +241,7 @@ class DefaultLayout extends React.Component {
                     </div>
                   </div>
                 ) : (
-                  <Suspense fallback={""}>
+                  <Suspense fallback={<Loader fullLoader={true} />}>
                     <Switch>
                       {routes.map((route, idx) => {
                         return route.component ? (
