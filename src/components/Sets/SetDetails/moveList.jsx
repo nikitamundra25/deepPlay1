@@ -599,72 +599,7 @@ class MoveList extends React.Component {
 
     return (
       <section className="play-list-collection set-detail-section set-detail-editble">
-        <InfiniteScroll
-          dataLength={movesOfSet.length} //This is important field to render the next data
-          next={() => {
-            this.handleLoadmoreRequest(setIdPathName);
-          }}
-          hasMore={totalMoves !== movesOfSet.length ? true : false}
-          loader={<Loader />}
-        >
-          <Row className={"m-0"}>
-            <Col md="12" className={"pb-3"}>
-              <div className="content-header mt-3 mb-1">
-                <span className="content-title ">
-                  Moves in this set ({totalMoves || 0})
-                </span>
-                {serachContent && serachContent[1] ? null : (
-                  <div className="set-detail-right-section">
-                    <ButtonGroup size="sm" className="mr-2">
-                      <Button
-                        className={
-                          isStarred[0]
-                            ? isStarred[1] === "false"
-                              ? "active"
-                              : ""
-                            : "active"
-                        }
-                        color=" "
-                        onClick={this.handleShowAll}
-                      >
-                        All
-                      </Button>
-                      <Button
-                        className={
-                          isStarred[1] === "true" ? "active stared-active" : ""
-                        }
-                        color=" "
-                        onClick={this.handleShowStarred}
-                      >
-                        Starred
-                      </Button>
-                    </ButtonGroup>
-                    <FormGroup className="mb-0 header-search-wrap ">
-                      <InputGroup className="">
-                        <DebounceInput
-                          minLength={1}
-                          value={search}
-                          className={"form-control"}
-                          autoComplete="off"
-                          placeholder="Type to filter moves"
-                          debounceTimeout={300}
-                          onChange={event => this.handleInputChange(event)}
-                        />
-                      </InputGroup>
-                    </FormGroup>
-                  </div>
-                )}
-              </div>
-            </Col>
-
-            <div
-              className={`video-thumbnail-block  ${
-                selectedMoveIds && selectedMoveIds.length
-                  ? "select-focus-event"
-                  : null
-              } `}
-            >
-              {selectedMoveIds && selectedMoveIds.length ? (
+          {selectedMoveIds && selectedMoveIds.length ? (
                 <div className={` ${backgroundClass}`} id="get-sticky-header">
                   <div className="selected-moves-main" id="get-sticky-sub-inner-header" style={{width: stickyHeaderWidth}} ></div>
                   <div className={"selected-moves selected-detail-page"} id="get-sticky-inner-header">
@@ -737,6 +672,72 @@ class MoveList extends React.Component {
                   </div>
                 </div>
               ) : null}
+        <InfiniteScroll
+          dataLength={movesOfSet.length} //This is important field to render the next data
+          next={() => {
+            this.handleLoadmoreRequest(setIdPathName);
+          }}
+          hasMore={totalMoves !== movesOfSet.length ? true : false}
+          loader={<Loader />}
+        >
+          <Row className={"m-0"}>
+            <Col md="12" className={"pb-3"}>
+              <div className="content-header mt-3 mb-1">
+                <span className="content-title ">
+                  Moves in this set ({totalMoves || 0})
+                </span>
+                {serachContent && serachContent[1] ? null : (
+                  <div className="set-detail-right-section">
+                    <ButtonGroup size="sm" className="mr-2">
+                      <Button
+                        className={
+                          isStarred[0]
+                            ? isStarred[1] === "false"
+                              ? "active"
+                              : ""
+                            : "active"
+                        }
+                        color=" "
+                        onClick={this.handleShowAll}
+                      >
+                        All
+                      </Button>
+                      <Button
+                        className={
+                          isStarred[1] === "true" ? "active stared-active" : ""
+                        }
+                        color=" "
+                        onClick={this.handleShowStarred}
+                      >
+                        Starred
+                      </Button>
+                    </ButtonGroup>
+                    <FormGroup className="mb-0 header-search-wrap ">
+                      <InputGroup className="">
+                        <DebounceInput
+                          minLength={1}
+                          value={search}
+                          className={"form-control"}
+                          autoComplete="off"
+                          placeholder="Type to filter moves"
+                          debounceTimeout={300}
+                          onChange={event => this.handleInputChange(event)}
+                        />
+                      </InputGroup>
+                    </FormGroup>
+                  </div>
+                )}
+              </div>
+            </Col>
+
+            <div
+              className={`video-thumbnail-block  ${
+                selectedMoveIds && selectedMoveIds.length
+                  ? "select-focus-event"
+                  : null
+              } `}
+            >
+            
 
               {!isMoveSearchLoading && !isMoveListLoading ? (
                 <div className="video-thumbnail-sub-block  video-thumb-edit-view">
