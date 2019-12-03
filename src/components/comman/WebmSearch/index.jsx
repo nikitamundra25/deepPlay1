@@ -496,7 +496,6 @@ class WebmSearch extends Component {
       description,
       edit
     } = this.state;
-
     return (
       <>
         <Modal
@@ -872,7 +871,8 @@ class WebmSearch extends Component {
               </div>
             </div>
             <div className="text-right pr-4">
-              {videoData && videoData.tags && videoData.tags.length ? (
+              {(videoData && videoData.tags && videoData.tags.length) ||
+              (videoData && videoData.description) ? (
                 <span
                   className="cursor_pointer"
                   onClick={() => this.openAddTagsModal(videoData._id, "edit")}

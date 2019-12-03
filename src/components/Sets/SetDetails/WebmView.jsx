@@ -385,6 +385,8 @@ class WebmView extends Component {
     const { modelInfoReducer, videoData } = this.props;
     const { modelDetails } = modelInfoReducer;
     this.props.getTagListRequest();
+    console.log("idididid", id);
+
     this.setState({
       moveIdToAddTags: id,
       tags: videoData.tags ? videoData.tags : [],
