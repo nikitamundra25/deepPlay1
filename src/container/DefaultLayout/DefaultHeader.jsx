@@ -295,10 +295,10 @@ class DefaultHeader extends React.Component {
                               color=" "
                               className="nav-dropdown-btn"
                             >
-                              <i className="fas fa-plus-square"></i>
+                              <i className="fas fa-plus-square"></i> 
                               <span className="dropdown-text">
                                 {" "}
-                                &nbsp; Create
+                             Create
                               </span>
                             </DropdownToggle>
                             <DropdownMenu>
