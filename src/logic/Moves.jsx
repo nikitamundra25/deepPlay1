@@ -306,6 +306,14 @@ const deleteMoveLogic = createLogic({
       if (!toast.isActive(toastId)) {
         toastId = toast.success(result.messages[0]);
       }
+      dispatch(
+        modelOpenRequest({
+          modelDetails: {
+            isVideoModalOpenReq: false,
+            isVideoModalOpen: false
+          }
+        })
+      );
       if (!action.payload.isSearch) {
         dispatch(
           getMovesOfSetRequest({
@@ -539,7 +547,6 @@ const updateSortIndexLogic = createLogic({
 const removeVideoLocalServerLogic = createLogic({
   type: MovesAction.REMOVE_VIDEO_LOCAL_SERVER_REQUEST,
   async process({ action }, dispatch, done) {
-    
     let api = new ApiHelper();
     let result = await api.FetchFromServer(
       "move",

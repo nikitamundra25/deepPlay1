@@ -13,7 +13,8 @@ export const loginAction = {
   FORGET_PASSSWORD_FAILED: "Forget password Failed!",
   VALIDATE_RESET_REQUEST: "Reset Token Validation Started!",
   RESET_PASSSWORD_REQUEST: "Reset Password Started!",
-  VERIFY_WORKSPACE_LOGIN: "Verify the login for the workspace!"
+  VERIFY_WORKSPACE_LOGIN: "Verify the login for the workspace!",
+  DETECT_BROWSER_REQUEST: "Detect Browser Request"
 };
 
 export const loginRequest = createAction(loginAction.LOGIN_REQUEST);
@@ -48,6 +49,7 @@ export const socialLoginSuccess = createAction(
 export const verifyWorkspaceLogin = createAction(
   loginAction.VERIFY_WORKSPACE_LOGIN
 );
-export const loginFailed = createAction(
-  loginAction.LOGIN_FAILED
+export const loginFailed = createAction(loginAction.LOGIN_FAILED);
+export const detectBrowserRequest = createAction(
+  loginAction.DETECT_BROWSER_REQUEST
 );

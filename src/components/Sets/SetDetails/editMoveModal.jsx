@@ -12,13 +12,11 @@ import {
 } from "reactstrap";
 import "./index.scss";
 import closeBtn from "../../../assets/img/close-img.png";
-import { logger } from "helper/Logger";
 import {
   CreateFolderValidations,
   CreateFolderValidationsMessaages
 } from "../../../validations";
 import Validator from "js-object-validation";
-
 
 class EditMoveModal extends React.Component {
   constructor(props) {
@@ -67,63 +65,35 @@ class EditMoveModal extends React.Component {
     });
   };
 
-  // handleTagChange = (newValue, actionMeta) => {
-  //   //const { tagsList } = this.props.moveReducer
-  //   console.log(newValue);
-  //   if (newValue) {
-  //     this.setState({
-  //       tags: newValue
-  //     });
-  //   } else {
-  //     this.setState({
-  //       tags: []
-  //     });
-  //   }
-  //   console.log(`action: ${actionMeta.action}`);
-  //   if (actionMeta.action === "create-option") {
-  //     this.props.addTagsInTagModalRequest({
-  //       tags: newValue[newValue.length - 1]
-  //     });
-  //   }
-  //   console.groupEnd();
-  // };
-
   handleEditMove = async e => {
     e.preventDefault();
-    const { title, description, tags } = this.state;
-    try {
-      const { isValid, errors } = Validator(
-        this.state,
-        CreateFolderValidations,
-        CreateFolderValidationsMessaages
-      );
-      if (!isValid) {
-        this.setState({
-          errors
-        });
-        return;
-      }
-      const { moveIdToEdit, videoData } = this.props;
-      const data = {
-        moveId: moveIdToEdit,
-        title: title,
-        description: description,
-        tags: tags,
-        setId: videoData.setId._id,
-        videoData: videoData,
-        fromMoveList: false
-      };
-
-      await this.props.editMove(data);
-    } catch (error) {
-      logger(error);
+    const { title, description } = this.state;
+    const data = {
+      title: title ? title : "",
+      description: description ? description : ""
+    };
+    const { isValid, errors } = Validator(
+      data,
+      CreateFolderValidations,
+      CreateFolderValidationsMessaages
+    );
+    if (!isValid) {
+      this.setState({
+        errors
+      });
+      return;
     }
-
-    // await this.props.createSet(data);
-    // this.setState({
-    //   title: "",
-    //   description: ""
-    // });
+    const { moveIdToEdit, videoData } = this.props;
+    const propData = {
+      moveId: moveIdToEdit,
+      title: title,
+      description: description,
+      tags: this.state.tags,
+      setId: videoData.setId._id,
+      videoData: videoData,
+      fromMoveList: false
+    };
+    await this.props.editMove(propData);
   };
 
   render() {

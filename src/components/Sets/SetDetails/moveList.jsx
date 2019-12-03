@@ -21,6 +21,7 @@ import remove from "../../../assets/img/set-detail-ic/remove.svg";
 import { ListManager } from "react-beautiful-dnd-grid";
 import MoveListDetails from "./moveListdetails";
 import videoLoading from "../../../assets/img/icons/video-poster.png";
+import { toast } from "react-toastify";
 
 // a little function to help us with reordering the result
 const reorder = (list, startIndex, endIndex) => {
@@ -61,7 +62,9 @@ class MoveList extends React.Component {
       isLoadImage: false,
       isMoveLoadingCount: false,
       moveLoadingCount: -1,
-      errors: ""
+      errors: "",
+      sourceIndex: -1,
+      destinationIndex: -1
     };
   }
 
@@ -79,6 +82,7 @@ class MoveList extends React.Component {
       this.setState({ backgroundClass: "" });
     }
   };
+
   handleVideoHoverLeave = () => {
     this.setState({
       isSelectVideo: false
@@ -112,16 +116,6 @@ class MoveList extends React.Component {
       this.scrollClass = document.getElementsByClassName(
         "selected-moves selected-detail-page"
       );
-      // var body = document.body,
-      //   html = document.documentElement;
-
-      // var height = Math.max(
-      //   body.scrollHeight,
-      //   body.offsetHeight,
-      //   html.clientHeight,
-      //   html.scrollHeight,
-      //   html.offsetHeight
-      // );
     }
 
     if (prevProps.movesOfSet !== this.props.movesOfSet) {
@@ -276,13 +270,17 @@ class MoveList extends React.Component {
    */
   handleVideoPlay = index => {
     let myVideo = document.getElementById(`webm-video-${index}`);
-    myVideo.play();
+    if (!this.props.isSortIndexUpdate) {
+      myVideo.play();
+    }
   };
   /*
    */
   handleVideoPause = index => {
     let myVideo = document.getElementById(`webm-video-${index}`);
-    myVideo.pause();
+    if (!this.props.isSortIndexUpdate) {
+      myVideo.pause();
+    }
   };
   /*
    */
@@ -450,7 +448,9 @@ class MoveList extends React.Component {
       isMarkingStar: {
         index: -1,
         isChanging: false
-      }
+      },
+      sourceIndex,
+      destinationIndex
     });
     this.props.updateSortIndexRequest(data);
   };
@@ -514,24 +514,34 @@ class MoveList extends React.Component {
     });
   };
 
-  handleonBlur = videoData => {
-    this.setState({
-      doubleClick: false,
-      doubleClickIndex: -1,
-      title: ""
-    });
+  handleonBlur = (e, videoData, index) => {
+    const value = e.target.textContent;
+    const error =
+      value && value.length > 50
+        ? "Title cannot have more than 50 characters"
+        : "";
+    if (error) {
+      toast.error("Title cannot have more than 50 characters");
+      return;
+    } else {
+      this.setState({
+        doubleClick: false,
+        doubleClickIndex: -1,
+        title: ""
+      });
 
-    if (this.state.title !== null && this.state.errors === "") {
-      const data = {
-        moveId: videoData._id,
-        title: this.state.title,
-        description: videoData.description,
-        tags: videoData.tags,
-        setId: videoData.setId._id,
-        moveofSetList: this.props.movesOfSet,
-        fromMoveList: true
-      };
-      this.props.editMove(data);
+      if (this.state.title !== null || this.state.errors !== null) {
+        const data = {
+          moveId: videoData._id,
+          title: value,
+          description: videoData.description,
+          tags: videoData.tags,
+          setId: videoData.setId._id,
+          moveofSetList: this.props.movesOfSet,
+          fromMoveList: true
+        };
+        this.props.editMove(data);
+      }
     }
   };
 
@@ -539,12 +549,18 @@ class MoveList extends React.Component {
     const { name, value } = e.target;
     const error =
       value && value.length > 50
-        ? "Description cannot have more than 50 characters"
+        ? "Title cannot have more than 50 characters"
         : "";
-    this.setState({
-      [name]: value,
-      errors: error ? error : null
-    });
+    if (error) {
+      this.setState({
+        errors: error ? error : null
+      });
+    } else {
+      this.setState({
+        [name]: value,
+        errors: null
+      });
+    }
   };
 
   render() {
@@ -553,10 +569,12 @@ class MoveList extends React.Component {
       allSetList,
       setIdPathName,
       isMoveSearchLoading,
+      isSortIndexUpdate,
       totalMoves,
       tagsList,
       isMoveListLoading,
-      movesOfSet
+      movesOfSet,
+      isIosDevice
     } = this.props;
     const { modelDetails } = modelInfoReducer;
     const { transferToModalOpen, addTagModalOpen } = modelDetails;
@@ -581,7 +599,9 @@ class MoveList extends React.Component {
       isLoadImage,
       isMoveLoadingCount,
       moveLoadingCount,
-      errors
+      errors,
+      sourceIndex,
+      destinationIndex
     } = this.state;
     const location = this.props.location;
     const isStarred = location.search.split("=");
@@ -653,6 +673,7 @@ class MoveList extends React.Component {
                   ? "select-focus-event"
                   : null
               } `}
+              id="video-thumbnail-block"
             >
               {selectedMoveIds && selectedMoveIds.length ? (
                 <div className={` ${backgroundClass}`} id="get-sticky-header">
@@ -744,6 +765,7 @@ class MoveList extends React.Component {
                       </div>
                     </div>
                   </div>
+
                   {selectedMoveIds && selectedMoveIds.length ? (
                     <div className="select-focus-wrap"></div>
                   ) : null}
@@ -763,8 +785,11 @@ class MoveList extends React.Component {
                             handleMovesSelect={this.handleMovesSelect}
                             isMarkingStar={isMarkingStar}
                             video={video}
+                            isSortIndexUpdate={isSortIndexUpdate}
                             isSelectVideo={isSelectVideo}
                             videoIndex={videoIndex}
+                            sourceIndex={sourceIndex}
+                            destinationIndex={destinationIndex}
                             isVideoModalOpen={isVideoModalOpen}
                             handleStarred={this.handleStarred}
                             handleVideoCheckBox={this.handleVideoCheckBox}
@@ -773,6 +798,7 @@ class MoveList extends React.Component {
                             isMoveLoadingCount={isMoveLoadingCount}
                             moveLoadingCount={moveLoadingCount}
                             errors={errors}
+                            isIosDevice={isIosDevice}
                           />
                         );
                       })
@@ -796,6 +822,9 @@ class MoveList extends React.Component {
                               handleMovesSelect={this.handleMovesSelect}
                               isMarkingStar={isMarkingStar}
                               video={video}
+                              sourceIndex={sourceIndex}
+                              destinationIndex={destinationIndex}
+                              isSortIndexUpdate={isSortIndexUpdate}
                               isSelectVideo={isSelectVideo}
                               videoIndex={videoIndex}
                               isVideoModalOpen={isVideoModalOpen}
@@ -811,6 +840,7 @@ class MoveList extends React.Component {
                               reorderList={this.reorderList}
                               isLoadImage={isLoadImage}
                               errors={errors}
+                              isIosDevice={isIosDevice}
                             />
                           );
                         }}

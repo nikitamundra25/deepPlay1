@@ -222,28 +222,27 @@ a {
     font-size: 55px;
     padding-left: 2px;
     color: $videoAddBannerBack;
-    img{
+    img {
       width: 20px;
     }
   }
-  &.video-add-banner{
-    border:none;
+  &.video-add-banner {
+    border: none;
     background: none;
-    .play-ic-wrap{
+    .play-ic-wrap {
       position: absolute;
       top: 50%;
       left: 50%;
       background: rgba(0, 0, 0, 0.61);
       transform: translate(-50%, -50%);
       z-index: 9;
-      transform:all 0.5s;
+      transform: all 0.5s;
     }
-    .play-ic-wrap.pause-wrap{
+    .play-ic-wrap.pause-wrap {
       display: none;
-    
     }
-    &:hover{
-      .play-ic-wrap.pause-wrap{
+    &:hover {
+      .play-ic-wrap.pause-wrap {
         display: flex;
         padding: 0px;
       }
@@ -323,7 +322,7 @@ a {
       .play-list-heading {
         font-weight: normal;
         white-space: nowrap;
-        text-overflow: ellipsis;
+        text-overflow: initial;
         width: calc(100% - 20px);
         overflow: hidden;
       }
@@ -339,22 +338,20 @@ a {
         top: 10px;
         width: 10px;
       }
-      .play-list-tile-select{
+      .play-list-tile-select {
         z-index: 102;
       }
-      &.with-move{
-        .add-play-list-block{
+      &.with-move {
+        .add-play-list-block {
           min-height: 130px;
           padding: 10px 15px;
         }
       }
-      .video-thumb-edit-view > *{
-       
-        width:100%;
+      .video-thumb-edit-view > * {
+        width: 100%;
       }
-      
-      .play-sub-block{
-       
+
+      .play-sub-block {
       }
     }
   }
@@ -798,8 +795,8 @@ a {
     border-right: 0.4em solid transparent;
     border-left: 0.4em solid transparent;
   }
-  &.user-header-profile{
-    .dropdown-menu{
+  &.user-header-profile {
+    .dropdown-menu {
       top: 130% !important;
     }
   }
@@ -1342,7 +1339,7 @@ a {
     margin-top: 0px;
     padding-top: 0px;
   }
-  .input-group-text{
+  .input-group-text {
     background-color: transparent;
   }
 }
@@ -1387,8 +1384,8 @@ a {
     border: none;
     color: #fff;
     line-height: 120%;
-    font-weight: normal; 
-    padding: 0.50rem 0.50rem; 
+    font-weight: normal;
+    padding: 0.5rem 0.5rem;
   }
 }
 .content-with-tip {
@@ -2248,18 +2245,18 @@ a {
     width: 100%;
   }
 }
-.videos-loading{
+.videos-loading {
   width: 30px;
 }
-.edit-view-wrap{
+.edit-view-wrap {
   z-index: 9;
   display: flex;
   overflow: hidden;
   flex-wrap: wrap;
-  &>div{
+  & > div {
     width: 100%;
   }
-  &>.play-list-tile-select{
+  & > .play-list-tile-select {
     width: 25%;
   }
 }
@@ -2298,7 +2295,7 @@ a {
   }
 }
 @media (max-width: 1024px) {
-  .edit-view-wrap>.play-list-tile-select{
+  .edit-view-wrap > .play-list-tile-select {
     width: 50%;
   }
   .content-with-img {
@@ -2598,7 +2595,7 @@ a {
 }
 // media query end
 // Please don't write other css in the bottom of media query
-.video-move-layer{
+.video-move-layer {
   z-index: 2;
   position: absolute;
   // background: #ccc;

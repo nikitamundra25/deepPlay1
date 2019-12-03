@@ -15,7 +15,9 @@ import {
   getAllFolderRequest,
   ManageSetRequest,
   updateSortIndexRequest,
-  updateMoveRequest
+  videoUnSelectRequest,
+  updateMoveRequest,
+  videoSelectRequest
 } from "../../../actions";
 import SharableLinkModal from "../../comman/shareableLink/SharableLink";
 import { AppRoutes } from "../../../config/AppRoutes";
@@ -65,24 +67,25 @@ class MoveSearchComponent extends React.Component {
   /*  
   */
   componentDidUpdate = ({ location, moveReducer }) => {
-    const { location: currentLocation } = this.props;
-    const { search } = location;
-    const { search: currentSearch } = currentLocation;
-    const isStarred = currentSearch.split("=");
-    if (search !== currentSearch) {
-      this.props.getMovesOfSetRequest({
-        setId: this.state.setIdPathName,
-        page: 1,
-        isInfiniteScroll: false,
-        isStarred: isStarred[1]
-      });
-    }
+    // const { location: currentLocation } = this.props;
+    // const { search } = location;
+    // const { search: currentSearch } = currentLocation;
+    // const isStarred = currentSearch.split("=");
+    // if (search !== currentSearch) {
+    //   this.props.getMovesOfSetRequest({
+    //     setId: this.state.setIdPathName,
+    //     page: 1,
+    //     isInfiniteScroll: false,
+    //     isStarred: isStarred[1]
+    //   });
+    // }
     if (moveReducer.movesOfSet !== this.props.moveReducer.movesOfSet) {
       this.setState({
         moveListItem: this.props.moveReducer.movesOfSet
       });
     }
   };
+
   onTogglePublicAccess = isPublic => {
     const location = this.props.location;
     const pathName = location.pathname.split("/");
@@ -114,9 +117,7 @@ class MoveSearchComponent extends React.Component {
   /*
    */
   handleMoveAdd = () => {
-    const location = this.props.location;
-    const pathName = location.pathname.split("/");
-    this.props.redirectTo(AppRoutes.MOVE.url + `?setId=${pathName[3]}`);
+    this.props.redirectTo(AppRoutes.MOVE.url);
   };
   /*
    */
@@ -184,15 +185,7 @@ class MoveSearchComponent extends React.Component {
   /*
    */
   isStarred = data => {
-    const location = this.props.location;
-    const isSearch = location.search.split("=");
-    const moveData = {
-      moveId: data.moveId,
-      isStarred: data.isStarred,
-      isSearch: isSearch.length ? isSearch[1] : false,
-      isVideoModalOpen: true
-    };
-    this.props.isStarredRequest(moveData);
+    this.props.isStarredRequest(data);
   };
 
   deleteMove = data => {
@@ -213,7 +206,8 @@ class MoveSearchComponent extends React.Component {
       moveId: data.moveId,
       setId: data.setId,
       previousSetId: data.previousSetId,
-      isSearch: isSearch.length ? isSearch[1] : false
+      isSearch: isSearch.length ? isSearch[1] : false,
+      fromMoveSearch: true
     };
     this.props.transferMoveRequest(data1);
   };
@@ -232,7 +226,28 @@ class MoveSearchComponent extends React.Component {
   };
 
   addTagstoMove = data => {
-    this.props.addTagsRequest(data);
+    // this.props.addTagsRequest(data);
+    if (data.fromMoveList) {
+      const moveList = [...data.moveofSetList];
+      moveList.map((key, i) => {
+        // eslint-disable-next-line
+        return data.moveId.map(k => {
+          if (k === key._id) {
+            moveList[i].tags = key.tags.concat(
+              data.tags.filter(
+                item => key.tags.findIndex(tag => tag.label === item.label) < 0
+              )
+            );
+          }
+        });
+      });
+      this.props.addTagsRequest({ data: data, moveList: moveList });
+    } else {
+      const moveVideo = data.videoData;
+      moveVideo.tags = data.tags;
+      moveVideo.description = data.description;
+      this.props.addTagsRequest({ data: data, moveVideo: moveVideo });
+    }
   };
 
   // Transfer sets to particular folder
@@ -251,6 +266,25 @@ class MoveSearchComponent extends React.Component {
     }
   };
 
+  editMove = data => {
+    if (data.fromMoveList) {
+      const moveList = [...data.moveofSetList];
+      moveList.map((key, i) => {
+        if (data.moveId === key._id) {
+          return (moveList[i].title = data.title);
+        } else {
+          return null;
+        }
+      });
+      this.props.updateMoveRequest({ data: data, moveList: moveList });
+    } else {
+      const moveVideo = data.videoData;
+      moveVideo.title = data.title;
+      moveVideo.description = data.description;
+      this.props.updateMoveRequest({ data: data, moveVideo: moveVideo });
+    }
+  };
+
   render() {
     const {
       moveReducer,
@@ -261,7 +295,9 @@ class MoveSearchComponent extends React.Component {
       loadVideoDataRequest,
       getMovesOfSetRequest,
       getAllFolders,
-      updateSortIndexRequest
+      updateSortIndexRequest,
+      videoUnSelectRequest,
+      videoSelectRequest
     } = this.props;
     const { modelDetails } = modelInfoReducer;
     const {
@@ -270,7 +306,8 @@ class MoveSearchComponent extends React.Component {
       videoData,
       totalMoves,
       searchMoveResult,
-      isMoveSearchLoading
+      isMoveSearchLoading,
+      tagsList
     } = moveReducer;
     const { userEncryptedInfo } = shareLinkReducer;
     const {
@@ -311,7 +348,7 @@ class MoveSearchComponent extends React.Component {
                   loadVideoDataRequest={loadVideoDataRequest}
                   addTagstoMove={this.addTagstoMove}
                   isStarred={this.isStarred}
-                  editMove={data => this.props.updateMoveRequest(data)}
+                  editMove={this.editMove}
                   {...this.props}
                 />
               ) : null}
@@ -325,6 +362,7 @@ class MoveSearchComponent extends React.Component {
                     moveCount={0}
                     isStarred={this.isStarred}
                     deleteMove={this.deleteMove}
+                    tagsList={tagsList}
                     movesOfSet={moveListItem}
                     handleVideoModal={this.handleVideoModal}
                     allSetList={allSetList}
@@ -340,6 +378,9 @@ class MoveSearchComponent extends React.Component {
                     isMoveSearchLoading={isMoveSearchLoading}
                     getMovesOfSetRequest={getMovesOfSetRequest}
                     updateSortIndexRequest={updateSortIndexRequest}
+                    videoUnSelectRequest={videoUnSelectRequest}
+                    editMove={this.editMove}
+                    videoSelectRequest={videoSelectRequest}
                     searchMove={data => this.props.searchMoveRequest(data)}
                     {...this.props}
                   />
@@ -408,6 +449,12 @@ const mapDispatchToProps = dispatch => ({
   },
   updateMoveRequest: data => {
     dispatch(updateMoveRequest(data));
+  },
+  videoUnSelectRequest: data => {
+    dispatch(videoUnSelectRequest(data));
+  },
+  videoSelectRequest: data => {
+    dispatch(videoSelectRequest(data));
   }
 });
 export default connect(
