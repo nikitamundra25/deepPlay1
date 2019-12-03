@@ -1,8 +1,5 @@
 import { Request, Response } from "express";
-import {
-  IsProductionMode,
-  ServerURL
-} from "../config";
+import { IsProductionMode, ServerURL } from "../config";
 import Mongoose, { Document } from "mongoose";
 import ytdl from "ytdl-core";
 import { MoveModel, SetModel, TagModel } from "../models";
@@ -223,6 +220,7 @@ const createMove = async (req: Request, res: Response): Promise<any> => {
         message: "User id not found"
       });
     }
+
     let moveResult: Document | any;
     if (!frames && !frames.length) {
       let fileName: string[] = moveUrl.split("/");
@@ -273,7 +271,9 @@ const createMove = async (req: Request, res: Response): Promise<any> => {
     });
   }
 };
+
 /*  */
+
 // --------------Get all set info---------------------
 const getMoveBySetId = async (req: Request, res: Response): Promise<any> => {
   try {
@@ -300,38 +300,38 @@ const getMoveBySetId = async (req: Request, res: Response): Promise<any> => {
         .limit(limitNumber)
         .sort({ sortIndex: 1 });
     } else {
-      const moveListData: Document | any = await MoveModel.find({
-        setId: query.setId,
-        userId: headToken.id,
-        isDeleted: false,
-        moveURL: { $ne: null }
-      }).sort({ sortIndex: 1 });
+      // const moveListData: Document | any = await MoveModel.find({
+      //   setId: query.setId,
+      //   userId: headToken.id,
+      //   isDeleted: false,
+      //   moveURL: { $ne: null }
+      // }).sort({ sortIndex: 1 });
 
-      let isRepetedSortIndex: Boolean = false;
-      if (moveListData && moveListData.length) {
-        for (let index = 0; index < moveListData.length; index++) {
-          const element = moveListData[index].sortIndex;
-          const check = moveListData.filter(
-            (item: any) => item.sortIndex === element
-          );
-          if (check && check.length > 1) {
-            isRepetedSortIndex = true;
-          }
-        }
-      }
-      let num: number = 0;
-      if (isRepetedSortIndex) {
-        for (let index = 0; index < moveListData.length; index++) {
-          await MoveModel.updateOne(
-            {
-              _id: moveListData[index]._id
-            },
-            {
-              sortIndex: ++num
-            }
-          );
-        }
-      }
+      // let isRepetedSortIndex: Boolean = false;
+      // if (moveListData && moveListData.length) {
+      //   for (let index = 0; index < moveListData.length; index++) {
+      //     const element = moveListData[index].sortIndex;
+      //     const check = moveListData.filter(
+      //       (item: any) => item.sortIndex === element
+      //     );
+      //     if (check && check.length > 1) {
+      //       isRepetedSortIndex = true;
+      //     }
+      //   }
+      // }
+      // let num: number = 0;
+      // if (isRepetedSortIndex) {
+      //   for (let index = 0; index < moveListData.length; index++) {
+      //     await MoveModel.updateOne(
+      //       {
+      //         _id: moveListData[index]._id
+      //       },
+      //       {
+      //         sortIndex: ++num
+      //       }
+      //     );
+      //   }
+      // }
 
       movesData = await MoveModel.find({
         setId: query.setId,
@@ -506,6 +506,21 @@ const updateMoveDetailsAndTrimVideo = async (
       }
     );
 
+    //update sort index by 1
+    const moveListData: Document | any = await MoveModel.find({
+      setId: setId,
+      isDeleted: false,
+      moveURL: { $ne: null }
+    }).sort({ sortIndex: 1 });
+
+    for (let index = 0; index < moveListData.length; index++) {
+      await MoveModel.updateOne(
+        { setId: setId, _id: moveListData[index]._id },
+        { $set: { sortIndex: index + 1 } }
+      );
+    }
+    //-------
+
     let thumbnailPath: any[] = [];
     if (frames && frames.length) {
       if (IsProductionMode) {
@@ -623,6 +638,7 @@ const updateMoveDetailsAndTrimVideo = async (
               description,
               tags,
               setId,
+              sortIndex: 0,
               isMoveProcessing: false,
               startTime: timer.min ? timer.min : 0,
               videoMetaData: {
@@ -646,13 +662,15 @@ const updateMoveDetailsAndTrimVideo = async (
               isVideoProcessing: setData1
             }
           );
+
           return res.status(200).json({
             responsecode: 200,
             data: result,
             setId: setId,
             videoOriginalFile: videoOriginalFile,
             videoFileMain: videoFileMain,
-            s3VideoUrl: s3VideoUrl
+            s3VideoUrl: s3VideoUrl,
+            videoThumbnail: s3VideoThumbnailUrl
           });
         });
     } else {
@@ -1118,12 +1136,13 @@ const getMoveBySearch = async (req: Request, res: Response): Promise<any> => {
         path: "setId.folderId",
         match: { isDeleted: false }
       });
-      
+
       totalMoves = await MoveModel.count({
         title: {
           $regex: new RegExp(search.trim(), "i")
         },
         isDeleted: false,
+        userId: headToken.id,
         moveURL: { $ne: null }
       });
     }

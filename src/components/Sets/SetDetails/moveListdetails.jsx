@@ -5,6 +5,7 @@ import "./index.scss";
 import blankStar from "../../../assets/img/star-line.svg";
 import videoLoading from "../../../assets/img/icons/video-poster.svg";
 import moveLoader from "../../../assets/img/loder/moveLoad.png";
+import VideoIndexLoader from "../../../assets/img/loder/indexLoader.svg";
 
 class MoveListDetails extends React.Component {
   render() {
@@ -28,7 +29,12 @@ class MoveListDetails extends React.Component {
       doubleClickIndex,
       onDoubleClick,
       handleonBlur,
-      isLoadImage
+      isLoadImage,
+      sourceIndex,
+      destinationIndex,
+      isSortIndexUpdate,
+      isSavingWebM
+      // isIosDevice
     } = this.props;
 
     return (
@@ -38,6 +44,7 @@ class MoveListDetails extends React.Component {
             ? "play-list-tile-select cursor_pointer"
             : "play-list-tile cursor_pointer"
         }
+        key={index}
       >
         <div
           onClick={
@@ -46,7 +53,7 @@ class MoveListDetails extends React.Component {
               : null
           }
           onMouseLeave={
-            !video.isMoveProcessing
+            !video.isMoveProcessing 
               ? () => {
                   handleVideoHoverLeave();
                 }
@@ -69,7 +76,7 @@ class MoveListDetails extends React.Component {
               <div
                 onMouseOver={() => handleVideoPlay(index)}
                 onClick={
-                  !video.isMoveProcessing
+                  !video.isMoveProcessing 
                     ? isVideoChecked && !isVideoModalOpen
                       ? () =>
                           handleMovesSelect(
@@ -115,7 +122,7 @@ class MoveListDetails extends React.Component {
                       className="custom-control-input"
                       id={`selected-video-${index}`}
                       onChange={
-                        !video.isMoveProcessing
+                        !video.isMoveProcessing 
                           ? e => handleMovesSelect(null, e, index, video._id)
                           : null
                       }
@@ -143,7 +150,7 @@ class MoveListDetails extends React.Component {
                           className="custom-control-input"
                           id={`selected-video-${index}`}
                           onChange={
-                            !video.isMoveProcessing
+                            !video.isMoveProcessing 
                               ? e =>
                                   handleMovesSelect(null, e, index, video._id)
                               : null
@@ -159,27 +166,37 @@ class MoveListDetails extends React.Component {
                     ) : null}
                   </>
                 )}
-                <div className={"video-effect"}>
-                  <video
-                    width={"100%"}
-                    id={`webm-video-${index}`}
-                    poster={
-                      video.isMoveProcessing
-                        ? moveLoader
-                        : video.videoThumbnail
-                        ? video.videoThumbnail
-                        : videoLoading
-                    }
-                    muted={true}
-                    draggable="true"
-                    oncontextmenu="return false;"
-                    loop
-                    className={isLoadImage ? "load-class" : ""}
-                    playsinline
-                  >
-                    <source src={`${video.moveURL}`} type="video/webm" />
-                  </video>
-                </div>
+
+                <>
+                  {isSortIndexUpdate &&
+                  (sourceIndex === index || destinationIndex === index) ? (
+                    <div className="video-effect loading-img">
+                      <img src={VideoIndexLoader} alt="" />
+                    </div>
+                  ) : (
+                    <div className={"video-effect"}>
+                      <video
+                        width={"100%"}
+                        id={`webm-video-${index}`}
+                        poster={
+                          video.isMoveProcessing && isSavingWebM
+                            ? moveLoader
+                            : video.videoThumbnail
+                            ? video.videoThumbnail
+                            : videoLoading
+                        }
+                        muted={true}
+                        draggable="true"
+                        onContextMenu={e => e.preventDefault()}
+                        loop
+                        className={isLoadImage ? "load-class" : ""}
+                        playsInline
+                      >
+                        <source src={`${video.moveURL}`} type="video/webm" />
+                      </video>
+                    </div>
+                  )}
+                </>
                 <div
                   className="blur-img"
                   // style={{ background: "#000" }}
@@ -187,8 +204,9 @@ class MoveListDetails extends React.Component {
               </div>
               <div className="play-list-text">
                 <div
+                  suppressContentEditableWarning={true}
                   className="text-capitalize play-list-heading h6 m-0"
-                  contenteditable={
+                  contentEditable={
                     doubleClick && doubleClickIndex === index ? "true" : "false"
                   }
                   onDoubleClick={

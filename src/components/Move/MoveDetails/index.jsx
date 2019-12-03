@@ -427,7 +427,8 @@ class MoveDetails extends React.Component {
       isSavingWebM,
       tagsList,
       moveUrlDetails,
-      isCreatingAnotherMove
+      isCreatingAnotherMove,
+      isIosDevice
     } = moveReducer;
     const { frames, videoMetaData } = moveDetails || {};
     const {
@@ -500,6 +501,7 @@ class MoveDetails extends React.Component {
                   videoMetaData={videoMetaData || {}}
                   onTimerChange={this.onTimerChange}
                   completeEditing={this.completeEditing}
+                  isIosDevice={isIosDevice}
                 />
               </>
             </CardBody>

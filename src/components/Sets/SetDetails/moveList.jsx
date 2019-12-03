@@ -66,18 +66,13 @@ class MoveList extends React.Component {
       eleHeight: "",
       windowHeight: "",
       stickyHeaderWidth:null,
+      sourceIndex: -1,
+      destinationIndex: -1
     };
   }
 
   componentDidMount() {
     window.addEventListener("scroll", this.listenScrollEvent);
-    const height = document.getElementById("video-thumbnail-block")
-      .clientHeight;
-    const windowHeight = window.innerHeight;
-    this.setState({
-      eleHeight: height,
-      windowHeight
-    });
   }
   /*
   /*  
@@ -139,16 +134,6 @@ class MoveList extends React.Component {
       this.scrollClass = document.getElementsByClassName(
         "selected-moves selected-detail-page"
       );
-      // var body = document.body,
-      //   html = document.documentElement;
-
-      // var height = Math.max(
-      //   body.scrollHeight,
-      //   body.offsetHeight,
-      //   html.clientHeight,
-      //   html.scrollHeight,
-      //   html.offsetHeight
-      // );
     }
 
     if (prevProps.movesOfSet !== this.props.movesOfSet) {
@@ -303,13 +288,17 @@ class MoveList extends React.Component {
    */
   handleVideoPlay = index => {
     let myVideo = document.getElementById(`webm-video-${index}`);
-    myVideo.play();
+    if (!this.props.isSortIndexUpdate) {
+      myVideo.play();
+    }
   };
   /*
    */
   handleVideoPause = index => {
     let myVideo = document.getElementById(`webm-video-${index}`);
-    myVideo.pause();
+    if (!this.props.isSortIndexUpdate) {
+      myVideo.pause();
+    }
   };
   /*
    */
@@ -413,7 +402,7 @@ class MoveList extends React.Component {
         setId: this.props.setIdPathName,
         page: 1,
         isInfiniteScroll: false,
-        isMoveList: true,
+        isMoveList: true
       });
       this.setState({
         page: 1,
@@ -477,7 +466,9 @@ class MoveList extends React.Component {
       isMarkingStar: {
         index: -1,
         isChanging: false
-      }
+      },
+      sourceIndex,
+      destinationIndex
     });
     this.props.updateSortIndexRequest(data);
   };
@@ -596,10 +587,13 @@ class MoveList extends React.Component {
       allSetList,
       setIdPathName,
       isMoveSearchLoading,
+      isSortIndexUpdate,
       totalMoves,
       tagsList,
       isMoveListLoading,
-      movesOfSet
+      movesOfSet,
+      isSavingWebM,
+      isIosDevice
     } = this.props;
     const { modelDetails } = modelInfoReducer;
     const { transferToModalOpen, addTagModalOpen } = modelDetails;
@@ -625,9 +619,9 @@ class MoveList extends React.Component {
       isMoveLoadingCount,
       moveLoadingCount,
       errors,
+      sourceIndex,
+      destinationIndex,
       stickyHeaderWidth
-      // eleHeight,
-      // windowHeight
     } = this.state;
     const location = this.props.location;
     const isStarred = location.search.split("=");
@@ -812,8 +806,12 @@ class MoveList extends React.Component {
                             handleMovesSelect={this.handleMovesSelect}
                             isMarkingStar={isMarkingStar}
                             video={video}
+                            isSavingWebM={isSavingWebM}
+                            isSortIndexUpdate={isSortIndexUpdate}
                             isSelectVideo={isSelectVideo}
                             videoIndex={videoIndex}
+                            sourceIndex={sourceIndex}
+                            destinationIndex={destinationIndex}
                             isVideoModalOpen={isVideoModalOpen}
                             handleStarred={this.handleStarred}
                             handleVideoCheckBox={this.handleVideoCheckBox}
@@ -822,6 +820,7 @@ class MoveList extends React.Component {
                             isMoveLoadingCount={isMoveLoadingCount}
                             moveLoadingCount={moveLoadingCount}
                             errors={errors}
+                            isIosDevice={isIosDevice}
                           />
                         );
                       })
@@ -845,6 +844,10 @@ class MoveList extends React.Component {
                               handleMovesSelect={this.handleMovesSelect}
                               isMarkingStar={isMarkingStar}
                               video={video}
+                              sourceIndex={sourceIndex}
+                              isSavingWebM={isSavingWebM}
+                              destinationIndex={destinationIndex}
+                              isSortIndexUpdate={isSortIndexUpdate}
                               isSelectVideo={isSelectVideo}
                               videoIndex={videoIndex}
                               isVideoModalOpen={isVideoModalOpen}
@@ -860,6 +863,7 @@ class MoveList extends React.Component {
                               reorderList={this.reorderList}
                               isLoadImage={isLoadImage}
                               errors={errors}
+                              isIosDevice={isIosDevice}
                             />
                           );
                         }}

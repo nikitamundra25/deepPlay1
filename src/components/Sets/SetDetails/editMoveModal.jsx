@@ -68,32 +68,32 @@ class EditMoveModal extends React.Component {
   handleEditMove = async e => {
     e.preventDefault();
     const { title, description } = this.state;
-      const data = {
-        title: title? title: "",
-        description: description? description: ""
-      }
-      const { isValid, errors } = Validator(
-        data,
-        CreateFolderValidations,
-        CreateFolderValidationsMessaages
-      );
-      if (!isValid) {
-        this.setState({
-          errors
-        });
-        return;
-      }
-      const { moveIdToEdit, videoData } = this.props;
-      const propData = {
-        moveId: moveIdToEdit,
-        title: title,
-        description: description,
-        tags: this.state.tags,
-        setId: videoData.setId._id,
-        videoData: videoData,
-        fromMoveList: false
-      };
-      await this.props.editMove(propData);
+    const data = {
+      title: title ? title : "",
+      description: description ? description : ""
+    };
+    const { isValid, errors } = Validator(
+      data,
+      CreateFolderValidations,
+      CreateFolderValidationsMessaages
+    );
+    if (!isValid) {
+      this.setState({
+        errors
+      });
+      return;
+    }
+    const { moveIdToEdit, videoData } = this.props;
+    const propData = {
+      moveId: moveIdToEdit,
+      title: title,
+      description: description,
+      tags: this.state.tags,
+      setId: videoData.setId._id,
+      videoData: videoData,
+      fromMoveList: false
+    };
+    await this.props.editMove(propData);
   };
 
   render() {

@@ -70,7 +70,7 @@ export const loginReducer = handleActions(
     [changePasswordAction.CHANGE_PASSWORD_FAILED]: (state, { payload }) => ({
       ...state,
       isChangePasswordSuccess: false,
-    })
+    }),
   },
   initialState
 );

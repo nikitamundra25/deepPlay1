@@ -264,7 +264,7 @@ class FrameDetails extends Component {
    *
    */
   render() {
-    const { frames, videoMetaData } = this.props;
+    const { frames, videoMetaData, isIosDevice } = this.props;
     const { duration } = videoMetaData || {};
     const { seconds: maxValue } = duration || {};
     const { time } = this.state;
@@ -310,7 +310,11 @@ class FrameDetails extends Component {
                   <Label>Trim From: </Label>
                   <Input
                     type="text"
-                    value={SecondsToMMSSMM(time.min)}
+                    value={
+                      SecondsToMMSSMM(time.min) < 0
+                        ? "00:00:00"
+                        : SecondsToMMSSMM(time.min)
+                    }
                     // onChange={e =>
                     //   this.labelValueChange({
                     //     ...time,
@@ -366,7 +370,7 @@ class FrameDetails extends Component {
               className={"btn-black btn url-upload-btn"}
               onClick={this.props.completeEditing}
             >
-              Finish
+              {isIosDevice ? "Unsupported for this device" : "Finish"}
             </Button>
           </Col>
         </Row>
