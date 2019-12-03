@@ -346,7 +346,7 @@ const getMoveBySetId = async (req: Request, res: Response): Promise<any> => {
     }
     const moveList: Document | any | null = await MoveModel.populate(
       movesData,
-      { path: "setId.folderId" }
+      { path: "setId.folderId", match: { isDeleted: false } }
     );
     let totalMoves: Document | any | null;
     if (query.isStarred === "true") {
@@ -1042,8 +1042,8 @@ const updateMove = async (req: Request, res: Response): Promise<any> => {
     const { title, description, tags, moveId } = body;
     let updateMove: IUpdateMove = {
       title,
-      description
-      // tags
+      description,
+      tags
     };
 
     if (!moveId) {
@@ -1062,6 +1062,7 @@ const updateMove = async (req: Request, res: Response): Promise<any> => {
         {
           title: title,
           description: description,
+          tags: tags,
           objectID: stemp
         },
         (err: string, content: any) => {

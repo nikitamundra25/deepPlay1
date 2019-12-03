@@ -206,6 +206,25 @@ class DefaultHeader extends React.Component {
     this.props.addTagsRequest({ data: data, moveVideo: moveVideo });
   };
 
+  editMove = data => {
+    if (data.fromMoveList) {
+      const moveList = [...data.moveofSetList];
+      moveList.map((key, i) => {
+        if (data.moveId === key._id) {
+          return (moveList[i].title = data.title);
+        } else {
+          return null;
+        }
+      });
+      this.props.updateMoveRequest({ data: data, moveList: moveList });
+    } else {
+      const moveVideo = data.videoData;
+      moveVideo.title = data.title;
+      moveVideo.description = data.description;
+      this.props.updateMoveRequest({ data: data, moveVideo: moveVideo });
+    }
+  };
+
   /*  */
   render() {
     const {
@@ -295,11 +314,8 @@ class DefaultHeader extends React.Component {
                               color=" "
                               className="nav-dropdown-btn"
                             >
-                              <i className="fas fa-plus-square"></i> 
-                              <span className="dropdown-text">
-                                {" "}
-                             Create
-                              </span>
+                              <i className="fas fa-plus-square"></i>
+                              <span className="dropdown-text"> Create</span>
                             </DropdownToggle>
                             <DropdownMenu>
                               <DropdownItem></DropdownItem>
@@ -645,7 +661,7 @@ class DefaultHeader extends React.Component {
             allSetList={allSetList}
             fromMoveSearch={true}
             tagsList={tagsList}
-            editMove={data => this.props.updateMoveRequest(data)}
+            editMove={this.editMove}
             loadVideoDataRequest={loadVideoDataRequest}
             transferMove={this.props.transferMove}
             isFullScreenMode={isFullScreenMode}
