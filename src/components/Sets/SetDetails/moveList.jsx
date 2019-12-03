@@ -574,6 +574,7 @@ class MoveList extends React.Component {
       tagsList,
       isMoveListLoading,
       movesOfSet,
+      isSavingWebM,
       isIosDevice
     } = this.props;
     const { modelDetails } = modelInfoReducer;
@@ -785,6 +786,7 @@ class MoveList extends React.Component {
                             handleMovesSelect={this.handleMovesSelect}
                             isMarkingStar={isMarkingStar}
                             video={video}
+                            isSavingWebM={isSavingWebM}
                             isSortIndexUpdate={isSortIndexUpdate}
                             isSelectVideo={isSelectVideo}
                             videoIndex={videoIndex}
@@ -823,6 +825,7 @@ class MoveList extends React.Component {
                               isMarkingStar={isMarkingStar}
                               video={video}
                               sourceIndex={sourceIndex}
+                              isSavingWebM={isSavingWebM}
                               destinationIndex={destinationIndex}
                               isSortIndexUpdate={isSortIndexUpdate}
                               isSelectVideo={isSelectVideo}

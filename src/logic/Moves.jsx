@@ -202,6 +202,25 @@ const completeVideoEditingLogic = createLogic({
           })
         );
       }
+
+      let currMoveArr = getState().moveReducer.movesOfSet;
+      let finalMoveList = [];
+      if (currMoveArr && currMoveArr.length) {
+        currMoveArr.map((key, index) => {
+          if (key._id === action.payload.moveId) {
+            let data = {
+              ...key,
+              moveURL: result.data.s3VideoUrl,
+              videoThumbnail: result.data.videoThumbnail,
+              isMoveProcessing: false
+            };
+            finalMoveList.push(data);
+          } else {
+            finalMoveList.push(key);
+          }
+          return true;
+        });
+      }
       dispatch(
         completeVideoEditingSuccess({
           isSavingWebM: false,
@@ -211,10 +230,10 @@ const completeVideoEditingLogic = createLogic({
             videoOriginalFile: result.data.videoOriginalFile,
             videoFileMain: result.data.videoFileMain,
             s3VideoUrl: result.data.s3VideoUrl
-          }
+          },
+          movesOfSet: finalMoveList
         })
       );
-
       let temp = getState().moveReducer.isMoveDone;
       if (temp) {
         dispatch(

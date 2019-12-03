@@ -310,7 +310,11 @@ class FrameDetails extends Component {
                   <Label>Trim From: </Label>
                   <Input
                     type="text"
-                    value={SecondsToMMSSMM(time.min)}
+                    value={
+                      SecondsToMMSSMM(time.min) < 0
+                        ? "00:00:00"
+                        : SecondsToMMSSMM(time.min)
+                    }
                     // onChange={e =>
                     //   this.labelValueChange({
                     //     ...time,

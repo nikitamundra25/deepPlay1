@@ -32,7 +32,8 @@ class MoveListDetails extends React.Component {
       isLoadImage,
       sourceIndex,
       destinationIndex,
-      isSortIndexUpdate
+      isSortIndexUpdate,
+      isSavingWebM
       // isIosDevice
     } = this.props;
 
@@ -52,7 +53,7 @@ class MoveListDetails extends React.Component {
               : null
           }
           onMouseLeave={
-            !video.isMoveProcessing
+            !video.isMoveProcessing 
               ? () => {
                   handleVideoHoverLeave();
                 }
@@ -75,7 +76,7 @@ class MoveListDetails extends React.Component {
               <div
                 onMouseOver={() => handleVideoPlay(index)}
                 onClick={
-                  !video.isMoveProcessing
+                  !video.isMoveProcessing 
                     ? isVideoChecked && !isVideoModalOpen
                       ? () =>
                           handleMovesSelect(
@@ -121,7 +122,7 @@ class MoveListDetails extends React.Component {
                       className="custom-control-input"
                       id={`selected-video-${index}`}
                       onChange={
-                        !video.isMoveProcessing
+                        !video.isMoveProcessing 
                           ? e => handleMovesSelect(null, e, index, video._id)
                           : null
                       }
@@ -149,7 +150,7 @@ class MoveListDetails extends React.Component {
                           className="custom-control-input"
                           id={`selected-video-${index}`}
                           onChange={
-                            !video.isMoveProcessing
+                            !video.isMoveProcessing 
                               ? e =>
                                   handleMovesSelect(null, e, index, video._id)
                               : null
@@ -178,7 +179,7 @@ class MoveListDetails extends React.Component {
                         width={"100%"}
                         id={`webm-video-${index}`}
                         poster={
-                          video.isMoveProcessing
+                          video.isMoveProcessing && isSavingWebM
                             ? moveLoader
                             : video.videoThumbnail
                             ? video.videoThumbnail
