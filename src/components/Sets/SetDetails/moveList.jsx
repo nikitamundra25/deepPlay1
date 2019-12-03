@@ -60,8 +60,9 @@ class MoveList extends React.Component {
       backgroundClass: "",
       isLoadImage: false,
       isMoveLoadingCount: false,
-      moveLoadingCount: -1, 
+      moveLoadingCount: -1,
       stickyHeaderWidth:null,
+      errors: ""
     };
   }
 
@@ -536,7 +537,7 @@ class MoveList extends React.Component {
       title: ""
     });
 
-    if (this.state.title !== null) {
+    if (this.state.title !== null && this.state.errors === "") {
       const data = {
         moveId: videoData._id,
         title: this.state.title,
@@ -552,8 +553,13 @@ class MoveList extends React.Component {
 
   handleChange = e => {
     const { name, value } = e.target;
+    const error =
+      value && value.length > 50
+        ? "Description cannot have more than 50 characters"
+        : "";
     this.setState({
-      [name]: value
+      [name]: value,
+      errors: error ? error : null
     });
   };
 
@@ -591,7 +597,8 @@ class MoveList extends React.Component {
       isLoadImage,
       isMoveLoadingCount,
       moveLoadingCount,
-      stickyHeaderWidth
+      stickyHeaderWidth,
+      errors
     } = this.state;
     const location = this.props.location;
     const isStarred = location.search.split("=");
@@ -784,6 +791,7 @@ class MoveList extends React.Component {
                             isLoadImage={isLoadImage}
                             isMoveLoadingCount={isMoveLoadingCount}
                             moveLoadingCount={moveLoadingCount}
+                            errors={errors}
                           />
                         );
                       })
@@ -821,6 +829,7 @@ class MoveList extends React.Component {
                               handleChange={this.handleChange}
                               reorderList={this.reorderList}
                               isLoadImage={isLoadImage}
+                              errors={errors}
                             />
                           );
                         }}

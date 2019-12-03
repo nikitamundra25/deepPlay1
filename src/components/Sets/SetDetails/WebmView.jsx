@@ -247,9 +247,11 @@ class WebmView extends Component {
       isMuted: !isMuted
     });
   };
+
   /**
    *
    */
+
   handleVideoFullScreen = () => {
     console.log("insidee");
 
@@ -681,7 +683,7 @@ class WebmView extends Component {
                     disablecontrols="true"
                     disablepictureinpicture="true"
                     controlsList="nodownload"
-                    onContextMenu={(e)=> e.preventDefault()}
+                    onContextMenu={e => e.preventDefault()}
                     onClick={isPlaying ? this.pauseVideo : this.playVideo}
                   >
                     <source

@@ -1,12 +1,8 @@
 import { Request, Response } from "express";
 import {
-  CloudinaryAPIKey,
-  CloudinaryAPISecretKey,
-  CloudName,
   IsProductionMode,
   ServerURL
 } from "../config";
-import cloudinary from "cloudinary";
 import Mongoose, { Document } from "mongoose";
 import ytdl from "ytdl-core";
 import { MoveModel, SetModel, TagModel } from "../models";
@@ -23,18 +19,6 @@ const algoliasearch = require("algoliasearch");
 const client = algoliasearch(algoliaAppId, algoliaAPIKey);
 const index = client.initIndex("deep_play_data");
 const __basedir = path.join(__dirname, "../public");
-
-cloudinary.config({
-  cloud_name: CloudName,
-  api_key: CloudinaryAPIKey,
-  api_secret: CloudinaryAPISecretKey
-});
-
-var up_options = {
-  resource_type: "video",
-  eager: [{ format: "webM", video_codec: "h264:main:3.1", bit_rate: "3500k" }],
-  eager_async: true
-};
 
 /**
  * Title:- Download Video to local server
@@ -138,7 +122,7 @@ const downloadYoutubeVideo = async (
           ytdl(body.url, { quality: "highest" }).pipe(
             (videoStream = fs.createWriteStream(originalVideoPath))
           );
-          videoStream.on("close", async function () {
+          videoStream.on("close", async function() {
             const {
               frames: framesArray,
               videoMetaData,
@@ -224,7 +208,14 @@ const getVideoFrames = async (videoName: string): Promise<any> => {
 const createMove = async (req: Request, res: Response): Promise<any> => {
   try {
     const { body, currentUser } = req;
-    const { moveUrl } = body;
+    const {
+      moveUrl,
+      frames,
+      videoMetaData,
+      videoName,
+      sourceUrl,
+      isYoutubeUrl
+    } = body;
 
     let headToken: Request | any = currentUser;
     if (!headToken.id) {
@@ -232,27 +223,39 @@ const createMove = async (req: Request, res: Response): Promise<any> => {
         message: "User id not found"
       });
     }
-
-    let fileName: string[] = moveUrl.split("/");
-    const {
-      frames: framesArray,
-      videoMetaData,
-      videoName
-    } = await getVideoFrames(fileName[2]);
-    delete videoMetaData.filename;
-    const frames = framesArray.map(
-      (frame: string | null) => `${ServerURL}/uploads/youtube-videos/${frame}`
-    );
-    const moveResult: Document | any = new MoveModel({
-      videoUrl: moveUrl,
-      userId: headToken.id,
-      sourceUrl: moveUrl,
-      frames: frames,
-      videoMetaData,
-      videoName,
-      isYoutubeUrl: false
-    });
-    await moveResult.save();
+    let moveResult: Document | any;
+    if (!frames && !frames.length) {
+      let fileName: string[] = moveUrl.split("/");
+      const {
+        frames: framesArray,
+        videoMetaData,
+        videoName
+      } = await getVideoFrames(fileName[2]);
+      delete videoMetaData.filename;
+      const frames = framesArray.map(
+        (frame: string | null) => `${ServerURL}/uploads/youtube-videos/${frame}`
+      );
+      moveResult = new MoveModel({
+        videoUrl: moveUrl,
+        userId: headToken.id,
+        frames: frames,
+        videoMetaData: videoMetaData,
+        videoName: videoName,
+        isYoutubeUrl: false
+      });
+      await moveResult.save();
+    } else {
+      moveResult = new MoveModel({
+        videoUrl: moveUrl,
+        userId: headToken.id,
+        sourceUrl: sourceUrl,
+        frames: frames ? frames : null,
+        videoMetaData: videoMetaData ? videoMetaData : null,
+        videoName: videoName ? videoName : null,
+        isYoutubeUrl: isYoutubeUrl ? isYoutubeUrl : false
+      });
+      await moveResult.save();
+    }
     return res.status(200).json({
       message: "Move has been created successfully.",
       moveId: moveResult._id,
@@ -527,7 +530,7 @@ const updateMoveDetailsAndTrimVideo = async (
       }
       const fileName = `${
         result.videoUrl.split(".")[0]
-        }_clip_${moment().unix()}.webm`;
+      }_clip_${moment().unix()}.webm`;
       let videoFileMain: String | any, videoOriginalFile: String | any;
       if (IsProductionMode) {
         videoFileMain = path.join(__dirname, `${fileName}`);
@@ -729,7 +732,7 @@ const isStarredMove = async (req: Request, res: Response): Promise<any> => {
     return res.status(200).json({
       message: `Move has been ${
         isStarred === "true" ? "starred" : "Unstarred"
-        } successfully!`
+      } successfully!`
     });
   } catch (error) {
     console.log(error);

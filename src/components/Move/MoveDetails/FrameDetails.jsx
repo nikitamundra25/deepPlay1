@@ -153,10 +153,10 @@ class FrameDetails extends Component {
       parseInt(max) - parseInt(min) === 1
     ) {
       if (e.keyCode === 38) {
-        if (SecondsToMMSSMM(max + 0.001) <= SecondsToMMSSMM(duration.seconds)) {
+        if (SecondsToMMSSMM(max + 0.1) <= SecondsToMMSSMM(duration.seconds)) {
           let changeValue = {
-            min: min + 0.001,
-            max: max + 0.001
+            min: min + 0.1,
+            max: max + 0.1
           };
           this.setState(
             {
@@ -170,8 +170,8 @@ class FrameDetails extends Component {
       } else if (e.keyCode === 40) {
         if (min > 0) {
           let changeValue = {
-            min: min - 0.001,
-            max: max - 0.001
+            min: min - 0.1,
+            max: max - 0.1
           };
           this.setState(
             {
@@ -195,11 +195,9 @@ class FrameDetails extends Component {
     } else {
       if (name === "from") {
         if (e.keyCode === 38) {
-          if (
-            SecondsToMMSSMM(max + 0.001) <= SecondsToMMSSMM(duration.seconds)
-          ) {
+          if (SecondsToMMSSMM(max + 0.1) <= SecondsToMMSSMM(duration.seconds)) {
             let changeValue = {
-              min: min + 0.001,
+              min: min + 0.1,
               max: max
             };
             this.setState(
@@ -214,7 +212,7 @@ class FrameDetails extends Component {
         } else if (e.keyCode === 40) {
           if (min > 0) {
             let changeValue = {
-              min: min - 0.001,
+              min: min - 0.1,
               max: max
             };
             this.setState(
@@ -229,12 +227,10 @@ class FrameDetails extends Component {
         }
       } else {
         if (e.keyCode === 38) {
-          if (
-            SecondsToMMSSMM(max + 0.001) <= SecondsToMMSSMM(duration.seconds)
-          ) {
+          if (SecondsToMMSSMM(max + 0.1) <= SecondsToMMSSMM(duration.seconds)) {
             let changeValue = {
               min: min,
-              max: max + 0.001
+              max: max + 0.1
             };
             this.setState(
               {
@@ -249,7 +245,7 @@ class FrameDetails extends Component {
           if (min > 0) {
             let changeValue = {
               min: min,
-              max: max - 0.001
+              max: max - 0.1
             };
             this.setState(
               {
