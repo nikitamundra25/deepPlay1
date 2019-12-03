@@ -64,7 +64,8 @@ class MoveDetails extends React.Component {
       isEdit: false,
       descError: "",
       isVideoFinished: false,
-      selectedSetId: ""
+      selectedSetId: "",
+      errorTitle: ""
     };
     this.videoDetails = React.createRef();
   }
@@ -303,6 +304,24 @@ class MoveDetails extends React.Component {
       descError: error ? error : null
     });
   };
+
+  handleChangeTitle = e => {
+    const { name, value } = e.target;
+    const error =
+      value && value.length > 50
+        ? "Title cannot have more than 50 characters"
+        : "";
+    if (error) {
+      this.setState({
+        errorTitle: error ? error : null
+      });
+    } else {
+      this.setState({
+        [name]: value,
+        errorTitle: null
+      });
+    }
+  };
   /**
    *
    */
@@ -422,6 +441,7 @@ class MoveDetails extends React.Component {
       videoDuration,
       videoMaxDuration,
       isEdit,
+      errorTitle,
       descError
     } = this.state;
 
@@ -437,11 +457,12 @@ class MoveDetails extends React.Component {
                     <>
                       <VideoView
                         moveReducer={moveReducer}
-                        handleChange={this.handleChange}
+                        handleChange={this.handleChangeTitle}
                         handleDesriptionModal={this.handleDesriptionModal}
                         description={description}
                         timer={timer}
                         title={title}
+                        errorTitle={errorTitle}
                         isEdit={isEdit}
                         videoDuration={data =>
                           this.setState({

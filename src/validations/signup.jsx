@@ -58,7 +58,6 @@ export const CreateFolderValidations = {
   title: {
     [ValidationTypes.REQUIRED]: true,
     [ValidationTypes.MAXLENGTH]: 50,
-    [ValidationTypes.MINLENGTH]: 2
   },
   description: {
     [ValidationTypes.MAXLENGTH]: 250

@@ -21,6 +21,7 @@ import remove from "../../../assets/img/set-detail-ic/remove.svg";
 import { ListManager } from "react-beautiful-dnd-grid";
 import MoveListDetails from "./moveListdetails";
 import videoLoading from "../../../assets/img/icons/video-poster.png";
+import { toast } from "react-toastify";
 
 // a little function to help us with reordering the result
 const reorder = (list, startIndex, endIndex) => {
@@ -61,40 +62,34 @@ class MoveList extends React.Component {
       isLoadImage: false,
       isMoveLoadingCount: false,
       moveLoadingCount: -1,
-      stickyHeaderWidth:null,
-      errors: ""
+      errors: "",
+      eleHeight: "",
+      windowHeight: ""
     };
   }
 
   componentDidMount() {
     window.addEventListener("scroll", this.listenScrollEvent);
+    const height = document.getElementById("video-thumbnail-block")
+      .clientHeight;
+    const windowHeight = window.innerHeight;
+    this.setState({
+      eleHeight: height,
+      windowHeight
+    });
   }
   /*
   /*  
   */
 
   listenScrollEvent = e => {
-    let offsetElemnt = document.getElementById("get-sticky-header");
-    let offsetElemntInner = document.getElementById("get-sticky-inner-header");
-    let offsetElemntSubInner = document.getElementById("get-sticky-sub-inner-header");
-    
-    if(offsetElemnt){
-      let offsetWidth = offsetElemnt.getBoundingClientRect();
-      if (offsetWidth.top+125 <= 1) {
-        
-        console.log(offsetWidth.top, offsetWidth.left, offsetElemntInner.getBoundingClientRect().left,offsetElemntInner.offsetWidth ,"offsetWidth---------");
-        
-        this.setState({
-          stickyHeaderWidth: offsetElemntInner.offsetWidth
-        })
-        offsetElemntInner.style.left=offsetElemntSubInner.getBoundingClientRect().left+"px";
-        this.setState({ backgroundClass: "sticky-header" });
-      } else {
-        offsetElemntInner.style.left=50+"%";
-        this.setState({ backgroundClass: "" });
-      }
+    if (window.scrollY > 180) {
+      this.setState({ backgroundClass: "sticky-header" });
+    } else {
+      this.setState({ backgroundClass: "" });
     }
   };
+
   handleVideoHoverLeave = () => {
     this.setState({
       isSelectVideo: false
@@ -402,7 +397,7 @@ class MoveList extends React.Component {
         setId: this.props.setIdPathName,
         page: 1,
         isInfiniteScroll: false,
-        isMoveList: true
+        isMoveList: true,
       });
       this.setState({
         page: 1,
@@ -530,24 +525,34 @@ class MoveList extends React.Component {
     });
   };
 
-  handleonBlur = videoData => {
-    this.setState({
-      doubleClick: false,
-      doubleClickIndex: -1,
-      title: ""
-    });
+  handleonBlur = (e, videoData, index) => {
+    const value = e.target.textContent;
+    const error =
+      value && value.length > 50
+        ? "Title cannot have more than 50 characters"
+        : "";
+    if (error) {
+      toast.error("Title cannot have more than 50 characters");
+      return;
+    } else {
+      this.setState({
+        doubleClick: false,
+        doubleClickIndex: -1,
+        title: ""
+      });
 
-    if (this.state.title !== null && this.state.errors === "") {
-      const data = {
-        moveId: videoData._id,
-        title: this.state.title,
-        description: videoData.description,
-        tags: videoData.tags,
-        setId: videoData.setId._id,
-        moveofSetList: this.props.movesOfSet,
-        fromMoveList: true
-      };
-      this.props.editMove(data);
+      if (this.state.title !== null || this.state.errors !== null) {
+        const data = {
+          moveId: videoData._id,
+          title: value,
+          description: videoData.description,
+          tags: videoData.tags,
+          setId: videoData.setId._id,
+          moveofSetList: this.props.movesOfSet,
+          fromMoveList: true
+        };
+        this.props.editMove(data);
+      }
     }
   };
 
@@ -555,12 +560,18 @@ class MoveList extends React.Component {
     const { name, value } = e.target;
     const error =
       value && value.length > 50
-        ? "Description cannot have more than 50 characters"
+        ? "Title cannot have more than 50 characters"
         : "";
-    this.setState({
-      [name]: value,
-      errors: error ? error : null
-    });
+    if (error) {
+      this.setState({
+        errors: error ? error : null
+      });
+    } else {
+      this.setState({
+        [name]: value,
+        errors: null
+      });
+    }
   };
 
   render() {
@@ -597,8 +608,9 @@ class MoveList extends React.Component {
       isLoadImage,
       isMoveLoadingCount,
       moveLoadingCount,
-      stickyHeaderWidth,
       errors
+      // eleHeight,
+      // windowHeight
     } = this.state;
     const location = this.props.location;
     const isStarred = location.search.split("=");
@@ -606,10 +618,75 @@ class MoveList extends React.Component {
 
     return (
       <section className="play-list-collection set-detail-section set-detail-editble">
-          {selectedMoveIds && selectedMoveIds.length ? (
+        <InfiniteScroll
+          dataLength={movesOfSet.length} //This is important field to render the next data
+          next={() => {
+            this.handleLoadmoreRequest(setIdPathName);
+          }}
+          hasMore={totalMoves !== movesOfSet.length ? true : false}
+          loader={<Loader />}
+        >
+          <Row className={"m-0"}>
+            <Col md="12" className={"pb-3"}>
+              <div className="content-header mt-3 mb-1">
+                <span className="content-title ">
+                  Moves in this set ({totalMoves || 0})
+                </span>
+                {serachContent && serachContent[1] ? null : (
+                  <div className="set-detail-right-section">
+                    <ButtonGroup size="sm" className="mr-2">
+                      <Button
+                        className={
+                          isStarred[0]
+                            ? isStarred[1] === "false"
+                              ? "active"
+                              : ""
+                            : "active"
+                        }
+                        color=" "
+                        onClick={this.handleShowAll}
+                      >
+                        All
+                      </Button>
+                      <Button
+                        className={
+                          isStarred[1] === "true" ? "active stared-active" : ""
+                        }
+                        color=" "
+                        onClick={this.handleShowStarred}
+                      >
+                        Starred
+                      </Button>
+                    </ButtonGroup>
+                    <FormGroup className="mb-0 header-search-wrap ">
+                      <InputGroup className="">
+                        <DebounceInput
+                          minLength={1}
+                          value={search}
+                          className={"form-control"}
+                          autoComplete="off"
+                          placeholder="Type to filter moves"
+                          debounceTimeout={300}
+                          onChange={event => this.handleInputChange(event)}
+                        />
+                      </InputGroup>
+                    </FormGroup>
+                  </div>
+                )}
+              </div>
+            </Col>
+
+            <div
+              className={`video-thumbnail-block  ${
+                selectedMoveIds && selectedMoveIds.length
+                  ? "select-focus-event"
+                  : null
+              } `}
+              id="video-thumbnail-block"
+            >
+              {selectedMoveIds && selectedMoveIds.length ? (
                 <div className={` ${backgroundClass}`} id="get-sticky-header">
-                  <div className="selected-moves-main" id="get-sticky-sub-inner-header" style={{width: stickyHeaderWidth}} ></div>
-                  <div className={"selected-moves selected-detail-page"} id="get-sticky-inner-header">
+                  <div className={"selected-moves selected-detail-page"}>
                     <div
                       className={
                         "d-flex justify-content-between align-items-center "
@@ -679,72 +756,6 @@ class MoveList extends React.Component {
                   </div>
                 </div>
               ) : null}
-        <InfiniteScroll
-          dataLength={movesOfSet.length} //This is important field to render the next data
-          next={() => {
-            this.handleLoadmoreRequest(setIdPathName);
-          }}
-          hasMore={totalMoves !== movesOfSet.length ? true : false}
-          loader={<Loader />}
-        >
-          <Row className={"m-0"}>
-            <Col md="12" className={"pb-3"}>
-              <div className="content-header mt-3 mb-1">
-                <span className="content-title ">
-                  Moves in this set ({totalMoves || 0})
-                </span>
-                {serachContent && serachContent[1] ? null : (
-                  <div className="set-detail-right-section">
-                    <ButtonGroup size="sm" className="mr-2">
-                      <Button
-                        className={
-                          isStarred[0]
-                            ? isStarred[1] === "false"
-                              ? "active"
-                              : ""
-                            : "active"
-                        }
-                        color=" "
-                        onClick={this.handleShowAll}
-                      >
-                        All
-                      </Button>
-                      <Button
-                        className={
-                          isStarred[1] === "true" ? "active stared-active" : ""
-                        }
-                        color=" "
-                        onClick={this.handleShowStarred}
-                      >
-                        Starred
-                      </Button>
-                    </ButtonGroup>
-                    <FormGroup className="mb-0 header-search-wrap ">
-                      <InputGroup className="">
-                        <DebounceInput
-                          minLength={1}
-                          value={search}
-                          className={"form-control"}
-                          autoComplete="off"
-                          placeholder="Type to filter moves"
-                          debounceTimeout={300}
-                          onChange={event => this.handleInputChange(event)}
-                        />
-                      </InputGroup>
-                    </FormGroup>
-                  </div>
-                )}
-              </div>
-            </Col>
-
-            <div
-              className={`video-thumbnail-block  ${
-                selectedMoveIds && selectedMoveIds.length
-                  ? "select-focus-event"
-                  : null
-              } `}
-            >
-            
 
               {!isMoveSearchLoading && !isMoveListLoading ? (
                 <div className="video-thumbnail-sub-block  video-thumb-edit-view">
@@ -763,10 +774,11 @@ class MoveList extends React.Component {
                       </div>
                     </div>
                   </div>
+
                   {selectedMoveIds && selectedMoveIds.length ? (
                     <div className="select-focus-wrap"></div>
                   ) : null}
-                  <div className="edit-view-wrap" id="edit-view-wrap">
+                  <div className="edit-view-wrap">
                     {selectedMoveIds && selectedMoveIds.length ? (
                       movesOfSet.map((video, index) => {
                         return (

@@ -28,6 +28,7 @@ import CreateSetComponent from "../../components/Sets/createSet";
 import searchArrow from "../../assets/img/back-search.png";
 import { DebounceInput } from "react-debounce-input";
 import WebmSearch from "../../components/comman/WebmSearch";
+import { APP_URL } from "../../config/Appconfig";
 
 class DefaultHeader extends React.Component {
   constructor(props) {
@@ -260,6 +261,7 @@ class DefaultHeader extends React.Component {
         : profiledata
         ? profiledata.profileImage
         : "";
+    const temp = this.state.path.split("/");
 
     return (
       <>
@@ -304,14 +306,28 @@ class DefaultHeader extends React.Component {
                             </DropdownMenu>
 
                             <DropdownMenu>
-                              <DropdownItem
-                                active={routePath === "/move" ? true : false}
-                                onClick={() =>
-                                  this.props.redirectTo(AppRoutes.MOVE.url)
-                                }
-                              >
-                                Create Move
-                              </DropdownItem>
+                              {temp && temp.length && temp[1] !== "move" ? (
+                                <DropdownItem
+                                  active={routePath === "/move" ? true : false}
+                                  onClick={() =>
+                                    this.props.redirectTo(AppRoutes.MOVE.url)
+                                  }
+                                >
+                                  Create Move
+                                </DropdownItem>
+                              ) : (
+                                <DropdownItem
+                                  active={routePath === "/move" ? true : false}
+                                >
+                                  <a
+                                    href={`${APP_URL}/move`}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                  >
+                                    Create Move
+                                  </a>
+                                </DropdownItem>
+                              )}
                               <DropdownItem
                                 // active={
                                 //   routePath === "/create-set" ? true : false

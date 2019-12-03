@@ -7,9 +7,7 @@ import {
   Modal,
   ModalBody,
   UncontrolledTooltip,
-  ModalHeader,
-  FormGroup,
-  Input
+  ModalHeader
 } from "reactstrap";
 import { logger } from "helper/Logger";
 import InputRange from "react-input-range";
@@ -21,6 +19,7 @@ import ViewInfoModal from "./viewInfoModal";
 import AddTagModal from "./addTagsModal";
 import EditMoveModal from "./editMoveModal";
 import { ConfirmBox } from "helper/SweetAleart";
+import { toast } from "react-toastify";
 
 class WebmView extends Component {
   video;
@@ -440,23 +439,33 @@ class WebmView extends Component {
     });
   };
 
-  handleonBlur = videoData => {
-    this.setState({
-      doubleClick: false,
-      title: ""
-    });
+  handleonBlur = (e, videoData) => {
+    const value = e.target.textContent;
+    const error =
+      value && value.length > 50
+        ? "Title cannot have more than 50 characters"
+        : "";
+    if (error) {
+      toast.error("Title cannot have more than 50 characters");
+      return;
+    } else {
+      this.setState({
+        doubleClick: false,
+        title: ""
+      });
 
-    if (this.state.title !== "") {
-      const data = {
-        moveId: videoData._id,
-        title: this.state.title,
-        description: videoData.description,
-        tags: videoData.tags,
-        setId: videoData.setId._id,
-        videoData: videoData,
-        fromMoveList: false
-      };
-      this.props.editMove(data);
+      if (value !== "" || this.state.errorTitle !== null) {
+        const data = {
+          moveId: videoData._id,
+          title: value,
+          description: videoData.description,
+          tags: videoData.tags,
+          setId: videoData.setId._id,
+          videoData: videoData,
+          fromMoveList: false
+        };
+        this.props.editMove(data);
+      }
     }
   };
 
@@ -511,7 +520,7 @@ class WebmView extends Component {
       tags,
       // isFullScreenMode,
       doubleClick,
-      title,
+      // title,
       description,
       edit,
       error
@@ -541,26 +550,34 @@ class WebmView extends Component {
           <ModalBody>
             <div className="video-slider-text">
               <div
+                contenteditable={doubleClick ? "true" : "false"}
                 className="video-slider-title font-weight-bold"
                 onDoubleClick={() => this.onDoubleClick(videoData.title)}
+                onBlur={
+                  doubleClick ? e => this.handleonBlur(e, videoData) : null
+                }
               >
-                {doubleClick ? (
-                  <FormGroup>
-                    <Input
-                      id="title"
-                      type="text"
-                      placeholder="Enter a title"
-                      name="title"
-                      onChange={this.handleChange}
-                      value={title}
-                      onBlur={() => this.handleonBlur(videoData)}
-                    />
-                  </FormGroup>
+                {videoData && videoData.title ? videoData.title : "Unnamed"}
+                {/* {doubleClick ? (
+                  <>
+                    <FormGroup>
+                      <Input
+                        id="title"
+                        type="text"
+                        placeholder="Enter a title"
+                        name="title"
+                        onChange={this.handleChangeTitle}
+                        value={title}
+                        onBlur={() => this.handleonBlur(videoData)}
+                      />
+                    </FormGroup>
+                    {errorTitle ? errorTitle : null}
+                  </>
                 ) : videoData && videoData.title ? (
                   videoData.title
                 ) : (
                   "Unnamed"
-                )}
+                )} */}
               </div>
               {!isShareable ? (
                 <div className="video-slider-dropDown">
@@ -896,7 +913,8 @@ class WebmView extends Component {
               </div>
             </div>
             <div className="text-right pr-4">
-              {videoData && videoData.tags && videoData.tags.length ? (
+              {(videoData && videoData.tags && videoData.tags.length) ||
+              (videoData && videoData.description) ? (
                 <span
                   className="cursor_pointer"
                   onClick={() => this.openAddTagsModal(videoData._id, "edit")}
