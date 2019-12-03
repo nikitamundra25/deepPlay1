@@ -497,6 +497,9 @@ header{
       border-radius: 50%;
       padding: 8px;
       color: #fff;
+      width: 30px;
+      height: 30px;
+      line-height: 14px;
     }
 
     color: $dashboardTextColor;
@@ -1111,7 +1114,7 @@ header{
     }
     input {
       max-width: 100%;
-      min-width: 248px;
+      min-width: 258px;
       font-size: 14px;
       padding: 6px;
       height: auto;

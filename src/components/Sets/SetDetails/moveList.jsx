@@ -64,7 +64,8 @@ class MoveList extends React.Component {
       moveLoadingCount: -1,
       errors: "",
       eleHeight: "",
-      windowHeight: ""
+      windowHeight: "",
+      stickyHeaderWidth:null,
     };
   }
 
@@ -82,13 +83,28 @@ class MoveList extends React.Component {
   /*  
   */
 
-  listenScrollEvent = e => {
-    if (window.scrollY > 180) {
+ listenScrollEvent = e => {
+  let offsetElemnt = document.getElementById("get-sticky-header");
+  let offsetElemntInner = document.getElementById("get-sticky-inner-header");
+  let offsetElemntSubInner = document.getElementById("get-sticky-sub-inner-header");
+  
+  if(offsetElemnt){
+    let offsetWidth = offsetElemnt.getBoundingClientRect();
+    if (offsetWidth.top+125 <= 1) {
+      
+      console.log(offsetWidth.top, offsetWidth.left, offsetElemntInner.getBoundingClientRect().left,offsetElemntInner.offsetWidth ,"offsetWidth---------");
+      
+      this.setState({
+        stickyHeaderWidth: offsetElemntInner.offsetWidth
+      })
+      offsetElemntInner.style.left=offsetElemntSubInner.getBoundingClientRect().left+"px";
       this.setState({ backgroundClass: "sticky-header" });
     } else {
+      offsetElemntInner.style.left=50+"%";
       this.setState({ backgroundClass: "" });
     }
-  };
+  }
+};
 
   handleVideoHoverLeave = () => {
     this.setState({
@@ -608,7 +624,8 @@ class MoveList extends React.Component {
       isLoadImage,
       isMoveLoadingCount,
       moveLoadingCount,
-      errors
+      errors,
+      stickyHeaderWidth
       // eleHeight,
       // windowHeight
     } = this.state;
@@ -686,7 +703,8 @@ class MoveList extends React.Component {
             >
               {selectedMoveIds && selectedMoveIds.length ? (
                 <div className={` ${backgroundClass}`} id="get-sticky-header">
-                  <div className={"selected-moves selected-detail-page"}>
+                        <div className="selected-moves-main" id="get-sticky-sub-inner-header" style={{width: stickyHeaderWidth}} ></div>
+                  <div className={"selected-moves selected-detail-page"} id="get-sticky-inner-header">
                     <div
                       className={
                         "d-flex justify-content-between align-items-center "
