@@ -549,7 +549,9 @@ const updateMoveDetailsAndTrimVideo = async (
         .setVideoDuration(duration)
         .setVideoFormat("webm")
         .save(videoFileMain, async (err: any, file: any) => {
-          console.log(err, videoFile, file);
+          console.log("=========================")
+          console.log(err);
+          console.log("=========================");
           if (err) {
             return res.status(400).json({
               message:
