@@ -81,44 +81,47 @@ class FrameDetails extends Component {
     const { videoMetaData } = this.props;
     const { duration } = videoMetaData || {};
     const { seconds: maxValue } = duration || {};
+    if (min >= 0) {
+      if (min !== time.min && min >= max) {
+        max =
+          min + AppConfig.MAX_VIDEO_LENGTH < maxValue
+            ? min + AppConfig.MAX_VIDEO_LENGTH
+            : maxValue;
+        value.max = max;
+      } else if (max !== time.max && min >= max) {
+        min =
+          max - AppConfig.MAX_VIDEO_LENGTH < 0
+            ? max - AppConfig.MAX_VIDEO_LENGTH
+            : 0;
+        value.min = min;
+      }
+      if (max - min > AppConfig.MAX_VIDEO_LENGTH) {
+        this.setState(
+          {
+            time: {
+              max: max === time.max ? min + AppConfig.MAX_VIDEO_LENGTH : max,
+              min: min === time.min ? max - AppConfig.MAX_VIDEO_LENGTH : min
+            }
+          },
+          () => {
+            this.props.onTimerChange(this.state.time);
+          }
+        );
 
-    if (min !== time.min && min >= max) {
-      max =
-        min + AppConfig.MAX_VIDEO_LENGTH < maxValue
-          ? min + AppConfig.MAX_VIDEO_LENGTH
-          : maxValue;
-      value.max = max;
-    } else if (max !== time.max && min >= max) {
-      min =
-        max - AppConfig.MAX_VIDEO_LENGTH < 0
-          ? max - AppConfig.MAX_VIDEO_LENGTH
-          : 0;
-      value.min = min;
-    }
-    if (max - min > AppConfig.MAX_VIDEO_LENGTH) {
+        return;
+      }
+
       this.setState(
         {
-          time: {
-            max: max === time.max ? min + AppConfig.MAX_VIDEO_LENGTH : max,
-            min: min === time.min ? max - AppConfig.MAX_VIDEO_LENGTH : min
-          }
+          time: value
         },
         () => {
           this.props.onTimerChange(this.state.time);
         }
       );
-
-      return;
+    } else {
+      return
     }
-
-    this.setState(
-      {
-        time: value
-      },
-      () => {
-        this.props.onTimerChange(this.state.time);
-      }
-    );
   };
   /**
    *
@@ -148,88 +151,16 @@ class FrameDetails extends Component {
     const { min, max } = time;
     const { videoMetaData } = this.props;
     const { duration } = videoMetaData || {};
-    if (
-      parseInt(max) - parseInt(min) === AppConfig.MAX_VIDEO_LENGTH ||
-      parseInt(max) - parseInt(min) === 1
-    ) {
-      if (e.keyCode === 38) {
-        if (SecondsToMMSSMM(max + 0.1) <= SecondsToMMSSMM(duration.seconds)) {
-          let changeValue = {
-            min: min + 0.1,
-            max: max + 0.1
-          };
-          this.setState(
-            {
-              time: changeValue
-            },
-            () => {
-              this.props.onTimerChange(this.state.time);
-            }
-          );
-        }
-      } else if (e.keyCode === 40) {
-        if (min > 0) {
-          let changeValue = {
-            min: min - 0.1,
-            max: max - 0.1
-          };
-          this.setState(
-            {
-              time: changeValue
-            },
-            () => {
-              this.props.onTimerChange(this.state.time);
-            }
-          );
-        }
-      } else {
-        this.setState(
-          {
-            time: time
-          },
-          () => {
-            this.props.onTimerChange(this.state.time);
-          }
-        );
-      }
-    } else {
-      if (name === "from") {
+    const trimmValue = e.target.value
+    if (parseInt(trimmValue) >= 0) {
+      if (
+        parseInt(max) - parseInt(min) === AppConfig.MAX_VIDEO_LENGTH ||
+        parseInt(max) - parseInt(min) === 1
+      ) {
         if (e.keyCode === 38) {
           if (SecondsToMMSSMM(max + 0.1) <= SecondsToMMSSMM(duration.seconds)) {
             let changeValue = {
               min: min + 0.1,
-              max: max
-            };
-            this.setState(
-              {
-                time: changeValue
-              },
-              () => {
-                this.props.onTimerChange(this.state.time);
-              }
-            );
-          }
-        } else if (e.keyCode === 40) {
-          if (min > 0) {
-            let changeValue = {
-              min: min - 0.1,
-              max: max
-            };
-            this.setState(
-              {
-                time: changeValue
-              },
-              () => {
-                this.props.onTimerChange(this.state.time);
-              }
-            );
-          }
-        }
-      } else {
-        if (e.keyCode === 38) {
-          if (SecondsToMMSSMM(max + 0.1) <= SecondsToMMSSMM(duration.seconds)) {
-            let changeValue = {
-              min: min,
               max: max + 0.1
             };
             this.setState(
@@ -244,7 +175,7 @@ class FrameDetails extends Component {
         } else if (e.keyCode === 40) {
           if (min > 0) {
             let changeValue = {
-              min: min,
+              min: min - 0.1,
               max: max - 0.1
             };
             this.setState(
@@ -255,6 +186,81 @@ class FrameDetails extends Component {
                 this.props.onTimerChange(this.state.time);
               }
             );
+          }
+        } else {
+          this.setState(
+            {
+              time: time
+            },
+            () => {
+              this.props.onTimerChange(this.state.time);
+            }
+          );
+        }
+      } else {
+        if (name === "from") {
+          if (e.keyCode === 38) {
+            if (SecondsToMMSSMM(max + 0.1) <= SecondsToMMSSMM(duration.seconds)) {
+              let changeValue = {
+                min: min + 0.1,
+                max: max
+              };
+              this.setState(
+                {
+                  time: changeValue
+                },
+                () => {
+                  this.props.onTimerChange(this.state.time);
+                }
+              );
+            }
+          } else if (e.keyCode === 40) {
+            if (min > 0) {
+              let changeValue = {
+                min: min - 0.1,
+                max: max
+              };
+              this.setState(
+                {
+                  time: changeValue
+                },
+                () => {
+                  this.props.onTimerChange(this.state.time);
+                }
+              );
+            }
+          }
+        } else {
+          if (e.keyCode === 38) {
+            if (SecondsToMMSSMM(max + 0.1) <= SecondsToMMSSMM(duration.seconds)) {
+              let changeValue = {
+                min: min,
+                max: max + 0.1
+              };
+              this.setState(
+                {
+                  time: changeValue
+                },
+                () => {
+                  this.props.onTimerChange(this.state.time);
+                }
+              );
+            }
+          } else if (e.keyCode === 40) {
+            if (min > 0) {
+              let changeValue = {
+                min: min,
+                max: max - 0.1
+              };
+              this.setState(
+                {
+                  time: changeValue
+                },
+                () => {
+                  this.props.onTimerChange(this.state.time);
+                }
+              );
+            }
           }
         }
       }
@@ -282,8 +288,8 @@ class FrameDetails extends Component {
               return type === "min"
                 ? `${SecondsToMMSSMM(time.min >= 0 ? time.min : 0)}`
                 : type === "max"
-                ? `${SecondsToMMSSMM(time.max >= 0 ? time.max : 0)}`
-                : null;
+                  ? `${SecondsToMMSSMM(time.max >= 0 ? time.max : 0)}`
+                  : null;
             }}
             value={time}
             onChange={this.labelValueChange}
