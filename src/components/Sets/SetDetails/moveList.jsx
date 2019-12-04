@@ -85,7 +85,7 @@ class MoveList extends React.Component {
   
   if(offsetElemnt){
     let offsetWidth = offsetElemnt.getBoundingClientRect();
-    if (offsetWidth.top+125 <= 1) {
+    if (offsetWidth.top+110 <= 1) {
       
       console.log(offsetWidth.top, offsetWidth.left, offsetElemntInner.getBoundingClientRect().left,offsetElemntInner.offsetWidth ,"offsetWidth---------");
       

@@ -2371,6 +2371,11 @@ header{
   background: #000;
 }
 @media (max-width: 991px) {
+  .selected-detail-page {
+    .btn{
+      padding: 15px 22px!important;
+    }
+  }
   .auth-user-model{
   .auth-subheading{
     &::before{
