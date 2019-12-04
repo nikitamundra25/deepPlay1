@@ -135,7 +135,6 @@ class MoveList extends React.Component {
         "selected-moves selected-detail-page"
       );
     }
-
     if (prevProps.movesOfSet !== this.props.movesOfSet) {
       // eslint-disable-next-line
       this.props.movesOfSet.map((key, index) => {
