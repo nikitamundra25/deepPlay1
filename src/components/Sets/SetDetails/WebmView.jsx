@@ -263,7 +263,6 @@ class WebmView extends Component {
       });
     } else if (this.customVideo.webkitEnterFullscreen) {
       this.props.videoFullscreenReq();
-      console.log("insidee 1");
       this.customVideo.webkitEnterFullscreen();
       this.setState({
         isFullScreenMode: true
@@ -411,7 +410,6 @@ class WebmView extends Component {
 
   handleTagChange = (newValue, actionMeta) => {
     //const { tagsList } = this.props.moveReducer
-    console.log(newValue);
     if (newValue) {
       this.setState({
         tags: newValue
@@ -421,7 +419,6 @@ class WebmView extends Component {
         tags: []
       });
     }
-    console.log(`action: ${actionMeta.action}`);
     if (actionMeta.action === "create-option") {
       this.props.addTagsInTagModalRequest({
         tags: newValue[newValue.length - 1]

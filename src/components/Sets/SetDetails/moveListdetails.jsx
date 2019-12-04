@@ -205,6 +205,7 @@ class MoveListDetails extends React.Component {
               <div className="play-list-text">
                 <div
                   suppressContentEditableWarning={true}
+                  id="max-title-length"
                   className="text-capitalize play-list-heading h6 m-0"
                   contentEditable={
                     doubleClick && doubleClickIndex === index ? "true" : "false"

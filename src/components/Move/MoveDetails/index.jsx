@@ -144,7 +144,9 @@ class MoveDetails extends React.Component {
           this.props.moveReducer.moveDetails === ""
         ) {
           window.history.back();
-          toast.warn("This move has already been created.");
+          if (!toast.isActive(this.toastId)) {
+            this.toastId = toast.warn("This move has already been created.");
+          }
         }
         const { allSetList } = this.props.setReducer;
         let selectOption;
@@ -275,7 +277,6 @@ class MoveDetails extends React.Component {
    */
   handleTagChange = (newValue, actionMeta) => {
     //const { tagsList } = this.props.moveReducer
-    console.log(newValue, "kite", actionMeta);
     if (newValue) {
       this.setState({
         tags: newValue
@@ -585,6 +586,7 @@ class MoveDetails extends React.Component {
             handleSetDetails={this.handleSetDetails}
             moveUrlDetails={moveUrlDetails}
             moveDetails={moveDetails}
+            timer={timer}
             createAnother={this.createAnother}
             isCreatingAnotherMove={isCreatingAnotherMove}
           />

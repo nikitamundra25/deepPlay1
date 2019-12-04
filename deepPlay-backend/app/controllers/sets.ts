@@ -62,6 +62,11 @@ const createSet = async (req: Request, res: Response): Promise<any> => {
             isPublic: moveElement.isPublic ? moveElement.isPublic : false,
             userId: headToken.id,
             sharableLink: moveElement.sharableLink,
+            videoThumbnail: moveElement.videoThumbnail
+              ? moveElement.videoThumbnail
+              : null,
+            startTime: moveElement.startTime ? moveElement.startTime : null,
+            sortIndex: moveElement.sortIndex ? moveElement.sortIndex : null,
             status: true,
             setId: setId,
             moveURL: moveElement.moveURL,

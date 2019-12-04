@@ -20,7 +20,7 @@ class AllSearchComponent extends React.Component {
   };
   render() {
     const { searchData, isSearchLoading, profiledata } = this.props;
-    let folderList, setList, movelist;
+    let folderList, setList,  movelist;
     if (searchData && searchData.length) {
       folderList = searchData.filter(
         item =>

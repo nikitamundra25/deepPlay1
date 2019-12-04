@@ -8,10 +8,8 @@ const allSearchModule = async (req: Request, res: Response): Promise<any> => {
   try {
     const { currentUser } = req;
     const { query } = req;
-    const { search } = query
+    const { search } = query;
     const headToken: Request | any = currentUser;
-
-    const filterData: String = ''
 
     // define condition
     let condition: any = {
@@ -21,18 +19,13 @@ const allSearchModule = async (req: Request, res: Response): Promise<any> => {
       isDeleted: false
     });
     if (search !== "") {
-      index.search(search,
-        {
-          filters: filterData,
-        },
-        (err: string, hits: Object | any) => {
-          if (err) throw err;
-          return res.status(200).json({
-            data: hits.hits,
-            message: "This is algolia search data"
-          });
-        }
-      );
+      index.search(search, (err: string, hits: Object | any) => {
+        if (err) throw err;
+        return res.status(200).json({
+          data: hits.hits,
+          message: "This is algolia search data"
+        });
+      });
     } else {
       return res.status(200).json({
         data: [],
@@ -47,6 +40,4 @@ const allSearchModule = async (req: Request, res: Response): Promise<any> => {
   }
 };
 
-export {
-  allSearchModule
-};
+export { allSearchModule };
