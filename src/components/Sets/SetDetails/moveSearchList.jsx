@@ -224,7 +224,10 @@ class MoveSearchList extends React.Component {
       setId: pathName[3]
     };
     const { value } = await ConfirmBox({
-      text: "You want to remove this move! "
+      text:
+        selectedMoveIds.length > 1
+          ? "You want to remove moves! "
+          : "You want to remove this move! "
     });
     if (value) {
       this.props.getMoveBySearchRequest({
@@ -283,7 +286,10 @@ class MoveSearchList extends React.Component {
       previousSetId: data.previousSetId
     };
     const { value } = await ConfirmBox({
-      text: "You want to transfer this move! "
+      text:
+        selectedMoveIds.length > 1
+          ? "You want to transfer moves! "
+          : "You want to transfer this move! "
     });
     if (value) {
       this.props.getMoveBySearchRequest({
@@ -399,7 +405,7 @@ class MoveSearchList extends React.Component {
     this.props.videoUnSelectRequest();
     this.setState({
       isVideoChecked: false,
-      isVideoModalOpen: false,
+      isVideoModalOpen: true,
       selectedMoves: [],
       selectedMoveIds: []
     });

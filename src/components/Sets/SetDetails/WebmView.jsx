@@ -252,8 +252,6 @@ class WebmView extends Component {
    */
 
   handleVideoFullScreen = () => {
-    console.log("insidee");
-
     this.customVideo = document.getElementById("custom_video_control");
     if (this.customVideo.mozRequestFullScreen) {
       this.customVideo.mozRequestFullScreen();
@@ -385,8 +383,6 @@ class WebmView extends Component {
     const { modelInfoReducer, videoData } = this.props;
     const { modelDetails } = modelInfoReducer;
     this.props.getTagListRequest();
-    console.log("idididid", id);
-
     this.setState({
       moveIdToAddTags: id,
       tags: videoData.tags ? videoData.tags : [],

@@ -232,7 +232,7 @@ class AllSearchComponent extends React.Component {
                           //   this.props.handleSearchEmpty();
                           // }}
                           //  onClick={() => this.props.handleMoveSearch(movelist)}
-                          onClick={() => this.handleMoveSearch(movelist)}
+                          onClick={() => this.handleMoveSearch(moveData)}
                           className="cursor_pointer searched-tile"
                         >
                           <div className="searhed-img-main-wrap">
