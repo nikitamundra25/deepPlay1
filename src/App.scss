@@ -357,8 +357,7 @@ header{
         width: 100%;
       }
 
-      .play-sub-block {
-      }
+    
     }
   }
   .play-list-text {
@@ -2455,13 +2454,7 @@ header{
   .play-list-tile {
     width: 50%;
   }
-  .create-btn-wrap { 
-    max-width: 160px;
-      i{
-        position: relative;
-        top: 2px;
-      }
-  }
+
   .nav-main-section {
     .nav-inputs-wrap {
       z-index: 9;
@@ -2541,6 +2534,13 @@ header{
     z-index: 9;
   }
 
+}
+.create-btn-wrap { 
+  max-width: 160px;
+    i{
+      position: relative;
+      top: 2px;
+    }
 }
 @media (max-width: 767px) {
   body {
