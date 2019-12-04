@@ -29,6 +29,8 @@ import WebmView from "./WebmView";
 import Loader from "../../comman/Loader/Loader";
 import MoveSearchList from "./moveSearchList";
 import TransferToModal from "../../Folders/FolderDetails/transferTo";
+import qs from "query-string";
+
 // core components
 class MoveSearchComponent extends React.Component {
   constructor(props) {
@@ -50,13 +52,13 @@ class MoveSearchComponent extends React.Component {
   }
   componentDidMount = () => {
     const location = this.props.location;
+    let parsed = qs.parse(this.props.location.search);
     const pathName = location.pathname.split("/");
-    const isStarred = location.search.split("=");
     this.props.getMoveBySearchRequest({
-      search: isStarred[1],
+      search: parsed.search,
       page: 1,
-      isInfiniteScroll: false,
-      isStarred: isStarred[1]
+      isInfiniteScroll: false
+      // isStarred: isStarred[1]
     });
     this.props.getSetList({ isSetNoLimit: false });
     this.setState({

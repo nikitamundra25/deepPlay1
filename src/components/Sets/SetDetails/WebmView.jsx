@@ -252,8 +252,6 @@ class WebmView extends Component {
    */
 
   handleVideoFullScreen = () => {
-    console.log("insidee");
-
     this.customVideo = document.getElementById("custom_video_control");
     if (this.customVideo.mozRequestFullScreen) {
       this.customVideo.mozRequestFullScreen();
@@ -265,7 +263,6 @@ class WebmView extends Component {
       });
     } else if (this.customVideo.webkitEnterFullscreen) {
       this.props.videoFullscreenReq();
-      console.log("insidee 1");
       this.customVideo.webkitEnterFullscreen();
       this.setState({
         isFullScreenMode: true
@@ -385,8 +382,6 @@ class WebmView extends Component {
     const { modelInfoReducer, videoData } = this.props;
     const { modelDetails } = modelInfoReducer;
     this.props.getTagListRequest();
-    console.log("idididid", id);
-
     this.setState({
       moveIdToAddTags: id,
       tags: videoData.tags ? videoData.tags : [],
@@ -415,7 +410,6 @@ class WebmView extends Component {
 
   handleTagChange = (newValue, actionMeta) => {
     //const { tagsList } = this.props.moveReducer
-    console.log(newValue);
     if (newValue) {
       this.setState({
         tags: newValue
@@ -425,7 +419,6 @@ class WebmView extends Component {
         tags: []
       });
     }
-    console.log(`action: ${actionMeta.action}`);
     if (actionMeta.action === "create-option") {
       this.props.addTagsInTagModalRequest({
         tags: newValue[newValue.length - 1]

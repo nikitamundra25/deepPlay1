@@ -167,9 +167,10 @@ class DefaultHeader extends React.Component {
     });
   };
 
-  searchAllMove = () => {
+  searchAllMove = name => {
     this.props.redirectTo(
-      AppRoutes.MOVE_SEAECH_ALL.url + `?search=${this.state.search}`
+      AppRoutes.MOVE_SEAECH_ALL.url +
+        `?search=${name ? name : this.state.search}`
     );
     this.setState({
       search: ""
@@ -179,19 +180,24 @@ class DefaultHeader extends React.Component {
   handleVideoModal = moveURL => {
     const { modelInfoReducer } = this.props;
     const { modelDetails } = modelInfoReducer;
-    this.setState(
-      {
-        showVideo: moveURL
-      },
-      () => {
-        this.props.modelOperate({
-          modelDetails: {
-            isVideoModalOpenReq: !modelDetails.isVideoModalOpenReq
-          }
-        });
-        this.props.videoDataFromSearch();
-      }
-    );
+    const path = this.state.path.split("/");
+    if (path && path.length && path[1] === "set" && path[2] === "details") {
+      this.searchAllMove(moveURL ? moveURL.title : null);
+    } else {
+      this.setState(
+        {
+          showVideo: moveURL
+        },
+        () => {
+          this.props.modelOperate({
+            modelDetails: {
+              isVideoModalOpenReq: !modelDetails.isVideoModalOpenReq
+            }
+          });
+          this.props.videoDataFromSearch();
+        }
+      );
+    }
     this.props.videoFullscreenExit();
     this.props.getSetList({ isSetNoLimit: false });
   };
@@ -646,13 +652,13 @@ class DefaultHeader extends React.Component {
           handleOpen={this.handleSetModal}
           createSet={this.createSet}
         />
-        {showVideo && showVideo.length ? (
+        {showVideo ? (
           <WebmSearch
             isVideoModalOpen={isVideoModalOpenReq}
             handleVideoModal={this.handleVideoModal}
             video={showVideo}
             videoData={videoData}
-            showVideo={showVideo && showVideo.length ? showVideo[0] : null}
+            showVideo={showVideo ? showVideo : null}
             movesOfSet={[showVideo]}
             deleteMove={this.deleteMove}
             isStarred={this.isStarred}

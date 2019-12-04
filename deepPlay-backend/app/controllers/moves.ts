@@ -14,7 +14,7 @@ import { algoliaAppId, algoliaAPIKey } from "../config/app";
 var CronJob = require("cron").CronJob;
 const algoliasearch = require("algoliasearch");
 const client = algoliasearch(algoliaAppId, algoliaAPIKey);
-const index = client.initIndex("deep_play_data");
+const index: any = client.initIndex("deep_play_data");
 const __basedir = path.join(__dirname, "../public");
 
 /**
@@ -564,7 +564,7 @@ const updateMoveDetailsAndTrimVideo = async (
         .setVideoDuration(duration)
         .setVideoFormat("webm")
         .save(videoFileMain, async (err: any, file: any) => {
-          console.log("=========================")
+          console.log("=========================");
           console.log(err);
           console.log("=========================");
           if (err) {
@@ -914,15 +914,15 @@ const addTagsInMove = async (req: Request, res: Response): Promise<any> => {
       });
     }
     if (fromMoveList) {
-      for (let index = 0; index < moveId.length; index++) {
-        const moveid = moveId[index];
+      for (let i = 0; i < moveId.length; i++) {
+        const moveid = moveId[i];
         const result: Document | null | any = await MoveModel.findById(moveid, {
           tags: 1
         });
         const tagArr: Document | any | null = result.tags;
         if (tagArr && tagArr.length) {
           let oldTagArray: { label: string }[] = tagArr;
-          var array3 = oldTagArray.concat(
+          var array3: any[] = oldTagArray.concat(
             tags.filter(
               (item: any) =>
                 oldTagArray.findIndex((tag: any) => tag.label === item.label) <
@@ -937,6 +937,21 @@ const addTagsInMove = async (req: Request, res: Response): Promise<any> => {
               }
             }
           );
+
+          const result1: any = await MoveModel.find({ _id: moveid });
+          const stemp = result1.length ? result1[0].objectId : null;
+          if (stemp) {
+            index.partialUpdateObject(
+              {
+                tags: array3,
+                objectID: stemp
+              },
+              (err: string, content: any) => {
+                if (err) throw err;
+                console.log(content);
+              }
+            );
+          }
         } else {
           await MoveModel.updateOne(
             { _id: moveid },
@@ -946,6 +961,20 @@ const addTagsInMove = async (req: Request, res: Response): Promise<any> => {
               }
             }
           );
+          const result1: any = await MoveModel.find({ _id: moveid });
+          const stemp = result1.length ? result1[0].objectId : null;
+          if (stemp) {
+            index.partialUpdateObject(
+              {
+                tags: tags,
+                objectID: stemp
+              },
+              (err: string, content: any) => {
+                if (err) throw err;
+                console.log(content);
+              }
+            );
+          }
         }
       }
     } else {
@@ -958,6 +987,22 @@ const addTagsInMove = async (req: Request, res: Response): Promise<any> => {
           }
         }
       );
+
+      const result1: any = await MoveModel.find({ _id: moveId });
+      const stemp = result1.length ? result1[0].objectId : null;
+      if (stemp) {
+        index.partialUpdateObject(
+          {
+            description: description,
+            tags: tags,
+            objectID: stemp
+          },
+          (err: string, content: any) => {
+            if (err) throw err;
+            console.log(content);
+          }
+        );
+      }
     }
     if (fromMoveList) {
       return res.status(200).json({

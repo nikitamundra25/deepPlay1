@@ -20,7 +20,6 @@ import transfer from "../../../assets/img/set-detail-ic/transfer.svg";
 import remove from "../../../assets/img/set-detail-ic/remove.svg";
 import { ListManager } from "react-beautiful-dnd-grid";
 import MoveListDetails from "./moveListdetails";
-import videoLoading from "../../../assets/img/icons/video-poster.png";
 import { toast } from "react-toastify";
 
 // a little function to help us with reordering the result
@@ -65,7 +64,7 @@ class MoveList extends React.Component {
       errors: "",
       eleHeight: "",
       windowHeight: "",
-      stickyHeaderWidth:null,
+      stickyHeaderWidth: null,
       sourceIndex: -1,
       destinationIndex: -1
     };
@@ -78,28 +77,28 @@ class MoveList extends React.Component {
   /*  
   */
 
- listenScrollEvent = e => {
-  let offsetElemnt = document.getElementById("get-sticky-header");
-  let offsetElemntInner = document.getElementById("get-sticky-inner-header");
-  let offsetElemntSubInner = document.getElementById("get-sticky-sub-inner-header");
-  
-  if(offsetElemnt){
-    let offsetWidth = offsetElemnt.getBoundingClientRect();
-    if (offsetWidth.top+125 <= 1) {
-      
-      console.log(offsetWidth.top, offsetWidth.left, offsetElemntInner.getBoundingClientRect().left,offsetElemntInner.offsetWidth ,"offsetWidth---------");
-      
-      this.setState({
-        stickyHeaderWidth: offsetElemntInner.offsetWidth
-      })
-      offsetElemntInner.style.left=offsetElemntSubInner.getBoundingClientRect().left+"px";
-      this.setState({ backgroundClass: "sticky-header" });
-    } else {
-      offsetElemntInner.style.left=50+"%";
-      this.setState({ backgroundClass: "" });
+  listenScrollEvent = e => {
+    let offsetElemnt = document.getElementById("get-sticky-header");
+    let offsetElemntInner = document.getElementById("get-sticky-inner-header");
+    let offsetElemntSubInner = document.getElementById(
+      "get-sticky-sub-inner-header"
+    );
+
+    if (offsetElemnt) {
+      let offsetWidth = offsetElemnt.getBoundingClientRect();
+      if (offsetWidth.top + 125 <= 1) {
+        this.setState({
+          stickyHeaderWidth: offsetElemntInner.offsetWidth
+        });
+        offsetElemntInner.style.left =
+          offsetElemntSubInner.getBoundingClientRect().left + "px";
+        this.setState({ backgroundClass: "sticky-header" });
+      } else {
+        offsetElemntInner.style.left = 50 + "%";
+        this.setState({ backgroundClass: "" });
+      }
     }
-  }
-};
+  };
 
   handleVideoHoverLeave = () => {
     this.setState({
@@ -121,7 +120,6 @@ class MoveList extends React.Component {
       });
     }
     if (prevProps.isSavingWebM !== this.props.isSavingWebM) {
-      console.log("inside isSavingWebM");
       this.props.movesOfSet.map((key, index) => {
         this.myVideo = document.getElementById(`webm-video-${index}`);
         if (this.myVideo) {
@@ -135,62 +133,6 @@ class MoveList extends React.Component {
         "selected-moves selected-detail-page"
       );
     }
-
-    if (prevProps.movesOfSet !== this.props.movesOfSet) {
-      // eslint-disable-next-line
-      this.props.movesOfSet.map((key, index) => {
-        this.myVideo = document.getElementById(`webm-video-${index}`);
-        if (this.myVideo) {
-          this.myVideo.onloadstart = event => {
-            this.setState({
-              isLoadImage: false
-            });
-          };
-          this.myVideo.oncanplay = event => {
-            this.setState({
-              isLoadImage: false
-            });
-            this.myVideo.getAttribute("poster", videoLoading);
-          };
-        }
-      });
-
-      /* console.log("upperrrrrrr");
-      if (this.props.isSavingWebM[0].index !== -1) {
-        console.log("happygd,jesgf");
-        this.setState({
-          isMoveLoadingCount: true,
-          moveLoadingCount:
-            this.props.isSavingWebM[0].index - this.props.movesOfSet.length
-        });
-      } */
-    }
-
-    // if (
-    //   prevProps.isMoveStarLoading &&
-    //   prevProps.isMoveStarLoading.loading !==
-    //     this.props.isMoveStarLoading.loading
-    // ) {
-    //   if (
-    //     this.props.movesOfSet &&
-    //     this.props.movesOfSet.length &&
-    //     !this.props.movesOfSet[this.props.isMoveStarLoading.index].isStarred
-    //   ) {
-    //     this.setState({
-    //       isMarkingStar: {
-    //         index: this.props.isMoveStarLoading.index,
-    //         isChanging: true
-    //       }
-    //     });
-    //   } else {
-    //     this.setState({
-    //       isMarkingStar: {
-    //         index: this.props.isMoveStarLoading.index,
-    //         isChanging: false
-    //       }
-    //     });
-    //   }
-    // }
   };
 
   /*
@@ -241,11 +183,12 @@ class MoveList extends React.Component {
       selectedMoveIds
     });
   };
+
   handleUnselectAll = () => {
     this.props.videoUnSelectRequest();
     this.setState({
       isVideoChecked: false,
-      isVideoModalOpen: false,
+      isVideoModalOpen: true,
       selectedMoves: [],
       selectedMoveIds: []
     });
@@ -336,7 +279,10 @@ class MoveList extends React.Component {
       setId: pathName[3]
     };
     const { value } = await ConfirmBox({
-      text: "You want to remove this move! "
+      text:
+        selectedMoveIds.length > 1
+          ? "You want to remove moves!"
+          : "You want to remove this move!"
     });
     if (value) {
       this.props.getMovesOfSetRequest({
@@ -395,7 +341,10 @@ class MoveList extends React.Component {
       previousSetId: data.previousSetId
     };
     const { value } = await ConfirmBox({
-      text: "You want to transfer this move! "
+      text:
+        selectedMoveIds.length > 1
+          ? "You want to transfer moves!"
+          : "You want to transfer this move!"
     });
     if (value) {
       this.props.getMovesOfSetRequest({
@@ -475,7 +424,6 @@ class MoveList extends React.Component {
 
   handleTagChange = (newValue, actionMeta) => {
     //const { tagsList } = this.props.moveReducer
-    console.log(newValue);
     if (newValue) {
       this.setState({
         tags: newValue
@@ -538,8 +486,11 @@ class MoveList extends React.Component {
       value && value.length > 50
         ? "Title cannot have more than 50 characters"
         : "";
+
     if (error) {
-      toast.error("Title cannot have more than 50 characters");
+      if (!toast.isActive(this.toastId)) {
+        this.toastId = toast.error("Title cannot have more than 50 characters");
+      }
       return;
     } else {
       this.setState({
@@ -547,7 +498,6 @@ class MoveList extends React.Component {
         doubleClickIndex: -1,
         title: ""
       });
-
       if (this.state.title !== null || this.state.errors !== null) {
         const data = {
           moveId: videoData._id,
@@ -697,8 +647,15 @@ class MoveList extends React.Component {
             >
               {selectedMoveIds && selectedMoveIds.length ? (
                 <div className={` ${backgroundClass}`} id="get-sticky-header">
-                        <div className="selected-moves-main" id="get-sticky-sub-inner-header" style={{width: stickyHeaderWidth}} ></div>
-                  <div className={"selected-moves selected-detail-page"} id="get-sticky-inner-header">
+                  <div
+                    className="selected-moves-main"
+                    id="get-sticky-sub-inner-header"
+                    style={{ width: stickyHeaderWidth }}
+                  ></div>
+                  <div
+                    className={"selected-moves selected-detail-page"}
+                    id="get-sticky-inner-header"
+                  >
                     <div
                       className={
                         "d-flex justify-content-between align-items-center "
@@ -821,6 +778,7 @@ class MoveList extends React.Component {
                             moveLoadingCount={moveLoadingCount}
                             errors={errors}
                             isIosDevice={isIosDevice}
+                            title={title}
                           />
                         );
                       })
