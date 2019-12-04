@@ -168,6 +168,17 @@ div[data-react-beautiful-dnd-drag-handle] {
   padding: 4px 9px 7px 11px;
   font-weight: 400;
   margin-right: 5px;
+  margin-bottom: 5px;
+}
+.video-tag-wrap{
+  .video-tag-heading{
+    flex: 0 0 65px;
+  }
+  .video-tag-content{
+    display: flex;
+    flex-wrap: wrap;
+    flex: 1;
+  }
 }
 .load-class {
   border: 16px solid #f3f3f3; /* Light grey */

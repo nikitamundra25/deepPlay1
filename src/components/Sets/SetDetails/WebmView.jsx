@@ -921,14 +921,14 @@ class WebmView extends Component {
                 </span>
               ) : null}
             </div>
-            <div className="pt-3 d-flex">
+            <div className="pt-3 d-flex video-tag-wrap">
               {videoData && videoData.tags && videoData.tags.length ? (
                 <>
-                  <div className="font-weight-bold">
+                  <div className="font-weight-bold video-tag-heading">
                     {" "}
                     <i className="fa fa-tags" aria-hidden="true" /> Tags :
                   </div>
-                  <div className={"pl-2 pb-3"}>
+                  <div className={"pl-2 pb-3 video-tag-content"}>
                     {videoData.tags.map(tags => {
                       return <span className="video-tags"> {tags.value} </span>;
                     })}
@@ -939,7 +939,7 @@ class WebmView extends Component {
             <div className="mt-2">
               {videoData && videoData.description ? (
                 <div>
-                  <span className="font-weight-bold pr-2">
+                  <span className="font-weight-bold pr-2 d-inline-flex align-items-center float-left">
                     {" "}
                     <i className="fas fa-comment-alt pr-1" aria-hidden="true" />
                     Description :
