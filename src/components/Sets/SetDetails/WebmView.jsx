@@ -330,14 +330,23 @@ class WebmView extends Component {
     });
   };
 
-  handleMoveTransfer = data => {
-    this.props.transferMove(data);
+  handleMoveTransfer = async data => {
+    const { value } = await ConfirmBox({
+      text: "You want to transfer this move!"
+    });
+    if (value) {
+      this.props.transferMove(data);
+    }
   };
 
-  handlePreviousVideoPlay = () => {
+  handlePreviousVideoPlay = isSkipable => {
     const { movesOfSet } = this.props;
     const { videoIndex } = this.state;
-    this.props.loadVideoDataRequest(movesOfSet[videoIndex - 1]);
+    this.props.loadVideoDataRequest(
+      isSkipable
+        ? movesOfSet[videoIndex - 2 < 0 ? 0 : videoIndex - 2]
+        : movesOfSet[videoIndex - 1]
+    );
     this.setState({
       videoIndex: videoIndex - 1
     });
@@ -520,7 +529,18 @@ class WebmView extends Component {
       edit,
       error
     } = this.state;
-    const isFullScreenMode = document.fullscreenElement;
+
+    let isFullScreenMode =
+      document.fullscreenElement ||
+      document.webkitFullscreenElement ||
+      document.mozFullScreenElement ||
+      document.msFullscreenElement;
+    let isSkipable = false;
+    isSkipable =
+      movesOfSet[videoIndex - 1] && movesOfSet[videoIndex - 1].isMoveProcessing
+        ? true
+        : false;
+    console.log("isSkipable", isSkipable);
 
     return (
       <>
@@ -663,7 +683,7 @@ class WebmView extends Component {
                 <div className="videos-arrows-wrap">
                   {videoIndex > 0 ? (
                     <div
-                      onClick={() => this.handlePreviousVideoPlay()}
+                      onClick={() => this.handlePreviousVideoPlay(isSkipable)}
                       className="cursor_pointer left-arrow-wrap"
                     >
                       <i className="fa fa-angle-left" aria-hidden="true" />

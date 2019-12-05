@@ -32,7 +32,7 @@ import {
 import "./index.scss";
 import Loader from "components/comman/Loader/Loader";
 import FrameDetails from "./FrameDetails";
-import { logger } from "helper/Logger";
+// import { logger } from "helper/Logger";
 import { completeVideoEditing } from "actions/Moves";
 import closeBtn from "../../../assets/img/close-img.png";
 import MoveSuccessModal from "./moveSuccessModal";
@@ -206,9 +206,8 @@ class MoveDetails extends React.Component {
   completeEditing = e => {
     e.preventDefault();
     const { moveReducer } = this.props;
-    const { moveDetails, isSavingWebM } = moveReducer;
+    const { moveDetails } = moveReducer;
     let parsed = qs.parse(this.props.location.search);
-    logger(isSavingWebM);
     const { _id: moveId, frames } = moveDetails;
     const { timer, title, description, setMoveCount } = this.state;
     const { tags, setId } = this.videoDetails.current.getDetails();
@@ -220,7 +219,6 @@ class MoveDetails extends React.Component {
       });
       return;
     }
-    logger(this.state, moveId);
     this.setState({
       isVideoFinished: true
     });
