@@ -3,7 +3,6 @@ import loader from "../../../assets/img/loder/new-resize.gif";
 import "./index.scss";
 
 const VideoLoader = props => {
-  console.log("props", props);
   return (
     <div
       className={
