@@ -86,7 +86,12 @@ const createFolder = async (req: Request, res: Response): Promise<any> => {
                 status: true,
                 setId: setId,
                 moveURL: moveElement.moveURL,
+                videoThumbnail: moveElement.videoThumbnail
+                  ? moveElement.videoThumbnail
+                  : null,
+                sortIndex: moveElement.sortIndex ? moveElement.sortIndex : null,
                 sourceUrl: moveElement.sourceUrl ? moveElement.sourceUrl : null,
+                startTime: moveElement.startTime ? moveElement.startTime : null,
                 isYoutubeUrl: moveElement.isYoutubeUrl
                   ? moveElement.isYoutubeUrl
                   : false

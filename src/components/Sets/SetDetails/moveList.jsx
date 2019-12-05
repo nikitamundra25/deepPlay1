@@ -424,7 +424,6 @@ class MoveList extends React.Component {
 
   handleTagChange = (newValue, actionMeta) => {
     //const { tagsList } = this.props.moveReducer
-    console.log(newValue);
     if (newValue) {
       this.setState({
         tags: newValue
@@ -487,8 +486,11 @@ class MoveList extends React.Component {
       value && value.length > 50
         ? "Title cannot have more than 50 characters"
         : "";
+
     if (error) {
-      toast.error("Title cannot have more than 50 characters");
+      if (!toast.isActive(this.toastId)) {
+        this.toastId = toast.error("Title cannot have more than 50 characters");
+      }
       return;
     } else {
       this.setState({
@@ -496,7 +498,6 @@ class MoveList extends React.Component {
         doubleClickIndex: -1,
         title: ""
       });
-
       if (this.state.title !== null || this.state.errors !== null) {
         const data = {
           moveId: videoData._id,
@@ -575,7 +576,6 @@ class MoveList extends React.Component {
     const location = this.props.location;
     const isStarred = location.search.split("=");
     const serachContent = location.search.split("search");
-
     return (
       <section className="play-list-collection set-detail-section set-detail-editble">
         <InfiniteScroll
@@ -777,6 +777,7 @@ class MoveList extends React.Component {
                             moveLoadingCount={moveLoadingCount}
                             errors={errors}
                             isIosDevice={isIosDevice}
+                            title={title}
                           />
                         );
                       })

@@ -346,7 +346,6 @@ class MoveSearchList extends React.Component {
 
   handleTagChange = (newValue, actionMeta) => {
     //const { tagsList } = this.props.moveReducer
-    console.log(newValue);
     if (newValue) {
       this.setState({
         tags: newValue
@@ -356,7 +355,6 @@ class MoveSearchList extends React.Component {
         tags: []
       });
     }
-    console.log(`action: ${actionMeta.action}`);
     if (actionMeta.action === "create-option") {
       this.props.addTagsInTagModalRequest({
         tags: newValue[newValue.length - 1]

@@ -20,7 +20,7 @@ class AllSearchComponent extends React.Component {
   };
   render() {
     const { searchData, isSearchLoading, profiledata } = this.props;
-    let folderList, setList, movelist;
+    let folderList, setList, movelist, result;
     if (searchData && searchData.length) {
       folderList = searchData.filter(
         item =>
@@ -40,6 +40,12 @@ class AllSearchComponent extends React.Component {
           item.userId === profiledata._id &&
           item.isDeleted === false
       );
+      result = movelist.reduce((unique, o) => {
+        if (!unique.some(obj => obj._id === o._id && obj._id === o._id)) {
+          unique.push(o);
+        }
+        return unique;
+      }, []);
     }
     return (
       <>
@@ -203,13 +209,13 @@ class AllSearchComponent extends React.Component {
                 </div>
               </div>
             )}
-            {movelist && movelist.length ? (
+            {result && result.length ? (
               <div className="search-result-block moves-block">
                 <div className="category-wrap">
                   <div className="category-heading">Moves</div>
-                  {movelist && movelist.length >= 5 ? (
+                  {result && result.length >= 5 ? (
                     <span
-                      onClick={this.props.searchAllMove}
+                      onClick={() => this.props.searchAllMove("null")}
                       className="view-all-wrap font-weight-bold"
                     >
                       View All
@@ -218,7 +224,7 @@ class AllSearchComponent extends React.Component {
                 </div>
                 <div className="searched-wrap">
                   <div className="searched-block">
-                    {movelist.slice(0, 5).map((moveData, index) => {
+                    {result.slice(0, 5).map((moveData, index) => {
                       return (
                         <div
                           key={index}

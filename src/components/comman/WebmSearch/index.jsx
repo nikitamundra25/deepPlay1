@@ -371,7 +371,6 @@ class WebmSearch extends Component {
     const { modelInfoReducer, videoData } = this.props;
     const { modelDetails } = modelInfoReducer;
     this.props.getTagListRequest();
-    console.log("videoData.tags",videoData.tags);
     
     this.setState({
       moveIdToAddTags: id,
@@ -401,7 +400,6 @@ class WebmSearch extends Component {
 
   handleTagChange = (newValue, actionMeta) => {
     //const { tagsList } = this.props.moveReducer
-    console.log(newValue);
     if (newValue) {
       this.setState({
         tags: newValue
@@ -411,7 +409,6 @@ class WebmSearch extends Component {
         tags: []
       });
     }
-    console.log(`action: ${actionMeta.action}`);
     if (actionMeta.action === "create-option") {
       this.props.addTagsInTagModalRequest({
         tags: newValue[newValue.length - 1]
@@ -428,7 +425,6 @@ class WebmSearch extends Component {
   };
 
   handleonBlur = (e, videoData) => {
-    console.log("videoData", videoData);
     const value = e.target.textContent;
     const error =
       value && value.length > 50

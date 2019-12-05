@@ -11,6 +11,9 @@ export interface IMove {
   moveURL: String;
   sourceUrl: String;
   isYoutubeUrl: Boolean;
+  startTime: Number;
+  videoThumbnail: String;
+  sortIndex: Number;
 }
 export interface IMoveCopy {
   title: String;

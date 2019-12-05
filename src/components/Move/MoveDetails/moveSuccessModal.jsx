@@ -10,6 +10,8 @@ class MoveSuccessModal extends React.Component {
     };
   }
 
+  componentDidMount = () => {};
+
   handleVideoPlay = () => {
     this.video = document.getElementById("video-trimmer");
     this.setState({
@@ -26,8 +28,10 @@ class MoveSuccessModal extends React.Component {
       isMoveSuccessModal,
       moveUrlDetails,
       isCreatingAnotherMove,
-      moveDetails
+      moveDetails,
+      timer
     } = this.props;
+
     //const { isPlaying } = this.state
     return (
       <>
@@ -48,11 +52,18 @@ class MoveSuccessModal extends React.Component {
               <div className="w-100 set-content-wrap pt-0 mt-0 ">
                 <div className="set-content-block w-100">
                   <div className="d-flex vieos-add-section video-add-banner justify-content-center align-items-center">
-                    <video width={"100%"} autoPlay loop id={"video-trimmer"} playsinline>
+                    <video
+                      width={"100%"}
+                      autoPlay
+                      loop={true}
+                      id={"video-trimmer"}
+                      playsinline
+                    >
                       <source
                         src={`${AppConfig.API_ENDPOINT}${
                           moveDetails && moveDetails.videoUrl
-                            ? moveDetails.videoUrl
+                            ? moveDetails.videoUrl +
+                              `#t=${timer.min},${timer.max}`
                             : ""
                         }`}
                       />
