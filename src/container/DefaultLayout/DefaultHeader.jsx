@@ -339,7 +339,7 @@ class DefaultHeader extends React.Component {
                                 </DropdownItem>
                               ) : (
                                 <a
-                                  href={`${APP_URL}/move`}
+                                  href={"/move"}
                                   target="_blank"
                                   rel="noopener noreferrer"
                                 >
