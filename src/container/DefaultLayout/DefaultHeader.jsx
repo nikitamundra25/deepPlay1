@@ -287,7 +287,7 @@ class DefaultHeader extends React.Component {
         ? profiledata.profileImage
         : "";
     const temp = this.state.path.split("/");
-
+    console.log("APP_URL",APP_URL)
     return (
       <>
         <header className="header-global theme-header dashboard-header">
