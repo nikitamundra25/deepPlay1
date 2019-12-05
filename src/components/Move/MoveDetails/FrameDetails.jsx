@@ -81,33 +81,42 @@ class FrameDetails extends Component {
     const { videoMetaData } = this.props;
     const { duration } = videoMetaData || {};
     const { seconds: maxValue } = duration || {};
+    console.log("max", max);
+    console.log("min", min);
+    console.log("max - min", (max - min) <= 15);
     if (min >= 0) {
       if (min !== time.min && min >= max) {
+        console.log("in 1st");
         max =
           min + AppConfig.MAX_VIDEO_LENGTH < maxValue
             ? min + AppConfig.MAX_VIDEO_LENGTH
             : maxValue;
         value.max = max;
       } else if (max !== time.max && min >= max) {
+        console.log("in 2nd");
         min =
           max - AppConfig.MAX_VIDEO_LENGTH < 0
             ? max - AppConfig.MAX_VIDEO_LENGTH
             : 0;
         value.min = min;
       }
-      if (max - min > AppConfig.MAX_VIDEO_LENGTH) {
+      if (Math.ceil(max) - Math.ceil(min) > AppConfig.MAX_VIDEO_LENGTH) {
+        console.log("in 3rd", time);
+        console.log("max", max);
+        console.log("min", min);
+        console.log("max === time.max", max === Math.ceil(time.max));
+        console.log("min === time.min", min === Math.ceil(time.min));
         this.setState(
           {
             time: {
-              max: max === time.max ? min + AppConfig.MAX_VIDEO_LENGTH : max,
-              min: min === time.min ? max - AppConfig.MAX_VIDEO_LENGTH : min
+              max: max === Math.ceil(time.max) ? min + AppConfig.MAX_VIDEO_LENGTH : max,
+              min: min === Math.ceil(time.min) ? max - AppConfig.MAX_VIDEO_LENGTH : min
             }
           },
           () => {
             this.props.onTimerChange(this.state.time);
           }
         );
-
         return;
       }
 
@@ -120,6 +129,7 @@ class FrameDetails extends Component {
         }
       );
     } else {
+      console.log("In Else condition");
       return
     }
   };
