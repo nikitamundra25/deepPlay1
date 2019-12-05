@@ -28,7 +28,6 @@ import CreateSetComponent from "../../components/Sets/createSet";
 import searchArrow from "../../assets/img/back-search.png";
 import { DebounceInput } from "react-debounce-input";
 import WebmSearch from "../../components/comman/WebmSearch";
-import { APP_URL } from "../../config/Appconfig";
 
 class DefaultHeader extends React.Component {
   constructor(props) {
@@ -168,10 +167,16 @@ class DefaultHeader extends React.Component {
   };
 
   searchAllMove = name => {
-    this.props.redirectTo(
-      AppRoutes.MOVE_SEAECH_ALL.url +
-        `?search=${name ? name : this.state.search}`
-    );
+    if (name !== "null") {
+      this.props.redirectTo(
+        AppRoutes.MOVE_SEAECH_ALL.url +
+          `?search=${name ? name : this.state.search}`
+      );
+    } else {
+      this.props.redirectTo(
+        AppRoutes.MOVE_SEAECH_ALL.url + `?search=${this.state.search}`
+      );
+    }
     this.setState({
       search: ""
     });
@@ -287,7 +292,6 @@ class DefaultHeader extends React.Component {
         ? profiledata.profileImage
         : "";
     const temp = this.state.path.split("/");
-    console.log("APP_URL",APP_URL)
     return (
       <>
         <header className="header-global theme-header dashboard-header">

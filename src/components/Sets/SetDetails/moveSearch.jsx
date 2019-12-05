@@ -69,18 +69,17 @@ class MoveSearchComponent extends React.Component {
   /*  
   */
   componentDidUpdate = ({ location, moveReducer }) => {
-    // const { location: currentLocation } = this.props;
-    // const { search } = location;
-    // const { search: currentSearch } = currentLocation;
-    // const isStarred = currentSearch.split("=");
-    // if (search !== currentSearch) {
-    //   this.props.getMovesOfSetRequest({
-    //     setId: this.state.setIdPathName,
-    //     page: 1,
-    //     isInfiniteScroll: false,
-    //     isStarred: isStarred[1]
-    //   });
-    // }
+    const { location: currentLocation } = this.props;
+    const { search } = location;
+    const { search: currentSearch } = currentLocation;
+    const isStarred = currentSearch.split("=");
+    if (search !== currentSearch) {
+      this.props.getMoveBySearchRequest({
+        search: isStarred[1],
+        page: 1,
+        isInfiniteScroll: false
+      });
+    }
     if (moveReducer.movesOfSet !== this.props.moveReducer.movesOfSet) {
       this.setState({
         moveListItem: this.props.moveReducer.movesOfSet
