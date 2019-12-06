@@ -53,12 +53,11 @@ class DefaultLayout extends React.Component {
     ) {
       this.props.redirectTo("/");
     }
-
+  
     this.getMobileOperatingSystem();
   }
 
   getMobileOperatingSystem = () => {
-    console.log("lookkk");
     let userAgent = navigator.userAgent || navigator.vendor || window.opera;
 
     // iOS detection from: http://stackoverflow.com/a/9039885/177710

@@ -53,7 +53,7 @@ class FrameDetails extends Component {
                 // get width for left and right container
                 const leftWidth = newChild.childNodes[1].style.left;
                 const rightWidth = newChild.childNodes[2].style.left;
-                const siderWidth = newChild.childNodes[0].style.width;
+                // const siderWidth = newChild.childNodes[0].style.width;
                 const actualRightWidth = 100 - parseFloat(rightWidth);
                 // set properties
                 leftContainer.style.width = leftWidth;
@@ -62,7 +62,6 @@ class FrameDetails extends Component {
                 rightContainer.style.left = rightWidth;
                 leftCount[0].style.left = leftWidth;
                 rightCount[0].style.left = rightWidth;
-                logger(leftWidth, actualRightWidth, siderWidth);
               }
             }
           }
@@ -82,35 +81,39 @@ class FrameDetails extends Component {
     const { duration } = videoMetaData || {};
     const { seconds: maxValue } = duration || {};
     if (min >= 0) {
-      if (min !== time.min && min >= max) {
+      if (min !== parseInt(time.min) && min >= max) {
         max =
-          min + AppConfig.MAX_VIDEO_LENGTH < maxValue
-            ? min + AppConfig.MAX_VIDEO_LENGTH
+          parseInt(min) + AppConfig.MAX_VIDEO_LENGTH < maxValue
+            ? parseInt(min) + AppConfig.MAX_VIDEO_LENGTH
             : maxValue;
         value.max = max;
-      } else if (max !== time.max && min >= max) {
+      } else if (max !== parseInt(time.max) && min >= max) {
         min =
           max - AppConfig.MAX_VIDEO_LENGTH < 0
             ? max - AppConfig.MAX_VIDEO_LENGTH
             : 0;
         value.min = min;
       }
-      if (max - min > AppConfig.MAX_VIDEO_LENGTH) {
+      if (parseInt(max) - parseInt(min) > AppConfig.MAX_VIDEO_LENGTH) {
         this.setState(
           {
             time: {
-              max: max === time.max ? min + AppConfig.MAX_VIDEO_LENGTH : max,
-              min: min === time.min ? max - AppConfig.MAX_VIDEO_LENGTH : min
+              max:
+                parseInt(max) === Math.round(time.max)
+                  ? parseInt(min) + AppConfig.MAX_VIDEO_LENGTH
+                  : parseInt(max),
+              min:
+                parseInt(min) === Math.round(time.min)
+                  ? parseInt(max) - AppConfig.MAX_VIDEO_LENGTH
+                  : parseInt(min)
             }
           },
           () => {
             this.props.onTimerChange(this.state.time);
           }
         );
-
         return;
       }
-
       this.setState(
         {
           time: value
@@ -120,7 +123,7 @@ class FrameDetails extends Component {
         }
       );
     } else {
-      return
+      return;
     }
   };
   /**
@@ -151,7 +154,7 @@ class FrameDetails extends Component {
     const { min, max } = time;
     const { videoMetaData } = this.props;
     const { duration } = videoMetaData || {};
-    const trimmValue = e.target.value
+    const trimmValue = e.target.value;
     if (parseInt(trimmValue) >= 0) {
       if (
         parseInt(max) - parseInt(min) === AppConfig.MAX_VIDEO_LENGTH ||
@@ -200,9 +203,25 @@ class FrameDetails extends Component {
       } else {
         if (name === "from") {
           if (e.keyCode === 38) {
-            if (SecondsToMMSSMM(max + 0.1) <= SecondsToMMSSMM(duration.seconds)) {
+            if (
+              SecondsToMMSSMM(max + 0.1) <= SecondsToMMSSMM(duration.seconds) &&
+              parseInt(min) <= parseInt(max)
+            ) {
               let changeValue = {
                 min: min + 0.1,
+                max: max
+              };
+              this.setState(
+                {
+                  time: changeValue
+                },
+                () => {
+                  this.props.onTimerChange(this.state.time);
+                }
+              );
+            } else if (parseInt(min) >= parseInt(max)) {
+              let changeValue = {
+                min: max - 1,
                 max: max
               };
               this.setState(
@@ -232,10 +251,29 @@ class FrameDetails extends Component {
           }
         } else {
           if (e.keyCode === 38) {
-            if (SecondsToMMSSMM(max + 0.1) <= SecondsToMMSSMM(duration.seconds)) {
+            if (
+              SecondsToMMSSMM(max + 0.1) <= SecondsToMMSSMM(duration.seconds) &&
+              parseInt(max) - parseInt(min) <= AppConfig.MAX_VIDEO_LENGTH
+            ) {
               let changeValue = {
                 min: min,
                 max: max + 0.1
+              };
+              this.setState(
+                {
+                  time: changeValue
+                },
+                () => {
+                  this.props.onTimerChange(this.state.time);
+                }
+              );
+            } else if (
+              parseInt(max) - parseInt(min) >=
+              AppConfig.MAX_VIDEO_LENGTH
+            ) {
+              let changeValue = {
+                min: max - 15,
+                max: max
               };
               this.setState(
                 {
@@ -288,8 +326,8 @@ class FrameDetails extends Component {
               return type === "min"
                 ? `${SecondsToMMSSMM(time.min >= 0 ? time.min : 0)}`
                 : type === "max"
-                  ? `${SecondsToMMSSMM(time.max >= 0 ? time.max : 0)}`
-                  : null;
+                ? `${SecondsToMMSSMM(time.max >= 0 ? time.max : 0)}`
+                : null;
             }}
             value={time}
             onChange={this.labelValueChange}

@@ -64,15 +64,24 @@ class MoveComponent extends React.Component {
       var match = value.match(myregexp);
       if (match) {
         const ValidYouTubeUrl = this.validateYouTubeUrl(value);
-        this.setState(
-          {
-            url: ValidYouTubeUrl,
-            isYouTubeUrl: true
-          },
-          () => {
-            this.handleMoveUpload(e);
-          }
-        );
+        if (ValidYouTubeUrl) {
+          this.setState(
+            {
+              url: ValidYouTubeUrl,
+              isYouTubeUrl: true
+            },
+            () => {
+              this.handleMoveUpload(e);
+            }
+          );
+        } else {
+          this.setState({
+            errors: {
+              validUrl:
+                'We accept only this "https://www.youtube.com/watch?v=1GWyCJHuNms" format.'
+            }
+          });
+        }
       } else {
         this.setState({
           errors: {

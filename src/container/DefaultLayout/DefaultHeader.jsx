@@ -28,7 +28,6 @@ import CreateSetComponent from "../../components/Sets/createSet";
 import searchArrow from "../../assets/img/back-search.png";
 import { DebounceInput } from "react-debounce-input";
 import WebmSearch from "../../components/comman/WebmSearch";
-import { APP_URL } from "../../config/Appconfig";
 
 class DefaultHeader extends React.Component {
   constructor(props) {
@@ -167,10 +166,17 @@ class DefaultHeader extends React.Component {
     });
   };
 
-  searchAllMove = () => {
-    this.props.redirectTo(
-      AppRoutes.MOVE_SEAECH_ALL.url + `?search=${this.state.search}`
-    );
+  searchAllMove = name => {
+    if (name !== "null") {
+      this.props.redirectTo(
+        AppRoutes.MOVE_SEAECH_ALL.url +
+          `?search=${name ? name : this.state.search}`
+      );
+    } else {
+      this.props.redirectTo(
+        AppRoutes.MOVE_SEAECH_ALL.url + `?search=${this.state.search}`
+      );
+    }
     this.setState({
       search: ""
     });
@@ -179,19 +185,24 @@ class DefaultHeader extends React.Component {
   handleVideoModal = moveURL => {
     const { modelInfoReducer } = this.props;
     const { modelDetails } = modelInfoReducer;
-    this.setState(
-      {
-        showVideo: moveURL
-      },
-      () => {
-        this.props.modelOperate({
-          modelDetails: {
-            isVideoModalOpenReq: !modelDetails.isVideoModalOpenReq
-          }
-        });
-        this.props.videoDataFromSearch();
-      }
-    );
+    const path = this.state.path.split("/");
+    if (path && path.length && path[1] === "set" && path[2] === "details") {
+      this.searchAllMove(moveURL ? moveURL.title : null);
+    } else {
+      this.setState(
+        {
+          showVideo: moveURL
+        },
+        () => {
+          this.props.modelOperate({
+            modelDetails: {
+              isVideoModalOpenReq: !modelDetails.isVideoModalOpenReq
+            }
+          });
+          this.props.videoDataFromSearch();
+        }
+      );
+    }
     this.props.videoFullscreenExit();
     this.props.getSetList({ isSetNoLimit: false });
   };
@@ -204,6 +215,25 @@ class DefaultHeader extends React.Component {
     const moveVideo = data.videoData;
     moveVideo.tags = data.tags;
     this.props.addTagsRequest({ data: data, moveVideo: moveVideo });
+  };
+
+  editMove = data => {
+    if (data.fromMoveList) {
+      const moveList = [...data.moveofSetList];
+      moveList.map((key, i) => {
+        if (data.moveId === key._id) {
+          return (moveList[i].title = data.title);
+        } else {
+          return null;
+        }
+      });
+      this.props.updateMoveRequest({ data: data, moveList: moveList });
+    } else {
+      const moveVideo = data.videoData;
+      moveVideo.title = data.title;
+      moveVideo.description = data.description;
+      this.props.updateMoveRequest({ data: data, moveVideo: moveVideo });
+    }
   };
 
   /*  */
@@ -262,7 +292,6 @@ class DefaultHeader extends React.Component {
         ? profiledata.profileImage
         : "";
     const temp = this.state.path.split("/");
-
     return (
       <>
         <header className="header-global theme-header dashboard-header">
@@ -295,11 +324,8 @@ class DefaultHeader extends React.Component {
                               color=" "
                               className="nav-dropdown-btn"
                             >
-                              <i className="fas fa-plus-square"></i> 
-                              <span className="dropdown-text">
-                                {" "}
-                             Create
-                              </span>
+                              <i className="fas fa-plus-square"></i>
+                              <span className="dropdown-text"> Create</span>
                             </DropdownToggle>
                             <DropdownMenu>
                               <DropdownItem></DropdownItem>
@@ -317,7 +343,7 @@ class DefaultHeader extends React.Component {
                                 </DropdownItem>
                               ) : (
                                 <a
-                                  href={`${APP_URL}/move`}
+                                  href={"/move"}
                                   target="_blank"
                                   rel="noopener noreferrer"
                                 >
@@ -630,13 +656,13 @@ class DefaultHeader extends React.Component {
           handleOpen={this.handleSetModal}
           createSet={this.createSet}
         />
-        {showVideo && showVideo.length ? (
+        {showVideo ? (
           <WebmSearch
             isVideoModalOpen={isVideoModalOpenReq}
             handleVideoModal={this.handleVideoModal}
             video={showVideo}
             videoData={videoData}
-            showVideo={showVideo && showVideo.length ? showVideo[0] : null}
+            showVideo={showVideo ? showVideo : null}
             movesOfSet={[showVideo]}
             deleteMove={this.deleteMove}
             isStarred={this.isStarred}
@@ -645,7 +671,7 @@ class DefaultHeader extends React.Component {
             allSetList={allSetList}
             fromMoveSearch={true}
             tagsList={tagsList}
-            editMove={data => this.props.updateMoveRequest(data)}
+            editMove={this.editMove}
             loadVideoDataRequest={loadVideoDataRequest}
             transferMove={this.props.transferMove}
             isFullScreenMode={isFullScreenMode}

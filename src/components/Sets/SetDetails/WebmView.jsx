@@ -252,8 +252,6 @@ class WebmView extends Component {
    */
 
   handleVideoFullScreen = () => {
-    console.log("insidee");
-
     this.customVideo = document.getElementById("custom_video_control");
     if (this.customVideo.mozRequestFullScreen) {
       this.customVideo.mozRequestFullScreen();
@@ -265,7 +263,6 @@ class WebmView extends Component {
       });
     } else if (this.customVideo.webkitEnterFullscreen) {
       this.props.videoFullscreenReq();
-      console.log("insidee 1");
       this.customVideo.webkitEnterFullscreen();
       this.setState({
         isFullScreenMode: true
@@ -333,14 +330,23 @@ class WebmView extends Component {
     });
   };
 
-  handleMoveTransfer = data => {
-    this.props.transferMove(data);
+  handleMoveTransfer = async data => {
+    const { value } = await ConfirmBox({
+      text: "You want to transfer this move!"
+    });
+    if (value) {
+      this.props.transferMove(data);
+    }
   };
 
-  handlePreviousVideoPlay = () => {
+  handlePreviousVideoPlay = isSkipable => {
     const { movesOfSet } = this.props;
     const { videoIndex } = this.state;
-    this.props.loadVideoDataRequest(movesOfSet[videoIndex - 1]);
+    this.props.loadVideoDataRequest(
+      isSkipable
+        ? movesOfSet[videoIndex - 2 < 0 ? 0 : videoIndex - 2]
+        : movesOfSet[videoIndex - 1]
+    );
     this.setState({
       videoIndex: videoIndex - 1
     });
@@ -413,7 +419,6 @@ class WebmView extends Component {
 
   handleTagChange = (newValue, actionMeta) => {
     //const { tagsList } = this.props.moveReducer
-    console.log(newValue);
     if (newValue) {
       this.setState({
         tags: newValue
@@ -423,7 +428,6 @@ class WebmView extends Component {
         tags: []
       });
     }
-    console.log(`action: ${actionMeta.action}`);
     if (actionMeta.action === "create-option") {
       this.props.addTagsInTagModalRequest({
         tags: newValue[newValue.length - 1]
@@ -446,7 +450,9 @@ class WebmView extends Component {
         ? "Title cannot have more than 50 characters"
         : "";
     if (error) {
-      toast.error("Title cannot have more than 50 characters");
+      if (!toast.isActive(this.toastId)) {
+        this.toastId = toast.error("Title cannot have more than 50 characters");
+      }
       return;
     } else {
       this.setState({
@@ -525,7 +531,18 @@ class WebmView extends Component {
       edit,
       error
     } = this.state;
-    const isFullScreenMode = document.fullscreenElement;
+
+    let isFullScreenMode =
+      document.fullscreenElement ||
+      document.webkitFullscreenElement ||
+      document.mozFullScreenElement ||
+      document.msFullscreenElement;
+
+    let isSkipable = false;
+    isSkipable =
+      movesOfSet[videoIndex - 1] && movesOfSet[videoIndex - 1].isMoveProcessing
+        ? true
+        : false;
 
     return (
       <>
@@ -550,7 +567,8 @@ class WebmView extends Component {
           <ModalBody>
             <div className="video-slider-text">
               <div
-                contenteditable={doubleClick ? "true" : "false"}
+                suppressContentEditableWarning={true}
+                contentEditable={doubleClick ? "true" : "false"}
                 className="video-slider-title font-weight-bold"
                 onDoubleClick={() => this.onDoubleClick(videoData.title)}
                 onBlur={
@@ -668,7 +686,7 @@ class WebmView extends Component {
                 <div className="videos-arrows-wrap">
                   {videoIndex > 0 ? (
                     <div
-                      onClick={() => this.handlePreviousVideoPlay()}
+                      onClick={() => this.handlePreviousVideoPlay(isSkipable)}
                       className="cursor_pointer left-arrow-wrap"
                     >
                       <i className="fa fa-angle-left" aria-hidden="true" />
@@ -695,7 +713,7 @@ class WebmView extends Component {
                     }
                     loop
                     // preload="auto"
-                    playsinline
+                    playsInline
                     autoPlay
                     disablecontrols="true"
                     disablepictureinpicture="true"
