@@ -183,7 +183,15 @@ class SetComponent extends React.Component {
                               </span>
                             </div>
                             <small>
-                              {setList.description ? setList.description : ""}
+                              {console.log(
+                                setList.description.length,
+                                " setList.description"
+                              )}
+                              {setList.description
+                                ? setList.description.length > 100
+                                  ? setList.description.substring(0, 80) +  "..."
+                                  : setList.description
+                                : ""}
                             </small>
                             <div className="content-number-tile">
                               {" "}
