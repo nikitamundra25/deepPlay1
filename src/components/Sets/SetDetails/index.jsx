@@ -34,6 +34,7 @@ import {
   videoFullscreenReq,
   videoFullscreenExit,
   videoSelectRequest,
+  changeHeaderRequest,
   videoUnSelectRequest
 } from "../../../actions";
 import SharableLinkModal from "../../comman/shareableLink/SharableLink";
@@ -78,7 +79,9 @@ class SetDetails extends React.Component {
       isStarred: isStarred[1]
     });
     this.props.getSetList({ isSetNoLimit: false });
-
+    if (pathName[1] === "set" && pathName[2] === "details") {
+      this.props.changeHeaderRequest();
+    }
     this.setState({
       setIdPathName: pathName[3]
     });
@@ -405,7 +408,7 @@ class SetDetails extends React.Component {
                 <i className="fas fa-plus icon-font"></i>
               </span>
               <UncontrolledTooltip placement="top" target="move">
-                Add new move
+                Create New Move
               </UncontrolledTooltip>
               <span
                 id="share"
@@ -626,6 +629,7 @@ const mapDispatchToProps = dispatch => ({
   },
   videoUnSelectRequest: data => {
     dispatch(videoUnSelectRequest(data));
-  }
+  },
+  changeHeaderRequest: () => dispatch(changeHeaderRequest())
 });
 export default connect(mapStateToProps, mapDispatchToProps)(SetDetails);

@@ -450,7 +450,9 @@ class WebmView extends Component {
         ? "Title cannot have more than 50 characters"
         : "";
     if (error) {
-      toast.error("Title cannot have more than 50 characters");
+      if (!toast.isActive(this.toastId)) {
+        this.toastId = toast.error("Title cannot have more than 50 characters");
+      }
       return;
     } else {
       this.setState({
@@ -535,12 +537,12 @@ class WebmView extends Component {
       document.webkitFullscreenElement ||
       document.mozFullScreenElement ||
       document.msFullscreenElement;
+
     let isSkipable = false;
     isSkipable =
       movesOfSet[videoIndex - 1] && movesOfSet[videoIndex - 1].isMoveProcessing
         ? true
         : false;
-    console.log("isSkipable", isSkipable);
 
     return (
       <>
@@ -565,7 +567,8 @@ class WebmView extends Component {
           <ModalBody>
             <div className="video-slider-text">
               <div
-                contenteditable={doubleClick ? "true" : "false"}
+                suppressContentEditableWarning={true}
+                contentEditable={doubleClick ? "true" : "false"}
                 className="video-slider-title font-weight-bold"
                 onDoubleClick={() => this.onDoubleClick(videoData.title)}
                 onBlur={
@@ -710,7 +713,7 @@ class WebmView extends Component {
                     }
                     loop
                     // preload="auto"
-                    playsinline
+                    playsInline
                     autoPlay
                     disablecontrols="true"
                     disablepictureinpicture="true"
