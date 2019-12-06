@@ -170,6 +170,7 @@ class FolderComponent extends React.Component {
                           onMouseLeave={() => this.closePopOver()}
                         >
                           <div className="cotent-tile d-flex content-with-tip content-with-img">
+                           
                             <div
                               className="cotent-text-tile "
                               onClick={() =>
