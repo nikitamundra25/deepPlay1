@@ -97,8 +97,8 @@ class MoveList extends React.Component {
         offsetElemntInner.style.left = 50 + "%";
         this.setState({ backgroundClass: "" });
       }
-    };
-  }
+    }
+  };
 
   handleVideoHoverLeave = () => {
     this.setState({
