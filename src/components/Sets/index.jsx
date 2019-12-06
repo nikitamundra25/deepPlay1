@@ -165,26 +165,25 @@ class SetComponent extends React.Component {
                           onClick={() => this.handleSetDetails(setList._id)}
                         >
                           <div className="cotent-text-tile cursor_pointer ">
-                            <div className="content-heading-tile d-flex">
+                            <div className="content-heading-tile  ">
                               {" "}
+
                               <span
-                                // onClick={() => this.handleSetDetails(setList._id)}
-                                className={" text-capitalize"}
+                                className={" text-capitalize content-heading-tile d-flex h5  w-100 mb-1"}
                               >
-                                <span>
-                                  {setList.isCopy
-                                    ? `Copy of ${setList.title} ${
-                                        setList.copyIndex > 0
-                                          ? `(${setList.copyIndex})`
-                                          : ""
-                                      }`
-                                    : setList.title}
-                                </span>
+                                {setList.isCopy
+                                  ? `Copy of ${setList.title} ${
+                                  setList.copyIndex > 0
+                                    ? `(${setList.copyIndex})`
+                                    : ""
+                                  }`
+                                  : setList.title}
                               </span>
-                            </div>
-                            <small>
+                              <small className="">
                               {setList.description ? setList.description : ""}
                             </small>
+                            </div>
+                           
                             <div className="content-number-tile">
                               {" "}
                               {setList.moveCount} moves
@@ -204,15 +203,15 @@ class SetComponent extends React.Component {
                                 />
                               </div>
                             ) : (
-                              <div className={""}>
-                                <img
-                                  src={emptyImg}
-                                  alt=""
-                                  width="60"
-                                  height="60"
-                                />
-                              </div>
-                            )}
+                                <div className={""}>
+                                  <img
+                                    src={emptyImg}
+                                    alt=""
+                                    width="60"
+                                    height="60"
+                                  />
+                                </div>
+                              )}
 
                             {/* <div
                             className="cotent-img-tile "
@@ -276,46 +275,46 @@ class SetComponent extends React.Component {
                 );
               })
             ) : (
-              <>
-                <Col>
-                  <div className="create-set-section mt-2 w-100">
-                    <Card className="set-content-wrap">
-                      <div className="set-content-block w-100 empty-folder-wrap">
-                        <CardHeader className="empty-folder-header">
-                          <img src={emptySetIc} alt={"Folder"} />
-                          <div className="content-header set-header">
-                            <span className="content-title">
-                              {" "}
-                              <h3>You haven't created any set yet</h3>
-                              <p>Create a Set to Organize your Moves.</p>
-                            </span>
-                          </div>
-                        </CardHeader>
-                        <CardBody className="">
-                          <div className="create-set-tile"></div>
-                          <div className="text-center">
-                            <Button
-                              color=" "
-                              type="button"
-                              className="btn-black btn mt-3 folder-create-btn"
-                              onClick={this.handleSetModal}
-                            >
-                              <i className="fas fa-plus mr-1"></i>
-                              Create New Set
+                <>
+                  <Col>
+                    <div className="create-set-section mt-2 w-100">
+                      <Card className="set-content-wrap">
+                        <div className="set-content-block w-100 empty-folder-wrap">
+                          <CardHeader className="empty-folder-header">
+                            <img src={emptySetIc} alt={"Folder"} />
+                            <div className="content-header set-header">
+                              <span className="content-title">
+                                {" "}
+                                <h3>You haven't created any set yet</h3>
+                                <p>Create a Set to Organize your Moves.</p>
+                              </span>
+                            </div>
+                          </CardHeader>
+                          <CardBody className="">
+                            <div className="create-set-tile"></div>
+                            <div className="text-center">
+                              <Button
+                                color=" "
+                                type="button"
+                                className="btn-black btn mt-3 folder-create-btn"
+                                onClick={this.handleSetModal}
+                              >
+                                <i className="fas fa-plus mr-1"></i>
+                                Create New Set
                             </Button>
-                          </div>
-                        </CardBody>
-                      </div>
-                    </Card>
-                  </div>
-                </Col>
-              </>
-            )
+                            </div>
+                          </CardBody>
+                        </div>
+                      </Card>
+                    </div>
+                  </Col>
+                </>
+              )
           ) : (
-            <Col sm={12} className="loader-col">
-              <Loader />
-            </Col>
-          )}
+              <Col sm={12} className="loader-col">
+                <Loader />
+              </Col>
+            )}
         </Row>
 
         <SharableLinkModal
