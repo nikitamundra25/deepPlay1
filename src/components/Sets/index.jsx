@@ -165,34 +165,31 @@ class SetComponent extends React.Component {
                           onClick={() => this.handleSetDetails(setList._id)}
                         >
                           <div className="cotent-text-tile cursor_pointer ">
-                            <div className="content-heading-tile d-flex">
+                            <div className="content-heading-tile  ">
                               {" "}
                               <span
-                                // onClick={() => this.handleSetDetails(setList._id)}
-                                className={" text-capitalize"}
+                                className={
+                                  " text-capitalize content-heading-tile d-flex h5  w-100 mb-1"
+                                }
                               >
-                                <span>
-                                  {setList.isCopy
-                                    ? `Copy of ${setList.title} ${
-                                        setList.copyIndex > 0
-                                          ? `(${setList.copyIndex})`
-                                          : ""
-                                      }`
-                                    : setList.title}
-                                </span>
+                                {setList.isCopy
+                                  ? `Copy of ${setList.title} ${
+                                      setList.copyIndex > 0
+                                        ? `(${setList.copyIndex})`
+                                        : ""
+                                    }`
+                                  : setList.title}
                               </span>
+                              <small className="">
+                                {setList.description
+                                  ? setList.description.length > 100
+                                    ? setList.description.substring(0, 80) +
+                                      "..."
+                                    : setList.description
+                                  : ""}
+                              </small>
                             </div>
-                            <small>
-                              {console.log(
-                                setList.description.length,
-                                " setList.description"
-                              )}
-                              {setList.description
-                                ? setList.description.length > 100
-                                  ? setList.description.substring(0, 80) +  "..."
-                                  : setList.description
-                                : ""}
-                            </small>
+
                             <div className="content-number-tile">
                               {" "}
                               {setList.moveCount} moves
