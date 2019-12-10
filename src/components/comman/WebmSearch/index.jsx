@@ -371,7 +371,7 @@ class WebmSearch extends Component {
     const { modelInfoReducer, videoData } = this.props;
     const { modelDetails } = modelInfoReducer;
     this.props.getTagListRequest();
-    
+
     this.setState({
       moveIdToAddTags: id,
       tags: videoData.tags ? videoData.tags : [],
@@ -498,13 +498,27 @@ class WebmSearch extends Component {
       moveIdToAddTags,
       moveIdToEdit,
       tags,
-      // isFullScreenMode,
+      isFullScreenMode,
       doubleClick,
       description,
       edit
     } = this.state;
-    const isFullScreenMode = document.fullscreenElement;
 
+    let isFullScreenMode1 =
+      document.fullscreenElement ||
+      document.webkitFullscreenElement ||
+      document.mozFullScreenElement ||
+      document.msFullscreenElement;
+    let playScreen = false;
+
+    if (isFullScreenMode1) {
+      if (isFullScreenMode && !isPlaying && playScreen) {
+        // console.log("inisdee");
+        this.playVideo();
+      }
+    }
+
+    playScreen = !isFullScreenMode ? (isFullScreenMode1 ? true : false) : true;
     return (
       <>
         <Modal
@@ -621,6 +635,7 @@ class WebmSearch extends Component {
                 </div>
               ) : null}
             </div>
+
             <div className="video-slider-img pb-3">
               <div className="custom-video-player" id="custom_video_control">
                 <div className="videos-arrows-wrap">
@@ -647,9 +662,9 @@ class WebmSearch extends Component {
                     id="webm-video"
                     muted={isMuted}
                     className={
-                      this.props.isFullScreenMode
-                        ? "full-video-mode video-loading-tag"
-                        : "video-loading-tag"
+                      isFullScreenMode
+                        ? "full-video-mode video-loading-tag cursor_pointer"
+                        : "video-loading-tag cursor_pointer"
                     }
                     loop
                     // preload="auto"
@@ -657,6 +672,7 @@ class WebmSearch extends Component {
                     disablecontrols="true"
                     disablepictureinpicture="true"
                     controlsList="nodownload"
+                    onClick={isPlaying ? this.pauseVideo : this.playVideo}
                   >
                     <source
                       src={`${
@@ -742,7 +758,7 @@ class WebmSearch extends Component {
                           />
                         </div>
                       </div>
-                      {isFullScreenMode ? (
+                      {isFullScreenMode1 ? (
                         <div className={"video-slider-btn ml-4 cursor_pointer"}>
                           <div className={"d-flex justify-content-between"}>
                             {videoIndex > 0 ? (
@@ -847,7 +863,7 @@ class WebmSearch extends Component {
                       </div>
                     </div>
                     <div className="control-right-block">
-                      {!isFullScreenMode ? (
+                      {!isFullScreenMode1 ? (
                         <span
                           onClick={() => this.handleVideoFullScreen()}
                           className="control-tile cursor_pointer"

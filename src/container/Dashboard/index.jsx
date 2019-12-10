@@ -139,7 +139,12 @@ class Dashboard extends React.Component {
                                       </span>
                                     </span>
                                   </div>
-                                  {set.description ? set.description : ""}
+                                 <small> {set.description
+                                  ? set.description.length > 100
+                                    ? set.description.substring(0, 80) +
+                                      "..."
+                                    : set.description
+                                  : ""}</small>
                                   <div className="content-number-tile">
                                     {" "}
                                     {set.moveCount || 0} moves

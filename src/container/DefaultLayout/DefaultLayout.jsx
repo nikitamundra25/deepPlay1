@@ -53,7 +53,7 @@ class DefaultLayout extends React.Component {
     ) {
       this.props.redirectTo("/");
     }
-
+  
     this.getMobileOperatingSystem();
   }
 

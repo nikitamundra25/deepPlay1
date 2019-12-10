@@ -156,7 +156,7 @@ const downloadYoutubeVideo = async (
   } catch (error) {
     console.log(error, "kkkkk");
     res.status(500).send({
-      message: error.message
+      message: error.msg
     });
   }
 };

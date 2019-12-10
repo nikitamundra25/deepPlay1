@@ -193,7 +193,12 @@ class FolderComponent extends React.Component {
                                 </span>
                               </div>
                               <span className={"content-sub-heading-tile"}>
-                                {folder.description ? folder.description : ""}
+                                {folder.description
+                                  ? folder.description.length > 100
+                                    ? folder.description.substring(0, 80) +
+                                      "..."
+                                    : folder.description
+                                  : ""}
                               </span>
                             </div>
                             <div className="d-flex img-tile-wrap cursor_pointer">
@@ -272,7 +277,7 @@ class FolderComponent extends React.Component {
                                 onClick={this.handleFolderModel}
                               >
                                 <i className="fas fa-plus mr-1"></i>
-                               Create New Folder 
+                                Create New Folder
                               </Button>
                             </div>
                           </CardBody>

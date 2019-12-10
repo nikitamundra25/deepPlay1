@@ -204,7 +204,7 @@ class WebmView extends Component {
     this.video = document.getElementById("webm-video");
     this.video.currentTime = value;
     this.setState({
-      currentTime: value
+      currentTime: parseFloat(value)
     });
   };
   /**
@@ -212,10 +212,12 @@ class WebmView extends Component {
    */
   playVideo = () => {
     this.video = document.getElementById("webm-video");
-    this.setState({
-      isPlaying: true
-    });
-    this.video.play();
+    if (this.video) {
+      this.setState({
+        isPlaying: true
+      });
+      this.video.play();
+    }
   };
   /**
    *
@@ -272,18 +274,20 @@ class WebmView extends Component {
 
   handleVideoResizeScreen = () => {
     this.customVideo = document.getElementById("custom_video_control");
-    if (this.customVideo.mozRequestFullScreen) {
-      document.mozCancelFullScreen();
-    } else if (this.customVideo.webkitExitFullscreen) {
-      document.exitFullscreen();
-      this.setState({
-        isFullScreenMode: false
-      });
-    } else {
-      document.exitFullscreen();
-      this.setState({
-        isFullScreenMode: false
-      });
+    if (this.customVideo) {
+      if (this.customVideo.mozRequestFullScreen) {
+        document.mozCancelFullScreen();
+      } else if (this.customVideo.webkitExitFullscreen) {
+        document.exitFullscreen();
+        this.setState({
+          isFullScreenMode: false
+        });
+      } else {
+        document.exitFullscreen();
+        this.setState({
+          isFullScreenMode: false
+        });
+      }
     }
   };
 
@@ -450,7 +454,9 @@ class WebmView extends Component {
         ? "Title cannot have more than 50 characters"
         : "";
     if (error) {
-      toast.error("Title cannot have more than 50 characters");
+      if (!toast.isActive(this.toastId)) {
+        this.toastId = toast.error("Title cannot have more than 50 characters");
+      }
       return;
     } else {
       this.setState({
@@ -522,7 +528,7 @@ class WebmView extends Component {
       moveIdToAddTags,
       moveIdToEdit,
       tags,
-      // isFullScreenMode,
+      isFullScreenMode,
       doubleClick,
       // title,
       description,
@@ -530,17 +536,37 @@ class WebmView extends Component {
       error
     } = this.state;
 
-    let isFullScreenMode =
+    let isFullScreenMode1 =
       document.fullscreenElement ||
       document.webkitFullscreenElement ||
       document.mozFullScreenElement ||
       document.msFullscreenElement;
+
     let isSkipable = false;
     isSkipable =
       movesOfSet[videoIndex - 1] && movesOfSet[videoIndex - 1].isMoveProcessing
         ? true
         : false;
-    console.log("isSkipable", isSkipable);
+    let playScreen = false;
+
+    if (isFullScreenMode1) {
+      if (isFullScreenMode && !isPlaying && playScreen) {
+        // console.log("inisdee");
+        this.playVideo();
+      }
+    }
+
+    playScreen = !isFullScreenMode ? (isFullScreenMode1 ? true : false) : true;
+
+    // if (!isPlaying) {
+    //   if (isFullScreenMode) {
+    //     isFullScreenMode1 = true;
+    //   }
+    // }
+
+    // if (!isFullScreenMode && !isPlaying) {
+    //   isFullScreenMode1 = false;
+    // }
 
     return (
       <>
@@ -565,7 +591,8 @@ class WebmView extends Component {
           <ModalBody>
             <div className="video-slider-text">
               <div
-                contenteditable={doubleClick ? "true" : "false"}
+                suppressContentEditableWarning={true}
+                contentEditable={doubleClick ? "true" : "false"}
                 className="video-slider-title font-weight-bold"
                 onDoubleClick={() => this.onDoubleClick(videoData.title)}
                 onBlur={
@@ -710,7 +737,7 @@ class WebmView extends Component {
                     }
                     loop
                     // preload="auto"
-                    playsinline
+                    playsInline
                     autoPlay
                     disablecontrols="true"
                     disablepictureinpicture="true"
@@ -778,10 +805,10 @@ class WebmView extends Component {
                             audioSpeed > 0.6 ? (
                               <i className="fas fa-volume-up"></i>
                             ) : (
-                              <i class="fas fa-volume-down"></i>
+                              <i className="fas fa-volume-down"></i>
                             )
                           ) : (
-                            <i class="fas fa-volume-mute"></i>
+                            <i className="fas fa-volume-mute"></i>
                           )}
                         </span>
                       </div>
@@ -802,7 +829,7 @@ class WebmView extends Component {
                           />
                         </div>
                       </div>
-                      {isFullScreenMode ? (
+                      {isFullScreenMode1 ? (
                         <div className={"video-slider-btn ml-4 cursor_pointer"}>
                           <div className={"d-flex justify-content-between"}>
                             {videoIndex > 0 ? (
@@ -907,7 +934,7 @@ class WebmView extends Component {
                       </div>
                     </div>
                     <div className="control-right-block">
-                      {!isFullScreenMode ? (
+                      {!isFullScreenMode1 ? (
                         <span
                           onClick={() => this.handleVideoFullScreen()}
                           className="control-tile cursor_pointer"
@@ -946,8 +973,13 @@ class WebmView extends Component {
                     <i className="fa fa-tags" aria-hidden="true" /> Tags :
                   </div>
                   <div className={"pl-2 pb-3 video-tag-content"}>
-                    {videoData.tags.map(tags => {
-                      return <span className="video-tags"> {tags.value} </span>;
+                    {videoData.tags.map((tags, index) => {
+                      return (
+                        <span className="video-tags" key={index}>
+                          {" "}
+                          {tags.value}{" "}
+                        </span>
+                      );
                     })}
                   </div>
                 </>

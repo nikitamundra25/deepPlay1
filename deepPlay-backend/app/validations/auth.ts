@@ -25,7 +25,7 @@ export const UpdateAdminPasswordValidation = [
     .withMessage("Please enter old password.")
     .trim()
     .custom(
-      async (password: string, {req}): Promise<any> => {
+      async (password: string, { req }): Promise<any> => {
         const { currentUser } = req;
         if (!comparePassword(password, currentUser.password)) {
           throw new Error("Old password is incorrect.");
@@ -38,4 +38,26 @@ export const UpdateAdminPasswordValidation = [
     .isEmpty()
     .withMessage("Please enter new password.")
     .trim()
+];
+
+export const LoginValidations = [
+  body("email")
+    .not()
+    .isEmpty()
+    .withMessage("Email is Required")
+    .trim(),
+  body("email")
+    .trim()
+    .isEmail()
+    .withMessage("Email is not valid"),
+  body("password")
+    .not()
+    .isEmpty()
+    .withMessage("Password is Required")
+    .trim(),
+  body("password")
+    .not()
+    .isEmpty()
+    .isLength({ min: 6 })
+    .withMessage("Password should contain atleast 6 characters")
 ];
