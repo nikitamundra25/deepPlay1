@@ -149,7 +149,12 @@ class FolderSharedLink extends React.Component {
                                 </div>
                                 <div className="content-heading-tile">
                                   {" "}
-                                  {list.description}
+                                  {list.description
+                                    ? list.description.length > 100
+                                      ? list.description.substring(0, 80) +
+                                        "..."
+                                      : list.description
+                                    : ""}
                                 </div>
 
                                 <div className="content-number-tile">

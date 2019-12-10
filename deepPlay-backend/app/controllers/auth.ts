@@ -21,6 +21,12 @@ Created By:- Rishabh Bula*/
 
 const login = async (req: Request, res: Response): Promise<any> => {
   try {
+    const errors: Result<ValidationError> = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(422).json({
+        message: ValidationFormatter(errors.mapped())
+      });
+    }
     const { body } = req;
     const { email, password } = body;
     const Email: string = email.toLowerCase();
