@@ -220,7 +220,7 @@ class DefaultLayout extends React.Component {
                 routePath !== "/public-access-denied" ? (
                   <div className="dashboard-right-wrap">
                     <div className="dashboard-right-section">
-                      <Suspense fallback={""}>
+                      <Suspense fallback={<Loader fullLoader={true} />}>
                         <Switch>
                           {routes.map((route, idx) => {
                             return route.component ? (
