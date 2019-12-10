@@ -119,7 +119,7 @@ const downloadYoutubeVideo = async (
           ytdl(body.url, { quality: "highest" }).pipe(
             (videoStream = fs.createWriteStream(originalVideoPath))
           );
-          videoStream.on("open", async function() {
+          videoStream.on("close", async function() {
             const {
               frames: framesArray,
               videoMetaData,
