@@ -11,6 +11,7 @@ export const smtpTransport = nodemailer.createTransport({
     pass:<string> "chapter247@@"
   }
 });
+
 /**
  *
  */

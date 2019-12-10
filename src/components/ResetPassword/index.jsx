@@ -24,6 +24,8 @@ import {
   ResetPasswordValidations,
   ResetPasswordValidationsMessaages
 } from "../../validations/login";
+import "./index.scss";
+
 // core components
 class ResetPasswordComponent extends React.Component {
   constructor(props) {
@@ -87,7 +89,7 @@ class ResetPasswordComponent extends React.Component {
     const { password, confirmPassword, errors } = this.state;
     return (
       <div className="forgot-password-wrap">
-        <div className="theme-container reset-header-background">
+        <div className="external-header reset-header-background">
           <Navbar
             className="d-flex navbar-main header-navbar"
             // expand="lg"
@@ -107,7 +109,7 @@ class ResetPasswordComponent extends React.Component {
           <div className="dashboard-full-section without-sidebar">
             <Row>
               <Col md={12} className={"mx-auto"}>
-                <Card className="mb-5 p-0 shadow">
+                <Card className="mb-5 p-0 mt-5 shadow">
                   <CardHeader className={"text-center"}>
                     <h4 className="my-4">Reset Password</h4>
                   </CardHeader>
