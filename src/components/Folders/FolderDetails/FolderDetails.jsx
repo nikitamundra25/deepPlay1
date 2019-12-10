@@ -27,7 +27,8 @@ import {
   updateFolderRequest,
   redirectTo,
   getAllSetRequest,
-  deleteSetRequest
+  deleteSetRequest,
+  changeHeaderRequest
 } from "../../../actions";
 import AddSetModal from "./addSet";
 import TransferToModal from "./transferTo";
@@ -65,6 +66,9 @@ class RecentFolderComponent extends React.Component {
     this.props.folderDetail({ id: pathName[3] });
     this.props.getSetsList({ folderId: pathName[3] });
     this.props.getAllSetRequest({ isSetNoLimit: true });
+     if (pathName[1] === "folder" && pathName[2] === "details") {
+      this.props.changeHeaderRequest();
+    }
     this.setState({
       folderId: pathName[3],
       page: parseInt(page) || 1
@@ -604,7 +608,8 @@ const mapDispatchToProps = dispatch => ({
   getAllSetRequest: data => dispatch(getAllSetRequest(data)),
   onDeleteSets: data => {
     dispatch(deleteSetRequest(data));
-  }
+  },
+   changeHeaderRequest: () => dispatch(changeHeaderRequest())
 });
 
 export default connect(
