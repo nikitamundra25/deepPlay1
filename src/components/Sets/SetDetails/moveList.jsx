@@ -424,6 +424,7 @@ class MoveList extends React.Component {
 
   handleTagChange = (newValue, actionMeta) => {
     //const { tagsList } = this.props.moveReducer
+
     if (newValue) {
       this.setState({
         tags: newValue
@@ -576,6 +577,7 @@ class MoveList extends React.Component {
     const location = this.props.location;
     const isStarred = location.search.split("=");
     const serachContent = location.search.split("search");
+
     return (
       <section className="play-list-collection set-detail-section set-detail-editble">
         <InfiniteScroll

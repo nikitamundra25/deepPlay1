@@ -27,7 +27,8 @@ import {
   updateFolderRequest,
   redirectTo,
   getAllSetRequest,
-  deleteSetRequest
+  deleteSetRequest,
+  changeHeaderRequest
 } from "../../../actions";
 import AddSetModal from "./addSet";
 import TransferToModal from "./transferTo";
@@ -65,6 +66,9 @@ class RecentFolderComponent extends React.Component {
     this.props.folderDetail({ id: pathName[3] });
     this.props.getSetsList({ folderId: pathName[3] });
     this.props.getAllSetRequest({ isSetNoLimit: true });
+    if (pathName[1] === "folder" && pathName[2] === "details") {
+      this.props.changeHeaderRequest();
+    }
     this.setState({
       folderId: pathName[3],
       page: parseInt(page) || 1
@@ -315,7 +319,7 @@ class RecentFolderComponent extends React.Component {
             <div className="sub-title">
               {folderDetails ? folderDetails.description : ""}
             </div>
-            <div className="sub-title">
+            <div className="sub-title pt-2">
               Total sets: {totalSetsInFolder ? totalSetsInFolder : 0}
             </div>
           </span>
@@ -340,7 +344,7 @@ class RecentFolderComponent extends React.Component {
             <UncontrolledTooltip placement="top" target="share">
               Get Shareable Link
             </UncontrolledTooltip>
-            <UncontrolledDropdown className="header-dropdown  ">
+            <UncontrolledDropdown className="header-dropdown">
               <DropdownToggle color={" "} className="mr-0">
                 <span id="edit" className="cursor_pointer ml-4 mr-0">
                   <i className="fas fa-sliders-h icon-font"></i>
@@ -399,7 +403,11 @@ class RecentFolderComponent extends React.Component {
                             </div>
                             <span className={"text-capitalize"}>
                               <small>
-                                {list.description ? list.description : ""}
+                                {list.description
+                                  ? list.description.length > 100
+                                    ? list.description.substring(0, 80) + "..."
+                                    : list.description
+                                  : ""}
                               </small>
                             </span>
                             <div className="content-number-tile">
@@ -604,7 +612,8 @@ const mapDispatchToProps = dispatch => ({
   getAllSetRequest: data => dispatch(getAllSetRequest(data)),
   onDeleteSets: data => {
     dispatch(deleteSetRequest(data));
-  }
+  },
+  changeHeaderRequest: () => dispatch(changeHeaderRequest())
 });
 
 export default connect(

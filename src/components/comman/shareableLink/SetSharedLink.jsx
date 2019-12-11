@@ -168,8 +168,7 @@ class SetSharedLink extends React.Component {
                       : "No Title "}
                   </div>
                   <div className="sub-title">
-                    {decryptedSetDetails ? decryptedSetDetails.moveCount : 0}{" "}
-                    Moves
+                    {decryptedSetDetails ? decryptedSetDetails.description : ""}
                   </div>
                 </span>
               </div>
