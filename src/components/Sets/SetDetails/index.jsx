@@ -110,6 +110,7 @@ class SetDetails extends React.Component {
       });
     }
   };
+
   onTogglePublicAccess = isPublic => {
     const location = this.props.location;
     const pathName = location.pathname.split("/");
@@ -261,6 +262,8 @@ class SetDetails extends React.Component {
   };
 
   addTagstoMove = data => {
+    const { moveReducer } = this.props;
+    const { movesOfSet } = moveReducer;
     if (data.fromMoveList) {
       const moveList = [...data.moveofSetList];
       moveList.map((key, i) => {
@@ -280,7 +283,13 @@ class SetDetails extends React.Component {
       const moveVideo = data.videoData;
       moveVideo.tags = data.tags;
       moveVideo.description = data.description;
-      this.props.addTagsRequest({ data: data, moveVideo: moveVideo });
+      let moveData = [...movesOfSet];
+      moveData[moveVideo.id].tags = data.tags;
+      this.props.addTagsRequest({
+        data: data,
+        moveVideo: moveVideo,
+        moveData: moveData
+      });
     }
   };
 
@@ -395,9 +404,9 @@ class SetDetails extends React.Component {
                     : setDetails.title
                   : "MySets"}
               </div>
-              {/* <div className="sub-title">
-                Total Move {setDetails ? `${setDetails.moveCount}` : 0}
-              </div> */}
+              <div className="sub-title">
+                {setDetails ? setDetails.description : ""}
+              </div>
             </span>
             <div className="d-flex  justify-content-center align-items-between">
               <span

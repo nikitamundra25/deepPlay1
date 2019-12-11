@@ -29,7 +29,7 @@ class MoveListDetails extends React.Component {
       doubleClickIndex,
       onDoubleClick,
       handleonBlur,
-      isLoadImage,
+      // isLoadImage,
       sourceIndex,
       destinationIndex,
       isSortIndexUpdate,
@@ -189,7 +189,6 @@ class MoveListDetails extends React.Component {
                         draggable="true"
                         onContextMenu={e => e.preventDefault()}
                         loop
-                        className={isLoadImage ? "load-class" : ""}
                         playsInline
                       >
                         <source src={`${video.moveURL}`} type="video/webm" />

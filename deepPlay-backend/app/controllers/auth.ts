@@ -351,7 +351,8 @@ const userVerifyLink = async (req: Request, res: Response): Promise<any> => {
     if (!userData) {
       return res.status(400).json({
         responsecode: 400,
-        message: "Your session has been expired.",
+        message:
+          "Your reset password link has been expired. Please try again with the new one.",
         success: false
       });
     }

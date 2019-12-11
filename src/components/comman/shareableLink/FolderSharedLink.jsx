@@ -122,7 +122,7 @@ class FolderSharedLink extends React.Component {
                   {" "}
                   {decryptedDetails ? decryptedDetails.description : ""}
                 </div>
-                <div className="sub-title">
+                <div className="sub-title pt-2">
                   Total sets: {totalSets ? totalSets : 0}
                 </div>
               </span>
@@ -148,18 +148,20 @@ class FolderSharedLink extends React.Component {
                                   <span>{list.title}</span>
                                 </div>
                                 <div className="content-heading-tile">
-                                  {" "}
-                                  {list.description
-                                    ? list.description.length > 100
-                                      ? list.description.substring(0, 80) +
-                                        "..."
-                                      : list.description
-                                    : ""}
+                                  <small>
+                                    {" "}
+                                    {list.description
+                                      ? list.description.length > 100
+                                        ? list.description.substring(0, 80) +
+                                          "..."
+                                        : list.description
+                                      : ""}
+                                  </small>
                                 </div>
 
                                 <div className="content-number-tile">
                                   {" "}
-                                  {list.moveCount} items
+                                  {list.moveCount} sets
                                 </div>
                               </div>
                               {list.recentlyAddMoveImg ? (

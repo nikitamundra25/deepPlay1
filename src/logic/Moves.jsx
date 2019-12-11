@@ -17,7 +17,7 @@ import {
   starredMovesSuccess,
   getTagListSuccess,
   getAllSetRequest,
-  videoCancelSuccess,
+  videoCancelSuccess
 } from "../actions";
 import { AppRoutes } from "../config/AppRoutes";
 import { toast } from "react-toastify";
@@ -195,7 +195,7 @@ const completeVideoEditingLogic = createLogic({
         dispatch(
           modelOpenRequest({
             modelDetails: {
-              isMoveSuccessModal: false,
+              //isMoveSuccessModal: false,
               createSetModalOpen: false
             }
           })
@@ -517,7 +517,12 @@ const addTagsLogic = createLogic({
       if (action.payload.data.fromMoveList) {
         dispatch(addTagsSuccess({ movesOfSet: action.payload.moveList }));
       } else {
-        dispatch(addTagsSuccess({ videoData: action.payload.moveVideo }));
+        dispatch(
+          addTagsSuccess({
+            videoData: action.payload.moveVideo,
+            movesOfSet: action.payload.moveData
+          })
+        );
       }
       dispatch(
         modelOpenRequest({

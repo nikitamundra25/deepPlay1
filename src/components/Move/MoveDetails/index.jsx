@@ -141,7 +141,8 @@ class MoveDetails extends React.Component {
         if (
           moveURL ||
           isMoveDone ||
-          this.props.moveReducer.moveDetails === ""
+          this.props.moveReducer.moveDetails === "" ||
+          this.props.moveReducer.moveDetails.isMoveProcessing
         ) {
           window.history.back();
           if (!toast.isActive(this.toastId)) {
