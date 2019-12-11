@@ -139,12 +139,15 @@ class Dashboard extends React.Component {
                                       </span>
                                     </span>
                                   </div>
-                                 <small> {set.description
-                                  ? set.description.length > 100
-                                    ? set.description.substring(0, 80) +
-                                      "..."
-                                    : set.description
-                                  : ""}</small>
+                                  <small>
+                                    {" "}
+                                    {set.description
+                                      ? set.description.length > 100
+                                        ? set.description.substring(0, 80) +
+                                          "..."
+                                        : set.description
+                                      : ""}
+                                  </small>
                                   <div className="content-number-tile">
                                     {" "}
                                     {set.moveCount || 0} moves
@@ -280,6 +283,15 @@ class Dashboard extends React.Component {
                                         : folder.title}
                                     </span>
                                   </div>
+                                  <small>
+                                    {" "}
+                                    {folder.description
+                                      ? folder.description.length > 100
+                                        ? folder.description.substring(0, 80) +
+                                          "..."
+                                        : folder.description
+                                      : ""}
+                                  </small>
                                   <div className="content-number-tile">
                                     {" "}
                                     {folder.setCount || 0} sets

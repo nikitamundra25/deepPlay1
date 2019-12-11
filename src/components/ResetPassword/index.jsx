@@ -14,8 +14,7 @@ import {
   Container,
   CardHeader,
   FormFeedback,
-  Navbar,
-  NavbarBrand
+  Navbar
 } from "reactstrap";
 import { Link } from "react-dom";
 import Validator from "js-object-validation";
@@ -91,18 +90,18 @@ class ResetPasswordComponent extends React.Component {
       <div className="forgot-password-wrap">
         <div className="external-header reset-header-background">
           <Navbar
-            className="d-flex navbar-main header-navbar"
+            className="d-flex header-navbar"
             // expand="lg"
             id="navbar-main"
           >
-            <NavbarBrand className="m-0" to="/" tag={Link}>
-              <h3
+            <span className="m-0" to="/" tag={Link}>
+              <h4
                 className="mb-0 text-white cursor_pointer"
                 onClick={() => this.props.redirectTo("/")}
               >
-                DeepPlay
-              </h3>
-            </NavbarBrand>
+                <b>DeepPlay</b>
+              </h4>
+            </span>
           </Navbar>
         </div>
         <Container>

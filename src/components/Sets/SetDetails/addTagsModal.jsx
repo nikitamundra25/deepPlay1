@@ -15,6 +15,7 @@ import closeBtn from "../../../assets/img/close-img.png";
 
 // core components
 class AddTagModal extends React.Component {
+
   onhandleTags = () => {
     const {
       moveIdToAddTag,
