@@ -115,28 +115,37 @@ const downloadYoutubeVideo = async (
     if (trueYoutubeUrl) {
       ytdl.getInfo(body.url, (err, info) => {
         if (err) throw err;
+        // console.log("info", info.formats)
+        info.formats.forEach(element => {
+          console.log("element.resolution",element);
+          
+          if (element.resolution === '1080p') {
+            console.log("element",element.url);
+          }
+          
+        });
         if (info) {
           ytdl(body.url, { quality: "highest" }).pipe(
             (videoStream = fs.createWriteStream(originalVideoPath))
           );
-          videoStream.on("close", async function() {
-            const {
-              frames: framesArray,
-              videoMetaData,
-              videoName
-            } = await getVideoFrames(fileName);
-            delete videoMetaData.filename;
-            const frames = framesArray.map(
-              (frame: string) => `${ServerURL}/uploads/youtube-videos/${frame}`
-            );
+          videoStream.on("close", async function () {
+            // const {
+            //   frames: framesArray,
+            //   videoMetaData,
+            //   videoName
+            // } = await getVideoFrames(fileName);
+            // delete videoMetaData.filename;
+            // const frames = framesArray.map(
+            //   (frame: string) => `${ServerURL}/uploads/youtube-videos/${frame}`
+            // );
             const moveResult: Document | any = new MoveModel({
               videoUrl: videoURL,
               sourceUrl: body.url,
               isYoutubeUrl: true,
               userId: headToken.id,
-              frames: frames,
-              videoMetaData,
-              videoName,
+              // frames: frames,
+              // videoMetaData,
+              // videoName,
               setId: body.setId !== "undefined" ? body.setId : null
             });
             await moveResult.save();
@@ -545,7 +554,7 @@ const updateMoveDetailsAndTrimVideo = async (
       }
       const fileName = `${
         result.videoUrl.split(".")[0]
-      }_clip_${moment().unix()}.webm`;
+        }_clip_${moment().unix()}.webm`;
       let videoFileMain: String | any, videoOriginalFile: String | any;
       if (IsProductionMode) {
         videoFileMain = path.join(__dirname, `${fileName}`);
@@ -752,7 +761,7 @@ const isStarredMove = async (req: Request, res: Response): Promise<any> => {
     return res.status(200).json({
       message: `Move has been ${
         isStarred === "true" ? "starred" : "Unstarred"
-      } successfully!`
+        } successfully!`
     });
   } catch (error) {
     console.log(error);

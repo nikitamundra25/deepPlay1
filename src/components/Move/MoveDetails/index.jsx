@@ -54,6 +54,7 @@ class MoveDetails extends React.Component {
       selectSetOptions: null,
       title: "",
       description: "",
+      videoFrames: [],
       isUpdateDescription: false,
       timer: {
         min: 0,
@@ -174,9 +175,9 @@ class MoveDetails extends React.Component {
           selectSetOptions: selectOption
             ? selectOption
             : {
-                label: "Type to select sets",
-                value: ""
-              }
+              label: "Type to select sets",
+              value: ""
+            }
         });
       }
     }
@@ -443,9 +444,9 @@ class MoveDetails extends React.Component {
       videoMaxDuration,
       isEdit,
       errorTitle,
-      descError
+      descError,
+      videoFrames
     } = this.state;
-
     return (
       <>
         <div className="create-set-section step-2 ">
@@ -463,6 +464,11 @@ class MoveDetails extends React.Component {
                         description={description}
                         timer={timer}
                         title={title}
+                        storeVideoFrames={(frames) => {
+                          this.setState({
+                            videoFrames: frames
+                          })
+                        }}
                         errorTitle={errorTitle}
                         isEdit={isEdit}
                         videoDuration={data =>
@@ -489,17 +495,18 @@ class MoveDetails extends React.Component {
                       />
                     </>
                   ) : (
-                    <Col sm={12} className="loader-col video-loader-wrap">
-                      <Loader fullLoader={true} />
-                    </Col>
-                  )}
+                      <Col sm={12} className="loader-col video-loader-wrap">
+                        <Loader fullLoader={true} />
+                      </Col>
+                    )}
                 </Row>
                 <FrameDetails
                   videoDuration={videoDuration || []}
                   videoMaxDuration={videoMaxDuration || 0}
-                  frames={frames || []}
+                  frames={videoFrames || []}
                   videoMetaData={videoMetaData || {}}
                   onTimerChange={this.onTimerChange}
+                  moveReducer={moveReducer}
                   completeEditing={this.completeEditing}
                   isIosDevice={isIosDevice}
                 />

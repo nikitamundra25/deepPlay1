@@ -50,6 +50,7 @@ class VideoView extends React.Component {
         timeDuration: timeDuration,
         videoMaxDuration: duration
       };
+      this.props.storeVideoFrames(timeDuration)
       this.props.videoDuration(data);
     };
   }

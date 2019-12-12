@@ -311,11 +311,11 @@ class FrameDetails extends Component {
    *
    */
   render() {
-    const { frames, videoMetaData, isIosDevice } = this.props;
+    const { frames, videoMetaData, isIosDevice, moveReducer } = this.props;
     const { duration } = videoMetaData || {};
     const { seconds: maxValue } = duration || {};
     const { time } = this.state;
-
+    const { moveDetails } = moveReducer;
     return (
       <div className="fram-picker">
         <div className=" mt-5 video-controls " id={"video-controls"}>
@@ -329,8 +329,8 @@ class FrameDetails extends Component {
               return type === "min"
                 ? `${SecondsToMMSSMM(time.min >= 0 ? time.min : 0)}`
                 : type === "max"
-                ? `${SecondsToMMSSMM(time.max >= 0 ? time.max : 0)}`
-                : null;
+                  ? `${SecondsToMMSSMM(time.max >= 0 ? time.max : 0)}`
+                  : null;
             }}
             value={time}
             onChange={this.labelValueChange}
@@ -340,7 +340,22 @@ class FrameDetails extends Component {
               {orderBy(frames).map((frame, index) => {
                 return (
                   <div className="frem-inner" key={index}>
-                    <img src={frame} alt={`Frame ${index + 1}`} />
+                    <video
+                      width={"100%"}
+                      autoPlay={false}
+                      loop={true}
+
+                      id={"video-trimmer"}
+                    >
+                      <source
+                        src={`${AppConfig.API_ENDPOINT}${
+                          moveDetails && moveDetails.videoUrl
+                            ? moveDetails.videoUrl +
+                            `#t=${frame},${frames[index + 1]}`
+                            : ""
+                          }`}
+                      />
+                    </video>
                   </div>
                 );
               })}
