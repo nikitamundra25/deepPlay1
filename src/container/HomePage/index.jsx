@@ -46,13 +46,15 @@ const image = [
   },
   {
     id: 6,
-    title: "Flamenco",
-    image: "http://www.ritmoflamenco.ca/wp-content/uploads/flamencomusic.jpg"
+    title: "Folk",
+    image:
+      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcStpQd89lkIsaKUSKqNhvMfNJ0_zAUb-iovWT2zhtPrqs685k6eXA&s"
   },
   {
     id: 7,
-    title: "Flamenco",
-    image: "http://www.ritmoflamenco.ca/wp-content/uploads/flamencomusic.jpg"
+    title: "Contemporary",
+    image:
+      "https://image.freepik.com/free-photo/modern-dancer-jumping_1163-3789.jpg"
   }
 ];
 // core components
@@ -129,15 +131,19 @@ class HomePage extends React.Component {
       <Container>
         <section className="home-video-section">
           <Row className="">
-            <Col lg="5" md="6" className="d-flex flex-column justify-content-center align-items-center">
+            <Col
+              lg="5"
+              md="6"
+              className="d-flex flex-column justify-content-center align-items-center"
+            >
               <div className="banner-text text-right">
                 <h3 className="banner-heading">
                   Deconstruct Movements to Accelerate Learning
                 </h3>
                 <p className="banner-content mt-4 mt-0">
-                  Break down complex budles of movements into tiny bits to speed
-                  up your or your students' learning Watch the video to learn
-                  more
+                  Break down complex bundles of movements into tiny bits to
+                  speed up your or your students' learning. Watch the video to
+                  learn more.
                 </p>
               </div>
               <div className="text-right w-100">
@@ -154,7 +160,11 @@ class HomePage extends React.Component {
                 </Button>
               </div>
             </Col>
-            <Col lg="7" md="6" className="d-flex justify-content-center align-items-center">
+            <Col
+              lg="7"
+              md="6"
+              className="d-flex justify-content-center align-items-center"
+            >
               {/* <iframe width="560" title={"Dance"} height="315" src="https://www.youtube.com/embed/nrDtcsyd-U4" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe> */}
 
               {/* no videos */}

@@ -631,7 +631,8 @@ const updateFolder = async (req: Request, res: Response): Promise<any> => {
     const { title, description, id } = body;
     let updateFolder: IUpdateFolder = {
       title,
-      description
+      description,
+      isCopy: false
     };
     await FolderModel.findByIdAndUpdate(id, {
       $set: { ...updateFolder, updatedAt: Date.now() }

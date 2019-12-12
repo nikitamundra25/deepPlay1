@@ -229,7 +229,7 @@ const createMove = async (req: Request, res: Response): Promise<any> => {
     }
     let moveResult: Document | any;
 
-    if (!frames && !frames.length) {
+    if (!frames && !frames.length && !isYoutubeUrl) {
       let fileName: string[] = moveUrl.split("/");
       const {
         frames: framesArray,
