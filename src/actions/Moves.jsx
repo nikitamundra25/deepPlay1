@@ -32,6 +32,8 @@ export const MovesAction = {
   REMOVE_VIDEO_LOCAL_SERVER_SUCCESS: "Remove video from local server success!",
   UPDATE_MOVE_REQUEST: "Update Move Request",
   UPDATE_MOVE_SUCCESS: "Update Move Success",
+  YOUTUBE_UPDATE_MOVE_REQUEST: "YouTube Update Move Request",
+  YOUTUBE_UPDATE_MOVE_SUCCESS: "YouTube Update Move Success",
   GET_MOVE_BY_SEARCH_REQUEST: "Get Move Details By Search Request",
   GET_MOVE_BY_SEARCH_SUCCESS: "Get Move Details By Search Success",
   ADD_TAGS_IN_TAGMODAL_REQUEST: "Add Tags In Tag Modal Request",
@@ -131,6 +133,13 @@ export const removeVideoLocalServerSuccess = createAction(
 
 export const updateMoveRequest = createAction(MovesAction.UPDATE_MOVE_REQUEST);
 export const updateMoveSuccess = createAction(MovesAction.UPDATE_MOVE_SUCCESS);
+
+export const YoutubeUpdateMoveRequest = createAction(
+  MovesAction.YOUTUBE_UPDATE_MOVE_REQUEST
+);
+export const YoutubeUpdateMoveSuccess = createAction(
+  MovesAction.YOUTUBE_UPDATE_MOVE_SUCCESS
+);
 
 export const getMoveBySearchRequest = createAction(
   MovesAction.GET_MOVE_BY_SEARCH_REQUEST

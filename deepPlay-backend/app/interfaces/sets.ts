@@ -13,4 +13,5 @@ export interface ISet {
 export interface IUpdateSet {
   title: String;
   description: String;
+  isCopy: Boolean;
 }

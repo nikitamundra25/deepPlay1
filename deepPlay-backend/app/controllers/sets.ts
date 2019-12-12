@@ -454,7 +454,7 @@ const deleteSet = async (req: Request, res: Response): Promise<void> => {
 
     res.status(200).json({
       data: result[0],
-      message: "Sets has been deleted successfully"
+      message: "Set has been removed Successfully"
     });
   } catch (error) {
     console.log(error);
@@ -680,7 +680,8 @@ const updateSet = async (req: Request, res: Response): Promise<any> => {
     const { title, description, setId } = body;
     let updateSet: IUpdateSet = {
       title,
-      description
+      description,
+      isCopy: false
     };
     await SetModel.findByIdAndUpdate(setId, {
       $set: { ...updateSet, updatedAt: Date.now() }

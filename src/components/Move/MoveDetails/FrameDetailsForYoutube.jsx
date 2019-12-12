@@ -10,7 +10,7 @@ import {
 } from "helper/Time";
 import { logger } from "helper/Logger";
 
-class FrameDetails extends Component {
+class YouTubeFrameDetails extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -311,11 +311,17 @@ class FrameDetails extends Component {
    *
    */
   render() {
-    const { frames, videoMetaData, isIosDevice } = this.props;
-    const { duration } = videoMetaData || {};
-    const { seconds: maxValue } = duration || {};
+    const {
+      frames,
+      // videoMetaData,
+      isIosDevice,
+      moveReducer,
+      videoMaxDuration
+    } = this.props;
+    // const { duration } = videoMetaData || {};
+    // const { seconds: maxValue } = duration || {};
     const { time } = this.state;
-
+    const { moveDetails } = moveReducer;
     return (
       <div className="fram-picker">
         <div className=" mt-5 video-controls " id={"video-controls"}>
@@ -323,7 +329,7 @@ class FrameDetails extends Component {
           <div id={"right-container"}></div>
           <InputRange
             draggableTrack
-            maxValue={maxValue}
+            maxValue={videoMaxDuration}
             minValue={0}
             formatLabel={(val, type) => {
               return type === "min"
@@ -340,7 +346,21 @@ class FrameDetails extends Component {
               {orderBy(frames).map((frame, index) => {
                 return (
                   <div className="frem-inner" key={index}>
-                    <img src={frame} alt={`Frame ${index + 1}`} />
+                    <video
+                      width={"100%"}
+                      autoPlay={false}
+                      loop={true}
+                      id={"video-trimmer"}
+                    >
+                      <source
+                        src={
+                          moveDetails && moveDetails.videoUrl
+                            ? moveDetails.videoUrl +
+                              `#t=${frame},${frames[index + 1]}`
+                            : ""
+                        }
+                      />
+                    </video>
                   </div>
                 );
               })}
@@ -426,4 +446,4 @@ class FrameDetails extends Component {
   }
 }
 
-export default FrameDetails;
+export default YouTubeFrameDetails;

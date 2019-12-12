@@ -50,6 +50,7 @@ class VideoView extends React.Component {
         timeDuration: timeDuration,
         videoMaxDuration: duration
       };
+      this.props.storeVideoFrames(timeDuration);
       this.props.videoDuration(data);
     };
   }
@@ -75,7 +76,14 @@ class VideoView extends React.Component {
    *
    */
   render() {
-    const { moveReducer, description, title, isEdit, errorTitle } = this.props;
+    const {
+      moveReducer,
+      description,
+      title,
+      isEdit,
+      errorTitle,
+      isYoutubeUrl
+    } = this.props;
     const { moveDetails } = moveReducer;
 
     return (
@@ -128,7 +136,11 @@ class VideoView extends React.Component {
                   onContextMenu={e => e.preventDefault()}
                 >
                   <source
-                    src={`${AppConfig.API_ENDPOINT}${moveDetails.videoUrl}`}
+                    src={
+                      !isYoutubeUrl
+                        ? `${AppConfig.API_ENDPOINT}${moveDetails.videoUrl}`
+                        : moveDetails.videoUrl
+                    }
                   />
                 </video>
               ) : (

@@ -18,7 +18,8 @@ import {
   updateMove,
   getMoveBySearch,
   addTags,
-  getTagListByUserId
+  getTagListByUserId,
+  updateMoveDetailsFromYouTubeAndTrim
 } from "../controllers";
 import { ValidateAdminToken } from "../common";
 import { storageFile } from "../common/video";
@@ -46,7 +47,12 @@ MoveRouter.get(
   getMoveDetailsById
 );
 MoveRouter.get("/public-url-move-details", publicUrlMoveDetails);
-MoveRouter.post("/update", updateMoveDetailsAndTrimVideo);
+MoveRouter.post("/update", ValidateAdminToken, updateMoveDetailsAndTrimVideo);
+MoveRouter.post(
+  "/update-youtube-video",
+  ValidateAdminToken,
+  updateMoveDetailsFromYouTubeAndTrim
+);
 MoveRouter.put("/copy-move", copyMove);
 MoveRouter.put("/starred-move", ValidateAdminToken, isStarredMove);
 MoveRouter.patch("/delete-move", ValidateAdminToken, deleteMove);
@@ -63,4 +69,5 @@ MoveRouter.post(
 MoveRouter.put("/update-move", ValidateAdminToken, updateMove);
 MoveRouter.put("/add-tags", ValidateAdminToken, addTags);
 MoveRouter.get("/get-tag-list", ValidateAdminToken, getTagListByUserId);
+
 export default MoveRouter;

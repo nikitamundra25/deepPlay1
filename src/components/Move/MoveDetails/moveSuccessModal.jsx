@@ -29,10 +29,12 @@ class MoveSuccessModal extends React.Component {
       moveUrlDetails,
       isCreatingAnotherMove,
       moveDetails,
+      isYoutubeUrl,
       timer
     } = this.props;
 
     //const { isPlaying } = this.state
+
     return (
       <>
         <Modal
@@ -60,12 +62,17 @@ class MoveSuccessModal extends React.Component {
                       playsinline
                     >
                       <source
-                        src={`${AppConfig.API_ENDPOINT}${
-                          moveDetails && moveDetails.videoUrl
-                            ? moveDetails.videoUrl +
+                        src={
+                          !isYoutubeUrl
+                            ? `${AppConfig.API_ENDPOINT}${
+                                moveDetails && moveDetails.videoUrl
+                                  ? moveDetails.videoUrl +
+                                    `#t=${timer.min},${timer.max}`
+                                  : ""
+                              }`
+                            : moveDetails.videoUrl +
                               `#t=${timer.min},${timer.max}`
-                            : ""
-                        }`}
+                        }
                       />
                     </video>
                   </div>

@@ -27,7 +27,8 @@ import {
   addTagsInTagModalRequest,
   getTagListRequest,
   createSetRequest,
-  noIAmDoneRequest
+  noIAmDoneRequest,
+  YoutubeUpdateMoveRequest
 } from "../../../actions";
 import "./index.scss";
 import Loader from "components/comman/Loader/Loader";
@@ -40,6 +41,7 @@ import qs from "query-string";
 import { AppRoutes } from "../../../config/AppRoutes";
 import CreateSetComponent from "../../Sets/createSet";
 import { toast } from "react-toastify";
+import YouTubeFrameDetails from "./FrameDetailsForYoutube";
 
 // core components
 class MoveDetails extends React.Component {
@@ -54,6 +56,7 @@ class MoveDetails extends React.Component {
       selectSetOptions: null,
       title: "",
       description: "",
+      videoFrames: [],
       isUpdateDescription: false,
       timer: {
         min: 0,
@@ -209,7 +212,7 @@ class MoveDetails extends React.Component {
     const { moveReducer } = this.props;
     const { moveDetails } = moveReducer;
     let parsed = qs.parse(this.props.location.search);
-    const { _id: moveId, frames } = moveDetails;
+    const { _id: moveId, frames, isYoutubeUrl } = moveDetails;
     const { timer, title, description, setMoveCount } = this.state;
     const { tags, setId } = this.videoDetails.current.getDetails();
     if (!setId) {
@@ -223,18 +226,37 @@ class MoveDetails extends React.Component {
     this.setState({
       isVideoFinished: true
     });
-    this.props.completeVideoEditing({
-      timer,
-      moveId,
-      tags,
-      setId,
-      title: title,
-      description: description,
-      frames:
-        frames && frames.length ? (frames[5] ? frames[5] : frames[0]) : [],
-      isEdit: parsed.isEdit ? true : false,
-      setMoveCount
-    });
+    // eslint-disable-next-line
+    {
+      !isYoutubeUrl
+        ? this.props.completeVideoEditing({
+            timer,
+            moveId,
+            tags,
+            setId,
+            title: title,
+            description: description,
+            frames:
+              frames && frames.length
+                ? frames[5]
+                  ? frames[5]
+                  : frames[0]
+                : [],
+            isEdit: parsed.isEdit ? true : false,
+            setMoveCount
+          })
+        : this.props.completeYouTubeVideoEditing({
+            timer,
+            moveId,
+            tags,
+            setId,
+            title: title,
+            description: description,
+            isEdit: parsed.isEdit ? true : false,
+            setMoveCount
+          });
+    }
+
     this.handleMoveSuccessModal();
   };
   /**
@@ -259,13 +281,15 @@ class MoveDetails extends React.Component {
       videoMetaData,
       videoName,
       sourceUrl,
-      isYoutubeUrl
+      isYoutubeUrl,
+      videoThumbnail
     } = moveDetails;
     // this.handleMoveSuccessModal();
     this.props.createAnotherMoveRequest({
       moveUrl: moveDetails.videoUrl,
-      frames: frames && frames.length && frames,
-      videoMetaData: videoMetaData,
+      frames: frames && frames.length ? frames : [],
+      videoMetaData: videoMetaData ? videoMetaData : null,
+      videoThumbnail,
       sourceUrl,
       isYoutubeUrl,
       videoName: videoName
@@ -430,7 +454,7 @@ class MoveDetails extends React.Component {
       isCreatingAnotherMove,
       isIosDevice
     } = moveReducer;
-    const { frames, videoMetaData } = moveDetails || {};
+    const { frames, videoMetaData, isYoutubeUrl } = moveDetails || {};
     const {
       timer,
       title,
@@ -443,9 +467,9 @@ class MoveDetails extends React.Component {
       videoMaxDuration,
       isEdit,
       errorTitle,
-      descError
+      descError,
+      videoFrames
     } = this.state;
-
     return (
       <>
         <div className="create-set-section step-2 ">
@@ -463,8 +487,14 @@ class MoveDetails extends React.Component {
                         description={description}
                         timer={timer}
                         title={title}
+                        storeVideoFrames={frames => {
+                          this.setState({
+                            videoFrames: frames
+                          });
+                        }}
                         errorTitle={errorTitle}
                         isEdit={isEdit}
+                        isYoutubeUrl={isYoutubeUrl}
                         videoDuration={data =>
                           this.setState({
                             videoDuration: data.timeDuration,
@@ -494,15 +524,29 @@ class MoveDetails extends React.Component {
                     </Col>
                   )}
                 </Row>
-                <FrameDetails
-                  videoDuration={videoDuration || []}
-                  videoMaxDuration={videoMaxDuration || 0}
-                  frames={frames || []}
-                  videoMetaData={videoMetaData || {}}
-                  onTimerChange={this.onTimerChange}
-                  completeEditing={this.completeEditing}
-                  isIosDevice={isIosDevice}
-                />
+                {!isYoutubeUrl ? (
+                  <FrameDetails
+                    videoDuration={videoDuration || []}
+                    videoMaxDuration={videoMaxDuration || 0}
+                    frames={frames || []}
+                    videoMetaData={videoMetaData || {}}
+                    onTimerChange={this.onTimerChange}
+                    moveReducer={moveReducer}
+                    completeEditing={this.completeEditing}
+                    isIosDevice={isIosDevice}
+                  />
+                ) : (
+                  <YouTubeFrameDetails
+                    videoDuration={videoDuration || []}
+                    videoMaxDuration={videoMaxDuration || 0}
+                    frames={videoFrames || []}
+                    videoMetaData={videoMetaData || {}}
+                    onTimerChange={this.onTimerChange}
+                    moveReducer={moveReducer}
+                    completeEditing={this.completeEditing}
+                    isIosDevice={isIosDevice}
+                  />
+                )}
               </>
             </CardBody>
           </Card>
@@ -584,6 +628,7 @@ class MoveDetails extends React.Component {
             redirectToSetDetails={this.redirectToSetDetails}
             handleSetDetails={this.handleSetDetails}
             moveUrlDetails={moveUrlDetails}
+            isYoutubeUrl={isYoutubeUrl}
             moveDetails={moveDetails}
             timer={timer}
             createAnother={this.createAnother}
@@ -621,7 +666,8 @@ const mapDispatchToProps = dispatch => ({
   onSetsCreation: data => {
     dispatch(createSetRequest(data));
   },
-  noIAmDoneRequest: data => dispatch(noIAmDoneRequest(data))
+  noIAmDoneRequest: data => dispatch(noIAmDoneRequest(data)),
+  completeYouTubeVideoEditing: data => dispatch(YoutubeUpdateMoveRequest(data))
 });
 export default connect(
   mapStateToProps,

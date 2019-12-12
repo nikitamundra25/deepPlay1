@@ -20,8 +20,7 @@ class UploadImage extends Component {
     }
   };
 
-  onSelectFi
-  le = async (file, index) => {
+  onSelectFile = async (file, index) => {
     for (let x = 0; x < file.length; x++) {
       if (file[x].size > 10000000) {
         await ConfirmBox({
@@ -98,7 +97,7 @@ class UploadImage extends Component {
                 <div className="upload-file-wrap">
                   <Dropzone
                     onDrop={this.onSelectFile}
-                    accept="image/*"
+                    accept=".jpg,.png,.jpeg"
                     multiple={false}
                   >
                     {({ getRootProps, getInputProps }) => {

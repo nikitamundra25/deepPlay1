@@ -77,6 +77,10 @@ export const moveReducer = handleActions(
       ...state,
       isSavingWebM: true
     }),
+    [MovesAction.YOUTUBE_UPDATE_MOVE_REQUEST]: (state, { payload }) => ({
+      ...state,
+      isSavingWebM: true
+    }),
     [MovesAction.UPDATE_VIDEO_SETTINGS_SUCCESS]: (state, { payload }) => ({
       ...state,
       ...payload,

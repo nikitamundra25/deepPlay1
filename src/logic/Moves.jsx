@@ -250,6 +250,88 @@ const completeVideoEditingLogic = createLogic({
 /**
  *
  */
+// completed youTube video editing and send for final update
+const completeYouTubeVideoEditingLogic = createLogic({
+  type: MovesAction.YOUTUBE_UPDATE_MOVE_REQUEST,
+  async process({ action, getState }, dispatch, done) {
+    let api = new ApiHelper();
+    let result = await api.FetchFromServer(
+      "move",
+      "/update-youtube-video",
+      "POST",
+      true,
+      undefined,
+      action.payload
+    );
+    if (result.isError) {
+      toast.error(result.messages[0]);
+    } else {
+      logger(result, action.payload);
+      if (action.payload.isEdit) {
+        dispatch(
+          redirectTo({
+            path: `${AppRoutes.SET_DETAILS.url.replace(
+              ":id",
+              result.data.setId
+            )}`
+          })
+        );
+      } else {
+        dispatch(
+          modelOpenRequest({
+            modelDetails: {
+              //isMoveSuccessModal: false,
+              createSetModalOpen: false
+            }
+          })
+        );
+      }
+
+      let currMoveArr = getState().moveReducer.movesOfSet;
+      let finalMoveList = [];
+      if (currMoveArr && currMoveArr.length) {
+        currMoveArr.map((key, index) => {
+          if (key._id === action.payload.moveId) {
+            let data = {
+              ...key,
+              moveURL: result.data.s3VideoUrl,
+              videoThumbnail: result.data.videoThumbnail,
+              isMoveProcessing: false
+            };
+            finalMoveList.push(data);
+          } else {
+            finalMoveList.push(key);
+          }
+          return true;
+        });
+      }
+      dispatch(
+        completeVideoEditingSuccess({
+          isSavingWebM: false,
+          moveUrlDetails: {
+            moveURL: result.data.data.videoUrl,
+            setId: result.data.setId,
+            videoOriginalFile: result.data.videoOriginalFile,
+            videoFileMain: result.data.videoFileMain,
+            s3VideoUrl: result.data.s3VideoUrl
+          },
+          movesOfSet: finalMoveList
+        })
+      );
+      // let temp = getState().moveReducer.isMoveDone;
+      // if (temp) {
+      //   dispatch(
+      //     removeVideoLocalServerRequest({
+      //       videoOriginalFile: result.data.videoOriginalFile,
+      //       videoFileMain: result.data.videoFileMain,
+      //       setId: result.data.setId
+      //     })
+      //   );
+      // }
+      done();
+    }
+  }
+});
 
 //Star move
 const starMoveLogic = createLogic({
@@ -720,5 +802,6 @@ export const MoveLogics = [
   getMovesBySearchLogic,
   addTagsInModalLogic,
   getTagListRequestLogic,
-  videoCancelRequestLogic
+  videoCancelRequestLogic,
+  completeYouTubeVideoEditingLogic
 ];

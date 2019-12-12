@@ -13,4 +13,5 @@ export interface IFolder {
 export interface IUpdateFolder {
   title: String;
   description: String;
+  isCopy: Boolean;
 }

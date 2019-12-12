@@ -398,7 +398,7 @@ const deleteFolder = async (req: Request, res: Response): Promise<void> => {
 
     res.status(200).json({
       data: result,
-      message: "Folder has been deleted successfully"
+      message: "Folder has been removed Successfully"
     });
   } catch (error) {
     console.log(error);
@@ -631,7 +631,8 @@ const updateFolder = async (req: Request, res: Response): Promise<any> => {
     const { title, description, id } = body;
     let updateFolder: IUpdateFolder = {
       title,
-      description
+      description,
+      isCopy: false
     };
     await FolderModel.findByIdAndUpdate(id, {
       $set: { ...updateFolder, updatedAt: Date.now() }
