@@ -66,7 +66,7 @@ const createFolderLogic = createLogic({
         // );
       } else {
         if (!toast.isActive(toastId)) {
-          toastId = toast.success("Folder Copy has been created successfully");
+          toastId = toast.success("Folder has been copied successfully");
         }
         dispatch(getAllFolderRequest());
       }
@@ -134,7 +134,7 @@ const recentFolderLogic = createLogic({
       undefined,
       undefined
     );
-    if (result.isError){
+    if (result.isError) {
       if (!toast.isActive(toastId)) {
         toastId = toast.error(result.messages[0]);
       }

@@ -398,7 +398,7 @@ const deleteFolder = async (req: Request, res: Response): Promise<void> => {
 
     res.status(200).json({
       data: result,
-      message: "Folder has been deleted successfully"
+      message: "Folder has been removed Successfully"
     });
   } catch (error) {
     console.log(error);

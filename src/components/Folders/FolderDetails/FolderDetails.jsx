@@ -169,7 +169,7 @@ class RecentFolderComponent extends React.Component {
 
   handleDeleteFolder = async id => {
     const { value } = await ConfirmBox({
-      text: "You want to delete this folder!"
+      text: "You want to remove this folder!"
     });
     if (value) {
       this.props.deleteFolder(id);
@@ -357,13 +357,13 @@ class RecentFolderComponent extends React.Component {
                 <DropdownItem
                   onClick={() => this.handleDeleteFolder(folderDetails._id)}
                 >
-                  Delete Folder
+                  Remove Folder
                 </DropdownItem>
               </DropdownMenu>
             </UncontrolledDropdown>
 
             <UncontrolledTooltip placement="top" target="edit">
-              Edit & Delete Folder details
+              Edit & Remove Folder details
             </UncontrolledTooltip>
           </div>
         </div>{" "}

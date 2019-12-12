@@ -143,7 +143,7 @@ class SetDetails extends React.Component {
    */
   handleDeleteSet = async id => {
     const { value } = await ConfirmBox({
-      text: "You want to delete this set! "
+      text: "You want to remove this set! "
     });
     if (value) {
       const data = {
@@ -452,12 +452,12 @@ class SetDetails extends React.Component {
                   <DropdownItem
                     onClick={() => this.handleDeleteSet(setDetails._id)}
                   >
-                    Delete Set
+                    Remove Set
                   </DropdownItem>
                 </DropdownMenu>
               </UncontrolledDropdown>
               <UncontrolledTooltip placement="top" target="edit">
-                Edit & Delete Set Details
+                Edit & Remove Set Details
               </UncontrolledTooltip>
             </div>
           </div>
