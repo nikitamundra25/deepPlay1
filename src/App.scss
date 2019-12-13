@@ -258,8 +258,8 @@ a {
   max-width: 1600px;
   min-height: calc(100vh - 120px);
 }
-header{
-  .theme-container{
+header {
+  .theme-container {
     min-height: unset;
   }
 }
@@ -356,8 +356,6 @@ header{
       .video-thumb-edit-view > * {
         width: 100%;
       }
-
-    
     }
   }
   .play-list-text {
@@ -636,11 +634,10 @@ header{
       color: #fff;
       font-size: 20px;
       height: 15px;
-    
+
       display: flex;
       align-items: center;
       justify-content: center;
-      
     }
     img {
       width: 70%;
@@ -667,9 +664,12 @@ header{
     color: $whiteColor;
   }
 }
+
 .custom-checkbox .custom-control-input:checked ~ .custom-control-label {
+  // box-shadow: 2px 1px 2px 2px #8c888894;
   &::after {
     filter: invert(1);
+    // border: 1px solid !important;
   }
   &::before {
     border-color: rgba(0, 0, 0, 0.6);
@@ -937,8 +937,8 @@ header{
     color: #151515;
   }
   &:checked ~ .custom-control-label::before {
-      background-color: $blackcolor !important;
-      border-color: $blackcolor !important;
+    background-color: $blackcolor !important;
+    border-color: $blackcolor !important;
   }
   &:active ~ .custom-control-label::before {
     background-color: $blackcolor !important;
@@ -2264,7 +2264,7 @@ header{
   overflow: hidden;
   flex-wrap: wrap;
   width: 100%;
-  &>div{
+  & > div {
     width: 100%;
   }
   & > .play-list-tile-select {
@@ -2372,19 +2372,19 @@ header{
 }
 @media (max-width: 991px) {
   .selected-detail-page {
-    .btn{
-      padding: 15px 22px!important;
+    .btn {
+      padding: 15px 22px !important;
     }
   }
-  .auth-user-model{
-  .auth-subheading{
-    &::before{
-      width: calc(100% + 44px);
-      left: 50%;
-      transform: translateX(-50%);
+  .auth-user-model {
+    .auth-subheading {
+      &::before {
+        width: calc(100% + 44px);
+        left: 50%;
+        transform: translateX(-50%);
+      }
     }
-   
-  }}
+  }
   .play-list-collection {
     &.set-detail-section {
       &:not(.set-detail-editble) {
@@ -2538,14 +2538,13 @@ header{
   .header-input-group-text {
     z-index: 9;
   }
-
 }
-.create-btn-wrap { 
+.create-btn-wrap {
   max-width: 160px;
-    i{
-      position: relative;
-      top: 2px;
-    }
+  i {
+    position: relative;
+    top: 2px;
+  }
 }
 @media (max-width: 767px) {
   body {
@@ -2638,7 +2637,9 @@ header{
   height: 100%;
 }
 
-_::-webkit-full-page-media, _:future, :root .auth-user-model .modal-header .close span{
+_::-webkit-full-page-media,
+_:future,
+:root .auth-user-model .modal-header .close span {
   position: relative;
   top: -4px;
 }
