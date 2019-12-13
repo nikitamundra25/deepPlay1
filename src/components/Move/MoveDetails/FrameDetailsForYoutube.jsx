@@ -236,10 +236,27 @@ class YouTubeFrameDetails extends Component {
               );
             }
           } else if (e.keyCode === 40) {
-            
-            if (min > 0) {
+            if (
+              SecondsToMMSSMM(max - 0.1) <= SecondsToMMSSMM(videoMaxDuration) &&
+              parseInt(max) - parseInt(min) <= AppConfig.MAX_VIDEO_LENGTH
+            ) {
+              if (min > 0) {
+                let changeValue = {
+                  min: min - 0.1,
+                  max: max
+                };
+                this.setState(
+                  {
+                    time: changeValue
+                  },
+                  () => {
+                    this.props.onTimerChange(this.state.time);
+                  }
+                );
+              }
+            } else {
               let changeValue = {
-                min: min - 0.1,
+                min: max - AppConfig.MAX_VIDEO_LENGTH,
                 max: max
               };
               this.setState(
@@ -288,10 +305,28 @@ class YouTubeFrameDetails extends Component {
               );
             }
           } else if (e.keyCode === 40) {
-            if (min > 0) {
+            if (
+              SecondsToMMSSMM(max - 0.1) <= SecondsToMMSSMM(videoMaxDuration) &&
+              parseInt(max) - parseInt(min) >= 1
+            ) {
+              if (min > 0) {
+                let changeValue = {
+                  min: min,
+                  max: max - 0.1
+                };
+                this.setState(
+                  {
+                    time: changeValue
+                  },
+                  () => {
+                    this.props.onTimerChange(this.state.time);
+                  }
+                );
+              }
+            } else {
               let changeValue = {
-                min: min,
-                max: max - 0.1
+                min: 0,
+                max: 1
               };
               this.setState(
                 {
