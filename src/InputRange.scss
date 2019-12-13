@@ -16,7 +16,8 @@
   -webkit-transition: box-shadow 0.3s ease-out, -webkit-transform 0.3s ease-out;
   transition: box-shadow 0.3s ease-out, -webkit-transform 0.3s ease-out;
   transition: transform 0.3s ease-out, box-shadow 0.3s ease-out;
-  transition: transform 0.3s ease-out, box-shadow 0.3s ease-out, -webkit-transform 0.3s ease-out;
+  transition: transform 0.3s ease-out, box-shadow 0.3s ease-out,
+    -webkit-transform 0.3s ease-out;
   width: 1rem;
   left: 3px;
 }
@@ -145,7 +146,9 @@
     }
   }
 
-  .input-range__track + .input-range__slider-container + .input-range__slider-container {
+  .input-range__track
+    + .input-range__slider-container
+    + .input-range__slider-container {
     .input-range__label.input-range__label--value {
       top: 43px;
       left: -37px;
@@ -213,6 +216,7 @@
 .fram-wrap {
   display: flex;
   justify-content: flex-start;
+  position: relative;
   .fram-block {
     font-size: 10px;
     padding: 2px;

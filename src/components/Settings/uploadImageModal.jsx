@@ -20,37 +20,48 @@ class UploadImage extends Component {
     }
   };
 
-  onSelectFile = async (file, index) => {
-    for (let x = 0; x < file.length; x++) {
-      if (file[x].size > 10000000) {
-        await ConfirmBox({
-          text: "",
-          title: "You can upload Image Size up to 10MB",
-          showCancelButton: false,
-          confirmButtonText: "Ok"
-        });
-        return;
-      }
-    }
-    file.map(async (data, i) => {
-      let picReader = new FileReader();
-      let scope = this;
-      // eslint-disable-next-line
-      const type = data.type;
-      await picReader.addEventListener("load", async event => {
-        var image = new Image();
-        image.src = event.target.result;
-        image.onload = async function() {
-          let dataURL = picReader.result;
-          let imageData = "";
-          imageData = dataURL;
-          scope.setState({
-            imageData
+  onSelectFile = async (file, rejectedFiles) => {
+    if (file.length) {
+      for (let x = 0; x < file.length; x++) {
+        if (file[x].size > 10000000) {
+          await ConfirmBox({
+            text: "",
+            title: "You can upload Image Size up to 10MB",
+            showCancelButton: false,
+            confirmButtonText: "Ok"
           });
-        };
+          return;
+        }
+      }
+      file.map(async (data, i) => {
+        let picReader = new FileReader();
+        let scope = this;
+        // eslint-disable-next-line
+        const type = data.type;
+        await picReader.addEventListener("load", async event => {
+          var image = new Image();
+          image.src = event.target.result;
+          image.onload = async function() {
+            let dataURL = picReader.result;
+            let imageData = "";
+            imageData = dataURL;
+            scope.setState({
+              imageData
+            });
+          };
+        });
+        await picReader.readAsDataURL(data);
       });
-      await picReader.readAsDataURL(data);
-    });
+    } else {
+      await ConfirmBox({
+        text: "",
+        title:
+          "This file type is not supported. We only accept png, jpg & jpeg.",
+        showCancelButton: false,
+        confirmButtonText: "Ok"
+      });
+      return;
+    }
   };
 
   handleCancel = () => {

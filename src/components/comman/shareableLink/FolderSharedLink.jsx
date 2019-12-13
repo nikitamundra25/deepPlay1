@@ -232,7 +232,13 @@ class FolderSharedLink extends React.Component {
                   <Col md="6">
                     {/* <iframe width="560" title={"Dance"} height="315" src="https://www.youtube.com/embed/nrDtcsyd-U4" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe> */}
                     <div className="d-flex video-add-banner justify-content-center align-items-center">
-                      <img src={imgNotfound} alt={""} className="w-100" />
+                      <img
+                        src={imgNotfound}
+                        alt={""}
+                        className="w-100"
+                        width="200"
+                        height="250"
+                      />
                     </div>
                   </Col>
                   <Col

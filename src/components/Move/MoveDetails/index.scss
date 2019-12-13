@@ -59,30 +59,29 @@
       box-shadow: none;
     }
   }
-
 }
-.video-complete-popup{
+.video-complete-popup {
   max-width: 600px;
-  .vieos-add-section{
+  .vieos-add-section {
     max-width: 100%;
   }
-  .set-content-wrap{
+  .set-content-wrap {
     min-height: unset;
   }
-  .modal-body{
+  .modal-body {
     background: #fff;
   }
-  .video-add-banner{
+  .video-add-banner {
     background: #e6ebf1;
     position: relative;
-    video{
+    video {
       max-height: 100%;
       max-width: 100%;
       height: auto;
       width: auto;
     }
   }
-  .play-ic-wrap{
+  .play-ic-wrap {
     position: absolute;
     background: #060606;
     box-shadow: 0px 0px 3px 1px #8e8e8e;
@@ -90,5 +89,19 @@
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
+  }
+}
+.video-spinner {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 100%;
+  background: transparent;
+  text-align: center;
+  img {
+    width: 50px;
+    margin: 0px auto;
+    height: auto;
   }
 }
