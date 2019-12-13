@@ -9,6 +9,7 @@ import {
   SecondsToMMSSMM
 } from "helper/Time";
 import { logger } from "helper/Logger";
+import videoLoading from "../../../assets/img/loder/new-resize.gif";
 
 class YouTubeFrameDetails extends Component {
   constructor(props) {
@@ -17,10 +18,12 @@ class YouTubeFrameDetails extends Component {
       time: {
         min: 0,
         max: 15
-      }
+      },
+      videoLoadingStart: false,
+      imageLoadedIndex: []
     };
   }
-
+  
   componentDidUpdate() {
     this.updateSlider();
   }
@@ -310,6 +313,16 @@ class YouTubeFrameDetails extends Component {
   /**
    *
    */
+
+  handleVideoLoading = (index) => {
+    console.log("Index", index);
+
+    const ImageLoadedIndex = [...this.state.imageLoadedIndex]
+    ImageLoadedIndex.push(index)
+    this.setState({
+      imageLoadedIndex: ImageLoadedIndex
+    })
+  }
   render() {
     const {
       frames,
@@ -320,7 +333,7 @@ class YouTubeFrameDetails extends Component {
     } = this.props;
     // const { duration } = videoMetaData || {};
     // const { seconds: maxValue } = duration || {};
-    const { time } = this.state;
+    const { time, videoLoadingStart, imageLoadedIndex } = this.state;
     const { moveDetails } = moveReducer;
     return (
       <div className="fram-picker">
@@ -335,8 +348,8 @@ class YouTubeFrameDetails extends Component {
               return type === "min"
                 ? `${SecondsToMMSSMM(time.min >= 0 ? time.min : 0)}`
                 : type === "max"
-                ? `${SecondsToMMSSMM(time.max >= 0 ? time.max : 0)}`
-                : null;
+                  ? `${SecondsToMMSSMM(time.max >= 0 ? time.max : 0)}`
+                  : null;
             }}
             value={time}
             onChange={this.labelValueChange}
@@ -350,13 +363,17 @@ class YouTubeFrameDetails extends Component {
                       width={"100%"}
                       autoPlay={false}
                       loop={true}
-                      id={"video-trimmer"}
+                      id={`video-trimmer-${index}`}
+                      onLoadedData={() => {
+                        this.handleVideoLoading(index)
+                      }}
                     >
                       <source
                         src={
+
                           moveDetails && moveDetails.videoUrl
                             ? moveDetails.videoUrl +
-                              `#t=${frame},${frames[index + 1]}`
+                            `#t=${frame},${frames[index + 1]}`
                             : ""
                         }
                       />

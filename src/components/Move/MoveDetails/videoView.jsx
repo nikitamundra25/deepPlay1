@@ -86,6 +86,7 @@ class VideoView extends React.Component {
     } = this.props;
     const { moveDetails } = moveReducer;
 
+    
     return (
       <>
         <Col lg={"6"}>
@@ -132,7 +133,7 @@ class VideoView extends React.Component {
                   loop
                   id={"video-trimmer"}
                   muted={false}
-                  playsinline
+                  playsInline
                   onContextMenu={e => e.preventDefault()}
                 >
                   <source
