@@ -115,15 +115,20 @@ const downloadYoutubeVideo = async (
     let youTubeUrl = "";
     if (trueYoutubeUrl) {
       ytdl.getInfo(body.url, async (err, info) => {
-        if (err) throw err;
+        if (err) {
+          return res.status(400).json({
+            message: "This Video is not available.",
+            success: false
+          });
+        };;
 
         const thumbImg =
           info.player_response.videoDetails.thumbnail.thumbnails &&
-          info.player_response.videoDetails.thumbnail.thumbnails.length
+            info.player_response.videoDetails.thumbnail.thumbnails.length
             ? info.player_response.videoDetails.thumbnail.thumbnails[
-                info.player_response.videoDetails.thumbnail.thumbnails.length -
-                  1
-              ].url
+              info.player_response.videoDetails.thumbnail.thumbnails.length -
+              1
+            ].url
             : [];
 
         for (let index = 0; index < info.formats.length; index++) {
@@ -553,7 +558,7 @@ const updateMoveDetailsFromYouTubeAndTrim = async (
     ytdl(result.sourceUrl, { quality: "highest" }).pipe(
       (videoStream = fs.createWriteStream(originalVideoPath))
     );
-    videoStream.on("close", async function() {
+    videoStream.on("close", async function () {
       const videoUrlFileName = originalVideoPath.split("uploads");
       const videoUrl = `uploads/${videoUrlFileName[1]}`;
       const fileName = `${videoUrl.split(".")[0]}_clip_${moment().unix()}.webm`;
@@ -757,7 +762,7 @@ const updateMoveDetailsAndTrimVideo = async (
 
       const fileName = `${
         result.videoUrl.split(".")[0]
-      }_clip_${moment().unix()}.webm`;
+        }_clip_${moment().unix()}.webm`;
 
       let videoFileMain: String | any, videoOriginalFile: String | any;
       if (IsProductionMode) {
@@ -965,7 +970,7 @@ const isStarredMove = async (req: Request, res: Response): Promise<any> => {
     return res.status(200).json({
       message: `Move has been ${
         isStarred === "true" ? "starred" : "Unstarred"
-      } successfully!`
+        } successfully!`
     });
   } catch (error) {
     console.log(error);
