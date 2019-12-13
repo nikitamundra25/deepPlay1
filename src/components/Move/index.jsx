@@ -56,7 +56,7 @@ class MoveComponent extends React.Component {
     const { name, value } = e.target;
     this.setState({
       errors: "",
-      [name]: value
+      [name]: value.trim()
     });
     if (value !== undefined || value !== "") {
       // eslint-disable-next-line
