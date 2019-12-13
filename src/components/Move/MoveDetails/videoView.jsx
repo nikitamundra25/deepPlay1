@@ -102,7 +102,7 @@ class VideoView extends React.Component {
                     errorTitle ? "is-invalid move-title" : "move-title"
                   }
                   name="title"
-                  value={title}
+                  value={title ? title: ""}
                 />
                 <FormFeedback> {errorTitle ? errorTitle : null} </FormFeedback>
                 <InputGroupAddon

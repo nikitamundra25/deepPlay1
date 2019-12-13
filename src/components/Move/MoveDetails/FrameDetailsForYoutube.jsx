@@ -9,7 +9,7 @@ import {
   SecondsToMMSSMM
 } from "helper/Time";
 import { logger } from "helper/Logger";
-import videoLoading from "../../../assets/img/loder/new-resize.gif";
+import videoLoading from "../../../assets/img/loder/loader.svg";
 
 class YouTubeFrameDetails extends Component {
   constructor(props) {
@@ -19,11 +19,10 @@ class YouTubeFrameDetails extends Component {
         min: 0,
         max: 15
       },
-      videoLoadingStart: false,
       imageLoadedIndex: []
     };
   }
-  
+
   componentDidUpdate() {
     this.updateSlider();
   }
@@ -83,9 +82,6 @@ class YouTubeFrameDetails extends Component {
     const { videoMetaData } = this.props;
     const { duration } = videoMetaData || {};
     const { seconds: maxValue } = duration || {};
-    console.log("max", max);
-    console.log("min", min);
-    console.log("max - min", max - min <= 15);
     if (min >= 0) {
       if (min !== parseInt(time.min) && min >= max) {
         max =
@@ -313,27 +309,17 @@ class YouTubeFrameDetails extends Component {
   /**
    *
    */
-
-  handleVideoLoading = (index) => {
-    console.log("Index", index);
-
-    const ImageLoadedIndex = [...this.state.imageLoadedIndex]
-    ImageLoadedIndex.push(index)
+  handleVideoLoading = index => {
+    const ImageLoadedIndex = [...this.state.imageLoadedIndex];
+    ImageLoadedIndex.push(index);
     this.setState({
       imageLoadedIndex: ImageLoadedIndex
-    })
-  }
+    });
+  };
+
   render() {
-    const {
-      frames,
-      // videoMetaData,
-      isIosDevice,
-      moveReducer,
-      videoMaxDuration
-    } = this.props;
-    // const { duration } = videoMetaData || {};
-    // const { seconds: maxValue } = duration || {};
-    const { time, videoLoadingStart, imageLoadedIndex } = this.state;
+    const { frames, isIosDevice, moveReducer, videoMaxDuration } = this.props;
+    const { time, imageLoadedIndex } = this.state;
     const { moveDetails } = moveReducer;
     return (
       <div className="fram-picker">
@@ -348,8 +334,8 @@ class YouTubeFrameDetails extends Component {
               return type === "min"
                 ? `${SecondsToMMSSMM(time.min >= 0 ? time.min : 0)}`
                 : type === "max"
-                  ? `${SecondsToMMSSMM(time.max >= 0 ? time.max : 0)}`
-                  : null;
+                ? `${SecondsToMMSSMM(time.max >= 0 ? time.max : 0)}`
+                : null;
             }}
             value={time}
             onChange={this.labelValueChange}
@@ -357,7 +343,12 @@ class YouTubeFrameDetails extends Component {
           <div className={"frame-container"}>
             <div className="fram-wrap py-4">
               {orderBy(frames).map((frame, index) => {
-                return (
+                return imageLoadedIndex &&
+                  imageLoadedIndex.length - 1 === index ? (
+                  <div className="video-spinner" key={index}>
+                    <img src={videoLoading} alt="" />
+                  </div>
+                ) : (
                   <div className="frem-inner" key={index}>
                     <video
                       width={"100%"}
@@ -365,15 +356,14 @@ class YouTubeFrameDetails extends Component {
                       loop={true}
                       id={`video-trimmer-${index}`}
                       onLoadedData={() => {
-                        this.handleVideoLoading(index)
+                        this.handleVideoLoading(index);
                       }}
                     >
                       <source
                         src={
-
                           moveDetails && moveDetails.videoUrl
                             ? moveDetails.videoUrl +
-                            `#t=${frame},${frames[index + 1]}`
+                              `#t=${frame},${frames[index + 1]}`
                             : ""
                         }
                       />
