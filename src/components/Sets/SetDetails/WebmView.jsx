@@ -504,7 +504,6 @@ class WebmView extends Component {
       tagsList,
       fromMoveSearch
     } = this.props;
-
     const { modelDetails } = modelInfoReducer;
     const {
       viewInfoModalOpen,

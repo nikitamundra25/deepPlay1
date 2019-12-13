@@ -152,6 +152,7 @@ class MoveComponent extends React.Component {
       fileErr: ""
     });
     let files = e.target.files;
+    let videoDuration;
     if (files.length) {
       const fileType = files ? files[0].type.split("/") : "";
       if (fileType[1] !== "mp4" && fileType[1] !== "webm") {
@@ -164,6 +165,22 @@ class MoveComponent extends React.Component {
           confirmButtonText: "Okay"
         });
       } else {
+        let video = document.createElement("video");
+        video.setAttribute("src", window.URL.createObjectURL(files[0]));
+        video.onloadeddata = async function(event) {
+          const { duration } = event.srcElement;
+          videoDuration = duration;
+          // if (duration >= 36) {
+          //   await ConfirmBox({
+          //     title: "Oops...",
+          //     text: "Video duration should be less than 1 hour.",
+          //     type: "error",
+          //     showCancelButton: false,
+          //     confirmButtonText: "Okay"
+          //   });
+          //   return;
+          // }
+        };
         const search = window.location.search;
         const setId = search.split("=");
         this.setState(

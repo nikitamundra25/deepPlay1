@@ -10,7 +10,7 @@ export const ServerURL = !IsProductionMode
   ? "http://localhost:8000"
   : "http://192.249.123.124:8005";
 export const s3Key = {
-  keyId: "AKIA5R6U3BHKVS3EFDGW",
-  key: "hRZ8bTRNBsxThak7Dmf8lep7q7whcSRlRiFX/1OQ",
-  bucketName: "hope.bucket"
+  keyId: "AKIAR7XBBEDAFZWCMAIC",
+  key: "Oe9OQ2l/rB6UeO0u1+mAli3hIM2RbXTMhzD9QPrm",
+  bucketName: "deepplay-video"
 };
