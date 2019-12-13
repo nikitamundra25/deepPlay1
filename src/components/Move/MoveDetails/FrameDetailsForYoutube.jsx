@@ -154,8 +154,8 @@ class YouTubeFrameDetails extends Component {
   handleKeyEvent = (e, name) => {
     const { time } = this.state;
     const { min, max } = time;
-    const { videoMetaData } = this.props;
-    const { duration } = videoMetaData || {};
+    const { videoMaxDuration } = this.props;
+    // const { duration } = videoMetaData || {};
     const trimmValue = e.target.value;
     if (parseInt(trimmValue) >= 0) {
       if (
@@ -163,7 +163,7 @@ class YouTubeFrameDetails extends Component {
         parseInt(max) - parseInt(min) === 1
       ) {
         if (e.keyCode === 38) {
-          if (SecondsToMMSSMM(max + 0.1) <= SecondsToMMSSMM(duration.seconds)) {
+          if (SecondsToMMSSMM(max + 0.1) <= SecondsToMMSSMM(videoMaxDuration)) {
             let changeValue = {
               min: min + 0.1,
               max: max + 0.1
@@ -206,7 +206,7 @@ class YouTubeFrameDetails extends Component {
         if (name === "from") {
           if (e.keyCode === 38) {
             if (
-              SecondsToMMSSMM(max + 0.1) <= SecondsToMMSSMM(duration.seconds) &&
+              SecondsToMMSSMM(max + 0.1) <= SecondsToMMSSMM(videoMaxDuration) &&
               parseInt(min) <= parseInt(max)
             ) {
               let changeValue = {
@@ -236,6 +236,7 @@ class YouTubeFrameDetails extends Component {
               );
             }
           } else if (e.keyCode === 40) {
+            
             if (min > 0) {
               let changeValue = {
                 min: min - 0.1,
@@ -254,7 +255,7 @@ class YouTubeFrameDetails extends Component {
         } else {
           if (e.keyCode === 38) {
             if (
-              SecondsToMMSSMM(max + 0.1) <= SecondsToMMSSMM(duration.seconds) &&
+              SecondsToMMSSMM(max + 0.1) <= SecondsToMMSSMM(videoMaxDuration) &&
               parseInt(max) - parseInt(min) <= AppConfig.MAX_VIDEO_LENGTH
             ) {
               let changeValue = {

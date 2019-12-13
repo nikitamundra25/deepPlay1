@@ -176,10 +176,6 @@ class FolderComponent extends React.Component {
                                 this.handleFolderdetails(folder._id)
                               }
                             >
-                              <div className="content-number-tile">
-                                {" "}
-                                {folder.setCount} sets
-                              </div>
                               <div className="content-heading-tile d-flex">
                                 {" "}
                                 <span className={"cursor_pointer"}>
@@ -200,6 +196,10 @@ class FolderComponent extends React.Component {
                                     : folder.description
                                   : ""}
                               </span>
+                              <div className="content-number-tile">
+                                {" "}
+                                {folder.setCount} sets
+                              </div>
                             </div>
                             <div className="d-flex img-tile-wrap cursor_pointer">
                               <div className="cotent-img-tile">

@@ -2747,7 +2747,8 @@ input[type="button"].btn-block {
 
 .custom-control-label {
   position: relative;
-  margin-bottom: 0; }
+  margin-bottom: 0;
+}
   .custom-control-label::before {
     position: absolute;
     top: 0.125rem;
@@ -2759,7 +2760,8 @@ input[type="button"].btn-block {
     content: "";
     user-select: none;
     background-color: #fff;
-    box-shadow: none; }
+    box-shadow: none;
+   }
   .custom-control-label::after {
     position: absolute;
     top: 0.125rem;
@@ -2770,7 +2772,8 @@ input[type="button"].btn-block {
     content: "";
     background-repeat: no-repeat;
     background-position: center center;
-    background-size: 50% 50%; }
+    background-size: 50% 50%;
+   }
 
 .custom-checkbox .custom-control-label::before {
   border-radius: 0.2rem; }
