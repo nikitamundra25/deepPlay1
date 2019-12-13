@@ -5,7 +5,8 @@ import {
   updateProfileRequest,
   deleteUserAccountRequest,
   uploadImageRequest,
-  modelOpenRequest
+  modelOpenRequest,
+  cancelProfileRequest
 } from "../../actions";
 import { connect } from "react-redux";
 // core components
@@ -20,13 +21,14 @@ class Setting extends React.Component {
   onDelete = () => {
     this.props.onDeleteUserAccount();
   };
- 
+
   render() {
     const {
       modelOperate,
       modelInfoReducer,
       isImageUploading,
-      isprofileInfoLoading
+      isprofileInfoLoading,
+      cancelProfileRequest
     } = this.props;
     return (
       <>
@@ -42,6 +44,7 @@ class Setting extends React.Component {
           isImageUploading={isImageUploading}
           modelInfoReducer={modelInfoReducer}
           isprofileInfoLoading={isprofileInfoLoading}
+          cancelProfileRequest={cancelProfileRequest}
         />
       </>
     );
@@ -71,11 +74,9 @@ const mapDispatchToProps = dispatch => {
     uploadProfileImage: payload => {
       dispatch(uploadImageRequest(payload));
     },
-    modelOperate: data => dispatch(modelOpenRequest(data))
+    modelOperate: data => dispatch(modelOpenRequest(data)),
+    cancelProfileRequest: () => dispatch(cancelProfileRequest())
   };
 };
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(Setting);
+export default connect(mapStateToProps, mapDispatchToProps)(Setting);

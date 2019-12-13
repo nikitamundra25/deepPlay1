@@ -147,7 +147,7 @@ class SettingComponent extends Component {
     });
   };
 
-  handleOpen = () => {
+  handleOpen = name => {
     const { modelInfoReducer } = this.props;
     const { modelDetails } = modelInfoReducer;
     this.props.modelOperate({
@@ -155,6 +155,9 @@ class SettingComponent extends Component {
         uploadImageModalOpen: !modelDetails.uploadImageModalOpen
       }
     });
+    if (name === "cancel") {
+      this.props.cancelProfileRequest();
+    }
   };
 
   handleImage = data => {

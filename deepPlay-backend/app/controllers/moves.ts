@@ -120,8 +120,14 @@ const downloadYoutubeVideo = async (
             message: "This Video is not available.",
             success: false
           });
-        };;
+        }
 
+        if (info.player_response.videoDetails.lengthSeconds >= 3600) {
+          return res.status(400).json({
+            message: "Video duration should be less than 1 hour.",
+            success: false
+          });
+        }
         const thumbImg =
           info.player_response.videoDetails.thumbnail.thumbnails &&
             info.player_response.videoDetails.thumbnail.thumbnails.length
@@ -130,17 +136,32 @@ const downloadYoutubeVideo = async (
               1
             ].url
             : [];
-
-        for (let index = 0; index < info.formats.length; index++) {
-          const element = info.formats[index];
-          if (element.resolution === "1080p") {
-            youTubeUrl = element.url;
-          } else if (element.resolution === "720p") {
-            youTubeUrl = element.url;
-          } else if (element.resolution === "480p") {
-            youTubeUrl = element.url;
-          }
-        }
+        youTubeUrl = info.formats[0].url
+        // for (let index = 0; index < info.formats.length; index++) {
+        //   const element = info.formats[index];
+        //   if (element.resolution === "1080p") {
+        //     const temp = element.url.split("manifest.googlevideo.com");
+        //     if (temp[1]) {
+        //       youTubeUrl = info.formats[0].url;
+        //     } else {
+        //       youTubeUrl = element.url;
+        //     }
+        //   } else if (element.resolution === "720p") {
+        //     const temp = element.url.split("manifest.googlevideo.com");
+        //     if (temp[1]) {
+        //       youTubeUrl = info.formats[0].url;
+        //     } else {
+        //       youTubeUrl = element.url;
+        //     }
+        //   } else if (element.resolution === "480p") {
+        //     const temp = element.url.split("manifest.googlevideo.com");
+        //     if (temp[1]) {
+        //       youTubeUrl = info.formats[0].url;
+        //     } else {
+        //       youTubeUrl = element.url;
+        //     }
+        //   }
+        // }
 
         if (info) {
           const moveResult: Document | any = new MoveModel({

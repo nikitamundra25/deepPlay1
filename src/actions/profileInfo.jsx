@@ -10,7 +10,10 @@ export const ProfileAction = {
   UPLOAD_IMAGE_REQUEST: "Upload User Profile Image Request",
   UPLOAD_IMAGE_SUCCESS: "Upload User Profile Image Success",
   UPLOAD_IMAGE_FAILED: "Upload User Profile Image failed!",
+  CANCEL_IMAGE_UPLOAD: "Cancel Image Upload"
 };
+
+export const cancelProfileRequest = createAction(ProfileAction.CANCEL_IMAGE_UPLOAD);
 export const profileRequest = createAction(ProfileAction.PROFILEINFO_REQUEST);
 export const profileSuccess = createAction(ProfileAction.PROFILEINFO_SUCCESS);
 export const updateProfileRequest = createAction(

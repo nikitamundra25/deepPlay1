@@ -71,7 +71,8 @@ const downloadVideoLogic = createLogic({
       }
       dispatch(
         downloadYoutubeVideoSuccess({
-          videoUrl: ""
+          videoUrl: "",
+          cancelVideo: true
         })
       );
 

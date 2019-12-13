@@ -68,7 +68,7 @@ class UploadImage extends Component {
     this.setState({
       imageData: ""
     });
-    this.props.handleOpen();
+    this.props.handleOpen("cancel");
   };
   render() {
     const { isImageUploading } = this.props;

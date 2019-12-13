@@ -13,6 +13,7 @@ import {
 import { AppRoutes } from "../config/AppRoutes";
 import { toast } from "react-toastify";
 let toastId = null;
+let api = new ApiHelper();
 /**
  *
  */
@@ -172,9 +173,20 @@ const uploadImageLogic = createLogic({
   }
 });
 
+const CancelImageUploadLogic = createLogic({
+  type: ProfileAction.CANCEL_IMAGE_UPLOAD,
+  async process({ action }, dispatch, done) {
+    api.cancelRequest("cancel");
+    if (!toast.isActive(toastId)) {
+      toastId = toast.success("Image upload request canceled successfully!");
+    }
+    done();
+  }
+});
 export const profileInfoLogics = [
   profileInfoLogic,
   UpdateUserDataLogic,
   DeleteUserAccountLogic,
-  uploadImageLogic
+  uploadImageLogic,
+  CancelImageUploadLogic
 ];
