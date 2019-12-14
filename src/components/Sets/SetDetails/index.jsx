@@ -64,7 +64,8 @@ class SetDetails extends React.Component {
       moveData: [],
       setToTransfer: "",
       folderId: "",
-      moveListItem: []
+      moveListItem: [],
+      videoClose: false
     };
   }
   componentDidMount = () => {
@@ -219,6 +220,15 @@ class SetDetails extends React.Component {
   handleVideoModal = (moveURL, index) => {
     const { modelInfoReducer } = this.props;
     const { modelDetails } = modelInfoReducer;
+    if(modelDetails.isVideoModalOpen){
+      this.setState({
+        videoClose: true
+      })
+    }else{
+      this.setState({
+        videoClose:false
+      })
+    }
     this.setState(
       {
         showVideo: moveURL,

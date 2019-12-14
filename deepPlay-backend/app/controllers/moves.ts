@@ -468,7 +468,8 @@ const publicUrlMoveDetails = async (
       })
         .populate("setId")
         .skip(pageNumber)
-        .limit(limitNumber);
+        .limit(limitNumber)
+        .sort({ sortIndex: 1 });
 
       totalMove = await MoveModel.count({
         setId: decryptedSetId,
@@ -1271,7 +1272,7 @@ const addTagsInMove = async (req: Request, res: Response): Promise<any> => {
 const updateMoveIndex = async (req: Request, res: Response): Promise<any> => {
   try {
     const { body } = req;
-    const { setId, sortIndex, moveId, movesOfSet } = body;
+    const { setId, sortIndex, moveId, movesOfSet, parsed } = body;
 
     let num: number = parseInt(sortIndex);
     let num1: number = parseInt(sortIndex);
@@ -1282,13 +1283,25 @@ const updateMoveIndex = async (req: Request, res: Response): Promise<any> => {
         { $set: { sortIndex: index + 1 } }
       );
     }
-    const resp: Document | any | null = await MoveModel.find({
-      setId: setId,
-      isDeleted: false,
-      moveURL: { $ne: null }
-    }).sort({
-      sortIndex: 1
-    });
+    let resp: Document | any | null;
+    if (parsed.isStarred) {
+      resp = await MoveModel.find({
+        setId: setId,
+        isDeleted: false,
+        isStarred: true,
+        moveURL: { $ne: null }
+      }).sort({
+        sortIndex: 1
+      });
+    } else {
+      resp = await MoveModel.find({
+        setId: setId,
+        isDeleted: false,
+        moveURL: { $ne: null }
+      }).sort({
+        sortIndex: 1
+      });
+    }
 
     return res.status(200).json({
       message: "SortIndex have been updated successfully!",

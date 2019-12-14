@@ -169,53 +169,53 @@ class FolderComponent extends React.Component {
                           className="tile-wrap card cursor_pointer content-tip-img"
                           onMouseLeave={() => this.closePopOver()}
                         >
-                          <div className="cotent-tile d-flex content-with-tip content-with-img">
-                            <div
-                              className="cotent-text-tile "
-                              onClick={() =>
-                                this.handleFolderdetails(folder._id)
-                              }
-                            >
-                              <div className="content-heading-tile d-flex">
-                                {" "}
-                                <span className={"cursor_pointer"}>
-                                  {folder.isCopy
-                                    ? `Copy of ${folder.title} ${
-                                        folder.copyIndex > 0
-                                          ? `(${folder.copyIndex})`
-                                          : ""
-                                      }`
-                                    : folder.title}
+                          <div
+                            onClick={() => this.handleFolderdetails(folder._id)}
+                          >
+                            {" "}
+                            <div className="cotent-tile d-flex content-with-tip content-with-img">
+                              <div className="cotent-text-tile ">
+                                <div className="content-heading-tile d-flex">
+                                  {" "}
+                                  <span className={"cursor_pointer"}>
+                                    {folder.isCopy
+                                      ? `Copy of ${folder.title} ${
+                                          folder.copyIndex > 0
+                                            ? `(${folder.copyIndex})`
+                                            : ""
+                                        }`
+                                      : folder.title}
+                                  </span>
+                                </div>
+                                <span className={"content-sub-heading-tile"}>
+                                  {folder.description
+                                    ? folder.description.length > 100
+                                      ? folder.description.substring(0, 80) +
+                                        "..."
+                                      : folder.description
+                                    : ""}
                                 </span>
+                                <div className="content-number-tile">
+                                  {" "}
+                                  {folder.setCount} sets
+                                </div>
                               </div>
-                              <span className={"content-sub-heading-tile"}>
-                                {folder.description
-                                  ? folder.description.length > 100
-                                    ? folder.description.substring(0, 80) +
-                                      "..."
-                                    : folder.description
-                                  : ""}
-                              </span>
-                              <div className="content-number-tile">
-                                {" "}
-                                {folder.setCount} sets
-                              </div>
-                            </div>
-                            <div className="d-flex img-tile-wrap cursor_pointer">
-                              <div className="cotent-img-tile">
-                                {folder.setCount ? (
-                                  <img
-                                    src={fileFolderIc}
-                                    alt=""
-                                    className="folder-ic"
-                                  />
-                                ) : (
-                                  <img
-                                    src={emptyFolderIc}
-                                    alt=""
-                                    className="folder-ic"
-                                  />
-                                )}
+                              <div className="d-flex img-tile-wrap cursor_pointer">
+                                <div className="cotent-img-tile">
+                                  {folder.setCount ? (
+                                    <img
+                                      src={fileFolderIc}
+                                      alt=""
+                                      className="folder-ic"
+                                    />
+                                  ) : (
+                                    <img
+                                      src={emptyFolderIc}
+                                      alt=""
+                                      className="folder-ic"
+                                    />
+                                  )}
+                                </div>
                               </div>
                             </div>
                           </div>

@@ -21,6 +21,7 @@ import remove from "../../../assets/img/set-detail-ic/remove.svg";
 import { ListManager } from "react-beautiful-dnd-grid";
 import MoveListDetails from "./moveListdetails";
 import { toast } from "react-toastify";
+import qs from "query-string";
 
 // a little function to help us with reordering the result
 const reorder = (list, startIndex, endIndex) => {
@@ -413,9 +414,10 @@ class MoveList extends React.Component {
     }
     const list = this.props.movesOfSet;
     const items = reorder(list, sourceIndex, destinationIndex);
+    let parsed = qs.parse(this.props.location.search);
     const data = {
       setId: this.props.setIdPathName,
-      // moveId: draggableId,
+      parsed,
       sortIndex: destinationIndex,
       sourceIndex: sourceIndex,
       movesOfSet: items
