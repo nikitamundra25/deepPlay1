@@ -491,6 +491,11 @@ class WebmView extends Component {
     });
   };
 
+  handleVideoModal = () => {
+    this.setState({
+      isMuted: true
+    });
+  };
   render() {
     const {
       video,

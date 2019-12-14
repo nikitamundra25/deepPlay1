@@ -80,7 +80,6 @@ class MoveDetails extends React.Component {
     this.props.getAllSetRequest({ isSetNoLimit: false });
     this.props.getTagListRequest();
     const { recentSetAdded } = this.props.setReducer;
-
     if (recentSetAdded) {
       this.setState({
         selectSetOptions: {
@@ -256,13 +255,20 @@ class MoveDetails extends React.Component {
             setMoveCount
           });
     }
-
     this.handleMoveSuccessModal();
+  };
+
+  handleVideoPause = () => {
+    let myVideo = document.getElementById("video-trimmer");
+    if (myVideo) {
+      myVideo.pause();
+    }
   };
   /**
    *
    */
   handleMoveSuccessModal = data => {
+    this.handleVideoPause();
     const { modelInfoReducer } = this.props;
     // this.props.createAnotherMoveRequest({ moveUrl: data });
     const { modelDetails } = modelInfoReducer;

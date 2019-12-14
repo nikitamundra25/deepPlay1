@@ -122,21 +122,6 @@ const downloadYoutubeVideo = async (
           });
         }
 
-        if (info.player_response.videoDetails.lengthSeconds >= 3600) {
-          return res.status(400).json({
-            message: "Video duration should be less than 1 hour.",
-            success: false
-          });
-        }
-        const thumbImg =
-          info.player_response.videoDetails.thumbnail.thumbnails &&
-            info.player_response.videoDetails.thumbnail.thumbnails.length
-            ? info.player_response.videoDetails.thumbnail.thumbnails[
-              info.player_response.videoDetails.thumbnail.thumbnails.length -
-              1
-            ].url
-            : [];
-        youTubeUrl = info.formats[0].url
         // for (let index = 0; index < info.formats.length; index++) {
         //   const element = info.formats[index];
         //   if (element.resolution === "1080p") {
@@ -164,6 +149,21 @@ const downloadYoutubeVideo = async (
         // }
 
         if (info) {
+          if (info.player_response.videoDetails.lengthSeconds >= 3600) {
+            return res.status(400).json({
+              message: "Video duration should be less than 1 hour.",
+              success: false
+            });
+          }
+          const thumbImg =
+            info.player_response.videoDetails.thumbnail.thumbnails &&
+            info.player_response.videoDetails.thumbnail.thumbnails.length
+              ? info.player_response.videoDetails.thumbnail.thumbnails[
+                  info.player_response.videoDetails.thumbnail.thumbnails
+                    .length - 1
+                ].url
+              : [];
+          youTubeUrl = info.formats[0].url;
           const moveResult: Document | any = new MoveModel({
             videoUrl: youTubeUrl,
             sourceUrl: body.url,
@@ -578,7 +578,7 @@ const updateMoveDetailsFromYouTubeAndTrim = async (
     ytdl(result.sourceUrl, { quality: "highest" }).pipe(
       (videoStream = fs.createWriteStream(originalVideoPath))
     );
-    videoStream.on("close", async function () {
+    videoStream.on("close", async function() {
       const videoUrlFileName = originalVideoPath.split("uploads");
       const videoUrl = `uploads/${videoUrlFileName[1]}`;
       const fileName = `${videoUrl.split(".")[0]}_clip_${moment().unix()}.webm`;
@@ -782,7 +782,7 @@ const updateMoveDetailsAndTrimVideo = async (
 
       const fileName = `${
         result.videoUrl.split(".")[0]
-        }_clip_${moment().unix()}.webm`;
+      }_clip_${moment().unix()}.webm`;
 
       let videoFileMain: String | any, videoOriginalFile: String | any;
       if (IsProductionMode) {
@@ -990,7 +990,7 @@ const isStarredMove = async (req: Request, res: Response): Promise<any> => {
     return res.status(200).json({
       message: `Move has been ${
         isStarred === "true" ? "starred" : "Unstarred"
-        } successfully!`
+      } successfully!`
     });
   } catch (error) {
     console.log(error);
