@@ -220,14 +220,14 @@ class SetDetails extends React.Component {
   handleVideoModal = (moveURL, index) => {
     const { modelInfoReducer } = this.props;
     const { modelDetails } = modelInfoReducer;
-    if(modelDetails.isVideoModalOpen){
+    if (modelDetails.isVideoModalOpen) {
       this.setState({
         videoClose: true
-      })
-    }else{
+      });
+    } else {
       this.setState({
-        videoClose:false
-      })
+        videoClose: false
+      });
     }
     this.setState(
       {
@@ -388,7 +388,8 @@ class SetDetails extends React.Component {
       showVideoIndex,
       setToTransfer,
       folderId,
-      moveListItem
+      moveListItem,
+      videoClose
     } = this.state;
     const temp = moveListItem;
     let stemp = [];
@@ -485,6 +486,7 @@ class SetDetails extends React.Component {
                   transferMove={this.transferMove}
                   showVideo={showVideo}
                   videoData={videoData}
+                  videoClose={videoClose}
                   onEditMove={this.onEditMove}
                   showVideoIndex={showVideoIndex}
                   loadVideoDataRequest={loadVideoDataRequest}

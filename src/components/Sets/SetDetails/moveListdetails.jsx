@@ -8,6 +8,20 @@ import moveLoader from "../../../assets/img/loder/moveLoad.gif";
 import VideoIndexLoader from "../../../assets/img/loder/indexLoader.svg";
 
 class MoveListDetails extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      imageLoadedIndex: []
+    };
+  }
+
+  handleVideoLoading = index => {
+    const ImageLoadedIndex = [...this.state.imageLoadedIndex];
+    ImageLoadedIndex.push(index);
+    this.setState({
+      imageLoadedIndex: ImageLoadedIndex
+    });
+  };
   render() {
     const {
       index,
@@ -36,6 +50,8 @@ class MoveListDetails extends React.Component {
       isSavingWebM
       // isIosDevice
     } = this.props;
+    const{imageLoadedIndex}=this.state;
+    console.log("imageLoadedIndex", imageLoadedIndex);
 
     return (
       <div
@@ -190,6 +206,9 @@ class MoveListDetails extends React.Component {
                         onContextMenu={e => e.preventDefault()}
                         loop
                         playsInline
+                        onLoadedData={() => {
+                          this.handleVideoLoading(index);
+                        }}
                       >
                         <source src={`${video.moveURL}`} type="video/webm" />
                       </video>
