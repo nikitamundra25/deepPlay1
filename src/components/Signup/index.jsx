@@ -36,7 +36,7 @@ class SignupComponent extends React.Component {
       lastName: "",
       confirmPassword: "",
       roleType: false,
-      passwordStrength: "week",
+      passwordStrength: "weak",
       errors: {}
     };
   }
@@ -136,7 +136,7 @@ class SignupComponent extends React.Component {
         });
       } else {
         this.setState({
-          passwordStrength: "week"
+          passwordStrength: "weak"
         });
       }
     }
@@ -339,7 +339,7 @@ class SignupComponent extends React.Component {
                           password strength:{" "}
                           <span
                             className={`${
-                              passwordStrength === "week"
+                              passwordStrength === "weak"
                                 ? "text-danger"
                                 : "text-success"
                             } font-weight-700`}

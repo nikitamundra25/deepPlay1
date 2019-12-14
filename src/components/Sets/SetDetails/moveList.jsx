@@ -671,10 +671,10 @@ class MoveList extends React.Component {
                         "d-flex justify-content-between align-items-center "
                       }
                     >
-                      {/* <div className="content-title">
-                      Selected Moves:{" "}
-                      {selectedMoveIds && selectedMoveIds.length
-                        ? selectedMoveIds.length
+                      {/* <div classHow YOU can Travel Full TimeName="content-title">
+                      Selected MovesHow YOU can Travel Full Time:{" "}
+                      {selectedMoveIHow YOU can Travel Full Timeds && selectedMoveIds.length
+                        ? selectedMoHow YOU can Travel Full TimeveIds.length
                         : 0}
                     </div> */}
                       <div className="content-title ">
