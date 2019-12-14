@@ -11,16 +11,40 @@ class MoveListDetails extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      imageLoadedIndex: []
+      imageLoadedIndex: [],
+      hoverStart: false,
+      isChange: false
     };
+  }
+  componentDidUpdate = ({ isVideohovered }) => {
+    if (isVideohovered !== this.props.isVideohovered) {
+      if (this.props.isVideohovered) {
+        this.setState({
+          hoverStart: true
+        })
+      } else {
+        this.setState({
+          hoverStart: false
+        })
+      }
+      this.setState({
+        isChange: true
+      })
+    }
   }
 
   handleVideoLoading = index => {
-    const ImageLoadedIndex = [...this.state.imageLoadedIndex];
-    ImageLoadedIndex.push(index);
-    this.setState({
-      imageLoadedIndex: ImageLoadedIndex
-    });
+    const { hoverStart, isChange } = this.state
+    const loadClass = document.getElementsByClassName(`video-effect`)
+    if (isChange) {
+      if (hoverStart && this.props.videoIndex === index) {
+        loadClass.classList.add("video-data-load")
+      }
+      else{
+        console.log("in Elese");
+        loadClass.classList.remove("video-data-load")
+      }
+    }
   };
   render() {
     const {
@@ -50,8 +74,7 @@ class MoveListDetails extends React.Component {
       isSavingWebM
       // isIosDevice
     } = this.props;
-    const{imageLoadedIndex}=this.state;
-    console.log("imageLoadedIndex", imageLoadedIndex);
+    const { imageLoadedIndex } = this.state;
 
     return (
       <div
@@ -71,8 +94,8 @@ class MoveListDetails extends React.Component {
           onMouseLeave={
             !video.isMoveProcessing
               ? () => {
-                  handleVideoHoverLeave();
-                }
+                handleVideoHoverLeave();
+              }
               : null
           }
           key={index}
@@ -83,7 +106,7 @@ class MoveListDetails extends React.Component {
                 isVideoChecked && selectedMoves[index]
                   ? "video-full-selection"
                   : ""
-              }`}
+                }`}
               onMouseOver={() => handleVideoHover(index)}
               onMouseLeave={() => {
                 handleVideoPause(index);
@@ -95,12 +118,12 @@ class MoveListDetails extends React.Component {
                   !video.isMoveProcessing
                     ? isVideoChecked && !isVideoModalOpen
                       ? () =>
-                          handleMovesSelect(
-                            !selectedMoves[index],
-                            null,
-                            index,
-                            video._id
-                          )
+                        handleMovesSelect(
+                          !selectedMoves[index],
+                          null,
+                          index,
+                          video._id
+                        )
                       : null
                     : null
                 }
@@ -151,73 +174,73 @@ class MoveListDetails extends React.Component {
                     />
                   </span>
                 ) : (
-                  <>
-                    {" "}
-                    {!isVideoChecked &&
-                    isSelectVideo &&
-                    videoIndex === index ? (
-                      <span
-                        onClick={() =>
-                          handleVideoCheckBox(true, index, video._id)
-                        }
-                        className="plus-ic-wrap custom-control custom-checkbox"
-                      >
-                        <Input
-                          className="custom-control-input"
-                          id={`selected-video-${index}`}
-                          onChange={
-                            !video.isMoveProcessing
-                              ? e =>
-                                  handleMovesSelect(null, e, index, video._id)
-                              : null
-                          }
-                          type="checkbox"
-                          checked={selectedMoves[index] ? true : false}
-                        />
-                        <label
-                          className="custom-control-label"
-                          htmlFor={`selected-video-${index}`}
-                        />
-                      </span>
-                    ) : null}
-                  </>
-                )}
+                    <>
+                      {" "}
+                      {!isVideoChecked &&
+                        isSelectVideo &&
+                        videoIndex === index ? (
+                          <span
+                            onClick={() =>
+                              handleVideoCheckBox(true, index, video._id)
+                            }
+                            className="plus-ic-wrap custom-control custom-checkbox"
+                          >
+                            <Input
+                              className="custom-control-input"
+                              id={`selected-video-${index}`}
+                              onChange={
+                                !video.isMoveProcessing
+                                  ? e =>
+                                    handleMovesSelect(null, e, index, video._id)
+                                  : null
+                              }
+                              type="checkbox"
+                              checked={selectedMoves[index] ? true : false}
+                            />
+                            <label
+                              className="custom-control-label"
+                              htmlFor={`selected-video-${index}`}
+                            />
+                          </span>
+                        ) : null}
+                    </>
+                  )}
 
                 <>
                   {isSortIndexUpdate &&
-                  (sourceIndex === index || destinationIndex === index) ? (
-                    <div className="video-effect loading-img">
-                      <img src={VideoIndexLoader} alt="" />
-                    </div>
-                  ) : (
-                    <div className={"video-effect"}>
-                      <video
-                        width={"100%"}
-                        id={`webm-video-${index}`}
-                        poster={
-                          video.isMoveProcessing && isSavingWebM
-                            ? moveLoader
-                            : video.videoThumbnail
-                            ? video.videoThumbnail
-                            : videoLoading
-                        }
-                        muted={true}
-                        draggable="true"
-                        onContextMenu={e => e.preventDefault()}
-                        loop
-                        playsInline
-                        onLoadedData={() => {
-                          this.handleVideoLoading(index);
-                        }}
-                      >
-                        <source src={`${video.moveURL}`} type="video/webm" />
-                      </video>
-                    </div>
-                  )}
+                    (sourceIndex === index || destinationIndex === index) ? (
+                      <div className="video-effect loading-img">
+                        <img src={VideoIndexLoader} alt="" />
+                      </div>
+                    ) : (
+                      <div className={"video-effect"}>
+                        <video
+                          width={"100%"}
+                          id={`webm-video-${index}`}
+                          poster={
+                            video.isMoveProcessing && isSavingWebM
+                              ? moveLoader
+                              : video.videoThumbnail
+                                ? video.videoThumbnail
+                                : videoLoading
+                          }
+                          muted={true}
+                          draggable="true"
+                          onContextMenu={e => e.preventDefault()}
+                          loop
+                          playsInline
+                          onLoadStartCapture={() => {
+                            this.handleVideoLoading(index);
+                          }}
+                        >
+                          <source src={`${video.moveURL}`} type="video/webm" />
+                        </video>
+                      </div>
+                    )}
                 </>
                 <div
                   className="blur-img"
-                  // style={{ background: "#000" }}
+                // style={{ background: "#000" }}
                 />
               </div>
               <div className="play-list-text">
@@ -268,8 +291,8 @@ class MoveListDetails extends React.Component {
                   {video.isStarred ? (
                     <img src={starIc} alt={"star"} className="w-100" />
                   ) : (
-                    <img className="w-100" src={blankStar} alt={"star"} />
-                  )}
+                      <img className="w-100" src={blankStar} alt={"star"} />
+                    )}
                 </div>
               </div>
             </div>

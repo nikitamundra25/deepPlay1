@@ -40,6 +40,7 @@ class MoveList extends React.Component {
       videoIndex: -1,
       isVideoChecked: false,
       isSelectVideo: false,
+      isVideohovered: false,
       selectedMoves: [],
       selectedMoveIds: [],
       page: 1,
@@ -111,7 +112,8 @@ class MoveList extends React.Component {
 
   handleVideoHoverLeave = () => {
     this.setState({
-      isSelectVideo: false
+      isSelectVideo: false,
+      isVideohovered: false
     });
   };
 
@@ -149,7 +151,8 @@ class MoveList extends React.Component {
   handleVideoHover = index => {
     this.setState({
       isSelectVideo: true,
-      videoIndex: index
+      videoIndex: index,
+      isVideohovered: true
     });
   };
   /*
@@ -583,7 +586,8 @@ class MoveList extends React.Component {
       errors,
       sourceIndex,
       destinationIndex,
-      stickyHeaderWidth
+      stickyHeaderWidth,
+      isVideohovered
     } = this.state;
     const location = this.props.location;
     const isStarred = location.search.split("=");
@@ -791,6 +795,7 @@ class MoveList extends React.Component {
                             errors={errors}
                             isIosDevice={isIosDevice}
                             title={title}
+                            isVideohovered={isVideohovered}
                           />
                         );
                       })
@@ -832,6 +837,7 @@ class MoveList extends React.Component {
                               handleChange={this.handleChange}
                               reorderList={this.reorderList}
                               isLoadImage={isLoadImage}
+                              isVideohovered={isVideohovered}
                               errors={errors}
                               isIosDevice={isIosDevice}
                             />
