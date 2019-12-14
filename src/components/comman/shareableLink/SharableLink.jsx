@@ -89,7 +89,7 @@ class SharableLinkModal extends React.Component {
       >
         <ModalHeader>
           <span className="custom-title" id="exampleModalLabel">
-            Sharable Link
+            Shareable Link
           </span>
           <button
             aria-label="Close"
