@@ -130,37 +130,38 @@ const downloadYoutubeVideo = async (
         }
         const thumbImg =
           info.player_response.videoDetails.thumbnail.thumbnails &&
-          info.player_response.videoDetails.thumbnail.thumbnails.length
+            info.player_response.videoDetails.thumbnail.thumbnails.length
             ? info.player_response.videoDetails.thumbnail.thumbnails[
-                info.player_response.videoDetails.thumbnail.thumbnails.length -
-                  1
-              ].url
+              info.player_response.videoDetails.thumbnail.thumbnails.length -
+              1
+            ].url
             : [];
-        for (let index = 0; index < info.formats.length; index++) {
-          const element = info.formats[index];
-          if (element.resolution === "1080p") {
-            const temp = element.url.split("manifest.googlevideo.com");
-            if (temp[1]) {
-              youTubeUrl = info.formats[0].url;
-            } else {
-              youTubeUrl = element.url;
-            }
-          } else if (element.resolution === "720p") {
-            const temp = element.url.split("manifest.googlevideo.com");
-            if (temp[1]) {
-              youTubeUrl = info.formats[0].url;
-            } else {
-              youTubeUrl = element.url;
-            }
-          } else if (element.resolution === "480p") {
-            const temp = element.url.split("manifest.googlevideo.com");
-            if (temp[1]) {
-              youTubeUrl = info.formats[0].url;
-            } else {
-              youTubeUrl = element.url;
-            }
-          }
-        }
+        youTubeUrl = info.formats[0].url
+        // for (let index = 0; index < info.formats.length; index++) {
+        //   const element = info.formats[index];
+        //   if (element.resolution === "1080p") {
+        //     const temp = element.url.split("manifest.googlevideo.com");
+        //     if (temp[1]) {
+        //       youTubeUrl = info.formats[0].url;
+        //     } else {
+        //       youTubeUrl = element.url;
+        //     }
+        //   } else if (element.resolution === "720p") {
+        //     const temp = element.url.split("manifest.googlevideo.com");
+        //     if (temp[1]) {
+        //       youTubeUrl = info.formats[0].url;
+        //     } else {
+        //       youTubeUrl = element.url;
+        //     }
+        //   } else if (element.resolution === "480p") {
+        //     const temp = element.url.split("manifest.googlevideo.com");
+        //     if (temp[1]) {
+        //       youTubeUrl = info.formats[0].url;
+        //     } else {
+        //       youTubeUrl = element.url;
+        //     }
+        //   }
+        // }
 
         if (info) {
           const moveResult: Document | any = new MoveModel({
@@ -577,7 +578,7 @@ const updateMoveDetailsFromYouTubeAndTrim = async (
     ytdl(result.sourceUrl, { quality: "highest" }).pipe(
       (videoStream = fs.createWriteStream(originalVideoPath))
     );
-    videoStream.on("close", async function() {
+    videoStream.on("close", async function () {
       const videoUrlFileName = originalVideoPath.split("uploads");
       const videoUrl = `uploads/${videoUrlFileName[1]}`;
       const fileName = `${videoUrl.split(".")[0]}_clip_${moment().unix()}.webm`;
@@ -781,7 +782,7 @@ const updateMoveDetailsAndTrimVideo = async (
 
       const fileName = `${
         result.videoUrl.split(".")[0]
-      }_clip_${moment().unix()}.webm`;
+        }_clip_${moment().unix()}.webm`;
 
       let videoFileMain: String | any, videoOriginalFile: String | any;
       if (IsProductionMode) {
@@ -989,7 +990,7 @@ const isStarredMove = async (req: Request, res: Response): Promise<any> => {
     return res.status(200).json({
       message: `Move has been ${
         isStarred === "true" ? "starred" : "Unstarred"
-      } successfully!`
+        } successfully!`
     });
   } catch (error) {
     console.log(error);
