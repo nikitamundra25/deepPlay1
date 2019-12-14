@@ -39,7 +39,8 @@ export const moveReducer = handleActions(
       isVideoDownloading: true,
       moveDetails: {
         videoUrl: ""
-      }
+      },
+      cancelVideo: false
     }),
     [MovesAction.DOWNLOAD_YOUTUBE_VIDEO_SUCCESS]: (state, { payload }) => ({
       ...state,

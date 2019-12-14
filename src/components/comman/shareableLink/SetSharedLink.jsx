@@ -164,8 +164,14 @@ class SetSharedLink extends React.Component {
                   <div className="main-title">
                     {" "}
                     {decryptedSetDetails
-                      ? decryptedSetDetails.title
-                      : "No Title "}
+                      ? decryptedSetDetails && decryptedSetDetails.isCopy
+                        ? `Copy of ${decryptedSetDetails.title} ${
+                            decryptedSetDetails.copyIndex > 0
+                              ? `(${decryptedSetDetails.copyIndex})`
+                              : ""
+                          }`
+                        : decryptedSetDetails.title
+                      : "MySets"}
                   </div>
                   <div className="sub-title">
                     {decryptedSetDetails ? decryptedSetDetails.description : ""}

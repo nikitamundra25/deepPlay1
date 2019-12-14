@@ -116,7 +116,15 @@ class FolderSharedLink extends React.Component {
             <div className="content-header mt-3">
               <span className="content-title">
                 <div className="main-title">
-                  {decryptedDetails ? decryptedDetails.title : "MyFolder"}
+                  {decryptedDetails
+                    ? decryptedDetails && decryptedDetails.isCopy
+                      ? `Copy of ${decryptedDetails.title} ${
+                          decryptedDetails.copyIndex > 0
+                            ? `(${decryptedDetails.copyIndex})`
+                            : ""
+                        }`
+                      : decryptedDetails.title
+                    : "My Folder"}
                 </div>
                 <div className="sub-title">
                   {" "}

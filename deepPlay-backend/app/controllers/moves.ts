@@ -211,7 +211,6 @@ const getVideoFrames = async (videoName: string): Promise<any> => {
   const video = await new ffmpeg(videoURL);
   const videoDuration = (video.metadata.duration as any).seconds;
   return await new Promise((resolve, reject) => {
-    console.log("Inside Feeee Video");
     video.fnExtractFrameToJPG(
       `${dirName.split(".")[0]}_frames`,
       {
