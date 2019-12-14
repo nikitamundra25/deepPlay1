@@ -415,7 +415,7 @@ class DefaultHeader extends React.Component {
                                   value={search}
                                   className={"form-control"}
                                   autoComplete="off"
-                                  placeholder="Search for set, folder, Move and More"
+                                  placeholder="Search for your moves, sets or folders"
                                   debounceTimeout={300}
                                   onChange={event => this.handleChange(event)}
                                 />
@@ -524,8 +524,8 @@ class DefaultHeader extends React.Component {
                           <DropdownMenu>
                             {SidebarComponent.map((item, index) => {
                               if (
-                                item.name !== "Set" &&
-                                item.name !== "Folder"
+                                item.name !== "Sets" &&
+                                item.name !== "Folders"
                               ) {
                                 return (
                                   <DropdownItem

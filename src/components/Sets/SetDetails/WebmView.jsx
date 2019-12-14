@@ -78,7 +78,9 @@ class WebmView extends Component {
             });
           }
         });
+        // this.video.addEventListener("volumechange", () => {
 
+        // })
         this.video.addEventListener("pause", () => {
           this.setState({
             isPlaying: false
@@ -496,6 +498,15 @@ class WebmView extends Component {
       isMuted: true
     });
   };
+
+  handleKeyPress = (e, videoData) => {
+    if (e.which === 13 || e.keyCode === 13) {
+      this.handleonBlur(e, videoData);
+    } else {
+      return;
+    }
+  };
+
   render() {
     const {
       video,
@@ -507,7 +518,7 @@ class WebmView extends Component {
       isShareable,
       videoData,
       tagsList,
-      fromMoveSearch,
+      fromMoveSearch
     } = this.props;
     const { modelDetails } = modelInfoReducer;
     const {
@@ -601,6 +612,9 @@ class WebmView extends Component {
                 onDoubleClick={() => this.onDoubleClick(videoData.title)}
                 onBlur={
                   doubleClick ? e => this.handleonBlur(e, videoData) : null
+                }
+                onKeyPress={
+                  doubleClick ? e => this.handleKeyPress(e, video) : null
                 }
               >
                 {videoData && videoData.title ? videoData.title : "Unnamed"}
