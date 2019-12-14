@@ -46,6 +46,15 @@ class MoveListDetails extends React.Component {
       }
     }
   };
+
+  handleKeyPress = (e, videoData, index) => {
+    if (e.which === 13 || e.keyCode === 13) {
+      this.props.handleonBlur(e, videoData, index);
+    } else {
+      return;
+    }
+  };
+
   render() {
     const {
       index,
@@ -74,7 +83,6 @@ class MoveListDetails extends React.Component {
       isSavingWebM
       // isIosDevice
     } = this.props;
-    const { imageLoadedIndex } = this.state;
 
     return (
       <div
@@ -256,8 +264,14 @@ class MoveListDetails extends React.Component {
                       ? () => onDoubleClick(index, video.title)
                       : null
                   }
+                  tabindex="0"
                   onBlur={
                     doubleClick ? e => handleonBlur(e, video, index) : null
+                  }
+                  onKeyPress={
+                    doubleClick
+                      ? e => this.handleKeyPress(e, video, index)
+                      : null
                   }
                 >
                   {/* {doubleClick && doubleClickIndex === index ? (

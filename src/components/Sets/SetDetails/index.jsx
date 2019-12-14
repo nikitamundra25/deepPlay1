@@ -420,7 +420,7 @@ class SetDetails extends React.Component {
               </div>
             </span>
             <div className="d-flex  justify-content-center align-items-between">
-              <span
+              {/* <span
                 id="move"
                 className={"cursor_pointer"}
                 onClick={this.handleMoveAdd}
@@ -429,7 +429,7 @@ class SetDetails extends React.Component {
               </span>
               <UncontrolledTooltip placement="top" target="move">
                 Create New Move
-              </UncontrolledTooltip>
+              </UncontrolledTooltip> */}
               <span
                 id="share"
                 onClick={this.handleSharableLink}

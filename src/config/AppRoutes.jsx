@@ -31,12 +31,12 @@ export const AppRoutes = {
   },
   FOLDERS: {
     url: "/folder",
-    name: "Folder",
+    name: "Folders",
     exact: true
   },
   SETS: {
     url: "/set",
-    name: "Set",
+    name: "Sets",
     exact: true
   },
   SET_DETAILS: {

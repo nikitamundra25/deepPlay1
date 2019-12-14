@@ -221,7 +221,7 @@ const getAllSetById = async (req: Request, res: Response): Promise<void> => {
           isDeleted: false,
           moveURL: { $ne: null }
         })
-          .sort({ updatedAt: -1 })
+          .sort({ sortIndex: 1 })
           .limit(1);
 
         setResult.push({
