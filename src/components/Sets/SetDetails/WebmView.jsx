@@ -112,7 +112,7 @@ class WebmView extends Component {
         currentTime: 0,
         exactCurrentTime: 0,
         audioSpeed: 5,
-        isMuted: false,
+        isMuted: this.props.videoClose ? true : false,
         playBackSpeed: 1
       });
     }
@@ -507,7 +507,7 @@ class WebmView extends Component {
       isShareable,
       videoData,
       tagsList,
-      fromMoveSearch
+      fromMoveSearch,
     } = this.props;
     const { modelDetails } = modelInfoReducer;
     const {
