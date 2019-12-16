@@ -34,17 +34,17 @@ class MoveListDetails extends React.Component {
   }
 
   handleVideoLoading = index => {
-    const { hoverStart, isChange } = this.state
-    const loadClass = document.getElementsByClassName(`video-effect`)
-    if (isChange) {
-      if (hoverStart && this.props.videoIndex === index) {
-        loadClass.classList.add("video-data-load")
-      }
-      else{
-        console.log("in Elese");
-        loadClass.classList.remove("video-data-load")
-      }
-    }
+    // const { hoverStart, isChange } = this.state
+    // const loadClass = document.getElementsByClassName(`video-effect`)
+    // if (isChange) {
+    //   if (hoverStart && this.props.videoIndex === index) {
+    //     loadClass.classList.add("video-data-load")
+    //   }
+    //   else{
+    //     console.log("in Elese");
+    //     loadClass.classList.remove("video-data-load")
+    //   }
+    // }
   };
 
   handleKeyPress = (e, videoData, index) => {
