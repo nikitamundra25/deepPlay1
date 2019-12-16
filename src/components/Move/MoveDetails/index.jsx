@@ -148,7 +148,7 @@ class MoveDetails extends React.Component {
         ) {
           window.history.back();
           if (!toast.isActive(this.toastId)) {
-            this.toastId = toast.warn("This move has already been created.");
+            this.toastId = toast.warn("The move for this id has already been created.");
           }
         }
         const { allSetList } = this.props.setReducer;
