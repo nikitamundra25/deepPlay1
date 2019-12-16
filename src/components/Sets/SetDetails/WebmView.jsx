@@ -973,8 +973,8 @@ class WebmView extends Component {
               </div>
             </div>
             <div className="text-right pr-4">
-              {(videoData && videoData.tags && videoData.tags.length) ||
-              (videoData && videoData.description) ? (
+              {((videoData && videoData.tags && videoData.tags.length) ||
+              (videoData && videoData.description)) && !isShareable  ? (
                 <span
                   className="cursor_pointer"
                   onClick={() => this.openAddTagsModal(videoData._id, "edit")}

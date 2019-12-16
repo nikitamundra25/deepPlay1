@@ -269,11 +269,7 @@ class SetSharedLink extends React.Component {
                                         onContextMenu={e => e.preventDefault()}
                                       >
                                         <source
-                                          poster={
-                                            video.videoThumbnail
-                                              ? video.videoThumbnail
-                                              : videoLoading
-                                          }
+                                          poster={video.videoThumbnail}
                                           src={`${video.moveURL}`}
                                           loop
                                           type="video/webm"

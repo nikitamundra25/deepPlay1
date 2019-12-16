@@ -153,7 +153,7 @@ class LoginComponent extends React.Component {
             <Card className="bg-secondary shadow border-0 pb-0">
               <CardHeader>
                 <div className=" login-heading text-center mb-3">
-                  Sign in with
+                  Log in with
                 </div>
                 <div className="btn-wrapper text-center social-media-wrap">
                   <span className="btn-inner--icon mr-2 facebook-wrap">
@@ -181,7 +181,7 @@ class LoginComponent extends React.Component {
               </CardHeader>
               <CardBody className="px-lg-5">
                 <div className="text-center login-heading mb-4 auth-subheading">
-                  <span> Or sign in with credentials</span>
+                  <span> Or log in with credentials</span>
                 </div>
                 <Form onSubmit={this.handleLoginRequest}>
                   <FormGroup className="mb-3">
@@ -244,7 +244,7 @@ class LoginComponent extends React.Component {
                       color={" "}
                       disabled={isLoginRequest ? true : false}
                     >
-                      {isLoginRequest ? "Please Wait..." : "Sign in"}
+                      {isLoginRequest ? "Please Wait..." : "Log in"}
                     </Button>
 
                     <Button
