@@ -36,7 +36,7 @@ class SignupComponent extends React.Component {
       lastName: "",
       confirmPassword: "",
       roleType: false,
-      passwordStrength: "week",
+      passwordStrength: "weak",
       errors: {}
     };
   }
@@ -130,13 +130,13 @@ class SignupComponent extends React.Component {
     }
     if (name === "password") {
       let res = value.match(/^(?:[0-9]+[a-z]|[a-z]+[0-9])[a-z0-9]*$/i);
-      if (res) {
+      if (res || value >= 40) {
         this.setState({
           passwordStrength: "strong"
         });
       } else {
         this.setState({
-          passwordStrength: "week"
+          passwordStrength: "weak"
         });
       }
     }
@@ -264,7 +264,7 @@ class SignupComponent extends React.Component {
                         onChange={this.handleChange}
                         placeholder="First Name"
                         type="text"
-                        // invalid={errors.firstName}
+                      // invalid={errors.firstName}
                       />
                       <FormFeedback>
                         {errors.firstName || !firstName
@@ -339,10 +339,10 @@ class SignupComponent extends React.Component {
                           password strength:{" "}
                           <span
                             className={`${
-                              passwordStrength === "week"
+                              passwordStrength === "weak"
                                 ? "text-danger"
                                 : "text-success"
-                            } font-weight-700`}
+                              } font-weight-700`}
                           >
                             {passwordStrength}
                           </span>

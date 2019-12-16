@@ -122,21 +122,6 @@ const downloadYoutubeVideo = async (
           });
         }
 
-        if (info.player_response.videoDetails.lengthSeconds >= 3600) {
-          return res.status(400).json({
-            message: "Video duration should be less than 1 hour.",
-            success: false
-          });
-        }
-        const thumbImg =
-          info.player_response.videoDetails.thumbnail.thumbnails &&
-            info.player_response.videoDetails.thumbnail.thumbnails.length
-            ? info.player_response.videoDetails.thumbnail.thumbnails[
-              info.player_response.videoDetails.thumbnail.thumbnails.length -
-              1
-            ].url
-            : [];
-        youTubeUrl = info.formats[0].url
         // for (let index = 0; index < info.formats.length; index++) {
         //   const element = info.formats[index];
         //   if (element.resolution === "1080p") {
@@ -164,6 +149,21 @@ const downloadYoutubeVideo = async (
         // }
 
         if (info) {
+          if (info.player_response.videoDetails.lengthSeconds >= 3600) {
+            return res.status(400).json({
+              message: "Video duration should be less than 1 hour.",
+              success: false
+            });
+          }
+          const thumbImg =
+            info.player_response.videoDetails.thumbnail.thumbnails &&
+            info.player_response.videoDetails.thumbnail.thumbnails.length
+              ? info.player_response.videoDetails.thumbnail.thumbnails[
+                  info.player_response.videoDetails.thumbnail.thumbnails
+                    .length - 1
+                ].url
+              : [];
+          youTubeUrl = info.formats[0].url;
           const moveResult: Document | any = new MoveModel({
             videoUrl: youTubeUrl,
             sourceUrl: body.url,
@@ -212,7 +212,6 @@ const getVideoFrames = async (videoName: string): Promise<any> => {
   const video = await new ffmpeg(videoURL);
   const videoDuration = (video.metadata.duration as any).seconds;
   return await new Promise((resolve, reject) => {
-    console.log("Inside Feeee Video");
     video.fnExtractFrameToJPG(
       `${dirName.split(".")[0]}_frames`,
       {
@@ -469,7 +468,8 @@ const publicUrlMoveDetails = async (
       })
         .populate("setId")
         .skip(pageNumber)
-        .limit(limitNumber);
+        .limit(limitNumber)
+        .sort({ sortIndex: 1 });
 
       totalMove = await MoveModel.count({
         setId: decryptedSetId,
@@ -579,7 +579,7 @@ const updateMoveDetailsFromYouTubeAndTrim = async (
     ytdl(result.sourceUrl, { quality: "highest" }).pipe(
       (videoStream = fs.createWriteStream(originalVideoPath))
     );
-    videoStream.on("close", async function () {
+    videoStream.on("close", async function() {
       const videoUrlFileName = originalVideoPath.split("uploads");
       const videoUrl = `uploads/${videoUrlFileName[1]}`;
       const fileName = `${videoUrl.split(".")[0]}_clip_${moment().unix()}.webm`;
@@ -783,7 +783,7 @@ const updateMoveDetailsAndTrimVideo = async (
 
       const fileName = `${
         result.videoUrl.split(".")[0]
-        }_clip_${moment().unix()}.webm`;
+      }_clip_${moment().unix()}.webm`;
 
       let videoFileMain: String | any, videoOriginalFile: String | any;
       if (IsProductionMode) {
@@ -991,7 +991,7 @@ const isStarredMove = async (req: Request, res: Response): Promise<any> => {
     return res.status(200).json({
       message: `Move has been ${
         isStarred === "true" ? "starred" : "Unstarred"
-        } successfully!`
+      } successfully!`
     });
   } catch (error) {
     console.log(error);
@@ -1272,7 +1272,7 @@ const addTagsInMove = async (req: Request, res: Response): Promise<any> => {
 const updateMoveIndex = async (req: Request, res: Response): Promise<any> => {
   try {
     const { body } = req;
-    const { setId, sortIndex, moveId, movesOfSet } = body;
+    const { setId, sortIndex, moveId, movesOfSet, parsed } = body;
 
     let num: number = parseInt(sortIndex);
     let num1: number = parseInt(sortIndex);
@@ -1283,13 +1283,25 @@ const updateMoveIndex = async (req: Request, res: Response): Promise<any> => {
         { $set: { sortIndex: index + 1 } }
       );
     }
-    const resp: Document | any | null = await MoveModel.find({
-      setId: setId,
-      isDeleted: false,
-      moveURL: { $ne: null }
-    }).sort({
-      sortIndex: 1
-    });
+    let resp: Document | any | null;
+    if (parsed.isStarred) {
+      resp = await MoveModel.find({
+        setId: setId,
+        isDeleted: false,
+        isStarred: true,
+        moveURL: { $ne: null }
+      }).sort({
+        sortIndex: 1
+      });
+    } else {
+      resp = await MoveModel.find({
+        setId: setId,
+        isDeleted: false,
+        moveURL: { $ne: null }
+      }).sort({
+        sortIndex: 1
+      });
+    }
 
     return res.status(200).json({
       message: "SortIndex have been updated successfully!",

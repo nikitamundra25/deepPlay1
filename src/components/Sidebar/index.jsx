@@ -3,7 +3,7 @@ import folder from "../../assets/img/icons/folder.svg";
 import home from "../../assets/img/icons/home.svg";
 import set from "../../assets/img/icons/set.svg";
 import settings from "../../assets/img/icons/settings.svg";
-import changePassword from "../../assets/img/icons/lock.svg";
+// import changePassword from "../../assets/img/icons/lock.svg";
 
 export const SidebarComponent = [
   {
@@ -29,11 +29,11 @@ export const SidebarComponent = [
     url: AppRoutes.SETTINGS.url,
     icon: "fas fa-cog",
     iconUrl: settings
-  },
-  {
-    name: AppRoutes.CHANGE_PASSWORD.name,
-    url: AppRoutes.CHANGE_PASSWORD.url,
-    icon: "fas fa-lock",
-    iconUrl: changePassword
   }
+  // {
+  //   name: AppRoutes.CHANGE_PASSWORD.name,
+  //   url: AppRoutes.CHANGE_PASSWORD.url,
+  //   icon: "fas fa-lock",
+  //   iconUrl: changePassword
+  // }
 ];

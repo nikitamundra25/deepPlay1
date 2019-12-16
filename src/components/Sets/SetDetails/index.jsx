@@ -64,7 +64,8 @@ class SetDetails extends React.Component {
       moveData: [],
       setToTransfer: "",
       folderId: "",
-      moveListItem: []
+      moveListItem: [],
+      videoClose: false
     };
   }
   componentDidMount = () => {
@@ -219,6 +220,15 @@ class SetDetails extends React.Component {
   handleVideoModal = (moveURL, index) => {
     const { modelInfoReducer } = this.props;
     const { modelDetails } = modelInfoReducer;
+    if (modelDetails.isVideoModalOpen) {
+      this.setState({
+        videoClose: true
+      });
+    } else {
+      this.setState({
+        videoClose: false
+      });
+    }
     this.setState(
       {
         showVideo: moveURL,
@@ -378,7 +388,8 @@ class SetDetails extends React.Component {
       showVideoIndex,
       setToTransfer,
       folderId,
-      moveListItem
+      moveListItem,
+      videoClose
     } = this.state;
     const temp = moveListItem;
     let stemp = [];
@@ -409,7 +420,7 @@ class SetDetails extends React.Component {
               </div>
             </span>
             <div className="d-flex  justify-content-center align-items-between">
-              <span
+              {/* <span
                 id="move"
                 className={"cursor_pointer"}
                 onClick={this.handleMoveAdd}
@@ -418,7 +429,7 @@ class SetDetails extends React.Component {
               </span>
               <UncontrolledTooltip placement="top" target="move">
                 Create New Move
-              </UncontrolledTooltip>
+              </UncontrolledTooltip> */}
               <span
                 id="share"
                 onClick={this.handleSharableLink}
@@ -475,6 +486,7 @@ class SetDetails extends React.Component {
                   transferMove={this.transferMove}
                   showVideo={showVideo}
                   videoData={videoData}
+                  videoClose={videoClose}
                   onEditMove={this.onEditMove}
                   showVideoIndex={showVideoIndex}
                   loadVideoDataRequest={loadVideoDataRequest}

@@ -21,6 +21,7 @@ import remove from "../../../assets/img/set-detail-ic/remove.svg";
 import { ListManager } from "react-beautiful-dnd-grid";
 import MoveListDetails from "./moveListdetails";
 import { toast } from "react-toastify";
+import qs from "query-string";
 
 // a little function to help us with reordering the result
 const reorder = (list, startIndex, endIndex) => {
@@ -39,6 +40,7 @@ class MoveList extends React.Component {
       videoIndex: -1,
       isVideoChecked: false,
       isSelectVideo: false,
+      isVideohovered: false,
       selectedMoves: [],
       selectedMoveIds: [],
       page: 1,
@@ -80,18 +82,26 @@ class MoveList extends React.Component {
   listenScrollEvent = e => {
     let offsetElemnt = document.getElementById("get-sticky-header");
     let offsetElemntInner = document.getElementById("get-sticky-inner-header");
-    let offsetElemntSubInner = document.getElementById("get-sticky-sub-inner-header");
+    let offsetElemntSubInner = document.getElementById(
+      "get-sticky-sub-inner-header"
+    );
 
     if (offsetElemnt) {
       let offsetWidth = offsetElemnt.getBoundingClientRect();
       if (offsetWidth.top + 110 <= 1) {
-
-        console.log(offsetWidth.top, offsetWidth.left, offsetElemntInner.getBoundingClientRect().left, offsetElemntInner.offsetWidth, "offsetWidth---------");
+        console.log(
+          offsetWidth.top,
+          offsetWidth.left,
+          offsetElemntInner.getBoundingClientRect().left,
+          offsetElemntInner.offsetWidth,
+          "offsetWidth---------"
+        );
 
         this.setState({
           stickyHeaderWidth: offsetElemntInner.offsetWidth
-        })
-        offsetElemntInner.style.left = offsetElemntSubInner.getBoundingClientRect().left + "px";
+        });
+        offsetElemntInner.style.left =
+          offsetElemntSubInner.getBoundingClientRect().left + "px";
         this.setState({ backgroundClass: "sticky-header" });
       } else {
         offsetElemntInner.style.left = 50 + "%";
@@ -102,7 +112,8 @@ class MoveList extends React.Component {
 
   handleVideoHoverLeave = () => {
     this.setState({
-      isSelectVideo: false
+      isSelectVideo: false,
+      isVideohovered: false
     });
   };
 
@@ -110,7 +121,7 @@ class MoveList extends React.Component {
     if (
       prevProps.isMoveStarLoading &&
       prevProps.isMoveStarLoading.loading !==
-      this.props.isMoveStarLoading.loading
+        this.props.isMoveStarLoading.loading
     ) {
       this.setState({
         isMarkingStar: {
@@ -140,7 +151,8 @@ class MoveList extends React.Component {
   handleVideoHover = index => {
     this.setState({
       isSelectVideo: true,
-      videoIndex: index
+      videoIndex: index,
+      isVideohovered: true
     });
   };
   /*
@@ -190,7 +202,8 @@ class MoveList extends React.Component {
       isVideoChecked: false,
       isVideoModalOpen: true,
       selectedMoves: [],
-      selectedMoveIds: []
+      selectedMoveIds: [],
+      isMarkingStar: -1
     });
   };
   /*
@@ -404,9 +417,10 @@ class MoveList extends React.Component {
     }
     const list = this.props.movesOfSet;
     const items = reorder(list, sourceIndex, destinationIndex);
+    let parsed = qs.parse(this.props.location.search);
     const data = {
       setId: this.props.setIdPathName,
-      // moveId: draggableId,
+      parsed,
       sortIndex: destinationIndex,
       sourceIndex: sourceIndex,
       movesOfSet: items
@@ -572,7 +586,8 @@ class MoveList extends React.Component {
       errors,
       sourceIndex,
       destinationIndex,
-      stickyHeaderWidth
+      stickyHeaderWidth,
+      isVideohovered
     } = this.state;
     const location = this.props.location;
     const isStarred = location.search.split("=");
@@ -643,7 +658,7 @@ class MoveList extends React.Component {
                 selectedMoveIds && selectedMoveIds.length
                   ? "select-focus-event"
                   : null
-                } `}
+              } `}
               id="video-thumbnail-block"
             >
               {selectedMoveIds && selectedMoveIds.length ? (
@@ -662,10 +677,10 @@ class MoveList extends React.Component {
                         "d-flex justify-content-between align-items-center "
                       }
                     >
-                      {/* <div className="content-title">
-                      Selected Moves:{" "}
-                      {selectedMoveIds && selectedMoveIds.length
-                        ? selectedMoveIds.length
+                      {/* <div classHow YOU can Travel Full TimeName="content-title">
+                      Selected MovesHow YOU can Travel Full Time:{" "}
+                      {selectedMoveIHow YOU can Travel Full Timeds && selectedMoveIds.length
+                        ? selectedMoHow YOU can Travel Full TimeveIds.length
                         : 0}
                     </div> */}
                       <div className="content-title ">
@@ -780,62 +795,64 @@ class MoveList extends React.Component {
                             errors={errors}
                             isIosDevice={isIosDevice}
                             title={title}
+                            isVideohovered={isVideohovered}
                           />
                         );
                       })
                     ) : (
-                        <ListManager
-                          items={movesOfSet}
-                          direction="horizontal"
-                          maxItems={4}
-                          render={video => {
-                            let index = video.id;
-                            return (
-                              <MoveListDetails
-                                index={index}
-                                isVideoChecked={isVideoChecked}
-                                selectedMoves={selectedMoves}
-                                handleShowVideo={this.props.handleShowVideo}
-                                handleVideoHover={this.handleVideoHover}
-                                handleVideoPause={this.handleVideoPause}
-                                handleVideoHoverLeave={this.handleVideoHoverLeave}
-                                handleVideoPlay={this.handleVideoPlay}
-                                handleMovesSelect={this.handleMovesSelect}
-                                isMarkingStar={isMarkingStar}
-                                video={video}
-                                sourceIndex={sourceIndex}
-                                isSavingWebM={isSavingWebM}
-                                destinationIndex={destinationIndex}
-                                isSortIndexUpdate={isSortIndexUpdate}
-                                isSelectVideo={isSelectVideo}
-                                videoIndex={videoIndex}
-                                isVideoModalOpen={isVideoModalOpen}
-                                handleStarred={this.handleStarred}
-                                handleVideoCheckBox={this.handleVideoCheckBox}
-                                handleVideoModal={this.props.handleVideoModal}
-                                title={title}
-                                onDoubleClick={this.onDoubleClick}
-                                doubleClickIndex={doubleClickIndex}
-                                doubleClick={doubleClick}
-                                handleonBlur={this.handleonBlur}
-                                handleChange={this.handleChange}
-                                reorderList={this.reorderList}
-                                isLoadImage={isLoadImage}
-                                errors={errors}
-                                isIosDevice={isIosDevice}
-                              />
-                            );
-                          }}
-                          onDragEnd={this.reorderList}
-                        />
-                      )}
+                      <ListManager
+                        items={movesOfSet}
+                        direction="horizontal"
+                        maxItems={4}
+                        render={video => {
+                          let index = video.id;
+                          return (
+                            <MoveListDetails
+                              index={index}
+                              isVideoChecked={isVideoChecked}
+                              selectedMoves={selectedMoves}
+                              handleShowVideo={this.props.handleShowVideo}
+                              handleVideoHover={this.handleVideoHover}
+                              handleVideoPause={this.handleVideoPause}
+                              handleVideoHoverLeave={this.handleVideoHoverLeave}
+                              handleVideoPlay={this.handleVideoPlay}
+                              handleMovesSelect={this.handleMovesSelect}
+                              isMarkingStar={isMarkingStar}
+                              video={video}
+                              sourceIndex={sourceIndex}
+                              isSavingWebM={isSavingWebM}
+                              destinationIndex={destinationIndex}
+                              isSortIndexUpdate={isSortIndexUpdate}
+                              isSelectVideo={isSelectVideo}
+                              videoIndex={videoIndex}
+                              isVideoModalOpen={isVideoModalOpen}
+                              handleStarred={this.handleStarred}
+                              handleVideoCheckBox={this.handleVideoCheckBox}
+                              handleVideoModal={this.props.handleVideoModal}
+                              title={title}
+                              onDoubleClick={this.onDoubleClick}
+                              doubleClickIndex={doubleClickIndex}
+                              doubleClick={doubleClick}
+                              handleonBlur={this.handleonBlur}
+                              handleChange={this.handleChange}
+                              reorderList={this.reorderList}
+                              isLoadImage={isLoadImage}
+                              isVideohovered={isVideohovered}
+                              errors={errors}
+                              isIosDevice={isIosDevice}
+                            />
+                          );
+                        }}
+                        onDragEnd={this.reorderList}
+                      />
+                    )}
                   </div>
                 </div>
               ) : (
-                  <Col>
-                    <Loader />
-                  </Col>
-                )}
+                <Col>
+                  <Loader />
+                </Col>
+              )}
             </div>
           </Row>
           <TransferToModal

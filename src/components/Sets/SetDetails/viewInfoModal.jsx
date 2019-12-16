@@ -44,7 +44,9 @@ class ViewInfoModal extends React.Component {
                         <span className="info-heading">Title </span>
                         <span className="info-content">
                           <span className="colon-wrap">: </span>{" "}
-                          {videoData.title ? videoData.title : "Unnamed"}
+                          {videoData && videoData.title
+                            ? videoData.title
+                            : "Unnamed"}
                         </span>
                       </>
                     ) : null}
