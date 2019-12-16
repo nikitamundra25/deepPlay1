@@ -389,7 +389,7 @@ class YouTubeFrameDetails extends Component {
                     <video
                       width={"100%"}
                       autoPlay={false}
-                      loop={true}
+                      // loop={true}
                       id={`video-trimmer-${index}`}
                       onLoadedData={() => {
                         this.handleVideoLoading(index);

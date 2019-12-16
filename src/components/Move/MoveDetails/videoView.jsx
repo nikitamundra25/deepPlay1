@@ -10,6 +10,7 @@ import {
   FormFeedback
 } from "reactstrap";
 import { AppConfig } from "../../../config/Appconfig";
+// import videoLoading from "../../../assets/img/loder/loader.svg";
 import "./index.scss";
 
 // core components
@@ -20,7 +21,8 @@ class VideoView extends React.Component {
     this.state = {
       url: "",
       errors: "",
-      isPaste: false
+      isPaste: false,
+      isBufferingVideo: false
     };
   }
   /**
@@ -71,6 +73,17 @@ class VideoView extends React.Component {
     if (prevMoveData !== newMoveData) {
       this.video.load();
     }
+    const vid = document.getElementById("video-trimmer")
+    vid.onwaiting = () => {
+      this.setState({
+        isBufferingVideo: true
+      })
+    };
+    vid.oncanplay = () => {
+      this.setState({
+        isBufferingVideo: false
+      })
+    };
   }
   /**
    *
@@ -85,8 +98,7 @@ class VideoView extends React.Component {
       isYoutubeUrl
     } = this.props;
     const { moveDetails } = moveReducer;
-
-    
+    const { isBufferingVideo } = this.state
     return (
       <>
         <Col lg={"6"}>
@@ -102,7 +114,7 @@ class VideoView extends React.Component {
                     errorTitle ? "is-invalid move-title" : "move-title"
                   }
                   name="title"
-                  value={title ? title: ""}
+                  value={title ? title : ""}
                 />
                 <FormFeedback> {errorTitle ? errorTitle : null} </FormFeedback>
                 <InputGroupAddon
@@ -125,7 +137,7 @@ class VideoView extends React.Component {
             </div>
           </FormGroup>
           {moveDetails && moveDetails.videoUrl ? (
-            <>
+            <div className={"video-player"}>
               {!isEdit ? (
                 <video
                   width={"100%"}
@@ -145,22 +157,22 @@ class VideoView extends React.Component {
                   />
                 </video>
               ) : (
-                <video
-                  width={"100%"}
-                  autoPlay
-                  loop
-                  id={"video-trimmer"}
-                  muted={false}
-                  playsinline
-                  onContextMenu={e => e.preventDefault()}
-                >
-                  <source src={`${moveDetails.moveURL}`} />
-                </video>
-              )}
-            </>
+                  <video
+                    width={"100%"}
+                    autoPlay
+                    loop
+                    id={"video-trimmer"}
+                    muted={false}
+                    playsinline
+                    onContextMenu={e => e.preventDefault()}
+                  >
+                    <source src={`${moveDetails.moveURL}`} />
+                  </video>
+                )}
+            </div>
           ) : (
-            <span>No video available for trimming</span>
-          )}
+              <span>No video available for trimming</span>
+            )}
         </Col>
       </>
     );
