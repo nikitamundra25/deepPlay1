@@ -10,7 +10,8 @@ import {
   FormFeedback
 } from "reactstrap";
 import { AppConfig } from "../../../config/Appconfig";
-// import videoLoading from "../../../assets/img/loder/loader.svg";
+import videoLoading from "../../../assets/img/loder/loader.svg";
+
 import "./index.scss";
 
 // core components
@@ -138,6 +139,12 @@ class VideoView extends React.Component {
           </FormGroup>
           {moveDetails && moveDetails.videoUrl ? (
             <div className={"video-player"}>
+              {isBufferingVideo === true ? 
+                 <div className="video-spinner z-" >
+                   <img src={videoLoading} alt="" />
+               </div>
+               : null
+            }
               {!isEdit ? (
                 <video
                   width={"100%"}
