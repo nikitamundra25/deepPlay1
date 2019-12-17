@@ -20,7 +20,6 @@ import emptySetIc from "../../../assets/img/play-list-ic.svg";
 import InfiniteScroll from "react-infinite-scroll-component";
 import imgNotfound from "../../../assets/img/icons/lock.svg";
 import { Link } from "react-router-dom";
-import videoLoading from "../../../assets/img/icons/video-poster.png";
 
 // core components
 class SetSharedLink extends React.Component {
