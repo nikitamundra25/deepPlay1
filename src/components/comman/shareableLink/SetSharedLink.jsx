@@ -73,6 +73,7 @@ class SetSharedLink extends React.Component {
       showVideoIndex: videoIndex
     });
   };
+
   handleVideoHover = index => {
     this.setState({
       isSelectVideo: true,
@@ -266,9 +267,10 @@ class SetSharedLink extends React.Component {
                                         id={`webm-video-${index}`}
                                         muted={true}
                                         onContextMenu={e => e.preventDefault()}
+                                        poster={video.videoThumbnail}
+                                        preload="auto"
                                       >
                                         <source
-                                          poster={video.videoThumbnail}
                                           src={`${video.moveURL}`}
                                           loop
                                           type="video/webm"

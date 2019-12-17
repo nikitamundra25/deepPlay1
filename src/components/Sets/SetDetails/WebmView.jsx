@@ -20,6 +20,7 @@ import AddTagModal from "./addTagsModal";
 import EditMoveModal from "./editMoveModal";
 import { ConfirmBox } from "helper/SweetAleart";
 import { toast } from "react-toastify";
+// import videoLoading from "../../../assets/img/loder/loader.svg";
 
 class WebmView extends Component {
   video;
@@ -47,7 +48,8 @@ class WebmView extends Component {
       tags: [],
       edit: false,
       description: "",
-      error: ""
+      error: "",
+      isBufferingVideo: false
     };
   }
   /**
@@ -59,6 +61,19 @@ class WebmView extends Component {
     isFullScreenMode,
     isVideoFromSearch
   }) => {
+    // const vid = document.getElementById("webm-video");
+    // if (vid) {
+    //   vid.onwaiting = () => {
+    //     this.setState({
+    //       isBufferingVideo: true
+    //     });
+    //   };
+    //   vid.oncanplay = () => {
+    //     this.setState({
+    //       isBufferingVideo: false
+    //     });
+    //   };
+    // }
     if (isFullScreenMode !== this.props.isFullScreenMode) {
       const videoFullScreen = true;
       if (this.video) {
@@ -609,7 +624,11 @@ class WebmView extends Component {
                 suppressContentEditableWarning={true}
                 contentEditable={doubleClick ? "true" : "false"}
                 className="video-slider-title font-weight-bold"
-                onDoubleClick={() => this.onDoubleClick(videoData.title)}
+                onDoubleClick={
+                  !isShareable
+                    ? () => this.onDoubleClick(videoData.title)
+                    : null
+                }
                 onBlur={
                   doubleClick ? e => this.handleonBlur(e, videoData) : null
                 }
@@ -743,6 +762,7 @@ class WebmView extends Component {
                     </div>
                   ) : null}
                 </div>
+
                 {!isVideoLoading ? (
                   <video
                     width={"100%"}
@@ -974,7 +994,8 @@ class WebmView extends Component {
             </div>
             <div className="text-right pr-4">
               {((videoData && videoData.tags && videoData.tags.length) ||
-              (videoData && videoData.description)) && !isShareable  ? (
+                (videoData && videoData.description)) &&
+              !isShareable ? (
                 <span
                   className="cursor_pointer"
                   onClick={() => this.openAddTagsModal(videoData._id, "edit")}
