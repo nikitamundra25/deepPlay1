@@ -78,7 +78,7 @@ class VideoDetails extends React.Component {
           <div>
             <div className={"font-weight-bold h4"}>Trim your video</div>
             <span>
-              Use sliders below to trim your video (15 secs max).Or use your
+              Use sliders below to trim your video (15 secs max). Or use your
               arrow keys on timestamps to get really precise.
             </span>
           </div>

@@ -21,8 +21,24 @@ class FrameDetails extends Component {
     };
   }
 
-  componentDidUpdate() {
+  componentDidUpdate({ videoMetaData }) {
     this.updateSlider();
+    if (
+      videoMetaData &&
+      videoMetaData.duration !== this.props.videoMetaData.duration
+    ) {
+      const { videoMetaData } = this.props;
+      const { duration } = videoMetaData || {};
+      const { seconds: maxValue } = duration || {};
+      if (maxValue <= 15) {
+        this.setState({
+          time: {
+            min: 0,
+            max: maxValue
+          }
+        });
+      }
+    }
   }
 
   /**
@@ -80,9 +96,6 @@ class FrameDetails extends Component {
     const { videoMetaData } = this.props;
     const { duration } = videoMetaData || {};
     const { seconds: maxValue } = duration || {};
-    console.log("max", max);
-    console.log("min", min);
-    console.log("max - min", max - min <= 15);
     if (min >= 0) {
       if (min !== parseInt(time.min) && min >= max) {
         max =

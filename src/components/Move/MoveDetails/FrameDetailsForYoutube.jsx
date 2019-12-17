@@ -23,8 +23,18 @@ class YouTubeFrameDetails extends Component {
     };
   }
 
-  componentDidUpdate() {
+  componentDidUpdate({ videoMaxDuration }) {
     this.updateSlider();
+    if (videoMaxDuration !== this.props.videoMaxDuration) {
+      if (this.props.videoMaxDuration <= 15) {
+        this.setState({
+          time: {
+            min: 0,
+            max: this.props.videoMaxDuration
+          }
+        });
+      }
+    }
   }
 
   /**
