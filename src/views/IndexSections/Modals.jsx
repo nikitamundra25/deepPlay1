@@ -183,7 +183,7 @@ class Modals extends React.Component {
                 <Card className="bg-secondary shadow border-0">
                   <CardHeader className="bg-white pb-5">
                     <div className="text-muted text-center mb-3">
-                      <small>Sign in with</small>
+                      <small>Log in with</small>
                     </div>
                     <div className="btn-wrapper text-center">
                       <Button
@@ -218,7 +218,7 @@ class Modals extends React.Component {
                   </CardHeader>
                   <CardBody className="px-lg-5 py-lg-5">
                     <div className="text-center text-muted mb-4">
-                      <small>Or sign in with credentials</small>
+                      <small>Or log in with credentials</small>
                     </div>
                     <Form role="form">
                       <FormGroup
@@ -279,7 +279,7 @@ class Modals extends React.Component {
                       </div>
                       <div className="text-center">
                         <Button className="my-4" color="primary" type="button">
-                          Sign in
+                          Log in
                         </Button>
                       </div>
                     </Form>

@@ -20,7 +20,6 @@ import emptySetIc from "../../../assets/img/play-list-ic.svg";
 import InfiniteScroll from "react-infinite-scroll-component";
 import imgNotfound from "../../../assets/img/icons/lock.svg";
 import { Link } from "react-router-dom";
-import videoLoading from "../../../assets/img/icons/video-poster.png";
 
 // core components
 class SetSharedLink extends React.Component {
@@ -74,6 +73,7 @@ class SetSharedLink extends React.Component {
       showVideoIndex: videoIndex
     });
   };
+
   handleVideoHover = index => {
     this.setState({
       isSelectVideo: true,
@@ -267,13 +267,10 @@ class SetSharedLink extends React.Component {
                                         id={`webm-video-${index}`}
                                         muted={true}
                                         onContextMenu={e => e.preventDefault()}
+                                        poster={video.videoThumbnail}
+                                        preload="auto"
                                       >
                                         <source
-                                          poster={
-                                            video.videoThumbnail
-                                              ? video.videoThumbnail
-                                              : videoLoading
-                                          }
                                           src={`${video.moveURL}`}
                                           loop
                                           type="video/webm"

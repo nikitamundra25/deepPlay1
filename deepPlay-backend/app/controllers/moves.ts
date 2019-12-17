@@ -157,12 +157,19 @@ const downloadYoutubeVideo = async (
           }
           const thumbImg =
             info.player_response.videoDetails.thumbnail.thumbnails &&
-            info.player_response.videoDetails.thumbnail.thumbnails.length
+              info.player_response.videoDetails.thumbnail.thumbnails.length
               ? info.player_response.videoDetails.thumbnail.thumbnails[
-                  info.player_response.videoDetails.thumbnail.thumbnails
-                    .length - 1
-                ].url
+                info.player_response.videoDetails.thumbnail.thumbnails
+                  .length - 1
+              ].url
               : [];
+          const temp = info.formats[0].url.split("manifest.googlevideo.com");
+          if (temp[1]) {
+            return res.status(400).json({
+              message: "Provided Url does not exist,please try with diffrent url.",
+              success: false
+            })
+          }
           youTubeUrl = info.formats[0].url;
           const moveResult: Document | any = new MoveModel({
             videoUrl: youTubeUrl,
@@ -579,7 +586,7 @@ const updateMoveDetailsFromYouTubeAndTrim = async (
     ytdl(result.sourceUrl, { quality: "highest" }).pipe(
       (videoStream = fs.createWriteStream(originalVideoPath))
     );
-    videoStream.on("close", async function() {
+    videoStream.on("close", async function () {
       const videoUrlFileName = originalVideoPath.split("uploads");
       const videoUrl = `uploads/${videoUrlFileName[1]}`;
       const fileName = `${videoUrl.split(".")[0]}_clip_${moment().unix()}.webm`;
@@ -783,7 +790,7 @@ const updateMoveDetailsAndTrimVideo = async (
 
       const fileName = `${
         result.videoUrl.split(".")[0]
-      }_clip_${moment().unix()}.webm`;
+        }_clip_${moment().unix()}.webm`;
 
       let videoFileMain: String | any, videoOriginalFile: String | any;
       if (IsProductionMode) {
@@ -991,7 +998,7 @@ const isStarredMove = async (req: Request, res: Response): Promise<any> => {
     return res.status(200).json({
       message: `Move has been ${
         isStarred === "true" ? "starred" : "Unstarred"
-      } successfully!`
+        } successfully!`
     });
   } catch (error) {
     console.log(error);

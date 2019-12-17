@@ -456,7 +456,7 @@ class DefaultHeader extends React.Component {
                             onClick={this.handleLoginModel}
                             className="nav-link-inner--text pr-4 cusror_pointer"
                           >
-                            Sign in
+                            Log in
                           </span>
                           <span
                             onClick={this.handleSignupModel}
@@ -612,7 +612,7 @@ class DefaultHeader extends React.Component {
                         onClick={this.handleLoginModel}
                         className="nav-link-inner--text pr-4 cusror_pointer"
                       >
-                        Sign in
+                        Log in
                       </span>
                       <span
                         onClick={this.handleSignupModel}
