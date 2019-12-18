@@ -30,8 +30,10 @@ const allSetSharedLink = React.lazy(() =>
 const sampleSet = React.lazy(() => import("./components/SampleSet"));
 const moveSearchAll = React.lazy(() =>
   import("./components/Sets/SetDetails/moveSearch")
-);   
-const publicAccessDenied = React.lazy(() => import("./components/comman/shareableLink/nonPublicAccess404"));
+);
+const publicAccessDenied = React.lazy(() =>
+  import("./components/comman/shareableLink/nonPublicAccess404")
+);
 
 const routes = [
   {

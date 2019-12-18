@@ -88,8 +88,6 @@ const imageUpload = async (req: Request, res: Response) => {
       body.imageData !== "" &&
       body.imageData
     ) {
-      console.log("inside jaa rha");
-
       const base64Image = body.imageData.replace(
         /^data:image\/\w+;base64,/,
         ""

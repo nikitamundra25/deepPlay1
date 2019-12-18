@@ -167,14 +167,13 @@ class YouTubeFrameDetails extends Component {
     const { videoMaxDuration } = this.props;
     // const { duration } = videoMetaData || {};
     const trimmValue = e.target.value;
-    if (parseInt(trimmValue) >= 0) {
+    const extract = trimmValue.split(":");
+    if (parseInt(extract[0]) >= 0) {
       if (
         parseInt(max) - parseInt(min) === AppConfig.MAX_VIDEO_LENGTH ||
         parseInt(max) - parseInt(min) === 1
       ) {
-        console.log("First");
         if (e.keyCode === 38) {
-          console.log("First 38");
           if (SecondsToMMSSMM(max + 0.1) <= SecondsToMMSSMM(videoMaxDuration)) {
             let changeValue = {
               min: min + 0.1,
@@ -190,7 +189,6 @@ class YouTubeFrameDetails extends Component {
             );
           }
         } else if (e.keyCode === 40) {
-          console.log("First 40");
           if (min > 0) {
             let changeValue = {
               min: min - 0.1,
@@ -217,11 +215,7 @@ class YouTubeFrameDetails extends Component {
         }
       } else {
         if (name === "from") {
-          console.log("Fromm 1");
-
           if (e.keyCode === 38) {
-            console.log("Fromm 38");
-            console.log("videoMaxDuration", videoMaxDuration);
             if (
               SecondsToMMSSMM(max + 0.1) <= SecondsToMMSSMM(videoMaxDuration) &&
               parseInt(min) <= parseInt(max)
@@ -238,7 +232,11 @@ class YouTubeFrameDetails extends Component {
                   this.props.onTimerChange(this.state.time);
                 }
               );
-            } else if (SecondsToMMSSMM(max) <= SecondsToMMSSMM(videoMaxDuration) && parseInt(min) <= parseInt(max) && parseInt(min) >= 0) {
+            } else if (
+              SecondsToMMSSMM(max) <= SecondsToMMSSMM(videoMaxDuration) &&
+              parseInt(min) <= parseInt(max) &&
+              parseInt(min) >= 0
+            ) {
               let changeValue = {
                 min: min + 0.1,
                 max: max
@@ -251,8 +249,7 @@ class YouTubeFrameDetails extends Component {
                   this.props.onTimerChange(this.state.time);
                 }
               );
-            }
-            else if (parseInt(min) >= parseInt(max)) {
+            } else if (parseInt(min) >= parseInt(max)) {
               let changeValue = {
                 min: max - 1,
                 max: max
@@ -267,11 +264,10 @@ class YouTubeFrameDetails extends Component {
               );
             }
           } else if (e.keyCode === 40) {
-            console.log("Fromm 40");
-
             if (
               SecondsToMMSSMM(max - 0.1) <= SecondsToMMSSMM(videoMaxDuration) &&
-              parseInt(max) - parseInt(min) <= AppConfig.MAX_VIDEO_LENGTH && parseInt(min) >= 0
+              parseInt(max) - parseInt(min) <= AppConfig.MAX_VIDEO_LENGTH &&
+              parseInt(min) >= 0
             ) {
               if (min > 0) {
                 let changeValue = {
@@ -338,13 +334,10 @@ class YouTubeFrameDetails extends Component {
               );
             }
           } else if (e.keyCode === 40) {
-            console.log("elsee wala 40");
             if (
               SecondsToMMSSMM(max - 0.1) <= SecondsToMMSSMM(videoMaxDuration) &&
               parseInt(max) - parseInt(min) >= 1
             ) {
-              console.log("elsee wala 40 join");
-
               if (min > 0) {
                 let changeValue = {
                   min: min,
@@ -373,8 +366,6 @@ class YouTubeFrameDetails extends Component {
                 );
               }
             } else {
-              console.log("bbbbbbbbbbb");
-
               let changeValue = {
                 min: 0,
                 max: 1
@@ -391,6 +382,19 @@ class YouTubeFrameDetails extends Component {
           }
         }
       }
+    } else {
+      let changeValue = {
+        min: 0,
+        max: max
+      };
+      this.setState(
+        {
+          time: changeValue
+        },
+        () => {
+          this.props.onTimerChange(this.state.time);
+        }
+      );
     }
   };
   /**
@@ -421,8 +425,8 @@ class YouTubeFrameDetails extends Component {
               return type === "min"
                 ? `${SecondsToMMSSMM(time.min >= 0 ? time.min : 0)}`
                 : type === "max"
-                  ? `${SecondsToMMSSMM(time.max >= 0 ? time.max : 0)}`
-                  : null;
+                ? `${SecondsToMMSSMM(time.max >= 0 ? time.max : 0)}`
+                : null;
             }}
             value={time}
             onChange={this.labelValueChange}
@@ -432,31 +436,31 @@ class YouTubeFrameDetails extends Component {
               {orderBy(frames).map((frame, index) => {
                 return imageLoadedIndex &&
                   imageLoadedIndex.length - 1 === index ? (
-                    <div className="video-spinner" key={index}>
-                      <img src={videoLoading} alt="" />
-                    </div>
-                  ) : (
-                    <div className="frem-inner" key={index}>
-                      <video
-                        width={"100%"}
-                        autoPlay={false}
-                        // loop={true}
-                        id={`video-trimmer-${index}`}
-                        onLoadedData={() => {
-                          this.handleVideoLoading(index);
-                        }}
-                      >
-                        <source
-                          src={
-                            moveDetails && moveDetails.videoUrl
-                              ? moveDetails.videoUrl +
+                  <div className="video-spinner" key={index}>
+                    <img src={videoLoading} alt="" />
+                  </div>
+                ) : (
+                  <div className="frem-inner" key={index}>
+                    <video
+                      width={"100%"}
+                      autoPlay={false}
+                      // loop={true}
+                      id={`video-trimmer-${index}`}
+                      onLoadedData={() => {
+                        this.handleVideoLoading(index);
+                      }}
+                    >
+                      <source
+                        src={
+                          moveDetails && moveDetails.videoUrl
+                            ? moveDetails.videoUrl +
                               `#t=${frame},${frames[index + 1]}`
-                              : ""
-                          }
-                        />
-                      </video>
-                    </div>
-                  );
+                            : ""
+                        }
+                      />
+                    </video>
+                  </div>
+                );
               })}
             </div>
           </div>
