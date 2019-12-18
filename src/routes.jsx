@@ -34,6 +34,8 @@ const moveSearchAll = React.lazy(() =>
 const publicAccessDenied = React.lazy(() =>
   import("./components/comman/shareableLink/nonPublicAccess404")
 );
+const privacyPolicy = React.lazy(()=> import("./container/HomePage/privacy-policy"));
+const termsAndCondition = React.lazy(()=> import("./container/HomePage/terms&condition"));
 
 const routes = [
   {
@@ -149,7 +151,19 @@ const routes = [
     name: AppRoutes.NON_PUBLIC_ACCESS.name,
     exact: AppRoutes.NON_PUBLIC_ACCESS.exact,
     component: publicAccessDenied
-  }
+  },
+  {
+    path: AppRoutes.PRIVACY_POLICY.url,
+    name: AppRoutes.PRIVACY_POLICY.name,
+    exact: AppRoutes.PRIVACY_POLICY.exact,
+    component: privacyPolicy
+  },
+  {
+    path: AppRoutes.TERMS_AND_CONDITIONS.url,
+    name: AppRoutes.TERMS_AND_CONDITIONS.name,
+    exact: AppRoutes.TERMS_AND_CONDITIONS.exact,
+    component: termsAndCondition
+  },
 ];
 
 export default routes;

@@ -49,11 +49,13 @@ class DefaultLayout extends React.Component {
       pathname !== "/set/shared/link" &&
       pathname !== "/all/set/shared/link" &&
       pathname !== "/404" &&
-      pathname !== "/public-access-denied"
+      pathname !== "/public-access-denied" &&
+      pathname !== "/privacy-policy" &&
+      pathname !== "/terms-and-conditions"
     ) {
       this.props.redirectTo("/");
     }
-  
+
     this.getMobileOperatingSystem();
   }
 
@@ -201,7 +203,9 @@ class DefaultLayout extends React.Component {
                 routePath !== "/set/shared/link" &&
                 routePath !== "/all/set/shared/link" &&
                 routePath !== "/404" &&
-                routePath !== "/public-access-denied" ? (
+                routePath !== "/public-access-denied" &&
+                routePath !== "/privacy-policy" &&
+                routePath !== "/terms-and-conditions" ? (
                   <div className="ct-sidebar app-sidebar">
                     <DefaultSidebar
                       profileInfoReducer={profileInfoReducer}
@@ -217,6 +221,8 @@ class DefaultLayout extends React.Component {
                 routePath !== "/set/shared/link" &&
                 routePath !== "/all/set/shared/link" &&
                 routePath !== "/404" &&
+                routePath !== "/privacy-policy" &&
+                routePath !== "/terms-and-conditions" &&
                 routePath !== "/public-access-denied" ? (
                   <div className="dashboard-right-wrap">
                     <div className="dashboard-right-section">
@@ -274,7 +280,7 @@ class DefaultLayout extends React.Component {
           routePath !== "/all/set/shared/link" &&
           routePath !== "/set/shared/link" &&
           routePath !== "/404" &&
-          routePath !== "/public-access-denied" ? (
+          routePath !== "/public-access-denied"  ? (
           <DefaultFooter />
         ) : null}
       </>
