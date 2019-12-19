@@ -148,6 +148,9 @@ class VideoView extends React.Component {
                </div>
                : null
             }
+               {
+                !videoCanPlay ?
+                  "This Video Is Not Spported to Play" : null}
               {!isEdit ? (
                 <video
                   width={"100%"}
