@@ -78,13 +78,13 @@ class VideoDetails extends React.Component {
           <div>
             <div className={"font-weight-bold h4"}>Trim your video</div>
             <span>
-              Use sliders below to trim your video (15 secs max).Or use your
+              Use sliders below to trim your video (15 secs max). Or use your
               arrow keys on timestamps to get really precise.
             </span>
           </div>
           <FormGroup className="flex-fill flex-column mt-3 input-w">
             {/* add tag-input-wrap class for tagInput design  */}
-            <Label className="mt-2">Add tag and press enter for separate</Label>
+            <Label className="mt-2">Add tags and press enter to separate</Label>
             <div className="w-100 tag-input-wrap search-select-wrap">
               {/* <TagsInput
                 value={tags}

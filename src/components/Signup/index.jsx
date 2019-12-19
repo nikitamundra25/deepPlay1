@@ -404,7 +404,7 @@ class SignupComponent extends React.Component {
                       onClick={this.props.handleLoginModal}
                       type="button"
                     >
-                      Already have an account? Sign in
+                      Already have an account? Log in
                     </Button>
                   </div>
                 </Form>

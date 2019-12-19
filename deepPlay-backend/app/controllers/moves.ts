@@ -121,7 +121,7 @@ const downloadYoutubeVideo = async (
             success: false
           });
         }
-
+       
         // for (let index = 0; index < info.formats.length; index++) {
         //   const element = info.formats[index];
         //   if (element.resolution === "1080p") {
@@ -147,7 +147,7 @@ const downloadYoutubeVideo = async (
         //     }
         //   }
         // }
-
+      console.log("info",info);
         if (info) {
           if (info.player_response.videoDetails.lengthSeconds >= 3600) {
             return res.status(400).json({

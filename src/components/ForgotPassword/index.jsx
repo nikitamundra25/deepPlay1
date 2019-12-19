@@ -140,7 +140,7 @@ class ForgotPasswordComponent extends React.Component {
                     }
                   >
                     <span onClick={this.props.handleLoginModel}>
-                      Back to sign in
+                      Back to log in
                     </span>
                   </div>
                 </Form>

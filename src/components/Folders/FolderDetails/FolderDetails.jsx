@@ -58,6 +58,7 @@ class RecentFolderComponent extends React.Component {
       showAll: false
     };
   }
+  
   componentDidMount() {
     const location = this.props.location;
     const lSearch = location.search;
@@ -65,7 +66,7 @@ class RecentFolderComponent extends React.Component {
     const pathName = location.pathname.split("/");
     this.props.folderDetail({ id: pathName[3] });
     this.props.getSetsList({ folderId: pathName[3] });
-    this.props.getAllSetRequest({ isSetNoLimit: true });
+    this.props.getAllSetRequest({ isSetNoLimit: false });
     if (pathName[1] === "folder" && pathName[2] === "details") {
       this.props.changeHeaderRequest();
     }

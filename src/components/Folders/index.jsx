@@ -124,7 +124,7 @@ class FolderComponent extends React.Component {
           <span className="content-title">
             <div className="main-title"> {" Folders"}</div>
             <div className="sub-title">
-              Total folders {totalFolders ? totalFolders : "0"}
+              Total folders: {totalFolders ? totalFolders : "0"}
             </div>
           </span>
           <div className="d-flex  justify-content-center align-items-between">

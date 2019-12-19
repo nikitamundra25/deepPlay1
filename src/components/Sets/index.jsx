@@ -118,7 +118,7 @@ class SetComponent extends React.Component {
           <span className="content-title">
             <div className="main-title"> {" Sets"}</div>
             <div className="sub-title">
-              Total sets {totalSets ? totalSets : "0"}
+              Total sets: {totalSets ? totalSets : "0"}
             </div>
           </span>
           <div className="d-flex  justify-content-center align-items-between">
