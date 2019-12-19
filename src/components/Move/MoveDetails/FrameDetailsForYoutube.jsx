@@ -167,24 +167,28 @@ class YouTubeFrameDetails extends Component {
     const { videoMaxDuration } = this.props;
     const trimmValue = e.target.value;
     const extract = trimmValue.split(":");
+    console.log("parseInt(max) - parseInt(min)", parseInt(max) - parseInt(min));
     if (parseInt(extract[0]) >= 0) {
       if (parseInt(max) - parseInt(min) === AppConfig.MAX_VIDEO_LENGTH) {
         console.log("in 1");
-
         if (name === "from") {
           if (e.keyCode === 38) {
-            let changeValue = {
-              min: min + 0.1,
-              max: max <= parseInt(videoMaxDuration) ? max : videoMaxDuration
-            };
-            this.setState(
-              {
-                time: changeValue
-              },
-              () => {
-                this.props.onTimerChange(this.state.time);
-              }
-            );
+            if (
+              SecondsToMMSSMM(max + 0.1) < SecondsToMMSSMM(videoMaxDuration)
+            ) {
+              let changeValue = {
+                min: min + 0.1,
+                max: max <= parseInt(videoMaxDuration) ? max : videoMaxDuration
+              };
+              this.setState(
+                {
+                  time: changeValue
+                },
+                () => {
+                  this.props.onTimerChange(this.state.time);
+                }
+              );
+            }
           } else {
             let changeValue = {
               min: parseInt(min) === 0 ? 0 : min - 0.1,
@@ -201,23 +205,27 @@ class YouTubeFrameDetails extends Component {
           }
         } else {
           if (e.keyCode === 38) {
-            let changeValue = {
-              min: parseInt(max) - parseInt(min) === 1 ? min : min + 0.1,
-              max:
-                parseInt(max) === parseInt(videoMaxDuration)
-                  ? max <= parseInt(videoMaxDuration)
-                    ? max
-                    : videoMaxDuration
-                  : max + 0.1
-            };
-            this.setState(
-              {
-                time: changeValue
-              },
-              () => {
-                this.props.onTimerChange(this.state.time);
-              }
-            );
+            if (
+              SecondsToMMSSMM(max + 0.1) < SecondsToMMSSMM(videoMaxDuration)
+            ) {
+              let changeValue = {
+                min: parseInt(max) - parseInt(min) === 1 ? min : min + 0.1,
+                max:
+                  parseInt(max) === parseInt(videoMaxDuration)
+                    ? max <= parseInt(videoMaxDuration)
+                      ? max
+                      : videoMaxDuration
+                    : max + 0.1
+              };
+              this.setState(
+                {
+                  time: changeValue
+                },
+                () => {
+                  this.props.onTimerChange(this.state.time);
+                }
+              );
+            }
           } else {
             let changeValue = {
               min: min,
@@ -241,18 +249,22 @@ class YouTubeFrameDetails extends Component {
 
         if (name === "from") {
           if (e.keyCode === 38) {
-            let changeValue = {
-              min: parseInt(max) - parseInt(min) > 1 ? min + 0.1 : min,
-              max: max <= parseInt(videoMaxDuration) ? max : videoMaxDuration
-            };
-            this.setState(
-              {
-                time: changeValue
-              },
-              () => {
-                this.props.onTimerChange(this.state.time);
-              }
-            );
+            if (
+              SecondsToMMSSMM(max + 0.1) < SecondsToMMSSMM(videoMaxDuration)
+            ) {
+              let changeValue = {
+                min: parseInt(max) - parseInt(min) > 1 ? min + 0.1 : min,
+                max: max <= parseInt(videoMaxDuration) ? max : videoMaxDuration
+              };
+              this.setState(
+                {
+                  time: changeValue
+                },
+                () => {
+                  this.props.onTimerChange(this.state.time);
+                }
+              );
+            }
           } else {
             console.log("parseInt(min)", parseInt(min));
             let changeValue;
@@ -287,23 +299,27 @@ class YouTubeFrameDetails extends Component {
           }
         } else {
           if (e.keyCode === 38) {
-            let changeValue = {
-              min: min,
-              max:
-                parseInt(max) - parseInt(min) < 15
-                  ? max <= parseInt(videoMaxDuration)
-                    ? max + 0.1
-                    : parseInt(videoMaxDuration)
-                  : max
-            };
-            this.setState(
-              {
-                time: changeValue
-              },
-              () => {
-                this.props.onTimerChange(this.state.time);
-              }
-            );
+            if (
+              SecondsToMMSSMM(max + 0.1) < SecondsToMMSSMM(videoMaxDuration)
+            ) {
+              let changeValue = {
+                min: min,
+                max:
+                  parseInt(max) - parseInt(min) < 15
+                    ? max <= parseInt(videoMaxDuration)
+                      ? max + 0.1
+                      : parseInt(videoMaxDuration)
+                    : max
+              };
+              this.setState(
+                {
+                  time: changeValue
+                },
+                () => {
+                  this.props.onTimerChange(this.state.time);
+                }
+              );
+            }
           } else {
             let changeValue = {
               min: min,
@@ -320,22 +336,26 @@ class YouTubeFrameDetails extends Component {
           }
         }
       } else if (parseInt(max) - parseInt(min) === 1) {
-        console.log("in 3");
+        console.log("in 33333333333333333");
 
         if (name === "from") {
           if (e.keyCode === 38) {
-            let changeValue = {
-              min: max - 1,
-              max: max + 0.1
-            };
-            this.setState(
-              {
-                time: changeValue
-              },
-              () => {
-                this.props.onTimerChange(this.state.time);
-              }
-            );
+            if (
+              SecondsToMMSSMM(max + 0.1) < SecondsToMMSSMM(videoMaxDuration)
+            ) {
+              let changeValue = {
+                min: max - 1,
+                max: max + 0.1
+              };
+              this.setState(
+                {
+                  time: changeValue
+                },
+                () => {
+                  this.props.onTimerChange(this.state.time);
+                }
+              );
+            }
           } else {
             let changeValue = {
               min:
@@ -355,25 +375,29 @@ class YouTubeFrameDetails extends Component {
           }
         } else {
           if (e.keyCode === 38) {
-            let changeValue = {
-              min: min,
-              max:
-                parseInt(max) - parseInt(min) === AppConfig.MAX_VIDEO_LENGTH
-                  ? max
-                  : max + 0.1
-            };
-            this.setState(
-              {
-                time: changeValue
-              },
-              () => {
-                this.props.onTimerChange(this.state.time);
-              }
-            );
+            if (
+              SecondsToMMSSMM(max + 0.1) < SecondsToMMSSMM(videoMaxDuration)
+            ) {
+              let changeValue = {
+                min: min,
+                max:
+                  parseInt(max) - parseInt(min) === AppConfig.MAX_VIDEO_LENGTH
+                    ? max
+                    : max + 0.1
+              };
+              this.setState(
+                {
+                  time: changeValue
+                },
+                () => {
+                  this.props.onTimerChange(this.state.time);
+                }
+              );
+            }
           } else {
             let changeValue = {
-              min: max + 1,
-              max: max - 0.1
+              min: min - 1,
+              max: max - 1
             };
             this.setState(
               {
