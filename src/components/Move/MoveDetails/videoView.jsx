@@ -23,7 +23,8 @@ class VideoView extends React.Component {
       url: "",
       errors: "",
       isPaste: false,
-      isBufferingVideo: false
+      isBufferingVideo: false,
+      videoCanPlay: false
     };
   }
   /**
@@ -99,7 +100,9 @@ class VideoView extends React.Component {
       isYoutubeUrl
     } = this.props;
     const { moveDetails } = moveReducer;
-    const { isBufferingVideo } = this.state
+    const { isBufferingVideo, videoCanPlay } = this.state
+    console.log("videoCanPlay",videoCanPlay);
+    
     return (
       <>
         <Col lg={"6"}>
@@ -150,8 +153,12 @@ class VideoView extends React.Component {
                   width={"100%"}
                   autoPlay
                   loop
-                  onError={
-                    console.log("This video has error")
+                  onCanPlay={
+                    ()=>{
+                      this.setState({
+                        videoCanPlay: true
+                      })
+                    }
                   }
                   id={"video-trimmer"}
                   muted={false}
