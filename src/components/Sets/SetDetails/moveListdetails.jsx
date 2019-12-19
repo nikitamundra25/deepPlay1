@@ -224,7 +224,7 @@ class MoveListDetails extends React.Component {
                     <div className={"video-effect"}>
                       <video
                         width={"100%"}
-                        preload="auto"
+                        //preload="auto"
                         id={`webm-video-${index}`}
                         poster={
                           video.isMoveProcessing && isSavingWebM
