@@ -158,6 +158,7 @@
 }
 
 .input-range__label--max {
+  font-family: "hurmegeosans-no2-400";
   position: absolute;
   transition: left 0.3s ease-out, width 0.3s ease-out;
   span {
@@ -165,7 +166,7 @@
     cursor: default;
     background: #3ab59b;
     position: absolute;
-    left: -31px;
+    left: -40px;
     padding: 4px 15px;
     border-radius: 18px;
     color: #fff;
@@ -186,6 +187,7 @@
 }
 
 .input-range__label--min {
+  font-family: "hurmegeosans-no2-400";
   position: absolute;
   transition: left 0.3s ease-out, width 0.3s ease-out;
   span {
@@ -193,7 +195,7 @@
     cursor: default;
     background: #3ab59b;
     position: absolute;
-    left: -30px;
+    left: -40px;
     padding: 4px 15px;
     border-radius: 18px;
     color: #fff;

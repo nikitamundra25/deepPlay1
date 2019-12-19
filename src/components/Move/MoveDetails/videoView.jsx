@@ -11,6 +11,7 @@ import {
 } from "reactstrap";
 import { AppConfig } from "../../../config/Appconfig";
 import videoLoading from "../../../assets/img/loder/loader.svg";
+import videosIc from "../../../assets/img/videos-ic.svg";
 
 import "./index.scss";
 
@@ -24,7 +25,7 @@ class VideoView extends React.Component {
       errors: "",
       isPaste: false,
       isBufferingVideo: false,
-      videoCanPlay: false
+      videoCanPlay: true
     };
   }
   /**
@@ -148,9 +149,15 @@ class VideoView extends React.Component {
                </div>
                : null
             }
+            <div className="video-player-inner-wrap">
                {
-                !videoCanPlay ?
-                  "This Video Is Not Spported to Play" : null}
+                videoCanPlay && !isBufferingVideo ?
+                  <div className="not-supported-wrap">
+                    <div className="not-supported-img">
+                      <img src={videosIc} />
+                    </div>
+                    <p className="font-weight-bold">This Video Is Not Spported to Play</p>
+                    </div> : null}
               {!isEdit ? (
                 <video
                   width={"100%"}
@@ -158,9 +165,11 @@ class VideoView extends React.Component {
                   loop
                   onCanPlay={
                     ()=>{
-                      this.setState({
-                        videoCanPlay: true
-                      })
+                      setTimeout(() => {
+                        this.setState({
+                          videoCanPlay: false
+                        })
+                      }, 2000);
                     }
                   }
                   id={"video-trimmer"}
@@ -189,6 +198,7 @@ class VideoView extends React.Component {
                     <source src={`${moveDetails.moveURL}`} />
                   </video>
                 )}
+            </div>
             </div>
           ) : (
               <span>No video available for trimming</span>

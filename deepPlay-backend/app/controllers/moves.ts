@@ -11,6 +11,7 @@ import { IMoveCopy, IUpdateMove } from "../interfaces";
 import moment from "moment";
 import { s3BucketUpload } from "../common/awsBucket";
 import { algoliaAppId, algoliaAPIKey } from "../config/app";
+const youtubedl = require("youtube-dl");
 var CronJob = require("cron").CronJob;
 const algoliasearch = require("algoliasearch");
 const client = algoliasearch(algoliaAppId, algoliaAPIKey);
@@ -114,14 +115,22 @@ const downloadYoutubeVideo = async (
     const trueYoutubeUrl = ytdl.validateURL(body.url);
     let youTubeUrl = "";
     if (trueYoutubeUrl) {
-      ytdl.getInfo(body.url, async (err, info) => {
+      youtubedl.getInfo(body.url, async function(err: any, info: any) {
         if (err) {
           return res.status(400).json({
             message: "This Video is not available.",
             success: false
           });
         }
-       
+
+        // ytdl.getInfo(body.url, async (err, info) => {
+        //   if (err) {
+        //     return res.status(400).json({
+        //       message: "This Video is not available.",
+        //       success: false
+        //     });
+        //   }
+
         // for (let index = 0; index < info.formats.length; index++) {
         //   const element = info.formats[index];
         //   if (element.resolution === "1080p") {
@@ -147,30 +156,20 @@ const downloadYoutubeVideo = async (
         //     }
         //   }
         // }
-      console.log("info",info);
+
         if (info) {
-          if (info.player_response.videoDetails.lengthSeconds >= 3600) {
-            return res.status(400).json({
-              message: "Video duration should be less than 1 hour.",
-              success: false
-            });
-          }
+          // if (info.player_response.videoDetails.lengthSeconds >= 3600) {
+          //   return res.status(400).json({
+          //     message: "Video duration should be less than 1 hour.",
+          //     success: false
+          //   });
+          // }
           const thumbImg =
-            info.player_response.videoDetails.thumbnail.thumbnails &&
-              info.player_response.videoDetails.thumbnail.thumbnails.length
-              ? info.player_response.videoDetails.thumbnail.thumbnails[
-                info.player_response.videoDetails.thumbnail.thumbnails
-                  .length - 1
-              ].url
+            info.thumbnails && info.thumbnails.length
+              ? info.thumbnails[0].url
               : [];
-          const temp = info.formats[0].url.split("manifest.googlevideo.com");
-          if (temp[1]) {
-            return res.status(400).json({
-              message: "Provided Url does not exist,please try with diffrent url.",
-              success: false
-            })
-          }
-          youTubeUrl = info.formats[0].url;
+
+          youTubeUrl = info.url;
           const moveResult: Document | any = new MoveModel({
             videoUrl: youTubeUrl,
             sourceUrl: body.url,
@@ -586,7 +585,7 @@ const updateMoveDetailsFromYouTubeAndTrim = async (
     ytdl(result.sourceUrl, { quality: "highest" }).pipe(
       (videoStream = fs.createWriteStream(originalVideoPath))
     );
-    videoStream.on("close", async function () {
+    videoStream.on("close", async function() {
       const videoUrlFileName = originalVideoPath.split("uploads");
       const videoUrl = `uploads/${videoUrlFileName[1]}`;
       const fileName = `${videoUrl.split(".")[0]}_clip_${moment().unix()}.webm`;
@@ -790,7 +789,7 @@ const updateMoveDetailsAndTrimVideo = async (
 
       const fileName = `${
         result.videoUrl.split(".")[0]
-        }_clip_${moment().unix()}.webm`;
+      }_clip_${moment().unix()}.webm`;
 
       let videoFileMain: String | any, videoOriginalFile: String | any;
       if (IsProductionMode) {
@@ -998,7 +997,7 @@ const isStarredMove = async (req: Request, res: Response): Promise<any> => {
     return res.status(200).json({
       message: `Move has been ${
         isStarred === "true" ? "starred" : "Unstarred"
-        } successfully!`
+      } successfully!`
     });
   } catch (error) {
     console.log(error);

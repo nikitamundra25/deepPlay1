@@ -2646,3 +2646,24 @@ _:future,
   position: relative;
   top: -4px;
 }
+
+
+.video-player-inner-wrap{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #ddd;
+  height: 230px;
+  // flex-flow: co;
+  .not-supported-img{
+    text-align: center;
+    width: 120px;
+    margin: 10px auto;
+    img{
+      width: 100%;
+    }
+  }
+  .not-supported-wrap{
+  
+  }
+}
