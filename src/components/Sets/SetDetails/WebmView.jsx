@@ -48,7 +48,7 @@ class WebmView extends Component {
       tags: [],
       edit: false,
       description: "",
-      error: "",
+      error: ""
       // isBufferingVideo: false
     };
   }
@@ -93,9 +93,6 @@ class WebmView extends Component {
             });
           }
         });
-        // this.video.addEventListener("volumechange", () => {
-
-        // })
         this.video.addEventListener("pause", () => {
           this.setState({
             isPlaying: false
