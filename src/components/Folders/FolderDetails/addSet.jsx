@@ -63,6 +63,8 @@ class AddSetModal extends React.Component {
   handleSelect = e => {
     e.preventDefault();
     const setList = this.props.getAllSet;
+    console.log("setList", setList);
+
     let setItem = [];
     if (e.target.value === "yourSet") {
       setItem = setList.filter(item =>

@@ -49,7 +49,7 @@ class WebmView extends Component {
       edit: false,
       description: "",
       error: "",
-      isBufferingVideo: false
+      // isBufferingVideo: false
     };
   }
   /**

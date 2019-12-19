@@ -30,7 +30,7 @@ class Page404Component extends Component {
                 Oops !
                 </h1>
                 <p className="banner-subheading mt-4 mt-0 h3 font-weight-bold">
-                We Can't find the what you are Looking for....
+                Can't find what you are Looking for....
                 </p>
                 <p className="banner-content  mt-0 ">
                 We couldn’t find the page you were looking for. Maybe our FAQ or Community can help?
