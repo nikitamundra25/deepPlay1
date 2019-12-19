@@ -31,9 +31,6 @@ class VideoView extends React.Component {
    */
   componentDidMount() {
     this.video = document.getElementById("video-trimmer");
-    document.getElementsByTagName('video')[0].addEventListener('error', () => {
-      console.log("isError in fetching video");
-    });
     this.video.addEventListener("timeupdate", () => {
       const { timer } = this.props;
       const { min, max } = timer || {};
@@ -153,6 +150,9 @@ class VideoView extends React.Component {
                   width={"100%"}
                   autoPlay
                   loop
+                  onError={
+                    console.log("This video has error")
+                  }
                   id={"video-trimmer"}
                   muted={false}
                   playsInline
