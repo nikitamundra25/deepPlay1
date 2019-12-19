@@ -167,10 +167,8 @@ class YouTubeFrameDetails extends Component {
     const { videoMaxDuration } = this.props;
     const trimmValue = e.target.value;
     const extract = trimmValue.split(":");
-    console.log("parseInt(max) - parseInt(min)", parseInt(max) - parseInt(min));
     if (parseInt(extract[0]) >= 0) {
       if (parseInt(max) - parseInt(min) === AppConfig.MAX_VIDEO_LENGTH) {
-        console.log("in 1");
         if (name === "from") {
           if (e.keyCode === 38) {
             if (
@@ -245,8 +243,6 @@ class YouTubeFrameDetails extends Component {
         parseInt(max) - parseInt(min) < AppConfig.MAX_VIDEO_LENGTH &&
         parseInt(max) - parseInt(min) !== 1
       ) {
-        console.log("in 2");
-
         if (name === "from") {
           if (e.keyCode === 38) {
             if (
@@ -266,11 +262,8 @@ class YouTubeFrameDetails extends Component {
               );
             }
           } else {
-            console.log("parseInt(min)", parseInt(min));
             let changeValue;
             if (parseInt(min) > 0) {
-              console.log("blaaaaa", max <= parseInt(videoMaxDuration));
-
               changeValue = {
                 min:
                   parseInt(max) - parseInt(min) < AppConfig.MAX_VIDEO_LENGTH
@@ -281,8 +274,6 @@ class YouTubeFrameDetails extends Component {
                 max: max <= parseInt(videoMaxDuration) ? max : videoMaxDuration
               };
             } else {
-              console.log("kkkkkaaalaaaaa", max <= parseInt(videoMaxDuration));
-
               changeValue = {
                 min: 0,
                 max: max
@@ -336,8 +327,6 @@ class YouTubeFrameDetails extends Component {
           }
         }
       } else if (parseInt(max) - parseInt(min) === 1) {
-        console.log("in 33333333333333333");
-
         if (name === "from") {
           if (e.keyCode === 38) {
             if (
