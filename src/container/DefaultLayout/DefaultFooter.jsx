@@ -1,6 +1,6 @@
 import React from "react";
-
 import { NavItem, NavLink, Nav, Container, Row, Col } from "reactstrap";
+import { AppRoutes } from "config/AppRoutes";
 
 class DefaultFooter extends React.Component {
   render() {
@@ -17,8 +17,19 @@ class DefaultFooter extends React.Component {
               <Col md="6">
                 <Nav className=" nav-footer justify-content-end">
                   <NavItem>
-                    <NavLink href="/" target="_blank">
+                    <NavLink
+                      href={AppRoutes.TERMS_AND_CONDITIONS.url}
+                      target="_blank"
+                    >
                       Terms and Condition
+                    </NavLink>
+                  </NavItem>
+                  <NavItem>
+                    <NavLink
+                      href={AppRoutes.PRIVACY_POLICY.url}
+                      target="_blank"
+                    >
+                      Privacy Policy
                     </NavLink>
                   </NavItem>
                   <NavItem>

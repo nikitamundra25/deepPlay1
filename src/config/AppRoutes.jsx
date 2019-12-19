@@ -98,5 +98,15 @@ export const AppRoutes = {
     url: "/public-access-denied",
     name: "Public Access Denied",
     exact: true
+  },
+  PRIVACY_POLICY: {
+    url: "/privacy-policy",
+    name: "Privacy-policy",
+    exact: true
+  },
+  TERMS_AND_CONDITIONS: {
+    url: "/terms-and-conditions",
+    name: "Terms and conditions",
+    exact: true
   }
 };
