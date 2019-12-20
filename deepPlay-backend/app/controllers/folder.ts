@@ -85,6 +85,7 @@ const createFolder = async (req: Request, res: Response): Promise<any> => {
                 sharableLink: moveElement.sharableLink,
                 status: true,
                 setId: setId,
+                isStarred: moveElement.isStarred,
                 moveURL: moveElement.moveURL,
                 videoThumbnail: moveElement.videoThumbnail
                   ? moveElement.videoThumbnail
