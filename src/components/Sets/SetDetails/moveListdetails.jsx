@@ -84,20 +84,16 @@ class MoveListDetails extends React.Component {
       movesOfSet
       // isIosDevice
     } = this.props;
-    // console.log("isSavingWebM", isSavingWebM);
     let processingData = false;
     let videoProcessing = isSavingWebM.filter(function(user) {
       return user.id === video._id;
     });
-    // console.log("videoProcessing", videoProcessing);
 
     if (videoProcessing && videoProcessing.length) {
       processingData = true;
     } else {
       processingData = false;
     }
-    // console.log("processingData", processingData);
-
     return (
       <div
         className={

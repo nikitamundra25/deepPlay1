@@ -11,7 +11,7 @@ import {
 } from "reactstrap";
 import { AppConfig } from "../../../config/Appconfig";
 import videoLoading from "../../../assets/img/loder/loader.svg";
-import videosIc from "../../../assets/img/videos-ic.svg";
+// import videosIc from "../../../assets/img/videos-ic.svg";
 
 import "./index.scss";
 
@@ -108,7 +108,6 @@ class VideoView extends React.Component {
     } = this.props;
     const { moveDetails } = moveReducer;
     const { isBufferingVideo, videoCanPlay, videoData } = this.state
-    console.log("isBufferingVideo", videoData);
 
     return (
       <>
