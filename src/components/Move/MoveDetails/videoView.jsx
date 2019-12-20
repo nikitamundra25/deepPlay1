@@ -107,7 +107,7 @@ class VideoView extends React.Component {
       isYoutubeUrl
     } = this.props;
     const { moveDetails } = moveReducer;
-    const { isBufferingVideo, videoCanPlay, videoData } = this.state
+    const { isBufferingVideo, videoCanPlay } = this.state
 
     return (
       <>
