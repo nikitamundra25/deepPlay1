@@ -5,7 +5,7 @@ import "./index.scss";
 import blankStar from "../../../assets/img/star-line.svg";
 import videoLoading from "../../../assets/img/icons/video-poster.svg";
 import moveLoader from "../../../assets/img/loder/moveLoad.gif";
-import VideoIndexLoader from "../../../assets/img/loder/indexLoader.svg";
+// import VideoIndexLoader from "../../../assets/img/loder/indexLoader.svg";
 
 class MoveListDetails extends React.Component {
   constructor(props) {
@@ -65,7 +65,7 @@ class MoveListDetails extends React.Component {
       handleVideoHover,
       handleVideoPause,
       handleVideoPlay,
-      isMarkingStar,
+      // isMarkingStar,
       isVideoModalOpen,
       handleMovesSelect,
       isSelectVideo,
