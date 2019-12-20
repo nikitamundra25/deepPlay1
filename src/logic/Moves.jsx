@@ -170,6 +170,18 @@ const getMovesDetailsByIdLogic = createLogic({
 const completeVideoEditingLogic = createLogic({
   type: MovesAction.UPDATE_VIDEO_SETTINGS,
   async process({ action, getState }, dispatch, done) {
+    let currMoveArr = getState().moveReducer.isSavingWebM;
+    const temp = {
+      success: true,
+      id: action.payload.moveId
+    };
+    currMoveArr.push(temp);
+    dispatch(
+      modelOpenRequest({
+        isSavingWebM: { currMoveArr }
+      })
+    );
+
     let api = new ApiHelper();
     let result = await api.FetchFromServer(
       "move",
@@ -221,9 +233,21 @@ const completeVideoEditingLogic = createLogic({
           return true;
         });
       }
+
+      let savingWebm = getState().moveReducer.isSavingWebM;
+      let savingVideo = [...savingWebm];
+      if (savingVideo && savingVideo.length) {
+        savingVideo.map((key, index) => {
+          if (key.id === result.data.data._id) {
+            savingVideo.splice(index, 1);
+          }
+          return true;
+        });
+      }
+
       dispatch(
         completeVideoEditingSuccess({
-          isSavingWebM: false,
+          isSavingWebM: savingVideo,
           moveUrlDetails: {
             moveURL: result.data.data.videoUrl,
             setId: result.data.setId,

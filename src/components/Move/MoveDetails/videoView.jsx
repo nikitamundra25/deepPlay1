@@ -37,7 +37,7 @@ class VideoView extends React.Component {
     if (this.video) {
       this.setState({
         videoData: true
-      })
+      });
     }
     this.video.addEventListener("timeupdate", () => {
       const { timer } = this.props;
@@ -82,16 +82,16 @@ class VideoView extends React.Component {
     if (prevMoveData !== newMoveData) {
       this.video.load();
     }
-    const vid = document.getElementById("video-trimmer")
+    const vid = document.getElementById("video-trimmer");
     vid.onwaiting = () => {
       this.setState({
         isBufferingVideo: true
-      })
+      });
     };
     vid.oncanplay = () => {
       this.setState({
         isBufferingVideo: false
-      })
+      });
     };
   }
   /**
@@ -107,7 +107,7 @@ class VideoView extends React.Component {
       isYoutubeUrl
     } = this.props;
     const { moveDetails } = moveReducer;
-    const { isBufferingVideo, videoCanPlay } = this.state
+    const { isBufferingVideo, videoCanPlay } = this.state;
 
     return (
       <>
@@ -148,30 +148,27 @@ class VideoView extends React.Component {
           </FormGroup>
           {moveDetails && moveDetails.videoUrl ? (
             <div className={"video-player"}>
-              {(isBufferingVideo === true) ?
-                <div className="video-spinner z-" >
+              {isBufferingVideo === true ? (
+                <div className="video-spinner z-">
                   <img src={videoLoading} alt="" />
                 </div>
-                : null
-              }
+              ) : null}
               <div className="video-player-inner-wrap">
-                {
-                  !videoCanPlay ?
-                    <div className="video-spinner z-" >
-                      <img src={videoLoading} alt="" />
-                    </div> : null}
+                {!videoCanPlay ? (
+                  <div className="video-spinner z-">
+                    <img src={videoLoading} alt="" />
+                  </div>
+                ) : null}
                 {!isEdit ? (
                   <video
                     width={"100%"}
                     autoPlay
                     loop
-                    onCanPlay={
-                      () => {
-                        this.setState({
-                          videoCanPlay: true
-                        })
-                      }
-                    }
+                    onCanPlay={() => {
+                      this.setState({
+                        videoCanPlay: true
+                      });
+                    }}
                     id={"video-trimmer"}
                     muted={false}
                     playsInline
@@ -186,23 +183,23 @@ class VideoView extends React.Component {
                     />
                   </video>
                 ) : (
-                    <video
-                      width={"100%"}
-                      autoPlay
-                      loop
-                      id={"video-trimmer"}
-                      muted={false}
-                      playsinline
-                      onContextMenu={e => e.preventDefault()}
-                    >
-                      <source src={`${moveDetails.moveURL}`} />
-                    </video>
-                  )}
+                  <video
+                    width={"100%"}
+                    autoPlay
+                    loop
+                    id={"video-trimmer"}
+                    muted={false}
+                    playsinline
+                    onContextMenu={e => e.preventDefault()}
+                  >
+                    <source src={`${moveDetails.moveURL}`} />
+                  </video>
+                )}
               </div>
             </div>
           ) : (
-              <span>No video available for trimming</span>
-            )}
+            <span>No video available for trimming</span>
+          )}
         </Col>
       </>
     );
