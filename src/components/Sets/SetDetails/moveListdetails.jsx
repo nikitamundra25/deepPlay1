@@ -80,10 +80,23 @@ class MoveListDetails extends React.Component {
       sourceIndex,
       destinationIndex,
       isSortIndexUpdate,
-      isSavingWebM
+      isSavingWebM,
+      movesOfSet
       // isIosDevice
     } = this.props;
-    console.log("isSavingWebM", isSavingWebM);
+    // console.log("isSavingWebM", isSavingWebM);
+    let processingData = false;
+    let videoProcessing = isSavingWebM.filter(function(user) {
+      return user.id === video._id;
+    });
+    // console.log("videoProcessing", videoProcessing);
+
+    if (videoProcessing && videoProcessing.length) {
+      processingData = true;
+    } else {
+      processingData = false;
+    }
+    // console.log("processingData", processingData);
 
     return (
       <div
@@ -152,13 +165,7 @@ class MoveListDetails extends React.Component {
                       : null
                   }
                 ></div>
-                <div
-                  className={
-                    isMarkingStar.isChanging && isMarkingStar.index === index
-                      ? "star-mark isStarred"
-                      : "star-mark"
-                  }
-                >
+                <div className={"star-mark"}>
                   {video.isStarred ? (
                     <img src={starIc} alt={"star"} className="w-100" />
                   ) : null}
@@ -219,13 +226,24 @@ class MoveListDetails extends React.Component {
                   {isSortIndexUpdate &&
                   (sourceIndex === index || destinationIndex === index) ? (
                     <div className="video-effect loading-img">
-                      <img src={VideoIndexLoader} alt="" />
+                      {sourceIndex === index ? (
+                        <img
+                          src={movesOfSet[destinationIndex].videoThumbnail}
+                          alt=""
+                        />
+                      ) : null}
+                      {destinationIndex === index ? (
+                        <img
+                          src={movesOfSet[sourceIndex].videoThumbnail}
+                          alt=""
+                        />
+                      ) : null}
                     </div>
                   ) : (
                     <div className={"video-effect"}>
                       <video
                         width={"100%"}
-                        //preload="auto"
+                        preload="auto"
                         id={`webm-video-${index}`}
                         poster={
                           // !video.isMoveProcessing && !isSavingWebM
@@ -233,7 +251,7 @@ class MoveListDetails extends React.Component {
                           //     ? video.videoThumbnail
                           //     : videoLoading
                           //   : moveLoader
-                          video.isMoveProcessing && isSavingWebM
+                          processingData
                             ? moveLoader
                             : video.videoThumbnail
                             ? video.videoThumbnail

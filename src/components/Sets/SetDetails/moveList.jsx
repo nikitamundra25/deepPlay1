@@ -267,9 +267,13 @@ class MoveList extends React.Component {
     const starDiv = document.getElementsByClassName("star-mark")[index];
     if (isStarred) {
       listData[index].isStarred = false;
-      starDiv.classList.remove("isStarred");
+      // starDiv.classList.remove("isStarred");
     } else {
-      starDiv.classList.add("isStarred");
+      if (!toast.isActive(this.toastId)) {
+        this.toastId = toast.success("Move marked as starred");
+      }
+
+      // starDiv.classList.add("isStarred");
       listData[index].isStarred = true;
     }
     const data = {
@@ -830,6 +834,7 @@ class MoveList extends React.Component {
                               handleVideoCheckBox={this.handleVideoCheckBox}
                               handleVideoModal={this.props.handleVideoModal}
                               title={title}
+                              movesOfSet={movesOfSet}
                               onDoubleClick={this.onDoubleClick}
                               doubleClickIndex={doubleClickIndex}
                               doubleClick={doubleClick}
