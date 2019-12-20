@@ -2102,6 +2102,9 @@ header {
       right: 10%;
     }
   }
+  button{
+    overflow: unset;
+  }
 }
 .control-tile.speed-wrap .dropdown-menu {
   &:before {
@@ -2336,7 +2339,7 @@ header {
   .dashboard-full-section {
     .content-header {
       .icon-font {
-        font-size: 20px;
+        font-size: 14px;
       }
       .content-title {
         font-size: 18px;
@@ -2642,4 +2645,28 @@ _:future,
 :root .auth-user-model .modal-header .close span {
   position: relative;
   top: -4px;
+}
+
+
+.video-player-inner-wrap{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #ddd;
+  height: 230px;
+  // flex-flow: co;
+  video{
+  height:100%;
+  }
+  .not-supported-img{
+    text-align: center;
+    width: 120px;
+    margin: 10px auto;
+    img{
+      width: 100%;
+    }
+  }
+  .not-supported-wrap{
+  
+  }
 }

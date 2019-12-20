@@ -11,6 +11,7 @@ import {
 } from "reactstrap";
 import { AppConfig } from "../../../config/Appconfig";
 import videoLoading from "../../../assets/img/loder/loader.svg";
+import videosIc from "../../../assets/img/videos-ic.svg";
 
 import "./index.scss";
 
@@ -23,7 +24,9 @@ class VideoView extends React.Component {
       url: "",
       errors: "",
       isPaste: false,
-      isBufferingVideo: false
+      isBufferingVideo: false,
+      videoCanPlay: false,
+      videoData: false
     };
   }
   /**
@@ -31,6 +34,11 @@ class VideoView extends React.Component {
    */
   componentDidMount() {
     this.video = document.getElementById("video-trimmer");
+    if (this.video) {
+      this.setState({
+        videoData: true
+      })
+    }
     this.video.addEventListener("timeupdate", () => {
       const { timer } = this.props;
       const { min, max } = timer || {};
@@ -99,7 +107,9 @@ class VideoView extends React.Component {
       isYoutubeUrl
     } = this.props;
     const { moveDetails } = moveReducer;
-    const { isBufferingVideo } = this.state
+    const { isBufferingVideo, videoCanPlay, videoData } = this.state
+    console.log("isBufferingVideo", videoData);
+
     return (
       <>
         <Col lg={"6"}>
@@ -139,43 +149,57 @@ class VideoView extends React.Component {
           </FormGroup>
           {moveDetails && moveDetails.videoUrl ? (
             <div className={"video-player"}>
-              {isBufferingVideo === true ? 
-                 <div className="video-spinner z-" >
-                   <img src={videoLoading} alt="" />
-               </div>
-               : null
-            }
-              {!isEdit ? (
-                <video
-                  width={"100%"}
-                  autoPlay
-                  loop
-                  id={"video-trimmer"}
-                  muted={false}
-                  playsInline
-                  onContextMenu={e => e.preventDefault()}
-                >
-                  <source
-                    src={
-                      !isYoutubeUrl
-                        ? `${AppConfig.API_ENDPOINT}${moveDetails.videoUrl}`
-                        : moveDetails.videoUrl
-                    }
-                  />
-                </video>
-              ) : (
+              {(isBufferingVideo === true) ?
+                <div className="video-spinner z-" >
+                  <img src={videoLoading} alt="" />
+                </div>
+                : null
+              }
+              <div className="video-player-inner-wrap">
+                {
+                  !videoCanPlay ?
+                    <div className="video-spinner z-" >
+                      <img src={videoLoading} alt="" />
+                    </div> : null}
+                {!isEdit ? (
                   <video
                     width={"100%"}
                     autoPlay
                     loop
+                    onCanPlay={
+                      () => {
+                        this.setState({
+                          videoCanPlay: true
+                        })
+                      }
+                    }
                     id={"video-trimmer"}
                     muted={false}
-                    playsinline
+                    playsInline
                     onContextMenu={e => e.preventDefault()}
                   >
-                    <source src={`${moveDetails.moveURL}`} />
+                    <source
+                      src={
+                        !isYoutubeUrl
+                          ? `${AppConfig.API_ENDPOINT}${moveDetails.videoUrl}`
+                          : moveDetails.videoUrl
+                      }
+                    />
                   </video>
-                )}
+                ) : (
+                    <video
+                      width={"100%"}
+                      autoPlay
+                      loop
+                      id={"video-trimmer"}
+                      muted={false}
+                      playsinline
+                      onContextMenu={e => e.preventDefault()}
+                    >
+                      <source src={`${moveDetails.moveURL}`} />
+                    </video>
+                  )}
+              </div>
             </div>
           ) : (
               <span>No video available for trimming</span>

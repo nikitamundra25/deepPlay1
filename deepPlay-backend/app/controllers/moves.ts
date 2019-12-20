@@ -110,7 +110,12 @@ const downloadYoutubeVideo = async (
     }
     videoURL = path.join("uploads", "youtube-videos", fileName);
     let videoStream: any;
-
+    if (body.url === "https://www.youtube.com/embed/rp4UwPZfRis?autoplay=0&enablejsapi=1") {
+      return res.status(400).json({
+        message: "Video Url Not Supported",
+        success: false
+      })
+    }
     /* Download youtube videos on localserver */
     const trueYoutubeUrl = ytdl.validateURL(body.url);
     let youTubeUrl = "";
