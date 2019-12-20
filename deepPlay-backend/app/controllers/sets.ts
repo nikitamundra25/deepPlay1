@@ -58,6 +58,7 @@ const createSet = async (req: Request, res: Response): Promise<any> => {
             title: moveElement.title,
             description: moveElement.description,
             videoUrl: moveElement.videoUrl,
+            isStarred: moveElement.isStarred,
             tags: moveElement.tags,
             isPublic: moveElement.isPublic ? moveElement.isPublic : false,
             userId: headToken.id,
@@ -281,7 +282,7 @@ const getRecentSetById = async (req: Request, res: Response): Promise<void> => {
           isDeleted: false,
           moveURL: { $ne: null }
         })
-        .sort({ sortIndex: 1 })
+          .sort({ sortIndex: 1 })
           .limit(1);
 
         setResult.push({
