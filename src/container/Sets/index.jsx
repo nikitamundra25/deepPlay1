@@ -95,6 +95,7 @@ class Set extends React.Component {
       description: list.description,
       isDeleted: list.isDeleted,
       isPublic: list.isPublic,
+      isStarred: list.isStarred,
       folderId: list.folderId && list.folderId._id ? list.folderId._id : null,
       sharableLink: list.sharableLink,
       status: list.status,
@@ -252,7 +253,4 @@ const mapDispatchToProps = dispatch => {
     }
   };
 };
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(Set);
+export default connect(mapStateToProps, mapDispatchToProps)(Set);
