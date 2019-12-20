@@ -1,12 +1,15 @@
 import React from "react";
 import { ModalHeader, Modal, ModalBody, Button } from "reactstrap";
 import { AppConfig } from "../../../config/Appconfig";
+import videoLoading from "../../../assets/img/loder/loader.svg";
+
 // core components
 class MoveSuccessModal extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      isPlaying: false
+      isPlaying: false,
+      videoCanPlay: false
     };
   }
 
@@ -33,7 +36,7 @@ class MoveSuccessModal extends React.Component {
       timer
     } = this.props;
 
-    //const { isPlaying } = this.state
+    const { videoCanPlay } = this.state;
 
     return (
       <>
@@ -54,10 +57,25 @@ class MoveSuccessModal extends React.Component {
               <div className="w-100 set-content-wrap pt-0 mt-0 ">
                 <div className="set-content-block w-100">
                   <div className="d-flex vieos-add-section video-add-banner justify-content-center align-items-center">
+                    {!videoCanPlay ? (
+                      <div className="video-spinner z-">
+                        <img src={videoLoading} alt="" />
+                      </div>
+                    ) : null}
                     <video
                       width={"100%"}
                       autoPlay
                       loop={true}
+                      onCanPlay={() => {
+                        this.setState({
+                          videoCanPlay: true
+                        });
+                      }}
+                      onLoadedData={() => {
+                        this.setState({
+                          videoCanPlay: false
+                        });
+                      }}
                       id={"video-trimmer"}
                       playsinline
                     >
