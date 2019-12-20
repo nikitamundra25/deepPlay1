@@ -83,6 +83,7 @@ class MoveListDetails extends React.Component {
       isSavingWebM
       // isIosDevice
     } = this.props;
+    console.log("isSavingWebM", isSavingWebM);
 
     return (
       <div
@@ -227,6 +228,11 @@ class MoveListDetails extends React.Component {
                         preload="auto"
                         id={`webm-video-${index}`}
                         poster={
+                          // !video.isMoveProcessing && !isSavingWebM
+                          //   ? video.videoThumbnail
+                          //     ? video.videoThumbnail
+                          //     : videoLoading
+                          //   : moveLoader
                           video.isMoveProcessing && isSavingWebM
                             ? moveLoader
                             : video.videoThumbnail
@@ -293,7 +299,9 @@ class MoveListDetails extends React.Component {
                   ) : (
                     video.title || "unnamed"
                   )} */}
-                  {video.title || "unnamed"}
+                  {(doubleClick && doubleClickIndex === index) || video.title
+                    ? video.title
+                    : "unnamed"}
                 </div>
                 <div
                   className="star-wrap"

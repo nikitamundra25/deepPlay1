@@ -11,7 +11,10 @@ const initialState = {
   isMoveDetailsLoading: false,
   isMoveofSetLoading: false,
   isMoveList: false,
-  isSavingWebM: false,
+  isSavingWebM: [{
+    success: false,
+    id: -1
+  }],
   moveUrlDetails: [],
   videoData: {},
   isFullScreenMode: false,
@@ -81,7 +84,7 @@ export const moveReducer = handleActions(
     }),
     [MovesAction.YOUTUBE_UPDATE_MOVE_REQUEST]: (state, { payload }) => ({
       ...state,
-      isSavingWebM: true
+      // isSavingWebM: true
     }),
     [MovesAction.UPDATE_VIDEO_SETTINGS_SUCCESS]: (state, { payload }) => ({
       ...state,
