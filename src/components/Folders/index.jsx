@@ -116,7 +116,7 @@ class FolderComponent extends React.Component {
     const { modelDetails } = modelInfoReducer;
     const { createFolderOpen } = modelDetails;
     const lSearch = location.search;
-    const search = lSearch.split("=");
+    const temp = qs.parse(lSearch);
 
     return (
       <div className="page-body">
@@ -127,12 +127,12 @@ class FolderComponent extends React.Component {
               Total folders: {totalFolders ? totalFolders : "0"}
             </div>
           </span>
-          <div className="d-flex  justify-content-center align-items-between">
-            {search && search[1] ? (
+          <div className="d-flex  justify-content-center align-items-between pl-4">
+            {temp && temp.search ? (
               <>
                 <span
                   id="reset"
-                  className={"cursor_pointer reset-search text-center"}
+                  className={"cursor_pointer reset-search text-center mr-2 "}
                   onClick={this.props.handleResetSearch}
                 >
                   <i className="fas fa-undo-alt" />
@@ -146,7 +146,7 @@ class FolderComponent extends React.Component {
             <span
               onClick={this.handleFolderModel}
               id="move"
-              className="dashboard-right-content cursor_pointer ml-4"
+              className="dashboard-right-content cursor_pointer"
             >
               <i className="fas fa-plus icon-font"></i>
             </span>

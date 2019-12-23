@@ -97,6 +97,7 @@ class MoveListDetails extends React.Component {
     } else {
       processingData = false;
     }
+
     return (
       <div
         className={
@@ -256,7 +257,13 @@ class MoveListDetails extends React.Component {
                             ? video.videoThumbnail
                             : videoLoading
                         }
+                        // preload="none"
                         muted={true}
+                        onLoadedData={() => {
+                          this.setState({
+                            videoCanPlay: false
+                          });
+                        }}
                         draggable="true"
                         onContextMenu={e => e.preventDefault()}
                         loop

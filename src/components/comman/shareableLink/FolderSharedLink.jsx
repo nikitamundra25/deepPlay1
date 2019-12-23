@@ -32,12 +32,21 @@ class FolderSharedLink extends React.Component {
   }
 
   componentDidMount() {
-    let parsed = qs.parse(this.props.location.search);
+    let parsed1 = qs.parse(this.props.location.search);
     this.setState({
-      parsedUrl: parsed
+      parsedUrl: parsed1
     });
-    this.props.encryptedQuery(parsed);
-    this.props.publicUrlSetDetails(parsed);
+    this.props.encryptedQuery(parsed1);
+    // const temp = parsed1.isPublic.split("=");
+    // const page = temp && temp.length ? temp[1] : 1;
+    // const parsed = {
+    //   ...parsed1,
+    //   page: page
+    // };
+    this.setState({
+      page: parseInt(parsed1.page)
+    });
+    this.props.publicUrlSetDetails(parsed1);
   }
 
   componentDidUpdate(prevProps) {
@@ -57,7 +66,7 @@ class FolderSharedLink extends React.Component {
     const { parsedUrl } = this.state;
     this.props.onGoPage(
       `${AppRoutes.FOLDER_SHARED_LINK.url +
-        `?userId=${parsedUrl.userId}&folderId=${parsedUrl.folderId}&isPublic=${parsedUrl.isPublic}`}?${qs.stringify(
+        `?userId=${parsedUrl.userId}&folderId=${parsedUrl.folderId}&isPublic=${parsedUrl.isPublic}`}&${qs.stringify(
         { page: page }
       )}`
     );

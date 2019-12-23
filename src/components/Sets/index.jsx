@@ -111,7 +111,8 @@ class SetComponent extends React.Component {
     const { sharableLinkModalOpen, createSetModalOpen } = modelDetails;
     const { show, setIndex, page } = this.state;
     const lSearch = location.search;
-    const search = lSearch.split("=");
+    const temp = qs.parse(lSearch);
+
     return (
       <div className="set-main-section">
         <div className="content-header">
@@ -121,12 +122,12 @@ class SetComponent extends React.Component {
               Total sets: {totalSets ? totalSets : "0"}
             </div>
           </span>
-          <div className="d-flex  justify-content-center align-items-between">
-            {search && search[1] ? (
+          <div className="d-flex  justify-content-center align-items-between ">
+            {temp && temp.search ? (
               <>
                 <span
                   id="reset"
-                  className={"cursor_pointer reset-search text-center"}
+                  className={"cursor_pointer reset-search text-center mr-2"}
                   onClick={this.props.handleResetSearch}
                 >
                   <i className="fas fa-undo-alt"></i>

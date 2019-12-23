@@ -19,7 +19,10 @@ class Folder extends React.Component {
     const { location } = this.props;
     const lSearch = location.search;
     const search = lSearch.split("=");
-    this.props.allFolders({ search: search[1] });
+    const temp = qs.parse(lSearch);
+    temp.page
+      ? this.props.allFolders({ page: search[1] })
+      : this.props.allFolders({ search: search[1] });
   };
 
   handleForRecentFolder = folderId => {
@@ -103,7 +106,4 @@ const mapDispatchToProps = dispatch => {
     }
   };
 };
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(Folder);
+export default connect(mapStateToProps, mapDispatchToProps)(Folder);
