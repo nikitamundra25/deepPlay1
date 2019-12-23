@@ -246,18 +246,12 @@ class MoveListDetails extends React.Component {
                         //preload="auto"
                         id={`webm-video-${index}`}
                         poster={
-                          // !video.isMoveProcessing && !isSavingWebM
-                          //   ? video.videoThumbnail
-                          //     ? video.videoThumbnail
-                          //     : videoLoading
-                          //   : moveLoader
                           processingData
                             ? moveLoader
                             : video.videoThumbnail
                             ? video.videoThumbnail
                             : videoLoading
                         }
-                        // preload="none"
                         muted={true}
                         onLoadedData={() => {
                           this.setState({
