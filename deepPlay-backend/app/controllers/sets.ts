@@ -9,6 +9,7 @@ const client = algoliasearch(algoliaAppId, algoliaAPIKey);
 const index = client.initIndex("deep_play_data");
 import { decrypt, encrypt } from "../common";
 import { body } from "express-validator";
+let ObjectId = require("mongoose").Types.ObjectId;
 
 // --------------Create set---------------------
 const createSet = async (req: Request, res: Response): Promise<any> => {
@@ -484,7 +485,11 @@ const getSetDetailsById = async (
         message: "User id not found"
       });
     }
-
+    if (!ObjectId.isValid(setId)) {
+      res.status(400).json({
+        message: "Set id not found"
+      });
+    }
     const result: Document | any = await SetModel.findOne({
       userId: headToken.id,
       _id: Mongoose.Types.ObjectId(setId),
@@ -528,6 +533,11 @@ const publicUrlsetDetails = async (
   try {
     const { query } = req;
     const { folderId, isPublic, limit, page, userId } = query;
+    // console.log("pagepage", JSON.stringify(isPublic));
+    // const pageNum: any = JSON.stringify(isPublic);
+    // const pageN: any = pageNum.split("=");
+    // console.log("pageN", parseInt(pageN[1]));
+
     const decryptedFolderId = decrypt(folderId);
     const decryptedUserId = decrypt(userId);
     const pageNumber: number = ((parseInt(page) || 1) - 1) * (limit || 20);

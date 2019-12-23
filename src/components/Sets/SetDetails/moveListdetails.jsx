@@ -97,6 +97,7 @@ class MoveListDetails extends React.Component {
     } else {
       processingData = false;
     }
+
     return (
       <div
         className={
@@ -245,11 +246,6 @@ class MoveListDetails extends React.Component {
                         //preload="auto"
                         id={`webm-video-${index}`}
                         poster={
-                          // !video.isMoveProcessing && !isSavingWebM
-                          //   ? video.videoThumbnail
-                          //     ? video.videoThumbnail
-                          //     : videoLoading
-                          //   : moveLoader
                           processingData
                             ? moveLoader
                             : video.videoThumbnail
@@ -257,6 +253,11 @@ class MoveListDetails extends React.Component {
                             : videoLoading
                         }
                         muted={true}
+                        onLoadedData={() => {
+                          this.setState({
+                            videoCanPlay: false
+                          });
+                        }}
                         draggable="true"
                         onContextMenu={e => e.preventDefault()}
                         loop

@@ -280,7 +280,7 @@ class DefaultLayout extends React.Component {
           routePath !== "/all/set/shared/link" &&
           routePath !== "/set/shared/link" &&
           routePath !== "/404" &&
-          routePath !== "/public-access-denied"  ? (
+          routePath !== "/public-access-denied" ? (
           <DefaultFooter />
         ) : null}
       </>
