@@ -14,6 +14,7 @@ export interface IMove {
   startTime: Number;
   videoThumbnail: String;
   sortIndex: Number;
+  isStarred: Boolean;
 }
 export interface IMoveCopy {
   title: String;

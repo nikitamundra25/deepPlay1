@@ -32,6 +32,12 @@ class SharableLinkModal extends React.Component {
     });
   };
 
+  componentDidMount = () => {
+    this.setState({
+      isPublic: this.props.isPublic ? true : false
+    });
+  };
+
   componentDidUpdate = prevProps => {
     if (prevProps.isPublic !== this.props.isPublic) {
       this.setState({

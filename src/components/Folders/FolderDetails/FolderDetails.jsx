@@ -58,7 +58,7 @@ class RecentFolderComponent extends React.Component {
       showAll: false
     };
   }
-  
+
   componentDidMount() {
     const location = this.props.location;
     const lSearch = location.search;
@@ -364,7 +364,7 @@ class RecentFolderComponent extends React.Component {
             </UncontrolledDropdown>
 
             <UncontrolledTooltip placement="top" target="edit">
-              Edit & Remove Folder details
+              Edit Folder details
             </UncontrolledTooltip>
           </div>
         </div>{" "}

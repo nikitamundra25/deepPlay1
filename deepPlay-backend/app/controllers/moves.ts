@@ -110,7 +110,12 @@ const downloadYoutubeVideo = async (
     }
     videoURL = path.join("uploads", "youtube-videos", fileName);
     let videoStream: any;
-
+    if (body.url === "https://www.youtube.com/embed/rp4UwPZfRis?autoplay=0&enablejsapi=1") {
+      return res.status(400).json({
+        message: "Video Url Not Supported",
+        success: false
+      })
+    }
     /* Download youtube videos on localserver */
     const trueYoutubeUrl = ytdl.validateURL(body.url);
     let youTubeUrl = "";
@@ -582,10 +587,19 @@ const updateMoveDetailsFromYouTubeAndTrim = async (
       );
     }
     let videoStream: any;
-    ytdl(result.sourceUrl, { quality: "highest" }).pipe(
-      (videoStream = fs.createWriteStream(originalVideoPath))
-    );
-    videoStream.on("close", async function() {
+
+    const video = youtubedl(result.sourceUrl, ["--format=18"]);
+
+    // video.on('info', function(info) {
+    //   console.log('Download started')
+    //   console.log('filename: ' + info._filename)
+    //   console.log('size: ' + info.size)
+    // })
+    video.pipe(fs.createWriteStream(originalVideoPath));
+    // ytdl(result.sourceUrl, { quality: "highest" }).pipe(
+    //   (videoStream = fs.createWriteStream(originalVideoPath))
+    // );
+    video.on("close", async function() {
       const videoUrlFileName = originalVideoPath.split("uploads");
       const videoUrl = `uploads/${videoUrlFileName[1]}`;
       const fileName = `${videoUrl.split(".")[0]}_clip_${moment().unix()}.webm`;

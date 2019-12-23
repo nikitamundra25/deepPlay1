@@ -157,7 +157,6 @@ class YouTubeFrameDetails extends Component {
         </option>
       );
     }
-
     return options;
   };
 
@@ -169,22 +168,24 @@ class YouTubeFrameDetails extends Component {
     const extract = trimmValue.split(":");
     if (parseInt(extract[0]) >= 0) {
       if (parseInt(max) - parseInt(min) === AppConfig.MAX_VIDEO_LENGTH) {
-        console.log("in 1");
-
         if (name === "from") {
           if (e.keyCode === 38) {
-            let changeValue = {
-              min: min + 0.1,
-              max: max <= parseInt(videoMaxDuration) ? max : videoMaxDuration
-            };
-            this.setState(
-              {
-                time: changeValue
-              },
-              () => {
-                this.props.onTimerChange(this.state.time);
-              }
-            );
+            if (
+              SecondsToMMSSMM(max + 0.1) < SecondsToMMSSMM(videoMaxDuration)
+            ) {
+              let changeValue = {
+                min: min + 0.1,
+                max: max <= parseInt(videoMaxDuration) ? max : videoMaxDuration
+              };
+              this.setState(
+                {
+                  time: changeValue
+                },
+                () => {
+                  this.props.onTimerChange(this.state.time);
+                }
+              );
+            }
           } else {
             let changeValue = {
               min: parseInt(min) === 0 ? 0 : min - 0.1,
@@ -237,8 +238,6 @@ class YouTubeFrameDetails extends Component {
         parseInt(max) - parseInt(min) < AppConfig.MAX_VIDEO_LENGTH &&
         parseInt(max) - parseInt(min) !== 1
       ) {
-        console.log("in 2");
-
         if (name === "from") {
           if (e.keyCode === 38) {
             let changeValue = {
@@ -254,11 +253,8 @@ class YouTubeFrameDetails extends Component {
               }
             );
           } else {
-            console.log("parseInt(min)", parseInt(min));
             let changeValue;
             if (parseInt(min) > 0) {
-              console.log("blaaaaa", max <= parseInt(videoMaxDuration));
-
               changeValue = {
                 min:
                   parseInt(max) - parseInt(min) < AppConfig.MAX_VIDEO_LENGTH
@@ -269,8 +265,6 @@ class YouTubeFrameDetails extends Component {
                 max: max <= parseInt(videoMaxDuration) ? max : videoMaxDuration
               };
             } else {
-              console.log("kkkkkaaalaaaaa", max <= parseInt(videoMaxDuration));
-
               changeValue = {
                 min: 0,
                 max: max
@@ -320,22 +314,24 @@ class YouTubeFrameDetails extends Component {
           }
         }
       } else if (parseInt(max) - parseInt(min) === 1) {
-        console.log("in 3");
-
         if (name === "from") {
           if (e.keyCode === 38) {
-            let changeValue = {
-              min: max - 1,
-              max: max + 0.1
-            };
-            this.setState(
-              {
-                time: changeValue
-              },
-              () => {
-                this.props.onTimerChange(this.state.time);
-              }
-            );
+            if (
+              SecondsToMMSSMM(max + 0.1) < SecondsToMMSSMM(videoMaxDuration)
+            ) {
+              let changeValue = {
+                min: max - 1,
+                max: max + 0.1
+              };
+              this.setState(
+                {
+                  time: changeValue
+                },
+                () => {
+                  this.props.onTimerChange(this.state.time);
+                }
+              );
+            }
           } else {
             let changeValue = {
               min:
@@ -355,41 +351,90 @@ class YouTubeFrameDetails extends Component {
           }
         } else {
           if (e.keyCode === 38) {
-            let changeValue = {
-              min: min,
-              max:
-                parseInt(max) - parseInt(min) === AppConfig.MAX_VIDEO_LENGTH
-                  ? max
-                  : max + 0.1
-            };
-            this.setState(
-              {
-                time: changeValue
-              },
-              () => {
-                this.props.onTimerChange(this.state.time);
-              }
-            );
+            if (
+              SecondsToMMSSMM(max + 0.1) < SecondsToMMSSMM(videoMaxDuration)
+            ) {
+              let changeValue = {
+                min: min,
+                max:
+                  parseInt(max) - parseInt(min) === AppConfig.MAX_VIDEO_LENGTH
+                    ? max
+                    : max + 0.1
+              };
+              this.setState(
+                {
+                  time: changeValue
+                },
+                () => {
+                  this.props.onTimerChange(this.state.time);
+                }
+              );
+            }
           } else {
-            let changeValue = {
-              min: max + 1,
-              max: max - 0.1
-            };
-            this.setState(
-              {
-                time: changeValue
-              },
-              () => {
-                this.props.onTimerChange(this.state.time);
+            if (parseInt(max) - parseInt(min) > 1) {
+              let changeValue = {
+                min: min - 1,
+                max: max - 1
+              };
+              this.setState(
+                {
+                  time: changeValue
+                },
+                () => {
+                  this.props.onTimerChange(this.state.time);
+                }
+              );
+            } else {
+              if (parseInt(min) === 0) {
+                let changeValue = {
+                  min: min,
+                  max: min + 1
+                };
+                this.setState(
+                  {
+                    time: changeValue
+                  },
+                  () => {
+                    this.props.onTimerChange(this.state.time);
+                  }
+                );
+              } else {
+                let changeValue = {
+                  min: min - 1,
+                  max: max - 1
+                };
+                this.setState(
+                  {
+                    time: changeValue
+                  },
+                  () => {
+                    this.props.onTimerChange(this.state.time);
+                  }
+                );
               }
-            );
+            }
           }
+        }
+      } else {
+        if (parseInt(max) - parseInt(min) > AppConfig.MAX_VIDEO_LENGTH) {
+          let changeValue = {
+            min: min,
+            max: max - 1
+          };
+          this.setState(
+            {
+              time: changeValue
+            },
+            () => {
+              this.props.onTimerChange(this.state.time);
+            }
+          );
         }
       }
     } else {
       let changeValue = {
         min: 0,
-        max: max
+        max: max <= 0 ? 0 + 1 : max
       };
       this.setState(
         {
@@ -402,242 +447,6 @@ class YouTubeFrameDetails extends Component {
     }
   };
 
-  handleKeyEvent1 = (e, name) => {
-    const { time } = this.state;
-    const { min, max } = time;
-    const { videoMaxDuration } = this.props;
-    // const { duration } = videoMetaData || {};
-    const trimmValue = e.target.value;
-    const extract = trimmValue.split(":");
-    if (parseInt(extract[0]) >= 0) {
-      if (
-        parseInt(max) - parseInt(min) > AppConfig.MAX_VIDEO_LENGTH ||
-        parseInt(max) - parseInt(min) === 1
-      ) {
-        if (e.keyCode === 38) {
-          if (SecondsToMMSSMM(max + 0.1) < SecondsToMMSSMM(videoMaxDuration)) {
-            let changeValue = {
-              min: min + 0.1,
-              max: max + 0.1
-            };
-            this.setState(
-              {
-                time: changeValue
-              },
-              () => {
-                this.props.onTimerChange(this.state.time);
-              }
-            );
-          }
-        } else if (e.keyCode === 40) {
-          if (min > 0) {
-            let changeValue = {
-              min: min - 0.1,
-              max: max - 0.1
-            };
-            this.setState(
-              {
-                time: changeValue
-              },
-              () => {
-                this.props.onTimerChange(this.state.time);
-              }
-            );
-          }
-        } else {
-          this.setState(
-            {
-              time: time
-            },
-            () => {
-              this.props.onTimerChange(this.state.time);
-            }
-          );
-        }
-      } else {
-        if (name === "from") {
-          if (e.keyCode === 38) {
-            if (
-              SecondsToMMSSMM(max + 0.1) <= SecondsToMMSSMM(videoMaxDuration) &&
-              parseInt(min) <= parseInt(max)
-            ) {
-              let changeValue = {
-                min: min + 0.1,
-                max: max
-              };
-              this.setState(
-                {
-                  time: changeValue
-                },
-                () => {
-                  this.props.onTimerChange(this.state.time);
-                }
-              );
-            } else if (
-              SecondsToMMSSMM(max) <= SecondsToMMSSMM(videoMaxDuration) &&
-              parseInt(min) <= parseInt(max) &&
-              parseInt(min) >= 0
-            ) {
-              let changeValue = {
-                min: min + 0.1,
-                max: max
-              };
-              this.setState(
-                {
-                  time: changeValue
-                },
-                () => {
-                  this.props.onTimerChange(this.state.time);
-                }
-              );
-            } else if (parseInt(min) >= parseInt(max)) {
-              let changeValue = {
-                min: max - 1,
-                max: max
-              };
-              this.setState(
-                {
-                  time: changeValue
-                },
-                () => {
-                  this.props.onTimerChange(this.state.time);
-                }
-              );
-            }
-          } else if (e.keyCode === 40) {
-            if (
-              SecondsToMMSSMM(max - 0.1) <= SecondsToMMSSMM(videoMaxDuration) &&
-              parseInt(max) - parseInt(min) <= AppConfig.MAX_VIDEO_LENGTH &&
-              parseInt(min) >= 0
-            ) {
-              if (min > 0) {
-                let changeValue = {
-                  min: min - 0.1,
-                  max: max
-                };
-                this.setState(
-                  {
-                    time: changeValue
-                  },
-                  () => {
-                    this.props.onTimerChange(this.state.time);
-                  }
-                );
-              }
-            } else if (parseInt(min) >= 0) {
-              let changeValue = {
-                min: max - AppConfig.MAX_VIDEO_LENGTH,
-                max: max
-              };
-              this.setState(
-                {
-                  time: changeValue
-                },
-                () => {
-                  this.props.onTimerChange(this.state.time);
-                }
-              );
-            }
-          }
-        } else {
-          if (e.keyCode === 38) {
-            if (
-              SecondsToMMSSMM(max + 0.1) <= SecondsToMMSSMM(videoMaxDuration) &&
-              parseInt(max) - parseInt(min) <= AppConfig.MAX_VIDEO_LENGTH
-            ) {
-              let changeValue = {
-                min: min,
-                max: max + 0.1
-              };
-              this.setState(
-                {
-                  time: changeValue
-                },
-                () => {
-                  this.props.onTimerChange(this.state.time);
-                }
-              );
-            } else if (
-              parseInt(max) - parseInt(min) >=
-              AppConfig.MAX_VIDEO_LENGTH
-            ) {
-              let changeValue = {
-                min: max - 15,
-                max: max
-              };
-              this.setState(
-                {
-                  time: changeValue
-                },
-                () => {
-                  this.props.onTimerChange(this.state.time);
-                }
-              );
-            }
-          } else if (e.keyCode === 40) {
-            if (
-              SecondsToMMSSMM(max - 0.1) <= SecondsToMMSSMM(videoMaxDuration) &&
-              parseInt(max) - parseInt(min) >= 1
-            ) {
-              if (min > 0) {
-                let changeValue = {
-                  min: min,
-                  max: max - 0.1
-                };
-                this.setState(
-                  {
-                    time: changeValue
-                  },
-                  () => {
-                    this.props.onTimerChange(this.state.time);
-                  }
-                );
-              } else if (parseInt(max) - parseInt(min) >= 1) {
-                let changeValue = {
-                  min: min,
-                  max: max - 0.1
-                };
-                this.setState(
-                  {
-                    time: changeValue
-                  },
-                  () => {
-                    this.props.onTimerChange(this.state.time);
-                  }
-                );
-              }
-            } else {
-              let changeValue = {
-                min: 0,
-                max: 1
-              };
-              this.setState(
-                {
-                  time: changeValue
-                },
-                () => {
-                  this.props.onTimerChange(this.state.time);
-                }
-              );
-            }
-          }
-        }
-      }
-    } else {
-      let changeValue = {
-        min: 0,
-        max: max
-      };
-      this.setState(
-        {
-          time: changeValue
-        },
-        () => {
-          this.props.onTimerChange(this.state.time);
-        }
-      );
-    }
-  };
   /**
    *
    */
@@ -660,7 +469,7 @@ class YouTubeFrameDetails extends Component {
           <div id={"right-container"}></div>
           <InputRange
             draggableTrack
-            maxValue={videoMaxDuration}
+            maxValue={parseInt(videoMaxDuration)}
             minValue={0}
             formatLabel={(val, type) => {
               return type === "min"

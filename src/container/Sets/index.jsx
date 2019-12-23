@@ -36,7 +36,18 @@ class Set extends React.Component {
     const { location } = this.props;
     const lSearch = location.search;
     const search = lSearch.split("=");
-    this.props.getSetList({ isSetNoLimit: false, search: search[1] });
+    const temp = qs.parse(lSearch);
+    temp.page
+      ? this.props.getSetList({
+          isSetNoLimit: false,
+          //  search: search[1],
+          page: search[1]
+        })
+      : this.props.getSetList({
+          isSetNoLimit: false,
+          search: search[1]
+          // page: search[1]
+        });
   };
 
   componentDidUpdate({ location }) {
@@ -95,6 +106,7 @@ class Set extends React.Component {
       description: list.description,
       isDeleted: list.isDeleted,
       isPublic: list.isPublic,
+      isStarred: list.isStarred,
       folderId: list.folderId && list.folderId._id ? list.folderId._id : null,
       sharableLink: list.sharableLink,
       status: list.status,
@@ -252,7 +264,4 @@ const mapDispatchToProps = dispatch => {
     }
   };
 };
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(Set);
+export default connect(mapStateToProps, mapDispatchToProps)(Set);

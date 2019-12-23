@@ -11,7 +11,7 @@ import {
 } from "reactstrap";
 import { AppConfig } from "../../../config/Appconfig";
 import videoLoading from "../../../assets/img/loder/loader.svg";
-import videosIc from "../../../assets/img/videos-ic.svg";
+// import videosIc from "../../../assets/img/videos-ic.svg";
 
 import "./index.scss";
 
@@ -25,7 +25,8 @@ class VideoView extends React.Component {
       errors: "",
       isPaste: false,
       isBufferingVideo: false,
-      videoCanPlay: true
+      videoCanPlay: false,
+      videoData: false
     };
   }
   /**
@@ -33,6 +34,11 @@ class VideoView extends React.Component {
    */
   componentDidMount() {
     this.video = document.getElementById("video-trimmer");
+    if (this.video) {
+      this.setState({
+        videoData: true
+      });
+    }
     this.video.addEventListener("timeupdate", () => {
       const { timer } = this.props;
       const { min, max } = timer || {};
@@ -76,16 +82,16 @@ class VideoView extends React.Component {
     if (prevMoveData !== newMoveData) {
       this.video.load();
     }
-    const vid = document.getElementById("video-trimmer")
+    const vid = document.getElementById("video-trimmer");
     vid.onwaiting = () => {
       this.setState({
         isBufferingVideo: true
-      })
+      });
     };
     vid.oncanplay = () => {
       this.setState({
         isBufferingVideo: false
-      })
+      });
     };
   }
   /**
@@ -101,9 +107,8 @@ class VideoView extends React.Component {
       isYoutubeUrl
     } = this.props;
     const { moveDetails } = moveReducer;
-    const { isBufferingVideo, videoCanPlay } = this.state
-    console.log("videoCanPlay",videoCanPlay);
-    
+    const { isBufferingVideo, videoCanPlay } = this.state;
+
     return (
       <>
         <Col lg={"6"}>
@@ -143,49 +148,41 @@ class VideoView extends React.Component {
           </FormGroup>
           {moveDetails && moveDetails.videoUrl ? (
             <div className={"video-player"}>
-              {isBufferingVideo === true ? 
-                 <div className="video-spinner z-" >
-                   <img src={videoLoading} alt="" />
-               </div>
-               : null
-            }
-            <div className="video-player-inner-wrap">
-               {
-                videoCanPlay && !isBufferingVideo ?
-                  <div className="not-supported-wrap">
-                    <div className="not-supported-img">
-                      <img src={videosIc} />
-                    </div>
-                    <p className="font-weight-bold">This Video Is Not Spported to Play</p>
-                    </div> : null}
-              {!isEdit ? (
-                <video
-                  width={"100%"}
-                  autoPlay
-                  loop
-                  onCanPlay={
-                    ()=>{
-                      setTimeout(() => {
-                        this.setState({
-                          videoCanPlay: false
-                        })
-                      }, 2000);
-                    }
-                  }
-                  id={"video-trimmer"}
-                  muted={false}
-                  playsInline
-                  onContextMenu={e => e.preventDefault()}
-                >
-                  <source
-                    src={
-                      !isYoutubeUrl
-                        ? `${AppConfig.API_ENDPOINT}${moveDetails.videoUrl}`
-                        : moveDetails.videoUrl
-                    }
-                  />
-                </video>
-              ) : (
+              {isBufferingVideo === true ? (
+                <div className="video-spinner z-">
+                  <img src={videoLoading} alt="" />
+                </div>
+              ) : null}
+              <div className="video-player-inner-wrap">
+                {!videoCanPlay ? (
+                  <div className="video-spinner z-">
+                    <img src={videoLoading} alt="" />
+                  </div>
+                ) : null}
+                {!isEdit ? (
+                  <video
+                    width={"100%"}
+                    autoPlay
+                    loop
+                    onCanPlay={() => {
+                      this.setState({
+                        videoCanPlay: true
+                      });
+                    }}
+                    id={"video-trimmer"}
+                    muted={false}
+                    playsInline
+                    onContextMenu={e => e.preventDefault()}
+                  >
+                    <source
+                      src={
+                        !isYoutubeUrl
+                          ? `${AppConfig.API_ENDPOINT}${moveDetails.videoUrl}`
+                          : moveDetails.videoUrl
+                      }
+                    />
+                  </video>
+                ) : (
                   <video
                     width={"100%"}
                     autoPlay
@@ -198,11 +195,11 @@ class VideoView extends React.Component {
                     <source src={`${moveDetails.moveURL}`} />
                   </video>
                 )}
-            </div>
+              </div>
             </div>
           ) : (
-              <span>No video available for trimming</span>
-            )}
+            <span>No video available for trimming</span>
+          )}
         </Col>
       </>
     );

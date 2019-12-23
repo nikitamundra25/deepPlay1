@@ -5,7 +5,7 @@ import "./index.scss";
 import blankStar from "../../../assets/img/star-line.svg";
 import videoLoading from "../../../assets/img/icons/video-poster.svg";
 import moveLoader from "../../../assets/img/loder/moveLoad.gif";
-import VideoIndexLoader from "../../../assets/img/loder/indexLoader.svg";
+// import VideoIndexLoader from "../../../assets/img/loder/indexLoader.svg";
 
 class MoveListDetails extends React.Component {
   constructor(props) {
@@ -65,7 +65,7 @@ class MoveListDetails extends React.Component {
       handleVideoHover,
       handleVideoPause,
       handleVideoPlay,
-      isMarkingStar,
+      // isMarkingStar,
       isVideoModalOpen,
       handleMovesSelect,
       isSelectVideo,
@@ -80,9 +80,23 @@ class MoveListDetails extends React.Component {
       sourceIndex,
       destinationIndex,
       isSortIndexUpdate,
-      isSavingWebM
+      isSavingWebM,
+      movesOfSet
       // isIosDevice
     } = this.props;
+    let processingData = false;
+    let videoProcessing;
+    if (isSavingWebM && isSavingWebM.length) {
+      videoProcessing = isSavingWebM.filter(function(user) {
+        return user.id === video._id;
+      });
+    }
+
+    if (videoProcessing && videoProcessing.length) {
+      processingData = true;
+    } else {
+      processingData = false;
+    }
 
     return (
       <div
@@ -151,13 +165,7 @@ class MoveListDetails extends React.Component {
                       : null
                   }
                 ></div>
-                <div
-                  className={
-                    isMarkingStar.isChanging && isMarkingStar.index === index
-                      ? "star-mark isStarred"
-                      : "star-mark"
-                  }
-                >
+                <div className={"star-mark"}>
                   {video.isStarred ? (
                     <img src={starIc} alt={"star"} className="w-100" />
                   ) : null}
@@ -218,22 +226,38 @@ class MoveListDetails extends React.Component {
                   {isSortIndexUpdate &&
                   (sourceIndex === index || destinationIndex === index) ? (
                     <div className="video-effect loading-img">
-                      <img src={VideoIndexLoader} alt="" />
+                      {sourceIndex === index ? (
+                        <img
+                          src={movesOfSet[destinationIndex].videoThumbnail}
+                          alt=""
+                        />
+                      ) : null}
+                      {destinationIndex === index ? (
+                        <img
+                          src={movesOfSet[sourceIndex].videoThumbnail}
+                          alt=""
+                        />
+                      ) : null}
                     </div>
                   ) : (
                     <div className={"video-effect"}>
                       <video
                         width={"100%"}
-                        preload="auto"
+                        //preload="auto"
                         id={`webm-video-${index}`}
                         poster={
-                          video.isMoveProcessing && isSavingWebM
+                          processingData
                             ? moveLoader
                             : video.videoThumbnail
                             ? video.videoThumbnail
                             : videoLoading
                         }
                         muted={true}
+                        onLoadedData={() => {
+                          this.setState({
+                            videoCanPlay: false
+                          });
+                        }}
                         draggable="true"
                         onContextMenu={e => e.preventDefault()}
                         loop
@@ -293,7 +317,9 @@ class MoveListDetails extends React.Component {
                   ) : (
                     video.title || "unnamed"
                   )} */}
-                  {video.title || "unnamed"}
+                  {(doubleClick && doubleClickIndex === index) || video.title
+                    ? video.title
+                    : "unnamed"}
                 </div>
                 <div
                   className="star-wrap"

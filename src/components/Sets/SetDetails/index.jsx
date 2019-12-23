@@ -468,7 +468,7 @@ class SetDetails extends React.Component {
                 </DropdownMenu>
               </UncontrolledDropdown>
               <UncontrolledTooltip placement="top" target="edit">
-                Edit & Remove Set Details
+                Edit Set Details
               </UncontrolledTooltip>
             </div>
           </div>
