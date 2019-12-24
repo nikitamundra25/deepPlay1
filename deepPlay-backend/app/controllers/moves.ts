@@ -17,6 +17,7 @@ const algoliasearch = require("algoliasearch");
 const client = algoliasearch(algoliaAppId, algoliaAPIKey);
 const index: any = client.initIndex("deep_play_data");
 const __basedir = path.join(__dirname, "../public");
+let ObjectId = require("mongoose").Types.ObjectId;
 
 /**
  * Title:- Download Video to local server
@@ -110,11 +111,14 @@ const downloadYoutubeVideo = async (
     }
     videoURL = path.join("uploads", "youtube-videos", fileName);
     let videoStream: any;
-    if (body.url === "https://www.youtube.com/embed/rp4UwPZfRis?autoplay=0&enablejsapi=1") {
+    if (
+      body.url ===
+      "https://www.youtube.com/embed/rp4UwPZfRis?autoplay=0&enablejsapi=1"
+    ) {
       return res.status(400).json({
         message: "Video Url Not Supported",
         success: false
-      })
+      });
     }
     /* Download youtube videos on localserver */
     const trueYoutubeUrl = ytdl.validateURL(body.url);
@@ -327,6 +331,13 @@ const getMoveBySetId = async (req: Request, res: Response): Promise<any> => {
     if (!headToken.id) {
       res.status(400).json({
         message: "User id not found"
+      });
+    }
+
+    if (!ObjectId.isValid(query.setId)) {
+      res.status(400).json({
+        message: "Set id not found",
+        success: false
       });
     }
     const pageNumber: number = ((parseInt(page) || 1) - 1) * (limit || 20);

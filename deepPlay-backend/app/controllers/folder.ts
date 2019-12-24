@@ -6,6 +6,7 @@ import { algoliaAppId, algoliaAPIKey } from "../config/app";
 const algoliasearch = require("algoliasearch");
 const client = algoliasearch(algoliaAppId, algoliaAPIKey);
 const index = client.initIndex("deep_play_data");
+let ObjectId = require("mongoose").Types.ObjectId;
 
 // --------------Create folder---------------------
 const createFolder = async (req: Request, res: Response): Promise<any> => {
@@ -13,7 +14,7 @@ const createFolder = async (req: Request, res: Response): Promise<any> => {
     const { currentUser } = req;
     const { body } = req;
     if (!body) {
-      res.status(400).send({
+      return res.status(400).send({
         message: "Title is required"
       });
     }
@@ -130,7 +131,7 @@ const createFolder = async (req: Request, res: Response): Promise<any> => {
       }
     );
     /*  */
-    res.status(200).json({
+    return res.status(200).json({
       Result,
       message: "Folder created successfully"
     });
@@ -252,13 +253,13 @@ const getAllFolder = async (req: Request, res: Response): Promise<void> => {
 };
 
 // --------------Get Recent folder---------------------
-const getRecentFolder = async (req: Request, res: Response): Promise<void> => {
+const getRecentFolder = async (req: Request, res: Response): Promise<any> => {
   const limit = 10;
   try {
     const { currentUser } = req;
     let headToken: Request | any = currentUser;
     if (!headToken.id) {
-      res.status(400).json({
+      return res.status(400).json({
         message: "User id not found"
       });
     }
@@ -287,18 +288,18 @@ const getRecentFolder = async (req: Request, res: Response): Promise<void> => {
     }
 
     if (!result) {
-      res.status(400).json({
+      return res.status(400).json({
         message: "Folderid not found"
       });
     }
 
-    res.status(200).json({
+    return res.status(200).json({
       data: folderResult,
       message: "Folder have been fetched successfully"
     });
   } catch (error) {
     console.log(error);
-    res.status(500).send({
+   return res.status(500).send({
       message: error.message
     });
   }
@@ -308,12 +309,18 @@ const getRecentFolder = async (req: Request, res: Response): Promise<void> => {
 const getCretedFolderById = async (
   req: Request,
   res: Response
-): Promise<void> => {
+): Promise<any> => {
   try {
     const { query } = req;
     if (!query.id) {
-      res.status(400).json({
+      return res.status(400).json({
         message: "User id not found"
+      });
+    }
+    if (!ObjectId.isValid(query.id)) {
+      return res.status(400).json({
+        message: "Folder id not found",
+        success: false
       });
     }
     const result: Document | any = await FolderModel.findOne({ _id: query.id });
@@ -322,7 +329,7 @@ const getCretedFolderById = async (
         message: "Folderid not found"
       });
     }
-    res.status(200).json({
+    return res.status(200).json({
       data: result,
       message: "Folder has been fetched successfully"
     });
@@ -335,11 +342,11 @@ const getCretedFolderById = async (
 };
 
 // --------------Delete folder---------------------
-const deleteFolder = async (req: Request, res: Response): Promise<void> => {
+const deleteFolder = async (req: Request, res: Response): Promise<any> => {
   try {
     const { query } = req;
     if (!query.id) {
-      res.status(400).json({
+      return res.status(400).json({
         message: "Folder id not found"
       });
     }
@@ -389,7 +396,6 @@ const deleteFolder = async (req: Request, res: Response): Promise<void> => {
         if (err) throw err;
       });
     }
-    console.log("setObjectIds", setObjectIds);
 
     if (setObjectIds.length) {
       index.deleteObjects(setObjectIds, (err: string, content: any) => {

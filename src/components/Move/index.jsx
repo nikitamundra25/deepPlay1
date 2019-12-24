@@ -19,7 +19,11 @@ import {
 import "./index.scss";
 import { logger } from "helper/Logger";
 import { connect } from "react-redux";
-import { downloadYoutubeVideoRequest, videoCancelRequest } from "../../actions";
+import {
+  downloadYoutubeVideoRequest,
+  videoCancelRequest,
+  getSetDetailsRequest
+} from "../../actions";
 import { ConfirmBox } from "../../helper/SweetAleart";
 
 // core components
@@ -35,7 +39,13 @@ class MoveComponent extends React.Component {
     };
   }
 
-  componentDidMount = () => {};
+  componentDidMount = () => {
+    const search = window.location.search;
+    const setId = search.split("=");
+    if (setId && setId.length && setId[1]) {
+      this.props.getSetDetailsRequest({ setId: setId[1] });
+    }
+  };
 
   componentDidUpdate = ({ moveReducer }) => {
     const { cancelVideo } = this.props.moveReducer;
@@ -371,6 +381,7 @@ const mapStateToProps = state => ({
 });
 const mapDispatchToProps = dispatch => ({
   downloadVideo: data => dispatch(downloadYoutubeVideoRequest(data)),
-  videoCancelRequest: () => dispatch(videoCancelRequest())
+  videoCancelRequest: () => dispatch(videoCancelRequest()),
+  getSetDetailsRequest: data => dispatch(getSetDetailsRequest(data))
 });
 export default connect(mapStateToProps, mapDispatchToProps)(MoveComponent);

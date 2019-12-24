@@ -343,6 +343,8 @@ const getSetDetailsLogic = createLogic({
           // setDetails: {}
         })
       );
+      dispatch(redirectTo({ path: AppRoutes.SETS.url }));
+
       done();
       return;
     } else {
