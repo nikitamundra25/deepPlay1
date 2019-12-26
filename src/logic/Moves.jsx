@@ -115,7 +115,7 @@ const getMovesOfSetLogic = createLogic({
       undefined
     );
     if (result.isError) {
-      toast.error(result.messages[0]);
+      // toast.error(result.messages[0]);
       done();
       return;
     } else {

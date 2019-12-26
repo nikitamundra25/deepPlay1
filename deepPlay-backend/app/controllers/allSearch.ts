@@ -19,13 +19,19 @@ const allSearchModule = async (req: Request, res: Response): Promise<any> => {
       isDeleted: false
     });
     if (search !== "") {
-      index.search(search, (err: string, hits: Object | any) => {
-        if (err) throw err;
-        return res.status(200).json({
-          data: hits.hits,
-          message: "This is algolia search data"
-        });
-      });
+      index.search(
+        {
+          query: search,
+          hitsPerPage: 100
+        },
+        (err: string, hits: Object | any) => {
+          if (err) throw err;
+          return res.status(200).json({
+            data: hits.hits,
+            message: "This is algolia search data"
+          });
+        }
+      );
     } else {
       return res.status(200).json({
         data: [],

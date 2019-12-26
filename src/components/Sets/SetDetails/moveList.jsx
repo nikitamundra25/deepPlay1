@@ -272,7 +272,6 @@ class MoveList extends React.Component {
       if (!toast.isActive(this.toastId)) {
         this.toastId = toast.success("Move marked as starred");
       }
-
       // starDiv.classList.add("isStarred");
       listData[index].isStarred = true;
     }
@@ -699,7 +698,8 @@ class MoveList extends React.Component {
                               className=" "
                               color=" "
                             >
-                              <img src={addTag} alt="" className="mr-1" />{" "}
+                              <i className="far fa-check-square fa-lg mr-1 pr-2"></i>
+                              {/* <img src={addTag} alt="" className="mr-1" />{" "} */}
                               {selectedMoveIds.length >= movesOfSet.length
                                 ? "Unselect all"
                                 : "Select all"}

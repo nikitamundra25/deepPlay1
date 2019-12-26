@@ -413,6 +413,10 @@ class MoveSearchList extends React.Component {
   };
 
   onDoubleClick = (index, title) => {
+    const highlightText = document.getElementById(`video-title-${index}`);
+    if (highlightText) {
+      highlightText.classList.add("text-selected");
+    }
     this.setState({
       doubleClick: true,
       doubleClickIndex: index,
@@ -420,7 +424,19 @@ class MoveSearchList extends React.Component {
     });
   };
 
+  handleKeyPress = (e, videoData, index) => {
+    if (e.which === 13 || e.keyCode === 13) {
+      this.handleonBlur(e, videoData, index);
+    } else {
+      return;
+    }
+  };
+
   handleonBlur = (e, videoData, index) => {
+    const highlightText = document.getElementById(`video-title-${index}`);
+    if (highlightText) {
+      highlightText.classList.remove("text-selected");
+    }
     const value = e.target.textContent;
     const error =
       value && value.length > 50
@@ -653,6 +669,7 @@ class MoveSearchList extends React.Component {
                           return (
                             <div
                               className={"play-list-tile-select cursor_pointer"}
+                              key={index}
                             >
                               <div
                                 onClick={() =>
@@ -808,7 +825,7 @@ class MoveSearchList extends React.Component {
                                               ? video.videoThumbnail
                                               : videoLoading
                                           }
-                                          playsinline
+                                          playsInline
                                           loop
                                           onContextMenu={e =>
                                             e.preventDefault()
@@ -827,8 +844,16 @@ class MoveSearchList extends React.Component {
                                     </div>
                                     <div className="play-list-text">
                                       <div
-                                        className="text-capitalize play-list-heading h6 m-0"
-                                        contenteditable={
+                                        suppressContentEditableWarning={true}
+                                        className={
+                                          video.title !== "Unnamed" &&
+                                          video.title
+                                            ? "text-capitalize play-list-heading h6 m-0"
+                                            : "text-capitalize play-list-heading h6 m-0 text-untitled"
+                                        }
+                                        id={`video-title-${index}`}
+                                        tabIndex="0"
+                                        contentEditable={
                                           doubleClick &&
                                           doubleClickIndex === index
                                             ? "true"
@@ -847,8 +872,22 @@ class MoveSearchList extends React.Component {
                                                 )
                                             : null
                                         }
+                                        onKeyPress={
+                                          doubleClick
+                                            ? e =>
+                                                this.handleKeyPress(
+                                                  e,
+                                                  video,
+                                                  index
+                                                )
+                                            : null
+                                        }
                                       >
-                                        {video.title || "unnamed"}
+                                        {(doubleClick &&
+                                          doubleClickIndex === index) ||
+                                        video.title
+                                          ? video.title
+                                          : "unnamed"}
                                       </div>
                                       <div
                                         className="star-wrap"
