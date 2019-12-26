@@ -38,14 +38,16 @@ class AddSetModal extends React.Component {
       } else {
         if (setList && setList.length) {
           setList.map(item => {
-            if (
-              (item &&
-                item.folderId &&
-                item.folderId._id === this.props.folderId) ||
-              item.folderId === null
-            ) {
-              setItem.push(item);
-            }
+            // if (
+            //   (item &&
+            //     item.folderId &&
+            //     item.folderId._id === this.props.folderId) ||
+            //   item.folderId === null
+            // ) {
+            //   setItem.push(item);
+            // }
+            setItem.push(item);
+
             return true;
           });
         }
@@ -71,14 +73,16 @@ class AddSetModal extends React.Component {
     } else {
       if (setList && setList.length) {
         setList.map(item => {
-          if (
-            (item &&
-              item.folderId &&
-              item.folderId._id === this.props.folderId) ||
-            item.folderId === null
-          ) {
-            setItem.push(item);
-          }
+          // if (
+          //   (item &&
+          //     item.folderId &&
+          //     item.folderId._id === this.props.folderId) ||
+          //   item.folderId === null
+          // ) {
+          //   setItem.push(item);
+          // }
+          setItem.push(item);
+
           return true;
         });
       }
@@ -175,7 +179,8 @@ class AddSetModal extends React.Component {
                                   : set.title}
                               </div>
                               <div className="sets-icon ml-auto">
-                                {set.folderId !== null ? (
+                                {set.folderId !== null &&
+                                set.folderId._id === this.props.folderId ? (
                                   <span
                                     onClick={() =>
                                       this.OnhandleSets(set._id, "add")

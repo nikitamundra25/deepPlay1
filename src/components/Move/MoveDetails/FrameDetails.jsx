@@ -212,7 +212,7 @@ class FrameDetails extends Component {
               min: parseInt(max) - parseInt(min) === 1 ? min : min + 0.1,
               max:
                 parseInt(max) === parseInt(duration.seconds)
-                  ? max <= parseInt(duration.seconds)
+                  ? parseInt(max) <= parseInt(duration.seconds)
                     ? max
                     : duration.seconds
                   : max + 0.1
@@ -248,7 +248,10 @@ class FrameDetails extends Component {
           if (e.keyCode === 38) {
             let changeValue = {
               min: parseInt(max) - parseInt(min) > 1 ? min + 0.1 : min,
-              max: max <= parseInt(duration.seconds) ? max : duration.seconds
+              max:
+                parseInt(max) <= parseInt(duration.seconds)
+                  ? max
+                  : parseInt(duration.seconds)
             };
             this.setState(
               {
@@ -290,11 +293,11 @@ class FrameDetails extends Component {
             let changeValue = {
               min: min,
               max:
-                parseInt(max) - parseInt(min) < 15
-                  ? max <= parseInt(duration.seconds)
-                    ? max + 0.1
-                    : parseInt(duration.seconds)
-                  : max
+                parseInt(max) === parseInt(duration.seconds)
+                  ? parseInt(max) <= parseInt(duration.seconds)
+                    ? max
+                    : duration.seconds
+                  : max + 0.1
             };
             this.setState(
               {
