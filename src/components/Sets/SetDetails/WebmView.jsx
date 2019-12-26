@@ -644,7 +644,7 @@ class WebmView extends Component {
                   doubleClick ? e => this.handleonBlur(e, videoData) : null
                 }
                 onKeyPress={
-                  doubleClick ? e => this.handleKeyPress(e, video) : null
+                  doubleClick ? e => this.handleKeyPress(e, videoData) : null
                 }
               >
                 {videoData && videoData.title ? videoData.title : "Unnamed"}
