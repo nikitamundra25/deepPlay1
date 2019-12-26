@@ -318,6 +318,8 @@ class SetDetails extends React.Component {
       const moveVideo = data.videoData;
       moveVideo.title = data.title;
       moveVideo.description = data.description;
+      console.log("moveVideo", data.videoData);
+
       this.props.updateMoveRequest({ data: data, moveVideo: moveVideo });
     }
   };
