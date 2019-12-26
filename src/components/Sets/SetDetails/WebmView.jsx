@@ -462,6 +462,14 @@ class WebmView extends Component {
     });
   };
 
+  handleKeyPress = (e, videoData, showVideoIndex, video) => {
+    if (e.which === 13 || e.keyCode === 13) {
+      this.handleonBlur(e, videoData, showVideoIndex, video);
+    } else {
+      return;
+    }
+  };
+
   handleonBlur = (e, videoData) => {
     const value = e.target.textContent;
     const error =
@@ -478,7 +486,6 @@ class WebmView extends Component {
         doubleClick: false,
         title: ""
       });
-
       if (value !== "" || this.state.errorTitle !== null) {
         const data = {
           moveId: videoData._id,
@@ -512,14 +519,6 @@ class WebmView extends Component {
     });
   };
 
-  handleKeyPress = (e, videoData) => {
-    if (e.which === 13 || e.keyCode === 13) {
-      this.handleonBlur(e, videoData);
-    } else {
-      return;
-    }
-  };
-
   render() {
     const {
       video,
@@ -531,7 +530,8 @@ class WebmView extends Component {
       isShareable,
       videoData,
       tagsList,
-      fromMoveSearch
+      fromMoveSearch,
+      showVideoIndex
     } = this.props;
     const { modelDetails } = modelInfoReducer;
     const {
@@ -636,7 +636,9 @@ class WebmView extends Component {
                   doubleClick ? e => this.handleonBlur(e, videoData) : null
                 }
                 onKeyPress={
-                  doubleClick ? e => this.handleKeyPress(e, video) : null
+                  doubleClick
+                    ? e => this.handleKeyPress(e, videoData, showVideoIndex)
+                    : null
                 }
               >
                 {videoData && videoData.title ? videoData.title : "Unnamed"}

@@ -323,7 +323,7 @@ class MoveListDetails extends React.Component {
                   )} */}
                   {(doubleClick && doubleClickIndex === index) || video.title
                     ? video.title
-                    : "unnamed"} 
+                    : "unnamed"}
                 </div>
                 <div
                   className="star-wrap"
