@@ -206,7 +206,7 @@ class YouTubeFrameDetails extends Component {
               min: parseInt(max) - parseInt(min) === 1 ? min : min + 0.1,
               max:
                 parseInt(max) === parseInt(videoMaxDuration)
-                  ? max <= parseInt(videoMaxDuration)
+                  ? parseInt(max) <= parseInt(videoMaxDuration)
                     ? max
                     : videoMaxDuration
                   : max + 0.1
@@ -242,7 +242,10 @@ class YouTubeFrameDetails extends Component {
           if (e.keyCode === 38) {
             let changeValue = {
               min: parseInt(max) - parseInt(min) > 1 ? min + 0.1 : min,
-              max: max <= parseInt(videoMaxDuration) ? max : videoMaxDuration
+              max:
+                parseInt(max) <= parseInt(videoMaxDuration)
+                  ? max
+                  : parseInt(videoMaxDuration)
             };
             this.setState(
               {
@@ -284,11 +287,16 @@ class YouTubeFrameDetails extends Component {
             let changeValue = {
               min: min,
               max:
-                parseInt(max) - parseInt(min) < 15
-                  ? max <= parseInt(videoMaxDuration)
-                    ? max + 0.1
+                // parseInt(max) - parseInt(min) < 15
+                //   ? max <= parseInt(videoMaxDuration)
+                //     ? max + 0.1
+                //     : parseInt(videoMaxDuration)
+                //   : max
+                parseInt(max) === parseInt(videoMaxDuration)
+                  ? parseInt(max) <= parseInt(videoMaxDuration)
+                    ? max
                     : parseInt(videoMaxDuration)
-                  : max
+                  : max + 0.1
             };
             this.setState(
               {
@@ -314,6 +322,7 @@ class YouTubeFrameDetails extends Component {
           }
         }
       } else if (parseInt(max) - parseInt(min) === 1) {
+        console.log("heyyyyyyy");
         if (name === "from") {
           if (e.keyCode === 38) {
             if (
@@ -374,6 +383,8 @@ class YouTubeFrameDetails extends Component {
               );
             }
           } else {
+            console.log("height");
+
             if (parseInt(max) - parseInt(min) > 1) {
               let changeValue = {
                 min: min - 1,

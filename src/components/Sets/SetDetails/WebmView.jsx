@@ -632,8 +632,8 @@ class WebmView extends Component {
                 contentEditable={doubleClick ? "true" : "false"}
                 className={
                   videoData.title !== "Unnamed"
-                    ? "video-slider-title font-weight-bold"
-                    : "text-untitled-slider font-weight-bold "
+                    ? "text-capitalize video-slider-title font-weight-bold"
+                    : "text-capitalize text-untitled-slider font-weight-bold "
                 }
                 onDoubleClick={
                   !isShareable

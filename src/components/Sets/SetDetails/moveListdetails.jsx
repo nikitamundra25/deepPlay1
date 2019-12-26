@@ -97,14 +97,14 @@ class MoveListDetails extends React.Component {
     } else {
       processingData = false;
     }
-    const highlightText = document.getElementById(`video-title-${index}`);
-    if (highlightText) {
-      if (doubleClick && doubleClickIndex === index) {
-        highlightText.classList.add("text-selected");
-      } else {
-        highlightText.classList.remove("text-selected");
-      }
-    }
+    // const highlightText = document.getElementById(`video-title-${index}`);
+    // if (highlightText) {
+    //   if (doubleClick && doubleClickIndex === index) {
+    //     highlightText.classList.add("text-selected");
+    //   } else {
+    //     highlightText.classList.remove("text-selected");
+    //   }
+    // }
 
     return (
       <div
