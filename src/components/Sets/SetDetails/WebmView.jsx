@@ -622,7 +622,11 @@ class WebmView extends Component {
               <div
                 suppressContentEditableWarning={true}
                 contentEditable={doubleClick ? "true" : "false"}
-                className="video-slider-title font-weight-bold"
+                className={
+                  videoData.title
+                    ? "video-slider-title font-weight-bold"
+                    : "text-untitled-slider font-weight-bold "
+                }
                 onDoubleClick={
                   !isShareable
                     ? () => this.onDoubleClick(videoData.title)
@@ -636,7 +640,12 @@ class WebmView extends Component {
                 }
               >
                 {videoData && videoData.title ? videoData.title : "Unnamed"}
-
+                {/* {doubleClick && video.title ? video.title : "unnamed"} */}
+                {/* {video.title
+                  ? doubleClick
+                    ? video.title
+                    : video.title
+                  : "Unnamed"} */}
                 {/* {doubleClick ? (
                   <>
                     <FormGroup>

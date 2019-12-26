@@ -202,6 +202,14 @@ div[data-react-beautiful-dnd-drag-handle] {
     height: auto;
   }
 }
+.text-untitled {
+  color: #504e4e;
+}
+.text-untitled-slider{
+  font-size: 24px;
+  color: #504e4e;
+    font-weight: 600;
+}
 @keyframes spin {
   0% {
     transform: rotate(0deg);

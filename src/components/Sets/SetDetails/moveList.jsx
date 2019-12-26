@@ -699,7 +699,8 @@ class MoveList extends React.Component {
                               className=" "
                               color=" "
                             >
-                              <img src={addTag} alt="" className="mr-1" />{" "}
+                              <i className="far fa-check-square fa-lg mr-1 pr-2"></i>
+                              {/* <img src={addTag} alt="" className="mr-1" />{" "} */}
                               {selectedMoveIds.length >= movesOfSet.length
                                 ? "Unselect all"
                                 : "Select all"}

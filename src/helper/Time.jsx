@@ -25,5 +25,5 @@ export const SecondsToMMSSMM = timeInSeconds => {
     minutes = Math.floor(time / 60) % 60,
     seconds = Math.floor(time - minutes * 60),
     milliseconds = time.slice(2, -1);
-  return `${pad(minutes, 2)}:${pad(seconds, 2)}:${pad(milliseconds, 2)}`;
+  return `${pad(minutes, 2)}:${pad(seconds, 2)}.${pad(milliseconds, 2)}`;
 };

@@ -6,7 +6,8 @@ import {
   deleteUserAccountRequest,
   uploadImageRequest,
   modelOpenRequest,
-  cancelProfileRequest
+  cancelProfileRequest,
+  changePasswordRequest
 } from "../../actions";
 import { connect } from "react-redux";
 // core components
@@ -28,7 +29,8 @@ class Setting extends React.Component {
       modelInfoReducer,
       isImageUploading,
       isprofileInfoLoading,
-      cancelProfileRequest
+      cancelProfileRequest,
+      loginReducer
     } = this.props;
     return (
       <>
@@ -45,6 +47,8 @@ class Setting extends React.Component {
           modelInfoReducer={modelInfoReducer}
           isprofileInfoLoading={isprofileInfoLoading}
           cancelProfileRequest={cancelProfileRequest}
+          loginReducer={loginReducer}
+          changePasswordRequest={data => this.props.changePasswordRequest(data)}
         />
       </>
     );
@@ -56,7 +60,8 @@ const mapStateToProps = state => {
     isprofileInfoLoading: state.profileInfoReducer.isprofileInfoLoading,
     profileImage: state.profileImage.profileImage.profileThumbnail,
     isImageUploading: state.profileImage.isImageUploading,
-    modelInfoReducer: state.modelInfoReducer
+    modelInfoReducer: state.modelInfoReducer,
+    loginReducer: state.loginReducer
   };
 };
 
@@ -75,7 +80,10 @@ const mapDispatchToProps = dispatch => {
       dispatch(uploadImageRequest(payload));
     },
     modelOperate: data => dispatch(modelOpenRequest(data)),
-    cancelProfileRequest: () => dispatch(cancelProfileRequest())
+    cancelProfileRequest: () => dispatch(cancelProfileRequest()),
+    changePasswordRequest: data => {
+      dispatch(changePasswordRequest(data));
+    }
   };
 };
 

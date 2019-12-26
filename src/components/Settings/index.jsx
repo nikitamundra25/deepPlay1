@@ -18,12 +18,15 @@ import Validator from "js-object-validation";
 import Swal from "sweetalert2";
 import {
   SingupValidations,
-  SingupValidationsMessaages
+  SingupValidationsMessaages,
+  ChangePasswordValidations,
+  ChangePasswordValidationsMessaages
 } from "../../validations";
 import UploadImage from "./uploadImageModal";
 import profileIcon from "../../assets/img/profile-ic.png";
 import { AppConfig } from "../../config/Appconfig";
 import Loader from "../comman/Loader/Loader";
+import { logger } from "../../helper/Logger";
 
 class SettingComponent extends Component {
   constructor(props) {
@@ -38,7 +41,10 @@ class SettingComponent extends Component {
       file: "",
       name: "",
       modal: false,
-      errors: {}
+      errors: {},
+      oldPassword: "",
+      newPassword: "",
+      confirmPassword: ""
     };
   }
   componentDidUpdate(prevProps) {
@@ -63,7 +69,18 @@ class SettingComponent extends Component {
         modal: false
       });
     }
+    const previsousState = prevProps.loginReducer.isChangePasswordDone;
+    const currentState = this.props.loginReducer.isChangePasswordDone;
+    if (previsousState !== currentState) {
+      this.setState({
+        oldPassword: "",
+        newPassword: "",
+        confirmPassword: "",
+        errors: {}
+      });
+    }
   }
+
   onHandleEdit = () => {
     this.setState({
       isDisabled: !this.state.isDisabled
@@ -76,6 +93,18 @@ class SettingComponent extends Component {
       [name]: value.replace(/[^\w\s]|[0-9]|[_]/gi, "").trim(),
       errors: {
         ...this.state.errors,
+        [name]: null
+      }
+    });
+  };
+
+  handleChangePassword = e => {
+    const { target } = e;
+    const { value, name } = target;
+    this.setState({
+      [name]: value,
+      errors: {
+        ...this.state.error,
         [name]: null
       }
     });
@@ -173,13 +202,46 @@ class SettingComponent extends Component {
     });
   };
 
+  changePassword = e => {
+    e.preventDefault();
+    this.setState({
+      errors: {}
+    });
+    try {
+      const { isValid, errors } = Validator(
+        this.state,
+        ChangePasswordValidations,
+        ChangePasswordValidationsMessaages
+      );
+      if (!isValid) {
+        this.setState({
+          errors
+        });
+        return;
+      }
+      const { oldPassword, newPassword } = this.state;
+      this.props.changePasswordRequest({
+        oldPassword: oldPassword,
+        newPassword: newPassword
+      });
+      // this.setState({
+      //   oldPassword: "",
+      //   newPassword: "",
+      //   confirmPassword: ""
+      // });
+    } catch (error) {
+      logger(error);
+    }
+  };
   render() {
     const {
       profileInfoReducer,
       modelInfoReducer,
       isImageUploading,
-      isprofileInfoLoading
+      isprofileInfoLoading,
+      loginReducer
     } = this.props;
+    const { isChangePasswordSuccess } = loginReducer;
     const {
       isDisabled,
       firstName,
@@ -188,7 +250,10 @@ class SettingComponent extends Component {
       file,
       errors,
       imgError,
-      name
+      name,
+      newPassword,
+      oldPassword,
+      confirmPassword
     } = this.state;
     const { modelDetails } = modelInfoReducer;
     const { uploadImageModalOpen } = modelDetails;
@@ -424,6 +489,100 @@ class SettingComponent extends Component {
                     </div>
                   </CardBody>
                 </Card>
+                {/*  */}
+                <Card className="card-wrap ">
+                  <CardHeader className="d-flex">
+                    <CardTitle className="card-heading mb-0 h5">
+                      Change Password
+                    </CardTitle>
+                    <div className="heading-divider"></div>
+                    <div className="text-center">
+                      <Button
+                        className="dashboard-right-content btn-line-black"
+                        color=" "
+                        type="submit"
+                        disabled={isChangePasswordSuccess ? true : false}
+                        onClick={this.changePassword}
+                      >
+                        {isChangePasswordSuccess
+                          ? "Please Wait..."
+                          : "Change Password"}
+                      </Button>
+                    </div>
+                  </CardHeader>
+                  <CardBody>
+                    <Form className="form-wrap settingForm">
+                      <Row>
+                        <Col md="6">
+                          <FormGroup>
+                            <Label for="oldPassword">
+                              Old Password{" "}
+                              <span className="text-danger">*</span>
+                            </Label>
+                            <Input
+                              value={oldPassword}
+                              name="oldPassword"
+                              onChange={this.handleChangePassword}
+                              className={errors.oldPassword ? "is-invalid" : ""}
+                              placeholder="Old Password"
+                              type="password"
+                            />
+                            <FormFeedback>
+                              {errors.oldPassword ? errors.oldPassword : null}
+                            </FormFeedback>
+                          </FormGroup>
+                        </Col>
+                        <Col md="6">
+                          <FormGroup>
+                            <Label for="newPassword">
+                              New Password{" "}
+                              <span className="text-danger">*</span>
+                            </Label>
+                            <Input
+                              id="newPassword"
+                              placeholder="New Password"
+                              type="password"
+                              className={errors.newPassword ? "is-invalid" : ""}
+                              onChange={this.handleChangePassword}
+                              value={newPassword}
+                              name="newPassword"
+                            />
+                            <FormFeedback>
+                              {errors.newPassword ? errors.newPassword : null}
+                            </FormFeedback>
+                          </FormGroup>
+                        </Col>
+                      </Row>
+                      <Row>
+                        <Col md="12">
+                          <FormGroup>
+                            <Label for="confirmPassword">
+                              Confirm Password{" "}
+                              <span className="text-danger">*</span>
+                            </Label>
+                            <Input
+                              id="confirmPassword"
+                              placeholder="Confirm Password"
+                              type="password"
+                              className={
+                                errors.confirmPassword ? "is-invalid" : ""
+                              }
+                              onChange={this.handleChangePassword}
+                              value={confirmPassword}
+                              name="confirmPassword"
+                            />
+                            <FormFeedback>
+                              {errors.confirmPassword
+                                ? errors.confirmPassword
+                                : null}
+                            </FormFeedback>
+                          </FormGroup>
+                        </Col>
+                      </Row>
+                    </Form>
+                  </CardBody>
+                </Card>
+
                 <Card className="card-wrap mt-4">
                   <CardHeader>
                     <CardTitle className="card-heading mb-0 h5 text-danger">

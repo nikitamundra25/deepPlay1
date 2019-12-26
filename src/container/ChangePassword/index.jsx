@@ -34,7 +34,7 @@ class ChangePassword extends Component {
   }
 
   componentDidUpdate = ({ loginReducer }) => {
-    const previsousState = loginReducer.isChangePasswordDone
+    const previsousState = loginReducer.isChangePasswordDone;
     const currentState = this.props.loginReducer.isChangePasswordDone;
     if (previsousState !== currentState) {
       this.setState({
@@ -42,9 +42,9 @@ class ChangePassword extends Component {
         newPassword: "",
         confirmPassword: "",
         errors: {}
-      })
+      });
     }
-  }
+  };
 
   handleChange = e => {
     const { target } = e;
@@ -104,12 +104,10 @@ class ChangePassword extends Component {
           <Card className="set-content-wrap card-wrap ">
             <div className="set-content-block w-100 h-100">
               <CardHeader className="">
-
                 <CardTitle className="card-heading mb-0 h5">
                   Update Password
-                    </CardTitle>
+                </CardTitle>
                 <div className="heading-divider"></div>
-
               </CardHeader>
               <CardBody className="">
                 <div className="create-set-tile">
@@ -169,7 +167,9 @@ class ChangePassword extends Component {
                             id="confirmPassword"
                             placeholder="Confirm Password"
                             type="password"
-                            className={errors.confirmPassword ? "is-invalid" : ""}
+                            className={
+                              errors.confirmPassword ? "is-invalid" : ""
+                            }
                             onChange={this.handleChange}
                             value={confirmPassword}
                             name="confirmPassword"
@@ -215,7 +215,4 @@ const mapDispatchToProps = dispatch => ({
   }
 });
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(ChangePassword);
+export default connect(mapStateToProps, mapDispatchToProps)(ChangePassword);

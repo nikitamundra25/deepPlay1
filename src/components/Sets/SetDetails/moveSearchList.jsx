@@ -827,7 +827,11 @@ class MoveSearchList extends React.Component {
                                     </div>
                                     <div className="play-list-text">
                                       <div
-                                        className="text-capitalize play-list-heading h6 m-0"
+                                        className={
+                                          video.title
+                                            ? "text-capitalize play-list-heading h6 m-0"
+                                            : "text-capitalize play-list-heading h6 m-0 text-untitled"
+                                        }
                                         contenteditable={
                                           doubleClick &&
                                           doubleClickIndex === index
