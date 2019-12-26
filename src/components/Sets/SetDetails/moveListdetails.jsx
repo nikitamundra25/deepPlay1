@@ -97,6 +97,14 @@ class MoveListDetails extends React.Component {
     } else {
       processingData = false;
     }
+    const highlightText = document.getElementById(`video-title-${index}`);
+    if (highlightText) {
+      if (doubleClick && doubleClickIndex === index) {
+        highlightText.classList.add("text-selected");
+      } else {
+        highlightText.classList.remove("text-selected");
+      }
+    }
 
     return (
       <div
@@ -279,10 +287,10 @@ class MoveListDetails extends React.Component {
               <div className="play-list-text">
                 <div
                   suppressContentEditableWarning={true}
-                  id="max-title-length"
+                  id={`video-title-${index}`}
                   className={
-                    video.title
-                      ? "text-capitalize play-list-heading h6 m-0"
+                    video.title !== "Unnamed" && video.title
+                      ? "text-capitalize play-list-heading h6 m-0 "
                       : "text-capitalize play-list-heading h6 m-0 text-untitled"
                   }
                   contentEditable={

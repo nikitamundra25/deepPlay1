@@ -596,7 +596,14 @@ class WebmView extends Component {
     // if (!isFullScreenMode && !isPlaying) {
     //   isFullScreenMode1 = false;
     // }
-
+    const highlightText = document.getElementById("video-title");
+    if (highlightText) {
+      if (doubleClick) {
+        highlightText.classList.add("text-selected");
+      } else {
+        highlightText.classList.remove("text-selected");
+      }
+    }
     return (
       <>
         <Modal
@@ -620,10 +627,11 @@ class WebmView extends Component {
           <ModalBody>
             <div className="video-slider-text">
               <div
+                id="video-title"
                 suppressContentEditableWarning={true}
                 contentEditable={doubleClick ? "true" : "false"}
                 className={
-                  videoData.title
+                  videoData.title !== "Unnamed"
                     ? "video-slider-title font-weight-bold"
                     : "text-untitled-slider font-weight-bold "
                 }
@@ -640,12 +648,13 @@ class WebmView extends Component {
                 }
               >
                 {videoData && videoData.title ? videoData.title : "Unnamed"}
-                {/* {doubleClick && video.title ? video.title : "unnamed"} */}
-                {/* {video.title
-                  ? doubleClick
-                    ? video.title
-                    : video.title
-                  : "Unnamed"} */}
+
+                {/* {doubleClick
+                  ? videoData.title
+                    ? videoData.title
+                    : videoData.title
+                  : "unnamed"} */}
+
                 {/* {doubleClick ? (
                   <>
                     <FormGroup>
