@@ -15,9 +15,9 @@ import Loader from "components/comman/Loader/Loader";
 import AddTagModal from "./addTagsModal";
 import { ConfirmBox } from "helper/SweetAleart";
 import { DebounceInput } from "react-debounce-input";
-import addTag from "../../../assets/img/set-detail-ic/add-tag.svg";
-import transfer from "../../../assets/img/set-detail-ic/transfer.svg";
-import remove from "../../../assets/img/set-detail-ic/remove.svg";
+// import addTag from "../../../assets/img/set-detail-ic/add-tag.svg";
+// import transfer from "../../../assets/img/set-detail-ic/transfer.svg";
+// import remove from "../../../assets/img/set-detail-ic/remove.svg";
 import { ListManager } from "react-beautiful-dnd-grid";
 import MoveListDetails from "./moveListdetails";
 import { toast } from "react-toastify";
@@ -491,6 +491,10 @@ class MoveList extends React.Component {
   };
 
   onDoubleClick = (index, title) => {
+    const highlightText = document.getElementById(`video-title-${index}`);
+    if (highlightText) {
+      highlightText.classList.add("text-selected");
+    }
     this.setState({
       doubleClick: true,
       doubleClickIndex: index,
@@ -499,6 +503,10 @@ class MoveList extends React.Component {
   };
 
   handleonBlur = (e, videoData, index) => {
+    const highlightText = document.getElementById(`video-title-${index}`);
+    if (highlightText) {
+      highlightText.classList.remove("text-selected");
+    }
     const value = e.target.textContent;
     const error =
       value && value.length > 50
@@ -698,7 +706,11 @@ class MoveList extends React.Component {
                               className=" "
                               color=" "
                             >
-                              <i className="far fa-check-square fa-lg mr-1 pr-2"></i>
+                              {selectedMoveIds.length >= movesOfSet.length ? (
+                                <i className="fas fa-check-square fa-lg mr-1 pr-2"></i>
+                              ) : (
+                                <i className="fas fa-square fa-lg mr-1 pr-2"></i>
+                              )}
                               {/* <img src={addTag} alt="" className="mr-1" />{" "} */}
                               {selectedMoveIds.length >= movesOfSet.length
                                 ? "Unselect all"
@@ -709,15 +721,15 @@ class MoveList extends React.Component {
                               className=" "
                               color=" "
                             >
-                              <img src={addTag} alt="" className="mr-1" /> Add
-                              tags
+                              <i className="fas fa-tags fa-lg mr-1 pr-2"></i>{" "}
+                              Add tags
                             </Button>
                             <Button
                               onClick={() => this.openTransferToModal()}
                               className=" "
                               color=" "
                             >
-                              <img src={transfer} alt="" className="mr-1" />{" "}
+                              <i className="fas fa-file-export fa-lg mr-1 pr-2"></i>
                               Transfer
                             </Button>
                             <Button
@@ -725,7 +737,7 @@ class MoveList extends React.Component {
                               className=" "
                               color=" "
                             >
-                              <img src={remove} alt="" className="mr-1" />{" "}
+                              <i className="fas fa-trash fa-lg mr-1 pr-2"></i>
                               Remove
                             </Button>
                             <Button
@@ -733,10 +745,7 @@ class MoveList extends React.Component {
                               className="btn-black"
                               onClick={() => this.handleUnselectAll()}
                             >
-                              <i
-                                className="fa fa-times fa-lg"
-                                aria-hidden="true"
-                              />
+                              <i className="fas fa-times fa-lg"></i>
                             </Button>
                           </ButtonGroup>
                         </span>
