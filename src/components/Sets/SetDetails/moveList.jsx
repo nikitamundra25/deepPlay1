@@ -5,7 +5,7 @@ import {
   Button,
   ButtonGroup,
   FormGroup,
-  InputGroup
+  InputGroup,Input
 } from "reactstrap";
 import addPlusIc from "../../../assets/img/add_plus.png";
 import TransferToModal from "../../Folders/FolderDetails/transferTo";
@@ -696,13 +696,25 @@ class MoveList extends React.Component {
                                   ? this.handleUnselectAll()
                                   : this.handleSelectAll()
                               }
-                              className=" "
+                              className="custom-checkbox"
                               color=" "
                             >
-                              <img src={addTag} alt="" className="mr-1" />{" "}
+                           <span className=""></span>
+                    <Input
+                      className="custom-control-input"
+                      id={`selected-video`}
+                    
+                      type="checkbox"
+                    />
+                    <label
+                      className="custom-control-label"
+                      htmlFor={`selected-video`}
+                    >
                               {selectedMoveIds.length >= movesOfSet.length
                                 ? "Unselect all"
                                 : "Select all"}
+                                </label>
+                
                             </Button>
                             <Button
                               onClick={() => this.openAddTagsModal()}
@@ -747,7 +759,7 @@ class MoveList extends React.Component {
               ) : null}
 
               {!isMoveSearchLoading && !isMoveListLoading ? (
-                <div className="video-thumbnail-sub-block  video-thumb-edit-view">
+                <div className="video-thumbnail-sub-block  video-thumb-edit-view ">
                   <div className="play-list-tile create-move-element">
                     <div
                       className="play-list-block  d-flex h-100 cursor_pointer"

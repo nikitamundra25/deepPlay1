@@ -301,7 +301,6 @@ header {
       }
     }
     .play-sub-block {
-      border: 2px dashed transparent;
       background: #fff;
       box-shadow: 0px 0px 5px 0px #ccc;
       &.video-full-selection {
@@ -2550,9 +2549,9 @@ header {
   }
 }
 @media (max-width: 767px) {
-  body {
-    width: 767px;
-  }
+  // body {
+  //   width: 767px;
+  // }
   .play-list-tile {
     width: 50%;
   }
@@ -2620,7 +2619,7 @@ header {
     margin-right: 5px;
     color: #000;
     border-radius: 4px;
-    display: block;
+    display: none
   }
   .header-navbar .navbar-brand {
     margin: 0px;
@@ -2668,5 +2667,18 @@ _:future,
   }
   .not-supported-wrap{
   
+  }
+}
+.pagination {
+  .page-item{
+    [aria-label]{
+      &>span{
+      font-size: 0px;
+      &>span{
+        line-height: 30px;
+        display: block;
+    }
+    }
+    }
   }
 }
