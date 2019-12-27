@@ -740,7 +740,11 @@ class WebmView extends Component {
                 </div>
               ) : null}
             </div>
-            <div className="video-slider-img pb-3">
+            <div className="video-slider-img pb-3"
+                onMouseMove={()=>{
+                 
+                }}
+            >
               <div className="custom-video-player" id="custom_video_control">
                 <div className="videos-arrows-wrap">
                   {videoIndex > 0 ? (
@@ -795,7 +799,9 @@ class WebmView extends Component {
                     <Loader videoLoader={true} />
                   </div>
                 )}
-                <div className={"controls"}>
+                <div className={"controls"}
+            
+                >
                   <div className="control-background-wrap"></div>
                   <InputRange
                     draggableTrack={false}
