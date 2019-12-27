@@ -248,13 +248,13 @@ const getAllSetById = async (req: Request, res: Response): Promise<void> => {
 };
 
 // --------------Get Recent set info---------------------
-const getRecentSetById = async (req: Request, res: Response): Promise<void> => {
+const getRecentSetById = async (req: Request, res: Response): Promise<any> => {
   const limit = 10;
   try {
     const { currentUser } = req;
     let headToken: Request | any = currentUser;
     if (!headToken.id) {
-      res.status(400).json({
+     return res.status(400).json({
         message: "User id not found"
       });
     }
@@ -307,15 +307,21 @@ const getRecentSetById = async (req: Request, res: Response): Promise<void> => {
 };
 
 // --------------Get all sets which have folderId or null folderId---------------------
-const getSetsForFolder = async (req: Request, res: Response): Promise<void> => {
+const getSetsForFolder = async (req: Request, res: Response): Promise<any> => {
   try {
     const { currentUser } = req;
     const { query } = req;
     const { limit, page } = query;
     let headToken: Request | any = currentUser;
     if (!headToken.id) {
-      res.status(400).json({
+      return res.status(400).json({
         message: "User id not found"
+      });
+    }
+    if (!ObjectId.isValid(query.folderId)) {
+      return res.status(400).json({
+        message: "Set id not found",
+        success: false
       });
     }
     let result: Document | any,
@@ -473,7 +479,7 @@ Created By:- Rishabh Bula*/
 const getSetDetailsById = async (
   req: Request,
   res: Response
-): Promise<void> => {
+): Promise<any> => {
   try {
     const { currentUser } = req;
     const { query } = req;
@@ -481,13 +487,15 @@ const getSetDetailsById = async (
 
     let headToken: Request | any = currentUser;
     if (!headToken.id) {
-      res.status(400).json({
+    return res.status(400).json({
         message: "User id not found"
       });
     }
+
     if (!ObjectId.isValid(setId)) {
-      res.status(400).json({
-        message: "Set id not found"
+     return res.status(400).json({
+        message: "Set id not found",
+        success: false
       });
     }
     const result: Document | any = await SetModel.findOne({

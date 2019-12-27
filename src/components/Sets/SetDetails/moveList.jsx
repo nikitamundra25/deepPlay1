@@ -272,7 +272,6 @@ class MoveList extends React.Component {
       if (!toast.isActive(this.toastId)) {
         this.toastId = toast.success("Move marked as starred");
       }
-
       // starDiv.classList.add("isStarred");
       listData[index].isStarred = true;
     }

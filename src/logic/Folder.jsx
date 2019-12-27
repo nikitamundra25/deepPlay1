@@ -196,9 +196,10 @@ const getFolderDetailsLogic = createLogic({
       undefined
     );
     if (result.isError) {
-      if (!toast.isActive(toastId)) {
-        toastId = toast.error(result.messages[0]);
-      }
+      // if (!toast.isActive(toastId)) {
+      //   toastId = toast.error(result.messages[0]);
+      // }
+      dispatch(redirectTo({ path: AppRoutes.FOLDERS.url }));
       done();
       return;
     } else {

@@ -17,6 +17,7 @@ const algoliasearch = require("algoliasearch");
 const client = algoliasearch(algoliaAppId, algoliaAPIKey);
 const index: any = client.initIndex("deep_play_data");
 const __basedir = path.join(__dirname, "../public");
+let ObjectId = require("mongoose").Types.ObjectId;
 
 /**
  * Title:- Download Video to local server
@@ -110,11 +111,14 @@ const downloadYoutubeVideo = async (
     }
     videoURL = path.join("uploads", "youtube-videos", fileName);
     let videoStream: any;
-    if (body.url === "https://www.youtube.com/embed/rp4UwPZfRis?autoplay=0&enablejsapi=1") {
+    if (
+      body.url ===
+      "https://www.youtube.com/embed/rp4UwPZfRis?autoplay=0&enablejsapi=1"
+    ) {
       return res.status(400).json({
         message: "Video Url Not Supported",
         success: false
-      })
+      });
     }
     /* Download youtube videos on localserver */
     const trueYoutubeUrl = ytdl.validateURL(body.url);
@@ -327,6 +331,13 @@ const getMoveBySetId = async (req: Request, res: Response): Promise<any> => {
     if (!headToken.id) {
       res.status(400).json({
         message: "User id not found"
+      });
+    }
+
+    if (!ObjectId.isValid(query.setId)) {
+      res.status(400).json({
+        message: "Set id not found",
+        success: false
       });
     }
     const pageNumber: number = ((parseInt(page) || 1) - 1) * (limit || 20);
@@ -647,6 +658,7 @@ const updateMoveDetailsFromYouTubeAndTrim = async (
             startTime: timer.min ? timer.min : 0,
             sourceUrl: result.sourceUrl ? result.sourceUrl : null,
             tags,
+            sortIndex: 0,
             setId,
             isYoutubeUrl: true,
             userId: result.userId,
@@ -856,6 +868,7 @@ const updateMoveDetailsAndTrimVideo = async (
             sourceUrl: result.sourceUrl ? result.sourceUrl : null,
             tags,
             setId,
+            sortIndex: 0,
             isYoutubeUrl: result.isYoutubeUrl ? result.isYoutubeUrl : false,
             userId: result.userId,
             isDeleted: result.isDeleted,
@@ -1297,11 +1310,23 @@ const updateMoveIndex = async (req: Request, res: Response): Promise<any> => {
     let num: number = parseInt(sortIndex);
     let num1: number = parseInt(sortIndex);
 
-    for (let index = 0; index < movesOfSet.length; index++) {
+    for (let i = 0; i < movesOfSet.length; i++) {
       await MoveModel.updateOne(
-        { setId: setId, _id: movesOfSet[index]._id },
-        { $set: { sortIndex: index + 1 } }
+        { setId: setId, _id: movesOfSet[i]._id },
+        { $set: { sortIndex: i + 1 } }
       );
+      let stemp = movesOfSet[i].objectId;
+      if (stemp) {
+        index.partialUpdateObject(
+          {
+            sortIndex: i + 1,
+            objectID: stemp
+          },
+          (err: string, content: any) => {
+            if (err) throw err;
+          }
+        );
+      }
     }
     let resp: Document | any | null;
     if (parsed.isStarred) {
@@ -1385,7 +1410,7 @@ const updateMove = async (req: Request, res: Response): Promise<any> => {
         },
         (err: string, content: any) => {
           if (err) throw err;
-          console.log(content);
+          // console.log(content);
         }
       );
     }
@@ -1411,21 +1436,37 @@ const getMoveBySearch = async (req: Request, res: Response): Promise<any> => {
         message: "User id not found"
       });
     }
+
     const pageNumber: number = ((parseInt(page) || 1) - 1) * (limit || 20);
     const limitNumber: number = parseInt(limit) || 20;
     let movesData: Document | any,
       moveList: Document | any | null,
       totalMoves: Document | any | null;
+    let condition: any = {
+      $and: []
+    };
+    condition.$and.push({
+      isDeleted: false,
+      moveURL: { $ne: null }
+    });
+
     if (search) {
+      condition.$and.push({
+        $or: [
+          {
+            title: {
+              $regex: new RegExp(search.trim(), "i")
+            }
+          },
+          {
+            "tags.label": search.trim()
+          }
+        ]
+      });
+
       if (query.isStarred === "true") {
-        movesData = await MoveModel.find({
-          title: {
-            $regex: new RegExp(search.trim(), "i")
-          },
-          isDeleted: false,
-          isStarred: true,
-          moveURL: { $ne: null }
-        })
+        let conditionCheck = [...condition, { isStarred: true }];
+        movesData = await MoveModel.find(conditionCheck)
           .populate({
             path: "setId",
             match: { isDeleted: false }
@@ -1433,15 +1474,9 @@ const getMoveBySearch = async (req: Request, res: Response): Promise<any> => {
           .skip(pageNumber)
           .limit(limitNumber)
           .sort({ sortIndex: 1 });
+        totalMoves = await MoveModel.count(conditionCheck);
       } else {
-        movesData = await MoveModel.find({
-          title: {
-            $regex: new RegExp(search.trim(), "i")
-          },
-          isDeleted: false,
-          userId: headToken.id,
-          moveURL: { $ne: null }
-        })
+        movesData = await MoveModel.find(condition)
           .populate({
             path: "setId",
             match: { isDeleted: false }
@@ -1449,22 +1484,65 @@ const getMoveBySearch = async (req: Request, res: Response): Promise<any> => {
           .skip(pageNumber)
           .limit(limitNumber)
           .sort({ sortIndex: 1 });
+        totalMoves = await MoveModel.count(condition);
       }
 
       moveList = await MoveModel.populate(movesData, {
         path: "setId.folderId",
         match: { isDeleted: false }
       });
-
-      totalMoves = await MoveModel.count({
-        title: {
-          $regex: new RegExp(search.trim(), "i")
-        },
-        isDeleted: false,
-        userId: headToken.id,
-        moveURL: { $ne: null }
-      });
     }
+
+    // if (search) {
+    //   if (query.isStarred === "true") {
+    //     movesData = await MoveModel.find({
+    //       title: {
+    //         $regex: new RegExp(search.trim(), "i")
+    //       },
+    //       tags: { $elemMatch: { label: search.trim() } },
+    //       isDeleted: false,
+    //       isStarred: true,
+    //       moveURL: { $ne: null }
+    //     })
+    //       .populate({
+    //         path: "setId",
+    //         match: { isDeleted: false }
+    //       })
+    //       .skip(pageNumber)
+    //       .limit(limitNumber)
+    //       .sort({ sortIndex: 1 });
+    //   } else {
+    //     movesData = await MoveModel.find({
+    //       title: {
+    //         $regex: new RegExp(search.trim(), "i")
+    //       },
+    //       tags: { $elemMatch: { label: search.trim() } },
+    //       isDeleted: false,
+    //       userId: headToken.id,
+    //       moveURL: { $ne: null }
+    //     })
+    //       .populate({
+    //         path: "setId",
+    //         match: { isDeleted: false }
+    //       })
+    //       .skip(pageNumber)
+    //       .limit(limitNumber)
+    //       .sort({ sortIndex: 1 });
+    //   }
+    //   moveList = await MoveModel.populate(movesData, {
+    //     path: "setId.folderId",
+    //     match: { isDeleted: false }
+    //   });
+
+    //   totalMoves = await MoveModel.count({
+    //     title: {
+    //       $regex: new RegExp(search.trim(), "i")
+    //     },
+    //     isDeleted: false,
+    //     userId: headToken.id,
+    //     moveURL: { $ne: null }
+    //   });
+    // }
     return res.status(200).json({
       movesData: moveList,
       totalMoves: totalMoves

@@ -20,7 +20,7 @@ import AddTagModal from "./addTagsModal";
 import EditMoveModal from "./editMoveModal";
 import { ConfirmBox } from "helper/SweetAleart";
 import { toast } from "react-toastify";
-// import videoLoading from "../../../assets/img/loder/loader.svg";
+import videoLoading from "../../../assets/img/loder/loader.svg";
 
 class WebmView extends Component {
   video;
@@ -48,8 +48,9 @@ class WebmView extends Component {
       tags: [],
       edit: false,
       description: "",
-      error: ""
-      // isBufferingVideo: false
+      error: "",
+      videoCanPlay: false,
+      isBufferingVideo: false
     };
   }
   /**
@@ -61,19 +62,19 @@ class WebmView extends Component {
     isFullScreenMode,
     isVideoFromSearch
   }) => {
-    // const vid = document.getElementById("webm-video");
-    // if (vid) {
-    //   vid.onwaiting = () => {
-    //     this.setState({
-    //       isBufferingVideo: true
-    //     });
-    //   };
-    //   vid.oncanplay = () => {
-    //     this.setState({
-    //       isBufferingVideo: false
-    //     });
-    //   };
-    // }
+    const vid = document.getElementById("webm-video");
+    if (vid) {
+      vid.onwaiting = () => {
+        this.setState({
+          isBufferingVideo: true
+        });
+      };
+      vid.oncanplay = () => {
+        this.setState({
+          isBufferingVideo: false
+        });
+      };
+    }
     if (isFullScreenMode !== this.props.isFullScreenMode) {
       const videoFullScreen = true;
       if (this.video) {
@@ -560,9 +561,10 @@ class WebmView extends Component {
       // title,
       description,
       edit,
-      error
+      error,
+      videoCanPlay,
+      isBufferingVideo
     } = this.state;
-
     let isFullScreenMode1 =
       document.fullscreenElement ||
       document.webkitFullscreenElement ||
@@ -594,7 +596,14 @@ class WebmView extends Component {
     // if (!isFullScreenMode && !isPlaying) {
     //   isFullScreenMode1 = false;
     // }
-
+    const highlightText = document.getElementById("video-title");
+    if (highlightText) {
+      if (doubleClick) {
+        highlightText.classList.add("text-selected");
+      } else {
+        highlightText.classList.remove("text-selected");
+      }
+    }
     return (
       <>
         <Modal
@@ -618,9 +627,14 @@ class WebmView extends Component {
           <ModalBody>
             <div className="video-slider-text">
               <div
+                id="video-title"
                 suppressContentEditableWarning={true}
                 contentEditable={doubleClick ? "true" : "false"}
-                className="video-slider-title font-weight-bold"
+                className={
+                  videoData.title !== "Unnamed"
+                    ? "video-slider-title font-weight-bold"
+                    : "text-untitled-slider font-weight-bold "
+                }
                 onDoubleClick={
                   !isShareable
                     ? () => this.onDoubleClick(videoData.title)
@@ -634,7 +648,13 @@ class WebmView extends Component {
                 }
               >
                 {videoData && videoData.title ? videoData.title : "Unnamed"}
-                
+
+                {/* {doubleClick
+                  ? videoData.title
+                    ? videoData.title
+                    : videoData.title
+                  : "unnamed"} */}
+
                 {/* {doubleClick ? (
                   <>
                     <FormGroup>
@@ -764,7 +784,16 @@ class WebmView extends Component {
                     </div>
                   ) : null}
                 </div>
-
+                {isBufferingVideo === true ? (
+                  <div className="video-spinner z-">
+                    <img src={videoLoading} alt="" />
+                  </div>
+                ) : null}
+                {!videoCanPlay ? (
+                  <div className="video-spinner z-">
+                    <img src={videoLoading} alt="" />
+                  </div>
+                ) : null}
                 {!isVideoLoading ? (
                   <video
                     width={"100%"}
@@ -779,6 +808,16 @@ class WebmView extends Component {
                     // preload="auto"
                     playsInline
                     autoPlay
+                    onCanPlay={() => {
+                      this.setState({
+                        videoCanPlay: true
+                      });
+                    }}
+                    onLoadedData={() => {
+                      this.setState({
+                        videoCanPlay: false
+                      });
+                    }}
                     disablecontrols="true"
                     disablepictureinpicture="true"
                     controlsList="nodownload"

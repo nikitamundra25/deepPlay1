@@ -254,7 +254,7 @@ class YouTubeFrameDetails extends Component {
             );
           } else {
             let changeValue;
-            if (parseInt(min) > 0) {
+            if (parseFloat(min) > 0.1) {
               changeValue = {
                 min:
                   parseInt(max) - parseInt(min) < AppConfig.MAX_VIDEO_LENGTH
@@ -333,21 +333,24 @@ class YouTubeFrameDetails extends Component {
               );
             }
           } else {
-            let changeValue = {
-              min:
-                parseInt(max) - parseInt(min) === AppConfig.MAX_VIDEO_LENGTH
-                  ? min
-                  : min - 0.1,
-              max: max
-            };
-            this.setState(
-              {
-                time: changeValue
-              },
-              () => {
-                this.props.onTimerChange(this.state.time);
-              }
-            );
+            if (min !== 0.0) {
+              let changeValue = {
+                min:
+                  SecondsToMMSSMM(min) === "00:00.00" ||
+                  SecondsToMMSSMM(min) === "00:00.10"
+                    ? 0
+                    : min - 0.1,
+                max: max
+              };
+              this.setState(
+                {
+                  time: changeValue
+                },
+                () => {
+                  this.props.onTimerChange(this.state.time);
+                }
+              );
+            }
           }
         } else {
           if (e.keyCode === 38) {

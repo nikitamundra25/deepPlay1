@@ -311,7 +311,11 @@ class DefaultHeader extends React.Component {
                   <div className="header-bar-ic">
                     <i className="fa fa-bars" aria-hidden="true"></i>
                   </div>
-                  <NavbarBrand className="mr-lg-5 pr-lg-1" to="/" tag={Link}>
+                  <NavbarBrand
+                    className="mr-lg-5 pr-lg-1"
+                    to={isLoggedIn ? "/dashboard" : "/"}
+                    tag={Link}
+                  >
                     <h3 className="mb-0 header-title">DeepPlay</h3>
                   </NavbarBrand>
                   {isLoggedIn || isLoginSuccess ? (
@@ -411,7 +415,7 @@ class DefaultHeader extends React.Component {
                                   />
                                 </span>
                                 <DebounceInput
-                                  minLength={2}
+                                  minLength={1}
                                   value={search}
                                   className={"form-control"}
                                   autoComplete="off"
