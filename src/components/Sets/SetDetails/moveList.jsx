@@ -89,8 +89,6 @@ class MoveList extends React.Component {
     if (offsetElemnt) {
       let offsetWidth = offsetElemnt.getBoundingClientRect();
       if (offsetWidth.top + 110 <= 1) {
-       
-
         this.setState({
           stickyHeaderWidth: offsetElemntInner.offsetWidth
         });

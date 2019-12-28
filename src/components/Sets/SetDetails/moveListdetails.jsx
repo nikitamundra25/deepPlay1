@@ -16,6 +16,7 @@ class MoveListDetails extends React.Component {
       isChange: false
     };
   }
+
   componentDidUpdate = ({ isVideohovered }) => {
     if (isVideohovered !== this.props.isVideohovered) {
       if (this.props.isVideohovered) {
@@ -228,13 +229,21 @@ class MoveListDetails extends React.Component {
                     <div className="video-effect loading-img">
                       {sourceIndex === index ? (
                         <img
-                          src={movesOfSet[destinationIndex].videoThumbnail}
+                          src={
+                            processingData
+                              ? moveLoader
+                              : movesOfSet[destinationIndex].videoThumbnail
+                          }
                           alt=""
                         />
                       ) : null}
                       {destinationIndex === index ? (
                         <img
-                          src={movesOfSet[sourceIndex].videoThumbnail}
+                          src={
+                            processingData
+                              ? moveLoader
+                              : movesOfSet[sourceIndex].videoThumbnail
+                          }
                           alt=""
                         />
                       ) : null}
@@ -278,6 +287,7 @@ class MoveListDetails extends React.Component {
               </div>
               <div className="play-list-text">
                 <div
+                  tabIndex="0"
                   suppressContentEditableWarning={true}
                   id={`video-title-${index}`}
                   className={
@@ -293,7 +303,6 @@ class MoveListDetails extends React.Component {
                       ? () => onDoubleClick(index, video.title)
                       : null
                   }
-                  tabIndex="0"
                   onBlur={
                     doubleClick ? e => handleonBlur(e, video, index) : null
                   }
