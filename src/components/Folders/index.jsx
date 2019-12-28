@@ -175,7 +175,7 @@ class FolderComponent extends React.Component {
                             {" "}
                             <div className="cotent-tile d-flex content-with-tip content-with-img">
                               <div className="cotent-text-tile ">
-                                <div className="content-heading-tile d-flex">
+                                <div className="text-capitalize content-heading-tile d-flex">
                                   {" "}
                                   <span className={"cursor_pointer"}>
                                     {folder.isCopy

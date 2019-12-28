@@ -562,19 +562,43 @@ const createAnotherMoveLogic = createLogic({
       if (!toast.isActive(toastId)) {
         toastId = toast.success(result.messages[0]);
       }
-      dispatch(
-        redirectTo({
-          path: `${AppRoutes.MOVE_DETAILS.url.replace(
-            ":id",
-            result.data.moveId
-          )}`
-        })
-      );
-      dispatch(
-        createAnotherMoveSuccess({
-          moveDetails: result.data
-        })
-      );
+      // dispatch(
+      //   redirectTo({
+      //     path: `${AppRoutes.MOVE_DETAILS.url.replace(
+      //       ":id",
+      //       result.data.moveId
+      //     )}`
+      //   })
+      // );
+      if (action.payload.isYoutubeUrl) {
+        dispatch(
+          createAnotherMoveSuccess({
+            // moveDetails: result.data
+            creatingAnother: {
+              newMoveId: result.data.moveId,
+              isCreateAnother: true
+            }
+          })
+        );
+      } else {
+        dispatch(
+          redirectTo({
+            path: `${AppRoutes.MOVE_DETAILS.url.replace(
+              ":id",
+              result.data.moveId
+            )}`
+          })
+        );
+        dispatch(
+          createAnotherMoveSuccess({
+            moveDetails: result.data,
+            creatingAnother: {
+              newMoveId: "",
+              isCreateAnother: false
+            }
+          })
+        );
+      }
       dispatch(
         modelOpenRequest({
           modelDetails: {

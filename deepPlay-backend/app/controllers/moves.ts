@@ -237,6 +237,7 @@ const getVideoFrames = async (videoName: string): Promise<any> => {
         if (error) {
           console.log(error);
           reject(error);
+          return;
         }
         const frames: string[] = (file as any).map((f: string) => {
           const fArray = f.split("/");
@@ -637,6 +638,14 @@ const updateMoveDetailsFromYouTubeAndTrim = async (
           console.log(err);
           console.log("=========================");
           if (err) {
+            await MoveModel.updateOne(
+              {
+                _id: result._id
+              },
+              {
+                isDeleted: true
+              }
+            );
             return res.status(400).json({
               message:
                 "We are having an issue while creating webm for you. Please try again."
@@ -1115,7 +1124,7 @@ const transferMove = async (req: Request, res: Response): Promise<any> => {
 const filterMove = async (req: Request, res: Response): Promise<any> => {
   try {
     const { query, currentUser } = req;
-    const { search, setId, page, limit } = query;
+    const { search, setId, page, limit, isStarred } = query;
     let searchData: Document | any | null, totalMoves: Number | any | null;
     const pageNumber: number = ((parseInt(page) || 1) - 1) * (limit || 20);
     const limitNumber: number = parseInt(limit) || 20;
@@ -1150,15 +1159,27 @@ const filterMove = async (req: Request, res: Response): Promise<any> => {
             }
           },
           {
-            "tags.label": search.trim()
+            "tags.label": {
+              $regex: new RegExp(search.trim(), "i")
+            }
           }
         ]
       });
-      searchData = await MoveModel.find(condition)
-        .skip(pageNumber)
-        .limit(limitNumber);
 
-      totalMoves = await MoveModel.count(condition);
+      if (isStarred === "true") {
+        let conditionCheck = { ...condition, isStarred: true };
+        searchData = await MoveModel.find(conditionCheck)
+          .skip(pageNumber)
+          .limit(limitNumber)
+          .sort({ sortIndex: 1 });
+        totalMoves = await MoveModel.count(conditionCheck);
+      } else {
+        searchData = await MoveModel.find(condition)
+          .skip(pageNumber)
+          .limit(limitNumber)
+          .sort({ sortIndex: 1 });
+        totalMoves = await MoveModel.count(condition);
+      }
     }
 
     return res.status(200).json({
@@ -1459,13 +1480,15 @@ const getMoveBySearch = async (req: Request, res: Response): Promise<any> => {
             }
           },
           {
-            "tags.label": search.trim()
+            "tags.label": {
+              $regex: new RegExp(search.trim(), "i")
+            }
           }
         ]
       });
 
       if (query.isStarred === "true") {
-        let conditionCheck = [...condition, { isStarred: true }];
+        let conditionCheck = { ...condition, isStarred: true };
         movesData = await MoveModel.find(conditionCheck)
           .populate({
             path: "setId",
