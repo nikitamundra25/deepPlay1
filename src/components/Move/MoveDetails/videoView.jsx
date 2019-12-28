@@ -52,6 +52,7 @@ class VideoView extends React.Component {
       }
     });
     let timeDuration = [];
+
     this.video.onloadeddata = () => {
       const { duration } = this.video;
       for (let index = 0; index < duration; index = index + duration / 20) {
@@ -62,6 +63,7 @@ class VideoView extends React.Component {
         videoMaxDuration: duration
       };
       this.props.storeVideoFrames(timeDuration);
+
       this.props.videoDuration(data);
     };
   }
@@ -82,6 +84,8 @@ class VideoView extends React.Component {
     if (prevMoveData !== newMoveData) {
       this.video.load();
     }
+    // this.video.load();
+
     const vid = document.getElementById("video-trimmer");
     vid.onwaiting = () => {
       this.setState({

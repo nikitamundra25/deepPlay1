@@ -329,9 +329,31 @@ class MoveListDetails extends React.Component {
                   ) : (
                     video.title || "unnamed"
                   )} */}
-                  {(doubleClick && doubleClickIndex === index) || video.title
+                  {isSortIndexUpdate &&
+                  (sourceIndex === index || destinationIndex === index) ? (
+                    <>
+                      {sourceIndex === index
+                        ? (doubleClick && doubleClickIndex === index) ||
+                          movesOfSet[destinationIndex].title
+                          ? movesOfSet[destinationIndex].title
+                          : "unnamed"
+                        : null}
+                      {destinationIndex === index
+                        ? (doubleClick && doubleClickIndex === index) ||
+                          movesOfSet[sourceIndex].title
+                          ? movesOfSet[sourceIndex].title
+                          : "unnamed"
+                        : null}
+                    </>
+                  ) : (doubleClick && doubleClickIndex === index) ||
+                    video.title ? (
+                    video.title
+                  ) : (
+                    "unnamed"
+                  )}
+                  {/* {(doubleClick && doubleClickIndex === index) || video.title
                     ? video.title
-                    : "unnamed"} 
+                    : "unnamed"} */}
                 </div>
                 <div
                   className="star-wrap"
