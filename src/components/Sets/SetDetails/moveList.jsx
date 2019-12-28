@@ -89,13 +89,7 @@ class MoveList extends React.Component {
     if (offsetElemnt) {
       let offsetWidth = offsetElemnt.getBoundingClientRect();
       if (offsetWidth.top + 110 <= 1) {
-        console.log(
-          offsetWidth.top,
-          offsetWidth.left,
-          offsetElemntInner.getBoundingClientRect().left,
-          offsetElemntInner.offsetWidth,
-          "offsetWidth---------"
-        );
+       
 
         this.setState({
           stickyHeaderWidth: offsetElemntInner.offsetWidth
@@ -395,19 +389,24 @@ class MoveList extends React.Component {
 
   handleInputChange = e => {
     const { value } = e.target;
+    let parsed = qs.parse(this.props.location.search);
+    console.log("parsed", parsed);
+
     if (value) {
       this.setState({
         search: value
       });
       const data = {
         search: value,
-        setId: this.props.setIdPathName
+        setId: this.props.setIdPathName,
+        isStarred: parsed.isStarred === "true" ? true : false
       };
       this.props.searchMove(data);
     } else {
       this.props.getMovesOfSetRequest({
         setId: this.props.setIdPathName,
         page: 1,
+        isStarred: parsed.isStarred === "true" ? true : false,
         isInfiniteScroll: false,
         isMoveList: true
       });

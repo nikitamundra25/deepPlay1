@@ -23,7 +23,7 @@ class YouTubeFrameDetails extends Component {
     };
   }
 
-  componentDidUpdate({ videoMaxDuration }) {
+  componentDidUpdate({ videoMaxDuration, createNew }) {
     this.updateSlider();
     if (videoMaxDuration !== this.props.videoMaxDuration) {
       if (this.props.videoMaxDuration <= 15) {
@@ -34,6 +34,15 @@ class YouTubeFrameDetails extends Component {
           }
         });
       }
+    }
+    if (createNew !== this.props.createNew) {
+      this.setState({
+        time: {
+          min: 0,
+          max:
+            this.props.videoMaxDuration > 15 ? 15 : this.props.videoMaxDuration
+        }
+      });
     }
   }
 
@@ -322,7 +331,6 @@ class YouTubeFrameDetails extends Component {
           }
         }
       } else if (parseInt(max) - parseInt(min) === 1) {
-        console.log("heyyyyyyy");
         if (name === "from") {
           if (e.keyCode === 38) {
             if (
@@ -383,8 +391,6 @@ class YouTubeFrameDetails extends Component {
               );
             }
           } else {
-            console.log("height");
-
             if (parseInt(max) - parseInt(min) > 1) {
               let changeValue = {
                 min: min - 1,
@@ -476,6 +482,7 @@ class YouTubeFrameDetails extends Component {
     const { frames, isIosDevice, moveReducer, videoMaxDuration } = this.props;
     const { time, imageLoadedIndex } = this.state;
     const { moveDetails } = moveReducer;
+
     return (
       <div className="fram-picker">
         <div className=" mt-5 video-controls " id={"video-controls"}>

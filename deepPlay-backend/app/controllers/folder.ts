@@ -26,7 +26,7 @@ const createFolder = async (req: Request, res: Response): Promise<any> => {
       status: body.status ? body.status : true,
       userId: body.userId ? body.userId : headToken.id,
       sharableLink: body.sharableLink ? body.sharableLink : "",
-      isPublic: body.isPublic ? body.isPublic : true,
+      isPublic: body.isPublic ? true : false,
       isDeleted: body.isDeleted ? body.isDeleted : false,
       isCopy: true
     });
@@ -37,7 +37,7 @@ const createFolder = async (req: Request, res: Response): Promise<any> => {
       status: body.status ? body.status : true,
       userId: body.userId ? body.userId : headToken.id,
       sharableLink: body.sharableLink ? body.sharableLink : "",
-      isPublic: body.isPublic ? body.isPublic : true,
+      isPublic: body.isPublic ? true : false,
       isDeleted: body.isDeleted ? body.isDeleted : false,
       isCopy: body.isCopy ? true : false,
       copyIndex: countFolderCopy && body.isCopy ? countFolderCopy : 0
@@ -57,7 +57,7 @@ const createFolder = async (req: Request, res: Response): Promise<any> => {
           const newSetData: ISet = {
             title: element.title,
             description: element.description,
-            isPublic: element.isPublic,
+            isPublic: element.isPublic ? true : false,
             folderId: folderId,
             sharableLink: element.sharableLink,
             status: true,
@@ -299,7 +299,7 @@ const getRecentFolder = async (req: Request, res: Response): Promise<any> => {
     });
   } catch (error) {
     console.log(error);
-   return res.status(500).send({
+    return res.status(500).send({
       message: error.message
     });
   }

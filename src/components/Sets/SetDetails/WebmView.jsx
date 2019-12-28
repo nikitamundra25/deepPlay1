@@ -456,6 +456,10 @@ class WebmView extends Component {
   };
 
   onDoubleClick = title => {
+    const highlightText = document.getElementById("video-title");
+    if (highlightText) {
+      highlightText.classList.add("text-selected");
+    }
     this.setState({
       doubleClick: true,
       title: title
@@ -471,6 +475,10 @@ class WebmView extends Component {
   };
 
   handleonBlur = (e, videoData) => {
+    const highlightText = document.getElementById("video-title");
+    if (highlightText) {
+      highlightText.classList.remove("text-selected");
+    }
     const value = e.target.textContent;
     const error =
       value && value.length > 50
@@ -596,14 +604,7 @@ class WebmView extends Component {
     // if (!isFullScreenMode && !isPlaying) {
     //   isFullScreenMode1 = false;
     // }
-    const highlightText = document.getElementById("video-title");
-    if (highlightText) {
-      if (doubleClick) {
-        highlightText.classList.add("text-selected");
-      } else {
-        highlightText.classList.remove("text-selected");
-      }
-    }
+
     return (
       <>
         <Modal

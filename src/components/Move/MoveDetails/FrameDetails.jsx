@@ -21,7 +21,7 @@ class FrameDetails extends Component {
     };
   }
 
-  componentDidUpdate({ videoMetaData }) {
+  componentDidUpdate({ videoMetaData, moveReducer }) {
     this.updateSlider();
     if (
       videoMetaData &&
@@ -38,6 +38,18 @@ class FrameDetails extends Component {
           }
         });
       }
+    }
+    if (
+      moveReducer.creatingAnother.newMoveId !==
+      this.props.moveReducer.creatingAnother.newMoveId
+    ) {
+      this.setState({
+        time: {
+          min: 0,
+          max:
+            this.props.videoMaxDuration > 15 ? 15 : this.props.videoMaxDuration
+        }
+      });
     }
   }
 

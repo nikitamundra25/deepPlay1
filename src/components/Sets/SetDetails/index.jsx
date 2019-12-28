@@ -401,6 +401,7 @@ class SetDetails extends React.Component {
         return true;
       });
     }
+
     return (
       <>
         <div className="set-main-section">
@@ -567,7 +568,9 @@ class SetDetails extends React.Component {
           modal={sharableLinkModalOpen}
           handleOpen={this.handleSharableLink}
           onTogglePublicAccess={this.onTogglePublicAccess}
-          isPublic={setDetails ? setDetails.isPublic : false}
+          isPublic={
+            setDetails && setDetails.isPublic ? setDetails.isPublic : false
+          }
           userEncryptedInfo={userEncryptedInfo ? userEncryptedInfo : ""}
           shareComponent="Sets"
         />
