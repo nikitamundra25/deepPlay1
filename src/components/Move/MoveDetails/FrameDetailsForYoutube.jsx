@@ -23,7 +23,7 @@ class YouTubeFrameDetails extends Component {
     };
   }
 
-  componentDidUpdate({ videoMaxDuration }) {
+  componentDidUpdate({ videoMaxDuration, createNew }) {
     this.updateSlider();
     if (videoMaxDuration !== this.props.videoMaxDuration) {
       if (this.props.videoMaxDuration <= 15) {
@@ -34,6 +34,15 @@ class YouTubeFrameDetails extends Component {
           }
         });
       }
+    }
+    if (createNew !== this.props.createNew) {
+      this.setState({
+        time: {
+          min: 0,
+          max:
+            this.props.videoMaxDuration > 15 ? 15 : this.props.videoMaxDuration
+        }
+      });
     }
   }
 
@@ -206,7 +215,7 @@ class YouTubeFrameDetails extends Component {
               min: parseInt(max) - parseInt(min) === 1 ? min : min + 0.1,
               max:
                 parseInt(max) === parseInt(videoMaxDuration)
-                  ? max <= parseInt(videoMaxDuration)
+                  ? parseInt(max) <= parseInt(videoMaxDuration)
                     ? max
                     : videoMaxDuration
                   : max + 0.1
@@ -242,7 +251,10 @@ class YouTubeFrameDetails extends Component {
           if (e.keyCode === 38) {
             let changeValue = {
               min: parseInt(max) - parseInt(min) > 1 ? min + 0.1 : min,
-              max: max <= parseInt(videoMaxDuration) ? max : videoMaxDuration
+              max:
+                parseInt(max) <= parseInt(videoMaxDuration)
+                  ? max
+                  : parseInt(videoMaxDuration)
             };
             this.setState(
               {
@@ -284,11 +296,16 @@ class YouTubeFrameDetails extends Component {
             let changeValue = {
               min: min,
               max:
-                parseInt(max) - parseInt(min) < 15
-                  ? max <= parseInt(videoMaxDuration)
-                    ? max + 0.1
+                // parseInt(max) - parseInt(min) < 15
+                //   ? max <= parseInt(videoMaxDuration)
+                //     ? max + 0.1
+                //     : parseInt(videoMaxDuration)
+                //   : max
+                parseInt(max) === parseInt(videoMaxDuration)
+                  ? parseInt(max) <= parseInt(videoMaxDuration)
+                    ? max
                     : parseInt(videoMaxDuration)
-                  : max
+                  : max + 0.1
             };
             this.setState(
               {
@@ -465,6 +482,7 @@ class YouTubeFrameDetails extends Component {
     const { frames, isIosDevice, moveReducer, videoMaxDuration } = this.props;
     const { time, imageLoadedIndex } = this.state;
     const { moveDetails } = moveReducer;
+
     return (
       <div className="fram-picker">
         <div className=" mt-5 video-controls " id={"video-controls"}>

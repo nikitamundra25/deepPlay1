@@ -316,7 +316,11 @@ const ManageSetLogic = createLogic({
           toastId = toast.success("Your set has been transfered successfully");
         }
         dispatch(getAllSetRequest({ isSetNoLimit: false }));
-        dispatch(getFolderSetRequest());
+        dispatch(
+          getFolderSetRequest({
+            folderId: action.payload.folderId
+          })
+        );
       }
       done();
     }

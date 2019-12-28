@@ -318,6 +318,8 @@ class SetDetails extends React.Component {
       const moveVideo = data.videoData;
       moveVideo.title = data.title;
       moveVideo.description = data.description;
+      console.log("moveVideo", data.videoData);
+
       this.props.updateMoveRequest({ data: data, moveVideo: moveVideo });
     }
   };
@@ -399,6 +401,7 @@ class SetDetails extends React.Component {
         return true;
       });
     }
+
     return (
       <>
         <div className="set-main-section">
@@ -565,7 +568,9 @@ class SetDetails extends React.Component {
           modal={sharableLinkModalOpen}
           handleOpen={this.handleSharableLink}
           onTogglePublicAccess={this.onTogglePublicAccess}
-          isPublic={setDetails ? setDetails.isPublic : false}
+          isPublic={
+            setDetails && setDetails.isPublic ? setDetails.isPublic : false
+          }
           userEncryptedInfo={userEncryptedInfo ? userEncryptedInfo : ""}
           shareComponent="Sets"
         />
