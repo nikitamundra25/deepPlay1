@@ -570,6 +570,8 @@ const createAnotherMoveLogic = createLogic({
       //     )}`
       //   })
       // );
+      console.log("result.data.moveId", result.data.moveId);
+
       if (action.payload.isYoutubeUrl) {
         dispatch(
           createAnotherMoveSuccess({

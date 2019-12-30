@@ -19,9 +19,9 @@ import blankStar from "../../../assets/img/star-line.svg";
 import AddTagModal from "./addTagsModal";
 import { ConfirmBox } from "helper/SweetAleart";
 import { DebounceInput } from "react-debounce-input";
-import addTag from "../../../assets/img/set-detail-ic/add-tag.svg";
-import transfer from "../../../assets/img/set-detail-ic/transfer.svg";
-import remove from "../../../assets/img/set-detail-ic/remove.svg";
+// import addTag from "../../../assets/img/set-detail-ic/add-tag.svg";
+// import transfer from "../../../assets/img/set-detail-ic/transfer.svg";
+// import remove from "../../../assets/img/set-detail-ic/remove.svg";
 import { toast } from "react-toastify";
 
 // core components
@@ -593,7 +593,13 @@ class MoveSearchList extends React.Component {
                               className=" "
                               color=" "
                             >
-                              <img src={addTag} alt="" className="mr-1" />{" "}
+                              {selectedMoveIds.length >=
+                              moveofSetList.length ? (
+                                <i className="fas fa-square fa-lg mr-1 pr-2"></i>
+                              ) : (
+                                <i className="fas fa-check-square fa-lg mr-1 pr-2"></i>
+                              )}
+
                               {selectedMoveIds.length >= moveofSetList.length
                                 ? "Unselect all"
                                 : "Select all"}
@@ -603,15 +609,15 @@ class MoveSearchList extends React.Component {
                               className=" "
                               color=" "
                             >
-                              <img src={addTag} alt="" className="mr-1" /> Add
-                              tags
+                              <i className="fas fa-tags fa-lg mr-1 pr-2"></i>{" "}
+                              Add tags
                             </Button>
                             <Button
                               onClick={() => this.openTransferToModal()}
                               className=" "
                               color=" "
                             >
-                              <img src={transfer} alt="" className="mr-1" />{" "}
+                              <i className="fas fa-file-export fa-lg mr-1 pr-2"></i>
                               Transfer
                             </Button>
                             <Button
@@ -619,7 +625,7 @@ class MoveSearchList extends React.Component {
                               className=" "
                               color=" "
                             >
-                              <img src={remove} alt="" className="mr-1" />{" "}
+                              <i className="fas fa-trash fa-lg mr-1 pr-2"></i>
                               Remove
                             </Button>
                             <Button
@@ -627,10 +633,7 @@ class MoveSearchList extends React.Component {
                               className="btn-black"
                               onClick={() => this.handleUnselectAll()}
                             >
-                              <i
-                                className="fa fa-times fa-lg"
-                                aria-hidden="true"
-                              />
+                              <i className="fas fa-times fa-lg"></i>
                             </Button>
                           </ButtonGroup>
                         </span>

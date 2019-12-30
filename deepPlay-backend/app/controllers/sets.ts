@@ -508,6 +508,7 @@ const getSetDetailsById = async (req: Request, res: Response): Promise<any> => {
         isDeleted: false,
         moveURL: { $ne: null }
       });
+
       const SetResult: any = {
         ...result._doc,
         moveCount: moveCount
