@@ -25,7 +25,7 @@ const createSet = async (req: Request, res: Response): Promise<any> => {
       userId: body.userId ? body.userId : headToken.id,
       folderId: body.folderId ? Mongoose.Types.ObjectId(body.folderId) : null,
       sharableLink: body.sharableLink ? body.sharableLink : "",
-      isPublic: body.isPublic ? body.isPublic : true,
+      isPublic: body.isPublic ? true : false,
       isDeleted: body.isDeleted ? body.isDeleted : false,
       isCopy: true
     });
@@ -37,7 +37,7 @@ const createSet = async (req: Request, res: Response): Promise<any> => {
       userId: body.userId ? body.userId : headToken.id,
       folderId: body.folderId ? body.folderId : null,
       sharableLink: body.sharableLink ? body.sharableLink : "",
-      isPublic: body.isPublic ? body.isPublic : true,
+      isPublic: body.isPublic ? true : false,
       isDeleted: body.isDeleted ? body.isDeleted : false,
       isCopy: body.isCopy ? true : false,
       copyIndex: countSetCopy && body.isCopy ? countSetCopy : 0
@@ -61,7 +61,7 @@ const createSet = async (req: Request, res: Response): Promise<any> => {
             videoUrl: moveElement.videoUrl,
             isStarred: moveElement.isStarred,
             tags: moveElement.tags,
-            isPublic: moveElement.isPublic ? moveElement.isPublic : false,
+            isPublic: moveElement.isPublic ? true : false,
             userId: headToken.id,
             sharableLink: moveElement.sharableLink,
             videoThumbnail: moveElement.videoThumbnail
@@ -254,7 +254,7 @@ const getRecentSetById = async (req: Request, res: Response): Promise<any> => {
     const { currentUser } = req;
     let headToken: Request | any = currentUser;
     if (!headToken.id) {
-     return res.status(400).json({
+      return res.status(400).json({
         message: "User id not found"
       });
     }
@@ -354,7 +354,7 @@ const getSetsForFolder = async (req: Request, res: Response): Promise<any> => {
           isDeleted: false,
           moveURL: { $ne: null }
         })
-          .sort({ updatedAt: -1 })
+          .sort({ sortIndex: 1 })
           .limit(1);
 
         setResult.push({
@@ -476,10 +476,7 @@ const deleteSet = async (req: Request, res: Response): Promise<void> => {
 Query Prams:- folderId
 Created By:- Rishabh Bula*/
 
-const getSetDetailsById = async (
-  req: Request,
-  res: Response
-): Promise<any> => {
+const getSetDetailsById = async (req: Request, res: Response): Promise<any> => {
   try {
     const { currentUser } = req;
     const { query } = req;
@@ -487,13 +484,13 @@ const getSetDetailsById = async (
 
     let headToken: Request | any = currentUser;
     if (!headToken.id) {
-    return res.status(400).json({
+      return res.status(400).json({
         message: "User id not found"
       });
     }
 
     if (!ObjectId.isValid(setId)) {
-     return res.status(400).json({
+      return res.status(400).json({
         message: "Set id not found",
         success: false
       });
@@ -511,6 +508,7 @@ const getSetDetailsById = async (
         isDeleted: false,
         moveURL: { $ne: null }
       });
+
       const SetResult: any = {
         ...result._doc,
         moveCount: moveCount

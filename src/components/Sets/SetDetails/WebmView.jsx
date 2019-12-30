@@ -456,13 +456,29 @@ class WebmView extends Component {
   };
 
   onDoubleClick = title => {
+    const highlightText = document.getElementById("video-title");
+    if (highlightText) {
+      highlightText.classList.add("text-selected");
+    }
     this.setState({
       doubleClick: true,
       title: title
     });
   };
 
+  handleKeyPress = (e, videoData, showVideoIndex, video) => {
+    if (e.which === 13 || e.keyCode === 13) {
+      this.handleonBlur(e, videoData, showVideoIndex, video);
+    } else {
+      return;
+    }
+  };
+
   handleonBlur = (e, videoData) => {
+    const highlightText = document.getElementById("video-title");
+    if (highlightText) {
+      highlightText.classList.remove("text-selected");
+    }
     const value = e.target.textContent;
     const error =
       value && value.length > 50
@@ -478,7 +494,6 @@ class WebmView extends Component {
         doubleClick: false,
         title: ""
       });
-
       if (value !== "" || this.state.errorTitle !== null) {
         const data = {
           moveId: videoData._id,
@@ -512,14 +527,6 @@ class WebmView extends Component {
     });
   };
 
-  handleKeyPress = (e, videoData) => {
-    if (e.which === 13 || e.keyCode === 13) {
-      this.handleonBlur(e, videoData);
-    } else {
-      return;
-    }
-  };
-
   render() {
     const {
       video,
@@ -531,7 +538,8 @@ class WebmView extends Component {
       isShareable,
       videoData,
       tagsList,
-      fromMoveSearch
+      fromMoveSearch,
+      showVideoIndex
     } = this.props;
     const { modelDetails } = modelInfoReducer;
     const {
@@ -596,14 +604,7 @@ class WebmView extends Component {
     // if (!isFullScreenMode && !isPlaying) {
     //   isFullScreenMode1 = false;
     // }
-    const highlightText = document.getElementById("video-title");
-    if (highlightText) {
-      if (doubleClick) {
-        highlightText.classList.add("text-selected");
-      } else {
-        highlightText.classList.remove("text-selected");
-      }
-    }
+
     return (
       <>
         <Modal
@@ -632,8 +633,8 @@ class WebmView extends Component {
                 contentEditable={doubleClick ? "true" : "false"}
                 className={
                   videoData.title !== "Unnamed"
-                    ? "video-slider-title font-weight-bold"
-                    : "text-untitled-slider font-weight-bold "
+                    ? "text-capitalize video-slider-title font-weight-bold"
+                    : "text-capitalize text-untitled-slider font-weight-bold "
                 }
                 onDoubleClick={
                   !isShareable
@@ -644,7 +645,9 @@ class WebmView extends Component {
                   doubleClick ? e => this.handleonBlur(e, videoData) : null
                 }
                 onKeyPress={
-                  doubleClick ? e => this.handleKeyPress(e, video) : null
+                  doubleClick
+                    ? e => this.handleKeyPress(e, videoData, showVideoIndex)
+                    : null
                 }
               >
                 {videoData && videoData.title ? videoData.title : "Unnamed"}
@@ -742,7 +745,7 @@ class WebmView extends Component {
                         >
                           Transfer
                         </DropdownItem>
-                        <DropdownItem
+                        {/* <DropdownItem
                           onClick={() =>
                             videoData
                               ? this.handleMoveDelete(
@@ -753,7 +756,7 @@ class WebmView extends Component {
                           }
                         >
                           Remove
-                        </DropdownItem>
+                        </DropdownItem> */}
                       </DropdownMenu>
                     </UncontrolledDropdown>
                   </div>

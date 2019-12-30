@@ -34,7 +34,9 @@ const initialState = {
   isVideoFromSearch: false,
   cancelVideo: false,
   isMoveDone: false,
-  isIosDevice: false
+  isIosDevice: false,
+  creatingAnother: {},
+  alreadyExist: false
 };
 
 export const moveReducer = handleActions(
@@ -45,7 +47,8 @@ export const moveReducer = handleActions(
       moveDetails: {
         videoUrl: ""
       },
-      cancelVideo: false
+      cancelVideo: false,
+      alreadyExist: true
     }),
     [MovesAction.DOWNLOAD_YOUTUBE_VIDEO_SUCCESS]: (state, { payload }) => ({
       ...state,
@@ -53,7 +56,8 @@ export const moveReducer = handleActions(
       isVideoDownloading: false,
       moveDetails: {
         videoUrl: payload.videoUrl
-      }
+      },
+      alreadyExist: true
     }),
     [MovesAction.GET_MOVES_OF_SET_REQUEST]: (state, { payload }) => ({
       ...state,
@@ -130,7 +134,8 @@ export const moveReducer = handleActions(
     [MovesAction.CREATE_ANOTHER_MOVE_SUCCESS]: (state, { payload }) => ({
       ...state,
       ...payload,
-      isCreatingAnotherMove: false
+      isCreatingAnotherMove: false,
+      alreadyExist: true
     }),
     [MovesAction.GET_MOVE_BY_SEARCH_REQUEST]: (state, { payload }) => ({
       ...state,
@@ -203,7 +208,9 @@ export const moveReducer = handleActions(
     }),
     [MovesAction.I_AM_DONE_REQUEST]: (state, { payload }) => ({
       ...state,
-      isMoveDone: true
+      isMoveDone: true,
+      alreadyExist: false,
+      creatingAnother: {}
     }),
     [loginAction.DETECT_BROWSER_REQUEST]: (state, { payload }) => ({
       ...state,

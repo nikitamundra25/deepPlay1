@@ -15,9 +15,9 @@ import Loader from "components/comman/Loader/Loader";
 import AddTagModal from "./addTagsModal";
 import { ConfirmBox } from "helper/SweetAleart";
 import { DebounceInput } from "react-debounce-input";
-import addTag from "../../../assets/img/set-detail-ic/add-tag.svg";
-import transfer from "../../../assets/img/set-detail-ic/transfer.svg";
-import remove from "../../../assets/img/set-detail-ic/remove.svg";
+// import addTag from "../../../assets/img/set-detail-ic/add-tag.svg";
+// import transfer from "../../../assets/img/set-detail-ic/transfer.svg";
+// import remove from "../../../assets/img/set-detail-ic/remove.svg";
 import { ListManager } from "react-beautiful-dnd-grid";
 import MoveListDetails from "./moveListdetails";
 import { toast } from "react-toastify";
@@ -262,6 +262,7 @@ class MoveList extends React.Component {
   handleVideoPlay = index => {
     let myVideo = document.getElementById(`webm-video-${index}`);
     if (!this.props.isSortIndexUpdate) {
+      myVideo.currentTime = 0;
       myVideo.play();
     }
   };
@@ -412,19 +413,24 @@ class MoveList extends React.Component {
 
   handleInputChange = e => {
     const { value } = e.target;
+    let parsed = qs.parse(this.props.location.search);
+    console.log("parsed", parsed);
+
     if (value) {
       this.setState({
         search: value
       });
       const data = {
         search: value,
-        setId: this.props.setIdPathName
+        setId: this.props.setIdPathName,
+        isStarred: parsed.isStarred === "true" ? true : false
       };
       this.props.searchMove(data);
     } else {
       this.props.getMovesOfSetRequest({
         setId: this.props.setIdPathName,
         page: 1,
+        isStarred: parsed.isStarred === "true" ? true : false,
         isInfiniteScroll: false,
         isMoveList: true
       });
@@ -508,6 +514,10 @@ class MoveList extends React.Component {
   };
 
   onDoubleClick = (index, title) => {
+    const highlightText = document.getElementById(`video-title-${index}`);
+    if (highlightText) {
+      highlightText.classList.add("text-selected");
+    }
     this.setState({
       doubleClick: true,
       doubleClickIndex: index,
@@ -516,6 +526,10 @@ class MoveList extends React.Component {
   };
 
   handleonBlur = (e, videoData, index) => {
+    const highlightText = document.getElementById(`video-title-${index}`);
+    if (highlightText) {
+      highlightText.classList.remove("text-selected");
+    }
     const value = e.target.textContent;
     const error =
       value && value.length > 50
@@ -715,37 +729,30 @@ class MoveList extends React.Component {
                               className="custom-checkbox"
                               color=" "
                             >
-                              <span className=""></span>
-                              <Input
-                                className="custom-control-input"
-                                id={`selected-video`}
-
-                                type="checkbox"
-                              />
-                              <label
-                                className="custom-control-label"
-                                htmlFor={`selected-video`}
-                              >
-                                {selectedMoveIds.length >= movesOfSet.length
-                                  ? "Unselect all"
-                                  : "Select all"}
-                              </label>
-
+                              {selectedMoveIds.length >= movesOfSet.length ? (
+                                <i className="fas fa-check-square fa-lg mr-1 pr-2"></i>
+                              ) : (
+                                <i className="fas fa-square fa-lg mr-1 pr-2"></i>
+                              )}
+                              {/* <img src={addTag} alt="" className="mr-1" />{" "} */}
+                              {selectedMoveIds.length >= movesOfSet.length
+                                ? "Unselect all"
+                                : "Select all"}
                             </Button>
                             <Button
                               onClick={() => this.openAddTagsModal()}
                               className=" "
                               color=" "
                             >
-                              <img src={addTag} alt="" className="mr-1" /> Add
-                              tags
+                              <i className="fas fa-tags fa-lg mr-1 pr-2"></i>{" "}
+                              Add tags
                             </Button>
                             <Button
                               onClick={() => this.openTransferToModal()}
                               className=" "
                               color=" "
                             >
-                              <img src={transfer} alt="" className="mr-1" />{" "}
+                              <i className="fas fa-file-export fa-lg mr-1 pr-2"></i>
                               Transfer
                             </Button>
                             <Button
@@ -753,7 +760,7 @@ class MoveList extends React.Component {
                               className=" "
                               color=" "
                             >
-                              <img src={remove} alt="" className="mr-1" />{" "}
+                              <i className="fas fa-trash fa-lg mr-1 pr-2"></i>
                               Remove
                             </Button>
                             <Button
@@ -761,10 +768,7 @@ class MoveList extends React.Component {
                               className="btn-black"
                               onClick={() => this.handleUnselectAll()}
                             >
-                              <i
-                                className="fa fa-times fa-lg"
-                                aria-hidden="true"
-                              />
+                              <i className="fas fa-times fa-lg"></i>
                             </Button>
                           </ButtonGroup>
                         </span>

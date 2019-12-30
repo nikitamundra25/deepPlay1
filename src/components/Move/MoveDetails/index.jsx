@@ -68,7 +68,8 @@ class MoveDetails extends React.Component {
       descError: "",
       isVideoFinished: false,
       selectedSetId: "",
-      errorTitle: ""
+      errorTitle: "",
+      createNew: false
     };
     this.videoDetails = React.createRef();
   }
@@ -79,15 +80,17 @@ class MoveDetails extends React.Component {
     this.props.getMoveDetailsRequest({ moveId: moveId[3] });
     this.props.getAllSetRequest({ isSetNoLimit: false });
     this.props.getTagListRequest();
-    const { recentSetAdded } = this.props.setReducer;
-    if (recentSetAdded) {
-      this.setState({
-        selectSetOptions: {
-          label: recentSetAdded.title,
-          value: recentSetAdded._id
-        }
-      });
-    }
+    /*    const { recentSetAdded } = this.props.setReducer;
+    console.log("recentSetAdded", recentSetAdded); */
+
+    // if (recentSetAdded) {
+    //   this.setState({
+    //     selectSetOptions: {
+    //       label: recentSetAdded.title,
+    //       value: recentSetAdded._id
+    //     }
+    //   });
+    // }
     let parsed = qs.parse(this.props.location.search);
     this.setState({
       isEdit: parsed.isEdit
@@ -129,7 +132,10 @@ class MoveDetails extends React.Component {
       }
     }
 
-    if (moveReducer.moveDetails !== this.props.moveReducer.moveDetails) {
+    if (
+      moveReducer.moveDetails !== this.props.moveReducer.moveDetails &&
+      !this.props.moveReducer.creatingAnother.isCreateAnother
+    ) {
       if (this.props.moveReducer.moveDetails) {
         const {
           title,
@@ -148,7 +154,9 @@ class MoveDetails extends React.Component {
         ) {
           window.history.back();
           if (!toast.isActive(this.toastId)) {
-            this.toastId = toast.warn("The move for this id has already been created.");
+            this.toastId = toast.warn(
+              "The move for this id has already been created."
+            );
           }
         }
         const { allSetList } = this.props.setReducer;
@@ -209,7 +217,8 @@ class MoveDetails extends React.Component {
   completeEditing = e => {
     e.preventDefault();
     const { moveReducer } = this.props;
-    const { moveDetails } = moveReducer;
+    const { moveDetails, creatingAnother } = moveReducer;
+    const { isCreateAnother, newMoveId } = creatingAnother;
     let parsed = qs.parse(this.props.location.search);
     const { _id: moveId, frames, isYoutubeUrl } = moveDetails;
     const { timer, title, description, setMoveCount } = this.state;
@@ -223,8 +232,10 @@ class MoveDetails extends React.Component {
       return;
     }
     this.setState({
-      isVideoFinished: true
+      isVideoFinished: true,
+      createNew: false
     });
+
     // eslint-disable-next-line
     {
       !isYoutubeUrl
@@ -246,7 +257,7 @@ class MoveDetails extends React.Component {
           })
         : this.props.completeYouTubeVideoEditing({
             timer,
-            moveId,
+            moveId: !isCreateAnother ? moveId : newMoveId,
             tags,
             setId,
             title: title,
@@ -291,6 +302,18 @@ class MoveDetails extends React.Component {
       videoThumbnail
     } = moveDetails;
     // this.handleMoveSuccessModal();
+    this.setState({
+      title: "",
+      tags: [],
+      description: "",
+      timer: {
+        min: 0,
+        max: 15
+      },
+      errorTitle: "",
+      selectSetOptions: "",
+      createNew: true
+    });
     this.props.createAnotherMoveRequest({
       moveUrl: moveDetails.videoUrl,
       frames: frames && frames.length ? frames : [],
@@ -436,6 +459,15 @@ class MoveDetails extends React.Component {
     this.props.onSetsCreation(data);
   };
 
+  storeVideoFrames = frames => {
+    let temp = [];
+    frames.slice(0, 20).map(key => {
+      return (temp = [...temp, key]);
+    });
+    this.setState({
+      videoFrames: temp
+    });
+  };
   /**
    *
    */
@@ -458,9 +490,12 @@ class MoveDetails extends React.Component {
       tagsList,
       moveUrlDetails,
       isCreatingAnotherMove,
-      isIosDevice
+      isIosDevice,
+      creatingAnother
     } = moveReducer;
     const { frames, videoMetaData, isYoutubeUrl } = moveDetails || {};
+    const { isCreateAnother } = creatingAnother;
+
     const {
       timer,
       title,
@@ -474,8 +509,10 @@ class MoveDetails extends React.Component {
       isEdit,
       errorTitle,
       descError,
-      videoFrames
+      videoFrames,
+      createNew
     } = this.state;
+
     return (
       <>
         <div className="create-set-section step-2 ">
@@ -493,13 +530,10 @@ class MoveDetails extends React.Component {
                         description={description}
                         timer={timer}
                         title={title}
-                        storeVideoFrames={frames => {
-                          this.setState({
-                            videoFrames: frames
-                          });
-                        }}
+                        storeVideoFrames={this.storeVideoFrames}
                         errorTitle={errorTitle}
                         isEdit={isEdit}
+                        isCreateAnother={isCreateAnother}
                         isYoutubeUrl={isYoutubeUrl}
                         videoDuration={data =>
                           this.setState({
@@ -551,6 +585,7 @@ class MoveDetails extends React.Component {
                     moveReducer={moveReducer}
                     completeEditing={this.completeEditing}
                     isIosDevice={isIosDevice}
+                    createNew={createNew}
                   />
                 )}
               </>
