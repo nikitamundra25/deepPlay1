@@ -82,7 +82,7 @@ class MoveListDetails extends React.Component {
       handleStarred,
       doubleClick,
       doubleClickIndex,
-      onDoubleClick,
+      // onDoubleClick,
       handleonBlur,
       // isLoadImage,
       sourceIndex,
