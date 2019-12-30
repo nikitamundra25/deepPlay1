@@ -15,6 +15,7 @@ class MoveListDetails extends React.Component {
       hoverStart: false,
       isChange: false
     };
+    this.myRef = React.createRef();
   }
 
   componentDidUpdate = ({ isVideohovered }) => {
@@ -54,6 +55,12 @@ class MoveListDetails extends React.Component {
     } else {
       return;
     }
+  };
+
+  onDoubleClick = (index, title) => {
+    this.myRef.current.focus();
+    console.log("this.myRef", this.myRef);
+    this.props.onDoubleClick(index, title);
   };
 
   render() {
@@ -229,21 +236,13 @@ class MoveListDetails extends React.Component {
                     <div className="video-effect loading-img">
                       {sourceIndex === index ? (
                         <img
-                          src={
-                            processingData
-                              ? moveLoader
-                              : movesOfSet[destinationIndex].videoThumbnail
-                          }
+                          src={movesOfSet[destinationIndex].videoThumbnail}
                           alt=""
                         />
                       ) : null}
                       {destinationIndex === index ? (
                         <img
-                          src={
-                            processingData
-                              ? moveLoader
-                              : movesOfSet[sourceIndex].videoThumbnail
-                          }
+                          src={movesOfSet[sourceIndex].videoThumbnail}
                           alt=""
                         />
                       ) : null}
@@ -287,6 +286,7 @@ class MoveListDetails extends React.Component {
               </div>
               <div className="play-list-text">
                 <div
+                  ref={this.myRef}
                   tabIndex="0"
                   suppressContentEditableWarning={true}
                   id={`video-title-${index}`}
@@ -300,7 +300,7 @@ class MoveListDetails extends React.Component {
                   }
                   onDoubleClick={
                     !video.isMoveProcessing
-                      ? () => onDoubleClick(index, video.title)
+                      ? () => this.onDoubleClick(index, video.title)
                       : null
                   }
                   onBlur={

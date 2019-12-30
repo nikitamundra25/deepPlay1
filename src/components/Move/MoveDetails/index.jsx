@@ -80,15 +80,17 @@ class MoveDetails extends React.Component {
     this.props.getMoveDetailsRequest({ moveId: moveId[3] });
     this.props.getAllSetRequest({ isSetNoLimit: false });
     this.props.getTagListRequest();
-    const { recentSetAdded } = this.props.setReducer;
-    if (recentSetAdded) {
-      this.setState({
-        selectSetOptions: {
-          label: recentSetAdded.title,
-          value: recentSetAdded._id
-        }
-      });
-    }
+    /*    const { recentSetAdded } = this.props.setReducer;
+    console.log("recentSetAdded", recentSetAdded); */
+
+    // if (recentSetAdded) {
+    //   this.setState({
+    //     selectSetOptions: {
+    //       label: recentSetAdded.title,
+    //       value: recentSetAdded._id
+    //     }
+    //   });
+    // }
     let parsed = qs.parse(this.props.location.search);
     this.setState({
       isEdit: parsed.isEdit
@@ -233,6 +235,7 @@ class MoveDetails extends React.Component {
       isVideoFinished: true,
       createNew: false
     });
+
     // eslint-disable-next-line
     {
       !isYoutubeUrl
@@ -492,6 +495,7 @@ class MoveDetails extends React.Component {
     } = moveReducer;
     const { frames, videoMetaData, isYoutubeUrl } = moveDetails || {};
     const { isCreateAnother } = creatingAnother;
+
     const {
       timer,
       title,

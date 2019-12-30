@@ -237,6 +237,7 @@ class MoveList extends React.Component {
   handleVideoPlay = index => {
     let myVideo = document.getElementById(`webm-video-${index}`);
     if (!this.props.isSortIndexUpdate) {
+      myVideo.currentTime = 0;
       myVideo.play();
     }
   };

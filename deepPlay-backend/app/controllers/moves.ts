@@ -400,6 +400,7 @@ const getMoveBySetId = async (req: Request, res: Response): Promise<any> => {
         .limit(limitNumber)
         .sort({ sortIndex: 1 });
     }
+
     const moveList: Document | any | null = await MoveModel.populate(
       movesData,
       { path: "setId.folderId", match: { isDeleted: false } }
@@ -559,6 +560,7 @@ const updateMoveDetailsFromYouTubeAndTrim = async (
         setId,
         videoMetaData: {},
         isMoveProcessing: true,
+        userId: headToken.id,
         moveURL: ""
       }
     );
@@ -622,11 +624,13 @@ const updateMoveDetailsFromYouTubeAndTrim = async (
       } else {
         videoFileMain = path.join(__dirname, "..", `${fileName}`);
       }
+
       if (IsProductionMode) {
         videoOriginalFile = path.join(__dirname, `${result.videoUrl}`);
       } else {
         videoOriginalFile = path.join(__dirname, "..", `${result.videoUrl}`);
       }
+
       const video = await new ffmpeg(originalVideoPath);
       const duration = timer.max - timer.min;
       video
@@ -670,7 +674,7 @@ const updateMoveDetailsFromYouTubeAndTrim = async (
             sortIndex: 0,
             setId,
             isYoutubeUrl: true,
-            userId: result.userId,
+            userId: headToken.id,
             isDeleted: result.isDeleted,
             createdAt: result.createdAt,
             videoMetaData: {},
@@ -1467,6 +1471,7 @@ const getMoveBySearch = async (req: Request, res: Response): Promise<any> => {
       $and: []
     };
     condition.$and.push({
+      _id: headToken.id,
       isDeleted: false,
       moveURL: { $ne: null }
     });

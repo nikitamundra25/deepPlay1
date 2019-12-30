@@ -209,7 +209,8 @@ export const moveReducer = handleActions(
     [MovesAction.I_AM_DONE_REQUEST]: (state, { payload }) => ({
       ...state,
       isMoveDone: true,
-      alreadyExist: false
+      alreadyExist: false,
+      creatingAnother: {}
     }),
     [loginAction.DETECT_BROWSER_REQUEST]: (state, { payload }) => ({
       ...state,

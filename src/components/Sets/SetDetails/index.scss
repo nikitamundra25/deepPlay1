@@ -211,10 +211,9 @@ div[data-react-beautiful-dnd-drag-handle] {
   font-weight: 600;
 }
 .text-selected {
-  background: #0089ff;
-  color: white !important;
+  color: #000 !important;
   font-weight: bold;
-  border: 2px solid white;
+  border: 2px solid #2a5db1;
 }
 @keyframes spin {
   0% {
@@ -223,4 +222,18 @@ div[data-react-beautiful-dnd-drag-handle] {
   100% {
     transform: rotate(360deg);
   }
+}
+
+video[poster] {
+  object-fit: fill;
+}
+.vjs-poster {
+  background-repeat: no-repeat;
+  background-position: 50% 50%;
+  background-size: cover;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  position: relative;
+  width: 100%;
 }
