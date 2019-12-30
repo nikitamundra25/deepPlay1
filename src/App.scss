@@ -134,7 +134,7 @@ a {
 }
 
 .theme-header {
-  min-height: 74px;
+  min-height: 80px;
   background-color: $blackcolor;
   color: $whiteColor;
   z-index: 103;
@@ -143,6 +143,7 @@ a {
   top: 0px;
   .navbar-main.navbar {
     padding: 15px 8px;
+    min-height: 80px;
   }
   .header-title {
     font-size: 25px;
