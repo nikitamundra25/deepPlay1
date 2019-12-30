@@ -745,7 +745,7 @@ class WebmView extends Component {
                         >
                           Transfer
                         </DropdownItem>
-                        <DropdownItem
+                        {/* <DropdownItem
                           onClick={() =>
                             videoData
                               ? this.handleMoveDelete(
@@ -756,7 +756,7 @@ class WebmView extends Component {
                           }
                         >
                           Remove
-                        </DropdownItem>
+                        </DropdownItem> */}
                       </DropdownMenu>
                     </UncontrolledDropdown>
                   </div>

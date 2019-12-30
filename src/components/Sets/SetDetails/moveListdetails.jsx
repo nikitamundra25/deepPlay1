@@ -15,7 +15,9 @@ class MoveListDetails extends React.Component {
       hoverStart: false,
       isChange: false
     };
+    this.myRef = React.createRef();
   }
+
   componentDidUpdate = ({ isVideohovered }) => {
     if (isVideohovered !== this.props.isVideohovered) {
       if (this.props.isVideohovered) {
@@ -53,6 +55,12 @@ class MoveListDetails extends React.Component {
     } else {
       return;
     }
+  };
+
+  onDoubleClick = (index, title) => {
+    this.myRef.current.focus();
+    console.log("this.myRef", this.myRef);
+    this.props.onDoubleClick(index, title);
   };
 
   render() {
@@ -96,14 +104,6 @@ class MoveListDetails extends React.Component {
       processingData = true;
     } else {
       processingData = false;
-    }
-    const highlightText = document.getElementById(`video-title-${index}`);
-    if (highlightText) {
-      if (doubleClick && doubleClickIndex === index) {
-        highlightText.classList.add("text-selected");
-      } else {
-        highlightText.classList.remove("text-selected");
-      }
     }
 
     return (
@@ -286,6 +286,8 @@ class MoveListDetails extends React.Component {
               </div>
               <div className="play-list-text">
                 <div
+                  ref={this.myRef}
+                  tabIndex="0"
                   suppressContentEditableWarning={true}
                   id={`video-title-${index}`}
                   className={
@@ -298,10 +300,9 @@ class MoveListDetails extends React.Component {
                   }
                   onDoubleClick={
                     !video.isMoveProcessing
-                      ? () => onDoubleClick(index, video.title)
+                      ? () => this.onDoubleClick(index, video.title)
                       : null
                   }
-                  tabIndex="0"
                   onBlur={
                     doubleClick ? e => handleonBlur(e, video, index) : null
                   }

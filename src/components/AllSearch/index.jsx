@@ -58,7 +58,7 @@ class AllSearchComponent extends React.Component {
               <div className="search-result-block  moves-block">
                 <div className="category-wrap">
                   <div className="category-heading">Folders</div>
-                  {folderList && folderList.length >= 5 ? (
+                  {folderList && folderList.length >= 6 ? (
                     <span
                       onClick={this.props.searchAllFolder}
                       className="view-all-wrap font-weight-bold"
@@ -70,7 +70,7 @@ class AllSearchComponent extends React.Component {
                 <div className="folder-searched-wrap searched-wrap">
                   <div className="searched-block">
                     {folderList && folderList.length
-                      ? folderList.slice(0, 5).map((folderData, index) => {
+                      ? folderList.slice(0, 6).map((folderData, index) => {
                           return (
                             <div
                               key={index}
@@ -136,7 +136,7 @@ class AllSearchComponent extends React.Component {
               <div className="search-result-block  moves-block">
                 <div className="category-wrap">
                   <div className="category-heading">Sets</div>
-                  {setList && setList.length >= 5 ? (
+                  {setList && setList.length >= 6 ? (
                     <span
                       onClick={this.props.searchAllSet}
                       className="view-all-wrap font-weight-bold"
@@ -148,7 +148,7 @@ class AllSearchComponent extends React.Component {
                 <div className="searched-wrap">
                   <div className="searched-block">
                     {setList && setList.length
-                      ? setList.slice(0, 5).map((setData, index) => {
+                      ? setList.slice(0, 6).map((setData, index) => {
                           return (
                             <div
                               key={index}
@@ -213,7 +213,7 @@ class AllSearchComponent extends React.Component {
               <div className="search-result-block moves-block">
                 <div className="category-wrap">
                   <div className="category-heading">Moves</div>
-                  {result && result.length >= 5 ? (
+                  {result && result.length >= 6 ? (
                     <span
                       onClick={() => this.props.searchAllMove("null")}
                       className="view-all-wrap font-weight-bold"
@@ -224,7 +224,7 @@ class AllSearchComponent extends React.Component {
                 </div>
                 <div className="searched-wrap">
                   <div className="searched-block">
-                    {result.slice(0, 5).map((moveData, index) => {
+                    {result.slice(0, 6).map((moveData, index) => {
                       return (
                         <div
                           key={index}
@@ -254,7 +254,9 @@ class AllSearchComponent extends React.Component {
                               </div>
                             </div>
                           </div>
-                          <div className="searched-text">{moveData.title}</div>
+                          <div className="searched-text">
+                            {moveData.title ? moveData.title : "Unnamed"}
+                          </div>
                         </div>
                       );
                     })}
