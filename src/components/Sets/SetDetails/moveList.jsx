@@ -237,7 +237,7 @@ class MoveList extends React.Component {
   handleVideoPlay = index => {
     let myVideo = document.getElementById(`webm-video-${index}`);
     if (!this.props.isSortIndexUpdate) {
-      myVideo.currentTime = 0;
+      // myVideo.currentTime = 0;
       myVideo.play();
     }
   };
@@ -490,6 +490,7 @@ class MoveList extends React.Component {
 
   onDoubleClick = (index, title) => {
     const highlightText = document.getElementById(`video-title-${index}`);
+    // document.getElementById(`video-title-${index}`).focus();
     if (highlightText) {
       highlightText.classList.add("text-selected");
     }

@@ -59,9 +59,26 @@ class MoveListDetails extends React.Component {
 
   onDoubleClick = (index, title) => {
     this.myRef.current.focus();
-    console.log("this.myRef", this.myRef);
+    let selectedClass = document.getElementById(`video-title-${index}`);
+    console.log("let selectedClass ", selectedClass);
+    selectedClass.focus();
     this.props.onDoubleClick(index, title);
   };
+
+  // onFocus = (e, index) => {
+  //   document.getElementById(`video-title-${index}`).focus();
+  //   if (document.selection) {
+  //     // IE
+  //     var range = document.body.createTextRange();
+  //     range.moveToElementText(document.getElementById(`video-title-${index}`));
+  //     range.select();
+  //   } else if (window.getSelection) {
+  //     var range = document.createRange();
+  //     range.selectNode(document.getElementById(`video-title-${index}`));
+  //     window.getSelection().removeAllRanges();
+  //     window.getSelection().addRange(range);
+  //   }
+  // };
 
   render() {
     const {
@@ -82,7 +99,7 @@ class MoveListDetails extends React.Component {
       handleStarred,
       doubleClick,
       doubleClickIndex,
-      onDoubleClick,
+      // onDoubleClick,
       handleonBlur,
       // isLoadImage,
       sourceIndex,
@@ -296,13 +313,14 @@ class MoveListDetails extends React.Component {
                       : "text-capitalize play-list-heading h6 m-0 text-untitled"
                   }
                   contentEditable={
-                    doubleClick && doubleClickIndex === index ? "true" : "false"
+                    doubleClick && doubleClickIndex === index ? true : false
                   }
                   onDoubleClick={
                     !video.isMoveProcessing
                       ? () => this.onDoubleClick(index, video.title)
                       : null
                   }
+                  onInput={this.inputText}
                   onBlur={
                     doubleClick ? e => handleonBlur(e, video, index) : null
                   }
@@ -311,6 +329,7 @@ class MoveListDetails extends React.Component {
                       ? e => this.handleKeyPress(e, video, index)
                       : null
                   }
+                  // onFocus={e => this.onFocus(e, index)}
                 >
                   {/* {doubleClick && doubleClickIndex === index ? (
                     <>

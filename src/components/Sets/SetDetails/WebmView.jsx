@@ -50,7 +50,9 @@ class WebmView extends Component {
       description: "",
       error: "",
       videoCanPlay: false,
-      isBufferingVideo: false
+      isBufferingVideo: false,
+      isMouseMove: false,
+      mouseOnControls: false
     };
   }
   /**
@@ -527,6 +529,23 @@ class WebmView extends Component {
     });
   };
 
+  onmousemove = e => {
+    this.setState({
+      isMouseMove: true
+    });
+    setTimeout(() => {
+      this.setState({
+        isMouseMove: false
+      });
+    }, 2000);
+  };
+
+  onMouseOver = () => {
+    this.setState({
+      mouseOnControls: true
+    });
+  };
+
   render() {
     const {
       video,
@@ -571,7 +590,8 @@ class WebmView extends Component {
       edit,
       error,
       videoCanPlay,
-      isBufferingVideo
+      isBufferingVideo,
+      isMouseMove
     } = this.state;
     let isFullScreenMode1 =
       document.fullscreenElement ||
@@ -604,6 +624,14 @@ class WebmView extends Component {
     // if (!isFullScreenMode && !isPlaying) {
     //   isFullScreenMode1 = false;
     // }
+    if (isFullScreenMode1) {
+      let control = document.getElementsByClassName("controls");
+      if (control[0] && !isMouseMove && !this.state.mouseOnControls) {
+        control[0].classList.add("hide-controls");
+      } else {
+        control[0].classList.remove("hide-controls");
+      }
+    }
 
     return (
       <>
@@ -764,7 +792,11 @@ class WebmView extends Component {
               ) : null}
             </div>
             <div className="video-slider-img pb-3">
-              <div className="custom-video-player" id="custom_video_control">
+              <div
+                className="custom-video-player"
+                id="custom_video_control"
+                onMouseMove={isFullScreenMode1 ? this.onmousemove : null}
+              >
                 <div className="videos-arrows-wrap">
                   {videoIndex > 0 ? (
                     <div
@@ -837,7 +869,19 @@ class WebmView extends Component {
                     <Loader videoLoader={true} />
                   </div>
                 )}
-                <div className={"controls"}>
+
+                <div
+                  className={"controls"}
+                  onMouseOver={isFullScreenMode1 ? this.onMouseOver : null}
+                  onMouseLeave={
+                    isFullScreenMode1
+                      ? () =>
+                          this.setState({
+                            mouseOnControls: false
+                          })
+                      : null
+                  }
+                >
                   <div className="control-background-wrap"></div>
                   <InputRange
                     draggableTrack={false}
