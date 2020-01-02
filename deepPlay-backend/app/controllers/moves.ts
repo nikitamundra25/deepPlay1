@@ -788,7 +788,8 @@ const updateMoveDetailsAndTrimVideo = async (
         setId,
         videoMetaData: {},
         isMoveProcessing: true,
-        moveURL: ""
+        moveURL: "",
+        sortIndex: 0
       }
     );
 
@@ -856,6 +857,14 @@ const updateMoveDetailsAndTrimVideo = async (
           console.log(err);
           console.log("=========================");
           if (err) {
+            await MoveModel.updateOne(
+              {
+                _id: result._id
+              },
+              {
+                isDeleted: true
+              }
+            );
             return res.status(400).json({
               message:
                 "We are having an issue while creating webm for you. Please try again."

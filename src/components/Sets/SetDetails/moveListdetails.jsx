@@ -60,7 +60,6 @@ class MoveListDetails extends React.Component {
   onDoubleClick = (index, title) => {
     this.myRef.current.focus();
     let selectedClass = document.getElementById(`video-title-${index}`);
-    console.log("let selectedClass ", selectedClass);
     selectedClass.focus();
     this.props.onDoubleClick(index, title);
   };
@@ -316,7 +315,6 @@ class MoveListDetails extends React.Component {
                     doubleClick && doubleClickIndex === index ? true : false
                   }
                   onDoubleClick={
-                 
                     !video.isMoveProcessing
                       ? () => this.onDoubleClick(index, video.title)
                       : null
