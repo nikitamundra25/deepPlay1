@@ -75,11 +75,11 @@ class MoveList extends React.Component {
   componentDidMount() {
     window.addEventListener("scroll", this.listenScrollEvent);
   }
+
   /*
   /*  
   */
-
-  listenScrollEvent = e => {
+  fixedSubHeader = () => {
     let offsetElemnt = document.getElementById("get-sticky-header");
     let offsetElemntInner = document.getElementById("get-sticky-inner-header");
     let offsetElemntSubInner = document.getElementById(
@@ -89,17 +89,35 @@ class MoveList extends React.Component {
     if (offsetElemnt) {
       let offsetWidth = offsetElemnt.getBoundingClientRect();
       if (offsetWidth.top + 110 <= 1) {
+        // console.log(
+        //   offsetWidth.top,
+        //   offsetWidth.left,
+        //   offsetElemntInner.getBoundingClientRect().left,
+        //   offsetElemntInner.offsetWidth,
+        //   "offsetWidth---------"
+        // );
+
         this.setState({
-          stickyHeaderWidth: offsetElemntInner.offsetWidth
+          backgroundClass: "sticky-header"
         });
-        offsetElemntInner.style.left =
-          offsetElemntSubInner.getBoundingClientRect().left + "px";
-        this.setState({ backgroundClass: "sticky-header" });
+
+        this.setState(
+          {
+            stickyHeaderWidth: offsetElemntInner.offsetWidth
+          },
+          () => {
+            offsetElemntInner.style.left =
+              offsetElemntSubInner.getBoundingClientRect().left + "px";
+          }
+        );
       } else {
         offsetElemntInner.style.left = 50 + "%";
         this.setState({ backgroundClass: "" });
       }
     }
+  };
+  listenScrollEvent = e => {
+    this.fixedSubHeader();
   };
 
   handleVideoHoverLeave = () => {
@@ -156,16 +174,23 @@ class MoveList extends React.Component {
     let selectedMoveIds = [...this.state.selectedMoveIds];
     selectedMoveIds.push(moveId);
     this.props.videoSelectRequest();
-    this.setState({
-      isVideoChecked: true,
-      isVideoModalOpen: false,
-      selectedMoves,
-      selectedMoveIds,
-      isMarkingStar: {
-        index: -1,
-        isChanging: false
+    this.setState(
+      {
+        isVideoChecked: true,
+        isVideoModalOpen: false,
+        selectedMoves,
+        selectedMoveIds,
+        isMarkingStar: {
+          index: -1,
+          isChanging: false
+        }
+      },
+      () => {
+        // setTimeout(() => {
+        this.fixedSubHeader();
+        // }, 500);
       }
-    });
+    );
   };
   /*
    */
@@ -237,7 +262,7 @@ class MoveList extends React.Component {
   handleVideoPlay = index => {
     let myVideo = document.getElementById(`webm-video-${index}`);
     if (!this.props.isSortIndexUpdate) {
-      myVideo.currentTime = 0;
+      // myVideo.currentTime = 0;
       myVideo.play();
     }
   };
@@ -249,8 +274,10 @@ class MoveList extends React.Component {
       myVideo.pause();
     }
   };
+
   /*
    */
+
   handleStarred = (id, isStarred, index) => {
     const location = this.props.location;
     const pathName = location.pathname.split("/");
@@ -490,6 +517,7 @@ class MoveList extends React.Component {
 
   onDoubleClick = (index, title) => {
     const highlightText = document.getElementById(`video-title-${index}`);
+    // document.getElementById(`video-title-${index}`).focus();
     if (highlightText) {
       highlightText.classList.add("text-selected");
     }
@@ -686,12 +714,6 @@ class MoveList extends React.Component {
                         "d-flex justify-content-between align-items-center "
                       }
                     >
-                      {/* <div classHow YOU can Travel Full TimeName="content-title">
-                      Selected MovesHow YOU can Travel Full Time:{" "}
-                      {selectedMoveIHow YOU can Travel Full Timeds && selectedMoveIds.length
-                        ? selectedMoHow YOU can Travel Full TimeveIds.length
-                        : 0}
-                    </div> */}
                       <div className="content-title ">
                         <span className={"d-flex"}>
                           <ButtonGroup size="lg">
@@ -701,7 +723,7 @@ class MoveList extends React.Component {
                                   ? this.handleUnselectAll()
                                   : this.handleSelectAll()
                               }
-                              className=" "
+                              className="custom-checkbox"
                               color=" "
                             >
                               {selectedMoveIds.length >= movesOfSet.length ? (
@@ -709,7 +731,6 @@ class MoveList extends React.Component {
                               ) : (
                                 <i className="fas fa-square fa-lg mr-1 pr-2"></i>
                               )}
-                              {/* <img src={addTag} alt="" className="mr-1" />{" "} */}
                               {selectedMoveIds.length >= movesOfSet.length
                                 ? "Unselect all"
                                 : "Select all"}
@@ -754,7 +775,7 @@ class MoveList extends React.Component {
               ) : null}
 
               {!isMoveSearchLoading && !isMoveListLoading ? (
-                <div className="video-thumbnail-sub-block  video-thumb-edit-view">
+                <div className="video-thumbnail-sub-block  video-thumb-edit-view ">
                   <div className="play-list-tile create-move-element">
                     <div
                       className="play-list-block  d-flex h-100 cursor_pointer"
@@ -790,7 +811,7 @@ class MoveList extends React.Component {
                             handleMovesSelect={this.handleMovesSelect}
                             isMarkingStar={isMarkingStar}
                             video={video}
-                            isSavingWebM={isSavingWebM}
+                            // isSavingWebM={isSavingWebM}
                             isSortIndexUpdate={isSortIndexUpdate}
                             isSelectVideo={isSelectVideo}
                             videoIndex={videoIndex}

@@ -665,7 +665,7 @@ class MoveSearchList extends React.Component {
                     <div className="select-focus-wrap"></div>
                   ) : null}
 
-                  <div className="edit-view-wrap">
+                  <div className="edit-view-wrap 2">
                     {!isMoveSearchLoading ? (
                       moveofSetList && moveofSetList.length ? (
                         moveofSetList.map((video, index) => {

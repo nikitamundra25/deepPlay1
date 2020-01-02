@@ -167,12 +167,13 @@ const downloadYoutubeVideo = async (
         // }
 
         if (info) {
-          // if (info.player_response.videoDetails.lengthSeconds >= 3600) {
-          //   return res.status(400).json({
-          //     message: "Video duration should be less than 1 hour.",
-          //     success: false
-          //   });
-          // }
+          if (info._duration_raw >= 3600) {
+            return res.status(400).json({
+              message: "Video duration should be less than 1 hour.",
+              success: false
+            });
+          }
+
           const thumbImg =
             info.thumbnails && info.thumbnails.length
               ? info.thumbnails[0].url
@@ -559,6 +560,7 @@ const updateMoveDetailsFromYouTubeAndTrim = async (
         isYoutubeUrl: true,
         setId,
         videoMetaData: {},
+        sortIndex: 0,
         isMoveProcessing: true,
         userId: headToken.id,
         moveURL: ""
@@ -573,10 +575,12 @@ const updateMoveDetailsFromYouTubeAndTrim = async (
     }).sort({ sortIndex: 1 });
 
     for (let index = 0; index < moveListData.length; index++) {
-      await MoveModel.updateOne(
-        { setId: setId, _id: moveListData[index]._id },
-        { $set: { sortIndex: index + 1 } }
-      );
+      if (moveListData[index]._id !== result._id) {
+        await MoveModel.updateOne(
+          { setId: setId, _id: moveListData[index]._id },
+          { $set: { sortIndex: index + 1 } }
+        );
+      }
     }
     //-------
 
@@ -784,7 +788,8 @@ const updateMoveDetailsAndTrimVideo = async (
         setId,
         videoMetaData: {},
         isMoveProcessing: true,
-        moveURL: ""
+        moveURL: "",
+        sortIndex: 0
       }
     );
 
@@ -852,6 +857,14 @@ const updateMoveDetailsAndTrimVideo = async (
           console.log(err);
           console.log("=========================");
           if (err) {
+            await MoveModel.updateOne(
+              {
+                _id: result._id
+              },
+              {
+                isDeleted: true
+              }
+            );
             return res.status(400).json({
               message:
                 "We are having an issue while creating webm for you. Please try again."
