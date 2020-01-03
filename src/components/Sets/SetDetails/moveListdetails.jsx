@@ -64,6 +64,22 @@ class MoveListDetails extends React.Component {
     this.props.onDoubleClick(index, title);
   };
 
+  onpaste = e => {
+    e.preventDefault();
+    if (window.clipboardData) {
+      let content = window.clipboardData.getData("Text");
+      if (window.getSelection) {
+        var selObj = window.getSelection();
+        var selRange = selObj.getRangeAt(0);
+        selRange.deleteContents();
+        selRange.insertNode(document.createTextNode(content));
+      }
+    } else if (e.clipboardData) {
+      let content = (e.originalEvent || e).clipboardData.getData("text/plain");
+      document.execCommand("insertText", false, content);
+    }
+  };
+
   // onFocus = (e, index) => {
   //   document.getElementById(`video-title-${index}`).focus();
   //   if (document.selection) {
@@ -315,10 +331,13 @@ class MoveListDetails extends React.Component {
                     doubleClick && doubleClickIndex === index ? true : false
                   }
                   onDoubleClick={
-                    !video.isMoveProcessing
-                      ? () => this.onDoubleClick(index, video.title)
+                    !isVideoChecked
+                      ? !video.isMoveProcessing
+                        ? () => this.onDoubleClick(index, video.title)
+                        : null
                       : null
                   }
+                  onPaste={doubleClick ? this.onpaste : null}
                   onInput={this.inputText}
                   onBlur={
                     doubleClick ? e => handleonBlur(e, video, index) : null

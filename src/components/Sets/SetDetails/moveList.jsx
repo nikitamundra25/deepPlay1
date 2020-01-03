@@ -248,9 +248,15 @@ class MoveList extends React.Component {
         isVideoModalOpen: true
       });
     }
+    let result = selectedMoveIds.reduce((unique, o) => {
+      if (!unique.some(obj => obj === o && obj === o)) {
+        unique.push(o);
+      }
+      return unique;
+    }, []);
     this.setState({
       selectedMoves,
-      selectedMoveIds,
+      selectedMoveIds: result,
       isMarkingStar: {
         index: -1,
         isChanging: false
@@ -416,8 +422,6 @@ class MoveList extends React.Component {
   handleInputChange = e => {
     const { value } = e.target;
     let parsed = qs.parse(this.props.location.search);
-    console.log("parsed", parsed);
-
     if (value) {
       this.setState({
         search: value
@@ -530,9 +534,6 @@ class MoveList extends React.Component {
 
   handleonBlur = (e, videoData, index) => {
     const highlightText = document.getElementById(`video-title-${index}`);
-    if (highlightText) {
-      highlightText.classList.remove("text-selected");
-    }
     const value = e.target.textContent;
     const error =
       value && value.length > 50
@@ -545,6 +546,9 @@ class MoveList extends React.Component {
       }
       return;
     } else {
+      if (highlightText) {
+        highlightText.classList.remove("text-selected");
+      }
       this.setState({
         doubleClick: false,
         doubleClickIndex: -1,
@@ -815,6 +819,7 @@ class MoveList extends React.Component {
                             isSortIndexUpdate={isSortIndexUpdate}
                             isSelectVideo={isSelectVideo}
                             videoIndex={videoIndex}
+                            onDoubleClick={this.onDoubleClick}
                             sourceIndex={sourceIndex}
                             destinationIndex={destinationIndex}
                             isVideoModalOpen={isVideoModalOpen}

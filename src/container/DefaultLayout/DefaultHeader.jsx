@@ -186,7 +186,10 @@ class DefaultHeader extends React.Component {
     const { modelInfoReducer } = this.props;
     const { modelDetails } = modelInfoReducer;
     const path = this.state.path.split("/");
-    if (path && path.length && path[1] === "set" && path[2] === "details") {
+    if (
+      (path && path.length && path[1] === "set" && path[2] === "details") ||
+      (path && path.length && path[1] === "move-search-all")
+    ) {
       this.searchAllMove(moveURL ? moveURL.title : null);
     } else {
       this.setState(
@@ -214,6 +217,7 @@ class DefaultHeader extends React.Component {
   addTagstoMove = data => {
     const moveVideo = data.videoData;
     moveVideo.tags = data.tags;
+    moveVideo.description = data.description;
     this.props.addTagsRequest({ data: data, moveVideo: moveVideo });
   };
 

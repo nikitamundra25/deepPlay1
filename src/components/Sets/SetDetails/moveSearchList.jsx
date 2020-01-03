@@ -74,12 +74,38 @@ class MoveSearchList extends React.Component {
     });
   }
 
-  listenScrollEvent = e => {
-    if (window.scrollY > 180) {
-      this.setState({ backgroundClass: "sticky-header" });
-    } else {
-      this.setState({ backgroundClass: "" });
+  fixedSubHeader = () => {
+    let offsetElemnt = document.getElementById("get-sticky-header");
+    let offsetElemntInner = document.getElementById("get-sticky-inner-header");
+    let offsetElemntSubInner = document.getElementById(
+      "get-sticky-sub-inner-header"
+    );
+
+    if (offsetElemnt) {
+      let offsetWidth = offsetElemnt.getBoundingClientRect();
+      if (offsetWidth.top + 110 <= 1) {
+        this.setState({
+          backgroundClass: "sticky-header"
+        });
+
+        this.setState(
+          {
+            stickyHeaderWidth: offsetElemntInner.offsetWidth
+          },
+          () => {
+            offsetElemntInner.style.left =
+              offsetElemntSubInner.getBoundingClientRect().left + "px";
+          }
+        );
+      } else {
+        offsetElemntInner.style.left = 50 + "%";
+        this.setState({ backgroundClass: "" });
+      }
     }
+  };
+
+  listenScrollEvent = e => {
+    this.fixedSubHeader();
   };
   /*
    */
@@ -167,9 +193,16 @@ class MoveSearchList extends React.Component {
         isVideoModalOpen: true
       });
     }
+    let result = selectedMoveIds.reduce((unique, o) => {
+      if (!unique.some(obj => obj === o && obj === o)) {
+        unique.push(o);
+      }
+      return unique;
+    }, []);
+
     this.setState({
       selectedMoves,
-      selectedMoveIds,
+      selectedMoveIds: result,
       isMarkingStar: {
         index: -1,
         isChanging: false
@@ -424,6 +457,22 @@ class MoveSearchList extends React.Component {
     });
   };
 
+  onpaste = e => {
+    e.preventDefault();
+    if (window.clipboardData) {
+      let content = window.clipboardData.getData("Text");
+      if (window.getSelection) {
+        var selObj = window.getSelection();
+        var selRange = selObj.getRangeAt(0);
+        selRange.deleteContents();
+        selRange.insertNode(document.createTextNode(content));
+      }
+    } else if (e.clipboardData) {
+      let content = (e.originalEvent || e).clipboardData.getData("text/plain");
+      document.execCommand("insertText", false, content);
+    }
+  };
+
   handleKeyPress = (e, videoData, index) => {
     if (e.which === 13 || e.keyCode === 13) {
       this.handleonBlur(e, videoData, index);
@@ -499,6 +548,7 @@ class MoveSearchList extends React.Component {
     const location = this.props.location;
     const isStarred = location.search.split("=");
     const serachContent = location.search.split("search");
+    console.log("selectedMoveIds", selectedMoveIds);
 
     return (
       <section className="play-list-collection set-detail-section set-detail-editble">
@@ -586,7 +636,8 @@ class MoveSearchList extends React.Component {
                           <ButtonGroup size="lg">
                             <Button
                               onClick={() =>
-                                selectedMoveIds.length >= moveofSetList.length
+                                selectedMoveIds.length >=
+                                this.props.movesOfSet.length
                                   ? this.handleUnselectAll()
                                   : this.handleSelectAll()
                               }
@@ -600,7 +651,8 @@ class MoveSearchList extends React.Component {
                                 <i className="fas fa-check-square fa-lg mr-1 pr-2"></i>
                               )}
 
-                              {selectedMoveIds.length >= moveofSetList.length
+                              {selectedMoveIds.length >=
+                              this.props.movesOfSet.length
                                 ? "Unselect all"
                                 : "Select all"}
                             </Button>
@@ -863,7 +915,15 @@ class MoveSearchList extends React.Component {
                                             : "false"
                                         }
                                         onDoubleClick={() =>
-                                          this.onDoubleClick(index, video.title)
+                                          !isVideoChecked
+                                            ? this.onDoubleClick(
+                                                index,
+                                                video.title
+                                              )
+                                            : null
+                                        }
+                                        onPaste={
+                                          doubleClick ? this.onpaste : null
                                         }
                                         onBlur={
                                           doubleClick

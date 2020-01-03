@@ -1484,7 +1484,7 @@ const getMoveBySearch = async (req: Request, res: Response): Promise<any> => {
       $and: []
     };
     condition.$and.push({
-      _id: headToken.id,
+      userId: headToken.id,
       isDeleted: false,
       moveURL: { $ne: null }
     });
@@ -1525,6 +1525,7 @@ const getMoveBySearch = async (req: Request, res: Response): Promise<any> => {
           .skip(pageNumber)
           .limit(limitNumber)
           .sort({ sortIndex: 1 });
+
         totalMoves = await MoveModel.count(condition);
       }
 

@@ -468,6 +468,22 @@ class WebmView extends Component {
     });
   };
 
+  onpaste = e => {
+    e.preventDefault();
+    if (window.clipboardData) {
+      let content = window.clipboardData.getData("Text");
+      if (window.getSelection) {
+        var selObj = window.getSelection();
+        var selRange = selObj.getRangeAt(0);
+        selRange.deleteContents();
+        selRange.insertNode(document.createTextNode(content));
+      }
+    } else if (e.clipboardData) {
+      let content = (e.originalEvent || e).clipboardData.getData("text/plain");
+      document.execCommand("insertText", false, content);
+    }
+  };
+
   handleKeyPress = (e, videoData, showVideoIndex, video) => {
     if (e.which === 13 || e.keyCode === 13) {
       this.handleonBlur(e, videoData, showVideoIndex, video);
@@ -478,9 +494,6 @@ class WebmView extends Component {
 
   handleonBlur = (e, videoData) => {
     const highlightText = document.getElementById("video-title");
-    if (highlightText) {
-      highlightText.classList.remove("text-selected");
-    }
     const value = e.target.textContent;
     const error =
       value && value.length > 50
@@ -492,6 +505,9 @@ class WebmView extends Component {
       }
       return;
     } else {
+      if (highlightText) {
+        highlightText.classList.remove("text-selected");
+      }
       this.setState({
         doubleClick: false,
         title: ""
@@ -544,6 +560,10 @@ class WebmView extends Component {
     this.setState({
       mouseOnControls: true
     });
+  };
+
+  handleVideoModal = () => {
+    this.props.handleVideoModal();
   };
 
   render() {
@@ -624,11 +644,17 @@ class WebmView extends Component {
     // if (!isFullScreenMode && !isPlaying) {
     //   isFullScreenMode1 = false;
     // }
+
     if (isFullScreenMode1) {
       let control = document.getElementsByClassName("controls");
       if (control[0] && !isMouseMove && !this.state.mouseOnControls) {
         control[0].classList.add("hide-controls");
       } else {
+        control[0].classList.remove("hide-controls");
+      }
+    } else {
+      let control = document.getElementsByClassName("controls");
+      if (control && control[0]) {
         control[0].classList.remove("hide-controls");
       }
     }
@@ -646,7 +672,7 @@ class WebmView extends Component {
               className="close"
               data-dismiss="modal"
               type="button"
-              onClick={handleVideoModal}
+              onClick={!isShareable ? this.handleVideoModal : handleVideoModal}
             >
               <span aria-hidden="true">
                 <img src={closeBtn} alt="close-ic" />
@@ -660,15 +686,16 @@ class WebmView extends Component {
                 suppressContentEditableWarning={true}
                 contentEditable={doubleClick ? "true" : "false"}
                 className={
-                  videoData.title !== "Unnamed"
+                  videoData && videoData.title !== "Unnamed" && videoData.title
                     ? "text-capitalize video-slider-title font-weight-bold"
-                    : "text-capitalize text-untitled-slider font-weight-bold "
+                    : "text-capitalize text-untitled-slider font-weight-bold"
                 }
                 onDoubleClick={
                   !isShareable
                     ? () => this.onDoubleClick(videoData.title)
                     : null
                 }
+                onPaste={doubleClick ? this.onpaste : null}
                 onBlur={
                   doubleClick ? e => this.handleonBlur(e, videoData) : null
                 }
