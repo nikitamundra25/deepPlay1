@@ -479,7 +479,7 @@ class YouTubeFrameDetails extends Component {
   };
 
   render() {
-    const { frames, moveReducer, videoMaxDuration } = this.props;
+    const { frames, moveReducer, videoMaxDuration, videoError } = this.props;
     const { time, imageLoadedIndex } = this.state;
     const { moveDetails } = moveReducer;
 
@@ -605,6 +605,7 @@ class YouTubeFrameDetails extends Component {
               color={"default"}
               className={"btn-black btn url-upload-btn"}
               onClick={this.props.completeEditing}
+              disabled={videoError}
             >
               Finish
               {/* {isIosDevice ? "Unsupported for this device" : "Finish"} */}
