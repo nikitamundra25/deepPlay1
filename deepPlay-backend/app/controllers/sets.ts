@@ -589,7 +589,7 @@ const publicUrlsetDetails = async (
             isDeleted: false,
             moveURL: { $ne: null }
           })
-            .sort({ updatedAt: -1 })
+            .sort({ sortIndex: 1 })
             .limit(limitNumber);
 
           setResult.push({

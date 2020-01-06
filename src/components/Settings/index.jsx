@@ -47,6 +47,7 @@ class SettingComponent extends Component {
       confirmPassword: ""
     };
   }
+  
   componentDidUpdate(prevProps) {
     if (prevProps.profileInfoReducer !== this.props.profileInfoReducer) {
       const {

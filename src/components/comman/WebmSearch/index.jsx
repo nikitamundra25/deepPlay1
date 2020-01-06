@@ -20,6 +20,8 @@ import AddTagModal from "../../Sets/SetDetails/addTagsModal";
 import EditMoveModal from "../../Sets/SetDetails/editMoveModal";
 import { ConfirmBox } from "helper/SweetAleart";
 import { toast } from "react-toastify";
+import videoLoading from "../../../assets/img/loder/loader.svg";
+import "../shareableLink/index.scss";
 
 class WebmSearch extends Component {
   video;
@@ -46,7 +48,11 @@ class WebmSearch extends Component {
       doubleClick: false,
       tags: [],
       edit: false,
-      description: ""
+      description: "",
+      videoCanPlay: false,
+      isBufferingVideo: false,
+      isMouseMove: false,
+      mouseOnControls: false
     };
   }
   /**
@@ -58,6 +64,19 @@ class WebmSearch extends Component {
     isFullScreenMode,
     isVideoFromSearch
   }) => {
+    const vid = document.getElementById("webm-video");
+    if (vid) {
+      vid.onwaiting = () => {
+        this.setState({
+          isBufferingVideo: true
+        });
+      };
+      vid.oncanplay = () => {
+        this.setState({
+          isBufferingVideo: false
+        });
+      };
+    }
     if (isFullScreenMode !== this.props.isFullScreenMode) {
       const videoFullScreen = true;
       if (this.video) {
@@ -328,16 +347,26 @@ class WebmSearch extends Component {
     const { movesOfSet } = this.props;
     const { videoIndex } = this.state;
     this.props.loadVideoDataRequest(movesOfSet[videoIndex - 1]);
+    const highlightText = document.getElementById("video-title");
+    if (highlightText) {
+      highlightText.classList.remove("text-selected");
+    }
     this.setState({
-      videoIndex: videoIndex - 1
+      videoIndex: videoIndex - 1,
+      doubleClick: false
     });
   };
   handleNextVideoPlay = () => {
     const { movesOfSet } = this.props;
     const { videoIndex } = this.state;
     this.props.loadVideoDataRequest(movesOfSet[videoIndex + 1]);
+    const highlightText = document.getElementById("video-title");
+    if (highlightText) {
+      highlightText.classList.remove("text-selected");
+    }
     this.setState({
-      videoIndex: videoIndex + 1
+      videoIndex: videoIndex + 1,
+      doubleClick: false
     });
   };
 
@@ -418,13 +447,42 @@ class WebmSearch extends Component {
   };
 
   onDoubleClick = title => {
+    const highlightText = document.getElementById("video-title");
+    if (highlightText) {
+      highlightText.classList.add("text-selected");
+    }
     this.setState({
       doubleClick: true,
       title: title
     });
   };
 
+  onpaste = e => {
+    e.preventDefault();
+    if (window.clipboardData) {
+      let content = window.clipboardData.getData("Text");
+      if (window.getSelection) {
+        var selObj = window.getSelection();
+        var selRange = selObj.getRangeAt(0);
+        selRange.deleteContents();
+        selRange.insertNode(document.createTextNode(content));
+      }
+    } else if (e.clipboardData) {
+      let content = (e.originalEvent || e).clipboardData.getData("text/plain");
+      document.execCommand("insertText", false, content);
+    }
+  };
+
+  handleKeyPress = (e, videoData, video) => {
+    if (e.which === 13 || e.keyCode === 13) {
+      this.handleonBlur(e, videoData, video);
+    } else {
+      return;
+    }
+  };
+
   handleonBlur = (e, videoData) => {
+    const highlightText = document.getElementById("video-title");
     const value = e.target.textContent;
     const error =
       value && value.length > 50
@@ -434,6 +492,9 @@ class WebmSearch extends Component {
       toast.error("Title cannot have more than 50 characters");
       return;
     } else {
+      if (highlightText) {
+        highlightText.classList.remove("text-selected");
+      }
       this.setState({
         doubleClick: false,
         title: ""
@@ -443,10 +504,11 @@ class WebmSearch extends Component {
         const data = {
           moveId: videoData._id,
           title: value,
-          description: videoData.description,
-          tags: videoData.tags,
-          setId: videoData.setId._id,
-          videoData: videoData,
+          description:
+            videoData && videoData.description ? videoData.description : null,
+          tags: videoData ? videoData.tags : null,
+          setId: videoData && videoData.setId ? videoData.setId._id : null,
+          videoData: videoData ? videoData : null,
           fromMoveList: false
         };
         this.props.editMove(data);
@@ -460,6 +522,30 @@ class WebmSearch extends Component {
       [name]: value
     });
   };
+
+  onmousemove = e => {
+    this.setState({
+      isMouseMove: true
+    });
+    setTimeout(() => {
+      this.setState({
+        isMouseMove: false
+      });
+    }, 2000);
+  };
+
+  onMouseOver = () => {
+    this.setState({
+      mouseOnControls: true
+    });
+  };
+
+  // handleVideoModal = () => {
+  //   this.setState({
+  //     doubleClick: false
+  //   });
+  //   this.props.handleVideoModal();
+  // };
 
   render() {
     const {
@@ -501,7 +587,10 @@ class WebmSearch extends Component {
       isFullScreenMode,
       doubleClick,
       description,
-      edit
+      edit,
+      isMouseMove,
+      videoCanPlay,
+      isBufferingVideo
     } = this.state;
 
     let isFullScreenMode1 =
@@ -519,6 +608,21 @@ class WebmSearch extends Component {
     }
 
     playScreen = !isFullScreenMode ? (isFullScreenMode1 ? true : false) : true;
+
+    if (isFullScreenMode1) {
+      let control = document.getElementsByClassName("controls");
+      if (control[0] && !isMouseMove && !this.state.mouseOnControls) {
+        control[0].classList.add("hide-controls");
+      } else {
+        control[0].classList.remove("hide-controls");
+      }
+    } else {
+      let control = document.getElementsByClassName("controls");
+      if (control && control[0]) {
+        control[0].classList.remove("hide-controls");
+      }
+    }
+
     return (
       <>
         <Modal
@@ -532,7 +636,12 @@ class WebmSearch extends Component {
               className="close"
               data-dismiss="modal"
               type="button"
-              onClick={handleVideoModal}
+              onClick={() => {
+                this.setState({
+                  doubleClick: false
+                });
+                handleVideoModal(videoData, null);
+              }}
             >
               <span aria-hidden="true">
                 <img src={closeBtn} alt="close-ic" />
@@ -542,11 +651,21 @@ class WebmSearch extends Component {
           <ModalBody>
             <div className="video-slider-text">
               <div
-                className="video-slider-title font-weight-bold"
+                id="video-title"
+                className={
+                  videoData.title !== "Unnamed" && videoData.title
+                    ? "text-capitalize video-slider-title font-weight-bold"
+                    : "text-capitalize text-untitled-slider font-weight-bold "
+                }
+                suppressContentEditableWarning={true}
                 contenteditable={doubleClick ? "true" : "false"}
                 onDoubleClick={() => this.onDoubleClick(videoData.title)}
+                onPaste={doubleClick ? this.onpaste : null}
                 onBlur={
                   doubleClick ? e => this.handleonBlur(e, videoData) : null
+                }
+                onKeyPress={
+                  doubleClick ? e => this.handleKeyPress(e, videoData) : null
                 }
               >
                 {videoData && videoData.title ? videoData.title : "Unnamed"}
@@ -637,7 +756,11 @@ class WebmSearch extends Component {
             </div>
 
             <div className="video-slider-img pb-3">
-              <div className="custom-video-player" id="custom_video_control">
+              <div
+                className="custom-video-player"
+                id="custom_video_control"
+                onMouseMove={isFullScreenMode1 ? this.onmousemove : null}
+              >
                 <div className="videos-arrows-wrap">
                   {videoIndex > 0 ? (
                     <div
@@ -656,6 +779,16 @@ class WebmSearch extends Component {
                     </div>
                   ) : null}
                 </div>
+                {isBufferingVideo === true ? (
+                  <div className="video-spinner z-">
+                    <img src={videoLoading} alt="" />
+                  </div>
+                ) : null}
+                {!videoCanPlay ? (
+                  <div className="video-spinner z-">
+                    <img src={videoLoading} alt="" />
+                  </div>
+                ) : null}
                 {!isVideoLoading ? (
                   <video
                     width={"100%"}
@@ -669,6 +802,16 @@ class WebmSearch extends Component {
                     loop
                     // preload="auto"
                     autoPlay
+                    onCanPlay={() => {
+                      this.setState({
+                        videoCanPlay: true
+                      });
+                    }}
+                    onLoadedData={() => {
+                      this.setState({
+                        videoCanPlay: false
+                      });
+                    }}
                     disablecontrols="true"
                     disablepictureinpicture="true"
                     controlsList="nodownload"
@@ -688,7 +831,18 @@ class WebmSearch extends Component {
                     <Loader videoLoader={true} />
                   </div>
                 )}
-                <div className={"controls"}>
+                <div
+                  className={"controls"}
+                  onMouseOver={isFullScreenMode1 ? this.onMouseOver : null}
+                  onMouseLeave={
+                    isFullScreenMode1
+                      ? () =>
+                          this.setState({
+                            mouseOnControls: false
+                          })
+                      : null
+                  }
+                >
                   <div className="control-background-wrap"></div>
                   <InputRange
                     draggableTrack={false}

@@ -251,7 +251,7 @@ class SetSharedLink extends React.Component {
                                       onMouseOver={() =>
                                         this.handleVideoPlay(index)
                                       }
-                                      className="play-list-img blur-img-wrap checked-wrap"
+                                      className="play-list-img full-video-mode blur-img-wrap checked-wrap"
                                       onClick={
                                         !isVideoModalOpen
                                           ? () =>
@@ -269,6 +269,7 @@ class SetSharedLink extends React.Component {
                                         onContextMenu={e => e.preventDefault()}
                                         poster={video.videoThumbnail}
                                         preload="auto"
+                                        loop
                                       >
                                         <source
                                           src={`${video.moveURL}`}

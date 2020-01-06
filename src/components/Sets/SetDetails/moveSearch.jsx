@@ -228,6 +228,8 @@ class MoveSearchComponent extends React.Component {
 
   addTagstoMove = data => {
     // this.props.addTagsRequest(data);
+    const { moveReducer } = this.props;
+    const { movesOfSet } = moveReducer;
     if (data.fromMoveList) {
       const moveList = [...data.moveofSetList];
       moveList.map((key, i) => {
@@ -242,12 +244,29 @@ class MoveSearchComponent extends React.Component {
           }
         });
       });
-      this.props.addTagsRequest({ data: data, moveList: moveList });
+      this.props.addTagsRequest({
+        data: data,
+        moveList: moveList,
+        fromSearch: true
+      });
     } else {
       const moveVideo = data.videoData;
       moveVideo.tags = data.tags;
       moveVideo.description = data.description;
-      this.props.addTagsRequest({ data: data, moveVideo: moveVideo });
+      let moveData = [...movesOfSet];
+      moveData.map((key, index) => {
+        if (key._id === moveVideo._id) {
+          return (moveData[index].tags = data.tags);
+        } else {
+          return true;
+        }
+      });
+      this.props.addTagsRequest({
+        data: data,
+        moveVideo: moveVideo,
+        moveData: moveData,
+        fromSearch: true
+      });
     }
   };
 
@@ -343,6 +362,7 @@ class MoveSearchComponent extends React.Component {
                   allSetList={allSetList}
                   transferMove={this.transferMove}
                   showVideo={showVideo}
+                  tagsList={tagsList}
                   videoData={videoData}
                   onEditMove={this.onEditMove}
                   showVideoIndex={showVideoIndex}
