@@ -172,7 +172,15 @@ class VideoView extends React.Component {
                     </div>
                   ) : null
                 ) : (
-                  <div className="text-center">Access Denied</div>
+                   <>
+                    <span className="video-spinner">
+                      <div className="h2">Access Denied</div>
+                      <br />
+                      You don't have authorisation to view this video.
+                      <br />
+                      <div>Try with another one!</div>
+                    </span>
+                  </>
                 )}
                 {!isEdit ? (
                   <video
