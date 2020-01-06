@@ -268,13 +268,23 @@ class MoveListDetails extends React.Component {
                     <div className="video-effect loading-img">
                       {sourceIndex === index ? (
                         <img
-                          src={movesOfSet[destinationIndex].videoThumbnail}
+                          src={
+                            processingData ||
+                            movesOfSet[destinationIndex].isMoveProcessing
+                              ? moveLoader
+                              : movesOfSet[destinationIndex].videoThumbnail
+                          }
                           alt=""
                         />
                       ) : null}
                       {destinationIndex === index ? (
                         <img
-                          src={movesOfSet[sourceIndex].videoThumbnail}
+                          src={
+                            processingData ||
+                            movesOfSet[sourceIndex].isMoveProcessing
+                              ? moveLoader
+                              : movesOfSet[sourceIndex].videoThumbnail
+                          }
                           alt=""
                         />
                       ) : null}

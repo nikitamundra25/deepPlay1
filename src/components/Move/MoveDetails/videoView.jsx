@@ -87,12 +87,6 @@ class VideoView extends React.Component {
     }
     // this.video.load();
     const vid = document.getElementById("video-trimmer");
-    if (vid) {
-      vid.onstalled = () => {
-        console.log("Video data is not available");
-      };
-    }
-
     vid.onwaiting = () => {
       this.setState({
         isBufferingVideo: true
@@ -104,6 +98,37 @@ class VideoView extends React.Component {
       });
     };
   }
+  /**
+   *
+   */
+
+  playbackFailed = e => {
+    console.log("e.target.error", e.target.error);
+    // video playback failed - show a message saying why
+    switch (e.target.error.code) {
+      case e.target.error.MEDIA_ERR_ABORTED:
+        console.log("You aborted the video playback.");
+        break;
+      case e.target.error.MEDIA_ERR_NETWORK:
+        console.log(
+          "A network error caused the video download to fail part-way."
+        );
+        break;
+      case e.target.error.MEDIA_ERR_DECODE:
+        console.log(
+          "The video playback was aborted due to a corruption problem or because the video used features your browser did not support."
+        );
+        break;
+      case e.target.error.MEDIA_ERR_SRC_NOT_SUPPORTED:
+        console.log(
+          "The video could not be loaded, either because the server or network failed or because the format is not supported."
+        );
+        break;
+      default:
+        console.log("An unknown error occurred.");
+        break;
+    }
+  };
   /**
    *
    */
@@ -183,6 +208,7 @@ class VideoView extends React.Component {
                     muted={false}
                     playsInline
                     onContextMenu={e => e.preventDefault()}
+                    onError={e => this.playbackFailed(e)}
                   >
                     <source
                       src={
