@@ -103,7 +103,7 @@ class VideoView extends React.Component {
    */
 
   playbackFailed = e => {
-    console.log("e.target.error", e.target.error);
+    console.log("e.target.error", e.target);
     // video playback failed - show a message saying why
     switch (e.target.error.code) {
       case e.target.error.MEDIA_ERR_ABORTED:
