@@ -26,7 +26,8 @@ class VideoView extends React.Component {
       isPaste: false,
       isBufferingVideo: false,
       videoCanPlay: false,
-      videoData: false
+      videoData: false,
+      videoError: false
     };
   }
   /**
@@ -102,33 +103,6 @@ class VideoView extends React.Component {
    *
    */
 
-  playbackFailed = e => {
-    console.log("e.target.error", e.target);
-    // video playback failed - show a message saying why
-    switch (e.target.error.code) {
-      case e.target.error.MEDIA_ERR_ABORTED:
-        console.log("You aborted the video playback.");
-        break;
-      case e.target.error.MEDIA_ERR_NETWORK:
-        console.log(
-          "A network error caused the video download to fail part-way."
-        );
-        break;
-      case e.target.error.MEDIA_ERR_DECODE:
-        console.log(
-          "The video playback was aborted due to a corruption problem or because the video used features your browser did not support."
-        );
-        break;
-      case e.target.error.MEDIA_ERR_SRC_NOT_SUPPORTED:
-        console.log(
-          "The video could not be loaded, either because the server or network failed or because the format is not supported."
-        );
-        break;
-      default:
-        console.log("An unknown error occurred.");
-        break;
-    }
-  };
   /**
    *
    */
@@ -139,7 +113,9 @@ class VideoView extends React.Component {
       title,
       isEdit,
       errorTitle,
-      isYoutubeUrl
+      isYoutubeUrl,
+      playbackFailed,
+      videoError
     } = this.props;
     const { moveDetails } = moveReducer;
     const { isBufferingVideo, videoCanPlay } = this.state;
@@ -189,11 +165,15 @@ class VideoView extends React.Component {
                 </div>
               ) : null}
               <div className="video-player-inner-wrap">
-                {!videoCanPlay ? (
-                  <div className="video-spinner z-">
-                    <img src={videoLoading} alt="" />
-                  </div>
-                ) : null}
+                {!videoError ? (
+                  !videoCanPlay ? (
+                    <div className="video-spinner z-">
+                      <img src={videoLoading} alt="" />
+                    </div>
+                  ) : null
+                ) : (
+                  <div className="text-center">Access Denied</div>
+                )}
                 {!isEdit ? (
                   <video
                     width={"100%"}
@@ -208,7 +188,7 @@ class VideoView extends React.Component {
                     muted={false}
                     playsInline
                     onContextMenu={e => e.preventDefault()}
-                    onError={e => this.playbackFailed(e)}
+                    onError={e => playbackFailed(e)}
                   >
                     <source
                       src={

@@ -475,7 +475,7 @@ class FrameDetails extends Component {
    *
    */
   render() {
-    const { frames, videoMetaData, isIosDevice } = this.props;
+    const { frames, videoMetaData, videoError } = this.props;
     const { duration } = videoMetaData || {};
     const { seconds: maxValue } = duration || {};
     const { time } = this.state;
@@ -580,8 +580,9 @@ class FrameDetails extends Component {
               color={"default"}
               className={"btn-black btn url-upload-btn"}
               onClick={this.props.completeEditing}
+              disabled={videoError}
             >
-              {isIosDevice ? "Unsupported for this device" : "Finish"}
+              Finish
             </Button>
           </Col>
         </Row>

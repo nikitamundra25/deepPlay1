@@ -69,7 +69,8 @@ class MoveDetails extends React.Component {
       isVideoFinished: false,
       selectedSetId: "",
       errorTitle: "",
-      createNew: false
+      createNew: false,
+      videoError: false
     };
     this.videoDetails = React.createRef();
   }
@@ -471,6 +472,14 @@ class MoveDetails extends React.Component {
   /**
    *
    */
+
+  playbackFailed = e => {
+    // video playback failed - show a message saying why
+    this.setState({
+      videoError: true
+    });
+  };
+
   render() {
     const {
       setReducer,
@@ -510,7 +519,8 @@ class MoveDetails extends React.Component {
       errorTitle,
       descError,
       videoFrames,
-      createNew
+      createNew,
+      videoError
     } = this.state;
 
     return (
@@ -541,6 +551,8 @@ class MoveDetails extends React.Component {
                             videoMaxDuration: data.videoMaxDuration
                           })
                         }
+                        videoError={videoError}
+                        playbackFailed={this.playbackFailed}
                       />
                       <VideoDetails
                         setReducer={setReducer}
@@ -574,6 +586,7 @@ class MoveDetails extends React.Component {
                     moveReducer={moveReducer}
                     completeEditing={this.completeEditing}
                     isIosDevice={isIosDevice}
+                    videoError={videoError}
                   />
                 ) : (
                   <YouTubeFrameDetails
@@ -586,6 +599,7 @@ class MoveDetails extends React.Component {
                     completeEditing={this.completeEditing}
                     isIosDevice={isIosDevice}
                     createNew={createNew}
+                    videoError={videoError}
                   />
                 )}
               </>
