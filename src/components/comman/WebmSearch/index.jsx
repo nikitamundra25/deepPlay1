@@ -347,16 +347,26 @@ class WebmSearch extends Component {
     const { movesOfSet } = this.props;
     const { videoIndex } = this.state;
     this.props.loadVideoDataRequest(movesOfSet[videoIndex - 1]);
+    const highlightText = document.getElementById("video-title");
+    if (highlightText) {
+      highlightText.classList.remove("text-selected");
+    }
     this.setState({
-      videoIndex: videoIndex - 1
+      videoIndex: videoIndex - 1,
+      doubleClick: false
     });
   };
   handleNextVideoPlay = () => {
     const { movesOfSet } = this.props;
     const { videoIndex } = this.state;
     this.props.loadVideoDataRequest(movesOfSet[videoIndex + 1]);
+    const highlightText = document.getElementById("video-title");
+    if (highlightText) {
+      highlightText.classList.remove("text-selected");
+    }
     this.setState({
-      videoIndex: videoIndex + 1
+      videoIndex: videoIndex + 1,
+      doubleClick: false
     });
   };
 
@@ -473,7 +483,6 @@ class WebmSearch extends Component {
 
   handleonBlur = (e, videoData) => {
     const highlightText = document.getElementById("video-title");
-
     const value = e.target.textContent;
     const error =
       value && value.length > 50
@@ -495,10 +504,11 @@ class WebmSearch extends Component {
         const data = {
           moveId: videoData._id,
           title: value,
-          description: videoData.description,
-          tags: videoData.tags,
-          setId: videoData.setId._id,
-          videoData: videoData,
+          description:
+            videoData && videoData.description ? videoData.description : null,
+          tags: videoData ? videoData.tags : null,
+          setId: videoData && videoData.setId ? videoData.setId._id : null,
+          videoData: videoData ? videoData : null,
           fromMoveList: false
         };
         this.props.editMove(data);
@@ -530,12 +540,12 @@ class WebmSearch extends Component {
     });
   };
 
-  handleVideoModal = () => {
-    this.setState({
-      doubleClick: false
-    });
-    this.props.handleVideoModal();
-  };
+  // handleVideoModal = () => {
+  //   this.setState({
+  //     doubleClick: false
+  //   });
+  //   this.props.handleVideoModal();
+  // };
 
   render() {
     const {
@@ -626,7 +636,12 @@ class WebmSearch extends Component {
               className="close"
               data-dismiss="modal"
               type="button"
-              onClick={this.handleVideoModal}
+              onClick={() => {
+                this.setState({
+                  doubleClick: false
+                });
+                handleVideoModal(videoData, null);
+              }}
             >
               <span aria-hidden="true">
                 <img src={closeBtn} alt="close-ic" />
@@ -645,7 +660,7 @@ class WebmSearch extends Component {
                 suppressContentEditableWarning={true}
                 contenteditable={doubleClick ? "true" : "false"}
                 onDoubleClick={() => this.onDoubleClick(videoData.title)}
-                onPaste={doubleClick ? this.onpaste: null}
+                onPaste={doubleClick ? this.onpaste : null}
                 onBlur={
                   doubleClick ? e => this.handleonBlur(e, videoData) : null
                 }

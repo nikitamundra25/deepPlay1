@@ -368,8 +368,13 @@ class WebmView extends Component {
         ? movesOfSet[videoIndex - 2 < 0 ? 0 : videoIndex - 2]
         : movesOfSet[videoIndex - 1]
     );
+    const highlightText = document.getElementById("video-title");
+    if (highlightText) {
+      highlightText.classList.remove("text-selected");
+    }
     this.setState({
-      videoIndex: videoIndex - 1
+      videoIndex: videoIndex - 1,
+      doubleClick: false
     });
   };
 
@@ -377,8 +382,13 @@ class WebmView extends Component {
     const { movesOfSet } = this.props;
     const { videoIndex } = this.state;
     this.props.loadVideoDataRequest(movesOfSet[videoIndex + 1]);
+    const highlightText = document.getElementById("video-title");
+    if (highlightText) {
+      highlightText.classList.remove("text-selected");
+    }
     this.setState({
-      videoIndex: videoIndex + 1
+      videoIndex: videoIndex + 1,
+      doubleClick: false
     });
   };
 
@@ -493,6 +503,8 @@ class WebmView extends Component {
   };
 
   handleonBlur = (e, videoData) => {
+    console.log("videoData", videoData);
+
     const highlightText = document.getElementById("video-title");
     const value = e.target.textContent;
     const error =
@@ -516,10 +528,11 @@ class WebmView extends Component {
         const data = {
           moveId: videoData._id,
           title: value,
-          description: videoData.description,
-          tags: videoData.tags,
-          setId: videoData.setId._id,
-          videoData: videoData,
+          description:
+            videoData && videoData.description ? videoData.description : null,
+          tags: videoData ? videoData.tags : null,
+          setId: videoData && videoData.setId ? videoData.setId._id : null,
+          videoData: videoData ? videoData : null,
           fromMoveList: false
         };
         this.props.editMove(data);
@@ -672,7 +685,13 @@ class WebmView extends Component {
               className="close"
               data-dismiss="modal"
               type="button"
-              onClick={!isShareable ? this.handleVideoModal : handleVideoModal}
+              onClick={() => {
+                this.setState({
+                  doubleClick: false
+                });
+                handleVideoModal(videoData, null);
+              }}
+              // onClick={handleVideoModal}
             >
               <span aria-hidden="true">
                 <img src={closeBtn} alt="close-ic" />

@@ -39,6 +39,7 @@ class VideoView extends React.Component {
         videoData: true
       });
     }
+
     this.video.addEventListener("timeupdate", () => {
       const { timer } = this.props;
       const { min, max } = timer || {};
@@ -85,8 +86,13 @@ class VideoView extends React.Component {
       this.video.load();
     }
     // this.video.load();
-
     const vid = document.getElementById("video-trimmer");
+    if (vid) {
+      vid.onstalled = () => {
+        console.log("Video data is not available");
+      };
+    }
+
     vid.onwaiting = () => {
       this.setState({
         isBufferingVideo: true
