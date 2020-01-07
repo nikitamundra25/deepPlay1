@@ -23,7 +23,7 @@ class YouTubeFrameDetails extends Component {
     };
   }
 
-  componentDidUpdate({ videoMaxDuration, createNew }) {
+  componentDidUpdate({ videoMaxDuration, createNew, timer }) {
     this.updateSlider();
     if (videoMaxDuration !== this.props.videoMaxDuration) {
       if (this.props.videoMaxDuration <= 15) {
@@ -43,6 +43,18 @@ class YouTubeFrameDetails extends Component {
             this.props.videoMaxDuration > 15 ? 15 : this.props.videoMaxDuration
         }
       });
+    }
+    if (timer !== this.props.timer) {
+      console.log("hattt ", this.props.timer);
+      if (this.props.isVideoSleek) {
+        let timeStamp = this.props.timer;
+        this.setState({
+          time: {
+            min: timeStamp.min,
+            max: timeStamp.max
+          }
+        });
+      }
     }
   }
 
@@ -130,7 +142,7 @@ class YouTubeFrameDetails extends Component {
             }
           },
           () => {
-            this.props.onTimerChange(this.state.time);
+            this.props.onTimerChange(this.state.time, { isVideoSleek: true });
           }
         );
         return;
@@ -140,7 +152,7 @@ class YouTubeFrameDetails extends Component {
           time: value
         },
         () => {
-          this.props.onTimerChange(this.state.time);
+          this.props.onTimerChange(this.state.time, { isVideoSleek: true });
         }
       );
     } else {
@@ -482,6 +494,7 @@ class YouTubeFrameDetails extends Component {
     const { frames, moveReducer, videoMaxDuration, videoError } = this.props;
     const { time, imageLoadedIndex } = this.state;
     const { moveDetails } = moveReducer;
+    console.log(" this.props.timer", this.props.timer);
 
     return (
       <div className="fram-picker">

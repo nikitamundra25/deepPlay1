@@ -105,5 +105,10 @@
     height: auto;
   }
 }
-.video-player{
-position: relative;}
+.video-player {
+  position: relative;
+}
+
+video::-webkit-media-controls-fullscreen-button {
+  display: none;
+}

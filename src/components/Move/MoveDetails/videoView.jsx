@@ -41,18 +41,20 @@ class VideoView extends React.Component {
       });
     }
 
-    this.video.addEventListener("timeupdate", () => {
-      const { timer } = this.props;
-      const { min, max } = timer || {};
-      const { currentTime } = this.video;
-      if (parseInt(currentTime) >= max) {
-        this.video.pause();
-        setTimeout(() => {
-          this.video.currentTime = min;
-          this.video.play();
-        }, 500);
-      }
-    });
+    // this.video.addEventListener("timeupdate", () => {
+    //   console.log("kkkkkkk");
+
+    //   const { timer } = this.props;
+    //   const { min, max } = timer || {};
+    //   const { currentTime } = this.video;
+    //   if (parseInt(currentTime) >= max) {
+    //     this.video.pause();
+    //     setTimeout(() => {
+    //       this.video.currentTime = min;
+    //       this.video.play();
+    //     }, 500);
+    //   }
+    // });
     let timeDuration = [];
 
     this.video.onloadeddata = () => {
@@ -88,6 +90,17 @@ class VideoView extends React.Component {
     }
     // this.video.load();
     const vid = document.getElementById("video-trimmer");
+    let currTime = vid.currentTime;
+    let changeValue = {
+      min: currTime,
+      max: parseInt(currTime) + 15,
+    };
+
+    vid.onseeking = () => {
+      console.log("<<<<<<<<<<", changeValue,);
+
+      this.props.onTimerChange(changeValue,{isVideoSleek: true});
+    };
     vid.onwaiting = () => {
       this.setState({
         isBufferingVideo: true
@@ -118,7 +131,7 @@ class VideoView extends React.Component {
       videoError
     } = this.props;
     const { moveDetails } = moveReducer;
-    const { isBufferingVideo, videoCanPlay } = this.state;
+    const { /* isBufferingVideo */ videoCanPlay } = this.state;
 
     return (
       <>
@@ -159,11 +172,11 @@ class VideoView extends React.Component {
           </FormGroup>
           {moveDetails && moveDetails.videoUrl ? (
             <div className={"video-player"}>
-              {isBufferingVideo === true ? (
+              {/* {isBufferingVideo === true ? (
                 <div className="video-spinner z-">
                   <img src={videoLoading} alt="" />
                 </div>
-              ) : null}
+              ) : null} */}
               <div className="video-player-inner-wrap">
                 {!videoError ? (
                   !videoCanPlay ? (
@@ -172,7 +185,7 @@ class VideoView extends React.Component {
                     </div>
                   ) : null
                 ) : (
-                   <>
+                  <>
                     <span className="video-spinner">
                       <div className="h2">Access Denied</div>
                       <br />
@@ -195,8 +208,10 @@ class VideoView extends React.Component {
                     id={"video-trimmer"}
                     muted={false}
                     playsInline
-                    onContextMenu={e => e.preventDefault()}
                     onError={e => playbackFailed(e)}
+                    controls
+                    disablepictureinpicture="true"
+                    controlsList="nodownload"
                   >
                     <source
                       src={
