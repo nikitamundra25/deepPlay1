@@ -66,6 +66,10 @@ class WebmView extends Component {
   }) => {
     const vid = document.getElementById("webm-video");
     if (vid) {
+      document.onkeydown = event => {
+        this.handleKeyEvent(event);
+      };
+
       vid.onwaiting = () => {
         this.setState({
           isBufferingVideo: true
@@ -503,8 +507,6 @@ class WebmView extends Component {
   };
 
   handleonBlur = (e, videoData) => {
-    console.log("videoData", videoData);
-
     const highlightText = document.getElementById("video-title");
     const value = e.target.textContent;
     const error =
@@ -577,6 +579,18 @@ class WebmView extends Component {
 
   handleVideoModal = () => {
     this.props.handleVideoModal();
+  };
+
+  handleKeyEvent = e => {
+    if (e.which === 32 || e.keyCode === 32) {
+      if (this.state.isPlaying) {
+        this.pauseVideo();
+      } else {
+        this.playVideo();
+      }
+    } else {
+      return;
+    }
   };
 
   render() {

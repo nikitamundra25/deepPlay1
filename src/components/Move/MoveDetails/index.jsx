@@ -70,8 +70,7 @@ class MoveDetails extends React.Component {
       selectedSetId: "",
       errorTitle: "",
       createNew: false,
-      videoError: false,
-      isVideoSleek: false
+      videoError: false
     };
     this.videoDetails = React.createRef();
   }
@@ -208,10 +207,9 @@ class MoveDetails extends React.Component {
   /**
    *
    */
-  onTimerChange = (timer, isVideoSleek) => {
+  onTimerChange = timer => {
     this.setState({
-      timer,
-      isVideoSleek
+      timer
     });
   };
   /**
@@ -522,8 +520,7 @@ class MoveDetails extends React.Component {
       descError,
       videoFrames,
       createNew,
-      videoError,
-      isVideoSleek
+      videoError
     } = this.state;
 
     return (
@@ -556,7 +553,6 @@ class MoveDetails extends React.Component {
                         }
                         videoError={videoError}
                         playbackFailed={this.playbackFailed}
-                        onTimerChange={this.onTimerChange}
                       />
                       <VideoDetails
                         setReducer={setReducer}
@@ -591,7 +587,6 @@ class MoveDetails extends React.Component {
                     completeEditing={this.completeEditing}
                     isIosDevice={isIosDevice}
                     videoError={videoError}
-                    timer={timer}
                   />
                 ) : (
                   <YouTubeFrameDetails
@@ -605,8 +600,6 @@ class MoveDetails extends React.Component {
                     isIosDevice={isIosDevice}
                     createNew={createNew}
                     videoError={videoError}
-                    timer={timer}
-                    isVideoSleek={isVideoSleek}
                   />
                 )}
               </>

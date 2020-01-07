@@ -548,7 +548,6 @@ class MoveSearchList extends React.Component {
     const location = this.props.location;
     const isStarred = location.search.split("=");
     const serachContent = location.search.split("search");
-    console.log("selectedMoveIds", selectedMoveIds);
 
     return (
       <section className="play-list-collection set-detail-section set-detail-editble">

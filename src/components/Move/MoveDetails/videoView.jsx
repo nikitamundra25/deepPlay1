@@ -90,17 +90,6 @@ class VideoView extends React.Component {
     }
     // this.video.load();
     const vid = document.getElementById("video-trimmer");
-    let currTime = vid.currentTime;
-    let changeValue = {
-      min: currTime,
-      max: parseInt(currTime) + 15,
-    };
-
-    vid.onseeking = () => {
-      console.log("<<<<<<<<<<", changeValue,);
-
-      this.props.onTimerChange(changeValue,{isVideoSleek: true});
-    };
     vid.onwaiting = () => {
       this.setState({
         isBufferingVideo: true
@@ -209,7 +198,7 @@ class VideoView extends React.Component {
                     muted={false}
                     playsInline
                     onError={e => playbackFailed(e)}
-                    controls
+                    // controls
                     disablepictureinpicture="true"
                     controlsList="nodownload"
                   >

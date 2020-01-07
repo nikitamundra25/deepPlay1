@@ -44,18 +44,6 @@ class YouTubeFrameDetails extends Component {
         }
       });
     }
-    if (timer !== this.props.timer) {
-      console.log("hattt ", this.props.timer);
-      if (this.props.isVideoSleek) {
-        let timeStamp = this.props.timer;
-        this.setState({
-          time: {
-            min: timeStamp.min,
-            max: timeStamp.max
-          }
-        });
-      }
-    }
   }
 
   /**
