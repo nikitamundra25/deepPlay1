@@ -15,10 +15,6 @@ import Loader from "components/comman/Loader/Loader";
 import AddTagModal from "./addTagsModal";
 import { ConfirmBox } from "helper/SweetAleart";
 import { DebounceInput } from "react-debounce-input";
-// import addTag from "../../../assets/img/set-detail-ic/add-tag.svg";
-// import transfer from "../../../assets/img/set-detail-ic/transfer.svg";
-// import remove from "../../../assets/img/set-detail-ic/remove.svg";
-import { ListManager } from "react-beautiful-dnd-grid";
 import MoveListDetails from "./moveListdetails";
 import { toast } from "react-toastify";
 import qs from "query-string";
@@ -77,7 +73,7 @@ class MoveList extends React.Component {
   }
 
   /*
-  /*  
+  /*
   */
   fixedSubHeader = () => {
     let offsetElemnt = document.getElementById("get-sticky-header");
@@ -128,6 +124,9 @@ class MoveList extends React.Component {
   };
 
   componentDidUpdate = prevProps => {
+    if (this.props.movesOfSet.length !== prevProps.movesOfSet.length) {
+      this.handleDragAndDrop();
+    }
     if (
       prevProps.isMoveStarLoading &&
       prevProps.isMoveStarLoading.loading !==
@@ -155,7 +154,26 @@ class MoveList extends React.Component {
       );
     }
   };
-
+  handleDragAndDrop = () => {
+    const { $ } = window;
+    if ($("#list").hasClass("ui-sortable")) $("#sortable").sortable("destroy");
+    $("#sortable").sortable({
+      forcePlaceholderSize: true,
+      update: (event, ui) => {
+        const itemPrevIndex = $(ui.item).data("index");
+        let newIndex = itemPrevIndex;
+        $("#sortable")
+          .find("li")
+          .each(function(index, ele) {
+            if ($(this).data("index") === itemPrevIndex) {
+              newIndex = index;
+            }
+          });
+        this.reorderList(itemPrevIndex, newIndex);
+      }
+    });
+    $("#sortable").disableSelection();
+  };
   /*
    */
   handleVideoHover = index => {
@@ -447,6 +465,7 @@ class MoveList extends React.Component {
     if (destinationIndex === sourceIndex) {
       return;
     }
+    console.log(sourceIndex, destinationIndex);
     const list = this.props.movesOfSet;
     const items = reorder(list, sourceIndex, destinationIndex);
     let parsed = qs.parse(this.props.location.search);
@@ -457,14 +476,17 @@ class MoveList extends React.Component {
       sourceIndex: sourceIndex,
       movesOfSet: items
     };
-    this.setState({
-      isMarkingStar: {
-        index: -1,
-        isChanging: false
+    this.setState(
+      {
+        isMarkingStar: {
+          index: -1,
+          isChanging: false
+        }
       },
-      sourceIndex,
-      destinationIndex
-    });
+      () => {
+        this.handleDragAndDrop();
+      }
+    );
     this.props.updateSortIndexRequest(data);
   };
 
@@ -488,7 +510,7 @@ class MoveList extends React.Component {
     console.groupEnd();
   };
   /*
-  /*  
+  /*
   */
   handleLoadmoreRequest = setIdPathName => {
     const pageLimit = this.state.page;
@@ -837,52 +859,51 @@ class MoveList extends React.Component {
                         );
                       })
                     ) : (
-                      <ListManager
-                        items={movesOfSet}
-                        direction="horizontal"
-                        maxItems={4}
-                        render={video => {
-                          let index = video.id;
+                      <ul id="sortable">
+                        {movesOfSet.map((video, index) => {
                           return (
-                            <MoveListDetails
-                              index={index}
-                              isVideoChecked={isVideoChecked}
-                              selectedMoves={selectedMoves}
-                              handleShowVideo={this.props.handleShowVideo}
-                              handleVideoHover={this.handleVideoHover}
-                              handleVideoPause={this.handleVideoPause}
-                              handleVideoHoverLeave={this.handleVideoHoverLeave}
-                              handleVideoPlay={this.handleVideoPlay}
-                              handleMovesSelect={this.handleMovesSelect}
-                              isMarkingStar={isMarkingStar}
-                              video={video}
-                              sourceIndex={sourceIndex}
-                              isSavingWebM={isSavingWebM}
-                              destinationIndex={destinationIndex}
-                              isSortIndexUpdate={isSortIndexUpdate}
-                              isSelectVideo={isSelectVideo}
-                              videoIndex={videoIndex}
-                              isVideoModalOpen={isVideoModalOpen}
-                              handleStarred={this.handleStarred}
-                              handleVideoCheckBox={this.handleVideoCheckBox}
-                              handleVideoModal={this.props.handleVideoModal}
-                              title={title}
-                              movesOfSet={movesOfSet}
-                              onDoubleClick={this.onDoubleClick}
-                              doubleClickIndex={doubleClickIndex}
-                              doubleClick={doubleClick}
-                              handleonBlur={this.handleonBlur}
-                              handleChange={this.handleChange}
-                              reorderList={this.reorderList}
-                              isLoadImage={isLoadImage}
-                              isVideohovered={isVideohovered}
-                              errors={errors}
-                              isIosDevice={isIosDevice}
-                            />
+                            <li key={index} data-index={index}>
+                              <MoveListDetails
+                                index={index}
+                                isVideoChecked={isVideoChecked}
+                                selectedMoves={selectedMoves}
+                                handleShowVideo={this.props.handleShowVideo}
+                                handleVideoHover={this.handleVideoHover}
+                                handleVideoPause={this.handleVideoPause}
+                                handleVideoHoverLeave={
+                                  this.handleVideoHoverLeave
+                                }
+                                handleVideoPlay={this.handleVideoPlay}
+                                handleMovesSelect={this.handleMovesSelect}
+                                isMarkingStar={isMarkingStar}
+                                video={video}
+                                sourceIndex={sourceIndex}
+                                isSavingWebM={isSavingWebM}
+                                destinationIndex={destinationIndex}
+                                isSortIndexUpdate={isSortIndexUpdate}
+                                isSelectVideo={isSelectVideo}
+                                videoIndex={videoIndex}
+                                isVideoModalOpen={isVideoModalOpen}
+                                handleStarred={this.handleStarred}
+                                handleVideoCheckBox={this.handleVideoCheckBox}
+                                handleVideoModal={this.props.handleVideoModal}
+                                title={title}
+                                movesOfSet={movesOfSet}
+                                onDoubleClick={this.onDoubleClick}
+                                doubleClickIndex={doubleClickIndex}
+                                doubleClick={doubleClick}
+                                handleonBlur={this.handleonBlur}
+                                handleChange={this.handleChange}
+                                reorderList={this.reorderList}
+                                isLoadImage={isLoadImage}
+                                isVideohovered={isVideohovered}
+                                errors={errors}
+                                isIosDevice={isIosDevice}
+                              />
+                            </li>
                           );
-                        }}
-                        onDragEnd={this.reorderList}
-                      />
+                        })}
+                      </ul>
                     )}
                   </div>
                 </div>

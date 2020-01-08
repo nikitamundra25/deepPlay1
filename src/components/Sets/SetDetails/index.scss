@@ -243,3 +243,10 @@ video[poster] {
   display: none;
   cursor: none !important;
 }
+.ui-sortable {
+  list-style: none;
+  .ui-sortable-handle {
+    width: 25%;
+    float: left;
+  }
+}

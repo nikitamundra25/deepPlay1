@@ -88,7 +88,7 @@ class SetDetails extends React.Component {
     });
   };
   /*
-  /*  
+  /*
   */
   componentDidUpdate = ({ location, moveReducer }) => {
     const { location: currentLocation } = this.props;
