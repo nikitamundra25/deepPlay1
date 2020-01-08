@@ -168,7 +168,12 @@ class MoveDetails extends React.Component {
             if (setId) {
               if (setId === data._id) {
                 selectOption = {
-                  label: data.title,
+                  label:
+                    data && data.isCopy
+                      ? `${data.title} ${
+                        data.copyCount > 0 ? `(${data.copyCount})` : ""
+                      }`
+                      : data.title,
                   value: data._id
                 };
               }

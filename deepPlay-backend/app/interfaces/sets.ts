@@ -8,10 +8,13 @@ export interface ISet {
   status: Boolean;
   isCopy: Boolean;
   isDeleted: Boolean;
+  copyCount: Number;
+  copySetId: String;
   copyIndex: Number;
 }
 export interface IUpdateSet {
   title: String;
   description: String;
   isCopy: Boolean;
+  copyCount: Number;
 }

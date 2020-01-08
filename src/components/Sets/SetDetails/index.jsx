@@ -320,8 +320,6 @@ class SetDetails extends React.Component {
       const moveVideo = data.videoData;
       moveVideo.title = data.title;
       moveVideo.description = data.description;
-      console.log("moveVideo", data.videoData);
-
       this.props.updateMoveRequest({ data: data, moveVideo: moveVideo });
     }
   };
@@ -412,11 +410,11 @@ class SetDetails extends React.Component {
               <div className="main-title">
                 {setDetails
                   ? setDetails && setDetails.isCopy
-                    ? `Copy of ${setDetails.title} ${
-                        setDetails.copyIndex > 0
-                          ? `(${setDetails.copyIndex})`
-                          : ""
-                      }`
+                    ? `${setDetails.title} ${
+                      setDetails.copyCount > 0
+                        ? `(${setDetails.copyCount})`
+                        : ""
+                    }`
                     : setDetails.title
                   : "MySets"}
               </div>

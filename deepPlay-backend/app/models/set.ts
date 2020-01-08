@@ -34,7 +34,15 @@ const setSchema: Mongoose.Schema = new Schema({
     default: []
   },
   copyIndex: {
-    type: Number
+    type: Number,
+    default: 0
+  },
+  copyCount: {
+    type: Number,
+    default: 0
+  },
+  copySetId: {
+    type: String
   },
   userId: {
     type: Schema.Types.ObjectId,

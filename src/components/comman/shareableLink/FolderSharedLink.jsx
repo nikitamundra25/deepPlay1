@@ -127,9 +127,9 @@ class FolderSharedLink extends React.Component {
                 <div className="main-title">
                   {decryptedDetails
                     ? decryptedDetails && decryptedDetails.isCopy
-                      ? `Copy of ${decryptedDetails.title} ${
-                          decryptedDetails.copyIndex > 0
-                            ? `(${decryptedDetails.copyIndex})`
+                      ? `${decryptedDetails.title} ${
+                          decryptedDetails.copyCount > 0
+                            ? `(${decryptedDetails.copyCount})`
                             : ""
                         }`
                       : decryptedDetails.title
@@ -162,7 +162,15 @@ class FolderSharedLink extends React.Component {
                             <div className="d-flex content-with-img w-100">
                               <div className="cotent-text-tile">
                                 <div className="content-heading-tile">
-                                  <span>{list.title}</span>
+                                  <span>
+                                    {list.isCopy
+                                      ? `${list.title} ${
+                                          list.copyCount > 0
+                                            ? `(${list.copyCount})`
+                                            : ""
+                                        }`
+                                      : list.title}
+                                  </span>
                                 </div>
                                 <div className="content-heading-tile">
                                   <small>

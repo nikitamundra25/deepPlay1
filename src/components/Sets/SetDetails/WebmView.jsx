@@ -589,7 +589,7 @@ class WebmView extends Component {
         this.playVideo();
       }
     } else {
-      return;
+      return true;
     }
   };
 

@@ -482,7 +482,6 @@ class YouTubeFrameDetails extends Component {
     const { frames, moveReducer, videoMaxDuration, videoError } = this.props;
     const { time, imageLoadedIndex } = this.state;
     const { moveDetails } = moveReducer;
-    console.log(" this.props.timer", this.props.timer);
 
     return (
       <div className="fram-picker">

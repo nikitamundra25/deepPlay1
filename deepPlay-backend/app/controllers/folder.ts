@@ -30,9 +30,20 @@ const createFolder = async (req: Request, res: Response): Promise<any> => {
       isDeleted: body.isDeleted ? body.isDeleted : false,
       isCopy: true
     });
+    const folderData1: Document | any | null = await FolderModel.findOne({
+      _id: body.copyOfFolderId
+    });
+    const copied: number = folderData1.copyIndex;
+    let indexx = copied + 1;
 
+    await FolderModel.updateOne(
+      { _id: body.copyOfFolderId },
+      {
+        copyIndex: indexx
+      }
+    );
     const folderData: IFolder = {
-      title: body.title,
+      title: body.isCopy ? `copy of ${body.title}` : body.title,
       description: body.description ? body.description : "",
       status: body.status ? body.status : true,
       userId: body.userId ? body.userId : headToken.id,
@@ -40,7 +51,8 @@ const createFolder = async (req: Request, res: Response): Promise<any> => {
       isPublic: body.isPublic ? true : false,
       isDeleted: body.isDeleted ? body.isDeleted : false,
       isCopy: body.isCopy ? true : false,
-      copyIndex: countFolderCopy && body.isCopy ? countFolderCopy : 0
+      copyCount: indexx,
+      copySetId: body.isCopy ? body.copyOfSetId : null
     };
     const Result: Document | any = new FolderModel(folderData);
     await Result.save();
@@ -64,7 +76,9 @@ const createFolder = async (req: Request, res: Response): Promise<any> => {
             userId: headToken.id,
             isCopy: element.isCopy,
             isDeleted: element.isDeleted,
-            copyIndex: element.copyIndex
+            copyIndex: element.copyIndex,
+            copyCount: element.copyCount,
+            copySetId: element.copyOfSetId ? element.copyOfSetId : null
           };
           const setData: Document | any = new SetModel(newSetData);
           await setData.save();
@@ -639,7 +653,8 @@ const updateFolder = async (req: Request, res: Response): Promise<any> => {
     let updateFolder: IUpdateFolder = {
       title,
       description,
-      isCopy: false
+      isCopy: false,
+      copyCount: 0
     };
     await FolderModel.findByIdAndUpdate(id, {
       $set: { ...updateFolder, updatedAt: Date.now() }
