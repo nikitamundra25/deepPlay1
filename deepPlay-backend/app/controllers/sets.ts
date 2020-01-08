@@ -29,9 +29,27 @@ const createSet = async (req: Request, res: Response): Promise<any> => {
       isDeleted: body.isDeleted ? body.isDeleted : false,
       isCopy: true
     });
+    const setData1: Document | any | null = await SetModel.findOne({
+      _id: body.copyOfSetId
+    });
+    const copied: number = setData1.copyIndex;
+    let indexx = copied + 1;
+    await SetModel.updateOne(
+      { _id: body.copyOfSetId },
+      {
+        copyIndex: indexx
+      }
+    );
+    console.log("indexx", indexx, copied);
+
+    let setExist =
+      copied > 0
+        ? `copy of ${body.title} (${indexx})`
+        : `copy of ${body.title}`;
+    console.log("setExist", setExist);
 
     const setData: ISet = {
-      title: body.title,
+      title: body.isCopy ? `copy of ${body.title}` : body.title,
       description: body.description ? body.description : "",
       status: body.status ? body.status : true,
       userId: body.userId ? body.userId : headToken.id,
