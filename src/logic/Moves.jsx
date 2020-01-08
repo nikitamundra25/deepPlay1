@@ -695,6 +695,11 @@ const addTagsLogic = createLogic({
 const updateSortIndexLogic = createLogic({
   type: MovesAction.UPDATE_SORT_INDEX_REQUEST,
   async process({ action }, dispatch, done) {
+    dispatch(
+      updateSortIndexSuccess({
+        movesOfSet: action.payload.movesOfSet
+      })
+    );
     let api = new ApiHelper();
     let result = await api.FetchFromServer(
       "move",
@@ -711,11 +716,7 @@ const updateSortIndexLogic = createLogic({
       done();
       return;
     } else {
-      dispatch(
-        updateSortIndexSuccess({
-          movesOfSet: result.data.data
-        })
-      );
+      
       done();
     }
   }
