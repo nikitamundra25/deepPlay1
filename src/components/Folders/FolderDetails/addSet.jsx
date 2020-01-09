@@ -171,9 +171,9 @@ class AddSetModal extends React.Component {
                               <div className="sets-heading text-capitalize">
                                 {" "}
                                 {set && set.isCopy
-                                  ? `Copy of ${set.title}${
-                                      set.copyIndex > 0
-                                        ? `(${set.copyIndex})`
+                                  ? `${set.title} ${
+                                      set.copyCount > 0
+                                        ? `(${set.copyCount})`
                                         : ""
                                     }`
                                   : set.title}

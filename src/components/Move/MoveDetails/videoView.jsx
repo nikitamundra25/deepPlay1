@@ -120,7 +120,7 @@ class VideoView extends React.Component {
       videoError
     } = this.props;
     const { moveDetails } = moveReducer;
-    const { /* isBufferingVideo */ videoCanPlay } = this.state;
+    const { isBufferingVideo, videoCanPlay } = this.state;
 
     return (
       <>
@@ -161,11 +161,11 @@ class VideoView extends React.Component {
           </FormGroup>
           {moveDetails && moveDetails.videoUrl ? (
             <div className={"video-player"}>
-              {/* {isBufferingVideo === true ? (
+              {isBufferingVideo === true ? (
                 <div className="video-spinner z-">
                   <img src={videoLoading} alt="" />
                 </div>
-              ) : null} */}
+              ) : null}
               <div className="video-player-inner-wrap">
                 {!videoError ? (
                   !videoCanPlay ? (
@@ -198,7 +198,7 @@ class VideoView extends React.Component {
                     muted={false}
                     playsInline
                     onError={e => playbackFailed(e)}
-                    // controls
+                    onContextMenu={e => e.preventDefault()}
                     disablepictureinpicture="true"
                     controlsList="nodownload"
                   >

@@ -42,8 +42,8 @@ class VideoDetails extends React.Component {
         const defaultSetoptionsValue = {
           label:
             data && data.isCopy
-              ? `Copy of ${data.title}${
-                  data.copyIndex > 0 ? `(${data.copyIndex})` : ""
+              ? `${data.title} ${
+                  data.copyCount > 0 ? `(${data.copyCount})` : ""
                 }`
               : data.title,
           value: data._id,

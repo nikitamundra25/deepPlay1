@@ -748,7 +748,12 @@ const editMoveLogic = createLogic({
       if (action.payload.data.fromMoveList) {
         dispatch(updateMoveSuccess({ movesOfSet: action.payload.moveList }));
       } else {
-        dispatch(updateMoveSuccess({ videoData: action.payload.moveVideo }));
+        dispatch(
+          updateMoveSuccess({
+            videoData: action.payload.moveVideo,
+            movesOfSet: action.payload.moveData
+          })
+        );
       }
       dispatch(
         modelOpenRequest({

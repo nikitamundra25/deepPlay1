@@ -19,7 +19,15 @@ const folderSchema: Mongoose.Schema = new Schema({
     type: Number
   },
   copyIndex: {
-    type: Number
+    type: Number,
+    default: 0
+  },
+  copyCount: {
+    type: Number,
+    default: 0
+  },
+  copyFolderId: {
+    type: String
   },
   isPublic: {
     type: Boolean,

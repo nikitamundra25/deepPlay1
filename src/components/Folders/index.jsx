@@ -179,9 +179,9 @@ class FolderComponent extends React.Component {
                                   {" "}
                                   <span className={"cursor_pointer"}>
                                     {folder.isCopy
-                                      ? `Copy of ${folder.title} ${
-                                          folder.copyIndex > 0
-                                            ? `(${folder.copyIndex})`
+                                      ? `${folder.title} ${
+                                          folder.copyCount > 0
+                                            ? `(${folder.copyCount})`
                                             : ""
                                         }`
                                       : folder.title}

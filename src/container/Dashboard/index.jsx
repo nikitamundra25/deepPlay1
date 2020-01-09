@@ -134,7 +134,11 @@ class Dashboard extends React.Component {
                                     <span className={" text-capitalize"}>
                                       <span>
                                         {set.isCopy
-                                          ? `Copy of ${set.title}`
+                                          ? `${set.title} ${
+                                              set.copyCount > 0
+                                                ? `(${set.copyCount})`
+                                                : ""
+                                            }`
                                           : set.title}
                                       </span>
                                     </span>
@@ -279,7 +283,11 @@ class Dashboard extends React.Component {
                                     {" "}
                                     <span className={"cursor_pointer"}>
                                       {folder.isCopy
-                                        ? `Copy of ${folder.title}`
+                                        ? `${folder.title} ${
+                                            folder.copyCount > 0
+                                              ? `(${folder.copyCount})`
+                                              : ""
+                                          }`
                                         : folder.title}
                                     </span>
                                   </div>

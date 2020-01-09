@@ -95,9 +95,9 @@ class AllSearchComponent extends React.Component {
                               <div className="searched-text">
                                 {/* {folderData.title} */}
                                 {folderData.isCopy
-                                  ? `Copy of ${folderData.title} ${
-                                      folderData.copyIndex > 0
-                                        ? `(${folderData.copyIndex})`
+                                  ? `${folderData.title} ${
+                                      folderData.copyCount > 0
+                                        ? `(${folderData.copyCount})`
                                         : ""
                                     }`
                                   : folderData.title}
@@ -172,9 +172,9 @@ class AllSearchComponent extends React.Component {
                               </div>
                               <div className="searched-text">
                                 {setData.isCopy
-                                  ? `Copy of ${setData.title} ${
-                                      setData.copyIndex > 0
-                                        ? `(${setData.copyIndex})`
+                                  ? `${setData.title} ${
+                                      setData.copyCount > 0
+                                        ? `(${setData.copyCount})`
                                         : ""
                                     }`
                                   : setData.title}
