@@ -399,7 +399,7 @@ class MoveSearchList extends React.Component {
     console.groupEnd();
   };
   /*
-  /*  
+  /*
   */
   handleLoadmoreRequest = setIdPathName => {
     const location = this.props.location;

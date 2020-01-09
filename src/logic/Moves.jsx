@@ -701,7 +701,12 @@ const updateSortIndexLogic = createLogic({
       })
     );
     let api = new ApiHelper();
-    let result = await api.FetchFromServer(
+    dispatch(
+      updateSortIndexSuccess({
+        movesOfSet: action.payload.movesOfSet
+      })
+    );
+    await api.FetchFromServer(
       "move",
       "/sort-index-update",
       "PUT",
@@ -709,16 +714,7 @@ const updateSortIndexLogic = createLogic({
       undefined,
       action.payload
     );
-    if (result.isError) {
-      if (!toast.isActive(toastId)) {
-        toastId = toast.error(result.messages[0]);
-      }
-      done();
-      return;
-    } else {
-      
-      done();
-    }
+    done();
   }
 });
 
