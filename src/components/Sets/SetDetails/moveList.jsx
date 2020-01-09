@@ -132,7 +132,7 @@ class MoveList extends React.Component {
           prevState.selectedMoveIds.length &&
         this.state.selectedMoveIds === 0)
     ) {
-      this.handleDragAndDrop();
+//       this.handleDragAndDrop();
     }
     if (
       prevProps.isMoveStarLoading &&
