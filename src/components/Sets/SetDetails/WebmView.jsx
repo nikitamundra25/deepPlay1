@@ -522,10 +522,7 @@ class WebmView extends Component {
       if (highlightText) {
         highlightText.classList.remove("text-selected");
       }
-      this.setState({
-        doubleClick: false,
-        title: ""
-      });
+
       if (value !== "" || this.state.errorTitle !== null) {
         const data = {
           moveId: videoData._id,
@@ -537,6 +534,10 @@ class WebmView extends Component {
           videoData: videoData ? videoData : null,
           fromMoveList: false
         };
+        this.setState({
+          doubleClick: false,
+          title: ""
+        });
         this.props.editMove(data);
       }
     }

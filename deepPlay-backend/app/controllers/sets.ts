@@ -353,6 +353,7 @@ const getSetsForFolder = async (req: Request, res: Response): Promise<any> => {
           isDeleted: false
         }
       })
+      .sort({ createdAt: -1 })
       .skip(((parseInt(page) || 1) - 1) * (limit || 10))
       .limit(parseInt(limit) || 10);
     if (result && result.length) {

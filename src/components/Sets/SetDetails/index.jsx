@@ -296,7 +296,13 @@ class SetDetails extends React.Component {
       moveVideo.tags = data.tags;
       moveVideo.description = data.description;
       let moveData = [...movesOfSet];
-      moveData[moveVideo.id].tags = data.tags;
+      moveData.map((key, i) => {
+        if (moveVideo._id === key._id) {
+          return (moveData[i].tags = data.tags);
+        } else {
+          return null;
+        }
+      });
       this.props.addTagsRequest({
         data: data,
         moveVideo: moveVideo,
@@ -306,6 +312,8 @@ class SetDetails extends React.Component {
   };
 
   editMove = data => {
+    const { moveReducer } = this.props;
+    const { movesOfSet } = moveReducer;
     if (data.fromMoveList) {
       const moveList = [...data.moveofSetList];
       moveList.map((key, i) => {
@@ -320,7 +328,19 @@ class SetDetails extends React.Component {
       const moveVideo = data.videoData;
       moveVideo.title = data.title;
       moveVideo.description = data.description;
-      this.props.updateMoveRequest({ data: data, moveVideo: moveVideo });
+      let moveData = [...movesOfSet];
+      moveData.map((key, i) => {
+        if (moveVideo._id === key._id) {
+          return (moveData[i].title = data.title);
+        } else {
+          return null;
+        }
+      });
+      this.props.updateMoveRequest({
+        data: data,
+        moveVideo: moveVideo,
+        moveData: moveData
+      });
     }
   };
 
@@ -411,10 +431,10 @@ class SetDetails extends React.Component {
                 {setDetails
                   ? setDetails && setDetails.isCopy
                     ? `${setDetails.title} ${
-                      setDetails.copyCount > 0
-                        ? `(${setDetails.copyCount})`
-                        : ""
-                    }`
+                        setDetails.copyCount > 0
+                          ? `(${setDetails.copyCount})`
+                          : ""
+                      }`
                     : setDetails.title
                   : "MySets"}
               </div>
