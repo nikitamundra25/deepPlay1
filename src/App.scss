@@ -28,8 +28,7 @@ $source: "hurmegeosans-no2-400";
 @font-face {
   font-family: "hurmegeosans-no2-400";
   src: url("/public/assets/font/hurmegeosans-no2-400.eot");
-  src: url("/assets/font/hurmegeosans/hurmegeosans-no2-400.eot?#iefix")
-      format("embedded-opentype"),
+  src: url("/assets/font/hurmegeosans/hurmegeosans-no2-400.eot?#iefix") format("embedded-opentype"),
     url("/assets/font/hurmegeosans/hurmegeosans-no2-400.woff2") format("woff2");
   font-weight: normal;
   font-style: normal;
@@ -492,7 +491,7 @@ header {
       font-size: 14px;
       background: #000;
       border-radius: 50%;
-      padding:0px;
+      padding: 0px;
       color: #fff;
       width: 30px;
       height: 30px;
@@ -2279,6 +2278,11 @@ header {
   & > .play-list-tile-select {
     width: 25%;
   }
+  .ui-sortable{
+    width: 100%;
+    padding: 0px;
+  }
+
 }
 
 // media query start
@@ -2626,7 +2630,7 @@ header {
     margin-right: 5px;
     color: #000;
     border-radius: 4px;
-    display: none
+    display: none;
   }
   .header-navbar .navbar-brand {
     margin: 0px;
@@ -2675,15 +2679,26 @@ _:future,
   }
 }
 .pagination {
-  .page-item{
-    [aria-label]{
-      &>span{
-      font-size: 0px;
-      &>span{
-        line-height: 30px;
-        display: block;
+  .page-item {
+    [aria-label] {
+      & > span {
+        font-size: 0px;
+        & > span {
+          line-height: 30px;
+          display: block;
+        }
+      }
     }
-    }
+  }
+}
+.title-edit-text {
+  &.form-group {
+    margin: 0px;
+    input {
+      padding: 0px;
+      height: 24px;
+      border: 1px solid #000;
+      border-radius: 0px;
     }
   }
 }

@@ -338,7 +338,7 @@ class MoveListDetails extends React.Component {
                   }
                 >
                   {doubleClick && doubleClickIndex === index ? (
-                    <FormGroup>
+                    <FormGroup className="title-edit-text">
                       <Input
                         id="title"
                         autoFocus
