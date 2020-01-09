@@ -2272,6 +2272,7 @@ header {
   overflow: hidden;
   flex-wrap: wrap;
   width: 100%;
+  
   & > div {
     width: 100%;
   }
@@ -2697,8 +2698,9 @@ _:future,
     input {
       padding: 0px;
       height: 24px;
-      border: 1px solid #000;
+      border: 1px solid #2a5db1;
       border-radius: 0px;
+      text-transform: capitalize;
     }
   }
 }
