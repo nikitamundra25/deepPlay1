@@ -247,13 +247,18 @@ class MoveList extends React.Component {
 
   handleUnselectAll = () => {
     this.props.videoUnSelectRequest();
-    this.setState({
-      isVideoChecked: false,
-      isVideoModalOpen: true,
-      selectedMoves: [],
-      selectedMoveIds: [],
-      isMarkingStar: -1
-    });
+    this.setState(
+      {
+        isVideoChecked: false,
+        isVideoModalOpen: true,
+        selectedMoves: [],
+        selectedMoveIds: [],
+        isMarkingStar: -1
+      },
+      () => {
+        this.handleDragAndDrop();
+      }
+    );
   };
   /*
    */
@@ -286,14 +291,18 @@ class MoveList extends React.Component {
       }
       return unique;
     }, []);
-    this.setState({
-      selectedMoves,
-      selectedMoveIds: result,
-      isMarkingStar: {
-        index: -1,
-        isChanging: false
-      }
-    });
+    if (result && result.length) {
+      this.setState({
+        selectedMoves,
+        selectedMoveIds: result,
+        isMarkingStar: {
+          index: -1,
+          isChanging: false
+        }
+      });
+    } else {
+      this.handleUnselectAll();
+    }
   };
   /*
    */
@@ -571,38 +580,26 @@ class MoveList extends React.Component {
 
   handleonBlur = (e, videoData, index) => {
     const highlightText = document.getElementById(`video-title-${index}`);
-    const value = e.target.textContent;
-    const error =
-      value && value.length > 50
-        ? "Title cannot have more than 50 characters"
-        : "";
+    if (highlightText) {
+      highlightText.classList.remove("text-selected");
+    }
+    this.setState({
+      doubleClick: false,
+      doubleClickIndex: -1,
+      title: ""
+    });
 
-    if (error) {
-      if (!toast.isActive(this.toastId)) {
-        this.toastId = toast.error("Title cannot have more than 50 characters");
-      }
-      return;
-    } else {
-      if (highlightText) {
-        highlightText.classList.remove("text-selected");
-      }
-      this.setState({
-        doubleClick: false,
-        doubleClickIndex: -1,
-        title: ""
-      });
-      if (this.state.title !== null || this.state.errors !== null) {
-        const data = {
-          moveId: videoData._id,
-          title: value,
-          description: videoData.description,
-          tags: videoData.tags,
-          setId: videoData.setId._id,
-          moveofSetList: this.props.movesOfSet,
-          fromMoveList: true
-        };
-        this.props.editMove(data);
-      }
+    if (videoData) {
+      const data = {
+        moveId: videoData._id,
+        title: this.state.title,
+        description: videoData.description,
+        tags: videoData.tags,
+        setId: videoData.setId._id,
+        moveofSetList: this.props.movesOfSet,
+        fromMoveList: true
+      };
+      this.props.editMove(data);
     }
   };
 
@@ -613,9 +610,9 @@ class MoveList extends React.Component {
         ? "Title cannot have more than 50 characters"
         : "";
     if (error) {
-      this.setState({
-        errors: error ? error : null
-      });
+      if (!toast.isActive(this.toastId)) {
+        this.toastId = toast.warn(error);
+      }
     } else {
       this.setState({
         [name]: value,

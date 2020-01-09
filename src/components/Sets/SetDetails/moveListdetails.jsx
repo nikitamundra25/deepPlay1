@@ -1,5 +1,5 @@
 import React from "react";
-import { Input } from "reactstrap";
+import { Input, FormGroup } from "reactstrap";
 import starIc from "../../../assets/img/star.svg";
 import "./index.scss";
 import blankStar from "../../../assets/img/star-line.svg";
@@ -56,13 +56,6 @@ class MoveListDetails extends React.Component {
     }
   };
 
-  onDoubleClick = (index, title) => {
-    this.myRef.current.focus();
-    let selectedClass = document.getElementById(`video-title-${index}`);
-    selectedClass.focus();
-    this.props.onDoubleClick(index, title);
-  };
-
   onpaste = e => {
     e.preventDefault();
     if (window.clipboardData) {
@@ -79,20 +72,20 @@ class MoveListDetails extends React.Component {
     }
   };
 
-  // onFocus = (e, index) => {
-  //   document.getElementById(`video-title-${index}`).focus();
-  //   if (document.selection) {
-  //     // IE
-  //     var range = document.body.createTextRange();
-  //     range.moveToElementText(document.getElementById(`video-title-${index}`));
-  //     range.select();
-  //   } else if (window.getSelection) {
-  //     var range = document.createRange();
-  //     range.selectNode(document.getElementById(`video-title-${index}`));
-  //     window.getSelection().removeAllRanges();
-  //     window.getSelection().addRange(range);
-  //   }
-  // };
+  onFocus = (e, index) => {
+    document.getElementById(`video-title-${index}`).focus();
+    if (document.selection) {
+      // IE
+      var range = document.body.createTextRange();
+      range.moveToElementText(document.getElementById(`video-title-${index}`));
+      range.select();
+    } else if (window.getSelection) {
+      var range = document.createRange();
+      range.selectNode(document.getElementById(`video-title-${index}`));
+      window.getSelection().removeAllRanges();
+      window.getSelection().addRange(range);
+    }
+  };
 
   render() {
     const {
@@ -104,7 +97,7 @@ class MoveListDetails extends React.Component {
       handleVideoHover,
       handleVideoPause,
       handleVideoPlay,
-      // isMarkingStar,
+      onDoubleClick,
       isVideoModalOpen,
       handleMovesSelect,
       isSelectVideo,
@@ -114,11 +107,11 @@ class MoveListDetails extends React.Component {
       doubleClick,
       doubleClickIndex,
       handleonBlur,
-      isSortIndexUpdate,
+      handleChange,
       isSavingWebM,
-      movesOfSet
+      movesOfSet,
+      title
     } = this.props;
-    console.log(movesOfSet);
     let processingData = false;
     let videoProcessing;
     if (isSavingWebM && isSavingWebM.length) {
@@ -292,7 +285,7 @@ class MoveListDetails extends React.Component {
                 <div className="blur-img" />
               </div>
               <div className="play-list-text">
-                <div
+                {/* <div
                   ref={this.myRef}
                   tabIndex="0"
                   suppressContentEditableWarning={true}
@@ -329,6 +322,43 @@ class MoveListDetails extends React.Component {
                   video.title
                     ? video.title
                     : "unnamed"}
+                </div> */}
+                <div
+                  className={
+                    video.title
+                      ? "text-capitalize play-list-heading h6 m-0"
+                      : "text-capitalize play-list-heading h6 m-0 text-untitled"
+                  }
+                  onDoubleClick={
+                    !isVideoChecked
+                      ? !video.isMoveProcessing
+                        ? () => onDoubleClick(index, video.title)
+                        : null
+                      : null
+                  }
+                >
+                  {doubleClick && doubleClickIndex === index ? (
+                    <FormGroup>
+                      <Input
+                        id="title"
+                        autoFocus
+                        type="text"
+                        placeholder="Enter a title"
+                        name="title"
+                        onChange={handleChange}
+                        value={title}
+                        onBlur={e => handleonBlur(e, video, index)}
+                        onKeyPress={
+                          doubleClick
+                            ? e => this.handleKeyPress(e, video, index)
+                            : null
+                        }
+                      />
+                    </FormGroup>
+                  ) : (
+                    video.title || "unnamed"
+                  )}
+                  {/* {video.title || "unnamed"} */}
                 </div>
                 <div
                   className="star-wrap"
