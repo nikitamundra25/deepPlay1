@@ -123,8 +123,15 @@ class MoveList extends React.Component {
     });
   };
 
-  componentDidUpdate = prevProps => {
-    if (this.props.movesOfSet.length !== prevProps.movesOfSet.length) {
+  componentDidUpdate = (prevProps, prevState) => {
+    if (
+      this.props.movesOfSet.length !== prevProps.movesOfSet.length ||
+      (this.state.selectedMoveIds &&
+        prevState.selectedMoveIds &&
+        this.state.selectedMoveIds.length !==
+          prevState.selectedMoveIds.length &&
+        this.state.selectedMoveIds === 0)
+    ) {
       this.handleDragAndDrop();
     }
     if (
@@ -834,6 +841,7 @@ class MoveList extends React.Component {
                       movesOfSet.map((video, index) => {
                         return (
                           <MoveListDetails
+                            key={index}
                             index={index}
                             isVideoChecked={isVideoChecked}
                             selectedMoves={selectedMoves}
