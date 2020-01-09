@@ -72,20 +72,20 @@ class MoveListDetails extends React.Component {
     }
   };
 
-  onFocus = (e, index) => {
-    document.getElementById(`video-title-${index}`).focus();
-    if (document.selection) {
-      // IE
-      var range = document.body.createTextRange();
-      range.moveToElementText(document.getElementById(`video-title-${index}`));
-      range.select();
-    } else if (window.getSelection) {
-      var range = document.createRange();
-      range.selectNode(document.getElementById(`video-title-${index}`));
-      window.getSelection().removeAllRanges();
-      window.getSelection().addRange(range);
-    }
-  };
+  // onFocus = (e, index) => {
+  //   document.getElementById(`video-title-${index}`).focus();
+  //   if (document.selection) {
+  //     // IE
+  //     var range = document.body.createTextRange();
+  //     range.moveToElementText(document.getElementById(`video-title-${index}`));
+  //     range.select();
+  //   } else if (window.getSelection) {
+  //     var range = document.createRange();
+  //     range.selectNode(document.getElementById(`video-title-${index}`));
+  //     window.getSelection().removeAllRanges();
+  //     window.getSelection().addRange(range);
+  //   }
+  // };
 
   render() {
     const {
@@ -109,7 +109,7 @@ class MoveListDetails extends React.Component {
       handleonBlur,
       handleChange,
       isSavingWebM,
-      movesOfSet,
+      // movesOfSet,
       title
     } = this.props;
     let processingData = false;

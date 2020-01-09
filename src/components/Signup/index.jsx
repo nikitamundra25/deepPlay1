@@ -37,7 +37,8 @@ class SignupComponent extends React.Component {
       confirmPassword: "",
       roleType: false,
       passwordStrength: "weak",
-      errors: {}
+      errors: {},
+      termsService: false
     };
   }
   componentDidUpdate = ({ openSignupModel }) => {
@@ -113,11 +114,22 @@ class SignupComponent extends React.Component {
     //   errors: ""
     // });
     const { name, value, checked } = e.target;
+    console.log("name", name);
+
     if (name === "roleType") {
       this.setState({
         roleType: checked
       });
+      return;
     }
+
+    if (name === "termsService") {
+      this.setState({
+        termsService: checked
+      });
+      return;
+    }
+
     if (name === "firstName" || name === "lastName") {
       this.setState({
         [name]: value.replace(/[^\w\s]|[0-9]|[_]/gi, "").trim(),
@@ -129,7 +141,7 @@ class SignupComponent extends React.Component {
       return;
     }
     if (name === "password") {
-       value.match(/^(?:[0-9]+[a-z]|[a-z]+[0-9])[a-z0-9]*$/i);
+      value.match(/^(?:[0-9]+[a-z]|[a-z]+[0-9])[a-z0-9]*$/i);
       if (value.length >= 40) {
         this.setState({
           passwordStrength: "strong"
@@ -140,6 +152,7 @@ class SignupComponent extends React.Component {
         });
       }
     }
+
     this.setState({
       [name]: value.trim(),
       errors: {
@@ -200,10 +213,10 @@ class SignupComponent extends React.Component {
       confirmPassword,
       roleType,
       errors,
-      passwordStrength
+      passwordStrength,
+      termsService
     } = this.state;
     const { isSignupLoading } = loginReducer;
-
     return (
       <>
         <Modal
@@ -387,6 +400,25 @@ class SignupComponent extends React.Component {
                         <span>I am a Teacher</span>
                       </label>
                     </div>
+                    <div className="custom-control custom-control-alternative custom-checkbox mt-2 mb-4">
+                      <Input
+                        className="custom-control-input"
+                        id="customCheck"
+                        value={termsService}
+                        name={"termsService"}
+                        onChange={this.handleChange}
+                        type="checkbox"
+                      />
+                      <label
+                        className="custom-control-label"
+                        htmlFor="customCheck"
+                      >
+                        <span>
+                          I agree to DeepPlay's Terms of Service and Privacy
+                          Policy.{" "}
+                        </span>
+                      </label>
+                    </div>
                   </FormGroup>
 
                   <div className="text-center auth-btn-wrap">
@@ -394,7 +426,9 @@ class SignupComponent extends React.Component {
                       className="mb-2 btn-black btn-block"
                       color=" "
                       type="submit"
-                      disabled={isSignupLoading ? true : false}
+                      disabled={
+                        termsService ? (isSignupLoading ? true : false) : true
+                      }
                     >
                       {isSignupLoading ? "Please wait..." : "Create account"}
                     </Button>
