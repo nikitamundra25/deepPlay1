@@ -56,11 +56,6 @@
   }
 }
 
-.video-thumbnail-sub-block {
-  .play-list-img {
-    // overflow: unset;
-  }
-}
 .selected-moves {
   background: #fff;
   padding: 9px 0px 12px 8px;
@@ -243,9 +238,9 @@ video[poster] {
   display: none;
   cursor: none !important;
 }
-.ui-sortable {
+#sortable {
   list-style: none;
-  .ui-sortable-handle {
+  li {
     width: 25%;
     float: left;
   }

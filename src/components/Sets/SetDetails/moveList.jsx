@@ -156,7 +156,9 @@ class MoveList extends React.Component {
   };
   handleDragAndDrop = () => {
     const { $ } = window;
-    if ($("#list").hasClass("ui-sortable")) $("#sortable").sortable("destroy");
+    if ($("#sortable").hasClass("ui-sortable"))
+      $("#sortable").sortable("destroy");
+
     $("#sortable").sortable({
       forcePlaceholderSize: true,
       update: (event, ui) => {
@@ -173,6 +175,11 @@ class MoveList extends React.Component {
       }
     });
     $("#sortable").disableSelection();
+    setTimeout(() => {
+      this.setState({
+        test: "fasdf"
+      });
+    }, 200);
   };
   /*
    */
@@ -484,6 +491,7 @@ class MoveList extends React.Component {
         }
       },
       () => {
+        console.log(data);
         this.handleDragAndDrop();
       }
     );
@@ -862,7 +870,10 @@ class MoveList extends React.Component {
                       <ul id="sortable">
                         {movesOfSet.map((video, index) => {
                           return (
-                            <li key={index} data-index={index}>
+                            <li
+                              key={`list-item-${video._id}-${index}`}
+                              data-index={index}
+                            >
                               <MoveListDetails
                                 index={index}
                                 isVideoChecked={isVideoChecked}
