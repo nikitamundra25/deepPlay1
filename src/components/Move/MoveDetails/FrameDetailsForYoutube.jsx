@@ -23,7 +23,7 @@ class YouTubeFrameDetails extends Component {
     };
   }
 
-  componentDidUpdate({ videoMaxDuration, createNew }) {
+  componentDidUpdate({ videoMaxDuration, createNew, timer }) {
     this.updateSlider();
     if (videoMaxDuration !== this.props.videoMaxDuration) {
       if (this.props.videoMaxDuration <= 15) {
@@ -130,7 +130,7 @@ class YouTubeFrameDetails extends Component {
             }
           },
           () => {
-            this.props.onTimerChange(this.state.time);
+            this.props.onTimerChange(this.state.time, { isVideoSleek: true });
           }
         );
         return;
@@ -140,7 +140,7 @@ class YouTubeFrameDetails extends Component {
           time: value
         },
         () => {
-          this.props.onTimerChange(this.state.time);
+          this.props.onTimerChange(this.state.time, { isVideoSleek: true });
         }
       );
     } else {

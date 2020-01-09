@@ -7,11 +7,13 @@ export interface IFolder {
   status: Boolean;
   isDeleted: Boolean;
   isCopy: Boolean;
-  copyIndex: Number;
+  copyCount: Number;
+  copySetId: String;
 }
 
 export interface IUpdateFolder {
   title: String;
   description: String;
   isCopy: Boolean;
+  copyCount: Number;
 }

@@ -15,10 +15,6 @@ import Loader from "components/comman/Loader/Loader";
 import AddTagModal from "./addTagsModal";
 import { ConfirmBox } from "helper/SweetAleart";
 import { DebounceInput } from "react-debounce-input";
-// import addTag from "../../../assets/img/set-detail-ic/add-tag.svg";
-// import transfer from "../../../assets/img/set-detail-ic/transfer.svg";
-// import remove from "../../../assets/img/set-detail-ic/remove.svg";
-import { ListManager } from "react-beautiful-dnd-grid";
 import MoveListDetails from "./moveListdetails";
 import { toast } from "react-toastify";
 import qs from "query-string";
@@ -77,7 +73,7 @@ class MoveList extends React.Component {
   }
 
   /*
-  /*  
+  /*
   */
   fixedSubHeader = () => {
     let offsetElemnt = document.getElementById("get-sticky-header");
@@ -127,7 +123,17 @@ class MoveList extends React.Component {
     });
   };
 
-  componentDidUpdate = prevProps => {
+  componentDidUpdate = (prevProps, prevState) => {
+    if (
+      this.props.movesOfSet.length !== prevProps.movesOfSet.length ||
+      (this.state.selectedMoveIds &&
+        prevState.selectedMoveIds &&
+        this.state.selectedMoveIds.length !==
+          prevState.selectedMoveIds.length &&
+        this.state.selectedMoveIds === 0)
+    ) {
+      this.handleDragAndDrop();
+    }
     if (
       prevProps.isMoveStarLoading &&
       prevProps.isMoveStarLoading.loading !==
@@ -155,7 +161,33 @@ class MoveList extends React.Component {
       );
     }
   };
+  handleDragAndDrop = () => {
+    const { $ } = window;
+    if ($("#sortable").hasClass("ui-sortable"))
+      $("#sortable").sortable("destroy");
 
+    $("#sortable").sortable({
+      forcePlaceholderSize: true,
+      update: (event, ui) => {
+        const itemPrevIndex = $(ui.item).data("index");
+        let newIndex = itemPrevIndex;
+        $("#sortable")
+          .find("li")
+          .each(function(index, ele) {
+            if ($(this).data("index") === itemPrevIndex) {
+              newIndex = index;
+            }
+          });
+        this.reorderList(itemPrevIndex, newIndex);
+      }
+    });
+    $("#sortable").disableSelection();
+    setTimeout(() => {
+      this.setState({
+        test: "fasdf"
+      });
+    }, 200);
+  };
   /*
    */
   handleVideoHover = index => {
@@ -215,13 +247,18 @@ class MoveList extends React.Component {
 
   handleUnselectAll = () => {
     this.props.videoUnSelectRequest();
-    this.setState({
-      isVideoChecked: false,
-      isVideoModalOpen: true,
-      selectedMoves: [],
-      selectedMoveIds: [],
-      isMarkingStar: -1
-    });
+    this.setState(
+      {
+        isVideoChecked: false,
+        isVideoModalOpen: true,
+        selectedMoves: [],
+        selectedMoveIds: [],
+        isMarkingStar: -1
+      },
+      () => {
+        this.handleDragAndDrop();
+      }
+    );
   };
   /*
    */
@@ -254,14 +291,18 @@ class MoveList extends React.Component {
       }
       return unique;
     }, []);
-    this.setState({
-      selectedMoves,
-      selectedMoveIds: result,
-      isMarkingStar: {
-        index: -1,
-        isChanging: false
-      }
-    });
+    if (result && result.length) {
+      this.setState({
+        selectedMoves,
+        selectedMoveIds: result,
+        isMarkingStar: {
+          index: -1,
+          isChanging: false
+        }
+      });
+    } else {
+      this.handleUnselectAll();
+    }
   };
   /*
    */
@@ -447,6 +488,7 @@ class MoveList extends React.Component {
     if (destinationIndex === sourceIndex) {
       return;
     }
+    console.log(sourceIndex, destinationIndex);
     const list = this.props.movesOfSet;
     const items = reorder(list, sourceIndex, destinationIndex);
     let parsed = qs.parse(this.props.location.search);
@@ -457,14 +499,18 @@ class MoveList extends React.Component {
       sourceIndex: sourceIndex,
       movesOfSet: items
     };
-    this.setState({
-      isMarkingStar: {
-        index: -1,
-        isChanging: false
+    this.setState(
+      {
+        isMarkingStar: {
+          index: -1,
+          isChanging: false
+        }
       },
-      sourceIndex,
-      destinationIndex
-    });
+      () => {
+        console.log(data);
+        this.handleDragAndDrop();
+      }
+    );
     this.props.updateSortIndexRequest(data);
   };
 
@@ -488,7 +534,7 @@ class MoveList extends React.Component {
     console.groupEnd();
   };
   /*
-  /*  
+  /*
   */
   handleLoadmoreRequest = setIdPathName => {
     const pageLimit = this.state.page;
@@ -534,38 +580,26 @@ class MoveList extends React.Component {
 
   handleonBlur = (e, videoData, index) => {
     const highlightText = document.getElementById(`video-title-${index}`);
-    const value = e.target.textContent;
-    const error =
-      value && value.length > 50
-        ? "Title cannot have more than 50 characters"
-        : "";
+    if (highlightText) {
+      highlightText.classList.remove("text-selected");
+    }
+    this.setState({
+      doubleClick: false,
+      doubleClickIndex: -1,
+      title: ""
+    });
 
-    if (error) {
-      if (!toast.isActive(this.toastId)) {
-        this.toastId = toast.error("Title cannot have more than 50 characters");
-      }
-      return;
-    } else {
-      if (highlightText) {
-        highlightText.classList.remove("text-selected");
-      }
-      this.setState({
-        doubleClick: false,
-        doubleClickIndex: -1,
-        title: ""
-      });
-      if (this.state.title !== null || this.state.errors !== null) {
-        const data = {
-          moveId: videoData._id,
-          title: value,
-          description: videoData.description,
-          tags: videoData.tags,
-          setId: videoData.setId._id,
-          moveofSetList: this.props.movesOfSet,
-          fromMoveList: true
-        };
-        this.props.editMove(data);
-      }
+    if (videoData) {
+      const data = {
+        moveId: videoData._id,
+        title: this.state.title,
+        description: videoData.description,
+        tags: videoData.tags,
+        setId: videoData.setId._id,
+        moveofSetList: this.props.movesOfSet,
+        fromMoveList: true
+      };
+      this.props.editMove(data);
     }
   };
 
@@ -576,9 +610,9 @@ class MoveList extends React.Component {
         ? "Title cannot have more than 50 characters"
         : "";
     if (error) {
-      this.setState({
-        errors: error ? error : null
-      });
+      if (!toast.isActive(this.toastId)) {
+        this.toastId = toast.warn(error);
+      }
     } else {
       this.setState({
         [name]: value,
@@ -804,6 +838,7 @@ class MoveList extends React.Component {
                       movesOfSet.map((video, index) => {
                         return (
                           <MoveListDetails
+                            key={index}
                             index={index}
                             isVideoChecked={isVideoChecked}
                             selectedMoves={selectedMoves}
@@ -837,52 +872,54 @@ class MoveList extends React.Component {
                         );
                       })
                     ) : (
-                      <ListManager
-                        items={movesOfSet}
-                        direction="horizontal"
-                        maxItems={4}
-                        render={video => {
-                          let index = video.id;
+                      <ul id="sortable">
+                        {movesOfSet.map((video, index) => {
                           return (
-                            <MoveListDetails
-                              index={index}
-                              isVideoChecked={isVideoChecked}
-                              selectedMoves={selectedMoves}
-                              handleShowVideo={this.props.handleShowVideo}
-                              handleVideoHover={this.handleVideoHover}
-                              handleVideoPause={this.handleVideoPause}
-                              handleVideoHoverLeave={this.handleVideoHoverLeave}
-                              handleVideoPlay={this.handleVideoPlay}
-                              handleMovesSelect={this.handleMovesSelect}
-                              isMarkingStar={isMarkingStar}
-                              video={video}
-                              sourceIndex={sourceIndex}
-                              isSavingWebM={isSavingWebM}
-                              destinationIndex={destinationIndex}
-                              isSortIndexUpdate={isSortIndexUpdate}
-                              isSelectVideo={isSelectVideo}
-                              videoIndex={videoIndex}
-                              isVideoModalOpen={isVideoModalOpen}
-                              handleStarred={this.handleStarred}
-                              handleVideoCheckBox={this.handleVideoCheckBox}
-                              handleVideoModal={this.props.handleVideoModal}
-                              title={title}
-                              movesOfSet={movesOfSet}
-                              onDoubleClick={this.onDoubleClick}
-                              doubleClickIndex={doubleClickIndex}
-                              doubleClick={doubleClick}
-                              handleonBlur={this.handleonBlur}
-                              handleChange={this.handleChange}
-                              reorderList={this.reorderList}
-                              isLoadImage={isLoadImage}
-                              isVideohovered={isVideohovered}
-                              errors={errors}
-                              isIosDevice={isIosDevice}
-                            />
+                            <li
+                              key={`list-item-${video._id}-${index}`}
+                              data-index={index}
+                            >
+                              <MoveListDetails
+                                index={index}
+                                isVideoChecked={isVideoChecked}
+                                selectedMoves={selectedMoves}
+                                handleShowVideo={this.props.handleShowVideo}
+                                handleVideoHover={this.handleVideoHover}
+                                handleVideoPause={this.handleVideoPause}
+                                handleVideoHoverLeave={
+                                  this.handleVideoHoverLeave
+                                }
+                                handleVideoPlay={this.handleVideoPlay}
+                                handleMovesSelect={this.handleMovesSelect}
+                                isMarkingStar={isMarkingStar}
+                                video={video}
+                                sourceIndex={sourceIndex}
+                                isSavingWebM={isSavingWebM}
+                                destinationIndex={destinationIndex}
+                                isSortIndexUpdate={isSortIndexUpdate}
+                                isSelectVideo={isSelectVideo}
+                                videoIndex={videoIndex}
+                                isVideoModalOpen={isVideoModalOpen}
+                                handleStarred={this.handleStarred}
+                                handleVideoCheckBox={this.handleVideoCheckBox}
+                                handleVideoModal={this.props.handleVideoModal}
+                                title={title}
+                                movesOfSet={movesOfSet}
+                                onDoubleClick={this.onDoubleClick}
+                                doubleClickIndex={doubleClickIndex}
+                                doubleClick={doubleClick}
+                                handleonBlur={this.handleonBlur}
+                                handleChange={this.handleChange}
+                                reorderList={this.reorderList}
+                                isLoadImage={isLoadImage}
+                                isVideohovered={isVideohovered}
+                                errors={errors}
+                                isIosDevice={isIosDevice}
+                              />
+                            </li>
                           );
-                        }}
-                        onDragEnd={this.reorderList}
-                      />
+                        })}
+                      </ul>
                     )}
                   </div>
                 </div>

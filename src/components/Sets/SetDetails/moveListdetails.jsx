@@ -1,11 +1,10 @@
 import React from "react";
-import { Input } from "reactstrap";
+import { Input, FormGroup } from "reactstrap";
 import starIc from "../../../assets/img/star.svg";
 import "./index.scss";
 import blankStar from "../../../assets/img/star-line.svg";
 import videoLoading from "../../../assets/img/icons/video-poster.svg";
 import moveLoader from "../../../assets/img/loder/moveLoad.gif";
-// import VideoIndexLoader from "../../../assets/img/loder/indexLoader.svg";
 
 class MoveListDetails extends React.Component {
   constructor(props) {
@@ -57,13 +56,6 @@ class MoveListDetails extends React.Component {
     }
   };
 
-  onDoubleClick = (index, title) => {
-    this.myRef.current.focus();
-    let selectedClass = document.getElementById(`video-title-${index}`);
-    selectedClass.focus();
-    this.props.onDoubleClick(index, title);
-  };
-
   onpaste = e => {
     e.preventDefault();
     if (window.clipboardData) {
@@ -105,7 +97,7 @@ class MoveListDetails extends React.Component {
       handleVideoHover,
       handleVideoPause,
       handleVideoPlay,
-      // isMarkingStar,
+      onDoubleClick,
       isVideoModalOpen,
       handleMovesSelect,
       isSelectVideo,
@@ -114,15 +106,11 @@ class MoveListDetails extends React.Component {
       handleStarred,
       doubleClick,
       doubleClickIndex,
-      // onDoubleClick,
       handleonBlur,
-      // isLoadImage,
-      sourceIndex,
-      destinationIndex,
-      isSortIndexUpdate,
+      handleChange,
       isSavingWebM,
-      movesOfSet
-      // isIosDevice
+      // movesOfSet,
+      title
     } = this.props;
     let processingData = false;
     let videoProcessing;
@@ -263,71 +251,41 @@ class MoveListDetails extends React.Component {
                 )}
 
                 <>
-                  {isSortIndexUpdate &&
-                  (sourceIndex === index || destinationIndex === index) ? (
-                    <div className="video-effect loading-img">
-                      {sourceIndex === index ? (
-                        <img
-                          src={
-                            processingData ||
-                            movesOfSet[destinationIndex].isMoveProcessing
-                              ? moveLoader
-                              : movesOfSet[destinationIndex].videoThumbnail
-                          }
-                          alt=""
-                        />
-                      ) : null}
-                      {destinationIndex === index ? (
-                        <img
-                          src={
-                            processingData ||
-                            movesOfSet[sourceIndex].isMoveProcessing
-                              ? moveLoader
-                              : movesOfSet[sourceIndex].videoThumbnail
-                          }
-                          alt=""
-                        />
-                      ) : null}
-                    </div>
-                  ) : (
-                    <div className={"video-effect"}>
-                      <video
-                        width={"100%"}
-                        //preload="auto"
-                        id={`webm-video-${index}`}
-                        poster={
-                          processingData
-                            ? moveLoader
-                            : video.videoThumbnail
-                            ? video.videoThumbnail
-                            : videoLoading
-                        }
-                        muted={true}
-                        onLoadedData={() => {
-                          this.setState({
-                            videoCanPlay: false
-                          });
-                        }}
-                        draggable="true"
-                        onContextMenu={e => e.preventDefault()}
-                        loop
-                        playsInline
-                        onLoadStartCapture={() => {
-                          this.handleVideoLoading(index);
-                        }}
-                      >
-                        <source src={`${video.moveURL}`} type="video/webm" />
-                      </video>
-                    </div>
-                  )}
+                  <div className={"video-effect"}>
+                    <video
+                      width={"100%"}
+                      preload="auto"
+                      id={`webm-video-${index}`}
+                      poster={
+                        processingData
+                          ? moveLoader
+                          : video.videoThumbnail
+                          ? video.videoThumbnail
+                          : videoLoading
+                      }
+                      muted={true}
+                      onLoadedData={() => {
+                        this.setState({
+                          videoCanPlay: false
+                        });
+                      }}
+                      draggable="true"
+                      onContextMenu={e => e.preventDefault()}
+                      loop
+                      playsInline
+                      onLoadStartCapture={() => {
+                        this.handleVideoLoading(index);
+                      }}
+                      key={video._id}
+                    >
+                      <source src={`${video.moveURL}`} type="video/webm" />
+                    </video>
+                  </div>
                 </>
-                <div
-                  className="blur-img"
-                  // style={{ background: "#000" }}
-                />
+                <div className="blur-img" />
               </div>
               <div className="play-list-text">
-                <div
+                {/* <div
                   ref={this.myRef}
                   tabIndex="0"
                   suppressContentEditableWarning={true}
@@ -357,51 +315,50 @@ class MoveListDetails extends React.Component {
                       ? e => this.handleKeyPress(e, video, index)
                       : null
                   }
-                  // onFocus={e => this.onFocus(e, index)}
                 >
-                  {/* {doubleClick && doubleClickIndex === index ? (
-                    <>
-                      <FormGroup>
-                        <Input
-                          id="title"
-                          type="text"
-                          placeholder="Enter a title"
-                          name="title"
-                          onChange={handleChange}
-                          value={title}
-                          onBlur={() => handleonBlur(video, index)}
-                        />
-                      </FormGroup>
-                      {errors ? errors : null}
-                    </>
+                  {(isSortIndexUpdate &&
+                    doubleClick &&
+                    doubleClickIndex === index) ||
+                  video.title
+                    ? video.title
+                    : "unnamed"}
+                </div> */}
+                <div
+                  className={
+                    video.title
+                      ? "text-capitalize play-list-heading h6 m-0"
+                      : "text-capitalize play-list-heading h6 m-0 text-untitled"
+                  }
+                  onDoubleClick={
+                    !isVideoChecked
+                      ? !video.isMoveProcessing
+                        ? () => onDoubleClick(index, video.title)
+                        : null
+                      : null
+                  }
+                >
+                  {doubleClick && doubleClickIndex === index ? (
+                    <FormGroup className="title-edit-text">
+                      <Input
+                        id="title"
+                        autoFocus
+                        type="text"
+                        placeholder="Enter a title"
+                        name="title"
+                        onChange={handleChange}
+                        value={title}
+                        onBlur={e => handleonBlur(e, video, index)}
+                        onKeyPress={
+                          doubleClick
+                            ? e => this.handleKeyPress(e, video, index)
+                            : null
+                        }
+                      />
+                    </FormGroup>
                   ) : (
                     video.title || "unnamed"
-                  )} */}
-                  {isSortIndexUpdate &&
-                  (sourceIndex === index || destinationIndex === index) ? (
-                    <>
-                      {sourceIndex === index
-                        ? (doubleClick && doubleClickIndex === index) ||
-                          movesOfSet[destinationIndex].title
-                          ? movesOfSet[destinationIndex].title
-                          : "unnamed"
-                        : null}
-                      {destinationIndex === index
-                        ? (doubleClick && doubleClickIndex === index) ||
-                          movesOfSet[sourceIndex].title
-                          ? movesOfSet[sourceIndex].title
-                          : "unnamed"
-                        : null}
-                    </>
-                  ) : (doubleClick && doubleClickIndex === index) ||
-                    video.title ? (
-                    video.title
-                  ) : (
-                    "unnamed"
                   )}
-                  {/* {(doubleClick && doubleClickIndex === index) || video.title
-                    ? video.title
-                    : "unnamed"} */}
+                  {/* {video.title || "unnamed"} */}
                 </div>
                 <div
                   className="star-wrap"

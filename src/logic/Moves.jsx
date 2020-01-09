@@ -695,8 +695,18 @@ const addTagsLogic = createLogic({
 const updateSortIndexLogic = createLogic({
   type: MovesAction.UPDATE_SORT_INDEX_REQUEST,
   async process({ action }, dispatch, done) {
+    dispatch(
+      updateSortIndexSuccess({
+        movesOfSet: action.payload.movesOfSet
+      })
+    );
     let api = new ApiHelper();
-    let result = await api.FetchFromServer(
+    dispatch(
+      updateSortIndexSuccess({
+        movesOfSet: action.payload.movesOfSet
+      })
+    );
+    await api.FetchFromServer(
       "move",
       "/sort-index-update",
       "PUT",
@@ -704,20 +714,7 @@ const updateSortIndexLogic = createLogic({
       undefined,
       action.payload
     );
-    if (result.isError) {
-      if (!toast.isActive(toastId)) {
-        toastId = toast.error(result.messages[0]);
-      }
-      done();
-      return;
-    } else {
-      dispatch(
-        updateSortIndexSuccess({
-          movesOfSet: result.data.data
-        })
-      );
-      done();
-    }
+    done();
   }
 });
 
@@ -747,7 +744,12 @@ const editMoveLogic = createLogic({
       if (action.payload.data.fromMoveList) {
         dispatch(updateMoveSuccess({ movesOfSet: action.payload.moveList }));
       } else {
-        dispatch(updateMoveSuccess({ videoData: action.payload.moveVideo }));
+        dispatch(
+          updateMoveSuccess({
+            videoData: action.payload.moveVideo,
+            movesOfSet: action.payload.moveData
+          })
+        );
       }
       dispatch(
         modelOpenRequest({

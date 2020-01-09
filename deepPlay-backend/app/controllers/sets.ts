@@ -29,9 +29,21 @@ const createSet = async (req: Request, res: Response): Promise<any> => {
       isDeleted: body.isDeleted ? body.isDeleted : false,
       isCopy: true
     });
+    const setData1: Document | any | null = await SetModel.findOne({
+      _id: body.copyOfSetId
+    });
+    const copied: number = setData1.copyIndex;
+    let indexx = copied + 1;
+
+    await SetModel.updateOne(
+      { _id: body.copyOfSetId },
+      {
+        copyIndex: indexx
+      }
+    );
 
     const setData: ISet = {
-      title: body.title,
+      title: body.isCopy ? `copy of ${body.title}` : body.title,
       description: body.description ? body.description : "",
       status: body.status ? body.status : true,
       userId: body.userId ? body.userId : headToken.id,
@@ -40,7 +52,9 @@ const createSet = async (req: Request, res: Response): Promise<any> => {
       isPublic: body.isPublic ? true : false,
       isDeleted: body.isDeleted ? body.isDeleted : false,
       isCopy: body.isCopy ? true : false,
-      copyIndex: countSetCopy && body.isCopy ? countSetCopy : 0
+      copyCount: indexx,
+      copySetId: body.isCopy ? body.copyOfSetId : null,
+      copyIndex: 0
     };
     const setResult: Document | any = new SetModel(setData);
     await setResult.save();
@@ -339,6 +353,7 @@ const getSetsForFolder = async (req: Request, res: Response): Promise<any> => {
           isDeleted: false
         }
       })
+      .sort({ createdAt: -1 })
       .skip(((parseInt(page) || 1) - 1) * (limit || 10))
       .limit(parseInt(limit) || 10);
     if (result && result.length) {
@@ -431,6 +446,16 @@ const deleteSet = async (req: Request, res: Response): Promise<void> => {
     });
 
     const result1: any = await SetModel.findOne({ _id: body.id });
+    // const copySetData: any = await SetModel.findOne({ _id: result1.copySetId });
+    // let countDecrease =
+    //   copySetData.copyIndex > 0 ? copySetData.copyIndex - 1 : 0;
+
+    // await SetModel.updateOne(
+    //   { _id: copySetData._id },
+    //   {
+    //     copyIndex: countDecrease
+    //   }
+    // );
     const stemp: Number | any = result1 ? result1.objectId : null;
 
     const includeMove: Document | any | null = await MoveModel.find({
@@ -698,13 +723,29 @@ const updateSet = async (req: Request, res: Response): Promise<any> => {
     let updateSet: IUpdateSet = {
       title,
       description,
-      isCopy: false
+      isCopy: false,
+      copyCount: 0
     };
     await SetModel.findByIdAndUpdate(setId, {
       $set: { ...updateSet, updatedAt: Date.now() }
     });
 
     const result1: any = await SetModel.find({ _id: setId });
+
+    // const copySetData: any = await SetModel.findOne({
+    //   _id: result1[0].copySetId
+    // });
+
+    // let countDecrease =
+    //   copySetData.copyIndex > 0 ? copySetData.copyIndex - 1 : 0;
+
+    // await SetModel.updateOne(
+    //   { _id: copySetData._id },
+    //   {
+    //     copyIndex: countDecrease
+    //   }
+    // );
+
     const stemp = result1.length ? result1[0].objectId : null;
     if (stemp) {
       index.partialUpdateObject(

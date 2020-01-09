@@ -93,8 +93,8 @@ class TransferMoveModal extends React.Component {
           defaultFolderList.push({
             label:
               item && item.isCopy
-                ? `Copy of ${item.title}${
-                    item.copyIndex > 0 ? `(${item.copyIndex})` : ""
+                ? `${item.title} ${
+                    item.copyCount > 0 ? `(${item.copyCount})` : ""
                   }`
                 : item.title,
             value: item._id

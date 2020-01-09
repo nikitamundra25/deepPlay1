@@ -308,9 +308,9 @@ class RecentFolderComponent extends React.Component {
               {" "}
               {folderDetails
                 ? folderDetails && folderDetails.isCopy
-                  ? `Copy of ${folderDetails.title} ${
-                      folderDetails.copyIndex > 0
-                        ? `(${folderDetails.copyIndex})`
+                  ? `${folderDetails.title} ${
+                      folderDetails.copyCount > 0
+                        ? `(${folderDetails.copyCount})`
                         : ""
                     }`
                   : folderDetails.title
@@ -393,9 +393,9 @@ class RecentFolderComponent extends React.Component {
                               >
                                 <span>
                                   {list.isCopy
-                                    ? `Copy of ${list.title} ${
-                                        list.copyIndex > 0
-                                          ? `(${list.copyIndex})`
+                                    ? `${list.title} ${
+                                        list.copyCount > 0
+                                          ? `(${list.copyCount})`
                                           : ""
                                       }`
                                     : list.title}

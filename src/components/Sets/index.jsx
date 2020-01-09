@@ -174,9 +174,9 @@ class SetComponent extends React.Component {
                                 }
                               >
                                 {setList.isCopy
-                                  ? `Copy of ${setList.title} ${
-                                      setList.copyIndex > 0
-                                        ? `(${setList.copyIndex})`
+                                  ? `${setList.title} ${
+                                      setList.copyCount > 0
+                                        ? `(${setList.copyCount})`
                                         : ""
                                     }`
                                   : setList.title}
@@ -248,6 +248,7 @@ class SetComponent extends React.Component {
                                     this.props.OnCreateSetCopy(setList)
                                   }
                                   color=" "
+                                  disabled={setList.isVideoProcessing.length}
                                 >
                                   Copy
                                 </Button>
@@ -259,6 +260,7 @@ class SetComponent extends React.Component {
                                     )
                                   }
                                   color=" "
+                                  disabled={setList.isVideoProcessing.length}
                                 >
                                   Transfer
                                 </Button>

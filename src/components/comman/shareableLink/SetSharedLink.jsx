@@ -165,9 +165,9 @@ class SetSharedLink extends React.Component {
                     {" "}
                     {decryptedSetDetails
                       ? decryptedSetDetails && decryptedSetDetails.isCopy
-                        ? `Copy of ${decryptedSetDetails.title} ${
-                            decryptedSetDetails.copyIndex > 0
-                              ? `(${decryptedSetDetails.copyIndex})`
+                        ? `${decryptedSetDetails.title} ${
+                            decryptedSetDetails.copyCount > 0
+                              ? `(${decryptedSetDetails.copyCount})`
                               : ""
                           }`
                         : decryptedSetDetails.title
