@@ -17,30 +17,21 @@ const createSet = async (req: Request, res: Response): Promise<any> => {
     const { currentUser } = req;
     const { body } = req;
     const headToken: Request | any = currentUser;
+    let indexx: number = 0;
+    if (body.copyOfSetId) {
+      const setData1: Document | any | null = await SetModel.findOne({
+        _id: body.copyOfSetId
+      });
+      const copied: number = setData1.copyIndex;
+      indexx = copied + 1;
 
-    const countSetCopy: Document | any | null = await SetModel.count({
-      title: body.title,
-      description: body.description ? body.description : "",
-      status: body.status ? body.status : true,
-      userId: body.userId ? body.userId : headToken.id,
-      folderId: body.folderId ? Mongoose.Types.ObjectId(body.folderId) : null,
-      sharableLink: body.sharableLink ? body.sharableLink : "",
-      isPublic: body.isPublic ? true : false,
-      isDeleted: body.isDeleted ? body.isDeleted : false,
-      isCopy: true
-    });
-    const setData1: Document | any | null = await SetModel.findOne({
-      _id: body.copyOfSetId
-    });
-    const copied: number = setData1.copyIndex;
-    let indexx = copied + 1;
-
-    await SetModel.updateOne(
-      { _id: body.copyOfSetId },
-      {
-        copyIndex: indexx
-      }
-    );
+      await SetModel.updateOne(
+        { _id: body.copyOfSetId },
+        {
+          copyIndex: indexx
+        }
+      );
+    }
 
     const setData: ISet = {
       title: body.isCopy ? `copy of ${body.title}` : body.title,
