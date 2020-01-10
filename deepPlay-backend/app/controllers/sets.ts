@@ -18,7 +18,10 @@ const createSet = async (req: Request, res: Response): Promise<any> => {
     const { body } = req;
     const headToken: Request | any = currentUser;
     let indexx: number = 0;
-    if (body.copyOfSetId) {
+    console.log("body.copyOfSetId", body.copyOfSetId);
+    console.log(" body.isCopy", body.isCopy);
+    if (body.copyOfSetId && body.isCopy) {
+      console.log("In Copy Set func", body.isCopy);
       const setData1: Document | any | null = await SetModel.findOne({
         _id: body.copyOfSetId
       });
