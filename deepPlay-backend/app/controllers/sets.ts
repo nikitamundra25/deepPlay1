@@ -35,7 +35,6 @@ const createSet = async (req: Request, res: Response): Promise<any> => {
         }
       );
     }
-
     const setData: ISet = {
       title: body.isCopy ? `copy of ${body.title}` : body.title,
       description: body.description ? body.description : "",
