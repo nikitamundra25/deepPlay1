@@ -547,6 +547,23 @@ const updateMoveDetailsFromYouTubeAndTrim = async (
       }
     );
 
+    //update sort index by 1
+    const moveListData: Document | any = await MoveModel.find({
+      setId: setId,
+      isDeleted: false,
+      moveURL: { $ne: null }
+    }).sort({ sortIndex: 1 });
+
+    for (let index = 0; index < moveListData.length; index++) {
+      if (moveListData[index]._id !== result._id) {
+        await MoveModel.updateOne(
+          { setId: setId, _id: moveListData[index]._id },
+          { $set: { sortIndex: index + 1 } }
+        );
+      }
+    }
+    //-------
+
     await MoveModel.updateOne(
       {
         _id: result._id
@@ -566,23 +583,6 @@ const updateMoveDetailsFromYouTubeAndTrim = async (
         moveURL: ""
       }
     );
-
-    //update sort index by 1
-    const moveListData: Document | any = await MoveModel.find({
-      setId: setId,
-      isDeleted: false,
-      moveURL: { $ne: null }
-    }).sort({ sortIndex: 1 });
-
-    for (let index = 0; index < moveListData.length; index++) {
-      if (moveListData[index]._id !== result._id) {
-        await MoveModel.updateOne(
-          { setId: setId, _id: moveListData[index]._id },
-          { $set: { sortIndex: index + 1 } }
-        );
-      }
-    }
-    //-------
 
     let originalVideoPath: string = "";
     const fileName = [
@@ -774,6 +774,21 @@ const updateMoveDetailsAndTrimVideo = async (
       }
     );
 
+    //update sort index by 1
+    const moveListData: Document | any = await MoveModel.find({
+      setId: setId,
+      isDeleted: false,
+      moveURL: { $ne: null }
+    }).sort({ sortIndex: 1 });
+
+    for (let index = 0; index < moveListData.length; index++) {
+      await MoveModel.updateOne(
+        { setId: setId, _id: moveListData[index]._id },
+        { $set: { sortIndex: index + 1 } }
+      );
+    }
+    //-------
+
     await MoveModel.updateOne(
       {
         _id: result._id
@@ -793,25 +808,10 @@ const updateMoveDetailsAndTrimVideo = async (
       }
     );
 
-    //update sort index by 1
-    const moveListData: Document | any = await MoveModel.find({
-      setId: setId,
-      isDeleted: false,
-      moveURL: { $ne: null }
-    }).sort({ sortIndex: 1 });
-
-    for (let index = 0; index < moveListData.length; index++) {
-      await MoveModel.updateOne(
-        { setId: setId, _id: moveListData[index]._id },
-        { $set: { sortIndex: index + 1 } }
-      );
-    }
-    //-------
-
     let thumbnailPath: any[] = [];
     if (frames && frames.length) {
       if (IsProductionMode) {
-        thumbnailPath = frames.split("8005");
+        thumbnailPath = frames.split("org");
       } else {
         thumbnailPath = frames.split("8000");
       }
@@ -1096,7 +1096,10 @@ const deleteMove = async (req: Request, res: Response): Promise<any> => {
       });
     }
     return res.status(200).json({
-      message: "Move has been deleted successfully!"
+      message:
+        moveId.length > 1
+          ? "Moves has been deleted successfully!"
+          : "Move has been deleted successfully!"
     });
   } catch (error) {
     console.log(error);
@@ -1239,6 +1242,7 @@ const addTagsInMove = async (req: Request, res: Response): Promise<any> => {
                 0
             )
           );
+
           await MoveModel.updateOne(
             { _id: moveid },
             {
