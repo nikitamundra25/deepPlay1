@@ -142,7 +142,7 @@ class SignupComponent extends React.Component {
     }
     if (name === "password") {
       value.match(/^(?:[0-9]+[a-z]|[a-z]+[0-9])[a-z0-9]*$/i);
-      if (value.length >= 40) {
+      if (value.length >= 8) {
         this.setState({
           passwordStrength: "strong"
         });
