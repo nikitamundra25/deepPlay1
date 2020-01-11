@@ -807,7 +807,7 @@ const updateMoveDetailsAndTrimVideo = async (
         sortIndex: 0
       }
     );
-
+    console.log("Frames",frames)
     let thumbnailPath: any[] = [];
     if (frames && frames.length) {
       if (IsProductionMode) {
@@ -816,7 +816,7 @@ const updateMoveDetailsAndTrimVideo = async (
         thumbnailPath = frames.split("8000");
       }
     }
-
+    console.log("RRRRRRRRRRRRRRRRRRRRR",thumbnailPath)
     if (result) {
       let videoFile: String | any, videoThumbnail: String | any;
       if (IsProductionMode) {
