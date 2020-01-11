@@ -276,10 +276,15 @@ class WebmView extends Component {
 
   handleVideoFullScreen = () => {
     this.customVideo = document.getElementById("custom_video_control");
+    if (!this.state.isPlaying) {
+      this.playVideo();
+    }
+
     if (this.customVideo.mozRequestFullScreen) {
       this.customVideo.mozRequestFullScreen();
     } else if (this.customVideo.webkitRequestFullScreen) {
       this.props.videoFullscreenReq();
+
       this.customVideo.webkitRequestFullScreen();
       this.setState({
         isFullScreenMode: true
