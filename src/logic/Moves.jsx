@@ -746,7 +746,7 @@ const editMoveLogic = createLogic({
       } else {
         dispatch(
           updateMoveSuccess({
-            videoData: action.payload.moveVideo,
+            // videoData: action.payload.moveVideo,
             movesOfSet: action.payload.moveData
           })
         );
