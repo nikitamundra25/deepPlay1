@@ -585,6 +585,7 @@ const publicUrlsetDetails = async (
             isDeleted: false
           }
         })
+        .sort({ createdAt: -1 })
         .skip(pageNumber)
         .limit(limitNumber);
 

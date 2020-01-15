@@ -438,7 +438,7 @@ const deleteUser = async (req: Request, res: Response): Promise<any> => {
     });
     await emailVar.sendEmail(result.email);
     return res.status(200).json({
-      message: "User deleted successfully."
+      message: "Your Account has been deleted Successfully."
     });
   } catch (error) {
     res.status(500).json({

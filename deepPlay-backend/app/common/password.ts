@@ -60,9 +60,11 @@ const decrypt = (text: string) => {
   dec += decipher.final("utf8");
   return dec;
 };
+
 /**
  *
  */
+
 const JWTSecrete: string = "qwertyuiop[]lkjhgfdazxcvbnm,./!@#$%^&*()";
 
 export {

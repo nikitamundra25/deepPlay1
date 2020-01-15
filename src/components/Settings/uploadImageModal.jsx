@@ -83,7 +83,7 @@ class UploadImage extends Component {
           backdrop={"static"}
         >
           <ModalHeader>
-            <span className="custom-title">Upload profile image</span>
+            <span className="custom-title">Upload Profile Image</span>
 
             <button
               aria-label="Close"

@@ -396,6 +396,13 @@ const UpdateSetLogic = createLogic({
         })
       );
       dispatch(getSetDetailsRequest({ setId: action.payload.setId }));
+      if (action.payload.addMove) {
+        dispatch(
+          redirectTo({
+            path: AppRoutes.MOVE.url + `?setId=${action.payload.setId}`
+          })
+        );
+      }
       done();
     }
   }

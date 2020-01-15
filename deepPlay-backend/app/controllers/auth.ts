@@ -138,7 +138,7 @@ const signup = async (req: Request, res: Response): Promise<any> => {
     if (result) {
       return res.status(400).json({
         message:
-          "This Email Address is already regisred with us. Please try to register with another Email Address.",
+          "This Email Address is already registered with us. Please try to register with another Email Address.",
         success: false
       });
     } else {
@@ -230,7 +230,7 @@ const socialSignup = async (req: Request, res: Response) => {
           role: userResult.roleType
         });
         return res.status(200).json({
-          message: "User Regitered Successfully.",
+          message: "User Registered Successfully.",
           token: token,
           userData: userResult,
           success: true
@@ -290,7 +290,7 @@ const userForgotPassword = async (
     if (result === null) {
       return res.status(400).json({
         message:
-          "Email Address is not Registred with us. Please try with registered email address."
+          "Email Address is not Registered with us. Please try with registered email address."
       });
     }
     const encryptedUserId = encrypt(result.id);

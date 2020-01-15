@@ -331,15 +331,15 @@ class MoveList extends React.Component {
     const { selectedMoveIds } = this.state;
     let moveofSetList = this.props.movesOfSet;
     let listData = moveofSetList;
-    // const starDiv = document.getElementsByClassName("star-mark")[index];
+    const starDiv = document.getElementsByClassName("star-mark")[index];
     if (isStarred) {
       listData[index].isStarred = false;
-      // starDiv.classList.remove("isStarred");
+      starDiv.classList.remove("isStarred");
     } else {
-      if (!toast.isActive(this.toastId)) {
-        this.toastId = toast.success("Move marked as starred");
-      }
-      // starDiv.classList.add("isStarred");
+      // if (!toast.isActive(this.toastId)) {
+      //   this.toastId = toast.success("Move marked as starred");
+      // }
+      starDiv.classList.add("isStarred");
       listData[index].isStarred = true;
     }
     const data = {
