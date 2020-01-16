@@ -1,27 +1,37 @@
 <!DOCTYPE html>
 <html lang="en" class="perfect-scrollbar-off nav-open">
+  <head>
+    <!-- <meta charset="utf-8" /> -->
 
-<head>
-  <!-- <meta charset="utf-8" /> -->
+    <!-- <meta name="theme-color" content="#000000" /> -->
+    <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
+    <link rel="shortcut icon" href="%PUBLIC_URL%/favicon.ico" />
+    <link
+      rel="apple-touch-icon"
+      sizes="76x76"
+      href="%PUBLIC_URL%/apple-icon.png"
+    />
+    <!-- Fonts -->
+    <link
+      href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://use.fontawesome.com/releases/v5.8.1/css/all.css"
+      integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf"
+      crossorigin="anonymous"
+    />
+    <title>%REACT_APP_NAME%</title>
+    <!-- <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css" /> -->
+    <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+  </head>
 
-  <!-- <meta name="theme-color" content="#000000" /> -->
-  <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
-  <link rel="shortcut icon" href="%PUBLIC_URL%/favicon.ico" />
-  <link rel="apple-touch-icon" sizes="76x76" href="%PUBLIC_URL%/apple-icon.png" />
-  <!-- Fonts -->
-  <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700" rel="stylesheet" />
-  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css"
-    integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous" />
-  <title>%REACT_APP_NAME%</title>
-  <!-- <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css" /> -->
-  <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
-  <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
-</head>
-
-<body>
-  <noscript> You need to enable JavaScript to run this app. </noscript>
-  <div id="root"></div>
-  <!--
+  <body>
+    <noscript> You need to enable JavaScript to run this app. </noscript>
+    <div id="root"></div>
+    <!--
       This HTML file is a template.
       If you open it directly in the browser, you will see an empty page.
 
@@ -31,12 +41,23 @@
       To begin the development, run `npm start` or `yarn start`.
       To create a production bundle, use `npm run build` or `yarn build`.
     -->
-</body>
-<script type="text/javascript">
-  var $zoho = $zoho || {}; $zoho.salesiq = $zoho.salesiq ||
-    { widgetcode: "0dc2f1e2b28188fe51739c8aa0633a870799f03ee8d99ba51b2468d21b68fed1", values: {}, ready: function () { } };
-  var d = document; s = d.createElement("script"); s.type = "text/javascript"; s.id = "zsiqscript"; s.defer = true;
-  s.src = "https://salesiq.zoho.com/widget"; t = d.getElementsByTagName("script")[0]; t.parentNode.insertBefore(s, t); d.write("<div id='zsiqwidget'></div>");
-</script>
-
+  </body>
+  <script type="text/javascript">
+    var $zoho = $zoho || {};
+    $zoho.salesiq = $zoho.salesiq || {
+      widgetcode:
+        "0dc2f1e2b28188fe51739c8aa0633a870799f03ee8d99ba51b2468d21b68fed1",
+      values: {},
+      ready: function() {}
+    };
+    var d = document;
+    s = d.createElement("script");
+    s.type = "text/javascript";
+    s.id = "zsiqscript";
+    s.defer = true;
+    s.src = "https://salesiq.zoho.com/widget";
+    t = d.getElementsByTagName("script")[0];
+    t.parentNode.insertBefore(s, t);
+    d.write("<div id='zsiqwidget'></div>");
+  </script>
 </html>

@@ -22,6 +22,8 @@ import profileImageIc from "../../assets/img/profile-ic.png";
 import { AppRoutes } from "../../config/AppRoutes";
 import { SidebarComponent } from "../../components/Sidebar";
 import logoutIcon from "../../assets/img/icons/logout.svg";
+import liveChatIcon from "../../assets/img/icons/text.svg";
+
 import { AppConfig } from "../../config/Appconfig";
 import AllSearchComponent from "../../components/AllSearch";
 import CreateSetComponent from "../../components/Sets/createSet";
@@ -264,7 +266,8 @@ class DefaultHeader extends React.Component {
       isFullScreenMode,
       videoFullscreenReq,
       videoFullscreenExit,
-      isVideoFromSearch
+      isVideoFromSearch,
+      liveChatEnable
     } = this.props;
     const { modelDetails } = modelInfoReducer;
     const { isShareableUrl } = shareLinkReducer;
@@ -561,7 +564,16 @@ class DefaultHeader extends React.Component {
                                 return null;
                               }
                             })}
-
+                            <DropdownItem onClick={e => liveChatEnable(e)}>
+                              <div className="dropdown-img">
+                                <img
+                                  src={liveChatIcon}
+                                  alt={"liveChat"}
+                                  width="20"
+                                />{" "}
+                              </div>
+                              <div className="dropdown-txt">Chat with us</div>
+                            </DropdownItem>
                             <DropdownItem onClick={e => logoutRequest(e)}>
                               <div className="dropdown-img">
                                 <img

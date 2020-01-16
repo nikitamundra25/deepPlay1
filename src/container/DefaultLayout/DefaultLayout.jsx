@@ -35,6 +35,13 @@ import Loader from "components/comman/Loader/Loader";
 
 // core components
 class DefaultLayout extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      liveChatEnabled: false
+    };
+  }
+
   componentDidMount() {
     const pathname = this.props.location.pathname;
     const token = localStorage.getItem("token");
@@ -55,7 +62,6 @@ class DefaultLayout extends React.Component {
     ) {
       this.props.redirectTo("/");
     }
-
     this.getMobileOperatingSystem();
   }
 
@@ -79,6 +85,11 @@ class DefaultLayout extends React.Component {
     this.props.redirectTo(AppRoutes.SETTINGS.url);
   };
 
+  liveChatEnable = e => {
+    e.preventDefault();
+    let tagData = document.getElementsByClassName("zsiq_float");
+    tagData[0].classList.add("zsiq_float_show");
+  };
   /*
   /*  
   */
@@ -163,6 +174,7 @@ class DefaultLayout extends React.Component {
             tagsList={tagsList}
             videoDataFromSearch={videoDataFromSearch}
             isVideoFromSearch={isVideoFromSearch}
+            liveChatEnable={this.liveChatEnable}
             {...this.props}
           />
         ) : null}
@@ -244,6 +256,14 @@ class DefaultLayout extends React.Component {
                         </Switch>
                       </Suspense>
                     </div>
+                    {/* {this.state.liveChatEnabled
+                      ? document.write(`<script type="text/javascript">
+  var $zoho = $zoho || {}; $zoho.salesiq = $zoho.salesiq ||
+    { widgetcode: "0dc2f1e2b28188fe51739c8aa0633a870799f03ee8d99ba51b2468d21b68fed1", values: {}, ready: function () { } };
+  var d = document; s = d.createElement("script"); s.type = "text/javascript"; s.id = "zsiqscript"; s.defer = true;
+  s.src = "https://salesiq.zoho.com/widget"; t = d.getElementsByTagName("script")[0]; t.parentNode.insertBefore(s, t); d.write("<div id='zsiqwidget'></div>");
+</script>`)
+                      : ""} */}
                   </div>
                 ) : (
                   <Suspense fallback={<Loader fullLoader={true} />}>
