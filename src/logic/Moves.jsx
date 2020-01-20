@@ -744,9 +744,10 @@ const editMoveLogic = createLogic({
       if (action.payload.data.fromMoveList) {
         dispatch(updateMoveSuccess({ movesOfSet: action.payload.moveList }));
       } else {
+        console.log("Comment videoData for testing");
         dispatch(
           updateMoveSuccess({
-            // videoData: action.payload.moveVideo,
+            //             videoData: action.payload.moveVideo,
             movesOfSet: action.payload.moveData
           })
         );

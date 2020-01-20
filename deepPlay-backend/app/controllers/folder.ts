@@ -20,28 +20,21 @@ const createFolder = async (req: Request, res: Response): Promise<any> => {
     }
     const headToken: Request | any = currentUser;
 
-    const countFolderCopy: Document | any | null = await FolderModel.count({
-      title: body.title,
-      description: body.description ? body.description : "",
-      status: body.status ? body.status : true,
-      userId: body.userId ? body.userId : headToken.id,
-      sharableLink: body.sharableLink ? body.sharableLink : "",
-      isPublic: body.isPublic ? true : false,
-      isDeleted: body.isDeleted ? body.isDeleted : false,
-      isCopy: true
-    });
-    const folderData1: Document | any | null = await FolderModel.findOne({
-      _id: body.copyOfFolderId
-    });
-    const copied: number = folderData1.copyIndex;
-    let indexx = copied + 1;
+    let indexx: number = 0;
+    if (body.copyOfSetId && body.isCopy) {
+      const folderData1: Document | any | null = await FolderModel.findOne({
+        _id: body.copyOfFolderId
+      });
+      const copied: number = folderData1.copyIndex;
+      indexx = copied + 1;
 
-    await FolderModel.updateOne(
-      { _id: body.copyOfFolderId },
-      {
-        copyIndex: indexx
-      }
-    );
+      await FolderModel.updateOne(
+        { _id: body.copyOfFolderId },
+        {
+          copyIndex: indexx
+        }
+      );
+    }
     const folderData: IFolder = {
       title: body.isCopy ? `copy of ${body.title}` : body.title,
       description: body.description ? body.description : "",
