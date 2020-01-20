@@ -137,6 +137,7 @@ class DefaultLayout extends React.Component {
       isLoggedIn = false;
     }
     const routePath = this.props.location.pathname;
+
     return (
       <>
         {routePath !== "/resetPassword" ? (

@@ -7,13 +7,16 @@ import {
   InputGroupAddon,
   InputGroupText,
   UncontrolledTooltip,
-  FormFeedback
+  FormFeedback,
+  Button
 } from "reactstrap";
 import { AppConfig } from "../../../config/Appconfig";
 import videoLoading from "../../../assets/img/loder/loader.svg";
 // import videosIc from "../../../assets/img/videos-ic.svg";
 
 import "./index.scss";
+import { AppRoutes } from "config/AppRoutes";
+import { ConfirmBox } from "helper/SweetAleart";
 
 // core components
 class VideoView extends React.Component {
@@ -40,7 +43,23 @@ class VideoView extends React.Component {
         videoData: true
       });
     }
-
+    var promise = this.video.play();
+    if (promise !== undefined) {
+      promise
+        .then(_ => {
+          // Autoplay started!
+        })
+        .catch(async error => {
+          // Show something in the UI that the video is muted
+          console.log("not supported");
+          await ConfirmBox({
+            text: "",
+            title: "You need to enable autoPlay on this browser.",
+            showCancelButton: false,
+            confirmButtonText: "Ok"
+          });
+        });
+    }
     // this.video.addEventListener("timeupdate", () => {
     //   console.log("kkkkkkk");
 
@@ -90,6 +109,18 @@ class VideoView extends React.Component {
     }
     // this.video.load();
     const vid = document.getElementById("video-trimmer");
+    // var promise = vid.play();
+    // if (promise !== undefined) {
+    //   promise
+    //     .then(_ => {
+    //       // Autoplay started!
+    //     })
+    //     .catch(error => {
+    //       // Show something in the UI that the video is muted
+    //       console.log("not supported");
+    //       alert("Please need to enable autoPlay on this browser.")
+    //     });
+    // }
     vid.onwaiting = () => {
       this.setState({
         isBufferingVideo: true
@@ -181,6 +212,16 @@ class VideoView extends React.Component {
                       You don't have authorisation to view this video.
                       <br />
                       <div>Try with another one!</div>
+                      <br />
+                      <Button
+                        color={"default"}
+                        className={"btn-line-black btn "}
+                        onClick={() => {
+                          this.props.redirectTo(AppRoutes.MOVE.url);
+                        }}
+                      >
+                        Create Another Move
+                      </Button>
                     </span>
                   </>
                 )}
