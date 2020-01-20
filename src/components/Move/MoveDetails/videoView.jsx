@@ -46,18 +46,21 @@ class VideoView extends React.Component {
     var promise = this.video.play();
     if (promise !== undefined) {
       promise
-        .then(_ => {
-          // Autoplay started!
+        .then(() => {
+          // Start whatever you need to do only after playback
+          // has begun.
         })
         .catch(async error => {
-          // Show something in the UI that the video is muted
-          console.log("not supported");
-          await ConfirmBox({
-            text: "",
-            title: "You need to enable autoPlay on this browser.",
-            showCancelButton: false,
-            confirmButtonText: "Ok"
-          });
+          if (error.name === "NotAllowedError") {
+            await ConfirmBox({
+              text: "",
+              title: "You need to enable autoPlay on this browser.",
+              showCancelButton: false,
+              confirmButtonText: "Ok"
+            });
+          } else {
+            //Handle if we got different error
+          }
         });
     }
     // this.video.addEventListener("timeupdate", () => {
@@ -102,6 +105,7 @@ class VideoView extends React.Component {
     const { max: oldMax, min: oldMin } = oldTimer || {};
     const { max, min } = timer || {};
     if (this.video && (min !== oldMin || max !== oldMax)) {
+      this.reverse();
       this.video.currentTime = min;
     }
     if (prevMoveData !== newMoveData) {
@@ -135,6 +139,22 @@ class VideoView extends React.Component {
   /**
    *
    */
+  reverse = () => {
+    // button function for rewind
+
+    const video = document.getElementById("video-trimmer");
+    let intervalRewind;
+    intervalRewind = setInterval(function() {
+      video.playbackRate = 1.0;
+      if (video.currentTime === 0) {
+        clearInterval(intervalRewind);
+        video.pause();
+      } else {
+        video.currentTime += -0.1;
+      }
+    }, 30);
+    return;
+  };
 
   /**
    *
