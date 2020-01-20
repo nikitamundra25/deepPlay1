@@ -28,7 +28,8 @@ $source: "hurmegeosans-no2-400";
 @font-face {
   font-family: "hurmegeosans-no2-400";
   src: url("/public/assets/font/hurmegeosans-no2-400.eot");
-  src: url("/assets/font/hurmegeosans/hurmegeosans-no2-400.eot?#iefix") format("embedded-opentype"),
+  src: url("/assets/font/hurmegeosans/hurmegeosans-no2-400.eot?#iefix")
+      format("embedded-opentype"),
     url("/assets/font/hurmegeosans/hurmegeosans-no2-400.woff2") format("woff2");
   font-weight: normal;
   font-style: normal;
@@ -2272,18 +2273,17 @@ header {
   overflow: hidden;
   flex-wrap: wrap;
   width: 100%;
-  
+
   & > div {
     width: 100%;
   }
   & > .play-list-tile-select {
     width: 25%;
   }
-  .ui-sortable{
+  .ui-sortable {
     width: 100%;
     padding: 0px;
   }
-
 }
 
 // media query start
@@ -2703,4 +2703,17 @@ _:future,
       text-transform: capitalize;
     }
   }
+}
+.chat-hide {
+  visibility: hidden;
+}
+.zsiq_custommain img,
+.zsiq_float {
+  display: none !important;
+  cursor: pointer;
+}
+
+.zsiq_float_show {
+  display: inline !important;
+  cursor: pointer;
 }

@@ -94,8 +94,6 @@ export class ApiHelper {
    */
   async UploadVideo(service, endpoint, body, progressCallback) {
     let fd = new FormData();
-    console.log("progressCallback", progressCallback);
-
     for (const k in body) {
       if (body.hasOwnProperty(k)) {
         const element = body[k];
@@ -128,7 +126,6 @@ export class ApiHelper {
           code: response.status,
           response: response.data
         };
-
         throw errorObject;
       }
       const data = new SuccessHandlerHelper(response.data);

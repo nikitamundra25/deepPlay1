@@ -229,16 +229,16 @@ class MoveSearchList extends React.Component {
     const { selectedMoveIds } = this.state;
     let moveofSetList = this.props.movesOfSet;
     let listData = moveofSetList;
-    // const starDiv = document.getElementsByClassName("star-mark")[index];
+    const starDiv = document.getElementsByClassName("star-mark")[index];
     if (isStarred) {
       listData[index].isStarred = false;
-      // starDiv.classList.remove("isStarred");
+      starDiv.classList.remove("isStarred");
     } else {
-      // starDiv.classList.add("isStarred");
+      starDiv.classList.add("isStarred");
       listData[index].isStarred = true;
-      if (!toast.isActive(this.toastId)) {
-        this.toastId = toast.success("Move marked as starred");
-      }
+      // if (!toast.isActive(this.toastId)) {
+      //   this.toastId = toast.success("Move marked as starred");
+      // }
     }
     const data = {
       moveId: selectedMoveIds.length ? selectedMoveIds : id,
@@ -787,7 +787,7 @@ class MoveSearchList extends React.Component {
                                       <div className={"star-mark"}>
                                         {video.isStarred ? (
                                           <img
-                                            src={blankStar}
+                                            src={starIc}
                                             alt={"star"}
                                             className="w-100"
                                           />

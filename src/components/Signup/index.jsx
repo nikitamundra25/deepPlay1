@@ -180,7 +180,7 @@ class SignupComponent extends React.Component {
       firstName,
       lastName,
       confirmPassword,
-      roleType: roleType ? "teacher" : "Unclassified"
+      roleType: roleType ? "teacher" : "student"
     };
     let { isValid, errors } = Validator(
       data,

@@ -747,7 +747,7 @@ const editMoveLogic = createLogic({
         console.log("Comment videoData for testing");
         dispatch(
           updateMoveSuccess({
-//             videoData: action.payload.moveVideo,
+            //             videoData: action.payload.moveVideo,
             movesOfSet: action.payload.moveData
           })
         );

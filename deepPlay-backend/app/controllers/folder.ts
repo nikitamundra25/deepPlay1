@@ -21,7 +21,7 @@ const createFolder = async (req: Request, res: Response): Promise<any> => {
     const headToken: Request | any = currentUser;
 
     let indexx: number = 0;
-    if (body.copyOfSetId && body.isCopy) {
+    if (body.copyOfFolderId && body.isCopy) {
       const folderData1: Document | any | null = await FolderModel.findOne({
         _id: body.copyOfFolderId
       });
