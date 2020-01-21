@@ -102,29 +102,27 @@ class VideoView extends React.Component {
       ? this.props.moveReducer.isCreatingAnotherMove
       : null;
     const { timer } = this.props;
+    const vid = document.getElementById("video-trimmer");
     const { max: oldMax, min: oldMin } = oldTimer || {};
-    const { max, min } = timer || {};
+    const { max, min, to } = timer || {};
     if (this.video && (min !== oldMin || max !== oldMax)) {
-      this.reverse();
-      this.video.currentTime = min;
+      // this.video.currentTime = min;
+      if (to) {
+        this.video.currentTime = max;
+      } else {
+        vid.currentTime = min;
+      }
+      vid.ontimeupdate = () => {
+        if (parseInt(vid.currentTime) > parseInt(max)) {
+          vid.currentTime = min;
+        }
+      };
     }
     if (prevMoveData !== newMoveData) {
       this.video.load();
     }
     // this.video.load();
-    const vid = document.getElementById("video-trimmer");
-    // var promise = vid.play();
-    // if (promise !== undefined) {
-    //   promise
-    //     .then(_ => {
-    //       // Autoplay started!
-    //     })
-    //     .catch(error => {
-    //       // Show something in the UI that the video is muted
-    //       console.log("not supported");
-    //       alert("Please need to enable autoPlay on this browser.")
-    //     });
-    // }
+
     vid.onwaiting = () => {
       this.setState({
         isBufferingVideo: true
@@ -139,23 +137,6 @@ class VideoView extends React.Component {
   /**
    *
    */
-  reverse = () => {
-    // button function for rewind
-
-    const video = document.getElementById("video-trimmer");
-    let intervalRewind;
-    intervalRewind = setInterval(function() {
-      video.playbackRate = 1.0;
-      if (video.currentTime === 0) {
-        clearInterval(intervalRewind);
-        video.pause();
-      } else {
-        video.currentTime += -0.1;
-      }
-    }, 30);
-    return;
-  };
-
   /**
    *
    */
