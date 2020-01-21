@@ -7,13 +7,16 @@ import {
   InputGroupAddon,
   InputGroupText,
   UncontrolledTooltip,
-  FormFeedback
+  FormFeedback,
+  Button
 } from "reactstrap";
 import { AppConfig } from "../../../config/Appconfig";
 import videoLoading from "../../../assets/img/loder/loader.svg";
 // import videosIc from "../../../assets/img/videos-ic.svg";
 
 import "./index.scss";
+import { AppRoutes } from "config/AppRoutes";
+import { ConfirmBox } from "helper/SweetAleart";
 
 // core components
 class VideoView extends React.Component {
@@ -40,7 +43,26 @@ class VideoView extends React.Component {
         videoData: true
       });
     }
-
+    var promise = this.video.play();
+    if (promise !== undefined) {
+      promise
+        .then(() => {
+          // Start whatever you need to do only after playback
+          // has begun.
+        })
+        .catch(async error => {
+          if (error.name === "NotAllowedError") {
+            await ConfirmBox({
+              text: "",
+              title: "You need to enable autoPlay on this browser.",
+              showCancelButton: false,
+              confirmButtonText: "Ok"
+            });
+          } else {
+            //Handle if we got different error
+          }
+        });
+    }
     // this.video.addEventListener("timeupdate", () => {
     //   console.log("kkkkkkk");
 
@@ -80,16 +102,27 @@ class VideoView extends React.Component {
       ? this.props.moveReducer.isCreatingAnotherMove
       : null;
     const { timer } = this.props;
+    const vid = document.getElementById("video-trimmer");
     const { max: oldMax, min: oldMin } = oldTimer || {};
-    const { max, min } = timer || {};
+    const { max, min, to } = timer || {};
     if (this.video && (min !== oldMin || max !== oldMax)) {
-      this.video.currentTime = min;
+      // this.video.currentTime = min;
+      if (to) {
+        this.video.currentTime = max;
+      } else {
+        vid.currentTime = min;
+      }
+      vid.ontimeupdate = () => {
+        if (parseInt(vid.currentTime) > parseInt(max)) {
+          vid.currentTime = min;
+        }
+      };
     }
     if (prevMoveData !== newMoveData) {
       this.video.load();
     }
     // this.video.load();
-    const vid = document.getElementById("video-trimmer");
+
     vid.onwaiting = () => {
       this.setState({
         isBufferingVideo: true
@@ -104,7 +137,6 @@ class VideoView extends React.Component {
   /**
    *
    */
-
   /**
    *
    */
@@ -181,6 +213,16 @@ class VideoView extends React.Component {
                       You don't have authorisation to view this video.
                       <br />
                       <div>Try with another one!</div>
+                      <br />
+                      <Button
+                        color={"default"}
+                        className={"btn-line-black btn "}
+                        onClick={() => {
+                          this.props.redirectTo(AppRoutes.MOVE.url);
+                        }}
+                      >
+                        Create Another Move
+                      </Button>
                     </span>
                   </>
                 )}

@@ -218,7 +218,8 @@ class YouTubeFrameDetails extends Component {
                   ? parseInt(max) <= parseInt(videoMaxDuration)
                     ? max
                     : videoMaxDuration
-                  : max + 0.1
+                  : max + 0.1,
+              to: true
             };
             this.setState(
               {
@@ -231,7 +232,8 @@ class YouTubeFrameDetails extends Component {
           } else {
             let changeValue = {
               min: min,
-              max: max - 0.1
+              max: max - 0.1,
+              to: true
             };
             this.setState(
               {
@@ -305,7 +307,8 @@ class YouTubeFrameDetails extends Component {
                   ? parseInt(max) <= parseInt(videoMaxDuration)
                     ? max
                     : parseInt(videoMaxDuration)
-                  : max + 0.1
+                  : max + 0.1,
+              to: true
             };
             this.setState(
               {
@@ -318,7 +321,8 @@ class YouTubeFrameDetails extends Component {
           } else {
             let changeValue = {
               min: min,
-              max: parseInt(max) - parseInt(min) > 1 ? max - 0.1 : max
+              max: parseInt(max) - parseInt(min) > 1 ? max - 0.1 : max,
+              to: true
             };
             this.setState(
               {
@@ -379,7 +383,8 @@ class YouTubeFrameDetails extends Component {
                 max:
                   parseInt(max) - parseInt(min) === AppConfig.MAX_VIDEO_LENGTH
                     ? max
-                    : max + 0.1
+                    : max + 0.1,
+                to: true
               };
               this.setState(
                 {
@@ -394,7 +399,8 @@ class YouTubeFrameDetails extends Component {
             if (parseInt(max) - parseInt(min) > 1) {
               let changeValue = {
                 min: min - 1,
-                max: max - 1
+                max: max - 1,
+                to: true
               };
               this.setState(
                 {
