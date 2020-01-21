@@ -246,7 +246,10 @@ class MoveDetails extends React.Component {
     {
       !isYoutubeUrl
         ? this.props.completeVideoEditing({
-            timer,
+             timer: {
+              min: parseInt(timer.min),
+              max: parseInt(timer.max)
+            },
             moveId,
             tags,
             setId,
@@ -262,7 +265,10 @@ class MoveDetails extends React.Component {
             setMoveCount
           })
         : this.props.completeYouTubeVideoEditing({
-            timer,
+             timer: {
+              min: parseInt(timer.min),
+              max: parseInt(timer.max)
+            },
             moveId: !isCreateAnother ? moveId : newMoveId,
             tags,
             setId,
