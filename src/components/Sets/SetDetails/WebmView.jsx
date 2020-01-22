@@ -751,7 +751,6 @@ class WebmView extends Component {
                     ? videoData.title
                     : videoData.title
                   : "unnamed"} */}
-
                 {/* {doubleClick ? (
                   <>
                     <FormGroup>
@@ -773,6 +772,7 @@ class WebmView extends Component {
                   "Unnamed"
                 )} */}
               </div>
+
               {!isShareable ? (
                 <div className="video-slider-dropDown">
                   <div>

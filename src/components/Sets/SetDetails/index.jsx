@@ -218,7 +218,6 @@ class SetDetails extends React.Component {
   /*
    */
   handleVideoModal = (moveURL, index) => {
-    console.log("moveURL, index", moveURL, index);
 
     const { modelInfoReducer } = this.props;
     const { modelDetails } = modelInfoReducer;

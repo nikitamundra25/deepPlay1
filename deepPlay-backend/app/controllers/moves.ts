@@ -606,7 +606,7 @@ const updateMoveDetailsFromYouTubeAndTrim = async (
     }
     let videoStream: any;
 
-    const video = youtubedl(result.sourceUrl, ["--format=18"]);
+    const video = youtubedl(result.sourceUrl /* ["--format=18"] */);
 
     // video.on('info', function(info) {
     //   console.log('Download started')
@@ -654,6 +654,19 @@ const updateMoveDetailsFromYouTubeAndTrim = async (
                 isDeleted: true
               }
             );
+
+            const stemp: Document | null | any = await SetModel.findById(setId);
+            const setData1 = stemp.isVideoProcessing;
+            setData1.pop();
+            await SetModel.updateOne(
+              {
+                _id: setId
+              },
+              {
+                isVideoProcessing: setData1
+              }
+            );
+
             return res.status(400).json({
               message:
                 "We are having an issue while creating webm for you. Please try again."
@@ -807,7 +820,6 @@ const updateMoveDetailsAndTrimVideo = async (
         sortIndex: 0
       }
     );
-    console.log("Frames",frames)
     let thumbnailPath: any[] = [];
     if (frames && frames.length) {
       if (IsProductionMode) {
@@ -816,7 +828,6 @@ const updateMoveDetailsAndTrimVideo = async (
         thumbnailPath = frames.split("8000");
       }
     }
-    console.log("RRRRRRRRRRRRRRRRRRRRR",thumbnailPath)
     if (result) {
       let videoFile: String | any, videoThumbnail: String | any;
       if (IsProductionMode) {
@@ -865,6 +876,19 @@ const updateMoveDetailsAndTrimVideo = async (
                 isDeleted: true
               }
             );
+
+            const stemp: Document | null | any = await SetModel.findById(setId);
+            const setData1 = stemp.isVideoProcessing;
+            setData1.pop();
+            await SetModel.updateOne(
+              {
+                _id: setId
+              },
+              {
+                isVideoProcessing: setData1
+              }
+            );
+
             return res.status(400).json({
               message:
                 "We are having an issue while creating webm for you. Please try again."

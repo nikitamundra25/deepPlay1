@@ -145,7 +145,6 @@ class LoginComponent extends React.Component {
           className="modal-dialog-centered auth-user-model"
           isOpen={openLoginModel}
           toggle={handleLoginModel}
-          // backdrop={"static"}
           size={"sm"}
         >
           <ModalHeader toggle={handleLoginModel}></ModalHeader>
@@ -158,7 +157,7 @@ class LoginComponent extends React.Component {
                 <div className="btn-wrapper text-center social-media-wrap">
                   <span className="btn-inner--icon mr-2 facebook-wrap">
                     <FacebookLogin
-                      appId="429677604320021"
+                      appId="194959544980237"
                       autoLoad={false}
                       fields="name,email,picture"
                       textButton={"Facebook"}
@@ -169,7 +168,7 @@ class LoginComponent extends React.Component {
                   </span>
                   <span className="btn-inner--icon google-wrap">
                     <GoogleLogin
-                      clientId="52209426453-64s7do5ib1j1s3e9fhgnjgmvi3931vqm.apps.googleusercontent.com"
+                      clientId="201270708097-vrbfettj9u5gnrpnjd6sn9o73skmjg3f.apps.googleusercontent.com"
                       buttonText="Google"
                       className={"btn-neutral btn-icon btn btn-default"}
                       onSuccess={this.handleGoogleLogin}

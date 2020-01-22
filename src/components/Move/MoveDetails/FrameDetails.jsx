@@ -4,7 +4,7 @@ import { AppConfig } from "config/Appconfig";
 import { Input, Row, Col, FormGroup, Label, Button } from "reactstrap";
 import { orderBy } from "natural-orderby";
 import {
-  SecondsToHHMMSS,
+  // SecondsToHHMMSS,
   //  SecondsToMMSS,
   SecondsToMMSSMM
 } from "helper/Time";
@@ -102,20 +102,21 @@ class FrameDetails extends Component {
   /**
    *
    */
+
   labelValueChange = value => {
     let { min, max } = value;
     const { time } = this.state;
     const { videoMetaData } = this.props;
     const { duration } = videoMetaData || {};
     const { seconds: maxValue } = duration || {};
-    if (min >= 0) {
-      if (min !== parseInt(time.min) && min >= max) {
+    if (parseInt(min) >= 0) {
+      if (parseInt(min) !== parseInt(time.min) && min >= max) {
         max =
           parseInt(min) + AppConfig.MAX_VIDEO_LENGTH < maxValue
             ? parseInt(min) + AppConfig.MAX_VIDEO_LENGTH
             : maxValue;
         value.max = max;
-      } else if (max !== parseInt(time.max) && min >= max) {
+      } else if (parseInt(max) !== parseInt(time.max) && min >= max) {
         min =
           max - AppConfig.MAX_VIDEO_LENGTH < 0
             ? max - AppConfig.MAX_VIDEO_LENGTH
@@ -127,29 +128,48 @@ class FrameDetails extends Component {
           {
             time: {
               max:
-                parseInt(max) === Math.round(time.max)
+                parseInt(max) === parseInt(time.max)
                   ? parseInt(min) + AppConfig.MAX_VIDEO_LENGTH
                   : parseInt(max),
               min:
-                parseInt(min) === Math.round(time.min)
+                parseInt(min) === parseInt(time.min)
                   ? parseInt(max) - AppConfig.MAX_VIDEO_LENGTH
-                  : parseInt(min)
+                  : min
             }
           },
           () => {
-            this.props.onTimerChange(this.state.time);
+            this.props.onTimerChange(this.state.time, { isVideoSleek: true });
           }
         );
         return;
       }
-      this.setState(
-        {
-          time: value
-        },
-        () => {
-          this.props.onTimerChange(this.state.time);
-        }
-      );
+      if (
+        Math.round(min) === Math.round(max) ||
+        parseInt(min) === parseInt(max)
+      ) {
+        this.setState(
+          {
+            time: {
+              max: time.min + 1,
+              min: time.min
+            }
+          },
+          () => {
+            this.props.onTimerChange(this.state.time, { isVideoSleek: true });
+          }
+        );
+        return;
+      }
+      if (value.min >= 0) {
+        this.setState(
+          {
+            time: value
+          },
+          () => {
+            this.props.onTimerChange(this.state.time, { isVideoSleek: true });
+          }
+        );
+      }
     } else {
       return;
     }
@@ -169,7 +189,7 @@ class FrameDetails extends Component {
     ) {
       options.push(
         <option key={index} value={index}>
-          {SecondsToHHMMSS(index)}
+          {SecondsToMMSSMM(index)}
         </option>
       );
     }
@@ -227,7 +247,8 @@ class FrameDetails extends Component {
                   ? parseInt(max) <= parseInt(duration.seconds)
                     ? max
                     : duration.seconds
-                  : max + 0.1
+                  : max + 0.1,
+              to: true
             };
             this.setState(
               {
@@ -240,7 +261,8 @@ class FrameDetails extends Component {
           } else {
             let changeValue = {
               min: min,
-              max: max - 0.1
+              max: max - 0.1,
+              to: true
             };
             this.setState(
               {
@@ -309,7 +331,8 @@ class FrameDetails extends Component {
                   ? parseInt(max) <= parseInt(duration.seconds)
                     ? max
                     : duration.seconds
-                  : max + 0.1
+                  : max + 0.1,
+              to: true
             };
             this.setState(
               {
@@ -322,7 +345,8 @@ class FrameDetails extends Component {
           } else {
             let changeValue = {
               min: min,
-              max: parseInt(max) - parseInt(min) > 1 ? max - 0.1 : max
+              max: parseInt(max) - parseInt(min) > 1 ? max - 0.1 : max,
+              to: true
             };
             this.setState(
               {
@@ -383,7 +407,8 @@ class FrameDetails extends Component {
                 max:
                   parseInt(max) - parseInt(min) === AppConfig.MAX_VIDEO_LENGTH
                     ? max
-                    : max + 0.1
+                    : max + 0.1,
+                to: true
               };
               this.setState(
                 {
@@ -398,7 +423,8 @@ class FrameDetails extends Component {
             if (parseInt(max) - parseInt(min) > 1) {
               let changeValue = {
                 min: min - 1,
-                max: max - 1
+                max: max - 1,
+                to: true
               };
               this.setState(
                 {
@@ -487,6 +513,7 @@ class FrameDetails extends Component {
           <div id={"right-container"}></div>
           <InputRange
             draggableTrack
+            step={0.1}
             maxValue={maxValue}
             minValue={0}
             formatLabel={(val, type) => {
