@@ -4,7 +4,7 @@ import { AppConfig } from "config/Appconfig";
 import { Input, Row, Col, FormGroup, Label, Button } from "reactstrap";
 import { orderBy } from "natural-orderby";
 import {
-  SecondsToHHMMSS,
+  // SecondsToHHMMSS,
   //  SecondsToMMSS,
   SecondsToMMSSMM
 } from "helper/Time";
@@ -98,17 +98,15 @@ class YouTubeFrameDetails extends Component {
   labelValueChange = value => {
     let { min, max } = value;
     const { time } = this.state;
-    const { videoMetaData } = this.props;
-    const { duration } = videoMetaData || {};
-    const { seconds: maxValue } = duration || {};
-    if (min >= 0) {
-      if (min !== parseInt(time.min) && min >= max) {
+    const { videoMaxDuration } = this.props;
+    if (parseInt(min) >= 0) {
+      if (parseInt(min) !== parseInt(time.min) && min >= max) {
         max =
-          parseInt(min) + AppConfig.MAX_VIDEO_LENGTH < maxValue
+          parseInt(min) + AppConfig.MAX_VIDEO_LENGTH < videoMaxDuration
             ? parseInt(min) + AppConfig.MAX_VIDEO_LENGTH
-            : maxValue;
+            : videoMaxDuration;
         value.max = max;
-      } else if (max !== parseInt(time.max) && min >= max) {
+      } else if (parseInt(max) !== parseInt(time.max) && min >= max) {
         min =
           max - AppConfig.MAX_VIDEO_LENGTH < 0
             ? max - AppConfig.MAX_VIDEO_LENGTH
@@ -120,13 +118,13 @@ class YouTubeFrameDetails extends Component {
           {
             time: {
               max:
-                parseInt(max) === Math.round(time.max)
+                parseInt(max) === parseInt(time.max)
                   ? parseInt(min) + AppConfig.MAX_VIDEO_LENGTH
                   : parseInt(max),
               min:
-                parseInt(min) === Math.round(time.min)
+                parseInt(min) === parseInt(time.min)
                   ? parseInt(max) - AppConfig.MAX_VIDEO_LENGTH
-                  : parseInt(min)
+                  : min
             }
           },
           () => {
@@ -135,14 +133,33 @@ class YouTubeFrameDetails extends Component {
         );
         return;
       }
-      this.setState(
-        {
-          time: value
-        },
-        () => {
-          this.props.onTimerChange(this.state.time, { isVideoSleek: true });
-        }
-      );
+      if (
+        Math.round(min) === Math.round(max) ||
+        parseInt(min) === parseInt(max)
+      ) {
+        this.setState(
+          {
+            time: {
+              max: time.min + 1,
+              min: time.min
+            }
+          },
+          () => {
+            this.props.onTimerChange(this.state.time, { isVideoSleek: true });
+          }
+        );
+        return;
+      }
+      if (value.min >= 0) {
+        this.setState(
+          {
+            time: value
+          },
+          () => {
+            this.props.onTimerChange(this.state.time, { isVideoSleek: true });
+          }
+        );
+      }
     } else {
       return;
     }
@@ -162,7 +179,7 @@ class YouTubeFrameDetails extends Component {
     ) {
       options.push(
         <option key={index} value={index}>
-          {SecondsToHHMMSS(index)}
+          {SecondsToMMSSMM(index)}
         </option>
       );
     }
@@ -496,6 +513,7 @@ class YouTubeFrameDetails extends Component {
           <div id={"right-container"}></div>
           <InputRange
             draggableTrack
+            step={0.1}
             maxValue={parseInt(videoMaxDuration)}
             minValue={0}
             formatLabel={(val, type) => {
@@ -583,7 +601,7 @@ class YouTubeFrameDetails extends Component {
                     // }
                     onKeyDown={e => this.handleKeyEvent(e, "to")}
                   >
-                    {this.renderOptions("max")}
+                    {/* {this.renderOptions("max")} */}
                   </Input>
                 </FormGroup>
               </Col>

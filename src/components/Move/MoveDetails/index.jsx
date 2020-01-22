@@ -171,8 +171,8 @@ class MoveDetails extends React.Component {
                   label:
                     data && data.isCopy
                       ? `${data.title} ${
-                        data.copyCount > 0 ? `(${data.copyCount})` : ""
-                      }`
+                          data.copyCount > 0 ? `(${data.copyCount})` : ""
+                        }`
                       : data.title,
                   value: data._id
                 };
@@ -246,7 +246,10 @@ class MoveDetails extends React.Component {
     {
       !isYoutubeUrl
         ? this.props.completeVideoEditing({
-            timer,
+            timer: {
+              min: parseInt(timer.min),
+              max: parseInt(timer.max)
+            },
             moveId,
             tags,
             setId,
@@ -262,7 +265,10 @@ class MoveDetails extends React.Component {
             setMoveCount
           })
         : this.props.completeYouTubeVideoEditing({
-            timer,
+            timer: {
+              min: parseInt(timer.min),
+              max: parseInt(timer.max)
+            },
             moveId: !isCreateAnother ? moveId : newMoveId,
             tags,
             setId,

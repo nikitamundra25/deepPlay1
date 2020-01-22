@@ -310,7 +310,7 @@ class MoveListDetails extends React.Component {
                 </div> */}
                 <div
                   className={
-                    video.title
+                    video.title !== "Unnamed" && video.title
                       ? "text-capitalize play-list-heading h6 m-0"
                       : "text-capitalize play-list-heading h6 m-0 text-untitled"
                   }

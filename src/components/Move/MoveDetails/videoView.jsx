@@ -113,7 +113,7 @@ class VideoView extends React.Component {
         vid.currentTime = min;
       }
       vid.ontimeupdate = () => {
-        if (parseInt(vid.currentTime) > parseInt(max)) {
+        if (Math.round(vid.currentTime) >= parseInt(max)) {
           vid.currentTime = min;
         }
       };
