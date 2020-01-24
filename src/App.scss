@@ -505,6 +505,9 @@ header {
     display: flex;
     align-items: center;
     justify-content: space-between;
+    .header-img-icon{
+      width: 30px;
+    }
     .content-title {
       color: $dashboardTextColor;
       font-size: 21px;
