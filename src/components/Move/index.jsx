@@ -70,8 +70,10 @@ class MoveComponent extends React.Component {
     });
     if (value !== undefined || value !== "") {
       // eslint-disable-next-line
-      var myregexp = /(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/ ]{11})/i;
-      var match = value.match(myregexp);
+      let myregexp = /(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/ ]{11})/i;
+      let match = value.match(myregexp);
+      // let instagramRegExp = /(https?:\/\/(?:www\.)?instagram\.com\/p\/([^/?#&]+)).*/;
+      // let matchUrl = value.match(instagramRegExp);
       if (match) {
         const ValidYouTubeUrl = this.validateYouTubeUrl(value);
         if (ValidYouTubeUrl) {

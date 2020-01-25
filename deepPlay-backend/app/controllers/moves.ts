@@ -11,7 +11,11 @@ import { IMoveCopy, IUpdateMove } from "../interfaces";
 import moment from "moment";
 import { s3BucketUpload } from "../common/awsBucket";
 import { algoliaAppId, algoliaAPIKey } from "../config/app";
-const youtubedl = require("youtube-dl");
+// import cheerio from "cheerio";
+import request from "request";
+import youtubedl from "youtube-dl";
+import https from "https";
+const instagramUtil = require("../common/instagramUtil");
 var CronJob = require("cron").CronJob;
 const algoliasearch = require("algoliasearch");
 const client = algoliasearch(algoliaAppId, algoliaAPIKey);
@@ -89,6 +93,80 @@ const downloadYoutubeVideo = async (
         message: "User id not found"
       });
     }
+    //Get instagram download video url
+
+    getInstagramVideoUrl(
+      "https://www.instagram.com/p/B7fZ68Shjxp/?igshid=hqa3vif8hmtb",
+      { timeout: 15000 },
+      (error: any, info: any) => {
+        if (error) {
+          res.status(400).json({
+            message: "Instagram Url Not Supported",
+            success: false
+          });
+        }
+        console.log("====================================");
+        console.log("infooo", info);
+        console.log("====================================");
+        console.log("====================================");
+        console.log("error", error);
+        console.log("====================================");
+        if (info) {
+          let originalVideoPath: string = "";
+          const fileName = [
+            headToken.id + Date.now() + "deep_play_video" + ".webm"
+          ].join("");
+
+          if (IsProductionMode) {
+            originalVideoPath = path.join(
+              __dirname,
+              "uploads",
+              "youtube-videos",
+              fileName
+            );
+          } else {
+            originalVideoPath = path.join(
+              __basedir,
+              "../uploads",
+              "youtube-videos",
+              fileName
+            );
+          }
+
+          let video = fs.createWriteStream(originalVideoPath);
+          const request = https.get(info.list[0].video, function(
+            response: any
+          ) {
+            response.pipe(video);
+          });
+          video.on("close", async function() {
+            const videoUrlFileName = originalVideoPath.split("uploads");
+            const videoUrl = `uploads/${videoUrlFileName[1]}`;
+            console.log("videoUrlvideoUrldsg", videoUrl);
+
+            const fileName = `${
+              videoUrl.split(".")[0]
+            }_clip_${moment().unix()}.webm`;
+
+            let videoFileMain: String | any, videoOriginalFile: String | any;
+            if (IsProductionMode) {
+              videoFileMain = path.join(__dirname, `${fileName}`);
+            } else {
+              videoFileMain = path.join(__dirname, "..", `${fileName}`);
+            }
+
+            // if (IsProductionMode) {
+            //   videoOriginalFile = path.join(__dirname, `${result.videoUrl}`);
+            // } else {
+            //   videoOriginalFile = path.join(__dirname, "..", `${result.videoUrl}`);
+            // }
+          });
+        }
+      }
+    );
+
+    // end instagram video url
+
     let videoURL: string;
     const fileName = [
       headToken.id + Date.now() + "deep_play_video" + ".webm"
@@ -126,6 +204,8 @@ const downloadYoutubeVideo = async (
     if (trueYoutubeUrl) {
       youtubedl.getInfo(body.url, async function(err: any, info: any) {
         if (err) {
+          console.log("err", err);
+
           return res.status(400).json({
             message: "This Video is not available.",
             success: false
@@ -606,7 +686,7 @@ const updateMoveDetailsFromYouTubeAndTrim = async (
     }
     let videoStream: any;
 
-    const video = youtubedl(result.sourceUrl /* ["--format=18"] */);
+    const video = youtubedl(result.sourceUrl, ["--format=18"], {});
 
     // video.on('info', function(info) {
     //   console.log('Download started')
@@ -1762,6 +1842,63 @@ new CronJob(
   true,
   "America/Los_Angeles"
 );
+
+/* 
+/* 
+ */
+const getInstagramVideoUrl = (
+  url: string,
+  options: object | any,
+  callback: any
+) => {
+  if (typeof options === "function") (callback = options), (options = {});
+  options = instagramUtil.getReqOpt(options);
+  options.url = url;
+  request(options, (error: any, response: any, body: any) => {
+    if (error) {
+      callback(error);
+    } else {
+      if (response.statusCode == 200 && body) {
+        const data =
+          JSON.parse(
+            body.match(
+              /<script type="text\/javascript">window._sharedData = (.*);<\/script>/
+            )[1]
+          ) || {};
+        const type =
+          data.entry_data.PostPage[0].graphql.shortcode_media.__typename;
+        let info: any = {};
+        if (type === "GraphImage") {
+          info.list = [
+            {
+              image:
+                data.entry_data.PostPage[0].graphql.shortcode_media.display_url
+            }
+          ];
+        } else if (type === "GraphSidecar") {
+          info.list = data.entry_data.PostPage[0].graphql.shortcode_media.edge_sidecar_to_children.edges.map(
+            (item: object | any) => ({
+              image: item.node.display_url,
+              video: item.node.video_url
+            })
+          );
+        } else if (type === "GraphVideo") {
+          info.list = [
+            {
+              image:
+                data.entry_data.PostPage[0].graphql.shortcode_media.display_url,
+              video:
+                data.entry_data.PostPage[0].graphql.shortcode_media.video_url
+            }
+          ];
+        }
+        callback(null, info);
+      } else {
+        callback(new Error("Not Found instagram"));
+      }
+    }
+  });
+};
 
 export {
   downloadVideo,
