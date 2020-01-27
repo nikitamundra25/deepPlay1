@@ -606,7 +606,7 @@ const updateMoveDetailsFromYouTubeAndTrim = async (
     }
     let videoStream: any;
 
-    const video = youtubedl(result.sourceUrl /* ["--format=18"] */);
+    const video = youtubedl(result.sourceUrl , ["--format=248"],{} );
 
     // video.on('info', function(info) {
     //   console.log('Download started')
