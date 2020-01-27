@@ -94,77 +94,77 @@ const downloadYoutubeVideo = async (
       });
     }
     //Get instagram download video url
-
-    getInstagramVideoUrl(
-      "https://www.instagram.com/p/B7fZ68Shjxp/?igshid=hqa3vif8hmtb",
-      { timeout: 15000 },
-      (error: any, info: any) => {
-        if (error) {
-          res.status(400).json({
-            message: "Instagram Url Not Supported",
-            success: false
-          });
-        }
-        console.log("====================================");
-        console.log("infooo", info);
-        console.log("====================================");
-        console.log("====================================");
-        console.log("error", error);
-        console.log("====================================");
-        if (info) {
-          let originalVideoPath: string = "";
-          const fileName = [
-            headToken.id + Date.now() + "deep_play_video" + ".webm"
-          ].join("");
-
-          if (IsProductionMode) {
-            originalVideoPath = path.join(
-              __dirname,
-              "uploads",
-              "youtube-videos",
-              fileName
-            );
-          } else {
-            originalVideoPath = path.join(
-              __basedir,
-              "../uploads",
-              "youtube-videos",
-              fileName
-            );
+    if (body.instagramUrl) {
+      getInstagramVideoUrl(
+        "https://www.instagram.com/p/B7fZ68Shjxp/?igshid=hqa3vif8hmtb",
+        { timeout: 15000 },
+        (error: any, info: any) => {
+          if (error) {
+            res.status(400).json({
+              message: "Instagram Url Not Supported",
+              success: false
+            });
           }
+          console.log("====================================");
+          console.log("infooo", info);
+          console.log("====================================");
+          console.log("====================================");
+          console.log("error", error);
+          console.log("====================================");
+          if (info) {
+            let originalVideoPath: string = "";
+            const fileName = [
+              headToken.id + Date.now() + "deep_play_video" + ".webm"
+            ].join("");
 
-          let video = fs.createWriteStream(originalVideoPath);
-          const request = https.get(info.list[0].video, function(
-            response: any
-          ) {
-            response.pipe(video);
-          });
-          video.on("close", async function() {
-            const videoUrlFileName = originalVideoPath.split("uploads");
-            const videoUrl = `uploads/${videoUrlFileName[1]}`;
-            console.log("videoUrlvideoUrldsg", videoUrl);
-
-            const fileName = `${
-              videoUrl.split(".")[0]
-            }_clip_${moment().unix()}.webm`;
-
-            let videoFileMain: String | any, videoOriginalFile: String | any;
             if (IsProductionMode) {
-              videoFileMain = path.join(__dirname, `${fileName}`);
+              originalVideoPath = path.join(
+                __dirname,
+                "uploads",
+                "youtube-videos",
+                fileName
+              );
             } else {
-              videoFileMain = path.join(__dirname, "..", `${fileName}`);
+              originalVideoPath = path.join(
+                __basedir,
+                "../uploads",
+                "youtube-videos",
+                fileName
+              );
             }
 
-            // if (IsProductionMode) {
-            //   videoOriginalFile = path.join(__dirname, `${result.videoUrl}`);
-            // } else {
-            //   videoOriginalFile = path.join(__dirname, "..", `${result.videoUrl}`);
-            // }
-          });
-        }
-      }
-    );
+            let video = fs.createWriteStream(originalVideoPath);
+            const request = https.get(info.list[0].video, function(
+              response: any
+            ) {
+              response.pipe(video);
+            });
+            video.on("close", async function() {
+              const videoUrlFileName = originalVideoPath.split("uploads");
+              const videoUrl = `uploads/${videoUrlFileName[1]}`;
+              console.log("videoUrlvideoUrldsg", videoUrl);
 
+              const fileName = `${
+                videoUrl.split(".")[0]
+              }_clip_${moment().unix()}.webm`;
+
+              let videoFileMain: String | any, videoOriginalFile: String | any;
+              if (IsProductionMode) {
+                videoFileMain = path.join(__dirname, `${fileName}`);
+              } else {
+                videoFileMain = path.join(__dirname, "..", `${fileName}`);
+              }
+
+              // if (IsProductionMode) {
+              //   videoOriginalFile = path.join(__dirname, `${result.videoUrl}`);
+              // } else {
+              //   videoOriginalFile = path.join(__dirname, "..", `${result.videoUrl}`);
+              // }
+            });
+          }
+        }
+      );
+    }
     // end instagram video url
 
     let videoURL: string;
@@ -685,9 +685,7 @@ const updateMoveDetailsFromYouTubeAndTrim = async (
       );
     }
     let videoStream: any;
-
     const video = youtubedl(result.sourceUrl, ["--format=18"], {});
-
     // video.on('info', function(info) {
     //   console.log('Download started')
     //   console.log('filename: ' + info._filename)
@@ -695,8 +693,9 @@ const updateMoveDetailsFromYouTubeAndTrim = async (
     // })
     video.pipe(fs.createWriteStream(originalVideoPath));
     // ytdl(result.sourceUrl, { quality: "highest" }).pipe(
-    //   (videoStream = fs.createWriteStream(originalVideoPath))
+    //   (videoStream = fs.createWriteStream(originalVideoPath)) .size('1920x1080')
     // );
+
     video.on("close", async function() {
       const videoUrlFileName = originalVideoPath.split("uploads");
       const videoUrl = `uploads/${videoUrlFileName[1]}`;
@@ -720,6 +719,7 @@ const updateMoveDetailsFromYouTubeAndTrim = async (
       video
         .setVideoStartTime(timer.min)
         .setVideoDuration(duration)
+        // .setVideoSize("1920x1080", true, false)
         .setVideoFormat("webm")
         .save(videoFileMain, async (err: any, file: any) => {
           console.log("=========================");
@@ -752,6 +752,7 @@ const updateMoveDetailsFromYouTubeAndTrim = async (
                 "We are having an issue while creating webm for you. Please try again."
             });
           }
+
           const s3VideoUrl = await s3BucketUpload(
             videoFileMain,
             "deep-play.webm",
