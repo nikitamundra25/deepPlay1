@@ -18,6 +18,11 @@ import "./index.scss";
 import { AppRoutes } from "config/AppRoutes";
 import { ConfirmBox } from "helper/SweetAleart";
 
+const timeArr = [
+  { startTime: 5, endTime: 10 },
+  { startTime: 122, endTime: 180 }
+];
+
 // core components
 class VideoView extends React.Component {
   video;
@@ -92,6 +97,7 @@ class VideoView extends React.Component {
 
       this.props.videoDuration(data);
     };
+    // this.JumpTimeIntervals();
   }
   /**
    *
@@ -103,6 +109,7 @@ class VideoView extends React.Component {
       : null;
     const { timer } = this.props;
     const vid = document.getElementById("video-trimmer");
+    // this.JumpTimeIntervals();
     const { max: oldMax, min: oldMin } = oldTimer || {};
     const { max, min, to } = timer || {};
     if (this.video && (min !== oldMin || max !== oldMax)) {
@@ -118,6 +125,7 @@ class VideoView extends React.Component {
         }
       };
     }
+
     if (prevMoveData !== newMoveData) {
       this.video.load();
     }
@@ -137,6 +145,32 @@ class VideoView extends React.Component {
   /**
    *
    */
+  JumpTimeIntervals = () => {
+    var currentSegment = 0; // Segment being played
+    var endTime = timeArr[currentSegment]["endTime"];
+    var videoPlayer = document.getElementById("video-trimmer");
+    videoPlayer.currentTime = timeArr[currentSegment]["startTime"];
+    videoPlayer.play(); // Starts playing the video from startTime
+    videoPlayer.addEventListener(
+      "timeupdate",
+      function() {
+        if (videoPlayer.currentTime >= endTime) {
+          // Segment completed
+          currentSegment++;
+          if (currentSegment < timeArr.length) {
+            // Not the last segment in the array
+            videoPlayer.currentTime = timeArr[currentSegment]["startTime"];
+            endTime = timeArr[currentSegment]["endTime"];
+          } else {
+            // Last segment in the array is over
+            videoPlayer.pause();
+          }
+        }
+      },
+      false
+    );
+  };
+
   /**
    *
    */
@@ -229,7 +263,7 @@ class VideoView extends React.Component {
                 {!isEdit ? (
                   <video
                     width={"100%"}
-                    autoPlay
+                    // autoPlay
                     loop
                     onCanPlay={() => {
                       this.setState({
@@ -240,7 +274,8 @@ class VideoView extends React.Component {
                     muted={false}
                     playsInline
                     onError={e => playbackFailed(e)}
-                    onContextMenu={e => e.preventDefault()}
+                    // controls
+                    // onContextMenu={e => e.preventDefault()}
                     disablepictureinpicture="true"
                     controlsList="nodownload"
                   >
