@@ -1,14 +1,11 @@
 import React from "react";
 import {
   Col,
-  Input,
-  FormGroup,
-  InputGroup,
-  InputGroupAddon,
-  InputGroupText,
-  UncontrolledTooltip,
-  FormFeedback
+ FormGroup, Label, FormFeedback, InputGroup 
 } from "reactstrap";
+import CreatableSelect from "react-select/creatable";
+import "react-tagsinput/react-tagsinput.css";
+import AsyncSelect from "react-select/async";
 import { AppConfig } from "../../../config/Appconfig";
 import videoLoading from "../../../assets/img/loder/loader.svg";
 // import videosIc from "../../../assets/img/videos-ic.svg";
@@ -33,6 +30,26 @@ class VideoView extends React.Component {
   /**
    *
    */
+  
+  getDetails = () => {
+    const { tags, selectSetOptions } = this.props;
+    return {
+      tags,
+      setId: selectSetOptions ? selectSetOptions.value : null
+    };
+  };
+
+  loadSets = (input, callback) => {
+    if (input.length > 1) {
+      this.props.getAllSetRequest({
+        search: input,
+        callback,
+        isSetNoLimit: false
+      });
+    } else {
+      this.props.getAllSetRequest({ isSetNoLimit: false });
+    }
+  };
   componentDidMount() {
     this.video = document.getElementById("video-trimmer");
     if (this.video) {
@@ -117,49 +134,54 @@ class VideoView extends React.Component {
       errorTitle,
       isYoutubeUrl,
       playbackFailed,
-      videoError
+      videoError,
+      selectSetOptions, setReducer, tags, errors, tagsList
     } = this.props;
+    defaultSetoptions = [];
     const { moveDetails } = moveReducer;
+    const { allSetList,recentSetAdded } = setReducer;
+  
     const { isBufferingVideo, videoCanPlay } = this.state;
+    let recentAddedSet,
+    defaultSetoptions = [];
+  if (allSetList && allSetList.length) {
+    allSetList.map(data => {
+      const defaultSetoptionsValue = {
+        label:
+          data && data.isCopy
+            ? `${data.title} ${
+                data.copyCount > 0 ? `(${data.copyCount})` : ""
+              }`
+            : data.title,
+        value: data._id,
+        moveCount: data.moveCount
+      };
 
+      defaultSetoptions.push(defaultSetoptionsValue);
+      return true;
+    });
+    const addNewOption = {
+      label: "+ Create New Set",
+      value: ""
+    };
+    defaultSetoptions.push(addNewOption);
+  } else {
+    const addNewOption = {
+      label: "+ Create New Set",
+      value: ""
+    };
+    defaultSetoptions.push(addNewOption);
+  }
+  if (recentSetAdded && recentSetAdded.value) {
+    recentAddedSet = {
+      label: recentSetAdded.title,
+      value: recentSetAdded._id
+    };
+  }
     return (
       <>
-        <Col lg={"6"}>
-          <FormGroup className="flex-fill flex-column video-title-wrap">
-            <div className=" w-100">
-              <InputGroup className={"move-title-wrap"}>
-                <Input
-                  id="title"
-                  placeholder="Enter your title (optional)"
-                  onChange={e => this.props.handleChange(e)}
-                  type="text"
-                  className={
-                    errorTitle ? "is-invalid move-title" : "move-title"
-                  }
-                  name="title"
-                  value={title ? title : ""}
-                />
-                <FormFeedback> {errorTitle ? errorTitle : null} </FormFeedback>
-                <InputGroupAddon
-                  addonType="prepend"
-                  className="discription-btn-wrap"
-                >
-                  <div onClick={this.props.handleDesriptionModal}>
-                    <InputGroupText
-                      id="description"
-                      className={"discription-btn cursor_pointer"}
-                    >
-                      <i className="fas fas fa-info " />
-                      <UncontrolledTooltip placement="top" target="description">
-                        {description ? "Update Description" : "Add description"}
-                      </UncontrolledTooltip>
-                    </InputGroupText>
-                  </div>
-                </InputGroupAddon>
-              </InputGroup>
-            </div>
-          </FormGroup>
-          {moveDetails && moveDetails.videoUrl ? (
+        <Col lg={4}>
+         {moveDetails && moveDetails.videoUrl ? (
             <div className={"video-player"}>
               {isBufferingVideo === true ? (
                 <div className="video-spinner z-">
@@ -224,6 +246,68 @@ class VideoView extends React.Component {
                   </video>
                 )}
               </div>
+              <FormGroup className="flex-fill flex-column mt-3 input-w">
+            {/* add tag-input-wrap class for tagInput design  */}
+            <Label className="mt-2">Add tags and press enter to separate</Label>
+            <div className="w-100 tag-input-wrap search-select-wrap">
+              {/* <TagsInput
+                value={tags}
+                className={"form-control"}
+                maxTags={"5"}
+                onChange={this.props.handleTagChange}
+              /> */}
+              <CreatableSelect
+                classNamePrefix="react_select"
+                isMulti
+                onChange={this.props.handleTagChange}
+                value={tags}
+                options={tagsList}
+                // options={colourOptions}
+              />
+            </div>
+          </FormGroup>
+          <FormGroup className="flex-fill flex-column mt-3">
+            {/* add search-select class for search select design  */}
+            <Label className="mt-2">
+              Select sets <span className="text-danger">*</span>
+            </Label>
+            <InputGroup>
+              <div className="w-100 search-select-wrap">
+                <AsyncSelect
+                  classNamePrefix="react_select"
+                  loadOptions={this.loadSets}
+                  isClearable={
+                    selectSetOptions && selectSetOptions.value ? true : false
+                  }
+                  defaultOptions={defaultSetoptions}
+                  onBlur={this.props.onBlur}
+                  placeholder="Type to select sets"
+                  className={
+                    errors && errors.setId
+                      ? "is-invalid form-control search-input-wrap"
+                      : ""
+                  }
+                  onChange={e => this.props.handleInputChange(e)}
+                  value={
+                    recentAddedSet &&
+                    recentAddedSet.label &&
+                    recentAddedSet.value
+                      ? recentAddedSet
+                      : selectSetOptions
+                  }
+                />
+                <FormFeedback>
+                  {errors &&
+                  errors.setId &&
+                  selectSetOptions &&
+                  selectSetOptions.value === ""
+                    ? errors.setId
+                    : null}
+                </FormFeedback>
+              </div>
+            </InputGroup>
+          </FormGroup>
+      
             </div>
           ) : (
             <span>No video available for trimming</span>

@@ -477,6 +477,10 @@ header {
     width: calc(100% - 210px);
     min-height: calc(100vh - 58px);
     position: relative;
+    &.without-side {
+      margin-left: 0px;
+      width: 100%;
+    }
   }
   a {
     color: $dashboardTextColor;
@@ -505,7 +509,7 @@ header {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    .header-img-icon{
+    .header-img-icon {
       width: 30px;
     }
     .content-title {
@@ -1196,6 +1200,36 @@ header {
     }
   }
 }
+.create-videos-section {
+  .card-header {
+    display: flex;
+    padding: 0px 0px 0px 0px;
+    align-items: center;
+    .create-move-back {
+      position: relative;
+      left: 0px;
+      top: 0px;
+      margin: 0 15px;
+    }
+    .video-title-wrap {
+      padding: 15px;
+      background: #f3f3f3;
+      input {
+        background: transparent;
+        &::placeholder,
+        &:-moz-placeholder,
+        &::-webkit-input-placeholder,
+        &:-moz-placeholder,
+        &:-ms-input-placeholder {
+          color: #fff !important;
+        }
+      }
+    }
+  }
+  .trimming-body {
+    padding: 0px 15px 15px 15px;
+  }
+}
 .set-content-wrap {
   display: flex;
   align-items: center;
@@ -1476,6 +1510,9 @@ header {
 
 .video-title-wrap {
   margin-bottom: 0px;
+  input {
+    height: auto;
+  }
 }
 .move-title-wrap {
   display: flex;
@@ -2275,18 +2312,17 @@ header {
   overflow: hidden;
   flex-wrap: wrap;
   width: 100%;
-  
+
   & > div {
     width: 100%;
   }
   & > .play-list-tile-select {
     width: 25%;
   }
-  .ui-sortable{
+  .ui-sortable {
     width: 100%;
     padding: 0px;
   }
-
 }
 
 // media query start
@@ -2704,6 +2740,134 @@ _:future,
       border: 1px solid #2a5db1;
       border-radius: 0px;
       text-transform: capitalize;
+    }
+  }
+}
+.triming-section {
+  background: #efefef;
+  padding: 0px 0px 15px 0px;
+  margin: 15px 0px;
+  .triming-wrap {
+    padding: 20px 15px 20px 15px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    .triming-number {
+      font-weight: bold;
+    }
+    .triming-block {
+      display: flex;
+      align-items: center;
+      .triming-button {
+        height: 40px;
+        width: 50px;
+        padding: 6px 16px;
+        background: #9d9d9d;
+        color: #fff;
+        &:hover {
+          transform: none;
+          background: #ccc;
+          color: $blackcolor;
+          img {
+            -moz-filter: invert(1);
+            -webkit-filter: invert(1);
+            filter: invert(1);
+          }
+        }
+        img {
+          width: 100%;
+        }
+      }
+    }
+  }
+  .video-cutting-section {
+    max-height: 500px;
+    overflow: auto;
+    .video-cutting-block {
+      margin-top: 20px;
+      padding: 0px 15px;
+      .cutting-time-frame {
+        margin-top: 10px;
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        .cutting-time-form {
+          width: calc(100% - 200px);
+          max-width: 450px;
+          input {
+            padding: 5px 10px;
+            height: auto;
+          }
+        }
+        .delete-cut-wrap {
+          cursor: pointer;
+          color: #333;
+          &:hover {
+            color: $blackcolor;
+            font-weight: bold;
+          }
+        }
+      }
+    }
+  }
+  .trimming-buttons-wrap {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 20px;
+    padding: 0px 15px;
+  }
+}
+.rang-slider {
+  &.main-rang-slider {
+    padding: 0px 15px;
+  }
+  &.dot-rang-slider {
+    .input-range__track--background {
+      background-image: linear-gradient(
+        45deg,
+        rgba(255, 255, 255, 0.15) 25%,
+        transparent 25%,
+        transparent 50%,
+        rgba(255, 255, 255, 0.15) 50%,
+        rgba(255, 255, 255, 0.15) 75%,
+        transparent 75%,
+        transparent
+      );
+      background-size: 1rem 1rem;
+      background-color: #b8b8b8;
+    }
+  }
+
+  .input-range {
+    height: 20px;
+  }
+  .input-range__track--background {
+    background-color: #b8b8b8;
+    height: 20px;
+    top: 0px;
+    height: 20px;
+    top: 0px;
+
+    .input-range__track {
+      height: 20px;
+      background: #000000;
+    }
+    .input-range__slider {
+      height: 30px;
+      width: 30px;
+      top: 5px;
+      background-color: #aeaeae;
+      border-color: #aeaeae;
+      left: 0px;
+      box-shadow: inset 0 0 1px #fff, inset 0 1px 7px #e9d7d700, 0 3px 6px -3px #2c2c2c;
+      &:focus {
+        box-shadow: 0 0 0 5px rgba(0, 0, 0, 0.2);
+      }
+    }
+    .input-range__slider-container {
+      top: 0px;
     }
   }
 }
