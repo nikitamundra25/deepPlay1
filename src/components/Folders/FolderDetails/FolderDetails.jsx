@@ -42,8 +42,7 @@ import FolderModal from "../createFolderModal";
 import PaginationHelper from "helper/Pagination";
 import qs from "query-string";
 import { AppConfig } from "../../../config/Appconfig";
-import  plusIc  from "../../../assets/img/add.svg";
-
+import plusIc from "../../../assets/img/add.svg";
 
 // core components
 class RecentFolderComponent extends React.Component {
@@ -332,7 +331,7 @@ class RecentFolderComponent extends React.Component {
               onClick={this.openAddSetModel}
               id="move"
             >
-              <img src={plusIc} />
+              <img src={plusIc} alt="plusIc" />
             </span>
             <UncontrolledTooltip placement="top" target="move">
               Add Sets

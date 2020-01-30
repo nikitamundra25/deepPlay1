@@ -131,16 +131,11 @@ class VideoView extends React.Component {
     const vid = document.getElementById("video-trimmer");
     // this.JumpTimeIntervals();
     const { max: oldMax, min: oldMin } = oldTimer || {};
-    const { max, min, to } = timer || {};
+    const { max, min } = timer || {};
     if (this.video && (min !== oldMin || max !== oldMax)) {
-      // this.video.currentTime = min;
-      if (to) {
-        this.video.currentTime = max;
-      } else {
-        vid.currentTime = min;
-      }
+      this.video.currentTime = max;
       vid.ontimeupdate = () => {
-        if (Math.round(vid.currentTime) >= parseInt(max)) {
+        if (Math.round(vid.currentTime) > parseInt(max)) {
           vid.currentTime = min;
         }
       };
@@ -303,8 +298,8 @@ class VideoView extends React.Component {
                     muted={false}
                     playsInline
                     onError={e => playbackFailed(e)}
-                    // controls
-                    // onContextMenu={e => e.preventDefault()}
+                    controls
+                    onContextMenu={e => e.preventDefault()}
                     disablepictureinpicture="true"
                     controlsList="nodownload"
                   >

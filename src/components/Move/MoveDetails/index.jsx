@@ -75,7 +75,9 @@ class MoveDetails extends React.Component {
       selectedSetId: "",
       errorTitle: "",
       createNew: false,
-      videoError: false
+      videoError: false,
+      isPlaying: false,
+      currentTime: 0
     };
     this.videoDetails = React.createRef();
   }
@@ -86,6 +88,7 @@ class MoveDetails extends React.Component {
     this.props.getMoveDetailsRequest({ moveId: moveId[3] });
     this.props.getAllSetRequest({ isSetNoLimit: false });
     this.props.getTagListRequest();
+
     /*    const { recentSetAdded } = this.props.setReducer;
     console.log("recentSetAdded", recentSetAdded); */
 
@@ -117,6 +120,8 @@ class MoveDetails extends React.Component {
     const prevDescriptionModal = prevmodelDetails.isDescriptionModalOpen;
     const newModelInfoReducer = this.props.modelInfoReducer;
     const { modelDetails } = newModelInfoReducer;
+    this.video = document.getElementById("video-trimmer");
+
     if (prevDescriptionModal !== modelDetails.isDescriptionModalOpen) {
       if (this.state.description) {
         this.setState({
@@ -200,6 +205,16 @@ class MoveDetails extends React.Component {
               }
         });
       }
+      if (this.video) {
+        this.video.addEventListener("timeupdate", () => {
+          const currentVideoTime = parseFloat(
+            this.video ? this.video.currentTime : 0
+          ).toFixed(2);
+          this.setState({
+            currentTime: currentVideoTime
+          });
+        });
+      }
     }
     if (
       this.props.setReducer &&
@@ -211,6 +226,19 @@ class MoveDetails extends React.Component {
           label: recentSetAdded.title,
           value: recentSetAdded._id
         }
+      });
+    }
+
+    if (this.video) {
+      this.video.addEventListener("pause", () => {
+        this.setState({
+          isPlaying: false
+        });
+      });
+      this.video.addEventListener("play", () => {
+        this.setState({
+          isPlaying: true
+        });
       });
     }
   };
@@ -289,7 +317,44 @@ class MoveDetails extends React.Component {
   handleVideoPause = () => {
     let myVideo = document.getElementById("video-trimmer");
     if (myVideo) {
+      this.setState({
+        isPlaying: false
+      });
       myVideo.pause();
+    }
+  };
+
+  handleVideoPlay = () => {
+    this.video = document.getElementById("video-trimmer");
+    if (this.video) {
+      this.setState({
+        isPlaying: true
+      });
+      this.video.play();
+    }
+  };
+
+  handlePlayPause = () => {
+    console.log("sgfksagvfhv");
+
+    if (this.state.isPlaying) {
+      this.handleVideoPause();
+    } else {
+      this.handleVideoPlay();
+    }
+  };
+
+  handleSingleInputRange = value => {
+    const { videoMaxDuration } = this.state;
+    this.handleVideoPause();
+    const vid = document.getElementById("video-trimmer");
+    vid.currentTime = value;
+    this.setState({
+      currentTime:
+        value === parseInt(videoMaxDuration) ? videoMaxDuration : value
+    });
+    if (value === parseInt(videoMaxDuration)) {
+      this.handleVideoPlay();
     }
   };
   /**
@@ -536,7 +601,9 @@ class MoveDetails extends React.Component {
       descError,
       videoFrames,
       createNew,
-      videoError
+      videoError,
+      isPlaying,
+      currentTime
     } = this.state;
 
     return (
@@ -544,41 +611,53 @@ class MoveDetails extends React.Component {
         <div className="create-set-section create-videos-section step-2 ">
           <Card className="w-100 p-0">
             <CardHeader className="mb-3 ">
-            <span className="cursor_pointer back-arrow create-move-back"> <i class="fas fa-long-arrow-alt-left"></i> Back</span>
-                    <FormGroup className="flex-fill flex-column video-title-wrap">
-            <div className=" w-100">
-              <InputGroup className={"move-title-wrap"}>
-                <Input
-                  id="title"
-                  placeholder="Enter your title (optional)"
-                  onChange={e => this.props.handleChange(e)}
-                  type="text"
-                  className={
-                    errorTitle ? "is-invalid move-title" : "move-title"
-                  }
-                  name="title"
-                  value={title ? title : ""}
-                />
-                <FormFeedback> {errorTitle ? errorTitle : null} </FormFeedback>
-                <InputGroupAddon
-                  addonType="prepend"
-                  className="discription-btn-wrap"
-                >
-                  <div onClick={this.props.handleDesriptionModal}>
-                    <InputGroupText
-                      id="description"
-                      className={"discription-btn cursor_pointer"}
+              <span className="cursor_pointer back-arrow create-move-back">
+                {" "}
+                <i class="fas fa-long-arrow-alt-left"></i> Back
+              </span>
+              <FormGroup className="flex-fill flex-column video-title-wrap">
+                <div className=" w-100">
+                  <InputGroup className={"move-title-wrap"}>
+                    <Input
+                      id="title"
+                      placeholder="Enter your title (optional)"
+                      onChange={e => this.handleChangeTitle(e)}
+                      type="text"
+                      className={
+                        errorTitle ? "is-invalid move-title" : "move-title"
+                      }
+                      name="title"
+                      value={title ? title : ""}
+                    />
+                    <FormFeedback>
+                      {" "}
+                      {errorTitle ? errorTitle : null}{" "}
+                    </FormFeedback>
+
+                    <InputGroupAddon
+                      addonType="prepend"
+                      className="discription-btn-wrap"
                     >
-                      <i className="fas fas fa-info " />
-                      <UncontrolledTooltip placement="top" target="description">
-                        {description ? "Update Description" : "Add description"}
-                      </UncontrolledTooltip>
-                    </InputGroupText>
-                  </div>
-                </InputGroupAddon>
-              </InputGroup>
-            </div>
-          </FormGroup>
+                      <div onClick={this.props.handleDesriptionModal}>
+                        <InputGroupText
+                          id="description"
+                          className={"discription-btn cursor_pointer"}
+                        >
+                          <i className="fas fas fa-info " />
+                          <UncontrolledTooltip
+                            placement="top"
+                            target="description"
+                          >
+                            {description
+                              ? "Update Description"
+                              : "Add description"}
+                          </UncontrolledTooltip>
+                        </InputGroupText>
+                      </div>
+                    </InputGroupAddon>
+                  </InputGroup>
+                </div>
+              </FormGroup>
             </CardHeader>
             <CardBody className="trimming-body">
               {!isSavingWebM ? <div></div> : null}
@@ -586,7 +665,7 @@ class MoveDetails extends React.Component {
                 <Row className={" "}>
                   {moveDetails && moveDetails.videoUrl ? (
                     <>
-                  <VideoView
+                      <VideoView
                         moveReducer={moveReducer}
                         handleChange={this.handleChangeTitle}
                         handleDesriptionModal={this.handleDesriptionModal}
@@ -624,8 +703,13 @@ class MoveDetails extends React.Component {
                         tagsList={tagsList}
                         onBlur={this.onBlur}
                         ref={this.videoDetails}
+                        handlePlayPause={this.handlePlayPause}
+                        isPlaying={isPlaying}
+                        videoMaxDuration={videoMaxDuration}
+                        currentTime={currentTime}
+                        handleSingleInputRange={this.handleSingleInputRange}
+                        onTimerChange={this.onTimerChange}
                       />
-                     
                     </>
                   ) : (
                     <Col sm={12} className="loader-col video-loader-wrap">

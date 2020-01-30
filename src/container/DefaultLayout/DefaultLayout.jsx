@@ -238,7 +238,13 @@ class DefaultLayout extends React.Component {
                 routePath !== "/privacy-policy" &&
                 routePath !== "/terms-and-conditions" &&
                 routePath !== "/public-access-denied" ? (
-                  <div className={`dashboard-right-wrap ${ moveSection[0] == "/move/detail" ? "without-side detail-wrap" : " "}`}>
+                  <div
+                    className={`dashboard-right-wrap ${
+                      moveSection[0] === "/move/detail"
+                        ? "without-side detail-wrap"
+                        : " "
+                    }`}
+                  >
                     <div className="dashboard-right-section">
                       <Suspense fallback={<Loader fullLoader={true} />}>
                         <Switch>
