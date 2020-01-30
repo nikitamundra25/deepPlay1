@@ -25,6 +25,7 @@ import FacebookLogin from "react-facebook-login";
 import GoogleLogin from "react-google-login";
 import { toast } from "react-toastify";
 import { logger } from "helper/Logger";
+import { AppRoutes } from "config/AppRoutes";
 
 class SignupComponent extends React.Component {
   constructor(props) {
@@ -414,8 +415,22 @@ class SignupComponent extends React.Component {
                         htmlFor="customCheck"
                       >
                         <span>
-                          I agree to DeepPlay's Terms of Service and Privacy
-                          Policy.{" "}
+                          I agree to DeepPlay's{" "}
+                          <a
+                            href={AppRoutes.TERMS_AND_CONDITIONS.url}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                          >
+                            <u className="text-link">Terms of Service</u>{" "}
+                          </a>{" "}
+                          and{" "}
+                          <a
+                            href={AppRoutes.PRIVACY_POLICY.url}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                          >
+                            <u className="text-link">Privacy Policy.</u>
+                          </a>
                         </span>
                       </label>
                     </div>
