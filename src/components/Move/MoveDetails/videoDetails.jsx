@@ -110,7 +110,7 @@ class VideoDetails extends React.Component {
             trimTime: trimTimeUpdate
           },
           () => {
-            this.props.onTimerChange(this.state.trimTime[index], {
+            this.props.onTimerChange(this.state.trimTime[index], trimTime, {
               isVideoSleek: true
             });
           }
@@ -132,7 +132,7 @@ class VideoDetails extends React.Component {
             trimTime: trimTimeUpdate
           },
           () => {
-            this.props.onTimerChange(this.state.trimTime[index], {
+            this.props.onTimerChange(this.state.trimTime[index], trimTime, {
               isVideoSleek: true
             });
           }
@@ -146,7 +146,7 @@ class VideoDetails extends React.Component {
             trimTime: trimTimeUpdate
           },
           () => {
-            this.props.onTimerChange(this.state.trimTime[index], {
+            this.props.onTimerChange(this.state.trimTime[index], trimTime, {
               isVideoSleek: true
             });
           }
@@ -182,7 +182,10 @@ class VideoDetails extends React.Component {
                   trimTime: trimTimeUpdate
                 },
                 () => {
-                  this.props.onTimerChange(this.state.trimTime[index]);
+                  this.props.onTimerChange(
+                    this.state.trimTime[index],
+                    trimTime
+                  );
                 }
               );
             }
@@ -198,7 +201,7 @@ class VideoDetails extends React.Component {
                 trimTime: trimTimeUpdate
               },
               () => {
-                this.props.onTimerChange(this.state.trimTime[index]);
+                this.props.onTimerChange(this.state.trimTime[index], trimTime);
               }
             );
           }
@@ -221,7 +224,7 @@ class VideoDetails extends React.Component {
                 trimTime: trimTimeUpdate
               },
               () => {
-                this.props.onTimerChange(this.state.trimTime[index]);
+                this.props.onTimerChange(this.state.trimTime[index], trimTime);
               }
             );
           } else {
@@ -237,7 +240,7 @@ class VideoDetails extends React.Component {
                 trimTime: trimTimeUpdate
               },
               () => {
-                this.props.onTimerChange(this.state.trimTime[index]);
+                this.props.onTimerChange(this.state.trimTime[index], trimTime);
               }
             );
           }
@@ -262,7 +265,7 @@ class VideoDetails extends React.Component {
                 trimTime: trimTimeUpdate
               },
               () => {
-                this.props.onTimerChange(this.state.trimTime[index]);
+                this.props.onTimerChange(this.state.trimTime[index], trimTime);
               }
             );
           } else {
@@ -289,7 +292,7 @@ class VideoDetails extends React.Component {
                 trimTime: trimTimeUpdate
               },
               () => {
-                this.props.onTimerChange(this.state.trimTime[index]);
+                this.props.onTimerChange(this.state.trimTime[index], trimTime);
               }
             );
           }
@@ -317,7 +320,7 @@ class VideoDetails extends React.Component {
                 trimTime: trimTimeUpdate
               },
               () => {
-                this.props.onTimerChange(this.state.trimTime[index]);
+                this.props.onTimerChange(this.state.trimTime[index], trimTime);
               }
             );
           } else {
@@ -333,7 +336,7 @@ class VideoDetails extends React.Component {
                 trimTime: trimTimeUpdate
               },
               () => {
-                this.props.onTimerChange(this.state.trimTime[index]);
+                this.props.onTimerChange(this.state.trimTime[index], trimTime);
               }
             );
           }
@@ -355,7 +358,10 @@ class VideoDetails extends React.Component {
                   trimTime: trimTimeUpdate
                 },
                 () => {
-                  this.props.onTimerChange(this.state.trimTime[index]);
+                  this.props.onTimerChange(
+                    this.state.trimTime[index],
+                    trimTime
+                  );
                 }
               );
             }
@@ -376,7 +382,10 @@ class VideoDetails extends React.Component {
                   trimTime: trimTimeUpdate
                 },
                 () => {
-                  this.props.onTimerChange(this.state.trimTime[index]);
+                  this.props.onTimerChange(
+                    this.state.trimTime[index],
+                    trimTime
+                  );
                 }
               );
             }
@@ -401,7 +410,10 @@ class VideoDetails extends React.Component {
                   trimTime: trimTimeUpdate
                 },
                 () => {
-                  this.props.onTimerChange(this.state.trimTime[index]);
+                  this.props.onTimerChange(
+                    this.state.trimTime[index],
+                    trimTime
+                  );
                 }
               );
             }
@@ -419,7 +431,10 @@ class VideoDetails extends React.Component {
                   trimTime: trimTimeUpdate
                 },
                 () => {
-                  this.props.onTimerChange(this.state.trimTime[index]);
+                  this.props.onTimerChange(
+                    this.state.trimTime[index],
+                    trimTime
+                  );
                 }
               );
             } else {
@@ -435,7 +450,10 @@ class VideoDetails extends React.Component {
                     trimTime: trimTimeUpdate
                   },
                   () => {
-                    this.props.onTimerChange(this.state.trimTime[index]);
+                    this.props.onTimerChange(
+                      this.state.trimTime[index],
+                      trimTime
+                    );
                   }
                 );
               } else {
@@ -450,7 +468,10 @@ class VideoDetails extends React.Component {
                     trimTime: trimTimeUpdate
                   },
                   () => {
-                    this.props.onTimerChange(this.state.trimTime[index]);
+                    this.props.onTimerChange(
+                      this.state.trimTime[index],
+                      trimTime
+                    );
                   }
                 );
               }
@@ -470,7 +491,7 @@ class VideoDetails extends React.Component {
               trimTime: trimTimeUpdate
             },
             () => {
-              this.props.onTimerChange(this.state.trimTime[index]);
+              this.props.onTimerChange(this.state.trimTime[index], trimTime);
             }
           );
         }
@@ -487,7 +508,7 @@ class VideoDetails extends React.Component {
           time: trimTimeUpdate
         },
         () => {
-          this.props.onTimerChange(this.state.trimTime[index]);
+          this.props.onTimerChange(this.state.trimTime[index], trimTime);
         }
       );
     }
@@ -504,7 +525,8 @@ class VideoDetails extends React.Component {
       isPlaying,
       videoMaxDuration,
       currentTime,
-      handleSingleInputRange
+      handleSingleInputRange,
+      totalOutput
     } = this.props;
     const { recentSetAdded, allSetList } = setReducer;
     const { time, trimTime, setIndex } = this.state;
@@ -582,7 +604,10 @@ class VideoDetails extends React.Component {
                   </div>
                 </div>
                 <div className="triming-video-length">
-                  Output: <span className="triming-number">00.09s</span>
+                  Output:{" "}
+                  <span className="triming-number">
+                    {SecondsToMMSSMM(totalOutput)}s
+                  </span>
                 </div>
               </div>
               <div className="dot-rang-slider rang-slider pb-2 main-rang-slider">
@@ -607,7 +632,6 @@ class VideoDetails extends React.Component {
                         step={0.1}
                         maxValue={parseInt(videoMaxDuration)}
                         minValue={0}
-                        // value={this.state.value}
                         value={time}
                         onChange={value => this.labelValueChange(value, index)}
                       />
