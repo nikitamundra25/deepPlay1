@@ -13,7 +13,12 @@ import {
   Input,
   Button,
   FormGroup,
-  FormFeedback
+  InputGroup,
+  InputGroupAddon,
+  InputGroupText,
+  UncontrolledTooltip,
+  FormFeedback,
+  CardHeader
 } from "reactstrap";
 import VideoView from "./videoView";
 import VideoDetails from "./videoDetails";
@@ -536,20 +541,58 @@ class MoveDetails extends React.Component {
 
     return (
       <>
-        <div className="create-set-section step-2 ">
-          <Card className="w-100">
-            <CardBody className="p-0">
+        <div className="create-set-section create-videos-section step-2 ">
+          <Card className="w-100 p-0">
+            <CardHeader className="mb-3 ">
+            <span className="cursor_pointer back-arrow create-move-back"> <i class="fas fa-long-arrow-alt-left"></i> Back</span>
+                    <FormGroup className="flex-fill flex-column video-title-wrap">
+            <div className=" w-100">
+              <InputGroup className={"move-title-wrap"}>
+                <Input
+                  id="title"
+                  placeholder="Enter your title (optional)"
+                  onChange={e => this.props.handleChange(e)}
+                  type="text"
+                  className={
+                    errorTitle ? "is-invalid move-title" : "move-title"
+                  }
+                  name="title"
+                  value={title ? title : ""}
+                />
+                <FormFeedback> {errorTitle ? errorTitle : null} </FormFeedback>
+                <InputGroupAddon
+                  addonType="prepend"
+                  className="discription-btn-wrap"
+                >
+                  <div onClick={this.props.handleDesriptionModal}>
+                    <InputGroupText
+                      id="description"
+                      className={"discription-btn cursor_pointer"}
+                    >
+                      <i className="fas fas fa-info " />
+                      <UncontrolledTooltip placement="top" target="description">
+                        {description ? "Update Description" : "Add description"}
+                      </UncontrolledTooltip>
+                    </InputGroupText>
+                  </div>
+                </InputGroupAddon>
+              </InputGroup>
+            </div>
+          </FormGroup>
+            </CardHeader>
+            <CardBody className="trimming-body">
               {!isSavingWebM ? <div></div> : null}
               <>
-                <Row className={"mt-3"}>
+                <Row className={" "}>
                   {moveDetails && moveDetails.videoUrl ? (
                     <>
-                      <VideoView
+                  <VideoView
                         moveReducer={moveReducer}
                         handleChange={this.handleChangeTitle}
                         handleDesriptionModal={this.handleDesriptionModal}
                         description={description}
                         timer={timer}
+                        setReducer={setReducer}
                         title={title}
                         storeVideoFrames={this.storeVideoFrames}
                         errorTitle={errorTitle}
@@ -563,6 +606,8 @@ class MoveDetails extends React.Component {
                           })
                         }
                         videoError={videoError}
+                        getAllSetRequest={getAllSetRequest}
+                        tagsList={tagsList}
                         playbackFailed={this.playbackFailed}
                       />
                       <VideoDetails
@@ -580,6 +625,7 @@ class MoveDetails extends React.Component {
                         onBlur={this.onBlur}
                         ref={this.videoDetails}
                       />
+                     
                     </>
                   ) : (
                     <Col sm={12} className="loader-col video-loader-wrap">

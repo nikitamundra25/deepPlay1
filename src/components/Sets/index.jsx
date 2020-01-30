@@ -19,6 +19,7 @@ import { AppConfig } from "../../config/Appconfig";
 import SharableLinkModal from "components/comman/shareableLink/SharableLink";
 import CreateSetComponent from "../Sets/createSet";
 import emptyImg from "../../assets/img/empty-img.svg";
+import  plusIc  from "../../assets/img/add.svg";
 // core components
 class SetComponent extends React.Component {
   constructor(props) {
@@ -137,12 +138,13 @@ class SetComponent extends React.Component {
                 </UncontrolledTooltip>
               </>
             ) : null}
+          
             <span
-              id="set"
-              className={"cursor_pointer"}
+              className="dashboard-right-content cursor_pointer ml-4 header-img-icon"
               onClick={this.handleSetModal}
+              id="move"
             >
-              <i className="fas fa-plus icon-font"></i>
+              <img src={plusIc} />
             </span>
             <UncontrolledTooltip placement="top" target="set">
               Create New Set
