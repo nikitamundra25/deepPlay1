@@ -4,15 +4,15 @@ import { Container, Row } from "reactstrap";
 class TermsCondition extends Component {
   render() {
     return (
-      <Container>
-        <div class="dashboard-full-section without-sidebar">
+     
+        <div class="dashboard-full-section without-sidebar privacy-term-policy-wrap">
           <Row>
             <div class="content-title p-3">
               <h1>TERMS OF SERVICE</h1>
             </div>
             <div class="about-container">
               <ol>
-              <b> <li> Introduction</li></b>
+              <b className=" h5 font-weight-bold"> <li> Introduction</li></b>
               <p>
                 Welcome to DeepPlay (“Company”, “we”, “our”, “us”)! As you have
                 just clicked to our Terms of Service, please make a pause, grab
@@ -43,7 +43,7 @@ class TermsCondition extends Component {
                 access or use Service.
               </p>
               <p>Thank you for being responsible.</p>
-              <b><li> Communications </li></b>
+              <b className=" h5 font-weight-bold"><li> Communications </li></b>
               <p>
                 By creating an Account on our Service, you agree to subscribe to
                 newsletters, marketing or promotional materials and other
@@ -51,7 +51,7 @@ class TermsCondition extends Component {
                 any, or all, of these communications from us by following the
                 unsubscribe link or by emailing at.
               </p>
-              <b><li> Purchases </li></b>
+              <b className=" h5 font-weight-bold"><li> Purchases </li></b>
               <p>
                 If you wish to purchase any product or service made available
                 through Service (“Purchase”), you may be asked to supply certain
@@ -83,7 +83,7 @@ class TermsCondition extends Component {
                 We reserve the right to refuse or cancel your order if fraud or
                 an unauthorized or illegal transaction is suspected.
               </p>
-              <b><li> Contests, Sweepstakes and Promotions </li></b>
+              <b className=" h5 font-weight-bold"><li> Contests, Sweepstakes and Promotions </li></b>
               <p>
                 Any contests, sweepstakes or other promotions (collectively,
                 “Promotions”) made available through Service may be governed by
@@ -93,7 +93,7 @@ class TermsCondition extends Component {
                 Promotion conflict with these Terms of Service, Promotion rules
                 will apply.
               </p>
-              <b><li> Subscriptions</li></b>
+              <b className=" h5 font-weight-bold"><li> Subscriptions</li></b>
               <p>
                 Some parts of Service are billed on a subscription basis
                 (“Subscription(s)”). You will be billed in advance on a
@@ -126,7 +126,7 @@ class TermsCondition extends Component {
                 payment corresponding to the billing period as indicated on the
                 invoice.
               </p>
-              <b><li> Fee Changes</li></b>
+              <b className=" h5 font-weight-bold"><li> Fee Changes</li></b>
               <p>
                 DeepPlay, in its sole discretion and at any time, may modify
                 Subscription fees for the Subscriptions. Any Subscription fee
@@ -144,12 +144,12 @@ class TermsCondition extends Component {
                 comes into effect constitutes your agreement to pay the modified
                 Subscription fee amount.
               </p>
-              <b><li>Refunds</li> </b>
+              <b className=" h5 font-weight-bold"><li>Refunds</li> </b>
               <p>
                 We issue refunds for Contracts within sixty (60) days of the
                 original purchase of the Contract.
               </p>
-              <b><li> Content </li></b>
+              <b className=" h5 font-weight-bold"><li> Content </li></b>
               <p>
                 Our Service allows you to post, link, store, share and otherwise
                 make available certain information, text, graphics, videos, or
@@ -193,93 +193,97 @@ class TermsCondition extends Component {
                 purposes or for personal gain, without express advance written
                 permission from us.
               </p>
-              <b><li> Prohibited Uses </li></b>
+              <b className=" h5 font-weight-bold"><li> Prohibited Uses </li></b>
               <p>
                 You may use Service only for lawful purposes and in accordance
                 with Terms. You agree not to use Service:
               </p>
-              <ol>
-                <li type="a">
+              <p>
+              <ul type="bullat">
+                <li >
                   In any way that violates any applicable national or
                   international law or regulation.
                 </li>
-                <li type="a">
+                <li >
                   For the purpose of exploiting, harming, or attempting to
                   exploit or harm minors in any way by exposing them to
                   inappropriate content or otherwise.
                 </li>
-                <li type="a">
+                <li >
                   To transmit, or procure the sending of, any advertising or
                   promotional material, including any “junk mail”, “chain
                   letter,” “spam,” or any other similar solicitation.
                 </li>
-                <li type="a">
+                <li >
                   To impersonate or attempt to impersonate Company, a Company
                   employee, another user, or any other person or entity.
                 </li>
-                <li type="a">
+                <li >
                   In any way that infringes upon the rights of others, or in any
                   way is illegal, threatening, fraudulent, or harmful, or in
                   connection with any unlawful, illegal, fraudulent, or harmful
                   purpose or activity.
                 </li>
-                <li type="a">
+                <li >
                   To engage in any other conduct that restricts or inhibits
                   anyone’s use or enjoyment of Service, or which, as determined
                   by us, may harm or offend Company or users of Service or
                   expose them to liability.
                 </li>
-              </ol>
-              <p>Additionally, you agree not to:</p>
-              <ol>
-                <li type="a">
+              </ul>
+             </p>
+              <p className="font-weight-bold mb-1">Additionally, you agree not to:</p>
+              <p>
+              <ul type="bullat"> 
+                <li >
                   Use Service in any manner that could disable, overburden,
                   damage, or impair Service or interfere with any other party’s
                   use of Service, including their ability to engage in real time
                   activities through Service.
                 </li>
-                <li type="a">
+                <li >
                   Use any robot, spider, or other automatic device, process, or
                   means to access Service for any purpose, including monitoring
                   or copying any of the material on Service.
                 </li>
-                <li type="a">
+                <li >
                   Use any manual process to monitor or copy any of the material
                   on Service or for any other unauthorized purpose without our
                   prior written consent.
                 </li>
-                <li type="a">
+                <li >
                   Use any device, software, or routine that interferes with the
                   proper working of Service.
                 </li>
-                <li type="a">
+                <li >
                   Introduce any viruses, trojan horses, worms, logic bombs, or
                   other material which is malicious or technologically harmful.
                 </li>
-                <li type="a">
+                <li >
                   Attempt to gain unauthorized access to, interfere with,
                   damage, or disrupt any parts of Service, the server on which
                   Service is stored, or any server, computer, or database
                   connected to Service.
                 </li>
-                <li type="a">
+                <li >
                   Attack Service via a denial-of-service attack or a distributed
                   denial-of-service attack.
                 </li>
-                <li type="a">
+                <li >
                   Take any action that may damage or falsify Company rating.
                 </li>
-                <li type="a">
+                <li >
                   Otherwise attempt to interfere with the proper working of
                   Service.
                 </li>
-              </ol>
-              <b><li>Analytics </li></b>
+              </ul>
+             </p>
+              <b className=" h5 font-weight-bold"><li>Analytics </li></b>
               <p>
                 We may use third-party Service Providers to monitor and analyze
                 the use of our Service.
               </p>
-              <b>Google Analytics</b>
+              <b className="font-weight-bold">Google Analytics</b>
               <p>
                 Google Analytics is a web analytics service offered by Google
                 that tracks and reports website traffic. Google uses the data
@@ -298,7 +302,7 @@ class TermsCondition extends Component {
                 safeguarding your data:
                 https://support.google.com/analytics/answer/6004245.
               </p>
-              <b><li> No Use By Minors </li></b>
+              <b className=" h5 font-weight-bold"><li> No Use By Minors </li></b>
               <p>
                 Service is intended only for access and use by individuals at
                 least eighteen (18) years old. By accessing or using any of
@@ -309,7 +313,7 @@ class TermsCondition extends Component {
                 eighteen (18) years old, you are prohibited from both the access
                 and usage of Service.
               </p>
-              <b><li> Accounts</li></b>
+              <b className=" h5 font-weight-bold"><li> Accounts</li></b>
               <p>
                 When you create an account with us, you guarantee that you are
                 above the age of 18, and that the information you provide us is
@@ -339,7 +343,7 @@ class TermsCondition extends Component {
                 We reserve the right to refuse service, terminate accounts,
                 remove or edit content, or cancel orders in our sole discretion.
               </p>
-              <b><li> Intellectual Property</li></b>
+              <b className=" h5 font-weight-bold"><li> Intellectual Property</li></b>
               <p>
                 Service and its original content (excluding Content provided by
                 users), features and functionality are and will remain the
@@ -349,7 +353,7 @@ class TermsCondition extends Component {
                 connection with any product or service without the prior written
                 consent of DeepPlay.
               </p>
-              <b><li> Copyright Policy</li></b>
+              <b className=" h5 font-weight-bold"><li> Copyright Policy</li></b>
               <p>
                 We respect the intellectual property rights of others. It is our
                 policy to respond to any claim that Content posted on Service
@@ -371,7 +375,7 @@ class TermsCondition extends Component {
                 the infringement of any Content found on and/or through Service
                 on your copyright.
               </p>
-              <b>
+              <b className=" h5 font-weight-bold">
               <li> DMCA Notice and Procedure for Copyright Infringement Claims </li>
               </b>
               <p>
@@ -380,40 +384,42 @@ class TermsCondition extends Component {
                 following information in writing (see 17 U.S.C 512(c)(3) for
                 further detail):
               </p>
-              <ol>
-                <li type="a">
+              <p>
+              <ul type="bullat">
+                <li >
                   An electronic or physical signature of the person authorized
                   to act on behalf of the owner of the copyright's interest.
                 </li>
-                <li type="a">
+                <li >
                   A description of the copyrighted work that you claim has been
                   infringed, including the URL (i.e., web page address) of the
                   location where the copyrighted work exists or a copy of the
                   copyrighted work.
                 </li>
-                <li type="a">
+                <li >
                   {" "}
                   Identification of the URL or other specific location on
                   Service where the material that you claim is infringing is
                   located.
                 </li>
-                <li type="a">
+                <li >
                   Your address, telephone number, and email address.
                 </li>
-                <li type="a">
+                <li >
                   A statement by you that you have a good faith belief that the
                   disputed use is not authorized by the copyright owner, its
                   agent, or the law.
                 </li>
-                <li type="a">
+                <li >
                   A statement by you, made under penalty of perjury, that the
                   above information in your notice is accurate and that you are
                   the copyright owner or authorized to act on the copyright
                   owner's behalf.
                 </li>
-              </ol>
-              <p>You can contact our Copyright Agent via email at [●]</p>
-              <b><li> Error Reporting and Feedback</li></b>
+              </ul>
+              </p>
+              <p className="font-weight-bold">You can contact our Copyright Agent via email at [●]</p>
+              <b className=" h5 font-weight-bold"><li> Error Reporting and Feedback</li></b>
               <p>
                 You may provide us either directly at hello@deepplay.org or via
                 third party sites and tools with information and feedback
@@ -438,13 +444,13 @@ class TermsCondition extends Component {
                 The third party sites and tools mentioned above include the
                 following:
               </p>
-              <b>Bugsnag</b>
+              <b className=" h5 font-weight-bold">Bugsnag</b>
               <p>
                 Bugsnag is a platform for monitoring and logging stability of
                 applications provided by Bugsnag Inc. Please read their Privacy
                 Policy here: https://docs.bugsnag.com/legal/privacy-policy/
               </p>
-              <b>Firebase Crashlytics</b>
+              <b className=" h5 font-weight-bold">Firebase Crashlytics</b>
               <p>
                 Firebase Crashlytics is bug reporting service provided by Google
                 Inc.
@@ -460,7 +466,7 @@ class TermsCondition extends Component {
                 collects, please visit the Google Privacy Terms web page:
                 https://policies.google.com/privacy?hl=en
               </p>
-              <b><li> Links To Other Web Sites</li></b>
+              <b className=" h5 font-weight-bold"><li> Links To Other Web Sites</li></b>
               <p>
                 Our Service may contain links to third party web sites or
                 services that are not owned or controlled by DeepPlay
@@ -483,7 +489,7 @@ class TermsCondition extends Component {
                 POLICIES OF ANY THIRD PARTY WEB SITES OR SERVICES THAT YOU
                 VISIT.
               </p>
-              <b><li> Disclaimer Of Warranty</li></b>
+              <b className=" h5 font-weight-bold"><li> Disclaimer Of Warranty</li></b>
               <p>
                 THESE SERVICES ARE PROVIDED BY COMPANY ON AN “AS IS” AND “AS
                 AVAILABLE” BASIS. COMPANY MAKES NO REPRESENTATIONS OR WARRANTIES
@@ -517,7 +523,7 @@ class TermsCondition extends Component {
                 THE FOREGOING DOES NOT AFFECT ANY WARRANTIES WHICH CANNOT BE
                 EXCLUDED OR LIMITED UNDER APPLICABLE LAW.
               </p>
-              <b><li> Limitation Of Liability</li></b>
+              <b className=" h5 font-weight-bold"><li> Limitation Of Liability</li></b>
               <p>
                 EXCEPT AS PROHIBITED BY LAW, YOU WILL HOLD US AND OUR OFFICERS,
                 DIRECTORS, EMPLOYEES, AND AGENTS HARMLESS FOR ANY INDIRECT,
@@ -540,7 +546,7 @@ class TermsCondition extends Component {
                 DAMAGES, SO THE PRIOR LIMITATION OR EXCLUSION MAY NOT APPLY TO
                 YOU.
               </p>
-              <b><li> Termination</li></b>
+              <b className=" h5 font-weight-bold"><li> Termination</li></b>
               <p>
                 We may terminate or suspend your account and bar access to
                 Service immediately, without prior notice or liability, under
@@ -557,7 +563,7 @@ class TermsCondition extends Component {
                 limitation, ownership provisions, warranty disclaimers,
                 indemnity and limitations of liability.
               </p>
-              <b><li> Governing Law</li></b>
+              <b className=" h5 font-weight-bold"><li> Governing Law</li></b>
               <p>
                 These Terms shall be governed and construed in accordance with
                 the laws of State of Delaware without regard to its conflict of
@@ -572,7 +578,7 @@ class TermsCondition extends Component {
                 us regarding our Service and supersede and replace any prior
                 agreements we might have had between us regarding Service.
               </p>
-              <b><li> Changes To Service</li></b>
+              <b className=" h5 font-weight-bold"><li> Changes To Service</li></b>
               <p>
                 We reserve the right to withdraw or amend our Service, and any
                 service or material we provide via Service, in our sole
@@ -582,7 +588,7 @@ class TermsCondition extends Component {
                 some parts of Service, or the entire Service, to users,
                 including registered users.
               </p>
-              <b><li> Amendments To Terms</li></b>
+              <b className=" h5 font-weight-bold"><li> Amendments To Terms</li></b>
               <p>
                 We may amend Terms at any time by posting the amended terms on
                 this site. It is your responsibility to review these Terms
@@ -600,7 +606,7 @@ class TermsCondition extends Component {
                 you do not agree to the new terms, you are no longer authorized
                 to use Service.
               </p>
-              <b><li> Waiver And Severability</li></b>
+              <b className=" h5 font-weight-bold"><li> Waiver And Severability</li></b>
               <p>
                 No waiver by Company of any term or condition set forth in Terms
                 shall be deemed a further or continuing waiver of such term or
@@ -615,26 +621,26 @@ class TermsCondition extends Component {
                 or limited to the minimum extent such that the remaining
                 provisions of Terms will continue in full force and effect.
               </p>
-              <b><li> Acknowledgement</li></b>
+              <b className=" h5 font-weight-bold"><li> Acknowledgement</li></b>
               <p>
                 BY USING SERVICE OR OTHER SERVICES PROVIDED BY US, YOU
                 ACKNOWLEDGE THAT YOU HAVE READ THESE TERMS OF SERVICE AND AGREE
                 TO BE BOUND BY THEM.
               </p>
-              <b><li> Contact Us</li></b>
+              <b className=" h5 font-weight-bold"><li> Contact Us</li></b>
               <p>
                 Please send your feedback, comments, requests for technical
                 support:
-                <br />
+                <b className=" h5 font-weight-bold"r />
                 By email: hello@deepplay.org.
-                <br />
+                <b className=" h5 font-weight-bold"r />
                 By visiting this page on our website: http://www.deepplay.org
               </p>
               </ol>
             </div>
           </Row>
         </div>
-      </Container>
+  
     );
   }
 }

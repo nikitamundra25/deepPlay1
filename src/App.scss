@@ -2717,3 +2717,10 @@ _:future,
   display: inline !important;
   cursor: pointer;
 }
+.privacy-term-policy-wrap{
+  border-radius: 4px;
+  margin: 15px;
+  padding: 15px 15px;
+  box-shadow: 0 0 2px 0 rgba(0, 0, 0, 0.24);
+  background-color: $whiteColor;
+}
