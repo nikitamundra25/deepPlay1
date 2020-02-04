@@ -35,13 +35,6 @@ import Loader from "components/comman/Loader/Loader";
 
 // core components
 class DefaultLayout extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      liveChatEnabled: false
-    };
-  }
-
   componentDidMount() {
     const pathname = this.props.location.pathname;
     const token = localStorage.getItem("token");
@@ -85,11 +78,6 @@ class DefaultLayout extends React.Component {
     this.props.redirectTo(AppRoutes.SETTINGS.url);
   };
 
-  liveChatEnable = e => {
-    e.preventDefault();
-    let tagData = document.getElementsByClassName("zsiq_float");
-    tagData[0].classList.add("zsiq_float_show");
-  };
   /*
   /*  
   */
@@ -175,7 +163,6 @@ class DefaultLayout extends React.Component {
             tagsList={tagsList}
             videoDataFromSearch={videoDataFromSearch}
             isVideoFromSearch={isVideoFromSearch}
-            liveChatEnable={this.liveChatEnable}
             {...this.props}
           />
         ) : null}

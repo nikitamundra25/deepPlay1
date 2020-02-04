@@ -383,7 +383,8 @@ class WebmView extends Component {
     }
     this.setState({
       videoIndex: videoIndex - 1,
-      doubleClick: false
+      doubleClick: false,
+      playBackSpeed: 1
     });
   };
 
@@ -397,7 +398,8 @@ class WebmView extends Component {
     }
     this.setState({
       videoIndex: videoIndex + 1,
-      doubleClick: false
+      doubleClick: false,
+      playBackSpeed: 1
     });
   };
 

@@ -39,7 +39,8 @@ class DefaultHeader extends React.Component {
       path: "",
       search: "",
       open: false,
-      showVideo: ""
+      showVideo: "",
+      liveChatEnabled: false
     };
   }
 
@@ -242,6 +243,18 @@ class DefaultHeader extends React.Component {
     }
   };
 
+  liveChatEnable = e => {
+    e.preventDefault();
+    let tagData = document.getElementsByClassName("zsiq_float");
+    if (!this.state.liveChatEnabled) {
+      tagData[0].classList.add("zsiq_float_show");
+    } else {
+      tagData[0].classList.remove("zsiq_float_show");
+    }
+    this.setState({
+      liveChatEnabled: !this.state.liveChatEnabled
+    });
+  };
   /*  */
   render() {
     const {
@@ -266,8 +279,7 @@ class DefaultHeader extends React.Component {
       isFullScreenMode,
       videoFullscreenReq,
       videoFullscreenExit,
-      isVideoFromSearch,
-      liveChatEnable
+      isVideoFromSearch
     } = this.props;
     const { modelDetails } = modelInfoReducer;
     const { isShareableUrl } = shareLinkReducer;
@@ -279,7 +291,7 @@ class DefaultHeader extends React.Component {
       createSetOpen,
       isVideoModalOpenReq
     } = modelDetails;
-    const { path, search, open, showVideo } = this.state;
+    const { path, search, open, showVideo, liveChatEnabled } = this.state;
     const { isLoginSuccess } = loginReducer;
     const profiledata =
       profileInfoReducer && profileInfoReducer.profileInfo
@@ -564,7 +576,7 @@ class DefaultHeader extends React.Component {
                                 return null;
                               }
                             })}
-                            <DropdownItem onClick={e => liveChatEnable(e)}>
+                            <DropdownItem onClick={e => this.liveChatEnable(e)}>
                               <div className="dropdown-img">
                                 <img
                                   src={liveChatIcon}
@@ -572,7 +584,11 @@ class DefaultHeader extends React.Component {
                                   width="20"
                                 />{" "}
                               </div>
-                              <div className="dropdown-txt">Chat with us</div>
+                              <div className="dropdown-txt">
+                                {!liveChatEnabled
+                                  ? "Chat with us"
+                                  : "Close chat"}
+                              </div>
                             </DropdownItem>
                             <DropdownItem onClick={e => logoutRequest(e)}>
                               <div className="dropdown-img">
