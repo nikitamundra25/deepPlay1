@@ -61,6 +61,7 @@ class VideoView extends React.Component {
       this.props.getAllSetRequest({ isSetNoLimit: false });
     }
   };
+
   componentDidMount() {
     this.video = document.getElementById("video-trimmer");
     if (this.video) {
@@ -117,7 +118,7 @@ class VideoView extends React.Component {
 
       this.props.videoDuration(data);
     };
-    this.JumpTimeIntervals(timeArr);
+    // this.JumpTimeIntervals(timeArr);
   }
   /**
    *
@@ -137,11 +138,11 @@ class VideoView extends React.Component {
 
       // this.JumpTimeIntervals(TimeArray);
 
-      // vid.ontimeupdate = () => {
-      //   if (Math.round(vid.currentTime) > parseInt(max)) {
-      //     vid.currentTime = min;
-      //   }
-      // };
+      vid.ontimeupdate = () => {
+        if (Math.round(vid.currentTime) > parseInt(max)) {
+          vid.currentTime = min;
+        }
+      };
     }
 
     if (prevMoveData !== newMoveData) {
@@ -218,9 +219,7 @@ class VideoView extends React.Component {
     const {
       moveReducer,
       description,
-      title,
       isEdit,
-      errorTitle,
       isYoutubeUrl,
       playbackFailed,
       videoError,
@@ -309,47 +308,34 @@ class VideoView extends React.Component {
                     </span>
                   </>
                 )}
-                {!isEdit ? (
-                  <video
-                    width={"100%"}
-                    // autoPlay
-                    loop
-                    onCanPlay={() => {
-                      this.setState({
-                        videoCanPlay: true
-                      });
-                    }}
-                    id={"video-trimmer"}
-                    muted={false}
-                    playsInline
-                    onError={e => playbackFailed(e)}
-                    controls
-                    onContextMenu={e => e.preventDefault()}
-                    disablepictureinpicture="true"
-                    controlsList="nodownload"
-                    preload={"auto"}
-                  >
-                    <source
-                      src={
-                        !isYoutubeUrl
-                          ? `${AppConfig.API_ENDPOINT}${moveDetails.videoUrl}`
-                          : moveDetails.videoUrl
-                      }
-                    />
-                  </video>
-                ) : (
-                  <video
-                    width={"100%"}
-                    autoPlay
-                    loop
-                    id={"video-trimmer"}
-                    muted={false}
-                    playsinline
-                    onContextMenu={e => e.preventDefault()}
-                  >
-                    <source src={`${moveDetails.moveURL}`} />
-                  </video>
-                )}
+
+                <video
+                  width={"100%"}
+                  // autoPlay
+                  loop
+                  onCanPlay={() => {
+                    this.setState({
+                      videoCanPlay: true
+                    });
+                  }}
+                  id={"video-trimmer"}
+                  muted={false}
+                  playsInline
+                  onError={e => playbackFailed(e)}
+                  controls
+                  onContextMenu={e => e.preventDefault()}
+                  disablepictureinpicture="true"
+                  controlsList="nodownload"
+                  preload={"auto"}
+                >
+                  <source
+                    src={
+                      !isYoutubeUrl
+                        ? `${AppConfig.API_ENDPOINT}${moveDetails.videoUrl}`
+                        : moveDetails.videoUrl
+                    }
+                  />
+                </video>
               </div>
               <FormGroup className="flex-fill flex-column mt-3 input-w">
                 {/* add tag-input-wrap class for tagInput design  */}

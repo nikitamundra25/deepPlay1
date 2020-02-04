@@ -253,7 +253,6 @@ class MoveDetails extends React.Component {
       timer
     });
     this.handleTotalOutput(trimTime);
-    // videoPlayer.play();
   };
 
   handleTotalOutput = trimTime => {
@@ -368,6 +367,38 @@ class MoveDetails extends React.Component {
       this.handleVideoPlay();
     }
   };
+
+  /* Jump timeInterval to various cuts start
+/*  */
+  JumpTimeIntervals = timeArr => {
+    if (timeArr && timeArr.length) {
+      var currentSegment = 0; // Segment being played
+      var endTime = timeArr[currentSegment]["max"];
+      var videoPlayer = document.getElementById("video-trimmer");
+      videoPlayer.currentTime = timeArr[currentSegment]["min"];
+      videoPlayer.play(); // Starts playing the video from startTime
+      videoPlayer.addEventListener(
+        "timeupdate",
+        function() {
+          if (videoPlayer.currentTime >= endTime) {
+            // Segment completed
+            currentSegment++;
+            if (currentSegment < timeArr.length) {
+              // Not the last segment in the array
+              videoPlayer.currentTime = timeArr[currentSegment]["min"];
+              endTime = timeArr[currentSegment]["max"];
+            } else {
+              // Last segment in the array is over
+              videoPlayer.pause();
+            }
+          }
+        },
+        false
+      );
+    }
+  };
+  /* Jump timeInterval to various cuts ends
+/*  */
 
   handleSingleInputRange = value => {
     const { videoMaxDuration } = this.state;
@@ -665,7 +696,7 @@ class MoveDetails extends React.Component {
                       addonType="prepend"
                       className="discription-btn-wrap"
                     >
-                      <div onClick={this.props.handleDesriptionModal}>
+                      <div onClick={this.handleDesriptionModal}>
                         <InputGroupText
                           id="description"
                           className={"discription-btn cursor_pointer"}
@@ -699,10 +730,7 @@ class MoveDetails extends React.Component {
                         description={description}
                         timer={timer}
                         setReducer={setReducer}
-                        title={title}
                         storeVideoFrames={this.storeVideoFrames}
-                        errorTitle={errorTitle}
-                        isEdit={isEdit}
                         isCreateAnother={isCreateAnother}
                         isYoutubeUrl={isYoutubeUrl}
                         videoDuration={data =>
@@ -712,11 +740,15 @@ class MoveDetails extends React.Component {
                           })
                         }
                         videoError={videoError}
+                        handleTagChange={this.handleTagChange}
                         getAllSetRequest={getAllSetRequest}
                         tagsList={tagsList}
                         playbackFailed={this.playbackFailed}
                         TimeArray={TimeArray}
                         totalOutput={totalOutput}
+                        tags={tags}
+                        handleInputChange={this.handleInputChange}
+                        setId={moveDetails ? moveDetails.setId : null}
                       />
                       <VideoDetails
                         setReducer={setReducer}
@@ -740,6 +772,7 @@ class MoveDetails extends React.Component {
                         onTimerChange={this.onTimerChange}
                         totalOutput={totalOutput}
                         handleTotalOutput={this.handleTotalOutput}
+                        JumpTimeIntervals={this.JumpTimeIntervals}
                       />
                     </>
                   ) : (
@@ -748,32 +781,6 @@ class MoveDetails extends React.Component {
                     </Col>
                   )}
                 </Row>
-                {!isYoutubeUrl ? (
-                  <FrameDetails
-                    videoDuration={videoDuration || []}
-                    videoMaxDuration={videoMaxDuration || 0}
-                    frames={frames || []}
-                    videoMetaData={videoMetaData || {}}
-                    onTimerChange={this.onTimerChange}
-                    moveReducer={moveReducer}
-                    completeEditing={this.completeEditing}
-                    isIosDevice={isIosDevice}
-                    videoError={videoError}
-                  />
-                ) : (
-                  <YouTubeFrameDetails
-                    videoDuration={videoDuration || []}
-                    videoMaxDuration={videoMaxDuration || 0}
-                    frames={videoFrames || []}
-                    videoMetaData={videoMetaData || {}}
-                    onTimerChange={this.onTimerChange}
-                    moveReducer={moveReducer}
-                    completeEditing={this.completeEditing}
-                    isIosDevice={isIosDevice}
-                    createNew={createNew}
-                    videoError={videoError}
-                  />
-                )}
               </>
             </CardBody>
           </Card>

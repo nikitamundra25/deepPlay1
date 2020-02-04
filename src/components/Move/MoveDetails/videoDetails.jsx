@@ -98,6 +98,11 @@ class VideoDetails extends React.Component {
     }
   };
 
+  replayVideo = () => {
+    const { trimTime } = this.state;
+    this.props.JumpTimeIntervals(trimTime);
+  };
+
   labelValueChange = (value, index) => {
     let { min, max } = value;
     const { trimTime } = this.state;
@@ -105,7 +110,6 @@ class VideoDetails extends React.Component {
     let trimTimeUpdate = [...trimTime];
     const { videoMaxDuration, totalOutput } = this.props;
     let difference = trimTime[index].max - trimTime[index].min;
-    console.log("value", value);
 
     if (min >= 0) {
       if (min !== parseInt(trimTime[index].min) && min >= max) {
@@ -760,7 +764,11 @@ class VideoDetails extends React.Component {
                   >
                     <img src={!isPlaying ? playIc : pauseIc} alt={playIc} />
                   </Button>
-                  <Button className="triming-button pause-button " color={" "}>
+                  <Button
+                    className="triming-button pause-button "
+                    color={" "}
+                    onClick={this.replayVideo}
+                  >
                     <img src={replayIc} alt={replayIc} />
                   </Button>
                   <Button
