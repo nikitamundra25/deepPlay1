@@ -127,7 +127,6 @@ class VideoDetails extends React.Component {
       }
       if (parseInt(max) - parseInt(min) > AppConfig.MAX_VIDEO_LENGTH) {
         console.log("tttttttttt");
-
         // if (totalOutput >= 15) {
         data = {
           min:
@@ -202,26 +201,32 @@ class VideoDetails extends React.Component {
         return;
       }
       if (value.min >= 0) {
-        // console.log("yyyyyyyyyy", value);
-        // let data;
-        // if (parseInt(max) - parseInt(min) >= difference) {
-        //   console.log("bhattttaaaa", parseInt(min), parseInt(max));
-        //   if (totalOutput >= 15) {
-        //     data = {
-        //       min: parseInt(min) + 0.1,
-        //       max: parseInt(max) + 0.1
-        //     };
-        //   }
-        //   data = {
-        //     min: parseInt(min),
-        //     max: parseInt(max)
-        //   };
-        //   trimTimeUpdate[index] = data;
-        // } else {
-        //   console.log("ghantaaaaaa");
-
-        trimTimeUpdate[index] = value;
-        // }
+        console.log("yyyyyyyyyy", value);
+        let data;
+        if (parseInt(max) - parseInt(min) >= difference) {
+          console.log("bhattttaaaa", parseInt(min), parseInt(max));
+          if (parseInt(totalOutput) >= 15) {
+            data = {
+              min:
+                parseInt(min) !== Math.round(trimTime[index].min)
+                  ? parseInt(min) - difference
+                  : parseInt(min),
+              max:
+                parseInt(max) !== Math.round(trimTime[index].max)
+                  ? parseInt(min) + difference
+                  : parseInt(max)
+            };
+          } else {
+            data = {
+              min: min,
+              max: max
+            };
+            trimTimeUpdate[index] = data;
+          }
+        } else {
+          console.log("ghantaaaaaa");
+          trimTimeUpdate[index] = value;
+        }
         this.setState(
           {
             trimTime: trimTimeUpdate
