@@ -78,7 +78,8 @@ class MoveDetails extends React.Component {
       videoError: false,
       isPlaying: false,
       currentTime: 0,
-      totalOutput: 0
+      totalOutput: 15,
+      TimeArray: []
     };
     this.videoDetails = React.createRef();
   }
@@ -250,10 +251,11 @@ class MoveDetails extends React.Component {
     this.setState({
       timer
     });
-    this.totalOutput(trimTime);
+    this.handleTotalOutput(trimTime);
   };
 
-  totalOutput = trimTime => {
+  handleTotalOutput = trimTime => {
+    console.log("trimTime", trimTime);
     const time = trimTime;
     let sum = 0;
     let difference = 0;
@@ -263,10 +265,13 @@ class MoveDetails extends React.Component {
         sum = sum + difference;
       });
     }
+
     this.setState({
-      totalOutput: sum
+      totalOutput: sum,
+      TimeArray: trimTime
     });
   };
+
   /**
    *
    */
@@ -619,7 +624,8 @@ class MoveDetails extends React.Component {
       videoError,
       isPlaying,
       currentTime,
-      totalOutput
+      totalOutput,
+      TimeArray
     } = this.state;
 
     return (
@@ -704,6 +710,7 @@ class MoveDetails extends React.Component {
                         getAllSetRequest={getAllSetRequest}
                         tagsList={tagsList}
                         playbackFailed={this.playbackFailed}
+                        TimeArray={TimeArray}
                       />
                       <VideoDetails
                         setReducer={setReducer}
@@ -726,6 +733,7 @@ class MoveDetails extends React.Component {
                         handleSingleInputRange={this.handleSingleInputRange}
                         onTimerChange={this.onTimerChange}
                         totalOutput={totalOutput}
+                        handleTotalOutput={this.handleTotalOutput}
                       />
                     </>
                   ) : (

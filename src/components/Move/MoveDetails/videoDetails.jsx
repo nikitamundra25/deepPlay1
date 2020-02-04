@@ -20,6 +20,7 @@ import replayIc from "../../../assets/img/icons/replay.svg";
 import pauseIc from "../../../assets/img/icons/pause.svg";
 import { AppConfig } from "config/Appconfig";
 import { SecondsToMMSSMM } from "helper/Time";
+import { toast } from "react-toastify";
 // core components
 class VideoDetails extends React.Component {
   constructor(props) {
@@ -38,18 +39,43 @@ class VideoDetails extends React.Component {
 
   addCutHandler = () => {
     const cutCount = this.state.trimTime;
-    const data = {
-      min: 0,
-      max: 15
-    };
+    const { totalOutput, videoMaxDuration } = this.props;
+    if (parseInt(totalOutput) >= 15) {
+      if (!toast.isActive(this.toastId)) {
+        this.toastId = toast.warn(
+          "Max limit exceeds, You cannot trim more than 15 sec video."
+        );
+      }
+      return;
+    }
+    let difference = 15 - totalOutput;
+    let minValue = cutCount[cutCount.length - 1].max + 0.1;
+    let data;
+    if (minValue + difference < videoMaxDuration) {
+      data = {
+        min: minValue,
+        max: minValue + difference
+      };
+    } else {
+      data = {
+        min: 0,
+        max: difference
+      };
+    }
     cutCount.push(data);
-    this.setState({ trimTime: cutCount });
+    this.setState({ trimTime: cutCount }, () => {
+      this.props.onTimerChange(data, this.state.trimTime, {
+        isVideoSleek: false
+      });
+    });
   };
 
   deletehandler = index => {
     const cutCount = this.state.trimTime;
     cutCount.pop(cutCount[index]);
-    this.setState({ trimTime: cutCount });
+    this.setState({ trimTime: cutCount }, () => {
+      this.props.handleTotalOutput(this.state.trimTime);
+    });
   };
 
   getDetails = () => {
@@ -77,16 +103,22 @@ class VideoDetails extends React.Component {
     const { trimTime } = this.state;
     let data = {};
     let trimTimeUpdate = [...trimTime];
-    const { videoMaxDuration } = this.props;
+    const { videoMaxDuration, totalOutput } = this.props;
+    let difference = trimTime[index].max - trimTime[index].min;
+    console.log("value", value);
 
     if (min >= 0) {
       if (min !== parseInt(trimTime[index].min) && min >= max) {
+        console.log("11111111111");
+
         max =
           parseInt(min) + AppConfig.MAX_VIDEO_LENGTH < videoMaxDuration
             ? parseInt(min) + AppConfig.MAX_VIDEO_LENGTH
             : videoMaxDuration;
         value.max = max;
       } else if (max !== parseInt(trimTime[index].max) && min >= max) {
+        console.log("222222222222");
+
         min =
           max - AppConfig.MAX_VIDEO_LENGTH < 0
             ? max - AppConfig.MAX_VIDEO_LENGTH
@@ -94,25 +126,49 @@ class VideoDetails extends React.Component {
         value.min = min;
       }
       if (parseInt(max) - parseInt(min) > AppConfig.MAX_VIDEO_LENGTH) {
+        console.log("tttttttttt");
+
+        // if (totalOutput >= 15) {
         data = {
           min:
-            parseInt(min) === Math.round(trimTime[index].min)
-              ? parseInt(max) - AppConfig.MAX_VIDEO_LENGTH
+            parseInt(min) === Math.round(trimTime[index].min) ||
+            parseInt(min) === parseInt(trimTime[index].min)
+              ? parseInt(max) - difference
               : parseInt(min),
           max:
-            parseInt(max) === Math.round(trimTime[index].max)
-              ? parseInt(min) + AppConfig.MAX_VIDEO_LENGTH
+            parseInt(max) === Math.round(trimTime[index].max) ||
+            parseInt(max) === parseInt(trimTime[index].max)
+              ? parseInt(min) + difference
               : parseInt(max)
         };
+        // }
+        //  else {
+        //   console.log("ooooooooooo");
+
+        //   data = {
+        //     min:
+        //       parseInt(min) === Math.round(trimTime[index].min)
+        //         ? parseInt(max) - AppConfig.MAX_VIDEO_LENGTH
+        //         : parseInt(min),
+        //     max:
+        //       parseInt(max) === Math.round(trimTime[index].max)
+        //         ? parseInt(min) + AppConfig.MAX_VIDEO_LENGTH
+        //         : parseInt(max)
+        //   };
+        // }
         trimTimeUpdate[index] = data;
         this.setState(
           {
             trimTime: trimTimeUpdate
           },
           () => {
-            this.props.onTimerChange(this.state.trimTime[index], trimTime, {
-              isVideoSleek: true
-            });
+            this.props.onTimerChange(
+              this.state.trimTime[index],
+              this.state.trimTime,
+              {
+                isVideoSleek: true
+              }
+            );
           }
         );
         return;
@@ -121,6 +177,8 @@ class VideoDetails extends React.Component {
         Math.round(min) === Math.round(max) ||
         parseInt(min) === parseInt(max)
       ) {
+        console.log("gggggggggggggggggggggg");
+
         data = {
           max: trimTime[index].min + 1,
           min: trimTime[index].min
@@ -132,23 +190,50 @@ class VideoDetails extends React.Component {
             trimTime: trimTimeUpdate
           },
           () => {
-            this.props.onTimerChange(this.state.trimTime[index], trimTime, {
-              isVideoSleek: true
-            });
+            this.props.onTimerChange(
+              this.state.trimTime[index],
+              this.state.trimTime,
+              {
+                isVideoSleek: true
+              }
+            );
           }
         );
         return;
       }
       if (value.min >= 0) {
+        // console.log("yyyyyyyyyy", value);
+        // let data;
+        // if (parseInt(max) - parseInt(min) >= difference) {
+        //   console.log("bhattttaaaa", parseInt(min), parseInt(max));
+        //   if (totalOutput >= 15) {
+        //     data = {
+        //       min: parseInt(min) + 0.1,
+        //       max: parseInt(max) + 0.1
+        //     };
+        //   }
+        //   data = {
+        //     min: parseInt(min),
+        //     max: parseInt(max)
+        //   };
+        //   trimTimeUpdate[index] = data;
+        // } else {
+        //   console.log("ghantaaaaaa");
+
         trimTimeUpdate[index] = value;
+        // }
         this.setState(
           {
             trimTime: trimTimeUpdate
           },
           () => {
-            this.props.onTimerChange(this.state.trimTime[index], trimTime, {
-              isVideoSleek: true
-            });
+            this.props.onTimerChange(
+              this.state.trimTime[index],
+              this.state.trimTime,
+              {
+                isVideoSleek: true
+              }
+            );
           }
         );
       }
@@ -160,7 +245,7 @@ class VideoDetails extends React.Component {
   handleKeyEvent = (e, name, index) => {
     const { trimTime } = this.state;
     const { min, max } = trimTime[index];
-    const { videoMaxDuration } = this.props;
+    const { videoMaxDuration, totalOutput } = this.props;
     const trimmValue = e.target.value;
     let trimTimeUpdate = [...trimTime];
     const extract = trimmValue.split(":");
@@ -184,16 +269,25 @@ class VideoDetails extends React.Component {
                 () => {
                   this.props.onTimerChange(
                     this.state.trimTime[index],
-                    trimTime
+                    this.state.trimTime
                   );
                 }
               );
             }
-          } else {
-            let changeValue = {
-              min: parseInt(min) === 0 ? 0 : min - 0.1,
-              max: parseInt(max) - parseInt(min) === 1 ? max : max - 0.1
-            };
+          } else if (e.keyCode === 40) {
+            console.log("hereeeee");
+            let changeValue;
+            if (totalOutput >= AppConfig.MAX_VIDEO_LENGTH) {
+              changeValue = {
+                min: min - 0.1,
+                max: max - 0.1
+              };
+            } else {
+              changeValue = {
+                min: parseInt(min) === 0 ? 0 : min - 0.1,
+                max: parseInt(max) - parseInt(min) === 1 ? max : max - 0.1
+              };
+            }
             trimTimeUpdate[index] = changeValue;
 
             this.setState(
@@ -201,22 +295,36 @@ class VideoDetails extends React.Component {
                 trimTime: trimTimeUpdate
               },
               () => {
-                this.props.onTimerChange(this.state.trimTime[index], trimTime);
+                this.props.onTimerChange(
+                  this.state.trimTime[index],
+                  this.state.trimTime
+                );
               }
             );
           }
         } else {
           if (e.keyCode === 38) {
-            let changeValue = {
-              min: parseInt(max) - parseInt(min) === 1 ? min : min + 0.1,
-              max:
-                parseInt(max) === parseInt(videoMaxDuration)
-                  ? parseInt(max) <= parseInt(videoMaxDuration)
-                    ? max
-                    : videoMaxDuration
-                  : max + 0.1,
-              to: true
-            };
+            let changeValue;
+            if (totalOutput >= AppConfig.MAX_VIDEO_LENGTH) {
+              console.log("1000000000000");
+
+              changeValue = {
+                min: min + 0.1,
+                max: max + 0.1,
+                to: true
+              };
+            } else {
+              changeValue = {
+                min: parseInt(max) - parseInt(min) === 1 ? min : min + 0.1,
+                max:
+                  parseInt(max) === parseInt(videoMaxDuration)
+                    ? parseInt(max) <= parseInt(videoMaxDuration)
+                      ? max
+                      : videoMaxDuration
+                    : max + 0.1,
+                to: true
+              };
+            }
             trimTimeUpdate[index] = changeValue;
 
             this.setState(
@@ -224,10 +332,13 @@ class VideoDetails extends React.Component {
                 trimTime: trimTimeUpdate
               },
               () => {
-                this.props.onTimerChange(this.state.trimTime[index], trimTime);
+                this.props.onTimerChange(
+                  this.state.trimTime[index],
+                  this.state.trimTime
+                );
               }
             );
-          } else {
+          } else if (e.keyCode === 40) {
             let changeValue = {
               min: min,
               max: max - 0.1,
@@ -240,7 +351,10 @@ class VideoDetails extends React.Component {
                 trimTime: trimTimeUpdate
               },
               () => {
-                this.props.onTimerChange(this.state.trimTime[index], trimTime);
+                this.props.onTimerChange(
+                  this.state.trimTime[index],
+                  this.state.trimTime
+                );
               }
             );
           }
@@ -265,21 +379,33 @@ class VideoDetails extends React.Component {
                 trimTime: trimTimeUpdate
               },
               () => {
-                this.props.onTimerChange(this.state.trimTime[index], trimTime);
+                this.props.onTimerChange(
+                  this.state.trimTime[index],
+                  this.state.trimTime
+                );
               }
             );
-          } else {
+          } else if (e.keyCode === 40) {
             let changeValue;
+            console.log("22222222222222");
             if (parseFloat(min) > 0.1) {
-              changeValue = {
-                min:
-                  parseInt(max) - parseInt(min) < AppConfig.MAX_VIDEO_LENGTH
-                    ? min - 0.1
-                    : parseInt(min) > 0
-                    ? min
-                    : 0,
-                max: max <= parseInt(videoMaxDuration) ? max : videoMaxDuration
-              };
+              if (totalOutput >= AppConfig.MAX_VIDEO_LENGTH) {
+                changeValue = {
+                  min: min - 0.1,
+                  max: max - 0.1
+                };
+              } else {
+                changeValue = {
+                  min:
+                    parseInt(max) - parseInt(min) < AppConfig.MAX_VIDEO_LENGTH
+                      ? min - 0.1
+                      : parseInt(min) > 0
+                      ? min
+                      : 0,
+                  max:
+                    max <= parseInt(videoMaxDuration) ? max : videoMaxDuration
+                };
+              }
             } else {
               changeValue = {
                 min: 0,
@@ -292,27 +418,47 @@ class VideoDetails extends React.Component {
                 trimTime: trimTimeUpdate
               },
               () => {
-                this.props.onTimerChange(this.state.trimTime[index], trimTime);
+                this.props.onTimerChange(
+                  this.state.trimTime[index],
+                  this.state.trimTime
+                );
               }
             );
           }
         } else {
           if (e.keyCode === 38) {
-            let changeValue = {
-              min: min,
-              max:
-                // parseInt(max) - parseInt(min) < 15
-                //   ? max <= parseInt(videoMaxDuration)
-                //     ? max + 0.1
-                //     : parseInt(videoMaxDuration)
-                //   : max
-                parseInt(max) === parseInt(videoMaxDuration)
-                  ? parseInt(max) <= parseInt(videoMaxDuration)
-                    ? max
-                    : parseInt(videoMaxDuration)
-                  : max + 0.1,
-              to: true
-            };
+            let changeValue;
+            console.log("999999999999999");
+
+            if (totalOutput >= AppConfig.MAX_VIDEO_LENGTH) {
+              console.log("inside 9");
+              changeValue = {
+                min: min + 0.1,
+                max:
+                  parseInt(max) === parseInt(videoMaxDuration)
+                    ? parseInt(max) <= parseInt(videoMaxDuration)
+                      ? videoMaxDuration
+                      : parseInt(videoMaxDuration)
+                    : max + 0.1,
+                to: true
+              };
+            } else {
+              changeValue = {
+                min: min,
+                max:
+                  // parseInt(max) - parseInt(min) < 15
+                  //   ? max <= parseInt(videoMaxDuration)
+                  //     ? max + 0.1
+                  //     : parseInt(videoMaxDuration)
+                  //   : max
+                  parseInt(max) === parseInt(videoMaxDuration)
+                    ? parseInt(max) <= parseInt(videoMaxDuration)
+                      ? videoMaxDuration
+                      : videoMaxDuration
+                    : max + 0.1,
+                to: true
+              };
+            }
             trimTimeUpdate[index] = changeValue;
 
             this.setState(
@@ -320,10 +466,13 @@ class VideoDetails extends React.Component {
                 trimTime: trimTimeUpdate
               },
               () => {
-                this.props.onTimerChange(this.state.trimTime[index], trimTime);
+                this.props.onTimerChange(
+                  this.state.trimTime[index],
+                  this.state.trimTime
+                );
               }
             );
-          } else {
+          } else if (e.keyCode === 40) {
             let changeValue = {
               min: min,
               max: parseInt(max) - parseInt(min) > 1 ? max - 0.1 : max,
@@ -336,7 +485,10 @@ class VideoDetails extends React.Component {
                 trimTime: trimTimeUpdate
               },
               () => {
-                this.props.onTimerChange(this.state.trimTime[index], trimTime);
+                this.props.onTimerChange(
+                  this.state.trimTime[index],
+                  this.state.trimTime
+                );
               }
             );
           }
@@ -360,12 +512,13 @@ class VideoDetails extends React.Component {
                 () => {
                   this.props.onTimerChange(
                     this.state.trimTime[index],
-                    trimTime
+                    this.state.trimTime
                   );
                 }
               );
             }
-          } else {
+          } else if (e.keyCode === 40) {
+            console.log("3333333333333");
             if (min !== 0.0) {
               let changeValue = {
                 min:
@@ -384,7 +537,7 @@ class VideoDetails extends React.Component {
                 () => {
                   this.props.onTimerChange(
                     this.state.trimTime[index],
-                    trimTime
+                    this.state.trimTime
                   );
                 }
               );
@@ -392,17 +545,27 @@ class VideoDetails extends React.Component {
           }
         } else {
           if (e.keyCode === 38) {
+            console.log("888888888888");
             if (
               SecondsToMMSSMM(max + 0.1) < SecondsToMMSSMM(videoMaxDuration)
             ) {
-              let changeValue = {
-                min: min,
-                max:
-                  parseInt(max) - parseInt(min) === AppConfig.MAX_VIDEO_LENGTH
-                    ? max
-                    : max + 0.1,
-                to: true
-              };
+              let changeValue;
+              if (totalOutput >= AppConfig.MAX_VIDEO_LENGTH) {
+                changeValue = {
+                  min: min + 0.1,
+                  max: max + 0.1,
+                  to: true
+                };
+              } else {
+                changeValue = {
+                  min: min,
+                  max:
+                    parseInt(max) - parseInt(min) === AppConfig.MAX_VIDEO_LENGTH
+                      ? max
+                      : max + 0.1,
+                  to: true
+                };
+              }
               trimTimeUpdate[index] = changeValue;
 
               this.setState(
@@ -412,12 +575,12 @@ class VideoDetails extends React.Component {
                 () => {
                   this.props.onTimerChange(
                     this.state.trimTime[index],
-                    trimTime
+                    this.state.trimTime
                   );
                 }
               );
             }
-          } else {
+          } else if (e.keyCode === 40) {
             if (parseInt(max) - parseInt(min) > 1) {
               let changeValue = {
                 min: min - 1,
@@ -433,7 +596,7 @@ class VideoDetails extends React.Component {
                 () => {
                   this.props.onTimerChange(
                     this.state.trimTime[index],
-                    trimTime
+                    this.state.trimTime
                   );
                 }
               );
@@ -452,7 +615,7 @@ class VideoDetails extends React.Component {
                   () => {
                     this.props.onTimerChange(
                       this.state.trimTime[index],
-                      trimTime
+                      this.state.trimTime
                     );
                   }
                 );
@@ -470,7 +633,7 @@ class VideoDetails extends React.Component {
                   () => {
                     this.props.onTimerChange(
                       this.state.trimTime[index],
-                      trimTime
+                      this.state.trimTime
                     );
                   }
                 );
@@ -479,6 +642,7 @@ class VideoDetails extends React.Component {
           }
         }
       } else {
+        console.log("4444444444444");
         if (parseInt(max) - parseInt(min) > AppConfig.MAX_VIDEO_LENGTH) {
           let changeValue = {
             min: min,
@@ -491,7 +655,10 @@ class VideoDetails extends React.Component {
               trimTime: trimTimeUpdate
             },
             () => {
-              this.props.onTimerChange(this.state.trimTime[index], trimTime);
+              this.props.onTimerChange(
+                this.state.trimTime[index],
+                this.state.trimTime
+              );
             }
           );
         }
@@ -502,13 +669,15 @@ class VideoDetails extends React.Component {
         max: max <= 0 ? 0 + 1 : max
       };
       trimTimeUpdate[index] = changeValue;
-
       this.setState(
         {
           time: trimTimeUpdate
         },
         () => {
-          this.props.onTimerChange(this.state.trimTime[index], trimTime);
+          this.props.onTimerChange(
+            this.state.trimTime[index],
+            this.state.trimTime
+          );
         }
       );
     }

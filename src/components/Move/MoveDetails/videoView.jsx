@@ -127,12 +127,12 @@ class VideoView extends React.Component {
     const newMoveData = this.props.moveReducer
       ? this.props.moveReducer.isCreatingAnotherMove
       : null;
-    const { timer } = this.props;
+    const { timer, TimeArray } = this.props;
     const vid = document.getElementById("video-trimmer");
-    // this.JumpTimeIntervals();
     const { max: oldMax, min: oldMin } = oldTimer || {};
     const { max, min } = timer || {};
     if (this.video && (min !== oldMin || max !== oldMax)) {
+      // this.JumpTimeIntervals(TimeArray);
       this.video.currentTime = max;
       vid.ontimeupdate = () => {
         if (Math.round(vid.currentTime) > parseInt(max)) {
@@ -160,30 +160,33 @@ class VideoView extends React.Component {
   /**
    *
    */
-  JumpTimeIntervals = () => {
-    var currentSegment = 0; // Segment being played
-    var endTime = timeArr[currentSegment]["endTime"];
-    var videoPlayer = document.getElementById("video-trimmer");
-    videoPlayer.currentTime = timeArr[currentSegment]["startTime"];
-    videoPlayer.play(); // Starts playing the video from startTime
-    videoPlayer.addEventListener(
-      "timeupdate",
-      function() {
-        if (videoPlayer.currentTime >= endTime) {
-          // Segment completed
-          currentSegment++;
-          if (currentSegment < timeArr.length) {
-            // Not the last segment in the array
-            videoPlayer.currentTime = timeArr[currentSegment]["startTime"];
-            endTime = timeArr[currentSegment]["endTime"];
-          } else {
-            // Last segment in the array is over
-            videoPlayer.pause();
+  JumpTimeIntervals = timeArr => {
+    console.log("timeArr", timeArr);
+    if (timeArr && timeArr.length) {
+      var currentSegment = 0; // Segment being played
+      var endTime = timeArr[currentSegment]["max"];
+      var videoPlayer = document.getElementById("video-trimmer");
+      videoPlayer.currentTime = timeArr[currentSegment]["min"];
+      videoPlayer.play(); // Starts playing the video from startTime
+      videoPlayer.addEventListener(
+        "timeupdate",
+        function() {
+          if (videoPlayer.currentTime >= endTime) {
+            // Segment completed
+            currentSegment++;
+            if (currentSegment < timeArr.length) {
+              // Not the last segment in the array
+              videoPlayer.currentTime = timeArr[currentSegment]["min"];
+              endTime = timeArr[currentSegment]["max"];
+            } else {
+              // Last segment in the array is over
+              videoPlayer.pause();
+            }
           }
-        }
-      },
-      false
-    );
+        },
+        false
+      );
+    }
   };
 
   /**
