@@ -117,7 +117,7 @@ class VideoView extends React.Component {
 
       this.props.videoDuration(data);
     };
-    // this.JumpTimeIntervals(timeArr);
+    this.JumpTimeIntervals(timeArr);
   }
   /**
    *
@@ -137,11 +137,11 @@ class VideoView extends React.Component {
 
       // this.JumpTimeIntervals(TimeArray);
 
-      vid.ontimeupdate = () => {
-        if (Math.round(vid.currentTime) > parseInt(max)) {
-          vid.currentTime = min;
-        }
-      };
+      // vid.ontimeupdate = () => {
+      //   if (Math.round(vid.currentTime) > parseInt(max)) {
+      //     vid.currentTime = min;
+      //   }
+      // };
     }
 
     if (prevMoveData !== newMoveData) {
@@ -165,6 +165,7 @@ class VideoView extends React.Component {
    */
   JumpTimeIntervals = timeArr => {
     console.log("timeArr", timeArr);
+
     if (timeArr && timeArr.length) {
       var currentSegment = 0; // Segment being played
       var endTime = timeArr[currentSegment]["max"];

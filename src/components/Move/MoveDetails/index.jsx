@@ -277,53 +277,6 @@ class MoveDetails extends React.Component {
     );
   };
 
-  JumpTimeIntervals = timeArr => {
-    console.log("timeArr", timeArr);
-    if (timeArr && timeArr.length) {
-      var currentSegment = 0; // Segment being played
-      var endTime = timeArr[currentSegment]["max"];
-      console.log("endTime", endTime);
-
-      var videoPlayer = document.getElementById("video-trimmer");
-      videoPlayer.currentTime = timeArr[currentSegment]["min"];
-      videoPlayer.play(); // Starts playing the video from startTime
-      videoPlayer.addEventListener(
-        "timeupdate",
-        function() {
-          console.log(
-            "videoPlayer.currentTime >= endTime",
-            videoPlayer.currentTime >= endTime
-          );
-
-          if (videoPlayer.currentTime >= endTime) {
-            // Segment completed
-            console.log(
-              "currrsegment",
-              currentSegment,
-              "timeArr.length",
-              timeArr.length
-            );
-            console.log("timeArrtimeArr", timeArr);
-
-            currentSegment++;
-            console.log("currentSegment", currentSegment < timeArr.length);
-            if (currentSegment < timeArr.length) {
-              // Not the last segment in the array
-              videoPlayer.currentTime = timeArr[currentSegment]["min"];
-              endTime = timeArr[currentSegment]["max"];
-            } else {
-              console.log("hereee");
-
-              // Last segment in the array is over
-              videoPlayer.pause();
-            }
-          }
-        },
-        false
-      );
-    }
-  };
-
   /**
    *
    */
