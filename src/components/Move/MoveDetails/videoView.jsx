@@ -18,10 +18,10 @@ import "./index.scss";
 import { AppRoutes } from "config/AppRoutes";
 import { ConfirmBox } from "helper/SweetAleart";
 
-const timeArr = [
-  { min: 5, max: 11.700000000000001 },
-  { min: 69.7, max: 77 }
-];
+// const timeArr = [
+//   { min: 5, max: 11.700000000000001 },
+//   { min: 69.7, max: 77 }
+// ];
 
 // core components
 class VideoView extends React.Component {
@@ -41,14 +41,6 @@ class VideoView extends React.Component {
   /**
    *
    */
-
-  getDetails = () => {
-    const { tags, selectSetOptions } = this.props;
-    return {
-      tags,
-      setId: selectSetOptions ? selectSetOptions.value : null
-    };
-  };
 
   loadSets = (input, callback) => {
     if (input.length > 1) {
@@ -128,7 +120,7 @@ class VideoView extends React.Component {
     const newMoveData = this.props.moveReducer
       ? this.props.moveReducer.isCreatingAnotherMove
       : null;
-    const { timer, TimeArray } = this.props;
+    const { timer /* TimeArray */ } = this.props;
     const vid = document.getElementById("video-trimmer");
     const { max: oldMax, min: oldMin } = oldTimer || {};
     const { max, min } = timer || {};
@@ -218,8 +210,6 @@ class VideoView extends React.Component {
   render() {
     const {
       moveReducer,
-      description,
-      isEdit,
       isYoutubeUrl,
       playbackFailed,
       videoError,
@@ -229,7 +219,6 @@ class VideoView extends React.Component {
       errors,
       tagsList
     } = this.props;
-    defaultSetoptions = [];
     const { moveDetails } = moveReducer;
     const { allSetList, recentSetAdded } = setReducer;
 

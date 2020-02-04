@@ -41,23 +41,11 @@ const downloadVideo = async (req: Request, res: Response): Promise<any> => {
     let videoURL: string;
     const fileName = file.filename;
     videoURL = path.join("uploads", "youtube-videos", fileName);
-    const {
-      frames: framesArray,
-      videoMetaData,
-      videoName
-    } = await getVideoFrames(fileName);
-    delete videoMetaData.filename;
-    const frames = framesArray.map(
-      (frame: string) => `${ServerURL}/uploads/youtube-videos/${frame}`
-    );
 
     const moveResult: Document | any = new MoveModel({
       videoUrl: videoURL,
       userId: headToken.id,
       sourceUrl: videoURL,
-      frames: frames,
-      videoMetaData,
-      videoName,
       isYoutubeUrl: false,
       setId: body.setId !== "undefined" ? body.setId : null
     });
@@ -65,10 +53,7 @@ const downloadVideo = async (req: Request, res: Response): Promise<any> => {
     res.status(200).json({
       message: "Video uploaded successfully!",
       videoUrl: videoURL,
-      moveData: moveResult,
-      frames,
-      videoMetaData,
-      videoName
+      moveData: moveResult
     });
   } catch (error) {
     res.status(500).send({

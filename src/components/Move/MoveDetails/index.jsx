@@ -37,7 +37,6 @@ import {
 } from "../../../actions";
 import "./index.scss";
 import Loader from "components/comman/Loader/Loader";
-import FrameDetails from "./FrameDetails";
 // import { logger } from "helper/Logger";
 import { completeVideoEditing } from "actions/Moves";
 import closeBtn from "../../../assets/img/close-img.png";
@@ -46,7 +45,6 @@ import qs from "query-string";
 import { AppRoutes } from "../../../config/AppRoutes";
 import CreateSetComponent from "../../Sets/createSet";
 import { toast } from "react-toastify";
-import YouTubeFrameDetails from "./FrameDetailsForYoutube";
 
 // core components
 class MoveDetails extends React.Component {
@@ -248,7 +246,6 @@ class MoveDetails extends React.Component {
    *
    */
   onTimerChange = (timer, trimTime) => {
-    let videoPlayer = document.getElementById("video-trimmer");
     this.setState({
       timer
     });
@@ -256,14 +253,13 @@ class MoveDetails extends React.Component {
   };
 
   handleTotalOutput = trimTime => {
-    console.log("trimTime", trimTime);
     const time = trimTime;
     let sum = 0;
     let difference = 0;
     if (time && time.length) {
       time.map(key => {
         difference = key.max - key.min;
-        sum = sum + difference;
+        return (sum = sum + difference);
       });
     }
 
@@ -636,10 +632,10 @@ class MoveDetails extends React.Component {
       tagsList,
       moveUrlDetails,
       isCreatingAnotherMove,
-      isIosDevice,
+      // isIosDevice,
       creatingAnother
     } = moveReducer;
-    const { frames, videoMetaData, isYoutubeUrl } = moveDetails || {};
+    const { isYoutubeUrl } = moveDetails || {};
     const { isCreateAnother } = creatingAnother;
 
     const {
@@ -647,16 +643,11 @@ class MoveDetails extends React.Component {
       title,
       description,
       tags,
-      errors,
       selectSetOptions,
       isUpdateDescription,
-      videoDuration,
       videoMaxDuration,
-      isEdit,
       errorTitle,
       descError,
-      videoFrames,
-      createNew,
       videoError,
       isPlaying,
       currentTime,
@@ -669,7 +660,12 @@ class MoveDetails extends React.Component {
         <div className="create-set-section create-videos-section step-2 ">
           <Card className="w-100 p-0">
             <CardHeader className="mb-3 ">
-              <span className="cursor_pointer back-arrow create-move-back">
+              <span
+                className="cursor_pointer back-arrow create-move-back"
+                onClick={() => {
+                  window.history.back();
+                }}
+              >
                 {" "}
                 <i class="fas fa-long-arrow-alt-left"></i> Back
               </span>
@@ -740,29 +736,19 @@ class MoveDetails extends React.Component {
                           })
                         }
                         videoError={videoError}
+                        onBlur={this.onBlur}
                         handleTagChange={this.handleTagChange}
                         getAllSetRequest={getAllSetRequest}
                         tagsList={tagsList}
                         playbackFailed={this.playbackFailed}
                         TimeArray={TimeArray}
                         totalOutput={totalOutput}
+                        selectSetOptions={selectSetOptions}
                         tags={tags}
                         handleInputChange={this.handleInputChange}
                         setId={moveDetails ? moveDetails.setId : null}
                       />
                       <VideoDetails
-                        setReducer={setReducer}
-                        isDescriptionModalOpen={isDescriptionModalOpen}
-                        selectSetOptions={selectSetOptions}
-                        handleChange={this.handleChange}
-                        handleInputChange={this.handleInputChange}
-                        errors={errors}
-                        handleTagChange={this.handleTagChange}
-                        tags={tags}
-                        setId={moveDetails ? moveDetails.setId : null}
-                        getAllSetRequest={getAllSetRequest}
-                        tagsList={tagsList}
-                        onBlur={this.onBlur}
                         ref={this.videoDetails}
                         handlePlayPause={this.handlePlayPause}
                         isPlaying={isPlaying}

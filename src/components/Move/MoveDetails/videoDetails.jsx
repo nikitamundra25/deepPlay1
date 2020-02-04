@@ -1,18 +1,6 @@
 import React from "react";
-import {
-  Col,
-  FormGroup,
-  Label,
-  FormFeedback,
-  InputGroup,
-  Button,
-  Form,
-  Row,
-  Input
-} from "reactstrap";
-import CreatableSelect from "react-select/creatable";
+import { Col, FormGroup, Label, Button, Form, Row, Input } from "reactstrap";
 import "react-tagsinput/react-tagsinput.css";
-import AsyncSelect from "react-select/async";
 import InputRange from "react-input-range";
 import "./index.scss";
 import playIc from "../../../assets/img/icons/play.svg";
@@ -76,26 +64,6 @@ class VideoDetails extends React.Component {
     this.setState({ trimTime: cutCount }, () => {
       this.props.handleTotalOutput(this.state.trimTime);
     });
-  };
-
-  getDetails = () => {
-    const { tags, selectSetOptions } = this.props;
-    return {
-      tags,
-      setId: selectSetOptions ? selectSetOptions.value : null
-    };
-  };
-
-  loadSets = (input, callback) => {
-    if (input.length > 1) {
-      this.props.getAllSetRequest({
-        search: input,
-        callback,
-        isSetNoLimit: false
-      });
-    } else {
-      this.props.getAllSetRequest({ isSetNoLimit: false });
-    }
   };
 
   replayVideo = () => {
@@ -694,11 +662,6 @@ class VideoDetails extends React.Component {
 
   render() {
     const {
-      selectSetOptions,
-      setReducer,
-      tags,
-      errors,
-      tagsList,
       handlePlayPause,
       isPlaying,
       videoMaxDuration,
@@ -706,44 +669,7 @@ class VideoDetails extends React.Component {
       handleSingleInputRange,
       totalOutput
     } = this.props;
-    const { recentSetAdded, allSetList } = setReducer;
-    const { time, trimTime, setIndex } = this.state;
-    let recentAddedSet,
-      defaultSetoptions = [];
-    if (allSetList && allSetList.length) {
-      allSetList.map(data => {
-        const defaultSetoptionsValue = {
-          label:
-            data && data.isCopy
-              ? `${data.title} ${
-                  data.copyCount > 0 ? `(${data.copyCount})` : ""
-                }`
-              : data.title,
-          value: data._id,
-          moveCount: data.moveCount
-        };
-
-        defaultSetoptions.push(defaultSetoptionsValue);
-        return true;
-      });
-      const addNewOption = {
-        label: "+ Create New Set",
-        value: ""
-      };
-      defaultSetoptions.push(addNewOption);
-    } else {
-      const addNewOption = {
-        label: "+ Create New Set",
-        value: ""
-      };
-      defaultSetoptions.push(addNewOption);
-    }
-    if (recentSetAdded && recentSetAdded.value) {
-      recentAddedSet = {
-        label: recentSetAdded.title,
-        value: recentSetAdded._id
-      };
-    }
+    const { trimTime, setIndex } = this.state;
 
     return (
       <>
@@ -892,7 +818,7 @@ class VideoDetails extends React.Component {
                             ) : null}
                           </Row>
                         </Form>
-                        {index != 0 ? (
+                        {index !== 0 ? (
                           <div
                             className="delete-cut-wrap"
                             onClick={() => this.deletehandler(index)}
