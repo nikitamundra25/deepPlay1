@@ -43,12 +43,37 @@ const downloadVideo = async (req: Request, res: Response): Promise<any> => {
     const fileName = file.filename;
     videoURL = path.join("uploads", "youtube-videos", fileName);
 
+    /* Generate thumbnail and upload on s3 start
+     */
+    let s3VideoThumbnailUrl: any | null,
+      videoFile: String | any,
+      videoThumbnail: String | any;
+
+    const videoRes = await generateThumbanail(fileName);
+    if (IsProductionMode) {
+      videoFile = path.join(__dirname, videoURL);
+      videoThumbnail = videoRes ? videoRes : null;
+    } else {
+      videoFile = path.join(__basedir, "..", videoURL);
+      videoThumbnail = videoRes ? videoRes : null;
+    }
+    if (videoThumbnail) {
+      s3VideoThumbnailUrl = await s3BucketUpload(
+        videoThumbnail,
+        "deep-play.jpeg",
+        "moves-thumbnail"
+      );
+    }
+    /* Generated thumbnail and upload on s3 end
+     */
+
     const moveResult: Document | any = new MoveModel({
       videoUrl: videoURL,
       userId: headToken.id,
       sourceUrl: videoURL,
       isYoutubeUrl: false,
-      setId: body.setId !== "undefined" ? body.setId : null
+      setId: body.setId !== "undefined" ? body.setId : null,
+      videoThumbnail: s3VideoThumbnailUrl ? s3VideoThumbnailUrl : null
     });
     await moveResult.save();
     res.status(200).json({
@@ -880,6 +905,7 @@ const updateMoveDetailsAndTrimVideo = async (
         startTime: timer.min ? timer.min : 0,
         sourceUrl: result.sourceUrl ? result.sourceUrl : null,
         isYoutubeUrl: result.isYoutubeUrl ? result.isYoutubeUrl : false,
+        videoThumbnail: result.videoThumbnail ? result.videoThumbnail : null,
         setId,
         videoMetaData: {},
         isMoveProcessing: true,
@@ -888,25 +914,13 @@ const updateMoveDetailsAndTrimVideo = async (
       }
     );
     let thumbnailPath: any[] = [];
-    if (frames && frames.length) {
-      if (IsProductionMode) {
-        thumbnailPath = frames.split("org");
-      } else {
-        thumbnailPath = frames.split("8000");
-      }
-    }
+
     if (result) {
       let videoFile: String | any, videoThumbnail: String | any;
       if (IsProductionMode) {
         videoFile = path.join(__dirname, result.videoUrl);
-        if (thumbnailPath && thumbnailPath.length) {
-          videoThumbnail = path.join(__dirname, thumbnailPath[1]);
-        }
       } else {
         videoFile = path.join(__basedir, "..", result.videoUrl);
-        if (thumbnailPath && thumbnailPath.length) {
-          videoThumbnail = path.join(__basedir, "..", thumbnailPath[1]);
-        }
       }
 
       const fileName = `${
@@ -966,14 +980,7 @@ const updateMoveDetailsAndTrimVideo = async (
             "deep-play.webm",
             "moves"
           );
-          let s3VideoThumbnailUrl: any | null;
-          if (videoThumbnail) {
-            s3VideoThumbnailUrl = await s3BucketUpload(
-              videoThumbnail,
-              "deep-play.jpeg",
-              "moves-thumbnail"
-            );
-          }
+
           let moveDataForAlgolia: Document | any;
           /* Add items to algolia */
           moveDataForAlgolia = {
@@ -997,7 +1004,9 @@ const updateMoveDetailsAndTrimVideo = async (
                 seconds: duration
               }
             },
-            videoThumbnail: s3VideoThumbnailUrl ? s3VideoThumbnailUrl : null,
+            videoThumbnail: result.videoThumbnail
+              ? result.videoThumbnail
+              : null,
             searchType: "move"
           };
           let temp: any;
@@ -1011,8 +1020,8 @@ const updateMoveDetailsAndTrimVideo = async (
                 { _id: result._id },
                 {
                   objectId: temp,
-                  videoThumbnail: s3VideoThumbnailUrl
-                    ? s3VideoThumbnailUrl
+                  videoThumbnail: result.videoThumbnail
+                    ? result.videoThumbnail
                     : null
                 }
               );
@@ -1061,7 +1070,7 @@ const updateMoveDetailsAndTrimVideo = async (
             videoOriginalFile: videoOriginalFile,
             videoFileMain: videoFileMain,
             s3VideoUrl: s3VideoUrl,
-            videoThumbnail: s3VideoThumbnailUrl
+            videoThumbnail: result.videoThumbnail
           });
         });
     } else {
