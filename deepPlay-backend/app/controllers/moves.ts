@@ -15,6 +15,7 @@ import { algoliaAppId, algoliaAPIKey } from "../config/app";
 import request from "request";
 import youtubedl from "youtube-dl";
 import https from "https";
+import ThumbnailGenerator from "video-thumbnail-generator";
 const instagramUtil = require("../common/instagramUtil");
 var CronJob = require("cron").CronJob;
 const algoliasearch = require("algoliasearch");
@@ -1886,6 +1887,53 @@ const getInstagramVideoUrl = (
   });
 };
 
+/* 
+Generate thumbnail for bulk upload data
+*/
+const generateThumbanail = async (fileName: any) => {
+  /* Create frames for setting thumbnail start */
+  let videourl1: string;
+  if (IsProductionMode) {
+    videourl1 = path.join(__dirname, "uploads", "youtube-videos", fileName);
+  } else {
+    videourl1 = path.join(
+      __dirname,
+      "..",
+      "uploads",
+      "youtube-videos",
+      fileName
+    );
+  }
+
+  // Path1 is defined to set the path of thumbnail to be stored at
+  let path1: any = path.join(
+    __dirname,
+    "..",
+    "uploads",
+    "bulk-upload-thumbnail/"
+  );
+  let videoRes: any = "";
+  return await new Promise((resolve, reject) => {
+    const tg: any = new ThumbnailGenerator({
+      sourcePath: videourl1,
+      thumbnailPath: path1,
+      tmpDir: path1
+    });
+
+    tg.generateOneByPercentCb(90, async (err: any, result: any) => {
+      if (err) {
+        console.log(err);
+        reject(err);
+        return;
+      }
+      if (result) {
+        videoRes = path1 + result;
+        resolve(videoRes);
+      }
+    });
+  });
+  /* Create frames for setting thumbnail end*/
+};
 export {
   downloadVideo,
   getMoveBySetId,
