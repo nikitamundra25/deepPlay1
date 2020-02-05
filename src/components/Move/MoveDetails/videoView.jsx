@@ -41,6 +41,13 @@ class VideoView extends React.Component {
   /**
    *
    */
+  getDetails = () => {
+    const { tags, selectSetOptions } = this.props;
+    return {
+      tags,
+      setId: selectSetOptions ? selectSetOptions.value : null
+    };
+  };
 
   loadSets = (input, callback) => {
     if (input.length > 1) {
@@ -110,7 +117,6 @@ class VideoView extends React.Component {
 
       this.props.videoDuration(data);
     };
-    // this.JumpTimeIntervals(timeArr);
   }
   /**
    *
@@ -120,15 +126,12 @@ class VideoView extends React.Component {
     const newMoveData = this.props.moveReducer
       ? this.props.moveReducer.isCreatingAnotherMove
       : null;
-    const { timer /* TimeArray */ } = this.props;
+    const { timer } = this.props;
     const vid = document.getElementById("video-trimmer");
     const { max: oldMax, min: oldMin } = oldTimer || {};
     const { max, min } = timer || {};
     if (this.video && (min !== oldMin || max !== oldMax)) {
       this.video.currentTime = max;
-      // console.log("timeArr", timeArr);
-
-      // this.JumpTimeIntervals(TimeArray);
 
       // vid.ontimeupdate = () => {
       //   if (Math.round(vid.currentTime) > parseInt(max)) {
@@ -156,53 +159,6 @@ class VideoView extends React.Component {
   /**
    *
    */
-  JumpTimeIntervals = timeArr => {
-    console.log("timeArr", timeArr);
-
-    if (timeArr && timeArr.length) {
-      var currentSegment = 0; // Segment being played
-      var endTime = timeArr[currentSegment]["max"];
-      console.log("endTime", endTime);
-
-      var videoPlayer = document.getElementById("video-trimmer");
-      videoPlayer.currentTime = timeArr[currentSegment]["min"];
-      videoPlayer.play(); // Starts playing the video from startTime
-      videoPlayer.addEventListener(
-        "timeupdate",
-        function() {
-          console.log(
-            "videoPlayer.currentTime >= endTime",
-            videoPlayer.currentTime >= endTime
-          );
-
-          if (videoPlayer.currentTime >= endTime) {
-            // Segment completed
-            console.log(
-              "currrsegment",
-              currentSegment,
-              "timeArr.length",
-              timeArr.length
-            );
-            console.log("timeArrtimeArr", timeArr);
-
-            currentSegment++;
-            console.log("currentSegment", currentSegment < timeArr.length);
-            if (currentSegment < timeArr.length) {
-              // Not the last segment in the array
-              videoPlayer.currentTime = timeArr[currentSegment]["min"];
-              endTime = timeArr[currentSegment]["max"];
-            } else {
-              console.log("hereee");
-
-              // Last segment in the array is over
-              videoPlayer.pause();
-            }
-          }
-        },
-        false
-      );
-    }
-  };
 
   /**
    *

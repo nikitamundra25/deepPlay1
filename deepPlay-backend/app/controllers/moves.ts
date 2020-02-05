@@ -119,7 +119,6 @@ const downloadYoutubeVideo = async (
           console.log("====================================");
           console.log("infooo", info);
           console.log("====================================");
-          console.log("====================================");
           console.log("error", error);
           console.log("====================================");
           if (info) {
@@ -293,9 +292,9 @@ const downloadYoutubeVideo = async (
       });
     }
   } catch (error) {
-    console.log(error, "kkkkk");
     res.status(500).send({
-      message: error.msg
+      message: error.msg,
+      success: false
     });
   }
 };
@@ -346,7 +345,6 @@ const createMove = async (req: Request, res: Response): Promise<any> => {
     const { body, currentUser } = req;
     const {
       moveUrl,
-      frames,
       videoMetaData,
       videoName,
       sourceUrl,
@@ -362,39 +360,18 @@ const createMove = async (req: Request, res: Response): Promise<any> => {
     }
     let moveResult: Document | any;
 
-    if (!frames && !frames.length && !isYoutubeUrl) {
-      let fileName: string[] = moveUrl.split("/");
-      const {
-        frames: framesArray,
-        videoMetaData,
-        videoName
-      } = await getVideoFrames(fileName[2]);
-      delete videoMetaData.filename;
-      const frames = framesArray.map(
-        (frame: string | null) => `${ServerURL}/uploads/youtube-videos/${frame}`
-      );
-      moveResult = new MoveModel({
-        videoUrl: moveUrl,
-        userId: headToken.id,
-        frames: frames,
-        videoMetaData: videoMetaData,
-        videoName: videoName,
-        isYoutubeUrl: false
-      });
-      await moveResult.save();
-    } else {
-      moveResult = new MoveModel({
-        videoUrl: moveUrl,
-        userId: headToken.id,
-        sourceUrl: sourceUrl,
-        frames: frames ? frames : null,
-        videoThumbnail: isYoutubeUrl ? videoThumbnail : null,
-        videoMetaData: videoMetaData ? videoMetaData : null,
-        videoName: videoName ? videoName : null,
-        isYoutubeUrl: isYoutubeUrl ? isYoutubeUrl : false
-      });
-      await moveResult.save();
-    }
+    moveResult = new MoveModel({
+      videoUrl: moveUrl,
+      userId: headToken.id,
+      sourceUrl: sourceUrl,
+      frames: frames ? frames : null,
+      videoThumbnail: videoThumbnail ? videoThumbnail : null,
+      videoMetaData: videoMetaData ? videoMetaData : null,
+      videoName: videoName ? videoName : null,
+      isYoutubeUrl: isYoutubeUrl ? isYoutubeUrl : false
+    });
+    await moveResult.save();
+
     return res.status(200).json({
       message: "Move has been created successfully.",
       moveId: moveResult._id,
@@ -406,9 +383,9 @@ const createMove = async (req: Request, res: Response): Promise<any> => {
       success: true
     });
   } catch (error) {
-    console.log(error, "kkkkk");
     res.status(500).send({
-      message: error.message
+      message: error.message,
+      success: false
     });
   }
 };
@@ -1832,6 +1809,7 @@ new CronJob(
       });
     } catch (error) {
       console.log(error);
+      return;
     }
   },
   null,

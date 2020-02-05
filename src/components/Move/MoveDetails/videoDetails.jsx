@@ -81,16 +81,12 @@ class VideoDetails extends React.Component {
 
     if (min >= 0) {
       if (min !== parseInt(trimTime[index].min) && min >= max) {
-        console.log("11111111111");
-
         max =
           parseInt(min) + AppConfig.MAX_VIDEO_LENGTH < videoMaxDuration
             ? parseInt(min) + AppConfig.MAX_VIDEO_LENGTH
             : videoMaxDuration;
         value.max = max;
       } else if (max !== parseInt(trimTime[index].max) && min >= max) {
-        console.log("222222222222");
-
         min =
           max - AppConfig.MAX_VIDEO_LENGTH < 0
             ? max - AppConfig.MAX_VIDEO_LENGTH
@@ -196,7 +192,7 @@ class VideoDetails extends React.Component {
             trimTimeUpdate[index] = data;
           }
         } else {
-          console.log("ghantaaaaaa");
+          console.log("In last condition");
           trimTimeUpdate[index] = value;
         }
         this.setState(
@@ -283,8 +279,6 @@ class VideoDetails extends React.Component {
           if (e.keyCode === 38) {
             let changeValue;
             if (totalOutput >= AppConfig.MAX_VIDEO_LENGTH) {
-              console.log("1000000000000");
-
               changeValue = {
                 min: min + 0.1,
                 max: max + 0.1,
@@ -667,7 +661,8 @@ class VideoDetails extends React.Component {
       videoMaxDuration,
       currentTime,
       handleSingleInputRange,
-      totalOutput
+      totalOutput,
+      videoError
     } = this.props;
     const { trimTime, setIndex } = this.state;
 
@@ -837,7 +832,12 @@ class VideoDetails extends React.Component {
                 <Button className="btn-line-black" onClick={this.addCutHandler}>
                   <i class="fa fa-plus" aria-hidden="true"></i> Add Cut
                 </Button>
-                <Button className="btn-black " color={" "}>
+                <Button
+                  className="btn-black "
+                  color={" "}
+                  onClick={this.props.completeEditing}
+                  disabled={videoError}
+                >
                   Done <i class="fa fa-angle-right"></i>
                 </Button>
               </div>
