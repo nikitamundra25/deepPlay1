@@ -142,7 +142,7 @@ class SetComponent extends React.Component {
             <span
               className="dashboard-right-content cursor_pointer ml-4 header-img-icon"
               onClick={this.handleSetModal}
-              id="move"
+              id="set"
             >
               <img src={plusIc} alt="plusIc" />
             </span>
