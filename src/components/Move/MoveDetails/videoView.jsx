@@ -130,11 +130,11 @@ class VideoView extends React.Component {
 
       // this.JumpTimeIntervals(TimeArray);
 
-      vid.ontimeupdate = () => {
-        if (Math.round(vid.currentTime) > parseInt(max)) {
-          vid.currentTime = min;
-        }
-      };
+      // vid.ontimeupdate = () => {
+      //   if (Math.round(vid.currentTime) > parseInt(max)) {
+      //     vid.currentTime = min;
+      //   }
+      // };
     }
 
     if (prevMoveData !== newMoveData) {

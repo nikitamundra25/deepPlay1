@@ -368,7 +368,6 @@ class MoveDetails extends React.Component {
 /*  */
   JumpTimeIntervals = timeArr => {
     console.log("heree");
-
     if (timeArr && timeArr.length) {
       let currentSegment = 0; // Segment being played
       let endTime = timeArr[currentSegment]["max"];
@@ -378,7 +377,7 @@ class MoveDetails extends React.Component {
       videoPlayer.addEventListener(
         "timeupdate",
         function() {
-          if (videoPlayer.currentTime >= endTime) {
+          if (parseInt(videoPlayer.currentTime) >= parseInt(endTime)) {
             // Segment completed
             currentSegment++;
             if (currentSegment < timeArr.length) {
