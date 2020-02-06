@@ -339,23 +339,22 @@ class MoveDetails extends React.Component {
 
   /* Jump timeInterval to various cuts start
 /*  */
-  JumpTimeIntervals = timeArr => {
-    console.log("heree");
-    if (timeArr && timeArr.length) {
+  JumpTimeIntervals = time => {
+    if (time && time.length) {
       let currentSegment = 0; // Segment being played
-      let endTime = timeArr[currentSegment]["max"];
+      let endTime = time[currentSegment]["max"];
       let videoPlayer = document.getElementById("video-trimmer");
-      videoPlayer.currentTime = timeArr[currentSegment]["min"];
+      videoPlayer.currentTime = time[currentSegment]["min"];
       videoPlayer.play(); // Starts playing the video from startTime
       videoPlayer.ontimeupdate = () => {
         if (parseInt(videoPlayer.currentTime) >= parseInt(endTime)) {
           // Segment completed
 
           currentSegment++;
-          if (currentSegment < timeArr.length) {
+          if (currentSegment < time.length) {
             // Not the last segment in the array
-            videoPlayer.currentTime = timeArr[currentSegment]["min"];
-            endTime = timeArr[currentSegment]["max"];
+            videoPlayer.currentTime = time[currentSegment]["min"];
+            endTime = time[currentSegment]["max"];
           } else {
             // Last segment in the array is over
             videoPlayer.pause();

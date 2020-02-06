@@ -64,8 +64,10 @@ class VideoDetails extends React.Component {
   };
 
   replayVideo = () => {
-    const { trimTime } = this.state;
-    this.props.JumpTimeIntervals(trimTime);
+    const { time } = this.state;
+    let videoPlayer = document.getElementById("video-trimmer");
+    videoPlayer.currentTime = time.min;
+    this.props.handlePlayPause();
   };
 
   labelValueChange = value => {

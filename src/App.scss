@@ -2778,6 +2778,7 @@ _:future,
         width: 50px;
         padding: 6px 16px;
         background: #9d9d9d;
+        font-family: $source;
         color: #fff;
         &:hover {
           transform: none;
@@ -2792,6 +2793,9 @@ _:future,
         img {
           width: 100%;
         }
+      }
+      .triming-bounds {
+        font-family: sans-serif;
       }
     }
   }

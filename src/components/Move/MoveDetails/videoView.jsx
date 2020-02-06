@@ -158,8 +158,12 @@ class VideoView extends React.Component {
     if (prevMoveData !== newMoveData) {
       this.video.load();
     }
-    // this.video.load();
 
+    vid.onseeking = () => {
+      if (parseInt(vid.currentTime) < parseInt(timer.min)) {
+        vid.currentTime = timer.min;
+      }
+    };
     vid.onwaiting = () => {
       this.setState({
         isBufferingVideo: true
@@ -193,7 +197,7 @@ class VideoView extends React.Component {
     const { moveDetails } = moveReducer;
     const { allSetList, recentSetAdded } = setReducer;
 
-    const { isBufferingVideo, videoCanPlay } = this.state;
+    const { /* isBufferingVideo */ videoCanPlay } = this.state;
     let recentAddedSet,
       defaultSetoptions = [];
     if (allSetList && allSetList.length) {
