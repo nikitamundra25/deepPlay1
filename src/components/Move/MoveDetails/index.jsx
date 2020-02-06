@@ -77,7 +77,7 @@ class MoveDetails extends React.Component {
       isPlaying: false,
       currentTime: 0,
       totalOutput: 15,
-      TimeArray: []
+      isChange: true
     };
     this.videoDetails = React.createRef();
   }
@@ -197,6 +197,7 @@ class MoveDetails extends React.Component {
           title,
           description,
           tags,
+          timer: { min: 0.1, max: 15.1 },
           selectSetOptions: selectOption
             ? selectOption
             : {
@@ -230,45 +231,36 @@ class MoveDetails extends React.Component {
     }
 
     if (this.video) {
-      this.video.addEventListener("pause", () => {
+      this.video.onpause = () => {
         this.setState({
           isPlaying: false
         });
-      });
-      this.video.addEventListener("play", () => {
+      };
+      this.video.onplay = () => {
         this.setState({
           isPlaying: true
         });
-      });
+      };
     }
   };
   /**
    *
    */
-  onTimerChange = (timer, trimTime) => {
+  onTimerChange = timer => {
     this.setState({
       timer
     });
-    this.handleTotalOutput(trimTime);
+    this.handleTotalOutput(timer);
   };
 
-  handleTotalOutput = trimTime => {
-    const time = trimTime;
-    let sum = 0;
+  handleTotalOutput = time => {
     let difference = 0;
-    if (time && time.length) {
-      time.map(key => {
-        difference = key.max - key.min;
-        return (sum = sum + difference);
-      });
-    }
-
+    difference = time.max - time.min;
     this.setState(
       {
-        totalOutput: sum,
-        TimeArray: trimTime
-      },
-      () => this.JumpTimeIntervals(this.state.TimeArray)
+        totalOutput: difference
+      }
+      // () => this.JumpTimeIntervals(this.state.TimeArray)
     );
   };
 
@@ -375,15 +367,36 @@ class MoveDetails extends React.Component {
   /* Jump timeInterval to various cuts ends
 /*  */
 
-  handleSingleInputRange = value => {
-    const { videoMaxDuration } = this.state;
-    this.handleVideoPause();
+  handleChangeComplete = (value, time) => {
+    const { isChange } = this.state;
     const vid = document.getElementById("video-trimmer");
-    vid.currentTime = value;
-    this.setState({
-      currentTime:
-        value === parseInt(videoMaxDuration) ? videoMaxDuration : value
-    });
+    if (!isChange) {
+      vid.currentTime = time.min;
+      this.setState({
+        isChange: true
+      });
+    }
+  };
+
+  handleSingleInputRange = (value, time) => {
+    const { videoMaxDuration } = this.state;
+    const vid = document.getElementById("video-trimmer");
+    const { min, max } = time;
+    if (parseInt(min) <= parseInt(value) && parseInt(max) >= parseInt(value)) {
+      this.handleVideoPause();
+      vid.currentTime = value;
+      this.setState({
+        currentTime:
+          value === parseInt(videoMaxDuration) ? videoMaxDuration : value,
+        isChange: true
+      });
+    } else {
+      vid.currentTime = value;
+      this.setState({
+        isChange: false
+      });
+      this.handleVideoPlay();
+    }
     if (value === parseInt(videoMaxDuration)) {
       this.handleVideoPlay();
     }
@@ -631,8 +644,8 @@ class MoveDetails extends React.Component {
       isPlaying,
       currentTime,
       totalOutput,
-      TimeArray,
-      errors
+      errors,
+      isChange
     } = this.state;
 
     return (
@@ -723,15 +736,17 @@ class MoveDetails extends React.Component {
                         getAllSetRequest={getAllSetRequest}
                         tagsList={tagsList}
                         playbackFailed={this.playbackFailed}
-                        TimeArray={TimeArray}
                         totalOutput={totalOutput}
                         selectSetOptions={selectSetOptions}
                         tags={tags}
+                        isPlaying={isPlaying}
                         handleInputChange={this.handleInputChange}
                         setId={moveDetails ? moveDetails.setId : null}
+                        isChange={isChange}
                       />
                       <VideoDetails
                         handlePlayPause={this.handlePlayPause}
+                        handleVideoPause={this.handleVideoPause}
                         isPlaying={isPlaying}
                         videoMaxDuration={videoMaxDuration}
                         currentTime={currentTime}
@@ -742,6 +757,7 @@ class MoveDetails extends React.Component {
                         JumpTimeIntervals={this.JumpTimeIntervals}
                         videoError={videoError}
                         completeEditing={this.completeEditing}
+                        handleChangeComplete={this.handleChangeComplete}
                       />
                     </>
                   ) : (

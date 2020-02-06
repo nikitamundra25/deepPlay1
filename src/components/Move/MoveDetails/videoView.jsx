@@ -129,15 +129,30 @@ class VideoView extends React.Component {
     const { timer } = this.props;
     const vid = document.getElementById("video-trimmer");
     const { max: oldMax, min: oldMin } = oldTimer || {};
-    const { max, min } = timer || {};
-    if (this.video && (min !== oldMin || max !== oldMax)) {
-      this.video.currentTime = max;
+    const { max, min, isVideoSleek } = timer || {};
 
-      // vid.ontimeupdate = () => {
-      //   if (Math.round(vid.currentTime) > parseInt(max)) {
-      //     vid.currentTime = min;
-      //   }
-      // };
+    if (this.video && (min !== oldMin || max !== oldMax)) {
+      if (isVideoSleek) {
+        if (max === oldMax) {
+          this.video.currentTime = min;
+        } else {
+          this.video.currentTime = max;
+        }
+      } else {
+        if (!timer.to) {
+          this.video.currentTime = min;
+        } else {
+          this.video.currentTime = max;
+        }
+      }
+
+      vid.ontimeupdate = () => {
+        if (vid.currentTime.toFixed(2) >= max) {
+          if (this.props.isPlaying && this.props.isChange) {
+            vid.currentTime = min;
+          }
+        }
+      };
     }
 
     if (prevMoveData !== newMoveData) {
@@ -220,11 +235,11 @@ class VideoView extends React.Component {
         <Col lg={4}>
           {moveDetails && moveDetails.videoUrl ? (
             <div className={"video-player"}>
-              {isBufferingVideo === true ? (
+              {/* {isBufferingVideo === true ? (
                 <div className="video-spinner z-">
                   <img src={videoLoading} alt="" />
                 </div>
-              ) : null}
+              ) : null} */}
               <div className="video-player-inner-wrap">
                 {!videoError ? (
                   !videoCanPlay ? (
