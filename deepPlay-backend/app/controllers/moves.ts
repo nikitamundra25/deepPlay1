@@ -330,7 +330,6 @@ const createMove = async (req: Request, res: Response): Promise<any> => {
     const { body, currentUser } = req;
     const {
       moveUrl,
-      videoMetaData,
       videoName,
       sourceUrl,
       isYoutubeUrl,
@@ -1853,7 +1852,6 @@ const getInstagramVideoUrl = (
 Generate thumbnail for bulk upload data
 */
 const generateThumbanail = async (fileName: any) => {
-  /* Create frames for setting thumbnail start */
   let videourl1: string;
   if (IsProductionMode) {
     videourl1 = path.join(__dirname, "uploads", "youtube-videos", fileName);
@@ -1894,8 +1892,8 @@ const generateThumbanail = async (fileName: any) => {
       }
     });
   });
-  /* Create frames for setting thumbnail end*/
 };
+
 export {
   downloadVideo,
   getMoveBySetId,

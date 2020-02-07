@@ -65,7 +65,7 @@ class MoveDetails extends React.Component {
         min: 0,
         max: 15
       },
-      videoMaxDuration: 0,
+      videoMaxDuration: 1,
       setMoveCount: 0,
       isEdit: false,
       descError: "",
@@ -467,7 +467,7 @@ class MoveDetails extends React.Component {
    *
    */
   handleTagChange = (newValue, actionMeta) => {
-    //const { tagsList } = this.props.moveReducer
+    // const { tagsList } = this.props.moveReducer
     if (newValue) {
       this.setState({
         tags: newValue
@@ -509,7 +509,7 @@ class MoveDetails extends React.Component {
       });
     } else {
       this.setState({
-        [name]: value,
+        [name]: value.replace(/  +/g, " ").trimStart(),
         errorTitle: null
       });
     }
@@ -673,7 +673,7 @@ class MoveDetails extends React.Component {
                 }}
               >
                 {" "}
-                <i class="fas fa-long-arrow-alt-left"></i> Back
+                <i className="fas fa-long-arrow-alt-left"></i> Back
               </span>
               <FormGroup className="flex-fill flex-column video-title-wrap">
                 <div className=" w-100">
@@ -825,7 +825,7 @@ class MoveDetails extends React.Component {
                   }
                   maxLength={"500"}
                   onChange={this.handleChange}
-                  value={description}
+                  value={description || ""}
                   rows={3}
                 />
                 <FormFeedback>{descError ? descError : null}</FormFeedback>

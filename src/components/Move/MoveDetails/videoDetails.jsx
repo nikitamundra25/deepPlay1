@@ -67,7 +67,7 @@ class VideoDetails extends React.Component {
     const { time } = this.state;
     let videoPlayer = document.getElementById("video-trimmer");
     videoPlayer.currentTime = time.min;
-    this.props.handlePlayPause();
+    this.props.handleVideoPlay();
   };
 
   labelValueChange = value => {
@@ -718,7 +718,7 @@ class VideoDetails extends React.Component {
                   onClick={this.props.completeEditing}
                   disabled={videoError}
                 >
-                  Done <i class="fa fa-angle-right"></i>
+                  Done <i className="fa fa-angle-right"></i>
                 </Button>
               </div>
             </div>

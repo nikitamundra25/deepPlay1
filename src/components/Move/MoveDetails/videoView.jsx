@@ -12,16 +12,9 @@ import "react-tagsinput/react-tagsinput.css";
 import AsyncSelect from "react-select/async";
 import { AppConfig } from "../../../config/Appconfig";
 import videoLoading from "../../../assets/img/loder/loader.svg";
-// import videosIc from "../../../assets/img/videos-ic.svg";
-
-import "./index.scss";
 import { AppRoutes } from "config/AppRoutes";
 import { ConfirmBox } from "helper/SweetAleart";
-
-// const timeArr = [
-//   { min: 5, max: 11.700000000000001 },
-//   { min: 69.7, max: 77 }
-// ];
+import "./index.scss";
 
 // core components
 class VideoView extends React.Component {
@@ -88,20 +81,7 @@ class VideoView extends React.Component {
           }
         });
     }
-    // this.video.addEventListener("timeupdate", () => {
-    //   console.log("kkkkkkk");
 
-    //   const { timer } = this.props;
-    //   const { min, max } = timer || {};
-    //   const { currentTime } = this.video;
-    //   if (parseInt(currentTime) >= max) {
-    //     this.video.pause();
-    //     setTimeout(() => {
-    //       this.video.currentTime = min;
-    //       this.video.play();
-    //     }, 500);
-    //   }
-    // });
     let timeDuration = [];
 
     this.video.onloadeddata = () => {
@@ -161,9 +141,12 @@ class VideoView extends React.Component {
 
     vid.onseeking = () => {
       if (parseInt(vid.currentTime) < parseInt(timer.min)) {
+        // if (this.props.isChange) {
         vid.currentTime = timer.min;
+        // }
       }
     };
+
     vid.onwaiting = () => {
       this.setState({
         isBufferingVideo: true
@@ -234,6 +217,7 @@ class VideoView extends React.Component {
         value: recentSetAdded._id
       };
     }
+
     return (
       <>
         <Col lg={4}>
@@ -307,19 +291,12 @@ class VideoView extends React.Component {
                   Add tags and press enter to separate
                 </Label>
                 <div className="w-100 tag-input-wrap search-select-wrap">
-                  {/* <TagsInput
-                value={tags}
-                className={"form-control"}
-                maxTags={"5"}
-                onChange={this.props.handleTagChange}
-              /> */}
                   <CreatableSelect
                     classNamePrefix="react_select"
                     isMulti
                     onChange={this.props.handleTagChange}
                     value={tags}
                     options={tagsList}
-                    // options={colourOptions}
                   />
                 </div>
               </FormGroup>
@@ -356,12 +333,7 @@ class VideoView extends React.Component {
                       }
                     />
                     <FormFeedback>
-                      {errors &&
-                      errors.setId &&
-                      selectSetOptions &&
-                      selectSetOptions.value === ""
-                        ? errors.setId
-                        : null}
+                      {errors && errors.setId ? errors.setId : null}
                     </FormFeedback>
                   </div>
                 </InputGroup>

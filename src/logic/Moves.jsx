@@ -25,6 +25,7 @@ import { logger } from "helper/Logger";
 import { completeVideoEditingSuccess } from "actions/Moves";
 import { addTagsSuccess } from "actions/Moves";
 import { updateMoveSuccess } from "actions/Moves";
+import { addTagsInTagModalSuccess } from "actions/Moves";
 
 let toastId = null;
 let api = new ApiHelper();
@@ -800,7 +801,7 @@ const getMovesBySearchLogic = createLogic({
 //Add Tags In TagModal
 const addTagsInModalLogic = createLogic({
   type: MovesAction.ADD_TAGS_IN_TAGMODAL_REQUEST,
-  async process({ action }, dispatch, done) {
+  async process({ action, getState }, dispatch, done) {
     let api = new ApiHelper();
     let result = await api.FetchFromServer(
       "move",
@@ -814,6 +815,12 @@ const addTagsInModalLogic = createLogic({
       done();
       return;
     } else {
+      let tags = getState().moveReducer.tagsList;
+      dispatch(
+        addTagsInTagModalSuccess({
+          tagsList: [...tags, action.payload.tags]
+        })
+      );
       done();
     }
   }
