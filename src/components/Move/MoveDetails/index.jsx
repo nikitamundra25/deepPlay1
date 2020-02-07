@@ -693,7 +693,6 @@ class MoveDetails extends React.Component {
                       {" "}
                       {errorTitle ? errorTitle : null}{" "}
                     </FormFeedback>
-
                     <InputGroupAddon
                       addonType="prepend"
                       className="discription-btn-wrap"

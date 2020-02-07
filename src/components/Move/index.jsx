@@ -25,6 +25,7 @@ import {
   getSetDetailsRequest
 } from "../../actions";
 import { ConfirmBox } from "../../helper/SweetAleart";
+import { toast } from "react-toastify";
 
 // core components
 class MoveComponent extends React.Component {
@@ -164,6 +165,8 @@ class MoveComponent extends React.Component {
       fileErr: ""
     });
     let files = e.target.files;
+    let scope = this;
+    let temp = document.getElementById("videoUpload");
     // let videoDuration;
     if (files.length) {
       const fileType = files ? files[0].type.split("/") : "";
@@ -176,38 +179,38 @@ class MoveComponent extends React.Component {
           showCancelButton: false,
           confirmButtonText: "Okay"
         });
+        temp.value = "";
       } else {
         let video = document.createElement("video");
         video.setAttribute("src", window.URL.createObjectURL(files[0]));
         video.onloadeddata = async function(event) {
-          // const { duration } = event.srcElement;
+          const { duration } = event.srcElement;
           // videoDuration = duration;
-          // if (duration >= 36) {
-          //   await ConfirmBox({
-          //     title: "Oops...",
-          //     text: "Video duration should be less than 1 hour.",
-          //     type: "error",
-          //     showCancelButton: false,
-          //     confirmButtonText: "Okay"
-          //   });
-          //   return;
-          // }
-        };
-        const search = window.location.search;
-        const setId = search.split("=");
-        this.setState(
-          {
-            url: files[0].name,
-            errors: ""
-          },
-          () => {
-            this.props.downloadVideo({
-              url: files[0],
-              isYoutubeUrl: false,
-              setId: setId && setId.length ? setId[1] : null
-            });
+          if (duration >= 3600) {
+            if (!toast.isActive(this.toastId)) {
+              this.toastId = toast.error(
+                "Video duration should be less than 60m."
+              );
+            }
+            temp.value = "";
+            return;
           }
-        );
+          const search = window.location.search;
+          const setId = search.split("=");
+          scope.setState(
+            {
+              url: files[0].name,
+              errors: ""
+            },
+            () => {
+              scope.props.downloadVideo({
+                url: files[0],
+                isYoutubeUrl: false,
+                setId: setId && setId.length ? setId[1] : null
+              });
+            }
+          );
+        };
       }
     }
   };

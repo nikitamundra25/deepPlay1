@@ -244,7 +244,7 @@ const downloadYoutubeVideo = async (
         if (info) {
           if (info._duration_raw >= 3600) {
             return res.status(400).json({
-              message: "Video duration should be less than 1 hour.",
+              message: "Video duration should be less than 60m.",
               success: false
             });
           }
@@ -349,9 +349,7 @@ const createMove = async (req: Request, res: Response): Promise<any> => {
       videoUrl: moveUrl,
       userId: headToken.id,
       sourceUrl: sourceUrl,
-      frames: frames ? frames : null,
       videoThumbnail: videoThumbnail ? videoThumbnail : null,
-      videoMetaData: videoMetaData ? videoMetaData : null,
       videoName: videoName ? videoName : null,
       isYoutubeUrl: isYoutubeUrl ? isYoutubeUrl : false
     });
@@ -362,8 +360,6 @@ const createMove = async (req: Request, res: Response): Promise<any> => {
       moveId: moveResult._id,
       videoUrl: moveUrl,
       moveData: moveResult,
-      frames,
-      videoMetaData,
       videoName,
       success: true
     });
