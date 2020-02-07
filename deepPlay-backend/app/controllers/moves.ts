@@ -104,6 +104,7 @@ const downloadYoutubeVideo = async (
         message: "User id not found"
       });
     }
+
     //Get instagram download video url
     if (body.instagramUrl) {
       getInstagramVideoUrl(
@@ -181,24 +182,8 @@ const downloadYoutubeVideo = async (
     const fileName = [
       headToken.id + Date.now() + "deep_play_video" + ".webm"
     ].join("");
-    let originalVideoPath: string = "";
-    if (IsProductionMode) {
-      originalVideoPath = path.join(
-        __dirname,
-        "uploads",
-        "youtube-videos",
-        fileName
-      );
-    } else {
-      originalVideoPath = path.join(
-        __basedir,
-        "../uploads",
-        "youtube-videos",
-        fileName
-      );
-    }
+
     videoURL = path.join("uploads", "youtube-videos", fileName);
-    let videoStream: any;
     if (
       body.url ===
       "https://www.youtube.com/embed/rp4UwPZfRis?autoplay=0&enablejsapi=1"
@@ -893,7 +878,7 @@ const updateMoveDetailsAndTrimVideo = async (
     let thumbnailPath: any[] = [];
 
     if (result) {
-      let videoFile: String | any, videoThumbnail: String | any;
+      let videoFile: String | any;
       if (IsProductionMode) {
         videoFile = path.join(__dirname, result.videoUrl);
       } else {
@@ -952,6 +937,7 @@ const updateMoveDetailsAndTrimVideo = async (
                 "We are having an issue while creating webm for you. Please try again."
             });
           }
+
           const s3VideoUrl = await s3BucketUpload(
             videoFileMain,
             "deep-play.webm",
@@ -974,13 +960,13 @@ const updateMoveDetailsAndTrimVideo = async (
             userId: result.userId,
             isDeleted: result.isDeleted,
             createdAt: result.createdAt,
-            videoMetaData: {
-              ...result.videoMetaData,
-              duration: {
-                ...result.videoMetaData.duration,
-                seconds: duration
-              }
-            },
+            // videoMetaData: {
+            //   ...result.videoMetaData,
+            //   duration: {
+            //     ...result.videoMetaData.duration,
+            //     seconds: duration
+            //   }
+            // },
             videoThumbnail: result.videoThumbnail
               ? result.videoThumbnail
               : null,
@@ -1017,14 +1003,7 @@ const updateMoveDetailsAndTrimVideo = async (
               setId,
               sortIndex: 0,
               isMoveProcessing: false,
-              startTime: timer.min ? timer.min : 0,
-              videoMetaData: {
-                ...result.videoMetaData,
-                duration: {
-                  ...result.videoMetaData.duration,
-                  seconds: duration
-                }
-              }
+              startTime: timer.min ? timer.min : 0
             }
           );
 

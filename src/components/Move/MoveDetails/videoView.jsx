@@ -287,7 +287,7 @@ class VideoView extends React.Component {
                   playsInline
                   onError={e => playbackFailed(e)}
                   controls
-                  onContextMenu={e => e.preventDefault()}
+                  // onContextMenu={e => e.preventDefault()}
                   disablepictureinpicture="true"
                   controlsList="nodownload"
                   preload={"auto"}

@@ -273,7 +273,7 @@ class MoveDetails extends React.Component {
     const { moveDetails, creatingAnother } = moveReducer;
     const { isCreateAnother, newMoveId } = creatingAnother;
     let parsed = qs.parse(this.props.location.search);
-    const { _id: moveId, videoThumbnail } = moveDetails;
+    const { _id: moveId, videoThumbnail, isYoutubeUrl } = moveDetails;
     const { timer, title, description, setMoveCount } = this.state;
     const { tags, setId } = this.videoDetails.current.getDetails();
     if (!setId) {
@@ -290,22 +290,36 @@ class MoveDetails extends React.Component {
     });
 
     // eslint-disable-next-line
-
-    this.props.completeYouTubeVideoEditing({
-      timer: {
-        min: parseInt(timer.min),
-        max: parseInt(timer.max)
-      },
-      moveId: !isCreateAnother ? moveId : newMoveId,
-      tags,
-      setId,
-      title: title,
-      description: description,
-      isEdit: parsed.isEdit ? true : false,
-      setMoveCount,
-      videoThumbnail
-    });
-
+    {
+      !isYoutubeUrl
+        ? this.props.completeVideoEditing({
+            timer: {
+              min: parseInt(timer.min),
+              max: parseInt(timer.max)
+            },
+            moveId,
+            tags,
+            setId,
+            title: title,
+            description: description,
+            videoThumbnail: videoThumbnail,
+            isEdit: parsed.isEdit ? true : false,
+            setMoveCount
+          })
+        : this.props.completeYouTubeVideoEditing({
+            timer: {
+              min: parseInt(timer.min),
+              max: parseInt(timer.max)
+            },
+            moveId: !isCreateAnother ? moveId : newMoveId,
+            tags,
+            setId,
+            title: title,
+            description: description,
+            isEdit: parsed.isEdit ? true : false,
+            setMoveCount
+          });
+    }
     this.handleMoveSuccessModal();
   };
 
@@ -746,6 +760,7 @@ class MoveDetails extends React.Component {
                       <VideoDetails
                         handlePlayPause={this.handlePlayPause}
                         handleVideoPause={this.handleVideoPause}
+                        handleVideoPlay={this.handleVideoPlay}
                         isPlaying={isPlaying}
                         videoMaxDuration={videoMaxDuration}
                         currentTime={currentTime}

@@ -513,6 +513,43 @@ class VideoDetails extends React.Component {
 
   /*
    */
+  decreaseThreeSecond = () => {
+    const vid = document.getElementById("video-trimmer");
+    const currentTime = vid.currentTime;
+    const { time } = this.state;
+    const { min } = time;
+    if (min.toFixed(2) < currentTime) {
+      let temp = currentTime - 3;
+      if (temp > min.toFixed(2)) {
+        vid.currentTime = temp;
+      } else {
+        vid.currentTime = min;
+      }
+    } else {
+      this.props.handleVideoPlay();
+    }
+  };
+
+  /*
+   */
+  increaseThreeSecond = () => {
+    const vid = document.getElementById("video-trimmer");
+    const currentTime = vid.currentTime;
+    const { time } = this.state;
+    const { max } = time;
+    if (max.toFixed(2) > currentTime) {
+      let temp = currentTime + 3;
+      if (temp < max.toFixed(2)) {
+        vid.currentTime = temp;
+      } else {
+        vid.currentTime = max;
+      }
+    } else {
+      this.props.handleVideoPlay();
+    }
+  };
+  /*
+   */
 
   render() {
     const {
@@ -556,10 +593,15 @@ class VideoDetails extends React.Component {
                   <Button
                     className="triming-button pause-button time-decrease "
                     color={" "}
+                    onClick={this.decreaseThreeSecond}
                   >
                     -3s
                   </Button>
-                  <Button className="triming-button time-increase " color={" "}>
+                  <Button
+                    className="triming-button time-increase "
+                    color={" "}
+                    onClick={this.increaseThreeSecond}
+                  >
                     +3s
                   </Button>
                   <div className="triming-bounds">
