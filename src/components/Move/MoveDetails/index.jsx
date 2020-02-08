@@ -77,7 +77,8 @@ class MoveDetails extends React.Component {
       isPlaying: false,
       currentTime: 0,
       totalOutput: 15,
-      isChange: true
+      isChange: true,
+      maxLengthError: ""
     };
     this.videoDetails = React.createRef();
   }
@@ -143,10 +144,7 @@ class MoveDetails extends React.Component {
       }
     }
 
-    if (
-      moveReducer.moveDetails !== this.props.moveReducer.moveDetails &&
-      !this.props.moveReducer.creatingAnother.isCreateAnother
-    ) {
+    if (moveReducer.moveDetails !== this.props.moveReducer.moveDetails) {
       if (this.props.moveReducer.moveDetails) {
         const {
           title,
@@ -262,6 +260,19 @@ class MoveDetails extends React.Component {
       }
       // () => this.JumpTimeIntervals(this.state.TimeArray)
     );
+    if (difference >= 16) {
+      this.setState({
+        maxLengthError: "Video cannot be trim more than 15 sec."
+      });
+    } else if (difference === 1) {
+      this.setState({
+        maxLengthError: "Video cannot be trim less than 1 sec."
+      });
+    } else {
+      this.setState({
+        maxLengthError: ""
+      });
+    }
   };
 
   /**
@@ -270,11 +281,16 @@ class MoveDetails extends React.Component {
   completeEditing = e => {
     e.preventDefault();
     const { moveReducer } = this.props;
-    const { moveDetails, creatingAnother } = moveReducer;
-    const { isCreateAnother, newMoveId } = creatingAnother;
+    const { moveDetails } = moveReducer;
     let parsed = qs.parse(this.props.location.search);
     const { _id: moveId, videoThumbnail, isYoutubeUrl } = moveDetails;
-    const { timer, title, description, setMoveCount } = this.state;
+    const {
+      timer,
+      title,
+      description,
+      setMoveCount,
+      maxLengthError
+    } = this.state;
     const { tags, setId } = this.videoDetails.current.getDetails();
     if (!setId) {
       this.setState({
@@ -282,6 +298,12 @@ class MoveDetails extends React.Component {
           setId: "Please select set from list"
         }
       });
+      return;
+    }
+    if (maxLengthError) {
+      if (!toast.isActive(this.toastId)) {
+        this.toastId = toast.error(maxLengthError);
+      }
       return;
     }
     this.setState({
@@ -311,7 +333,7 @@ class MoveDetails extends React.Component {
               min: parseInt(timer.min),
               max: parseInt(timer.max)
             },
-            moveId: !isCreateAnother ? moveId : newMoveId,
+            moveId,
             tags,
             setId,
             title: title,
@@ -350,35 +372,6 @@ class MoveDetails extends React.Component {
       this.handleVideoPlay();
     }
   };
-
-  /* Jump timeInterval to various cuts start
-/*  */
-  JumpTimeIntervals = time => {
-    if (time && time.length) {
-      let currentSegment = 0; // Segment being played
-      let endTime = time[currentSegment]["max"];
-      let videoPlayer = document.getElementById("video-trimmer");
-      videoPlayer.currentTime = time[currentSegment]["min"];
-      videoPlayer.play(); // Starts playing the video from startTime
-      videoPlayer.ontimeupdate = () => {
-        if (parseInt(videoPlayer.currentTime) >= parseInt(endTime)) {
-          // Segment completed
-
-          currentSegment++;
-          if (currentSegment < time.length) {
-            // Not the last segment in the array
-            videoPlayer.currentTime = time[currentSegment]["min"];
-            endTime = time[currentSegment]["max"];
-          } else {
-            // Last segment in the array is over
-            videoPlayer.pause();
-          }
-        }
-      };
-    }
-  };
-  /* Jump timeInterval to various cuts ends
-/*  */
 
   handleChangeComplete = (value, time) => {
     const { isChange } = this.state;
@@ -451,7 +444,8 @@ class MoveDetails extends React.Component {
       },
       errorTitle: "",
       selectSetOptions: "",
-      createNew: true
+      createNew: true,
+      totalOutput: 15
     });
     this.props.createAnotherMoveRequest({
       moveUrl: moveDetails.videoUrl,
@@ -598,15 +592,6 @@ class MoveDetails extends React.Component {
     this.props.onSetsCreation(data);
   };
 
-  storeVideoFrames = frames => {
-    let temp = [];
-    frames.slice(0, 20).map(key => {
-      return (temp = [...temp, key]);
-    });
-    this.setState({
-      videoFrames: temp
-    });
-  };
   /**
    *
    */
@@ -636,13 +621,10 @@ class MoveDetails extends React.Component {
       isSavingWebM,
       tagsList,
       moveUrlDetails,
-      isCreatingAnotherMove,
+      isCreatingAnotherMove
       // isIosDevice,
-      creatingAnother
     } = moveReducer;
     const { isYoutubeUrl } = moveDetails || {};
-    const { isCreateAnother } = creatingAnother;
-
     const {
       timer,
       title,
@@ -658,7 +640,8 @@ class MoveDetails extends React.Component {
       currentTime,
       totalOutput,
       errors,
-      isChange
+      isChange,
+      maxLengthError
     } = this.state;
 
     return (
@@ -734,7 +717,6 @@ class MoveDetails extends React.Component {
                         errors={errors}
                         setReducer={setReducer}
                         storeVideoFrames={this.storeVideoFrames}
-                        isCreateAnother={isCreateAnother}
                         isYoutubeUrl={isYoutubeUrl}
                         videoDuration={data =>
                           this.setState({
@@ -771,6 +753,7 @@ class MoveDetails extends React.Component {
                         videoError={videoError}
                         completeEditing={this.completeEditing}
                         handleChangeComplete={this.handleChangeComplete}
+                        maxLengthError={maxLengthError}
                       />
                     </>
                   ) : (

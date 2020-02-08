@@ -112,3 +112,10 @@
 video::-webkit-media-controls-fullscreen-button {
   display: none;
 }
+
+.video-maxlength-error {
+  width: 100%;
+  margin-top: 0.25rem;
+  font-size: 100%;
+  color: #dd0e0e;
+}

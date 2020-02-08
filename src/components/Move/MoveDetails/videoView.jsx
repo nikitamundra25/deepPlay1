@@ -13,7 +13,6 @@ import AsyncSelect from "react-select/async";
 import { AppConfig } from "../../../config/Appconfig";
 import videoLoading from "../../../assets/img/loder/loader.svg";
 import { AppRoutes } from "config/AppRoutes";
-import { ConfirmBox } from "helper/SweetAleart";
 import "./index.scss";
 
 // core components
@@ -61,27 +60,6 @@ class VideoView extends React.Component {
         videoData: true
       });
     }
-    var promise = this.video.play();
-    if (promise !== undefined) {
-      promise
-        .then(() => {
-          // Start whatever you need to do only after playback
-          // has begun.
-        })
-        .catch(async error => {
-          if (error.name === "NotAllowedError") {
-            await ConfirmBox({
-              text: "",
-              title: "You need to enable autoPlay on this browser.",
-              showCancelButton: false,
-              confirmButtonText: "Ok"
-            });
-          } else {
-            //Handle if we got different error
-          }
-        });
-    }
-
     let timeDuration = [];
 
     this.video.onloadeddata = () => {
@@ -93,8 +71,6 @@ class VideoView extends React.Component {
         timeDuration: timeDuration,
         videoMaxDuration: duration
       };
-      this.props.storeVideoFrames(timeDuration);
-
       this.props.videoDuration(data);
     };
   }
