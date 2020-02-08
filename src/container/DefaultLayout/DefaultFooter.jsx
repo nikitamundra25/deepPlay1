@@ -32,7 +32,7 @@ class DefaultFooter extends React.Component {
                       Privacy Policy
                     </NavLink>
                   </NavItem>
-                  <NavItem>
+                  {/* <NavItem>
                     <NavLink href="/" target="_blank">
                       About Us
                     </NavLink>
@@ -41,7 +41,7 @@ class DefaultFooter extends React.Component {
                     <NavLink href="/" target="_blank">
                       Contact Us
                     </NavLink>
-                  </NavItem>
+                  </NavItem> */}
                 </Nav>
               </Col>
             </Row>
