@@ -11,6 +11,7 @@ class TermsCondition extends Component {
             <div class="content-body-title p-3">
               <h1>TERMS OF SERVICE</h1>
             </div>
+             <p>Last updated: 02/01/2020</p>
             <ol>
               <b className=" h5 font-weight-bold">
                 {" "}
