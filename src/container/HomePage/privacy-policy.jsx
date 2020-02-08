@@ -11,6 +11,7 @@ class PrivacyPolicy extends Component {
             <div className="content-body-title p-3 ">
               <h1>PRIVACY POLICY</h1>
             </div>
+            <p>Effective date: 02/01/2020</p>
             <ol>
               <b className="h5 font-weight-bold">
                 <li> Introduction</li>
