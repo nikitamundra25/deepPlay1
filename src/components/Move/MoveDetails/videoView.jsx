@@ -235,7 +235,7 @@ class VideoView extends React.Component {
 
                 <video
                   width={"100%"}
-                  // autoPlay
+                  autoPlay
                   loop
                   onCanPlay={() => {
                     this.setState({

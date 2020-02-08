@@ -400,6 +400,7 @@ class MoveDetails extends React.Component {
       vid.currentTime = value;
       this.setState({
         isChange: false
+        // currentTime: value
       });
       this.handleVideoPlay();
     }

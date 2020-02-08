@@ -442,7 +442,10 @@ class VideoDetails extends React.Component {
                   </span>
                 </div>
               </div>
-              <div className="dot-rang-slider rang-slider pb-2 main-rang-slider">
+              <div
+                className="dot-rang-slider rang-slider pb-2 main-rang-slider"
+                onContextMenu={e => e.preventDefault()}
+              >
                 <InputRange
                   maxValue={parseInt(videoMaxDuration)}
                   minValue={0}
@@ -492,6 +495,7 @@ class VideoDetails extends React.Component {
                                     focusTip: false
                                   });
                                 }}
+                                onChange={e => e.preventDefault()}
                               />
                             </FormGroup>
                           </Col>
@@ -516,6 +520,7 @@ class VideoDetails extends React.Component {
                                     focusTip: false
                                   });
                                 }}
+                                onChange={e => e.preventDefault()}
                               />
                             </FormGroup>
                           </Col>
