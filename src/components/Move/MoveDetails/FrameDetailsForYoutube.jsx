@@ -92,10 +92,455 @@ class YouTubeFrameDetails extends Component {
       }
     }
   }
+
+  /*
+   */
+  handleKeyEvent1 = (e, name) => {
+    const { time } = this.state;
+    const { min, max } = time;
+    const { videoMaxDuration, totalOutput } = this.props;
+    const trimmValue = e.target.value;
+    const extract = trimmValue.split(":");
+    this.props.handleVideoPause();
+    if (parseInt(extract[0]) >= 0) {
+      if (parseInt(max) - parseInt(min) === AppConfig.MAX_VIDEO_LENGTH) {
+        if (name === "from") {
+          if (e.keyCode === 38) {
+            if (
+              SecondsToMMSSMM(max + 0.1) < SecondsToMMSSMM(videoMaxDuration)
+            ) {
+              let changeValue = {
+                min: min + 0.1,
+                max: max <= parseInt(videoMaxDuration) ? max : videoMaxDuration
+              };
+
+              this.setState(
+                {
+                  time: changeValue
+                },
+                () => {
+                  this.props.onTimerChange(this.state.time);
+                }
+              );
+            }
+          } else if (e.keyCode === 40) {
+            let changeValue;
+            if (totalOutput >= AppConfig.MAX_VIDEO_LENGTH) {
+              changeValue = {
+                min: min - 0.1,
+                max: max - 0.1
+              };
+            } else {
+              changeValue = {
+                min: parseInt(min) === 0 ? 0 : min - 0.1,
+                max: parseInt(max) - parseInt(min) === 1 ? max : max - 0.1
+              };
+            }
+
+            this.setState(
+              {
+                time: changeValue
+              },
+              () => {
+                this.props.onTimerChange(this.state.time);
+              }
+            );
+          }
+        } else {
+          if (e.keyCode === 38) {
+            let changeValue;
+            if (totalOutput >= AppConfig.MAX_VIDEO_LENGTH) {
+              changeValue = {
+                min: min + 0.1,
+                max: max + 0.1,
+                to: true
+              };
+            } else {
+              changeValue = {
+                min: parseInt(max) - parseInt(min) === 1 ? min : min + 0.1,
+                max:
+                  parseInt(max) === parseInt(videoMaxDuration)
+                    ? parseInt(max) <= parseInt(videoMaxDuration)
+                      ? max
+                      : videoMaxDuration
+                    : max + 0.1,
+                to: true
+              };
+            }
+
+            this.setState(
+              {
+                time: changeValue
+              },
+              () => {
+                this.props.onTimerChange(this.state.time);
+              }
+            );
+          } else if (e.keyCode === 40) {
+            let changeValue = {
+              min: min,
+              max: max - 0.1,
+              to: true
+            };
+
+            this.setState(
+              {
+                time: changeValue
+              },
+              () => {
+                this.props.onTimerChange(this.state.time);
+              }
+            );
+          }
+        }
+      } else if (
+        parseInt(max) - parseInt(min) < AppConfig.MAX_VIDEO_LENGTH &&
+        parseInt(max) - parseInt(min) !== 1
+      ) {
+        if (name === "from") {
+          if (e.keyCode === 38) {
+            let changeValue = {
+              min: parseInt(max) - parseInt(min) > 1 ? min + 0.1 : min,
+              max:
+                parseInt(max) <= parseInt(videoMaxDuration)
+                  ? max
+                  : parseInt(videoMaxDuration)
+            };
+
+            this.setState(
+              {
+                time: changeValue
+              },
+              () => {
+                this.props.onTimerChange(this.state.time);
+              }
+            );
+          } else if (e.keyCode === 40) {
+            let changeValue;
+            if (parseFloat(min) > 0.1) {
+              if (totalOutput >= AppConfig.MAX_VIDEO_LENGTH) {
+                changeValue = {
+                  min: min - 0.1,
+                  max: max - 0.1
+                };
+              } else {
+                changeValue = {
+                  min:
+                    parseInt(max) - parseInt(min) < AppConfig.MAX_VIDEO_LENGTH
+                      ? min - 0.1
+                      : parseInt(min) > 0
+                      ? min
+                      : 0,
+                  max:
+                    max <= parseInt(videoMaxDuration) ? max : videoMaxDuration
+                };
+              }
+            } else {
+              changeValue = {
+                min: 0,
+                max: max
+              };
+            }
+
+            this.setState(
+              {
+                time: changeValue
+              },
+              () => {
+                this.props.onTimerChange(this.state.time);
+              }
+            );
+          }
+        } else {
+          if (e.keyCode === 38) {
+            let changeValue;
+            if (totalOutput >= AppConfig.MAX_VIDEO_LENGTH) {
+              changeValue = {
+                min: min + 0.1,
+                max:
+                  parseInt(max) === parseInt(videoMaxDuration)
+                    ? parseInt(max) <= parseInt(videoMaxDuration)
+                      ? videoMaxDuration
+                      : videoMaxDuration
+                    : max + 0.1,
+                to: true
+              };
+            } else {
+              changeValue = {
+                min: min,
+                max:
+                  // parseInt(max) - parseInt(min) < 15
+                  //   ? max <= parseInt(videoMaxDuration)
+                  //     ? max + 0.1
+                  //     : parseInt(videoMaxDuration)
+                  //   : max
+                  parseInt(max) === parseInt(videoMaxDuration)
+                    ? parseInt(max) <= parseInt(videoMaxDuration)
+                      ? videoMaxDuration
+                      : videoMaxDuration
+                    : max + 0.1,
+                to: true
+              };
+            }
+
+            this.setState(
+              {
+                time: changeValue
+              },
+              () => {
+                this.props.onTimerChange(this.state.time);
+              }
+            );
+          } else if (e.keyCode === 40) {
+            let changeValue = {
+              min: min,
+              max: parseInt(max) - parseInt(min) > 1 ? max - 0.1 : max,
+              to: true
+            };
+
+            this.setState(
+              {
+                time: changeValue
+              },
+              () => {
+                this.props.onTimerChange(this.state.time);
+              }
+            );
+          }
+        }
+      } else if (parseInt(max) - parseInt(min) === 1) {
+        if (name === "from") {
+          if (e.keyCode === 38) {
+            if (
+              SecondsToMMSSMM(max + 0.1) < SecondsToMMSSMM(videoMaxDuration)
+            ) {
+              let changeValue = {
+                min: max - 1,
+                max: max + 0.1
+              };
+
+              this.setState(
+                {
+                  time: changeValue
+                },
+                () => {
+                  this.props.onTimerChange(this.state.time);
+                }
+              );
+            }
+          } else if (e.keyCode === 40) {
+            if (min !== 0.0) {
+              let changeValue = {
+                min:
+                  SecondsToMMSSMM(min) === "00:00.00" ||
+                  SecondsToMMSSMM(min) === "00:00.10"
+                    ? 0
+                    : min - 0.1,
+                max: max
+              };
+
+              this.setState(
+                {
+                  time: changeValue
+                },
+                () => {
+                  this.props.onTimerChange(this.state.time);
+                }
+              );
+            }
+          }
+        } else {
+          if (e.keyCode === 38) {
+            if (
+              SecondsToMMSSMM(max + 0.1) < SecondsToMMSSMM(videoMaxDuration)
+            ) {
+              let changeValue;
+              if (totalOutput >= AppConfig.MAX_VIDEO_LENGTH) {
+                changeValue = {
+                  min: min + 0.1,
+                  max: max + 0.1,
+                  to: true
+                };
+              } else {
+                changeValue = {
+                  min: min,
+                  max:
+                    parseInt(max) - parseInt(min) === AppConfig.MAX_VIDEO_LENGTH
+                      ? max
+                      : max + 0.1,
+                  to: true
+                };
+              }
+
+              this.setState(
+                {
+                  time: changeValue
+                },
+                () => {
+                  this.props.onTimerChange(this.state.time);
+                }
+              );
+            }
+          } else if (e.keyCode === 40) {
+            if (parseInt(max) - parseInt(min) > 1) {
+              let changeValue = {
+                min: min - 1,
+                max: max - 1,
+                to: true
+              };
+
+              this.setState(
+                {
+                  time: changeValue
+                },
+                () => {
+                  this.props.onTimerChange(this.state.time);
+                }
+              );
+            } else {
+              if (parseInt(min) === 0) {
+                let changeValue = {
+                  min: min,
+                  max: min + 1
+                };
+
+                this.setState(
+                  {
+                    time: changeValue
+                  },
+                  () => {
+                    this.props.onTimerChange(this.state.time);
+                  }
+                );
+              } else {
+                let changeValue = {
+                  min: min - 1,
+                  max: max - 1
+                };
+
+                this.setState(
+                  {
+                    time: changeValue
+                  },
+                  () => {
+                    this.props.onTimerChange(this.state.time);
+                  }
+                );
+              }
+            }
+          }
+        }
+      } else {
+        if (parseInt(max) - parseInt(min) > AppConfig.MAX_VIDEO_LENGTH) {
+          let changeValue = {
+            min: min,
+            max: max - 1
+          };
+
+          this.setState(
+            {
+              time: changeValue
+            },
+            () => {
+              this.props.onTimerChange(this.state.time);
+            }
+          );
+        }
+      }
+    } else {
+      let changeValue = {
+        min: 0,
+        max: max <= 0 ? 0 + 1 : max
+      };
+
+      this.setState(
+        {
+          time: changeValue
+        },
+        () => {
+          this.props.onTimerChange(this.state.time);
+        }
+      );
+    }
+  };
+
+  /*
+   */
+  labelValueChange = value => {
+    let { min, max } = value;
+    const { time } = this.state;
+    const { videoMaxDuration } = this.props;
+    if (parseInt(min) >= 0) {
+      if (parseInt(min) !== parseInt(time.min) && min >= max) {
+        max =
+          parseInt(min) + AppConfig.MAX_VIDEO_LENGTH < videoMaxDuration
+            ? parseInt(min) + AppConfig.MAX_VIDEO_LENGTH
+            : videoMaxDuration;
+        value.max = max;
+      } else if (parseInt(max) !== parseInt(time.max) && min >= max) {
+        min =
+          max - AppConfig.MAX_VIDEO_LENGTH < 0
+            ? max - AppConfig.MAX_VIDEO_LENGTH
+            : 0;
+        value.min = min;
+      }
+      if (parseInt(max) - parseInt(min) > AppConfig.MAX_VIDEO_LENGTH) {
+        this.setState(
+          {
+            time: {
+              max:
+                parseInt(max) === parseInt(time.max)
+                  ? min + AppConfig.MAX_VIDEO_LENGTH
+                  : max,
+              min:
+                parseInt(min) === parseInt(time.min)
+                  ? max - AppConfig.MAX_VIDEO_LENGTH
+                  : min,
+              isVideoSleek: true
+            }
+          },
+          () => {
+            this.props.onTimerChange(this.state.time);
+          }
+        );
+        return;
+      }
+      if (
+        Math.round(min) === Math.round(max) ||
+        parseInt(min) === parseInt(max)
+      ) {
+        this.setState(
+          {
+            time: {
+              max: time.min + 1,
+              min: time.min,
+              isVideoSleek: true
+            }
+          },
+          () => {
+            this.props.onTimerChange(this.state.time);
+          }
+        );
+        return;
+      }
+      if (value.min >= 0) {
+        this.setState(
+          {
+            time: { min: value.min, max: value.max, isVideoSleek: true }
+          },
+          () => {
+            this.props.onTimerChange(this.state.time);
+          }
+        );
+      }
+    } else {
+      return;
+    }
+  };
   /**
    *
    */
-  labelValueChange = value => {
+  labelValueChange1 = value => {
     let { min, max } = value;
     const { time } = this.state;
     const { videoMaxDuration } = this.props;
