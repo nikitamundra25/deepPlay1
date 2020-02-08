@@ -1,15 +1,16 @@
 import React, { Component } from "react";
 import { Row } from "reactstrap";
+import "./index.scss";
 
 class TermsCondition extends Component {
   render() {
     return (
       <div class="dashboard-full-section without-sidebar privacy-term-policy-wrap">
         <Row>
-          <div class="content-title p-3">
-            <h1>TERMS OF SERVICE</h1>
-          </div>
-          <div class="about-container">
+          <div class="container">
+            <div class="content-body-title p-3">
+              <h1>TERMS OF SERVICE</h1>
+            </div>
             <ol>
               <b className=" h5 font-weight-bold">
                 {" "}

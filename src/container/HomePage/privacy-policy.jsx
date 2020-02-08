@@ -1,15 +1,16 @@
 import React, { Component } from "react";
 import { Row } from "reactstrap";
+import "./index.scss";
 
 class PrivacyPolicy extends Component {
   render() {
     return (
       <div class="dashboard-full-section without-sidebar privacy-term-policy-wrap">
-        <Row>
-          <div class="content-title p-3 ">
-            <h1>PRIVACY POLICY</h1>
-          </div>
-          <div class="about-container">
+        <Row className="terms-service-body">
+          <div className="container">
+            <div className="content-body-title p-3 ">
+              <h1>PRIVACY POLICY</h1>
+            </div>
             <ol>
               <b className="h5 font-weight-bold">
                 <li> Introduction</li>
