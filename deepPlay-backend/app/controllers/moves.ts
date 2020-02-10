@@ -613,6 +613,7 @@ const updateMoveDetailsFromYouTubeAndTrim = async (
     //   console.log('filename: ' + info._filename)
     //   console.log('size: ' + info.size)
     // })
+
     video.pipe(fs.createWriteStream(originalVideoPath));
     // ytdl(result.sourceUrl, { quality: "highest" }).pipe(
     //   (videoStream = fs.createWriteStream(originalVideoPath))
