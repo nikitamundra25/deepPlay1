@@ -822,6 +822,7 @@ const addTagsInModalLogic = createLogic({
           tagsList: [...tags, action.payload.tags]
         })
       );
+      done();
     }
   }
 });
