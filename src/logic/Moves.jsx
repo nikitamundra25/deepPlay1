@@ -25,7 +25,6 @@ import { logger } from "helper/Logger";
 import { completeVideoEditingSuccess } from "actions/Moves";
 import { addTagsSuccess } from "actions/Moves";
 import { updateMoveSuccess } from "actions/Moves";
-import { addTagsInTagModalSuccess } from "actions/Moves";
 
 let toastId = null;
 let api = new ApiHelper();
@@ -571,25 +570,37 @@ const createAnotherMoveLogic = createLogic({
       //     )}`
       //   })
       // );
+      console.log("result.data.moveId", result.data.moveId);
 
-      dispatch(
-        redirectTo({
-          path: `${AppRoutes.MOVE_DETAILS.url.replace(
-            ":id",
-            result.data.moveId
-          )}`
-        })
-      );
-      dispatch(
-        createAnotherMoveSuccess({
-          moveDetails: result.data,
-          creatingAnother: {
-            newMoveId: "",
-            isCreateAnother: false
-          }
-        })
-      );
-
+      if (action.payload.isYoutubeUrl) {
+        dispatch(
+          createAnotherMoveSuccess({
+            // moveDetails: result.data
+            creatingAnother: {
+              newMoveId: result.data.moveId,
+              isCreateAnother: true
+            }
+          })
+        );
+      } else {
+        dispatch(
+          redirectTo({
+            path: `${AppRoutes.MOVE_DETAILS.url.replace(
+              ":id",
+              result.data.moveId
+            )}`
+          })
+        );
+        dispatch(
+          createAnotherMoveSuccess({
+            moveDetails: result.data,
+            creatingAnother: {
+              newMoveId: "",
+              isCreateAnother: false
+            }
+          })
+        );
+      }
       dispatch(
         modelOpenRequest({
           modelDetails: {
@@ -790,7 +801,7 @@ const getMovesBySearchLogic = createLogic({
 //Add Tags In TagModal
 const addTagsInModalLogic = createLogic({
   type: MovesAction.ADD_TAGS_IN_TAGMODAL_REQUEST,
-  async process({ action, getState }, dispatch, done) {
+  async process({ action }, dispatch, done) {
     let api = new ApiHelper();
     let result = await api.FetchFromServer(
       "move",
@@ -804,12 +815,6 @@ const addTagsInModalLogic = createLogic({
       done();
       return;
     } else {
-      let tags = getState().moveReducer.tagsList;
-      dispatch(
-        addTagsInTagModalSuccess({
-          tagsList: [...tags, action.payload.tags]
-        })
-      );
       done();
     }
   }
