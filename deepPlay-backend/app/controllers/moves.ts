@@ -11,12 +11,7 @@ import { IMoveCopy, IUpdateMove } from "../interfaces";
 import moment from "moment";
 import { s3BucketUpload } from "../common/awsBucket";
 import { algoliaAppId, algoliaAPIKey } from "../config/app";
-// import cheerio from "cheerio";
-import request from "request";
-import youtubedl from "youtube-dl";
-import https from "https";
-import ThumbnailGenerator from "video-thumbnail-generator";
-const instagramUtil = require("../common/instagramUtil");
+const youtubedl = require("youtube-dl");
 var CronJob = require("cron").CronJob;
 const algoliasearch = require("algoliasearch");
 const client = algoliasearch(algoliaAppId, algoliaAPIKey);
@@ -42,44 +37,34 @@ const downloadVideo = async (req: Request, res: Response): Promise<any> => {
     let videoURL: string;
     const fileName = file.filename;
     videoURL = path.join("uploads", "youtube-videos", fileName);
-
-    /* Generate thumbnail and upload on s3 start
-     */
-    let s3VideoThumbnailUrl: any | null,
-      videoFile: String | any,
-      videoThumbnail: String | any;
-
-    const videoRes = await generateThumbanail(fileName);
-    if (IsProductionMode) {
-      videoFile = path.join(__dirname, videoURL);
-      videoThumbnail = videoRes ? videoRes : null;
-    } else {
-      videoFile = path.join(__basedir, "..", videoURL);
-      videoThumbnail = videoRes ? videoRes : null;
-    }
-    if (videoThumbnail) {
-      s3VideoThumbnailUrl = await s3BucketUpload(
-        videoThumbnail,
-        "deep-play.jpeg",
-        "moves-thumbnail"
-      );
-    }
-    /* Generated thumbnail and upload on s3 end
-     */
+    const {
+      frames: framesArray,
+      videoMetaData,
+      videoName
+    } = await getVideoFrames(fileName);
+    delete videoMetaData.filename;
+    const frames = framesArray.map(
+      (frame: string) => `${ServerURL}/uploads/youtube-videos/${frame}`
+    );
 
     const moveResult: Document | any = new MoveModel({
       videoUrl: videoURL,
       userId: headToken.id,
       sourceUrl: videoURL,
+      frames: frames,
+      videoMetaData,
+      videoName,
       isYoutubeUrl: false,
-      setId: body.setId !== "undefined" ? body.setId : null,
-      videoThumbnail: s3VideoThumbnailUrl ? s3VideoThumbnailUrl : null
+      setId: body.setId !== "undefined" ? body.setId : null
     });
     await moveResult.save();
     res.status(200).json({
       message: "Video uploaded successfully!",
       videoUrl: videoURL,
-      moveData: moveResult
+      moveData: moveResult,
+      frames,
+      videoMetaData,
+      videoName
     });
   } catch (error) {
     res.status(500).send({
@@ -104,86 +89,28 @@ const downloadYoutubeVideo = async (
         message: "User id not found"
       });
     }
-
-    //Get instagram download video url
-    if (body.instagramUrl) {
-      getInstagramVideoUrl(
-        "https://www.instagram.com/p/B7fZ68Shjxp/?igshid=hqa3vif8hmtb",
-        { timeout: 15000 },
-        (error: any, info: any) => {
-          if (error) {
-            res.status(400).json({
-              message: "Instagram Url Not Supported",
-              success: false
-            });
-          }
-          console.log("====================================");
-          console.log("infooo", info);
-          console.log("====================================");
-          console.log("error", error);
-          console.log("====================================");
-          if (info) {
-            let originalVideoPath: string = "";
-            const fileName = [
-              headToken.id + Date.now() + "deep_play_video" + ".webm"
-            ].join("");
-
-            if (IsProductionMode) {
-              originalVideoPath = path.join(
-                __dirname,
-                "uploads",
-                "youtube-videos",
-                fileName
-              );
-            } else {
-              originalVideoPath = path.join(
-                __basedir,
-                "../uploads",
-                "youtube-videos",
-                fileName
-              );
-            }
-
-            let video = fs.createWriteStream(originalVideoPath);
-            const request = https.get(info.list[0].video, function(
-              response: any
-            ) {
-              response.pipe(video);
-            });
-            video.on("close", async function() {
-              const videoUrlFileName = originalVideoPath.split("uploads");
-              const videoUrl = `uploads/${videoUrlFileName[1]}`;
-              console.log("videoUrlvideoUrldsg", videoUrl);
-
-              const fileName = `${
-                videoUrl.split(".")[0]
-              }_clip_${moment().unix()}.webm`;
-
-              let videoFileMain: String | any, videoOriginalFile: String | any;
-              if (IsProductionMode) {
-                videoFileMain = path.join(__dirname, `${fileName}`);
-              } else {
-                videoFileMain = path.join(__dirname, "..", `${fileName}`);
-              }
-
-              // if (IsProductionMode) {
-              //   videoOriginalFile = path.join(__dirname, `${result.videoUrl}`);
-              // } else {
-              //   videoOriginalFile = path.join(__dirname, "..", `${result.videoUrl}`);
-              // }
-            });
-          }
-        }
-      );
-    }
-    // end instagram video url
-
     let videoURL: string;
     const fileName = [
       headToken.id + Date.now() + "deep_play_video" + ".webm"
     ].join("");
-
+    let originalVideoPath: string = "";
+    if (IsProductionMode) {
+      originalVideoPath = path.join(
+        __dirname,
+        "uploads",
+        "youtube-videos",
+        fileName
+      );
+    } else {
+      originalVideoPath = path.join(
+        __basedir,
+        "../uploads",
+        "youtube-videos",
+        fileName
+      );
+    }
     videoURL = path.join("uploads", "youtube-videos", fileName);
+    let videoStream: any;
     if (
       body.url ===
       "https://www.youtube.com/embed/rp4UwPZfRis?autoplay=0&enablejsapi=1"
@@ -199,8 +126,6 @@ const downloadYoutubeVideo = async (
     if (trueYoutubeUrl) {
       youtubedl.getInfo(body.url, async function(err: any, info: any) {
         if (err) {
-          console.log("err", err);
-
           return res.status(400).json({
             message: "This Video is not available.",
             success: false
@@ -244,7 +169,7 @@ const downloadYoutubeVideo = async (
         if (info) {
           if (info._duration_raw >= 3600) {
             return res.status(400).json({
-              message: "Video duration should be less than 60m.",
+              message: "Video duration should be less than 1 hour.",
               success: false
             });
           }
@@ -277,9 +202,9 @@ const downloadYoutubeVideo = async (
       });
     }
   } catch (error) {
+    console.log(error, "kkkkk");
     res.status(500).send({
-      message: error.msg,
-      success: false
+      message: error.msg
     });
   }
 };
@@ -330,6 +255,8 @@ const createMove = async (req: Request, res: Response): Promise<any> => {
     const { body, currentUser } = req;
     const {
       moveUrl,
+      frames,
+      videoMetaData,
       videoName,
       sourceUrl,
       isYoutubeUrl,
@@ -344,28 +271,53 @@ const createMove = async (req: Request, res: Response): Promise<any> => {
     }
     let moveResult: Document | any;
 
-    moveResult = new MoveModel({
-      videoUrl: moveUrl,
-      userId: headToken.id,
-      sourceUrl: sourceUrl,
-      videoThumbnail: videoThumbnail ? videoThumbnail : null,
-      videoName: videoName ? videoName : null,
-      isYoutubeUrl: isYoutubeUrl ? isYoutubeUrl : false
-    });
-    await moveResult.save();
-
+    if (!frames && !frames.length && !isYoutubeUrl) {
+      let fileName: string[] = moveUrl.split("/");
+      const {
+        frames: framesArray,
+        videoMetaData,
+        videoName
+      } = await getVideoFrames(fileName[2]);
+      delete videoMetaData.filename;
+      const frames = framesArray.map(
+        (frame: string | null) => `${ServerURL}/uploads/youtube-videos/${frame}`
+      );
+      moveResult = new MoveModel({
+        videoUrl: moveUrl,
+        userId: headToken.id,
+        frames: frames,
+        videoMetaData: videoMetaData,
+        videoName: videoName,
+        isYoutubeUrl: false
+      });
+      await moveResult.save();
+    } else {
+      moveResult = new MoveModel({
+        videoUrl: moveUrl,
+        userId: headToken.id,
+        sourceUrl: sourceUrl,
+        frames: frames ? frames : null,
+        videoThumbnail: isYoutubeUrl ? videoThumbnail : null,
+        videoMetaData: videoMetaData ? videoMetaData : null,
+        videoName: videoName ? videoName : null,
+        isYoutubeUrl: isYoutubeUrl ? isYoutubeUrl : false
+      });
+      await moveResult.save();
+    }
     return res.status(200).json({
       message: "Move has been created successfully.",
       moveId: moveResult._id,
       videoUrl: moveUrl,
       moveData: moveResult,
+      frames,
+      videoMetaData,
       videoName,
       success: true
     });
   } catch (error) {
+    console.log(error, "kkkkk");
     res.status(500).send({
-      message: error.message,
-      success: false
+      message: error.message
     });
   }
 };
@@ -653,17 +605,19 @@ const updateMoveDetailsFromYouTubeAndTrim = async (
       );
     }
     let videoStream: any;
-    const video = youtubedl(result.sourceUrl, ["--format=18"], {});
+
+    const video = youtubedl(result.sourceUrl, ["--format=248"], {});
+
     // video.on('info', function(info) {
     //   console.log('Download started')
     //   console.log('filename: ' + info._filename)
     //   console.log('size: ' + info.size)
     // })
+
     video.pipe(fs.createWriteStream(originalVideoPath));
     // ytdl(result.sourceUrl, { quality: "highest" }).pipe(
-    //   (videoStream = fs.createWriteStream(originalVideoPath)) .size('1920x1080')
+    //   (videoStream = fs.createWriteStream(originalVideoPath))
     // );
-
     video.on("close", async function() {
       const videoUrlFileName = originalVideoPath.split("uploads");
       const videoUrl = `uploads/${videoUrlFileName[1]}`;
@@ -687,7 +641,6 @@ const updateMoveDetailsFromYouTubeAndTrim = async (
       video
         .setVideoStartTime(timer.min)
         .setVideoDuration(duration)
-        // .setVideoSize("1920x1080", true, false)
         .setVideoFormat("webm")
         .save(videoFileMain, async (err: any, file: any) => {
           console.log("=========================");
@@ -720,7 +673,6 @@ const updateMoveDetailsFromYouTubeAndTrim = async (
                 "We are having an issue while creating webm for you. Please try again."
             });
           }
-
           const s3VideoUrl = await s3BucketUpload(
             videoFileMain,
             "deep-play.webm",
@@ -862,7 +814,6 @@ const updateMoveDetailsAndTrimVideo = async (
         startTime: timer.min ? timer.min : 0,
         sourceUrl: result.sourceUrl ? result.sourceUrl : null,
         isYoutubeUrl: result.isYoutubeUrl ? result.isYoutubeUrl : false,
-        videoThumbnail: result.videoThumbnail ? result.videoThumbnail : null,
         setId,
         videoMetaData: {},
         isMoveProcessing: true,
@@ -871,13 +822,25 @@ const updateMoveDetailsAndTrimVideo = async (
       }
     );
     let thumbnailPath: any[] = [];
-
+    if (frames && frames.length) {
+      if (IsProductionMode) {
+        thumbnailPath = frames.split("org");
+      } else {
+        thumbnailPath = frames.split("8000");
+      }
+    }
     if (result) {
-      let videoFile: String | any;
+      let videoFile: String | any, videoThumbnail: String | any;
       if (IsProductionMode) {
         videoFile = path.join(__dirname, result.videoUrl);
+        if (thumbnailPath && thumbnailPath.length) {
+          videoThumbnail = path.join(__dirname, thumbnailPath[1]);
+        }
       } else {
         videoFile = path.join(__basedir, "..", result.videoUrl);
+        if (thumbnailPath && thumbnailPath.length) {
+          videoThumbnail = path.join(__basedir, "..", thumbnailPath[1]);
+        }
       }
 
       const fileName = `${
@@ -932,13 +895,19 @@ const updateMoveDetailsAndTrimVideo = async (
                 "We are having an issue while creating webm for you. Please try again."
             });
           }
-
           const s3VideoUrl = await s3BucketUpload(
             videoFileMain,
             "deep-play.webm",
             "moves"
           );
-
+          let s3VideoThumbnailUrl: any | null;
+          if (videoThumbnail) {
+            s3VideoThumbnailUrl = await s3BucketUpload(
+              videoThumbnail,
+              "deep-play.jpeg",
+              "moves-thumbnail"
+            );
+          }
           let moveDataForAlgolia: Document | any;
           /* Add items to algolia */
           moveDataForAlgolia = {
@@ -955,16 +924,14 @@ const updateMoveDetailsAndTrimVideo = async (
             userId: result.userId,
             isDeleted: result.isDeleted,
             createdAt: result.createdAt,
-            // videoMetaData: {
-            //   ...result.videoMetaData,
-            //   duration: {
-            //     ...result.videoMetaData.duration,
-            //     seconds: duration
-            //   }
-            // },
-            videoThumbnail: result.videoThumbnail
-              ? result.videoThumbnail
-              : null,
+            videoMetaData: {
+              ...result.videoMetaData,
+              duration: {
+                ...result.videoMetaData.duration,
+                seconds: duration
+              }
+            },
+            videoThumbnail: s3VideoThumbnailUrl ? s3VideoThumbnailUrl : null,
             searchType: "move"
           };
           let temp: any;
@@ -978,8 +945,8 @@ const updateMoveDetailsAndTrimVideo = async (
                 { _id: result._id },
                 {
                   objectId: temp,
-                  videoThumbnail: result.videoThumbnail
-                    ? result.videoThumbnail
+                  videoThumbnail: s3VideoThumbnailUrl
+                    ? s3VideoThumbnailUrl
                     : null
                 }
               );
@@ -998,7 +965,14 @@ const updateMoveDetailsAndTrimVideo = async (
               setId,
               sortIndex: 0,
               isMoveProcessing: false,
-              startTime: timer.min ? timer.min : 0
+              startTime: timer.min ? timer.min : 0,
+              videoMetaData: {
+                ...result.videoMetaData,
+                duration: {
+                  ...result.videoMetaData.duration,
+                  seconds: duration
+                }
+              }
             }
           );
 
@@ -1021,7 +995,7 @@ const updateMoveDetailsAndTrimVideo = async (
             videoOriginalFile: videoOriginalFile,
             videoFileMain: videoFileMain,
             s3VideoUrl: s3VideoUrl,
-            videoThumbnail: result.videoThumbnail
+            videoThumbnail: s3VideoThumbnailUrl
           });
         });
     } else {
@@ -1783,116 +1757,12 @@ new CronJob(
       });
     } catch (error) {
       console.log(error);
-      return;
     }
   },
   null,
   true,
   "America/Los_Angeles"
 );
-
-/* 
-/* 
- */
-const getInstagramVideoUrl = (
-  url: string,
-  options: object | any,
-  callback: any
-) => {
-  if (typeof options === "function") (callback = options), (options = {});
-  options = instagramUtil.getReqOpt(options);
-  options.url = url;
-  request(options, (error: any, response: any, body: any) => {
-    if (error) {
-      callback(error);
-    } else {
-      if (response.statusCode == 200 && body) {
-        const data =
-          JSON.parse(
-            body.match(
-              /<script type="text\/javascript">window._sharedData = (.*);<\/script>/
-            )[1]
-          ) || {};
-        const type =
-          data.entry_data.PostPage[0].graphql.shortcode_media.__typename;
-        let info: any = {};
-        if (type === "GraphImage") {
-          info.list = [
-            {
-              image:
-                data.entry_data.PostPage[0].graphql.shortcode_media.display_url
-            }
-          ];
-        } else if (type === "GraphSidecar") {
-          info.list = data.entry_data.PostPage[0].graphql.shortcode_media.edge_sidecar_to_children.edges.map(
-            (item: object | any) => ({
-              image: item.node.display_url,
-              video: item.node.video_url
-            })
-          );
-        } else if (type === "GraphVideo") {
-          info.list = [
-            {
-              image:
-                data.entry_data.PostPage[0].graphql.shortcode_media.display_url,
-              video:
-                data.entry_data.PostPage[0].graphql.shortcode_media.video_url
-            }
-          ];
-        }
-        callback(null, info);
-      } else {
-        callback(new Error("Not Found instagram"));
-      }
-    }
-  });
-};
-
-/* 
-Generate thumbnail for bulk upload data
-*/
-const generateThumbanail = async (fileName: any) => {
-  let videourl1: string;
-  if (IsProductionMode) {
-    videourl1 = path.join(__dirname, "uploads", "youtube-videos", fileName);
-  } else {
-    videourl1 = path.join(
-      __dirname,
-      "..",
-      "uploads",
-      "youtube-videos",
-      fileName
-    );
-  }
-
-  // Path1 is defined to set the path of thumbnail to be stored at
-  let path1: any = path.join(
-    __dirname,
-    "..",
-    "uploads",
-    "bulk-upload-thumbnail/"
-  );
-  let videoRes: any = "";
-  return await new Promise((resolve, reject) => {
-    const tg: any = new ThumbnailGenerator({
-      sourcePath: videourl1,
-      thumbnailPath: path1,
-      tmpDir: path1
-    });
-
-    tg.generateOneByPercentCb(90, async (err: any, result: any) => {
-      if (err) {
-        console.log(err);
-        reject(err);
-        return;
-      }
-      if (result) {
-        videoRes = path1 + result;
-        resolve(videoRes);
-      }
-    });
-  });
-};
 
 export {
   downloadVideo,

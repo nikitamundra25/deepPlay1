@@ -125,7 +125,7 @@ class DefaultLayout extends React.Component {
       isLoggedIn = false;
     }
     const routePath = this.props.location.pathname;
-    let moveSection = routePath.split("s");
+
     return (
       <>
         {routePath !== "/resetPassword" ? (
@@ -205,7 +205,6 @@ class DefaultLayout extends React.Component {
                 routePath !== "/404" &&
                 routePath !== "/public-access-denied" &&
                 routePath !== "/privacy-policy" &&
-                moveSection[0] !== "/move/detail" &&
                 routePath !== "/terms-and-conditions" ? (
                   <div className="ct-sidebar app-sidebar">
                     <DefaultSidebar
@@ -225,13 +224,7 @@ class DefaultLayout extends React.Component {
                 routePath !== "/privacy-policy" &&
                 routePath !== "/terms-and-conditions" &&
                 routePath !== "/public-access-denied" ? (
-                  <div
-                    className={`dashboard-right-wrap ${
-                      moveSection[0] === "/move/detail"
-                        ? "without-side detail-wrap"
-                        : " "
-                    }`}
-                  >
+                  <div className="dashboard-right-wrap">
                     <div className="dashboard-right-section">
                       <Suspense fallback={<Loader fullLoader={true} />}>
                         <Switch>

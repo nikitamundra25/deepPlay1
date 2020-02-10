@@ -67,7 +67,7 @@ class CreateSetComponent extends React.Component {
   handleChange = e => {
     const { name, value } = e.target;
     this.setState({
-      [name]: value.replace(/  +/g, " ").trimStart(),
+      [name]: value,
       errors: {
         ...this.state.errors,
         [name]: null
