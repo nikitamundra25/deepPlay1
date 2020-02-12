@@ -245,22 +245,31 @@ class MoveDetails extends React.Component {
    *
    */
   onTimerChange = timer => {
+    const time = this.state.timer;
+    let myVideo = document.getElementById("video-trimmer");
     this.setState({
       timer
     });
+
     this.handleTotalOutput(timer);
+    if (timer && timer.min !== time.min) {
+      myVideo.currentTime = timer.min;
+    } else {
+      myVideo.currentTime = timer.max;
+    }
+    this.setState({
+      currentTime: myVideo.currentTime
+    });
   };
 
   handleTotalOutput = time => {
     let difference = 0;
     difference = time.max - time.min;
-    this.setState(
-      {
-        totalOutput: difference
-      }
-      // () => this.JumpTimeIntervals(this.state.TimeArray)
-    );
-    if (difference >= 16) {
+    this.setState({
+      totalOutput: difference
+    });
+
+    if (difference.toFixed(2) > 15) {
       this.setState({
         maxLengthError: "Video cannot be trim more than 15 sec."
       });
