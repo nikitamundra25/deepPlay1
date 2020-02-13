@@ -172,11 +172,11 @@ export const moveReducer = handleActions(
       ...state,
       ...payload
     }),
-    [MovesAction.ADD_TAGS_IN_TAGMODAL_SUCCESS]: (state, { payload }) => ({
+    [MovesAction.ADD_TAGS_SUCCESS]: (state, { payload }) => ({
       ...state,
       ...payload
     }),
-    [MovesAction.ADD_TAGS_SUCCESS]: (state, { payload }) => ({
+    [MovesAction.ADD_TAGS_IN_TAGMODAL_SUCCESS]: (state, { payload }) => ({
       ...state,
       ...payload
     }),

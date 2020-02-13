@@ -571,25 +571,37 @@ const createAnotherMoveLogic = createLogic({
       //     )}`
       //   })
       // );
+      console.log("result.data.moveId", result.data.moveId);
 
-      dispatch(
-        redirectTo({
-          path: `${AppRoutes.MOVE_DETAILS.url.replace(
-            ":id",
-            result.data.moveId
-          )}`
-        })
-      );
-      dispatch(
-        createAnotherMoveSuccess({
-          moveDetails: result.data,
-          creatingAnother: {
-            newMoveId: "",
-            isCreateAnother: false
-          }
-        })
-      );
-
+      if (action.payload.isYoutubeUrl) {
+        dispatch(
+          createAnotherMoveSuccess({
+            // moveDetails: result.data
+            creatingAnother: {
+              newMoveId: result.data.moveId,
+              isCreateAnother: true
+            }
+          })
+        );
+      } else {
+        dispatch(
+          redirectTo({
+            path: `${AppRoutes.MOVE_DETAILS.url.replace(
+              ":id",
+              result.data.moveId
+            )}`
+          })
+        );
+        dispatch(
+          createAnotherMoveSuccess({
+            moveDetails: result.data,
+            creatingAnother: {
+              newMoveId: "",
+              isCreateAnother: false
+            }
+          })
+        );
+      }
       dispatch(
         modelOpenRequest({
           modelDetails: {

@@ -13,12 +13,12 @@ import {
   Input,
   Button,
   FormGroup,
+  FormFeedback,
+  CardHeader,
   InputGroup,
   InputGroupAddon,
   InputGroupText,
-  UncontrolledTooltip,
-  FormFeedback,
-  CardHeader
+  UncontrolledTooltip
 } from "reactstrap";
 import VideoView from "./videoView";
 import VideoDetails from "./videoDetails";
@@ -37,6 +37,7 @@ import {
 } from "../../../actions";
 import "./index.scss";
 import Loader from "components/comman/Loader/Loader";
+import FrameDetails from "./FrameDetails";
 // import { logger } from "helper/Logger";
 import { completeVideoEditing } from "actions/Moves";
 import closeBtn from "../../../assets/img/close-img.png";
@@ -45,6 +46,7 @@ import qs from "query-string";
 import { AppRoutes } from "../../../config/AppRoutes";
 import CreateSetComponent from "../../Sets/createSet";
 import { toast } from "react-toastify";
+import YouTubeFrameDetails from "./FrameDetailsForYoutube";
 
 // core components
 class MoveDetails extends React.Component {
@@ -65,7 +67,7 @@ class MoveDetails extends React.Component {
         min: 0,
         max: 15
       },
-      videoMaxDuration: 1,
+      videoMaxDuration: 0,
       setMoveCount: 0,
       isEdit: false,
       descError: "",
@@ -73,12 +75,7 @@ class MoveDetails extends React.Component {
       selectedSetId: "",
       errorTitle: "",
       createNew: false,
-      videoError: false,
-      isPlaying: false,
-      currentTime: 0,
-      totalOutput: 15,
-      isChange: true,
-      maxLengthError: ""
+      videoError: false
     };
     this.videoDetails = React.createRef();
   }
@@ -89,7 +86,6 @@ class MoveDetails extends React.Component {
     this.props.getMoveDetailsRequest({ moveId: moveId[3] });
     this.props.getAllSetRequest({ isSetNoLimit: false });
     this.props.getTagListRequest();
-
     /*    const { recentSetAdded } = this.props.setReducer;
     console.log("recentSetAdded", recentSetAdded); */
 
@@ -121,8 +117,6 @@ class MoveDetails extends React.Component {
     const prevDescriptionModal = prevmodelDetails.isDescriptionModalOpen;
     const newModelInfoReducer = this.props.modelInfoReducer;
     const { modelDetails } = newModelInfoReducer;
-    this.video = document.getElementById("video-trimmer");
-
     if (prevDescriptionModal !== modelDetails.isDescriptionModalOpen) {
       if (this.state.description) {
         this.setState({
@@ -144,7 +138,10 @@ class MoveDetails extends React.Component {
       }
     }
 
-    if (moveReducer.moveDetails !== this.props.moveReducer.moveDetails) {
+    if (
+      moveReducer.moveDetails !== this.props.moveReducer.moveDetails &&
+      !this.props.moveReducer.creatingAnother.isCreateAnother
+    ) {
       if (this.props.moveReducer.moveDetails) {
         const {
           title,
@@ -195,23 +192,12 @@ class MoveDetails extends React.Component {
           title,
           description,
           tags,
-          timer: { min: 0.1, max: 15.1 },
           selectSetOptions: selectOption
             ? selectOption
             : {
                 label: "Type to select sets",
                 value: ""
               }
-        });
-      }
-      if (this.video) {
-        this.video.addEventListener("timeupdate", () => {
-          const currentVideoTime = parseFloat(
-            this.video ? this.video.currentTime : 0
-          ).toFixed(2);
-          this.setState({
-            currentTime: currentVideoTime
-          });
         });
       }
     }
@@ -226,19 +212,6 @@ class MoveDetails extends React.Component {
           value: recentSetAdded._id
         }
       });
-    }
-
-    if (this.video) {
-      this.video.onpause = () => {
-        this.setState({
-          isPlaying: false
-        });
-      };
-      this.video.onplay = () => {
-        this.setState({
-          isPlaying: true
-        });
-      };
     }
   };
   /**
@@ -283,23 +256,17 @@ class MoveDetails extends React.Component {
       });
     }
   };
-
   /**
    *
    */
   completeEditing = e => {
     e.preventDefault();
     const { moveReducer } = this.props;
-    const { moveDetails } = moveReducer;
+    const { moveDetails, creatingAnother } = moveReducer;
+    const { isCreateAnother, newMoveId } = creatingAnother;
     let parsed = qs.parse(this.props.location.search);
-    const { _id: moveId, videoThumbnail, isYoutubeUrl } = moveDetails;
-    const {
-      timer,
-      title,
-      description,
-      setMoveCount,
-      maxLengthError
-    } = this.state;
+    const { _id: moveId, frames, isYoutubeUrl } = moveDetails;
+    const { timer, title, description, setMoveCount } = this.state;
     const { tags, setId } = this.videoDetails.current.getDetails();
     if (!setId) {
       this.setState({
@@ -307,12 +274,6 @@ class MoveDetails extends React.Component {
           setId: "Please select set from list"
         }
       });
-      return;
-    }
-    if (maxLengthError) {
-      if (!toast.isActive(this.toastId)) {
-        this.toastId = toast.error(maxLengthError);
-      }
       return;
     }
     this.setState({
@@ -333,7 +294,12 @@ class MoveDetails extends React.Component {
             setId,
             title: title,
             description: description,
-            videoThumbnail: videoThumbnail,
+            frames:
+              frames && frames.length
+                ? frames[5]
+                  ? frames[5]
+                  : frames[0]
+                : [],
             isEdit: parsed.isEdit ? true : false,
             setMoveCount
           })
@@ -342,7 +308,7 @@ class MoveDetails extends React.Component {
               min: parseInt(timer.min),
               max: parseInt(timer.max)
             },
-            moveId,
+            moveId: !isCreateAnother ? moveId : newMoveId,
             tags,
             setId,
             title: title,
@@ -357,9 +323,6 @@ class MoveDetails extends React.Component {
   handleVideoPause = () => {
     let myVideo = document.getElementById("video-trimmer");
     if (myVideo) {
-      this.setState({
-        isPlaying: false
-      });
       myVideo.pause();
     }
   };
@@ -471,8 +434,7 @@ class MoveDetails extends React.Component {
       },
       errorTitle: "",
       selectSetOptions: "",
-      createNew: true,
-      totalOutput: 15
+      createNew: true
     });
     this.props.createAnotherMoveRequest({
       moveUrl: moveDetails.videoUrl,
@@ -488,7 +450,7 @@ class MoveDetails extends React.Component {
    *
    */
   handleTagChange = (newValue, actionMeta) => {
-    // const { tagsList } = this.props.moveReducer
+    //const { tagsList } = this.props.moveReducer
     if (newValue) {
       this.setState({
         tags: newValue
@@ -530,7 +492,7 @@ class MoveDetails extends React.Component {
       });
     } else {
       this.setState({
-        [name]: value.replace(/  +/g, " ").trimStart(),
+        [name]: value,
         errorTitle: null
       });
     }
@@ -619,6 +581,15 @@ class MoveDetails extends React.Component {
     this.props.onSetsCreation(data);
   };
 
+  storeVideoFrames = frames => {
+    let temp = [];
+    frames.slice(0, 20).map(key => {
+      return (temp = [...temp, key]);
+    });
+    this.setState({
+      videoFrames: temp
+    });
+  };
   /**
    *
    */
@@ -648,26 +619,33 @@ class MoveDetails extends React.Component {
       isSavingWebM,
       tagsList,
       moveUrlDetails,
-      isCreatingAnotherMove
-      // isIosDevice,
+      isCreatingAnotherMove,
+      isIosDevice,
+      creatingAnother
     } = moveReducer;
-    const { isYoutubeUrl } = moveDetails || {};
+    const { frames, videoMetaData, isYoutubeUrl } = moveDetails || {};
+    const { isCreateAnother } = creatingAnother;
+
     const {
       timer,
       title,
       description,
       tags,
+      errors,
       selectSetOptions,
       isUpdateDescription,
+      videoDuration,
       videoMaxDuration,
+      isEdit,
       errorTitle,
       descError,
+      videoFrames,
+      createNew,
       videoError,
+      isChange,
       isPlaying,
       currentTime,
       totalOutput,
-      errors,
-      isChange,
       maxLengthError
     } = this.state;
 
@@ -678,80 +656,79 @@ class MoveDetails extends React.Component {
             <CardHeader className="mb-3 ">
               <Row>
                 <Col lg={4} className="trime-back-btn">
-                <span
-                className="cursor_pointer back-arrow create-move-back"
-                onClick={() => {
-                  window.history.back();
-                }}
-              >
-                {" "}
-                <i className="fas fa-long-arrow-alt-left"></i> Back
-              </span>
+                  <span
+                    className="cursor_pointer back-arrow create-move-back"
+                    onClick={() => {
+                      window.history.back();
+                    }}
+                  >
+                    {" "}
+                    <i className="fas fa-long-arrow-alt-left"></i> Back
+                  </span>
                 </Col>
                 <Col lg={8} className="trime-name-input">
-                <FormGroup className="flex-fill flex-column video-title-wrap">
-                <div className=" w-100">
-                  <InputGroup className={"move-title-wrap"}>
-                    <Input
-                      id="title"
-                      placeholder="Enter your title (optional)"
-                      onChange={e => this.handleChangeTitle(e)}
-                      type="text"
-                      className={
-                        errorTitle ? "is-invalid move-title" : "move-title"
-                      }
-                      name="title"
-                      value={title ? title : ""}
-                    />
-                    <FormFeedback>
-                      {" "}
-                      {errorTitle ? errorTitle : null}{" "}
-                    </FormFeedback>
-                    <InputGroupAddon
-                      addonType="prepend"
-                      className="discription-btn-wrap"
-                    >
-                      <div onClick={this.handleDesriptionModal}>
-                        <InputGroupText
-                          id="description"
-                          className={"discription-btn cursor_pointer"}
+                  <FormGroup className="flex-fill flex-column video-title-wrap">
+                    <div className=" w-100">
+                      <InputGroup className={"move-title-wrap"}>
+                        <Input
+                          id="title"
+                          placeholder="Enter your title (optional)"
+                          onChange={e => this.handleChangeTitle(e)}
+                          type="text"
+                          className={
+                            errorTitle ? "is-invalid move-title" : "move-title"
+                          }
+                          name="title"
+                          value={title ? title : ""}
+                        />
+                        <FormFeedback>
+                          {" "}
+                          {errorTitle ? errorTitle : null}{" "}
+                        </FormFeedback>
+                        <InputGroupAddon
+                          addonType="prepend"
+                          className="discription-btn-wrap"
                         >
-                          <i className="fas fas fa-info " />
-                          <UncontrolledTooltip
-                            placement="top"
-                            target="description"
-                          >
-                            {description
-                              ? "Update Description"
-                              : "Add description"}
-                          </UncontrolledTooltip>
-                        </InputGroupText>
-                      </div>
-                    </InputGroupAddon>
-                  </InputGroup>
-                </div>
-              </FormGroup>
-     
+                          <div onClick={this.handleDesriptionModal}>
+                            <InputGroupText
+                              id="description"
+                              className={"discription-btn cursor_pointer"}
+                            >
+                              <i className="fas fas fa-info " />
+                              <UncontrolledTooltip
+                                placement="top"
+                                target="description"
+                              >
+                                {description
+                                  ? "Update Description"
+                                  : "Add description"}
+                              </UncontrolledTooltip>
+                            </InputGroupText>
+                          </div>
+                        </InputGroupAddon>
+                      </InputGroup>
+                    </div>
+                  </FormGroup>
                 </Col>
               </Row>
-             
-               </CardHeader>
+            </CardHeader>
             <CardBody className="trimming-body">
               {!isSavingWebM ? <div></div> : null}
               <>
-                <Row className={" "}>
+                <Row className={"mt-3"}>
                   {moveDetails && moveDetails.videoUrl ? (
                     <>
                       <VideoView
-                        ref={this.videoDetails}
                         moveReducer={moveReducer}
                         handleChange={this.handleChangeTitle}
                         handleDesriptionModal={this.handleDesriptionModal}
                         description={description}
                         timer={timer}
-                        errors={errors}
-                        setReducer={setReducer}
+                        title={title}
                         storeVideoFrames={this.storeVideoFrames}
+                        errorTitle={errorTitle}
+                        isEdit={isEdit}
+                        isCreateAnother={isCreateAnother}
                         isYoutubeUrl={isYoutubeUrl}
                         videoDuration={data =>
                           this.setState({
@@ -760,16 +737,17 @@ class MoveDetails extends React.Component {
                           })
                         }
                         videoError={videoError}
-                        onBlur={this.onBlur}
-                        handleTagChange={this.handleTagChange}
-                        getAllSetRequest={getAllSetRequest}
-                        tagsList={tagsList}
                         playbackFailed={this.playbackFailed}
-                        totalOutput={totalOutput}
+                      />
+                      <VideoDetails
+                        setReducer={setReducer}
+                        isDescriptionModalOpen={isDescriptionModalOpen}
                         selectSetOptions={selectSetOptions}
-                        tags={tags}
-                        isPlaying={isPlaying}
+                        handleChange={this.handleChange}
                         handleInputChange={this.handleInputChange}
+                        errors={errors}
+                        handleTagChange={this.handleTagChange}
+                        tags={tags}
                         setId={moveDetails ? moveDetails.setId : null}
                         isChange={isChange}
                       />
@@ -798,6 +776,32 @@ class MoveDetails extends React.Component {
                     </Col>
                   )}
                 </Row>
+                {!isYoutubeUrl ? (
+                  <FrameDetails
+                    videoDuration={videoDuration || []}
+                    videoMaxDuration={videoMaxDuration || 0}
+                    frames={frames || []}
+                    videoMetaData={videoMetaData || {}}
+                    onTimerChange={this.onTimerChange}
+                    moveReducer={moveReducer}
+                    completeEditing={this.completeEditing}
+                    isIosDevice={isIosDevice}
+                    videoError={videoError}
+                  />
+                ) : (
+                  <YouTubeFrameDetails
+                    videoDuration={videoDuration || []}
+                    videoMaxDuration={videoMaxDuration || 0}
+                    frames={videoFrames || []}
+                    videoMetaData={videoMetaData || {}}
+                    onTimerChange={this.onTimerChange}
+                    moveReducer={moveReducer}
+                    completeEditing={this.completeEditing}
+                    isIosDevice={isIosDevice}
+                    createNew={createNew}
+                    videoError={videoError}
+                  />
+                )}
               </>
             </CardBody>
           </Card>
@@ -844,7 +848,7 @@ class MoveDetails extends React.Component {
                   }
                   maxLength={"500"}
                   onChange={this.handleChange}
-                  value={description || ""}
+                  value={description}
                   rows={3}
                 />
                 <FormFeedback>{descError ? descError : null}</FormFeedback>
