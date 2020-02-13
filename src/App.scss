@@ -2868,6 +2868,11 @@ _:future,
     justify-content: flex-end;
     margin-top: 20px;
     padding: 0px 15px;
+    button{
+      i{
+        font-size: 20px;
+      }
+    }
   }
 }
 .range-slider {
