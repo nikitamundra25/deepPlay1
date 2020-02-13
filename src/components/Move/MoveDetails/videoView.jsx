@@ -88,6 +88,7 @@ class VideoView extends React.Component {
     const { max, min, isVideoSleek } = timer || {};
 
     if (this.video && (min !== oldMin || max !== oldMax)) {
+      this.updateSlider();
       if (isVideoSleek) {
         if (max === oldMax) {
           this.video.currentTime = min;
@@ -137,7 +138,51 @@ class VideoView extends React.Component {
   /**
    *
    */
+  updateSlider() {
+    const containerEle = document.getElementById("video-controls");
+    if (containerEle) {
+      try {
+        const { childNodes } = containerEle;
+        for (let i = 0; i < childNodes.length; i++) {
+          const child = childNodes[i];
+          if (child.classList.contains("input-range")) {
+            for (let k = 0; k < child.childNodes.length; k++) {
+              const newChild = child.childNodes[k];
 
+              if (newChild.classList.contains("input-range__track")) {
+                const leftContainer = document.getElementById(
+                  "block-container-left"
+                );
+                const rightContainer = document.getElementById(
+                  "block-container-right"
+                );
+                const leftCount = document.getElementsByClassName(
+                  "input-range__label--min"
+                );
+                const rightCount = document.getElementsByClassName(
+                  "input-range__label--max"
+                );
+                // get width for left and right container
+                const leftWidth = newChild.childNodes[1].style.left;
+                const rightWidth = newChild.childNodes[2].style.left;
+                // const siderWidth = newChild.childNodes[0].style.width;
+                const actualRightWidth = 100 - parseFloat(rightWidth);
+                // set properties
+                leftContainer.style.width = leftWidth;
+                leftContainer.style.left = 0;
+                rightContainer.style.width = `${actualRightWidth}%`;
+                rightContainer.style.left = rightWidth;
+                leftCount[0].style.left = leftWidth;
+                rightCount[0].style.left = rightWidth;
+              }
+            }
+          }
+        }
+      } catch (error) {
+        // logger(error);
+      }
+    }
+  }
   /**
    *
    */
@@ -248,7 +293,8 @@ class VideoView extends React.Component {
                   onError={e => playbackFailed(e)}
                   controls
                   // onContextMenu={e => e.preventDefault()}
-                 
+                  disablepictureinpicture="true"
+                  controlsList="nodownload"
                   preload={"auto"}
                 >
                   <source

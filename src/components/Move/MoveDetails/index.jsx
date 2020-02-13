@@ -245,22 +245,31 @@ class MoveDetails extends React.Component {
    *
    */
   onTimerChange = timer => {
+    const time = this.state.timer;
+    let myVideo = document.getElementById("video-trimmer");
     this.setState({
       timer
     });
+
     this.handleTotalOutput(timer);
+    if (timer && timer.min !== time.min) {
+      myVideo.currentTime = timer.min;
+    } else {
+      myVideo.currentTime = timer.max;
+    }
+    this.setState({
+      currentTime: myVideo.currentTime
+    });
   };
 
   handleTotalOutput = time => {
     let difference = 0;
     difference = time.max - time.min;
-    this.setState(
-      {
-        totalOutput: difference
-      }
-      // () => this.JumpTimeIntervals(this.state.TimeArray)
-    );
-    if (difference >= 16) {
+    this.setState({
+      totalOutput: difference
+    });
+
+    if (difference.toFixed(2) > 15) {
       this.setState({
         maxLengthError: "Video cannot be trim more than 15 sec."
       });
@@ -385,6 +394,9 @@ class MoveDetails extends React.Component {
   };
 
   handleSingleInputRange = (value, time) => {
+    this.setState({
+      currentTime: value
+    });
     const { videoMaxDuration } = this.state;
     const vid = document.getElementById("video-trimmer");
     const { min, max } = time;
@@ -406,6 +418,23 @@ class MoveDetails extends React.Component {
     }
     if (value === parseInt(videoMaxDuration)) {
       this.handleVideoPlay();
+    }
+  };
+
+  /*
+   */
+  handleMouseLeave = time => {
+    const { min, max } = time;
+    const vid = document.getElementById("video-trimmer");
+    if (vid) {
+      if (vid.currentTime.toFixed(2) > min && vid.currentTime < max) {
+      } else {
+        vid.currentTime = min;
+        this.setState({
+          currentTime: min,
+          isChange: true
+        });
+      }
     }
   };
   /**
@@ -652,64 +681,62 @@ class MoveDetails extends React.Component {
             <CardHeader className="mb-3 ">
               <Row>
                 <Col lg={4} className="trime-back-btn">
-                <span
-                className="cursor_pointer back-arrow create-move-back"
-                onClick={() => {
-                  window.history.back();
-                }}
-              >
-                {" "}
-                <i className="fas fa-long-arrow-alt-left"></i> Back
-              </span>
+                  <span
+                    className="cursor_pointer back-arrow create-move-back"
+                    onClick={() => {
+                      window.history.back();
+                    }}
+                  >
+                    {" "}
+                    <i className="fas fa-long-arrow-alt-left"></i> Back
+                  </span>
                 </Col>
                 <Col lg={8} className="trime-name-input">
-                <FormGroup className="flex-fill flex-column video-title-wrap">
-                <div className=" w-100">
-                  <InputGroup className={"move-title-wrap"}>
-                    <Input
-                      id="title"
-                      placeholder="Enter your title (optional)"
-                      onChange={e => this.handleChangeTitle(e)}
-                      type="text"
-                      className={
-                        errorTitle ? "is-invalid move-title" : "move-title"
-                      }
-                      name="title"
-                      value={title ? title : ""}
-                    />
-                    <FormFeedback>
-                      {" "}
-                      {errorTitle ? errorTitle : null}{" "}
-                    </FormFeedback>
-                    <InputGroupAddon
-                      addonType="prepend"
-                      className="discription-btn-wrap"
-                    >
-                      <div onClick={this.handleDesriptionModal}>
-                        <InputGroupText
-                          id="description"
-                          className={"discription-btn cursor_pointer"}
+                  <FormGroup className="flex-fill flex-column video-title-wrap">
+                    <div className=" w-100">
+                      <InputGroup className={"move-title-wrap"}>
+                        <Input
+                          id="title"
+                          placeholder="Enter your title (optional)"
+                          onChange={e => this.handleChangeTitle(e)}
+                          type="text"
+                          className={
+                            errorTitle ? "is-invalid move-title" : "move-title"
+                          }
+                          name="title"
+                          value={title ? title : ""}
+                        />
+                        <FormFeedback>
+                          {" "}
+                          {errorTitle ? errorTitle : null}{" "}
+                        </FormFeedback>
+                        <InputGroupAddon
+                          addonType="prepend"
+                          className="discription-btn-wrap"
                         >
-                          <i className="fas fas fa-info " />
-                          <UncontrolledTooltip
-                            placement="top"
-                            target="description"
-                          >
-                            {description
-                              ? "Update Description"
-                              : "Add description"}
-                          </UncontrolledTooltip>
-                        </InputGroupText>
-                      </div>
-                    </InputGroupAddon>
-                  </InputGroup>
-                </div>
-              </FormGroup>
-     
+                          <div onClick={this.handleDesriptionModal}>
+                            <InputGroupText
+                              id="description"
+                              className={"discription-btn cursor_pointer"}
+                            >
+                              <i className="fas fas fa-info " />
+                              <UncontrolledTooltip
+                                placement="top"
+                                target="description"
+                              >
+                                {description
+                                  ? "Update Description"
+                                  : "Add description"}
+                              </UncontrolledTooltip>
+                            </InputGroupText>
+                          </div>
+                        </InputGroupAddon>
+                      </InputGroup>
+                    </div>
+                  </FormGroup>
                 </Col>
               </Row>
-             
-               </CardHeader>
+            </CardHeader>
             <CardBody className="trimming-body">
               {!isSavingWebM ? <div></div> : null}
               <>
@@ -763,6 +790,7 @@ class MoveDetails extends React.Component {
                         completeEditing={this.completeEditing}
                         handleChangeComplete={this.handleChangeComplete}
                         maxLengthError={maxLengthError}
+                        handleMouseLeave={this.handleMouseLeave}
                       />
                     </>
                   ) : (
