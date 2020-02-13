@@ -478,6 +478,10 @@ header {
     width: calc(100% - 210px);
     min-height: calc(100vh - 58px);
     position: relative;
+    &.without-side {
+      margin-left: 0px;
+      width: 100%;
+    }
   }
   a {
     color: $dashboardTextColor;
@@ -506,6 +510,9 @@ header {
     display: flex;
     align-items: center;
     justify-content: space-between;
+    .header-img-icon {
+      width: 30px;
+    }
     .content-title {
       color: $dashboardTextColor;
       font-size: 21px;
@@ -1519,6 +1526,9 @@ header {
 
 .video-title-wrap {
   margin-bottom: 0px;
+  input {
+    height: auto;
+  }
 }
 .move-title-wrap {
   display: flex;
@@ -2770,9 +2780,7 @@ _:future,
 .zsiq_float {
   display: none !important;
   cursor: pointer;
-  
 }
-  
 
 .zsiq_float_show {
   display: inline !important;

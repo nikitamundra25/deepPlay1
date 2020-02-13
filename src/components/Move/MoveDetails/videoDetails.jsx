@@ -1,11 +1,10 @@
 import React from "react";
 import { Col, FormGroup, Label, Button, Form, Row, Input } from "reactstrap";
-import CreatableSelect from "react-select/creatable";
 import "react-tagsinput/react-tagsinput.css";
 import InputRange from "react-input-range";
 // import "./index.scss";
 import playIc from "../../../assets/img/icons/play.svg";
-// import replayIc from "../../../assets/img/icons/replay.svg";
+import replayIc from "../../../assets/img/icons/replay.svg";
 import pauseIc from "../../../assets/img/icons/pause.svg";
 import { SecondsToMMSSMM } from "helper/Time";
 import { toast } from "react-toastify";
@@ -13,7 +12,13 @@ import { toast } from "react-toastify";
 class VideoDetails extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {};
+    this.state = {
+      time: {
+        min: 0,
+        max: 15
+      },
+      focusTip: false
+    };
   }
 
   addCutHandler = () => {
@@ -328,80 +333,47 @@ class VideoDetails extends React.Component {
     }
   };
 
-  loadSets = (input, callback) => {
-    if (input.length > 1) {
-      this.props.getAllSetRequest({
-        search: input,
-        callback,
-        isSetNoLimit: false
-      });
+  /*
+   */
+
+  /*
+   */
+  decreaseThreeSecond = () => {
+    const vid = document.getElementById("video-trimmer");
+    const currentTime = vid.currentTime;
+    const { time } = this.state;
+    const { min } = time;
+    if (min.toFixed(2) < currentTime) {
+      let temp = currentTime - 3;
+      if (temp > min.toFixed(2)) {
+        vid.currentTime = temp;
+      } else {
+        vid.currentTime = min;
+      }
     } else {
-      this.props.getAllSetRequest({ isSetNoLimit: false });
+      this.props.handleVideoPlay();
     }
   };
 
-  render() {
-    const { selectSetOptions, setReducer, tags, errors, tagsList } = this.props;
-    const { recentSetAdded, allSetList } = setReducer;
-    let recentAddedSet,
-      defaultSetoptions = [];
-    if (allSetList && allSetList.length) {
-      allSetList.map(data => {
-        const defaultSetoptionsValue = {
-          label:
-            data && data.isCopy
-              ? `${data.title} ${
-                  data.copyCount > 0 ? `(${data.copyCount})` : ""
-                }`
-              : data.title,
-          value: data._id,
-          moveCount: data.moveCount
-        };
-
-        defaultSetoptions.push(defaultSetoptionsValue);
-        return true;
-      });
-      const addNewOption = {
-        label: "+ Create New Set",
-        value: ""
-      };
-      defaultSetoptions.push(addNewOption);
-    } else {
-      const addNewOption = {
-        label: "+ Create New Set",
-        value: ""
-      };
-      defaultSetoptions.push(addNewOption);
-    }
-    if (recentSetAdded && recentSetAdded.value) {
-      recentAddedSet = {
-        label: recentSetAdded.title,
-        value: recentSetAdded._id
-      };
-    }
-  }
-  updateSlider() {
-    const containerEle = document.getElementById("video-controls");
-    if (containerEle) {
-      try {
-        const elemStyle = document.querySelector(
-          ".slider-controls-wrap .input-range__track--active"
-        ).style;
-        console.log(elemStyle.left, elemStyle.width);
-        document.getElementById("block-container").style.left = elemStyle.left;
-        document.getElementById("block-container").style.width =
-          elemStyle.width;
-      } catch (error) {
-        // logger(error);
+  /*
+   */
+  increaseThreeSecond = () => {
+    const vid = document.getElementById("video-trimmer");
+    const currentTime = vid.currentTime;
+    const { time } = this.state;
+    const { max } = time;
+    if (max.toFixed(2) > currentTime) {
+      let temp = currentTime + 3;
+      if (temp < max.toFixed(2)) {
+        vid.currentTime = temp;
+      } else {
+        vid.currentTime = max;
       }
+    } else {
+      this.props.handleVideoPlay();
     }
-  }
-  componentDidUpdate() {
-    this.updateSlider();
-  }
-  componentDidMount() {
-    this.updateSlider();
-  }
+  };
+
   /*
    */
 
@@ -422,8 +394,8 @@ class VideoDetails extends React.Component {
 
     return (
       <>
-        <Col lg={"6"} className="trim-video-text">
-          <div>
+        <Col lg={8} className="trim-video-text">
+          <div className="video-right-section">
             <div className={"font-weight-bold h4"}>Trim your video</div>
             <span>
               Use sliders below to trim your video (15 secs max). Or use your
@@ -444,7 +416,7 @@ class VideoDetails extends React.Component {
                     color={" "}
                     onClick={this.replayVideo}
                   >
-                    {/* <img src={replayIc} alt={replayIc} /> */}
+                    <img src={replayIc} alt={replayIc} />
                   </Button>
                   <Button
                     className="triming-button pause-button time-decrease "
@@ -604,3 +576,64 @@ class VideoDetails extends React.Component {
 }
 
 export default VideoDetails;
+// <FormGroup className="flex-fill flex-column mt-3 input-w">
+
+//           <Label className="mt-2">Add tags and press enter to separate</Label>
+//           <div className="w-100 tag-input-wrap search-select-wrap">
+//             {/* <TagsInput
+//               value={tags}
+//               className={"form-control"}
+//               maxTags={"5"}
+//               onChange={this.props.handleTagChange}
+//             /> */}
+//             <CreatableSelect
+//               classNamePrefix="react_select"
+//               isMulti
+//               onChange={this.props.handleTagChange}
+//               value={tags}
+//               options={tagsList}
+//               // options={colourOptions}
+//             />
+//           </div>
+//         </FormGroup>
+//         <FormGroup className="flex-fill flex-column mt-3">
+//           {/* add search-select class for search select design  */}
+//           <Label className="mt-2">
+//             Select sets <span className="text-danger">*</span>
+//           </Label>
+//           <InputGroup>
+//             <div className="w-100 search-select-wrap">
+//               <AsyncSelect
+//                 classNamePrefix="react_select"
+//                 loadOptions={this.loadSets}
+//                 isClearable={
+//                   selectSetOptions && selectSetOptions.value ? true : false
+//                 }
+//                 defaultOptions={defaultSetoptions}
+//                 onBlur={this.props.onBlur}
+//                 placeholder="Type to select sets"
+//                 className={
+//                   errors && errors.setId
+//                     ? "is-invalid form-control search-input-wrap"
+//                     : ""
+//                 }
+//                 onChange={e => this.props.handleInputChange(e)}
+//                 value={
+//                   recentAddedSet &&
+//                   recentAddedSet.label &&
+//                   recentAddedSet.value
+//                     ? recentAddedSet
+//                     : selectSetOptions
+//                 }
+//               />
+//               <FormFeedback>
+//                 {errors &&
+//                 errors.setId &&
+//                 selectSetOptions &&
+//                 selectSetOptions.value === ""
+//                   ? errors.setId
+//                   : null}
+//               </FormFeedback>
+//             </div>
+//           </InputGroup>
+//         </FormGroup>
