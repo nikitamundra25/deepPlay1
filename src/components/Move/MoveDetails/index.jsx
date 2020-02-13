@@ -252,7 +252,7 @@ class MoveDetails extends React.Component {
     });
 
     this.handleTotalOutput(timer);
-    if (timer && timer.min !== time.min) {
+    if (timer && timer.min < time.min) {
       myVideo.currentTime = timer.min;
     } else {
       myVideo.currentTime = timer.max;
