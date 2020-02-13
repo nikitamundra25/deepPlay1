@@ -404,8 +404,8 @@ class MoveDetails extends React.Component {
       this.handleVideoPause();
       vid.currentTime = value;
       this.setState({
-        currentTime:
-          value === parseInt(videoMaxDuration) ? videoMaxDuration : value,
+        // currentTime:
+        //   value === parseInt(videoMaxDuration) ? videoMaxDuration : value,
         isChange: true
       });
     } else {
