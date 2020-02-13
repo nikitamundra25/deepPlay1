@@ -2,7 +2,7 @@ import React from "react";
 import { Col, FormGroup, Label, Button, Form, Row, Input } from "reactstrap";
 import "react-tagsinput/react-tagsinput.css";
 import InputRange from "react-input-range";
-import "./index.scss";
+// import "./index.scss";
 import playIc from "../../../assets/img/icons/play.svg";
 import replayIc from "../../../assets/img/icons/replay.svg";
 import pauseIc from "../../../assets/img/icons/pause.svg";
@@ -140,7 +140,7 @@ class VideoDetails extends React.Component {
               let changeValue = {
                 min:
                   SecondsToMMSSMM(min) === "00:00.00" ||
-                  SecondsToMMSSMM(min) === "00:00.10"
+                    SecondsToMMSSMM(min) === "00:00.10"
                     ? 0
                     : min - 0.1,
                 max: max
@@ -231,7 +231,7 @@ class VideoDetails extends React.Component {
               let changeValue = {
                 min:
                   SecondsToMMSSMM(min) === "00:00.00" ||
-                  SecondsToMMSSMM(min) === "00:00.10"
+                    SecondsToMMSSMM(min) === "00:00.10"
                     ? 0
                     : min - 0.1,
                 max: max
@@ -373,6 +373,25 @@ class VideoDetails extends React.Component {
       this.props.handleVideoPlay();
     }
   };
+  updateSlider() {
+    const containerEle = document.getElementById("video-controls");
+    if (containerEle) {
+      try {
+        const elemStyle = document.querySelector(".slider-controls-wrap .input-range__track--active").style;
+        console.log(elemStyle.left, elemStyle.width)
+        document.getElementById("block-container").style.left = elemStyle.left
+        document.getElementById("block-container").style.width = elemStyle.width
+      } catch (error) {
+        // logger(error);
+      }
+    }
+  }
+  componentDidUpdate() {
+    this.updateSlider();
+  }
+  componentDidMount() {
+    this.updateSlider();
+  }
   /*
    */
 
@@ -443,9 +462,12 @@ class VideoDetails extends React.Component {
                 </div>
               </div>
               <div
-                className="dot-rang-slider rang-slider pb-2 main-rang-slider"
+                className="dot-range-slider range-slider  pb-2 main-range-slider"
                 onContextMenu={e => e.preventDefault()}
               >
+                <div className="position-relative">
+                <div id={"block-container"} className="block-container"></div>  
+                </div>
                 <InputRange
                   maxValue={parseInt(videoMaxDuration)}
                   minValue={0}
@@ -454,19 +476,23 @@ class VideoDetails extends React.Component {
                   onChange={value => handleSingleInputRange(value, time)}
                   onChangeComplete={value => handleChangeComplete(value, time)}
                 />
+
               </div>
               <div className="video-cutting-section">
                 <div className="video-cutting-block">
-                  <div className="rang-slider ">
-                    <InputRange
-                      draggableTrack
-                      step={0.1}
-                      maxValue={videoMaxDuration}
-                      minValue={0}
-                      value={time}
-                      onChange={value => this.labelValueChange(value)}
-                      onChangeComplete={value => this.changeComplete()}
-                    />
+                  <div className="range-slider slider-controls-wrap" id="video-controls">
+                    <div className="slider-range-wrap">
+
+                      <InputRange
+                        draggableTrack
+                        step={0.1}
+                        maxValue={videoMaxDuration}
+                        minValue={0}
+                        value={time}
+                        onChange={value => this.labelValueChange(value)}
+                        onChangeComplete={value => this.changeComplete()}
+                      />
+                    </div>
                     <div className="cutting-time-frame">
                       <Form className="cutting-time-form">
                         <Row className="">

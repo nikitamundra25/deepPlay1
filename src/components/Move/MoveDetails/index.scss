@@ -35,15 +35,15 @@
   color: #fff;
 }
 
-#left-container,
-#right-container {
-  transition: all 0.3s ease-out;
-  position: absolute;
-  background: rgba(0, 0, 0, 0.27);
-  top: 0;
-  height: 50px;
-  z-index: 1;
-}
+// #left-container,
+// #right-container {
+//   transition: all 0.3s ease-out;
+//   position: absolute;
+//   background: rgba(0, 0, 0, 0.27);
+//   top: 0;
+//   height: 50px;
+//   z-index: 1;
+// }
 .fram-picker {
   .input-range__slider {
     width: 7px;

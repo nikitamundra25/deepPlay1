@@ -650,7 +650,9 @@ class MoveDetails extends React.Component {
         <div className="create-set-section create-videos-section step-2 ">
           <Card className="w-100 p-0">
             <CardHeader className="mb-3 ">
-              <span
+              <Row>
+                <Col lg={4} className="trime-back-btn">
+                <span
                 className="cursor_pointer back-arrow create-move-back"
                 onClick={() => {
                   window.history.back();
@@ -659,7 +661,9 @@ class MoveDetails extends React.Component {
                 {" "}
                 <i className="fas fa-long-arrow-alt-left"></i> Back
               </span>
-              <FormGroup className="flex-fill flex-column video-title-wrap">
+                </Col>
+                <Col lg={8} className="trime-name-input">
+                <FormGroup className="flex-fill flex-column video-title-wrap">
                 <div className=" w-100">
                   <InputGroup className={"move-title-wrap"}>
                     <Input
@@ -701,7 +705,11 @@ class MoveDetails extends React.Component {
                   </InputGroup>
                 </div>
               </FormGroup>
-            </CardHeader>
+     
+                </Col>
+              </Row>
+             
+               </CardHeader>
             <CardBody className="trimming-body">
               {!isSavingWebM ? <div></div> : null}
               <>
