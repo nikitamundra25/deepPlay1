@@ -386,7 +386,8 @@ class VideoDetails extends React.Component {
       handleChangeComplete,
       totalOutput,
       videoError,
-      maxLengthError
+      maxLengthError,
+      handleMouseLeave
     } = this.props;
     const { time } = this.state;
 
@@ -445,6 +446,7 @@ class VideoDetails extends React.Component {
               <div
                 className="dot-rang-slider rang-slider pb-2 main-rang-slider"
                 onContextMenu={e => e.preventDefault()}
+                onMouseLeave={() => handleMouseLeave(time)}
               >
                 <InputRange
                   maxValue={parseInt(videoMaxDuration)}

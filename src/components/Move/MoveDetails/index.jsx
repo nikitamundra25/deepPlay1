@@ -417,6 +417,23 @@ class MoveDetails extends React.Component {
       this.handleVideoPlay();
     }
   };
+
+  /*
+   */
+  handleMouseLeave = time => {
+    const { min, max } = time;
+    const vid = document.getElementById("video-trimmer");
+    if (vid) {
+      if (vid.currentTime.toFixed(2) > min && vid.currentTime < max) {
+      } else {
+        vid.currentTime = min;
+        this.setState({
+          currentTime: min,
+          isChange: true
+        });
+      }
+    }
+  };
   /**
    *
    */
@@ -764,6 +781,7 @@ class MoveDetails extends React.Component {
                         completeEditing={this.completeEditing}
                         handleChangeComplete={this.handleChangeComplete}
                         maxLengthError={maxLengthError}
+                        handleMouseLeave={this.handleMouseLeave}
                       />
                     </>
                   ) : (
