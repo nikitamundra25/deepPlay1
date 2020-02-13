@@ -1,22 +1,19 @@
 import React from "react";
 import {
   Col,
-  Input,
   FormGroup,
-  InputGroup,
-  InputGroupAddon,
-  InputGroupText,
-  UncontrolledTooltip,
+  Label,
   FormFeedback,
+  InputGroup,
   Button
 } from "reactstrap";
+import CreatableSelect from "react-select/creatable";
+import "react-tagsinput/react-tagsinput.css";
+import AsyncSelect from "react-select/async";
 import { AppConfig } from "../../../config/Appconfig";
 import videoLoading from "../../../assets/img/loder/loader.svg";
-// import videosIc from "../../../assets/img/videos-ic.svg";
-
-import "./index.scss";
 import { AppRoutes } from "config/AppRoutes";
-import { ConfirmBox } from "helper/SweetAleart";
+import "./index.scss";
 
 // core components
 class VideoView extends React.Component {
@@ -36,6 +33,26 @@ class VideoView extends React.Component {
   /**
    *
    */
+  getDetails = () => {
+    const { tags, selectSetOptions } = this.props;
+    return {
+      tags,
+      setId: selectSetOptions ? selectSetOptions.value : null
+    };
+  };
+
+  loadSets = (input, callback) => {
+    if (input.length > 1) {
+      this.props.getAllSetRequest({
+        search: input,
+        callback,
+        isSetNoLimit: false
+      });
+    } else {
+      this.props.getAllSetRequest({ isSetNoLimit: false });
+    }
+  };
+
   componentDidMount() {
     this.video = document.getElementById("video-trimmer");
     if (this.video) {
@@ -43,40 +60,6 @@ class VideoView extends React.Component {
         videoData: true
       });
     }
-    var promise = this.video.play();
-    if (promise !== undefined) {
-      promise
-        .then(() => {
-          // Start whatever you need to do only after playback
-          // has begun.
-        })
-        .catch(async error => {
-          if (error.name === "NotAllowedError") {
-            await ConfirmBox({
-              text: "",
-              title: "You need to enable autoPlay on this browser.",
-              showCancelButton: false,
-              confirmButtonText: "Ok"
-            });
-          } else {
-            //Handle if we got different error
-          }
-        });
-    }
-    // this.video.addEventListener("timeupdate", () => {
-    //   console.log("kkkkkkk");
-
-    //   const { timer } = this.props;
-    //   const { min, max } = timer || {};
-    //   const { currentTime } = this.video;
-    //   if (parseInt(currentTime) >= max) {
-    //     this.video.pause();
-    //     setTimeout(() => {
-    //       this.video.currentTime = min;
-    //       this.video.play();
-    //     }, 500);
-    //   }
-    // });
     let timeDuration = [];
 
     this.video.onloadeddata = () => {
@@ -88,8 +71,6 @@ class VideoView extends React.Component {
         timeDuration: timeDuration,
         videoMaxDuration: duration
       };
-      this.props.storeVideoFrames(timeDuration);
-
       this.props.videoDuration(data);
     };
   }
@@ -104,24 +85,44 @@ class VideoView extends React.Component {
     const { timer } = this.props;
     const vid = document.getElementById("video-trimmer");
     const { max: oldMax, min: oldMin } = oldTimer || {};
-    const { max, min, to } = timer || {};
+    const { max, min, isVideoSleek } = timer || {};
+
     if (this.video && (min !== oldMin || max !== oldMax)) {
-      // this.video.currentTime = min;
-      if (to) {
-        this.video.currentTime = max;
+      this.updateSlider();
+      if (isVideoSleek) {
+        if (max === oldMax) {
+          this.video.currentTime = min;
+        } else {
+          this.video.currentTime = max;
+        }
       } else {
-        vid.currentTime = min;
+        if (!timer.to) {
+          this.video.currentTime = min;
+        } else {
+          this.video.currentTime = max;
+        }
       }
+
       vid.ontimeupdate = () => {
-        if (Math.round(vid.currentTime) >= parseInt(max)) {
-          vid.currentTime = min;
+        if (vid.currentTime.toFixed(2) >= max) {
+          if (this.props.isPlaying && this.props.isChange) {
+            vid.currentTime = min;
+          }
         }
       };
     }
+
     if (prevMoveData !== newMoveData) {
       this.video.load();
     }
-    // this.video.load();
+
+    vid.onseeking = () => {
+      if (parseInt(vid.currentTime) < parseInt(timer.min)) {
+        // if (this.props.isChange) {
+        vid.currentTime = timer.min;
+        // }
+      }
+    };
 
     vid.onwaiting = () => {
       this.setState({
@@ -137,67 +138,87 @@ class VideoView extends React.Component {
   /**
    *
    */
+  updateSlider() {
+    const containerEle = document.getElementById("video-controls");
+    if (containerEle) {
+      try {
+        const elemStyle = document.querySelector(
+          ".slider-controls-wrap .input-range__track--active"
+        ).style;
+        document.getElementById("block-container").style.left = elemStyle.left;
+        document.getElementById("block-container").style.width =
+          elemStyle.width;
+      } catch (error) {
+        // logger(error);
+      }
+    }
+  }
   /**
    *
    */
   render() {
     const {
       moveReducer,
-      description,
-      title,
-      isEdit,
-      errorTitle,
       isYoutubeUrl,
       playbackFailed,
-      videoError
+      videoError,
+      selectSetOptions,
+      setReducer,
+      tags,
+      errors,
+      tagsList
     } = this.props;
     const { moveDetails } = moveReducer;
-    const { isBufferingVideo, videoCanPlay } = this.state;
+    const { allSetList, recentSetAdded } = setReducer;
+
+    const { /* isBufferingVideo */ videoCanPlay } = this.state;
+    let recentAddedSet,
+      defaultSetoptions = [];
+    if (allSetList && allSetList.length) {
+      allSetList.map(data => {
+        const defaultSetoptionsValue = {
+          label:
+            data && data.isCopy
+              ? `${data.title} ${
+                  data.copyCount > 0 ? `(${data.copyCount})` : ""
+                }`
+              : data.title,
+          value: data._id,
+          moveCount: data.moveCount
+        };
+
+        defaultSetoptions.push(defaultSetoptionsValue);
+        return true;
+      });
+      const addNewOption = {
+        label: "+ Create New Set",
+        value: ""
+      };
+      defaultSetoptions.push(addNewOption);
+    } else {
+      const addNewOption = {
+        label: "+ Create New Set",
+        value: ""
+      };
+      defaultSetoptions.push(addNewOption);
+    }
+    if (recentSetAdded && recentSetAdded.value) {
+      recentAddedSet = {
+        label: recentSetAdded.title,
+        value: recentSetAdded._id
+      };
+    }
 
     return (
       <>
-        <Col lg={"6"}>
-          <FormGroup className="flex-fill flex-column video-title-wrap">
-            <div className=" w-100">
-              <InputGroup className={"move-title-wrap"}>
-                <Input
-                  id="title"
-                  placeholder="Enter your title (optional)"
-                  onChange={e => this.props.handleChange(e)}
-                  type="text"
-                  className={
-                    errorTitle ? "is-invalid move-title" : "move-title"
-                  }
-                  name="title"
-                  value={title ? title : ""}
-                />
-                <FormFeedback> {errorTitle ? errorTitle : null} </FormFeedback>
-                <InputGroupAddon
-                  addonType="prepend"
-                  className="discription-btn-wrap"
-                >
-                  <div onClick={this.props.handleDesriptionModal}>
-                    <InputGroupText
-                      id="description"
-                      className={"discription-btn cursor_pointer"}
-                    >
-                      <i className="fas fas fa-info " />
-                      <UncontrolledTooltip placement="top" target="description">
-                        {description ? "Update Description" : "Add description"}
-                      </UncontrolledTooltip>
-                    </InputGroupText>
-                  </div>
-                </InputGroupAddon>
-              </InputGroup>
-            </div>
-          </FormGroup>
+        <Col lg={4} className="trim-video-view">
           {moveDetails && moveDetails.videoUrl ? (
             <div className={"video-player"}>
-              {isBufferingVideo === true ? (
+              {/* {isBufferingVideo === true ? (
                 <div className="video-spinner z-">
                   <img src={videoLoading} alt="" />
                 </div>
-              ) : null}
+              ) : null} */}
               <div className="video-player-inner-wrap">
                 {!videoError ? (
                   !videoCanPlay ? (
@@ -226,46 +247,88 @@ class VideoView extends React.Component {
                     </span>
                   </>
                 )}
-                {!isEdit ? (
-                  <video
-                    width={"100%"}
-                    autoPlay
-                    loop
-                    onCanPlay={() => {
-                      this.setState({
-                        videoCanPlay: true
-                      });
-                    }}
-                    id={"video-trimmer"}
-                    muted={false}
-                    playsInline
-                    onError={e => playbackFailed(e)}
-                    onContextMenu={e => e.preventDefault()}
-                    disablepictureinpicture="true"
-                    controlsList="nodownload"
-                  >
-                    <source
-                      src={
-                        !isYoutubeUrl
-                          ? `${AppConfig.API_ENDPOINT}${moveDetails.videoUrl}`
-                          : moveDetails.videoUrl
+
+                <video
+                  width={"100%"}
+                  autoPlay
+                  loop
+                  onCanPlay={() => {
+                    this.setState({
+                      videoCanPlay: true
+                    });
+                  }}
+                  id={"video-trimmer"}
+                  muted={false}
+                  playsInline
+                  onError={e => playbackFailed(e)}
+                  controls
+                  // onContextMenu={e => e.preventDefault()}
+                  disablepictureinpicture="true"
+                  controlsList="nodownload"
+                  preload={"auto"}
+                >
+                  <source
+                    src={
+                      !isYoutubeUrl
+                        ? `${AppConfig.API_ENDPOINT}${moveDetails.videoUrl}`
+                        : moveDetails.videoUrl
+                    }
+                  />
+                </video>
+              </div>
+              <FormGroup className="flex-fill flex-column mt-3 input-w">
+                {/* add tag-input-wrap class for tagInput design  */}
+                <Label className="mt-2">
+                  Add tags and press enter to separate
+                </Label>
+                <div className="w-100 tag-input-wrap search-select-wrap">
+                  <CreatableSelect
+                    classNamePrefix="react_select"
+                    isMulti
+                    onChange={this.props.handleTagChange}
+                    value={tags}
+                    options={tagsList}
+                  />
+                </div>
+              </FormGroup>
+              <FormGroup className="flex-fill flex-column mt-3">
+                {/* add search-select class for search select design  */}
+                <Label className="mt-2">
+                  Select sets <span className="text-danger">*</span>
+                </Label>
+                <InputGroup>
+                  <div className="w-100 search-select-wrap">
+                    <AsyncSelect
+                      classNamePrefix="react_select"
+                      loadOptions={this.loadSets}
+                      isClearable={
+                        selectSetOptions && selectSetOptions.value
+                          ? true
+                          : false
+                      }
+                      defaultOptions={defaultSetoptions}
+                      onBlur={this.props.onBlur}
+                      placeholder="Type to select sets"
+                      className={
+                        errors && errors.setId
+                          ? "is-invalid form-control search-input-wrap"
+                          : ""
+                      }
+                      onChange={e => this.props.handleInputChange(e)}
+                      value={
+                        recentAddedSet &&
+                        recentAddedSet.label &&
+                        recentAddedSet.value
+                          ? recentAddedSet
+                          : selectSetOptions
                       }
                     />
-                  </video>
-                ) : (
-                  <video
-                    width={"100%"}
-                    autoPlay
-                    loop
-                    id={"video-trimmer"}
-                    muted={false}
-                    playsinline
-                    onContextMenu={e => e.preventDefault()}
-                  >
-                    <source src={`${moveDetails.moveURL}`} />
-                  </video>
-                )}
-              </div>
+                    <FormFeedback>
+                      {errors && errors.setId ? errors.setId : null}
+                    </FormFeedback>
+                  </div>
+                </InputGroup>
+              </FormGroup>
             </div>
           ) : (
             <span>No video available for trimming</span>
