@@ -2868,6 +2868,11 @@ _:future,
     justify-content: flex-end;
     margin-top: 20px;
     padding: 0px 15px;
+    button{
+      i{
+        font-size: 20px;
+      }
+    }
   }
 }
 .range-slider {
@@ -2880,16 +2885,7 @@ _:future,
   &.dot-range-slider {
     position: relative;
     .input-range__track--background {
-      background-image: linear-gradient(
-        45deg,
-        rgba(255, 255, 255, 0.15) 25%,
-        transparent 25%,
-        transparent 50%,
-        rgba(255, 255, 255, 0.15) 50%,
-        rgba(255, 255, 255, 0.15) 75%,
-        transparent 75%,
-        transparent
-      );
+      background: #dcdcdc;
       background-size: 1rem 1rem;
       background-color: #b8b8b8;
     }
@@ -2901,7 +2897,17 @@ _:future,
     -webkit-transition: left 0.3s ease-out, width 0.3s ease-out;
     transition: left 0.3s ease-out, width 0.3s ease-out;
     height: 20px;
-    background: #dcdcdc;
+    background-size: 1rem 1rem;
+    background-image: linear-gradient(
+      45deg,
+      rgba(255, 255, 255, 0.15) 25%,
+      transparent 25%,
+      transparent 50%,
+      rgba(255, 255, 255, 0.15) 50%,
+      rgba(255, 255, 255, 0.15) 75%,
+      transparent 75%,
+      transparent
+    );
     z-index: 1;
     position: absolute;
     top: -3px;

@@ -450,8 +450,10 @@ class VideoDetails extends React.Component {
                 onMouseLeave={() => handleMouseLeave(time)}
               >
                 <div className="position-relative">
-                  <div id={"block-container"} className="block-container"></div>
+                  <div id={"block-container-left"} className="block-container-left block-container"></div>
+                  <div id={"block-container-right"} className="block-container-right block-container"></div>
                 </div>
+
                 <InputRange
                   maxValue={parseInt(videoMaxDuration)}
                   minValue={0}
@@ -467,17 +469,18 @@ class VideoDetails extends React.Component {
                     className="range-slider slider-controls-wrap"
                     id="video-controls"
                   >
-                    <div className="slider-range-wrap">
-                      <InputRange
-                        draggableTrack
-                        step={0.1}
-                        maxValue={videoMaxDuration}
-                        minValue={0}
-                        value={time}
-                        onChange={value => this.labelValueChange(value)}
-                        onChangeComplete={value => this.changeComplete()}
-                      />
-                    </div>
+                    <div id={"left-container"}></div>
+                    <div id={"right-container"}></div>
+
+                    <InputRange
+                      draggableTrack
+                      step={0.1}
+                      maxValue={videoMaxDuration}
+                      minValue={0}
+                      value={time}
+                      onChange={value => this.labelValueChange(value)}
+                      onChangeComplete={value => this.changeComplete()}
+                    />
                     <div className="cutting-time-frame">
                       <Form className="cutting-time-form">
                         <Row className="">

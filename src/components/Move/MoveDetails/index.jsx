@@ -394,6 +394,9 @@ class MoveDetails extends React.Component {
   };
 
   handleSingleInputRange = (value, time) => {
+    this.setState({
+      currentTime: value
+    });
     const { videoMaxDuration } = this.state;
     const vid = document.getElementById("video-trimmer");
     const { min, max } = time;
@@ -401,8 +404,8 @@ class MoveDetails extends React.Component {
       this.handleVideoPause();
       vid.currentTime = value;
       this.setState({
-        currentTime:
-          value === parseInt(videoMaxDuration) ? videoMaxDuration : value,
+        // currentTime:
+        //   value === parseInt(videoMaxDuration) ? videoMaxDuration : value,
         isChange: true
       });
     } else {
@@ -678,64 +681,62 @@ class MoveDetails extends React.Component {
             <CardHeader className="mb-3 ">
               <Row>
                 <Col lg={4} className="trime-back-btn">
-                <span
-                className="cursor_pointer back-arrow create-move-back"
-                onClick={() => {
-                  window.history.back();
-                }}
-              >
-                {" "}
-                <i className="fas fa-long-arrow-alt-left"></i> Back
-              </span>
+                  <span
+                    className="cursor_pointer back-arrow create-move-back"
+                    onClick={() => {
+                      window.history.back();
+                    }}
+                  >
+                    {" "}
+                    <i className="fas fa-long-arrow-alt-left"></i> Back
+                  </span>
                 </Col>
                 <Col lg={8} className="trime-name-input">
-                <FormGroup className="flex-fill flex-column video-title-wrap">
-                <div className=" w-100">
-                  <InputGroup className={"move-title-wrap"}>
-                    <Input
-                      id="title"
-                      placeholder="Enter your title (optional)"
-                      onChange={e => this.handleChangeTitle(e)}
-                      type="text"
-                      className={
-                        errorTitle ? "is-invalid move-title" : "move-title"
-                      }
-                      name="title"
-                      value={title ? title : ""}
-                    />
-                    <FormFeedback>
-                      {" "}
-                      {errorTitle ? errorTitle : null}{" "}
-                    </FormFeedback>
-                    <InputGroupAddon
-                      addonType="prepend"
-                      className="discription-btn-wrap"
-                    >
-                      <div onClick={this.handleDesriptionModal}>
-                        <InputGroupText
-                          id="description"
-                          className={"discription-btn cursor_pointer"}
+                  <FormGroup className="flex-fill flex-column video-title-wrap">
+                    <div className=" w-100">
+                      <InputGroup className={"move-title-wrap"}>
+                        <Input
+                          id="title"
+                          placeholder="Enter your title (optional)"
+                          onChange={e => this.handleChangeTitle(e)}
+                          type="text"
+                          className={
+                            errorTitle ? "is-invalid move-title" : "move-title"
+                          }
+                          name="title"
+                          value={title ? title : ""}
+                        />
+                        <FormFeedback>
+                          {" "}
+                          {errorTitle ? errorTitle : null}{" "}
+                        </FormFeedback>
+                        <InputGroupAddon
+                          addonType="prepend"
+                          className="discription-btn-wrap"
                         >
-                          <i className="fas fas fa-info " />
-                          <UncontrolledTooltip
-                            placement="top"
-                            target="description"
-                          >
-                            {description
-                              ? "Update Description"
-                              : "Add description"}
-                          </UncontrolledTooltip>
-                        </InputGroupText>
-                      </div>
-                    </InputGroupAddon>
-                  </InputGroup>
-                </div>
-              </FormGroup>
-     
+                          <div onClick={this.handleDesriptionModal}>
+                            <InputGroupText
+                              id="description"
+                              className={"discription-btn cursor_pointer"}
+                            >
+                              <i className="fas fas fa-info " />
+                              <UncontrolledTooltip
+                                placement="top"
+                                target="description"
+                              >
+                                {description
+                                  ? "Update Description"
+                                  : "Add description"}
+                              </UncontrolledTooltip>
+                            </InputGroupText>
+                          </div>
+                        </InputGroupAddon>
+                      </InputGroup>
+                    </div>
+                  </FormGroup>
                 </Col>
               </Row>
-             
-               </CardHeader>
+            </CardHeader>
             <CardBody className="trimming-body">
               {!isSavingWebM ? <div></div> : null}
               <>
