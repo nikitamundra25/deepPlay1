@@ -142,12 +142,42 @@ class VideoView extends React.Component {
     const containerEle = document.getElementById("video-controls");
     if (containerEle) {
       try {
-        const elemStyle = document.querySelector(
-          ".slider-controls-wrap .input-range__track--active"
-        ).style;
-        document.getElementById("block-container").style.left = elemStyle.left;
-        document.getElementById("block-container").style.width =
-          elemStyle.width;
+        const { childNodes } = containerEle;
+        for (let i = 0; i < childNodes.length; i++) {
+          const child = childNodes[i];
+          if (child.classList.contains("input-range")) {
+            for (let k = 0; k < child.childNodes.length; k++) {
+              const newChild = child.childNodes[k];
+
+              if (newChild.classList.contains("input-range__track")) {
+                const leftContainer = document.getElementById(
+                  "block-container-left"
+                );
+                const rightContainer = document.getElementById(
+                  "block-container-right"
+                );
+                const leftCount = document.getElementsByClassName(
+                  "input-range__label--min"
+                );
+                const rightCount = document.getElementsByClassName(
+                  "input-range__label--max"
+                );
+                // get width for left and right container
+                const leftWidth = newChild.childNodes[1].style.left;
+                const rightWidth = newChild.childNodes[2].style.left;
+                // const siderWidth = newChild.childNodes[0].style.width;
+                const actualRightWidth = 100 - parseFloat(rightWidth);
+                // set properties
+                leftContainer.style.width = leftWidth;
+                leftContainer.style.left = 0;
+                rightContainer.style.width = `${actualRightWidth}%`;
+                rightContainer.style.left = rightWidth;
+                leftCount[0].style.left = leftWidth;
+                rightCount[0].style.left = rightWidth;
+              }
+            }
+          }
+        }
       } catch (error) {
         // logger(error);
       }
