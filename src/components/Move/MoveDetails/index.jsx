@@ -252,10 +252,19 @@ class MoveDetails extends React.Component {
     });
 
     this.handleTotalOutput(timer);
-    if (timer && timer.min < time.min) {
-      myVideo.currentTime = timer.min;
-    } else {
-      myVideo.currentTime = timer.max;
+
+    if (timer.isVideoSleek) {
+      if (timer.min === time.min && timer.max !== time.max) {
+        myVideo.currentTime = timer.max;
+      } else if (timer.max === time.max && timer.min !== time.min) {
+        myVideo.currentTime = timer.min;
+      } else {
+        if (timer.min < time.min) {
+          myVideo.currentTime = timer.min;
+        } else {
+          myVideo.currentTime = timer.max;
+        }
+      }
     }
     this.setState({
       currentTime: myVideo.currentTime
@@ -271,11 +280,11 @@ class MoveDetails extends React.Component {
 
     if (difference.toFixed(2) > 15) {
       this.setState({
-        maxLengthError: "Video cannot be trim more than 15 sec."
+        maxLengthError: "Move can't be allow more than 15 sec."
       });
     } else if (difference === 1) {
       this.setState({
-        maxLengthError: "Video cannot be trim less than 1 sec."
+        maxLengthError: "Move can't be allow less than 1 sec."
       });
     } else {
       this.setState({
