@@ -90,11 +90,22 @@ class VideoView extends React.Component {
     if (this.video && (min !== oldMin || max !== oldMax)) {
       this.updateSlider();
       if (isVideoSleek) {
-        if (max === oldMax) {
-          this.video.currentTime = min;
-        } else {
-          this.video.currentTime = max;
-        }
+        // if (min === oldMin && max !== oldMax) {
+        //   this.video.currentTime = max;
+        // } else if (max === oldMax && min !== oldMin) {
+        //   this.video.currentTime = min;
+        // } else {
+        //   if (min < oldMin) {
+        //     this.video.currentTime = min;
+        //   } else {
+        //     this.video.currentTime = max;
+        //   }
+        // }
+        // if (max === oldMax || min < oldMin) {
+        //   this.video.currentTime = min;
+        // } else {
+        //   this.video.currentTime = max;
+        // }
       } else {
         if (!timer.to) {
           this.video.currentTime = min;
