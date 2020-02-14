@@ -78,7 +78,7 @@ class VideoDetails extends React.Component {
         this.setState(
           {
             time: {
-              min: min,
+              min: parseInt(min) === -0 ? 0 : min,
               max: max,
               isVideoSleek: true
             }
@@ -106,6 +106,8 @@ class VideoDetails extends React.Component {
   /*
    */
   changeComplete = () => {
+    console.log("heteye");
+
     this.props.handlePlayPause();
   };
   /*
@@ -450,8 +452,14 @@ class VideoDetails extends React.Component {
                 onMouseLeave={() => handleMouseLeave(time)}
               >
                 <div className="position-relative">
-                  <div id={"block-container-left"} className="block-container-left block-container"></div>
-                  <div id={"block-container-right"} className="block-container-right block-container"></div>
+                  <div
+                    id={"block-container-left"}
+                    className="block-container-left block-container"
+                  ></div>
+                  <div
+                    id={"block-container-right"}
+                    className="block-container-right block-container"
+                  ></div>
                 </div>
 
                 <InputRange
