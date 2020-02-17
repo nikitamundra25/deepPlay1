@@ -168,7 +168,7 @@ class LoginComponent extends React.Component {
                   </span>
                   <span className="btn-inner--icon google-wrap">
                     <GoogleLogin
-                      clientId="52209426453-64s7do5ib1j1s3e9fhgnjgmvi3931vqm.apps.googleusercontent.com"
+                      clientId="201270708097-vrbfettj9u5gnrpnjd6sn9o73skmjg3f.apps.googleusercontent.com"
                       buttonText="Google"
                       className={"btn-neutral btn-icon btn btn-default"}
                       onSuccess={this.handleGoogleLogin}
