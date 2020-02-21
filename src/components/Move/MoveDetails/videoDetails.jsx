@@ -15,11 +15,22 @@ class VideoDetails extends React.Component {
     this.state = {
       time: {
         min: 0,
-        max: 15
+        max: 187
       },
       focusTip: false
     };
   }
+
+componentDidUpdate = ({videoMaxDuration}) => {
+  if(videoMaxDuration !== this.props.videoMaxDuration){
+    this.setState({
+      time:{
+        min: 0,
+        max: this.props.videoMaxDuration
+      }
+    })
+  }
+}
 
   addCutHandler = () => {
     const cutCount = this.state.trimTime;
@@ -65,7 +76,10 @@ class VideoDetails extends React.Component {
   replayVideo = () => {
     const { time } = this.state;
     let videoPlayer = document.getElementById("video-trimmer");
+    let audioPlayer = document.getElementById("audio-trimmer");
+
     videoPlayer.currentTime = time.min;
+    audioPlayer.currentTime = time.min;
     this.props.handleVideoPlay();
   };
 
@@ -342,6 +356,7 @@ class VideoDetails extends React.Component {
    */
   decreaseThreeSecond = () => {
     const vid = document.getElementById("video-trimmer");
+    const audio = document.getElementById("audio-trimmer");
     const currentTime = vid.currentTime;
     const { time } = this.state;
     const { min } = time;
@@ -349,8 +364,10 @@ class VideoDetails extends React.Component {
       let temp = currentTime - 3;
       if (temp > min.toFixed(2)) {
         vid.currentTime = temp;
+        audio.currentTime = temp;
       } else {
         vid.currentTime = min;
+        audio.currentTime = min;
       }
     } else {
       this.props.handleVideoPlay();
@@ -361,6 +378,7 @@ class VideoDetails extends React.Component {
    */
   increaseThreeSecond = () => {
     const vid = document.getElementById("video-trimmer");
+    const audio = document.getElementById("audio-trimmer");
     const currentTime = vid.currentTime;
     const { time } = this.state;
     const { max } = time;
@@ -368,8 +386,10 @@ class VideoDetails extends React.Component {
       let temp = currentTime + 3;
       if (temp < max.toFixed(2)) {
         vid.currentTime = temp;
+        audio.currentTime = temp;
       } else {
         vid.currentTime = max;
+        audio.currentTime = max;
       }
     } else {
       this.props.handleVideoPlay();

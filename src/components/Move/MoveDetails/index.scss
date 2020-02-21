@@ -119,3 +119,7 @@
 .range-slider .input-range__track--background .input-range__track {
   cursor: ew-resize;
 }
+
+video::-webkit-media-controls-volumeMenuButton {
+  display: none;
+}

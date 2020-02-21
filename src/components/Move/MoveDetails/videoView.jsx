@@ -55,6 +55,7 @@ class VideoView extends React.Component {
 
   componentDidMount() {
     this.video = document.getElementById("video-trimmer");
+    this.audio = document.getElementById("audio-trimmer");
     if (this.video) {
       this.setState({
         videoData: true
@@ -84,9 +85,10 @@ class VideoView extends React.Component {
       : null;
     const { timer } = this.props;
     const vid = document.getElementById("video-trimmer");
+    const audio = document.getElementById("audio-trimmer");
     const { max: oldMax, min: oldMin } = oldTimer || {};
     const { max, min, isVideoSleek } = timer || {};
-
+    // this.audio.currentTime = this.video.currentTime;
     if (this.video && (min !== oldMin || max !== oldMax)) {
       this.updateSlider();
       if (isVideoSleek) {
@@ -109,15 +111,18 @@ class VideoView extends React.Component {
       } else {
         if (!timer.to) {
           this.video.currentTime = min;
+          console.log("This audio min", min);
+          this.audio.currentTime = min;
         } else {
           this.video.currentTime = max;
+          this.audio.currentTime = max;
         }
       }
-
       vid.ontimeupdate = () => {
         if (vid.currentTime.toFixed(2) >= max) {
           if (this.props.isPlaying && this.props.isChange) {
             vid.currentTime = min;
+            audio.currentTime = min;
           }
         }
       };
@@ -131,6 +136,7 @@ class VideoView extends React.Component {
       if (parseInt(vid.currentTime) < parseInt(timer.min)) {
         // if (this.props.isChange) {
         vid.currentTime = timer.min;
+        audio.currentTime = timer.min;
         // }
       }
     };
@@ -307,6 +313,7 @@ class VideoView extends React.Component {
                   disablepictureinpicture="true"
                   controlsList="nodownload"
                   preload={"auto"}
+                  
                 >
                   <source
                     src={
@@ -316,6 +323,9 @@ class VideoView extends React.Component {
                     }
                   />
                 </video>
+                <audio id={"audio-trimmer"} controls autoPlay>
+                  <source src={moveDetails.audioUrl} type="audio/ogg" />
+                </audio>
               </div>
               <FormGroup className="flex-fill flex-column mt-3 input-w">
                 {/* add tag-input-wrap class for tagInput design  */}

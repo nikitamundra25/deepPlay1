@@ -78,7 +78,7 @@ class MoveDetails extends React.Component {
       currentTime: 0,
       totalOutput: 15,
       isChange: true,
-      maxLengthError: ""
+      maxLengthError:"Move can't be allow more than 15 sec."
     };
     this.videoDetails = React.createRef();
   }
@@ -227,17 +227,19 @@ class MoveDetails extends React.Component {
         }
       });
     }
-
+    this.audio = document.getElementById("audio-trimmer");
     if (this.video) {
       this.video.onpause = () => {
         this.setState({
           isPlaying: false
         });
+        this.audio.pause();
       };
       this.video.onplay = () => {
         this.setState({
           isPlaying: true
         });
+        this.audio.play();
       };
     }
   };
@@ -247,6 +249,7 @@ class MoveDetails extends React.Component {
   onTimerChange = timer => {
     const time = this.state.timer;
     let myVideo = document.getElementById("video-trimmer");
+    let myAudio = document.getElementById("audio-trimmer");
     this.setState({
       timer
     });
@@ -256,13 +259,17 @@ class MoveDetails extends React.Component {
     if (timer.isVideoSleek) {
       if (timer.min === time.min && timer.max !== time.max) {
         myVideo.currentTime = timer.max;
+        myAudio.currentTime = timer.max;
       } else if (timer.max === time.max && timer.min !== time.min) {
         myVideo.currentTime = timer.min;
+        myAudio.currentTime = timer.min;
       } else {
         if (timer.min < time.min) {
           myVideo.currentTime = timer.min;
+          myAudio.currentTime = timer.min;
         } else {
           myVideo.currentTime = timer.max;
+          myAudio.currentTime = timer.max;
         }
       }
     }
@@ -365,21 +372,25 @@ class MoveDetails extends React.Component {
 
   handleVideoPause = () => {
     let myVideo = document.getElementById("video-trimmer");
+    let myVideoAudio = document.getElementById("audio-trimmer");
     if (myVideo) {
       this.setState({
         isPlaying: false
       });
       myVideo.pause();
+      myVideoAudio.pause();
     }
   };
 
   handleVideoPlay = () => {
     this.video = document.getElementById("video-trimmer");
+    this.audio = document.getElementById("audio-trimmer");
     if (this.video) {
       this.setState({
         isPlaying: true
       });
       this.video.play();
+      this.audio.play();
     }
   };
 
@@ -394,8 +405,10 @@ class MoveDetails extends React.Component {
   handleChangeComplete = (value, time) => {
     const { isChange } = this.state;
     const vid = document.getElementById("video-trimmer");
+    const audio = document.getElementById("audio-trimmer");
     if (!isChange) {
       vid.currentTime = time.min;
+      audio.currentTime = time.min;
       this.setState({
         isChange: true
       });
@@ -408,10 +421,12 @@ class MoveDetails extends React.Component {
     });
     const { videoMaxDuration } = this.state;
     const vid = document.getElementById("video-trimmer");
+    const audio = document.getElementById("audio-trimmer");
     const { min, max } = time;
     if (parseInt(min) <= parseInt(value) && parseInt(max) >= parseInt(value)) {
       this.handleVideoPause();
       vid.currentTime = value;
+      audio.currentTime = value;
       this.setState({
         // currentTime:
         //   value === parseInt(videoMaxDuration) ? videoMaxDuration : value,
@@ -419,6 +434,7 @@ class MoveDetails extends React.Component {
       });
     } else {
       vid.currentTime = value;
+      audio.currentTime = value;
       this.setState({
         isChange: false
         // currentTime: value
@@ -435,10 +451,12 @@ class MoveDetails extends React.Component {
   handleMouseLeave = time => {
     const { min, max } = time;
     const vid = document.getElementById("video-trimmer");
+    const audio = document.getElementById("audio-trimmer");
     if (vid) {
       if (vid.currentTime.toFixed(2) > min && vid.currentTime < max) {
       } else {
         vid.currentTime = min;
+        audio.currentTime = min;
         this.setState({
           currentTime: min,
           isChange: true
