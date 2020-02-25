@@ -162,7 +162,7 @@ class CreateSetComponent extends React.Component {
               <Input
                 id="exampleFormControlInput1"
                 type="textarea"
-                placeholder="Enter a description (optional)"
+                placeholder="Enter a description (optional) Limit is 250 characters."
                 name="description"
                 className={errors.description ? "is-invalid" : ""}
                 onChange={this.handleChange}

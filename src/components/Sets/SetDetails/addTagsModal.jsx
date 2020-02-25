@@ -107,7 +107,7 @@ class AddTagModal extends React.Component {
                 <Input
                   id="description"
                   type="textarea"
-                  placeholder="Enter a description (optional)"
+                  placeholder="Enter a description (optional) Limit is 250 characters."
                   name="description"
                   className={error ? "is-invalid" : ""}
                   onChange={this.props.handleChange}

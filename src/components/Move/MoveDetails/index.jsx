@@ -78,7 +78,7 @@ class MoveDetails extends React.Component {
       currentTime: 0,
       totalOutput: 15,
       isChange: true,
-      maxLengthError: ""
+      maxLengthError:"Move can't be allow more than 15 sec."
     };
     this.videoDetails = React.createRef();
   }
@@ -145,6 +145,7 @@ class MoveDetails extends React.Component {
     }
 
     if (moveReducer.moveDetails !== this.props.moveReducer.moveDetails) {
+  
       if (this.props.moveReducer.moveDetails) {
         const {
           title,
@@ -168,40 +169,43 @@ class MoveDetails extends React.Component {
             );
           }
         }
-        const { allSetList } = this.props.setReducer;
-        let selectOption;
-        if (allSetList && allSetList.length) {
-          // eslint-disable-next-line
-          allSetList.map(data => {
-            if (setId) {
-              if (setId === data._id) {
-                selectOption = {
-                  label:
-                    data && data.isCopy
-                      ? `${data.title} ${
-                          data.copyCount > 0 ? `(${data.copyCount})` : ""
-                        }`
-                      : data.title,
-                  value: data._id
-                };
-              }
-              this.setState({
-                selectedSetId: setId
-              });
-            }
-          });
-        }
+        // const { allSetList } = this.props.setReducer;
+        // let selectOption;
+        // console.log("setId",allSetList);
+        
+        // if (allSetList && allSetList.length) {
+        //   // eslint-disable-next-line
+        //   allSetList.map(data => {
+        //     if (setId) {
+        //       if (setId === data._id) {
+        //         selectOption = {
+        //           label:
+        //             data && data.isCopy
+        //               ? `${data.title} ${
+        //                   data.copyCount > 0 ? `(${data.copyCount})` : ""
+        //                 }`
+        //               : data.title,
+        //           value: data._id
+        //         };
+        //       }
+        //       this.setState({
+        //         selectedSetId: setId
+        //       });
+        //     }
+        //   });
+        // }
+        
         this.setState({
           title,
           description,
           tags,
           timer: { min: 0.1, max: 15.1 },
-          selectSetOptions: selectOption
-            ? selectOption
-            : {
-                label: "Type to select sets",
-                value: ""
-              }
+          // selectSetOptions: selectOption
+          //   ? selectOption
+          //   : {
+          //       label: "Type to select sets",
+          //       value: ""
+          //     }
         });
       }
       if (this.video) {
@@ -213,6 +217,42 @@ class MoveDetails extends React.Component {
             currentTime: currentVideoTime
           });
         });
+      }
+    }
+    if(setReducer !== this.props.setReducer){
+      const {
+        setId,
+      } = this.props.moveReducer.moveDetails;
+      const { allSetList } = this.props.setReducer;
+      let selectOption;
+      if (allSetList && allSetList.length) {
+        // eslint-disable-next-line
+        allSetList.map(data => {
+          if (setId) {
+            if (setId === data._id) {
+              selectOption = {
+                label:
+                  data && data.isCopy
+                    ? `${data.title} ${
+                        data.copyCount > 0 ? `(${data.copyCount})` : ""
+                      }`
+                    : data.title,
+                value: data._id
+              };
+            }
+            this.setState({
+              selectedSetId: setId
+            });
+          }
+        });
+        this.setState({
+          selectSetOptions: selectOption
+          ? selectOption
+          : {
+              label: "Type to select sets",
+              value: ""
+            }
+        })
       }
     }
     if (
@@ -228,16 +268,24 @@ class MoveDetails extends React.Component {
       });
     }
 
-    if (this.video) {
+    this.audio = document.getElementById("audio-trimmer");
+    
+    if (this.video ) {
       this.video.onpause = () => {
         this.setState({
           isPlaying: false
         });
+     if(this.audio) {
+         this.audio.pause();
+         }
       };
       this.video.onplay = () => {
         this.setState({
           isPlaying: true
         });
+        if(this.audio) {
+        this.audio.play();
+        }
       };
     }
   };
@@ -247,6 +295,7 @@ class MoveDetails extends React.Component {
   onTimerChange = timer => {
     const time = this.state.timer;
     let myVideo = document.getElementById("video-trimmer");
+    let myAudio = document.getElementById("audio-trimmer");
     this.setState({
       timer
     });
@@ -256,13 +305,17 @@ class MoveDetails extends React.Component {
     if (timer.isVideoSleek) {
       if (timer.min === time.min && timer.max !== time.max) {
         myVideo.currentTime = timer.max;
+        myAudio.currentTime = timer.max;
       } else if (timer.max === time.max && timer.min !== time.min) {
         myVideo.currentTime = timer.min;
+        myAudio.currentTime = timer.min;
       } else {
         if (timer.min < time.min) {
           myVideo.currentTime = timer.min;
+          myAudio.currentTime = timer.min;
         } else {
           myVideo.currentTime = timer.max;
+          myAudio.currentTime = timer.max;
         }
       }
     }
@@ -365,21 +418,25 @@ class MoveDetails extends React.Component {
 
   handleVideoPause = () => {
     let myVideo = document.getElementById("video-trimmer");
+    let myVideoAudio = document.getElementById("audio-trimmer");
     if (myVideo) {
       this.setState({
         isPlaying: false
       });
       myVideo.pause();
+      myVideoAudio.pause();
     }
   };
 
   handleVideoPlay = () => {
     this.video = document.getElementById("video-trimmer");
+    this.audio = document.getElementById("audio-trimmer");
     if (this.video) {
       this.setState({
         isPlaying: true
       });
       this.video.play();
+      this.audio.play();
     }
   };
 
@@ -394,8 +451,10 @@ class MoveDetails extends React.Component {
   handleChangeComplete = (value, time) => {
     const { isChange } = this.state;
     const vid = document.getElementById("video-trimmer");
+    const audio = document.getElementById("audio-trimmer");
     if (!isChange) {
       vid.currentTime = time.min;
+      audio.currentTime = time.min;
       this.setState({
         isChange: true
       });
@@ -408,10 +467,12 @@ class MoveDetails extends React.Component {
     });
     const { videoMaxDuration } = this.state;
     const vid = document.getElementById("video-trimmer");
+    const audio = document.getElementById("audio-trimmer");
     const { min, max } = time;
     if (parseInt(min) <= parseInt(value) && parseInt(max) >= parseInt(value)) {
       this.handleVideoPause();
       vid.currentTime = value;
+      audio.currentTime = value;
       this.setState({
         // currentTime:
         //   value === parseInt(videoMaxDuration) ? videoMaxDuration : value,
@@ -419,6 +480,7 @@ class MoveDetails extends React.Component {
       });
     } else {
       vid.currentTime = value;
+      audio.currentTime = value;
       this.setState({
         isChange: false
         // currentTime: value
@@ -435,10 +497,12 @@ class MoveDetails extends React.Component {
   handleMouseLeave = time => {
     const { min, max } = time;
     const vid = document.getElementById("video-trimmer");
+    const audio = document.getElementById("audio-trimmer");
     if (vid) {
       if (vid.currentTime.toFixed(2) > min && vid.currentTime < max) {
       } else {
         vid.currentTime = min;
+        audio.currentTime = min;
         this.setState({
           currentTime: min,
           isChange: true
@@ -464,6 +528,7 @@ class MoveDetails extends React.Component {
   createAnother = data => {
     const { moveReducer } = this.props;
     const { moveDetails } = moveReducer;
+    const { setId } = this.videoDetails.current.getDetails();
     const {
       frames,
       videoMetaData,
@@ -479,18 +544,20 @@ class MoveDetails extends React.Component {
       description: "",
       timer: {
         min: 0,
-        max: 15
+        max: this.state.videoDuration
       },
       errorTitle: "",
-      selectSetOptions: "",
+      videoMaxDuration: 0,
       createNew: true,
-      totalOutput: 15
+      totalOutput: this.state.videoDuration,
+      maxLengthError:"Move can't be allow more than 15 sec."
     });
     this.props.createAnotherMoveRequest({
       moveUrl: moveDetails.videoUrl,
       frames: frames && frames.length ? frames : [],
       videoMetaData: videoMetaData ? videoMetaData : null,
       videoThumbnail,
+      setId,
       sourceUrl,
       isYoutubeUrl,
       videoName: videoName
@@ -766,7 +833,12 @@ class MoveDetails extends React.Component {
                         videoDuration={data =>
                           this.setState({
                             videoDuration: data.timeDuration,
-                            videoMaxDuration: data.videoMaxDuration
+                            videoMaxDuration: data.videoMaxDuration,
+                            totalOutput: data.videoMaxDuration,
+                            timer: {
+                              min: 0,
+                              max:  data.videoMaxDuration
+                            }
                           })
                         }
                         videoError={videoError}
@@ -847,7 +919,7 @@ class MoveDetails extends React.Component {
                 <Input
                   id="exampleFormControlInput1"
                   type="textarea"
-                  placeholder="Enter a description (optional)"
+                  placeholder="Enter a description (optional) Limit is 250 characters."
                   name="description"
                   className={
                     descError ? "form-control is-invalid" : "form-control"

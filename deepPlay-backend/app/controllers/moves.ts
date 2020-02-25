@@ -105,79 +105,6 @@ const downloadYoutubeVideo = async (
       });
     }
 
-    //Get instagram download video url
-    if (body.instagramUrl) {
-      getInstagramVideoUrl(
-        "https://www.instagram.com/p/B7fZ68Shjxp/?igshid=hqa3vif8hmtb",
-        { timeout: 15000 },
-        (error: any, info: any) => {
-          if (error) {
-            res.status(400).json({
-              message: "Instagram Url Not Supported",
-              success: false
-            });
-          }
-          console.log("====================================");
-          console.log("infooo", info);
-          console.log("====================================");
-          console.log("error", error);
-          console.log("====================================");
-          if (info) {
-            let originalVideoPath: string = "";
-            const fileName = [
-              headToken.id + Date.now() + "deep_play_video" + ".webm"
-            ].join("");
-
-            if (IsProductionMode) {
-              originalVideoPath = path.join(
-                __dirname,
-                "uploads",
-                "youtube-videos",
-                fileName
-              );
-            } else {
-              originalVideoPath = path.join(
-                __basedir,
-                "../uploads",
-                "youtube-videos",
-                fileName
-              );
-            }
-
-            let video = fs.createWriteStream(originalVideoPath);
-            const request = https.get(info.list[0].video, function(
-              response: any
-            ) {
-              response.pipe(video);
-            });
-            video.on("close", async function() {
-              const videoUrlFileName = originalVideoPath.split("uploads");
-              const videoUrl = `uploads/${videoUrlFileName[1]}`;
-              console.log("videoUrlvideoUrldsg", videoUrl);
-
-              const fileName = `${
-                videoUrl.split(".")[0]
-              }_clip_${moment().unix()}.webm`;
-
-              let videoFileMain: String | any, videoOriginalFile: String | any;
-              if (IsProductionMode) {
-                videoFileMain = path.join(__dirname, `${fileName}`);
-              } else {
-                videoFileMain = path.join(__dirname, "..", `${fileName}`);
-              }
-
-              // if (IsProductionMode) {
-              //   videoOriginalFile = path.join(__dirname, `${result.videoUrl}`);
-              // } else {
-              //   videoOriginalFile = path.join(__dirname, "..", `${result.videoUrl}`);
-              // }
-            });
-          }
-        }
-      );
-    }
-    // end instagram video url
-
     let videoURL: string;
     const fileName = [
       headToken.id + Date.now() + "deep_play_video" + ".webm"
@@ -195,7 +122,8 @@ const downloadYoutubeVideo = async (
     }
     /* Download youtube videos on localserver */
     const trueYoutubeUrl = ytdl.validateURL(body.url);
-    let youTubeUrl = "";
+    let youTubeUrl = "",
+      youTubeAudio = "";
     if (trueYoutubeUrl) {
       youtubedl.getInfo(body.url, async function(err: any, info: any) {
         if (err) {
@@ -215,31 +143,34 @@ const downloadYoutubeVideo = async (
         //     });
         //   }
 
-        // for (let index = 0; index < info.formats.length; index++) {
-        //   const element = info.formats[index];
-        //   if (element.resolution === "1080p") {
-        //     const temp = element.url.split("manifest.googlevideo.com");
-        //     if (temp[1]) {
-        //       youTubeUrl = info.formats[0].url;
-        //     } else {
-        //       youTubeUrl = element.url;
-        //     }
-        //   } else if (element.resolution === "720p") {
-        //     const temp = element.url.split("manifest.googlevideo.com");
-        //     if (temp[1]) {
-        //       youTubeUrl = info.formats[0].url;
-        //     } else {
-        //       youTubeUrl = element.url;
-        //     }
-        //   } else if (element.resolution === "480p") {
-        //     const temp = element.url.split("manifest.googlevideo.com");
-        //     if (temp[1]) {
-        //       youTubeUrl = info.formats[0].url;
-        //     } else {
-        //       youTubeUrl = element.url;
-        //     }
-        //   }
-        // }
+        for (let index = 0; index < info.formats.length; index++) {
+          const element = info.formats[index];
+          if (element.format === "251 - audio only (tiny)") {
+            youTubeAudio = info.formats[0].url;
+          }
+          if (element.format === "248 - 1920x1080 (1080p)") {
+            const temp = element.url.split("manifest.googlevideo.com");
+            if (temp[1]) {
+              youTubeUrl = info.formats[0].url;
+            } else {
+              youTubeUrl = element.url;
+            }
+          } else if (element.format === "247 - 1280x720 (720p)") {
+            const temp = element.url.split("manifest.googlevideo.com");
+            if (temp[1]) {
+              youTubeUrl = info.formats[0].url;
+            } else {
+              youTubeUrl = element.url;
+            }
+          } else if (element.format === "135 - 854x480 (480p)") {
+            const temp = element.url.split("manifest.googlevideo.com");
+            if (temp[1]) {
+              youTubeUrl = info.formats[0].url;
+            } else {
+              youTubeUrl = element.url;
+            }
+          }
+        }
 
         if (info) {
           if (info._duration_raw >= 3600) {
@@ -248,19 +179,21 @@ const downloadYoutubeVideo = async (
               success: false
             });
           }
+          console.log("infoinfo", youTubeAudio);
 
           const thumbImg =
             info.thumbnails && info.thumbnails.length
               ? info.thumbnails[0].url
               : [];
 
-          youTubeUrl = info.url;
+          // youTubeUrl = info.url;
           const moveResult: Document | any = new MoveModel({
             videoUrl: youTubeUrl,
             sourceUrl: body.url,
             isYoutubeUrl: true,
             userId: headToken.id,
             videoThumbnail: thumbImg,
+            audioUrl: youTubeAudio ? youTubeAudio : "",
             setId: body.setId !== "undefined" ? body.setId : null
           });
           await moveResult.save();
@@ -333,7 +266,8 @@ const createMove = async (req: Request, res: Response): Promise<any> => {
       videoName,
       sourceUrl,
       isYoutubeUrl,
-      videoThumbnail
+      videoThumbnail,
+      setId
     } = body;
 
     let headToken: Request | any = currentUser;
@@ -350,6 +284,7 @@ const createMove = async (req: Request, res: Response): Promise<any> => {
       sourceUrl: sourceUrl,
       videoThumbnail: videoThumbnail ? videoThumbnail : null,
       videoName: videoName ? videoName : null,
+      setId: setId? setId : null,
       isYoutubeUrl: isYoutubeUrl ? isYoutubeUrl : false
     });
     await moveResult.save();

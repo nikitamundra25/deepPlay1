@@ -147,7 +147,7 @@ class EditMoveModal extends React.Component {
               <Input
                 id="description"
                 type="textarea"
-                placeholder="Enter a description (optional)"
+                placeholder="Enter a description (optional) Limit is 250 characters."
                 name="description"
                 className={errors.description ? "is-invalid" : ""}
                 onChange={this.handleChange}
@@ -165,7 +165,7 @@ class EditMoveModal extends React.Component {
               <Input
                 id="set"
                 type="text"
-                placeholder="Enter a description (optional)"
+                placeholder="Enter a description (optional) Limit is 250 characters."
                 name="sets"
                 disabled={true}
                 value={sets}
