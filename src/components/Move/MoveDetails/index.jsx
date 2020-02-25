@@ -784,7 +784,8 @@ class MoveDetails extends React.Component {
                         videoDuration={data =>
                           this.setState({
                             videoDuration: data.timeDuration,
-                            videoMaxDuration: data.videoMaxDuration
+                            videoMaxDuration: data.videoMaxDuration,
+                            totalOutput: data.videoMaxDuration
                           })
                         }
                         videoError={videoError}
