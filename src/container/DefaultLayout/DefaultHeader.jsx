@@ -245,11 +245,12 @@ class DefaultHeader extends React.Component {
 
   liveChatEnable = e => {
     e.preventDefault();
-    let tagData = document.getElementsByClassName("zsiq_float");
+    let tagData = document.getElementsByClassName("fc-widget-normal");
+
     if (!this.state.liveChatEnabled) {
-      tagData[0].classList.add("zsiq_float_show");
+      tagData[0].classList.add("fc-widget-normal_show");
     } else {
-      tagData[0].classList.remove("zsiq_float_show");
+      tagData[0].classList.remove("fc-widget-normal_show");
     }
     this.setState({
       liveChatEnabled: !this.state.liveChatEnabled

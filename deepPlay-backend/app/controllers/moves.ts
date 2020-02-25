@@ -266,7 +266,8 @@ const createMove = async (req: Request, res: Response): Promise<any> => {
       videoName,
       sourceUrl,
       isYoutubeUrl,
-      videoThumbnail
+      videoThumbnail,
+      setId
     } = body;
 
     let headToken: Request | any = currentUser;
@@ -283,6 +284,7 @@ const createMove = async (req: Request, res: Response): Promise<any> => {
       sourceUrl: sourceUrl,
       videoThumbnail: videoThumbnail ? videoThumbnail : null,
       videoName: videoName ? videoName : null,
+      setId: setId? setId : null,
       isYoutubeUrl: isYoutubeUrl ? isYoutubeUrl : false
     });
     await moveResult.save();

@@ -58,13 +58,15 @@ class Dashboard extends React.Component {
           !recentFolders.length ? (
             <div className="create-set-section w-100 empty-folder-section">
               <Card className="set-content-wrap empty-folder-card">
-                <div className="set-content-block w-100 empty-folder-wrap">
+                <div className="set-content-block w-100 empty-folder-wrap text-center">
                   <CardHeader className="empty-folder-header">
                     <img src={emptyFolderIc} alt={"folder"} />
                     <div className="content-header set-header">
                       <span className="content-title">
                         {" "}
-                        <h3>You haven't visited any folder & sets yet</h3>
+                        <h3>Lets get you Started! 
+                          <br/>
+Create your folders and sets to organize your work.</h3>
                       </span>
                     </div>
                   </CardHeader>
@@ -213,13 +215,13 @@ class Dashboard extends React.Component {
                         <Col>
                           <div className="create-set-section w-100 empty-folder-section sjp">
                             <Card className="set-content-wrap empty-folder-card">
-                              <div className="set-content-block w-100 empty-folder-wrap">
+                              <div className="set-content-block w-100 empty-folder-wrap text-center">
                                 <CardHeader className="empty-folder-header">
                                   <img src={emptySetIc} alt={"Folder"} />
                                   <div className="content-header set-header">
                                     <span className="content-title">
                                       {" "}
-                                      <h3>You haven't visited any set yet</h3>
+                                      <h3>Create your sets to organize your work.</h3>
                                     </span>
                                   </div>
                                 </CardHeader>
@@ -354,14 +356,14 @@ class Dashboard extends React.Component {
                         <Col>
                           <div className="create-set-section w-100 empty-folder-section">
                             <Card className="set-content-wrap empty-folder-card">
-                              <div className="set-content-block w-100 empty-folder-wrap">
+                              <div className="set-content-block w-100 empty-folder-wrap text-center">
                                 <CardHeader className="empty-folder-header">
                                   <img src={emptyFolderIc} alt={"folder"} />
                                   <div className="content-header set-header">
                                     <span className="content-title">
                                       {" "}
                                       <h3>
-                                        You haven't visited any folder yet
+                                      Create your folders to organize your work.
                                       </h3>
                                     </span>
                                   </div>

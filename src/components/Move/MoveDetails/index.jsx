@@ -145,6 +145,7 @@ class MoveDetails extends React.Component {
     }
 
     if (moveReducer.moveDetails !== this.props.moveReducer.moveDetails) {
+  
       if (this.props.moveReducer.moveDetails) {
         const {
           title,
@@ -168,40 +169,43 @@ class MoveDetails extends React.Component {
             );
           }
         }
-        const { allSetList } = this.props.setReducer;
-        let selectOption;
-        if (allSetList && allSetList.length) {
-          // eslint-disable-next-line
-          allSetList.map(data => {
-            if (setId) {
-              if (setId === data._id) {
-                selectOption = {
-                  label:
-                    data && data.isCopy
-                      ? `${data.title} ${
-                          data.copyCount > 0 ? `(${data.copyCount})` : ""
-                        }`
-                      : data.title,
-                  value: data._id
-                };
-              }
-              this.setState({
-                selectedSetId: setId
-              });
-            }
-          });
-        }
+        // const { allSetList } = this.props.setReducer;
+        // let selectOption;
+        // console.log("setId",allSetList);
+        
+        // if (allSetList && allSetList.length) {
+        //   // eslint-disable-next-line
+        //   allSetList.map(data => {
+        //     if (setId) {
+        //       if (setId === data._id) {
+        //         selectOption = {
+        //           label:
+        //             data && data.isCopy
+        //               ? `${data.title} ${
+        //                   data.copyCount > 0 ? `(${data.copyCount})` : ""
+        //                 }`
+        //               : data.title,
+        //           value: data._id
+        //         };
+        //       }
+        //       this.setState({
+        //         selectedSetId: setId
+        //       });
+        //     }
+        //   });
+        // }
+        
         this.setState({
           title,
           description,
           tags,
           timer: { min: 0.1, max: 15.1 },
-          selectSetOptions: selectOption
-            ? selectOption
-            : {
-                label: "Type to select sets",
-                value: ""
-              }
+          // selectSetOptions: selectOption
+          //   ? selectOption
+          //   : {
+          //       label: "Type to select sets",
+          //       value: ""
+          //     }
         });
       }
       if (this.video) {
@@ -213,6 +217,42 @@ class MoveDetails extends React.Component {
             currentTime: currentVideoTime
           });
         });
+      }
+    }
+    if(setReducer !== this.props.setReducer){
+      const {
+        setId,
+      } = this.props.moveReducer.moveDetails;
+      const { allSetList } = this.props.setReducer;
+      let selectOption;
+      if (allSetList && allSetList.length) {
+        // eslint-disable-next-line
+        allSetList.map(data => {
+          if (setId) {
+            if (setId === data._id) {
+              selectOption = {
+                label:
+                  data && data.isCopy
+                    ? `${data.title} ${
+                        data.copyCount > 0 ? `(${data.copyCount})` : ""
+                      }`
+                    : data.title,
+                value: data._id
+              };
+            }
+            this.setState({
+              selectedSetId: setId
+            });
+          }
+        });
+        this.setState({
+          selectSetOptions: selectOption
+          ? selectOption
+          : {
+              label: "Type to select sets",
+              value: ""
+            }
+        })
       }
     }
     if (
@@ -227,19 +267,25 @@ class MoveDetails extends React.Component {
         }
       });
     }
+
     this.audio = document.getElementById("audio-trimmer");
-    if (this.video) {
+    
+    if (this.video ) {
       this.video.onpause = () => {
         this.setState({
           isPlaying: false
         });
-        this.audio.pause();
+     if(this.audio) {
+         this.audio.pause();
+         }
       };
       this.video.onplay = () => {
         this.setState({
           isPlaying: true
         });
+        if(this.audio) {
         this.audio.play();
+        }
       };
     }
   };
@@ -482,6 +528,7 @@ class MoveDetails extends React.Component {
   createAnother = data => {
     const { moveReducer } = this.props;
     const { moveDetails } = moveReducer;
+    const { setId } = this.videoDetails.current.getDetails();
     const {
       frames,
       videoMetaData,
@@ -497,18 +544,20 @@ class MoveDetails extends React.Component {
       description: "",
       timer: {
         min: 0,
-        max: 15
+        max: this.state.videoDuration
       },
       errorTitle: "",
-      selectSetOptions: "",
+      videoMaxDuration: 0,
       createNew: true,
-      totalOutput: 15
+      totalOutput: this.state.videoDuration,
+      maxLengthError:"Move can't be allow more than 15 sec."
     });
     this.props.createAnotherMoveRequest({
       moveUrl: moveDetails.videoUrl,
       frames: frames && frames.length ? frames : [],
       videoMetaData: videoMetaData ? videoMetaData : null,
       videoThumbnail,
+      setId,
       sourceUrl,
       isYoutubeUrl,
       videoName: videoName
@@ -785,7 +834,11 @@ class MoveDetails extends React.Component {
                           this.setState({
                             videoDuration: data.timeDuration,
                             videoMaxDuration: data.videoMaxDuration,
-                            totalOutput: data.videoMaxDuration
+                            totalOutput: data.videoMaxDuration,
+                            timer: {
+                              min: 0,
+                              max:  data.videoMaxDuration
+                            }
                           })
                         }
                         videoError={videoError}
@@ -866,7 +919,7 @@ class MoveDetails extends React.Component {
                 <Input
                   id="exampleFormControlInput1"
                   type="textarea"
-                  placeholder="Enter a description (optional)"
+                  placeholder="Enter a description (optional) Limit is 250 characters."
                   name="description"
                   className={
                     descError ? "form-control is-invalid" : "form-control"

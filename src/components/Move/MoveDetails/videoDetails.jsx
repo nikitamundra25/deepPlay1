@@ -15,7 +15,7 @@ class VideoDetails extends React.Component {
     this.state = {
       time: {
         min: 0,
-        max: 187
+        max: 2000
       },
       focusTip: false
     };

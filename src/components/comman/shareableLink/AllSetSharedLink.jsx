@@ -140,7 +140,7 @@ class AllSetSharedLink extends React.Component {
                   <Col>
                     <div className="create-set-section w-100 empty-folder-section">
                       <Card className="set-content-wrap empty-folder-card ">
-                        <div className="set-content-block w-100 empty-folder-wrap">
+                        <div className="set-content-block w-100 empty-folder-wrap text-center">
                           <CardHeader className="empty-folder-header ">
                             <img src={emptySetIc} alt={"Images"} />
                             <div className="content-header set-header">

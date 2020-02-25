@@ -257,7 +257,7 @@ class FolderComponent extends React.Component {
                   <Col>
                     <div className="create-set-section mt-2 w-100">
                       <Card className="set-content-wrap">
-                        <div className="set-content-block w-100 empty-folder-wrap">
+                        <div className="set-content-block w-100 empty-folder-wrap text-center">
                           <CardHeader className="empty-folder-header">
                             <img src={emptyFolderIc} alt={"folder"} />
                             <div className="content-header set-header">
