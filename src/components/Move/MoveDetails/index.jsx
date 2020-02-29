@@ -401,8 +401,8 @@ class MoveDetails extends React.Component {
           })
         : this.props.completeYouTubeVideoEditing({
             timer: {
-              min: parseInt(timer.min),
-              max: parseInt(timer.max)
+              min: timer.min,
+              max: timer.max
             },
             moveId,
             tags,
