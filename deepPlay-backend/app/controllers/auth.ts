@@ -197,12 +197,13 @@ Created By:- Rishabh Bula */
 const socialSignup = async (req: Request, res: Response) => {
   const { body } = req;
   try {
+    console.log("********************In social Signup",);
     if (body.accessToken) {
       const userData: Document | null = await UserModel.findOne({
         email: body.email,
         isDeleted: false
       });
-      console.log("User data", userData);
+      console.log("********************User data", userData);
 
       if (!userData) {
         const userSignup: IUser = {
