@@ -13,7 +13,9 @@ import AsyncSelect from "react-select/async";
 import { AppConfig } from "../../../config/Appconfig";
 import videoLoading from "../../../assets/img/loder/loader.svg";
 import { AppRoutes } from "config/AppRoutes";
+import InputRange from "react-input-range";
 import "./index.scss";
+import { SecondsToMMSS } from "helper/Time";
 
 // core components
 class VideoView extends React.Component {
@@ -27,7 +29,15 @@ class VideoView extends React.Component {
       isBufferingVideo: false,
       videoCanPlay: false,
       videoData: false,
-      videoError: false
+      videoError: false,
+      isMuted: false,
+      audioSpeed: 1,
+      currentTime: 0,
+      videoDuration: {},
+      doubleClick: false,
+      error: "",
+      isMouseMove: false,
+      mouseOnControls: false
     };
   }
   /**
@@ -73,12 +83,71 @@ class VideoView extends React.Component {
         videoMaxDuration: duration
       };
       this.props.videoDuration(data);
+      this.setState({
+        videoDuration: data
+      });
     };
   }
   /**
    *
    */
-  componentDidUpdate({ timer: oldTimer, moveReducer }) {
+  onVolumeChange = value => {
+    this.audio = document.getElementById("audio-trimmer");
+    this.setState({
+      audioSpeed: value,
+      isMuted: value === 0
+    });
+    this.audio.volume = value;
+  };
+
+  toggleMute = () => {
+    const { isMuted } = this.state;
+    this.audio = document.getElementById("audio-trimmer");
+    if (isMuted === false) {
+      this.audio.muted = true;
+    } else {
+      this.audio.muted = false;
+    }
+    this.setState({
+      isMuted: !isMuted
+    });
+  };
+
+  handleVideoFullScreen = () => {
+    this.customVideo = document.getElementById("video-trimmer");
+    if (!this.props.isPlaying) {
+      this.props.handlePlayPause();
+    }
+    if (this.customVideo.mozRequestFullScreen) {
+      this.customVideo.mozRequestFullScreen();
+    } else if (this.customVideo.webkitRequestFullScreen) {
+      this.customVideo.webkitRequestFullScreen();
+      this.props.videoFullscreenReq();
+      this.setState({
+        isFullScreenMode: true
+      });
+    } else if (this.customVideo.webkitEnterFullscreen) {
+      this.customVideo.webkitEnterFullscreen();
+      this.props.videoFullscreenReq();
+      this.setState({
+        isFullScreenMode: true
+      });
+    }
+  };
+
+  labelValueChange = value => {
+    this.video = document.getElementById("video-trimmer");
+    this.audio = document.getElementById("audio-trimmer");
+    this.video.currentTime = value;
+    this.audio.currentTime = value;
+    this.setState({
+      currentTime: parseFloat(value)
+    });
+  };
+  /**
+   *
+   */
+  componentDidUpdate({ timer: oldTimer, moveReducer, isFullScreenMode }) {
     const prevMoveData = moveReducer.isCreatingAnotherMove;
     const newMoveData = this.props.moveReducer
       ? this.props.moveReducer.isCreatingAnotherMove
@@ -125,9 +194,17 @@ class VideoView extends React.Component {
             audio.currentTime = min;
           }
         }
+        this.setState({
+          currentTime: vid.currentTime
+        });
       };
     }
-
+    if (isFullScreenMode !== this.props.isFullScreenMode) {
+      if (this.video) {
+        this.audio.controls = false;
+        this.video.controls = false;
+      }
+    }
     if (prevMoveData !== newMoveData) {
       this.video.load();
     }
@@ -140,7 +217,6 @@ class VideoView extends React.Component {
         // }
       }
     };
-
     vid.onwaiting = () => {
       this.setState({
         isBufferingVideo: true
@@ -213,12 +289,21 @@ class VideoView extends React.Component {
       setReducer,
       tags,
       errors,
-      tagsList
+      tagsList,
+      isPlaying,
+      handlePlayPause
     } = this.props;
     const { moveDetails } = moveReducer;
     const { allSetList, recentSetAdded } = setReducer;
 
-    const { /* isBufferingVideo */ videoCanPlay } = this.state;
+    const {
+      /* isBufferingVideo */ videoCanPlay,
+      audioSpeed,
+      isMuted,
+      isFullScreenMode1,
+      videoDuration,
+      currentTime
+    } = this.state;
     let recentAddedSet,
       defaultSetoptions = [];
     if (allSetList && allSetList.length) {
@@ -266,7 +351,7 @@ class VideoView extends React.Component {
                   <img src={videoLoading} alt="" />
                 </div>
               ) : null} */}
-              <div className="video-player-inner-wrap">
+              <div className="video-player-inner-wrap custom-video-player">
                 {!videoError ? (
                   !videoCanPlay ? (
                     <div className="video-spinner z-">
@@ -308,12 +393,10 @@ class VideoView extends React.Component {
                   muted={false}
                   playsInline
                   onError={e => playbackFailed(e)}
-                  controls
                   // onContextMenu={e => e.preventDefault()}
                   disablepictureinpicture="true"
                   controlsList="nodownload"
                   preload={"auto"}
-                  
                 >
                   <source
                     src={
@@ -323,7 +406,116 @@ class VideoView extends React.Component {
                     }
                   />
                 </video>
-                <audio id={"audio-trimmer"} controls autoPlay>
+                <div>
+                  <div
+                    className={"controls"}
+                    onMouseOver={isFullScreenMode1 ? this.onMouseOver : null}
+                    onMouseLeave={
+                      isFullScreenMode1
+                        ? () =>
+                            this.setState({
+                              mouseOnControls: false
+                            })
+                        : null
+                    }
+                  >
+                    <div className="control-background-wrap"></div>
+                    <InputRange
+                      draggableTrack={false}
+                      maxValue={videoDuration.videoMaxDuration}
+                      minValue={0}
+                      step={0.05}
+                      formatLabel={value => ``}
+                      value={currentTime}
+                      onChange={this.labelValueChange}
+                    />
+                    <div className={"controls-wrap"}>
+                      <div className={"control-left-block"}>
+                        <div className="play-paus-wrap control-tile">
+                          {isPlaying ? (
+                            <span
+                              onClick={handlePlayPause}
+                              className={"cursor_pointer"}
+                            >
+                              <i className={"fa fa-pause"}></i>
+                            </span>
+                          ) : (
+                            <span
+                              onClick={handlePlayPause}
+                              className={"cursor_pointer"}
+                            >
+                              <i className={"fa fa-play"}></i>
+                            </span>
+                          )}
+                        </div>
+                        <div className="video-time-wrap control-tile">
+                          {SecondsToMMSS(parseInt(currentTime))} /{" "}
+                          {SecondsToMMSS(
+                            parseInt(
+                              videoDuration ? videoDuration.videoMaxDuration : 0
+                            )
+                          )}
+                        </div>
+                        <div className="volume-up-down control-tile">
+                          <span
+                            onClick={this.toggleMute}
+                            className={"cursor_pointer"}
+                          >
+                            {isMuted ? (
+                              <i className="fas fa-volume-mute"></i>
+                            ) : audioSpeed ? (
+                              audioSpeed > 0.6 ? (
+                                <i className="fas fa-volume-up"></i>
+                              ) : (
+                                <i className="fas fa-volume-down"></i>
+                              )
+                            ) : (
+                              <i className="fas fa-volume-mute"></i>
+                            )}
+                          </span>
+                        </div>
+                        <div className="volume-range cursor_pointer control-tile">
+                          <div
+                            style={{
+                              width: 100
+                            }}
+                          >
+                            <InputRange
+                              draggableTrack={false}
+                              maxValue={1}
+                              minValue={0}
+                              step={0.1}
+                              formatLabel={value => ``}
+                              value={audioSpeed}
+                              onChange={this.onVolumeChange}
+                            />
+                          </div>
+                        </div>
+                      </div>
+                      <div className="control-right-block">
+                        {!isFullScreenMode1 ? (
+                          <span
+                            onClick={() => this.handleVideoFullScreen()}
+                            className="control-tile cursor_pointer"
+                          >
+                            <i className="fas fa-expand" />
+                          </span>
+                        ) : (
+                          <span
+                            onClick={() => this.handleVideoResizeScreen()}
+                            className="control-tile cursor_pointer"
+                          >
+                            <i
+                              className="fa fa-arrows-alt"
+                              aria-hidden="true"
+                            />
+                          </span>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <audio id={"audio-trimmer"} controls autoPlay loop>
                   <source src={moveDetails.audioUrl} type="audio/ogg" />
                 </audio>
               </div>

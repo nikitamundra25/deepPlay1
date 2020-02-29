@@ -33,7 +33,8 @@ import {
   getTagListRequest,
   createSetRequest,
   noIAmDoneRequest,
-  YoutubeUpdateMoveRequest
+  YoutubeUpdateMoveRequest,
+  videoFullscreenReq
 } from "../../../actions";
 import "./index.scss";
 import Loader from "components/comman/Loader/Loader";
@@ -78,7 +79,7 @@ class MoveDetails extends React.Component {
       currentTime: 0,
       totalOutput: 15,
       isChange: true,
-      maxLengthError:"Move can't be allow more than 15 sec."
+      maxLengthError: "Move can't be allow more than 15 sec."
     };
     this.videoDetails = React.createRef();
   }
@@ -145,7 +146,6 @@ class MoveDetails extends React.Component {
     }
 
     if (moveReducer.moveDetails !== this.props.moveReducer.moveDetails) {
-  
       if (this.props.moveReducer.moveDetails) {
         const {
           title,
@@ -169,37 +169,37 @@ class MoveDetails extends React.Component {
             );
           }
         }
-        // const { allSetList } = this.props.setReducer;
-        // let selectOption;
-        // console.log("setId",allSetList);
-        
-        // if (allSetList && allSetList.length) {
-        //   // eslint-disable-next-line
-        //   allSetList.map(data => {
-        //     if (setId) {
-        //       if (setId === data._id) {
-        //         selectOption = {
-        //           label:
-        //             data && data.isCopy
-        //               ? `${data.title} ${
-        //                   data.copyCount > 0 ? `(${data.copyCount})` : ""
-        //                 }`
-        //               : data.title,
-        //           value: data._id
-        //         };
-        //       }
-        //       this.setState({
-        //         selectedSetId: setId
-        //       });
-        //     }
-        //   });
-        // }
-        
+        const { allSetList } = this.props.setReducer;
+        let selectOption;
+        console.log("setId", allSetList);
+
+        if (allSetList && allSetList.length) {
+          // eslint-disable-next-line
+          allSetList.map(data => {
+            if (setId) {
+              if (setId === data._id) {
+                selectOption = {
+                  label:
+                    data && data.isCopy
+                      ? `${data.title} ${
+                          data.copyCount > 0 ? `(${data.copyCount})` : ""
+                        }`
+                      : data.title,
+                  value: data._id
+                };
+              }
+              this.setState({
+                selectedSetId: setId
+              });
+            }
+          });
+        }
+
         this.setState({
           title,
           description,
           tags,
-          timer: { min: 0.1, max: 15.1 },
+          timer: { min: 0.1, max: 15.1 }
           // selectSetOptions: selectOption
           //   ? selectOption
           //   : {
@@ -219,42 +219,42 @@ class MoveDetails extends React.Component {
         });
       }
     }
-    if(setReducer !== this.props.setReducer){
-      const {
-        setId,
-      } = this.props.moveReducer.moveDetails;
-      const { allSetList } = this.props.setReducer;
-      let selectOption;
-      if (allSetList && allSetList.length) {
-        // eslint-disable-next-line
-        allSetList.map(data => {
-          if (setId) {
-            if (setId === data._id) {
-              selectOption = {
-                label:
-                  data && data.isCopy
-                    ? `${data.title} ${
-                        data.copyCount > 0 ? `(${data.copyCount})` : ""
-                      }`
-                    : data.title,
-                value: data._id
-              };
-            }
-            this.setState({
-              selectedSetId: setId
-            });
-          }
-        });
-        this.setState({
-          selectSetOptions: selectOption
-          ? selectOption
-          : {
-              label: "Type to select sets",
-              value: ""
-            }
-        })
-      }
-    }
+    // if(setReducer !== this.props.setReducer){
+    //   const {
+    //     setId,
+    //   } = this.props.moveReducer.moveDetails;
+    //   const { allSetList } = this.props.setReducer;
+    //   let selectOption;
+    //   if (allSetList && allSetList.length) {
+    //     // eslint-disable-next-line
+    //     allSetList.map(data => {
+    //       if (setId) {
+    //         if (setId === data._id) {
+    //           selectOption = {
+    //             label:
+    //               data && data.isCopy
+    //                 ? `${data.title} ${
+    //                     data.copyCount > 0 ? `(${data.copyCount})` : ""
+    //                   }`
+    //                 : data.title,
+    //             value: data._id
+    //           };
+    //         }
+    //         this.setState({
+    //           selectedSetId: setId
+    //         });
+    //       }
+    //     });
+    //     this.setState({
+    //       selectSetOptions: selectOption
+    //       ? selectOption
+    //       : {
+    //           label: "Type to select sets",
+    //           value: ""
+    //         }
+    //     })
+    //   }
+    // }
     if (
       this.props.setReducer &&
       this.props.setReducer.recentSetAdded !== setReducer.recentSetAdded
@@ -269,22 +269,22 @@ class MoveDetails extends React.Component {
     }
 
     this.audio = document.getElementById("audio-trimmer");
-    
-    if (this.video ) {
+
+    if (this.video) {
       this.video.onpause = () => {
         this.setState({
           isPlaying: false
         });
-     if(this.audio) {
-         this.audio.pause();
-         }
+        if (this.audio) {
+          this.audio.pause();
+        }
       };
       this.video.onplay = () => {
         this.setState({
           isPlaying: true
         });
-        if(this.audio) {
-        this.audio.play();
+        if (this.audio) {
+          this.audio.play();
         }
       };
     }
@@ -550,7 +550,7 @@ class MoveDetails extends React.Component {
       videoMaxDuration: 0,
       createNew: true,
       totalOutput: this.state.videoDuration,
-      maxLengthError:"Move can't be allow more than 15 sec."
+      maxLengthError: "Move can't be allow more than 15 sec."
     });
     this.props.createAnotherMoveRequest({
       moveUrl: moveDetails.videoUrl,
@@ -714,7 +714,8 @@ class MoveDetails extends React.Component {
       setReducer,
       moveReducer,
       modelInfoReducer,
-      getAllSetRequest
+      getAllSetRequest,
+      videoFullscreenReq
     } = this.props;
     const { modelDetails } = modelInfoReducer;
     const {
@@ -727,7 +728,8 @@ class MoveDetails extends React.Component {
       isSavingWebM,
       tagsList,
       moveUrlDetails,
-      isCreatingAnotherMove
+      isCreatingAnotherMove,
+      isFullScreenMode
       // isIosDevice,
     } = moveReducer;
     const { isYoutubeUrl } = moveDetails || {};
@@ -830,6 +832,7 @@ class MoveDetails extends React.Component {
                         setReducer={setReducer}
                         storeVideoFrames={this.storeVideoFrames}
                         isYoutubeUrl={isYoutubeUrl}
+                        videoFullscreenReq={videoFullscreenReq}
                         videoDuration={data =>
                           this.setState({
                             videoDuration: data.timeDuration,
@@ -837,10 +840,11 @@ class MoveDetails extends React.Component {
                             totalOutput: data.videoMaxDuration,
                             timer: {
                               min: 0,
-                              max:  data.videoMaxDuration
+                              max: data.videoMaxDuration
                             }
                           })
                         }
+                        isFullScreenMode={isFullScreenMode}
                         videoError={videoError}
                         onBlur={this.onBlur}
                         handleTagChange={this.handleTagChange}
@@ -854,6 +858,7 @@ class MoveDetails extends React.Component {
                         handleInputChange={this.handleInputChange}
                         setId={moveDetails ? moveDetails.setId : null}
                         isChange={isChange}
+                        handlePlayPause={this.handlePlayPause}
                       />
                       <VideoDetails
                         handlePlayPause={this.handlePlayPause}
@@ -1000,7 +1005,10 @@ const mapDispatchToProps = dispatch => ({
     dispatch(createSetRequest(data));
   },
   noIAmDoneRequest: data => dispatch(noIAmDoneRequest(data)),
-  completeYouTubeVideoEditing: data => dispatch(YoutubeUpdateMoveRequest(data))
+  completeYouTubeVideoEditing: data => dispatch(YoutubeUpdateMoveRequest(data)),
+  videoFullscreenReq: data => {
+    dispatch(videoFullscreenReq(data));
+  }
 });
 export default connect(
   mapStateToProps,

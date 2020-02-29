@@ -139,7 +139,7 @@ componentDidUpdate = ({videoMaxDuration}) => {
         if (name === "from") {
           if (e.keyCode === 38) {
             let changeValue = {
-              min: min + 0.1,
+              min: min + 0.03,
               max: max
             };
 
@@ -158,7 +158,7 @@ componentDidUpdate = ({videoMaxDuration}) => {
                   SecondsToMMSSMM(min) === "00:00.00" ||
                   SecondsToMMSSMM(min) === "00:00.10"
                     ? 0
-                    : min - 0.1,
+                    : min - 0.03,
                 max: max
               };
               this.setState(
@@ -178,7 +178,7 @@ componentDidUpdate = ({videoMaxDuration}) => {
             ) {
               let changeValue = {
                 min: min,
-                max: max + 0.1,
+                max: max + 0.03,
                 to: true
               };
 
@@ -209,7 +209,7 @@ componentDidUpdate = ({videoMaxDuration}) => {
           } else if (e.keyCode === 40) {
             let changeValue = {
               min: min,
-              max: max - 0.1,
+              max: max - 0.03,
               to: true
             };
 
@@ -249,7 +249,7 @@ componentDidUpdate = ({videoMaxDuration}) => {
                   SecondsToMMSSMM(min) === "00:00.00" ||
                   SecondsToMMSSMM(min) === "00:00.10"
                     ? 0
-                    : min - 0.1,
+                    : min - 0.03,
                 max: max
               };
 
@@ -270,7 +270,7 @@ componentDidUpdate = ({videoMaxDuration}) => {
             ) {
               let changeValue = {
                 min: min,
-                max: max + 0.1,
+                max: max + 0.03,
                 to: true
               };
 
@@ -502,7 +502,7 @@ componentDidUpdate = ({videoMaxDuration}) => {
 
                     <InputRange
                       draggableTrack
-                      step={0.1}
+                      step={0.03}
                       maxValue={videoMaxDuration}
                       minValue={0}
                       value={time}
