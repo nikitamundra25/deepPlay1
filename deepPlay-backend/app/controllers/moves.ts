@@ -284,7 +284,7 @@ const createMove = async (req: Request, res: Response): Promise<any> => {
       sourceUrl: sourceUrl,
       videoThumbnail: videoThumbnail ? videoThumbnail : null,
       videoName: videoName ? videoName : null,
-      setId: setId? setId : null,
+      setId: setId ? setId : null,
       isYoutubeUrl: isYoutubeUrl ? isYoutubeUrl : false
     });
     await moveResult.save();
@@ -517,6 +517,7 @@ const updateMoveDetailsFromYouTubeAndTrim = async (
     const { body, currentUser } = req;
     let headToken: Request | any = currentUser;
     const { timer, moveId, title, description, tags, setId } = body;
+    console.log("Timmer", timer);
     const result: Document | null | any = await MoveModel.findById(moveId);
     const temp: Document | null | any = await SetModel.findById(setId);
     const setData = temp.isVideoProcessing;

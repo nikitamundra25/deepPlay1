@@ -157,7 +157,7 @@ class LoginComponent extends React.Component {
                 <div className="btn-wrapper text-center social-media-wrap">
                   <span className="btn-inner--icon mr-2 facebook-wrap">
                     <FacebookLogin
-                      appId="194959544980237"
+                      appId="429677604320021"
                       autoLoad={false}
                       fields="name,email,picture"
                       textButton={"Facebook"}
