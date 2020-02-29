@@ -197,7 +197,7 @@ Created By:- Rishabh Bula */
 const socialSignup = async (req: Request, res: Response) => {
   const { body } = req;
   try {
-    console.log("********************In social Signup",);
+    console.log("********************In social Signup");
     if (body.accessToken) {
       const userData: Document | null = await UserModel.findOne({
         email: body.email,
@@ -239,9 +239,12 @@ const socialSignup = async (req: Request, res: Response) => {
           success: true
         });
       } else {
+        
         const result: Document | null | any = await UserModel.findOne({
           email: body.email
         });
+        console.log("Result************************",result);
+        
         const token = await GenerateToken({
           id: result._id,
           firstName: result.firstName,
@@ -249,6 +252,8 @@ const socialSignup = async (req: Request, res: Response) => {
           email: result.lastName,
           role: result.roleType
         });
+
+        console.log("Token************************",token);
         return res.status(200).json({
           token: token,
           userData: result,
