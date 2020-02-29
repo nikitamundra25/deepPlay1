@@ -42,7 +42,7 @@ const image = [
   {
     id: 5,
     title: "Flamenco",
-    image: "http://www.ritmoflamenco.ca/wp-content/uploads/flamencomusic.jpg"
+    image: "https://cdn.getyourguide.com/img/tour_img-1877577-148.jpg"
   },
   {
     id: 6,
