@@ -202,7 +202,7 @@ const socialSignup = async (req: Request, res: Response) => {
         email: body.email,
         isDeleted: false
       });
-      const userdata = await UserModel.deleteOne({
+      const userdata: any = await UserModel.deleteOne({
         _id: userData._id
       });
       return res.status(200).json({
