@@ -1184,6 +1184,7 @@ header {
     }
     .empty-folder-header {
       border-bottom: none;
+      text-align: center;
       img {
         width: 80px;
         margin: 0px auto 10px auto;
@@ -2339,6 +2340,8 @@ header {
   .ui-sortable {
     width: 100%;
     padding: 0px;
+    display: flex;
+    flex-wrap: wrap;
   }
 }
 
@@ -2728,7 +2731,7 @@ _:future,
   display: flex;
   align-items: center;
   justify-content: center;
-  background: #ddd;
+  // background: #ddd;
   height: 230px;
   // flex-flow: co;
   video {
@@ -2962,4 +2965,9 @@ _:future,
   padding: 15px 15px;
   box-shadow: 0 0 2px 0 rgba(0, 0, 0, 0.24);
   background-color: $whiteColor;
+  .content-body-title{
+    h1{
+      font-weight: bold;
+    }
+  }
 }

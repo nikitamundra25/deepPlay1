@@ -9,7 +9,7 @@ class TermsCondition extends Component {
         <Row>
           <div class="container">
             <div class="content-body-title p-3">
-              <h1>TERMS OF SERVICE</h1>
+              <h1>Terms Of Service</h1>
             </div>
              <p>Last updated: 02/01/2020</p>
             <ol>
