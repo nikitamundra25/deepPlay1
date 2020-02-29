@@ -202,6 +202,8 @@ const socialSignup = async (req: Request, res: Response) => {
         email: body.email,
         isDeleted: false
       });
+      console.log("User data", userData);
+
       if (!userData) {
         const userSignup: IUser = {
           firstName: body.firstName,
