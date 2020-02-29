@@ -202,16 +202,6 @@ const socialSignup = async (req: Request, res: Response) => {
         email: body.email,
         isDeleted: false
       });
-      console.log("*************************userData",userData);
-      
-      const userdata: any = await UserModel.deleteOne({
-        _id: userData ? userData._id : null
-      });
-      return res.status(200).json({
-        message: "User deleted Successfully.",
-        delete: userdata,
-        success: true
-      });
       if (!userData) {
         const userSignup: IUser = {
           firstName: body.firstName,
