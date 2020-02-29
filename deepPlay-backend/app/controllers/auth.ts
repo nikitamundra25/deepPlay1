@@ -206,6 +206,8 @@ const socialSignup = async (req: Request, res: Response) => {
       console.log("********************User data", userData);
 
       if (!userData) {
+        console.log("*********************In not user Data");
+        
         const userSignup: IUser = {
           firstName: body.firstName,
           lastName: body.lastName,
