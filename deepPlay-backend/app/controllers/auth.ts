@@ -241,6 +241,8 @@ const socialSignup = async (req: Request, res: Response) => {
           success: true
         });
       } else {
+        console.log("+++++++++++++++++++++++In else condition");
+        
         
         const result: Document | null | any = await UserModel.findOne({
           email: body.email
