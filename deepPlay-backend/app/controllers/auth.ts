@@ -204,10 +204,11 @@ const socialSignup = async (req: Request, res: Response) => {
         isDeleted: false
       });
       console.log("********************User data", userData);
+      console.log("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$");
 
       if (!userData) {
         console.log("*********************In not user Data");
-        
+
         const userSignup: IUser = {
           firstName: body.firstName,
           lastName: body.lastName,
@@ -242,13 +243,12 @@ const socialSignup = async (req: Request, res: Response) => {
         });
       } else {
         console.log("+++++++++++++++++++++++In else condition");
-        
-        
+
         const result: Document | null | any = await UserModel.findOne({
           email: body.email
         });
-        console.log("Result************************",result);
-        
+        console.log("Result************************", result);
+
         const token = await GenerateToken({
           id: result._id,
           firstName: result.firstName,
@@ -257,7 +257,7 @@ const socialSignup = async (req: Request, res: Response) => {
           role: result.roleType
         });
 
-        console.log("Token************************",token);
+        console.log("Token************************", token);
         return res.status(200).json({
           token: token,
           userData: result,
