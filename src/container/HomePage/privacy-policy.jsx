@@ -9,7 +9,7 @@ class PrivacyPolicy extends Component {
         <Row className="terms-service-body">
           <div className="container">
             <div className="content-body-title p-3 ">
-              <h1>PRIVACY POLICY</h1>
+              <h1>Privacy policy</h1>
             </div>
             <p>Effective date: 02/01/2020</p>
             <ol>

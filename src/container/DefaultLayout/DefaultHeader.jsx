@@ -23,7 +23,7 @@ import { AppRoutes } from "../../config/AppRoutes";
 import { SidebarComponent } from "../../components/Sidebar";
 import logoutIcon from "../../assets/img/icons/logout.svg";
 import liveChatIcon from "../../assets/img/icons/text.svg";
-
+import suggestionIcon from "../../assets/img/icons/suggestion.svg";
 import { AppConfig } from "../../config/Appconfig";
 import AllSearchComponent from "../../components/AllSearch";
 import CreateSetComponent from "../../components/Sets/createSet";
@@ -590,6 +590,16 @@ class DefaultHeader extends React.Component {
                                   ? "Chat with us"
                                   : "Close chat"}
                               </div>
+                            </DropdownItem>
+                            <DropdownItem>
+                              <a href={"https://deepplay.kampsite.co/"} target={"_blank"} className="dropdown-img">
+                                <img
+                                  src={suggestionIcon}
+                                  alt={"liveChat"}
+                                  width="20"
+                                />{" "}
+                                Suggest Feature
+                              </a>
                             </DropdownItem>
                             <DropdownItem onClick={e => logoutRequest(e)}>
                               <div className="dropdown-img">
