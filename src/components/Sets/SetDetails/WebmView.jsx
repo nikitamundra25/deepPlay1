@@ -893,7 +893,7 @@ class WebmView extends Component {
                     <img src={videoLoading} alt="" />
                   </div>
                 ) : null}
-                {!isVideoLoading ? (
+                  {!isVideoLoading ? (
                   <video
                     width={"100%"}
                     id="webm-video"

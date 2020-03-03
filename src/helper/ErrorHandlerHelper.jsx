@@ -31,17 +31,16 @@ export class ErrorHandlerHelper {
       typeof this.rawError.data === "object" &&
       this.rawError.data.message
     ) {
-      // if (
-      //   (this.rawError && this.rawError.data.message === "Token has expired") ||
-      //   (this.rawError &&
-      //     this.rawError.data.message === "Unauthorized, Invalid token!")
-      // ) {
-      //   localStorage.removeItem("token");
-      //   window.location.href = "/";
-      // } else {
-      //   this.error.messages.push(this.rawError.data.message);
-      // }
-      this.error.messages.push(this.rawError.data.message);
+      if (
+        (this.rawError && this.rawError.data.message === "Token has expired") ||
+        (this.rawError &&
+          this.rawError.data.message === "Unauthorized, Invalid token!")
+      ) {
+        localStorage.removeItem("token");
+        window.location.href = "/";
+      } else {
+        this.error.messages.push(this.rawError.data.message);
+      }
     }
     if (!this.error.messages.length) {
       this.error.error = "Unknown";
