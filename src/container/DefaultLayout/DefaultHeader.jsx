@@ -598,7 +598,7 @@ class DefaultHeader extends React.Component {
                                   alt={"liveChat"}
                                   width="20"
                                 />{" "}
-                                Suggest Feature
+                                Suggest a Feature
                               </a>
                             </DropdownItem>
                             <DropdownItem onClick={e => logoutRequest(e)}>
