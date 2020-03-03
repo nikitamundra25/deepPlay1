@@ -114,7 +114,7 @@ class VideoView extends React.Component {
   };
 
   handleVideoFullScreen = () => {
-    this.customVideo = document.getElementById("video-trimmer");
+    this.customVideo = document.getElementById("custom_video_control");
     if (!this.props.isPlaying) {
       this.props.handlePlayPause();
     }
@@ -132,6 +132,28 @@ class VideoView extends React.Component {
       this.setState({
         isFullScreenMode: true
       });
+    }
+  };
+
+  handleVideoResizeScreen = () => {
+    this.customVideo = document.getElementById("custom_video_control");
+    if (!this.props.isPlaying) {
+      this.props.handlePlayPause();
+    }
+    if (this.customVideo) {
+      if (this.customVideo.mozRequestFullScreen) {
+        document.mozCancelFullScreen();
+      } else if (this.customVideo.webkitExitFullscreen) {
+        document.exitFullscreen();
+        this.setState({
+          isFullScreenMode: false
+        });
+      } else {
+        document.exitFullscreen();
+        this.setState({
+          isFullScreenMode: false
+        });
+      }
     }
   };
 
@@ -199,6 +221,7 @@ class VideoView extends React.Component {
         });
       };
     }
+
     if (isFullScreenMode !== this.props.isFullScreenMode) {
       if (this.video) {
         this.audio.controls = false;
@@ -279,6 +302,27 @@ class VideoView extends React.Component {
   /**
    *
    */
+  onmousemove = e => {
+    this.setState({
+      isMouseMove: true
+    });
+    setTimeout(() => {
+      this.setState({
+        isMouseMove: false
+      });
+    }, 2000);
+  };
+
+  onMouseOver = () => {
+    this.setState({
+      mouseOnControls: true
+    });
+  };
+
+  /*
+   */
+  /*
+   */
   render() {
     const {
       moveReducer,
@@ -300,9 +344,9 @@ class VideoView extends React.Component {
       /* isBufferingVideo */ videoCanPlay,
       audioSpeed,
       isMuted,
-      isFullScreenMode1,
       videoDuration,
-      currentTime
+      currentTime,
+      isMouseMove
     } = this.state;
     let recentAddedSet,
       defaultSetoptions = [];
@@ -340,7 +384,25 @@ class VideoView extends React.Component {
         value: recentSetAdded._id
       };
     }
+    let isFullScreenMode1 =
+      document.fullscreenElement ||
+      document.webkitFullscreenElement ||
+      document.mozFullScreenElement ||
+      document.msFullscreenElement;
 
+    if (isFullScreenMode1) {
+      let control = document.getElementsByClassName("controls");
+      if (control[0] && !isMouseMove && !this.state.mouseOnControls) {
+        control[0].classList.add("hide-controls");
+      } else {
+        control[0].classList.remove("hide-controls");
+      }
+    } else {
+      let control = document.getElementsByClassName("controls");
+      if (control && control[0]) {
+        control[0].classList.remove("hide-controls");
+      }
+    }
     return (
       <>
         <Col lg={4} className="trim-video-view">
@@ -351,7 +413,11 @@ class VideoView extends React.Component {
                   <img src={videoLoading} alt="" />
                 </div>
               ) : null} */}
-              <div className="video-player-inner-wrap custom-video-player">
+              <div
+                className="video-player-inner-wrap custom-video-player"
+                id="custom_video_control"
+                onMouseMove={isFullScreenMode1 ? this.onmousemove : null}
+              >
                 {!videoError ? (
                   !videoCanPlay ? (
                     <div className="video-spinner z-">
@@ -379,7 +445,6 @@ class VideoView extends React.Component {
                     </span>
                   </>
                 )}
-
                 <video
                   width={"100%"}
                   autoPlay
@@ -391,6 +456,7 @@ class VideoView extends React.Component {
                   }}
                   id={"video-trimmer"}
                   muted={false}
+                  onClick={handlePlayPause}
                   playsInline
                   onError={e => playbackFailed(e)}
                   // onContextMenu={e => e.preventDefault()}
@@ -456,10 +522,13 @@ class VideoView extends React.Component {
                             )
                           )}
                         </div>
-                        <div className="volume-up-down control-tile">
+                        <div
+                          onClick={this.toggleMute}
+                          className="volume-up-down control-tile cursor_pointer"
+                        >
                           <span
                             onClick={this.toggleMute}
-                            className={"cursor_pointer"}
+                            className="cursor_pointer"
                           >
                             {isMuted ? (
                               <i className="fas fa-volume-mute"></i>

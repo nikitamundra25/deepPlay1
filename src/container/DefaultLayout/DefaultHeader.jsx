@@ -587,7 +587,7 @@ class DefaultHeader extends React.Component {
                               </div>
                               <div className="dropdown-txt">
                                 {!liveChatEnabled
-                                  ? "Chat with us"
+                                  ? "Chat With Us"
                                   : "Close chat"}
                               </div>
                             </DropdownItem>
