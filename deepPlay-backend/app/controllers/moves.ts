@@ -589,7 +589,7 @@ const updateMoveDetailsFromYouTubeAndTrim = async (
       );
     }
     let videoStream: any;
-    const video = youtubedl(result.sourceUrl, ["--format=247"], {});
+    const video = youtubedl(result.sourceUrl, ["--format=18"], {});
     // video.on('info', function(info) {
     //   console.log('Download started')
     //   console.log('filename: ' + info._filename)
