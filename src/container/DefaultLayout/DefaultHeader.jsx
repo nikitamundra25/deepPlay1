@@ -292,7 +292,7 @@ class DefaultHeader extends React.Component {
       createSetOpen,
       isVideoModalOpenReq
     } = modelDetails;
-    const { path, search, open, showVideo, liveChatEnabled } = this.state;
+    const { path, search, open, showVideo } = this.state;
     const { isLoginSuccess } = loginReducer;
     const profiledata =
       profileInfoReducer && profileInfoReducer.profileInfo
@@ -577,22 +577,26 @@ class DefaultHeader extends React.Component {
                                 return null;
                               }
                             })}
-                            <DropdownItem onClick={e => this.liveChatEnable(e)}>
-                              <div className="dropdown-img">
+                            <DropdownItem>
+                              <a
+                                href={"https://www.tidio.com/talk/deepplay"}
+                                target={"_blank"}
+                                className="dropdown-img"
+                              >
                                 <img
                                   src={liveChatIcon}
                                   alt={"liveChat"}
                                   width="20"
                                 />{" "}
-                              </div>
-                              <div className="dropdown-txt">
-                                {!liveChatEnabled
-                                  ? "Chat With Us"
-                                  : "Close chat"}
-                              </div>
+                                Chat With Us
+                              </a>
                             </DropdownItem>
                             <DropdownItem>
-                              <a href={"https://deepplay.kampsite.co/"} target={"_blank"} className="dropdown-img">
+                              <a
+                                href={"https://deepplay.kampsite.co/"}
+                                target={"_blank"}
+                                className="dropdown-img"
+                              >
                                 <img
                                   src={suggestionIcon}
                                   alt={"liveChat"}
