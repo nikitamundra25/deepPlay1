@@ -292,7 +292,7 @@ class DefaultHeader extends React.Component {
       createSetOpen,
       isVideoModalOpenReq
     } = modelDetails;
-    const { path, search, open, showVideo, liveChatEnabled } = this.state;
+    const { path, search, open, showVideo } = this.state;
     const { isLoginSuccess } = loginReducer;
     const profiledata =
       profileInfoReducer && profileInfoReducer.profileInfo
