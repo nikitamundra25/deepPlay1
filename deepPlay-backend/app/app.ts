@@ -41,11 +41,11 @@ app.use("/api/v1", router);
  *
  */
 app.get("/", (req: express.Request, res: express.Response) => {
-  req.connection.setTimeout(0)
+  req.setTimeout(0) // no timeout
   return res.sendFile(path.join(__dirname, "public", "index.html"));
 });
 app.get("/*", (req: express.Request, res: express.Response) => {
-  req.connection.setTimeout(0)  
+  req.setTimeout(0)  // no timeout
   return res.sendFile(path.join(__dirname, "public", "index.html"));
 });
 

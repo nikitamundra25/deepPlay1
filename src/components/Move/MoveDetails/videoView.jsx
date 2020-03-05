@@ -490,27 +490,27 @@ class VideoView extends React.Component {
                       draggableTrack={false}
                       maxValue={videoDuration.videoMaxDuration}
                       minValue={0}
-                      step={0.05}
+                      step={0.01}
                       formatLabel={value => ``}
                       value={currentTime}
                       onChange={this.labelValueChange}
                     />
                     <div className={"controls-wrap"}>
                       <div className={"control-left-block"}>
-                        <div className="play-paus-wrap control-tile">
+                        <div className="play-paus-wrap control-tile cursor_pointer">
                           {isPlaying ? (
                             <span
                               onClick={handlePlayPause}
                               className={"cursor_pointer"}
                             >
-                              <i className={"fa fa-pause"}></i>
+                              <i className={"fa fa-pause cursor_pointer"} onClick={handlePlayPause}></i>
                             </span>
                           ) : (
                             <span
                               onClick={handlePlayPause}
                               className={"cursor_pointer"}
                             >
-                              <i className={"fa fa-play"}></i>
+                              <i className={"fa fa-play cursor_pointer"} onClick={handlePlayPause}></i>
                             </span>
                           )}
                         </div>
@@ -584,7 +584,7 @@ class VideoView extends React.Component {
                     </div>
                   </div>
                 </div>
-                <audio id={"audio-trimmer"} controls autoPlay loop>
+                <audio id={"audio-trimmer"} className={"d-none"} controls autoPlay loop>
                   <source src={moveDetails.audioUrl} type="audio/ogg" />
                 </audio>
               </div>

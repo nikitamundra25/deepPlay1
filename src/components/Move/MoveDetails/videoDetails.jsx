@@ -485,7 +485,7 @@ componentDidUpdate = ({videoMaxDuration}) => {
                 <InputRange
                   maxValue={parseInt(videoMaxDuration)}
                   minValue={0}
-                  step={0.1}
+                  step={0.01}
                   value={parseInt(currentTime)}
                   onChange={value => handleSingleInputRange(value, time)}
                   onChangeComplete={value => handleChangeComplete(value, time)}
