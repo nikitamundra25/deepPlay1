@@ -655,6 +655,7 @@ header {
     img {
       width: 70%;
     }
+
   }
 }
 .btn-black {
@@ -1402,6 +1403,9 @@ header {
     border: 2px solid #9ca3ad;
     right: 25px;
     top: 25px;
+    &.close-with-img{
+      padding: 6px;
+    }
   }
   .card {
     margin-top: 0px;
