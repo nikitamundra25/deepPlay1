@@ -524,7 +524,7 @@ class VideoView extends React.Component {
                         </div>
                         <div
                           onClick={this.toggleMute}
-                          className="volume-up-down control-tile cursor_pointer"
+                          className="volume-up-down  control-tile cursor_pointer"
                         >
                           <span
                             onClick={this.toggleMute}
