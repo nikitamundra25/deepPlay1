@@ -114,6 +114,10 @@
   margin-top: 0.25rem;
   font-size: 100%;
   color: #dd0e0e;
+  span{
+    height: 24px;
+    display: block;
+  }
 }
 
 .range-slider .input-range__track--background .input-range__track {

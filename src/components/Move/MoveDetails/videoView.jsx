@@ -244,11 +244,13 @@ class VideoView extends React.Component {
       this.setState({
         isBufferingVideo: true
       });
+      audio.pause()
     };
     vid.oncanplay = () => {
       this.setState({
         isBufferingVideo: false
       });
+      audio.play()
     };
   }
   /**
