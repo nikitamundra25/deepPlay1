@@ -577,7 +577,7 @@ componentDidUpdate = ({videoMaxDuration}) => {
                             </Col>
                           ) : null}
                           <Col sm={12} className="p-3 video-maxlength-error">
-                            {maxLengthError ? maxLengthError : ""}
+                            <span className="">{maxLengthError ? maxLengthError : ""}</span>
                           </Col>
                         </Row>
                       </Form>
