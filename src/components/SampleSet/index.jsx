@@ -380,7 +380,6 @@ class SampleSet extends React.Component {
         sampleSet: Basketball
       })
     } else if (parsed.title === 'Martial Arts_ MMA Takedowns') {
-      alert("dsafasf");
       this.setState({
         sampleSet: MartialArts
       })
