@@ -18,43 +18,37 @@ import {
 const image = [
   {
     id: 1,
-    title: "Rumba",
+    title: "Basketball_ 5 Basic Moves",
     image:
       "https://www.rushlake-media.com/wp-content/uploads/2018/11/victor-Anastacia-1080p.jpg"
   },
   {
     id: 2,
-    title: "Zumba",
+    title: "Martial Arts_ MMA Takedowns",
     image:
       "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQmW2LRpRoa11a0iFmo5cbyagU92VXVAtLqZt1Y4sT0dQ1jMfUeUQ"
   },
   {
     id: 3,
-    title: "Tango",
+    title: "Choreography_ Boogaloo Tutorial",
     image:
       "https://static.wixstatic.com/media/727c8f_9d251f742b3c44538dbf2f2c7552192d~mv2_d_1600_1200_s_2.jpg"
   },
   {
     id: 4,
-    title: "Ballroom Dancing",
+    title: "Guitar_ Hallelujah Tutorial (Easy Version)",
     image: "https://vistapointe.net/images/ballroom-dancing-wallpaper-5.jpg"
   },
   {
     id: 5,
-    title: "Flamenco",
+    title: "Painting_ Styling Hacks",
     image: "http://www.ritmoflamenco.ca/wp-content/uploads/flamencomusic.jpg"
   },
   {
     id: 6,
-    title: "Folk",
+    title: "Soccer_ Moves to Trick Opponents",
     image:
       "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcStpQd89lkIsaKUSKqNhvMfNJ0_zAUb-iovWT2zhtPrqs685k6eXA&s"
-  },
-  {
-    id: 7,
-    title: "Contemporary",
-    image:
-      "https://image.freepik.com/free-photo/modern-dancer-jumping_1163-3789.jpg"
   }
 ];
 // core components
@@ -185,13 +179,13 @@ class HomePage extends React.Component {
                       <img src={pauseIc} alt={"img"} />
                     </span>
                   ) : (
-                    <span
-                      onClick={this.videoPlayHandler}
-                      className="play-ic-wrap"
-                    >
-                      <img src={playIc} alt={"img"} />
-                    </span>
-                  )}
+                      <span
+                        onClick={this.videoPlayHandler}
+                        className="play-ic-wrap"
+                      >
+                        <img src={playIc} alt={"img"} />
+                      </span>
+                    )}
 
                   <video width="100%" id="webm-video-0" playsinline>
                     <source
@@ -239,7 +233,7 @@ class HomePage extends React.Component {
                     <div
                       className="play-sub-block cursor_pointer"
                       onClick={() =>
-                        this.props.redirectTo(AppRoutes.SAMPLE_SET.url)
+                        this.props.redirectTo(AppRoutes.SAMPLE_SET.url + `?title=${images.title}`)
                       }
                     >
                       <div className="play-list-img blur-img-wrap">
