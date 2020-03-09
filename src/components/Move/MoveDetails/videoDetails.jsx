@@ -21,16 +21,16 @@ class VideoDetails extends React.Component {
     };
   }
 
-componentDidUpdate = ({videoMaxDuration}) => {
-  if(videoMaxDuration !== this.props.videoMaxDuration){
-    this.setState({
-      time:{
-        min: 0,
-        max: this.props.videoMaxDuration
-      }
-    })
-  }
-}
+  componentDidUpdate = ({ videoMaxDuration }) => {
+    if (videoMaxDuration !== this.props.videoMaxDuration) {
+      this.setState({
+        time: {
+          min: 0,
+          max: this.props.videoMaxDuration
+        }
+      });
+    }
+  };
 
   addCutHandler = () => {
     const cutCount = this.state.trimTime;
@@ -120,8 +120,6 @@ componentDidUpdate = ({videoMaxDuration}) => {
   /*
    */
   changeComplete = () => {
-    console.log("heteye");
-
     this.props.handlePlayPause();
   };
   /*
@@ -231,7 +229,7 @@ componentDidUpdate = ({videoMaxDuration}) => {
             ) {
               let changeValue = {
                 min: time.min,
-                max: time.min + 1
+                max: time.max + 1
               };
               this.setState(
                 {
@@ -284,10 +282,18 @@ componentDidUpdate = ({videoMaxDuration}) => {
               );
             }
           } else if (e.keyCode === 40) {
-            let changeValue = {
-              min: time.min,
-              max: time.min + 1
-            };
+            let changeValue;
+            if (max - min <= 1.0200000000000047) {
+              changeValue = {
+                min: time.min,
+                max: time.min + 1
+              };
+            } else {
+              changeValue = {
+                min: time.min,
+                max: time.max - 0.03
+              };
+            }
             this.setState(
               {
                 time: changeValue
@@ -577,7 +583,9 @@ componentDidUpdate = ({videoMaxDuration}) => {
                             </Col>
                           ) : null}
                           <Col sm={12} className="p-3 video-maxlength-error">
-                            <span className="">{maxLengthError ? maxLengthError : ""}</span>
+                            <span className="">
+                              {maxLengthError ? maxLengthError : ""}
+                            </span>
                           </Col>
                         </Row>
                       </Form>

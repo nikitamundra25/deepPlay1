@@ -112,7 +112,7 @@ class MoveDetails extends React.Component {
     modelInfoReducer,
     location,
     moveReducer,
-    setReducer
+    setReducer,
   }) => {
     const path = this.props.location.pathname;
     const moveId = path.split("/");
