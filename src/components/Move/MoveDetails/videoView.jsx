@@ -169,7 +169,11 @@ class VideoView extends React.Component {
   /**
    *
    */
-  componentDidUpdate({ timer: oldTimer, moveReducer, isFullScreenMode }) {
+  componentDidUpdate({
+    timer: oldTimer,
+    moveReducer,
+    isFullScreenMode,
+  }) {
     const prevMoveData = moveReducer.isCreatingAnotherMove;
     const newMoveData = this.props.moveReducer
       ? this.props.moveReducer.isCreatingAnotherMove
@@ -180,6 +184,12 @@ class VideoView extends React.Component {
     const { max: oldMax, min: oldMin } = oldTimer || {};
     const { max, min, isVideoSleek } = timer || {};
     // this.audio.currentTime = this.video.currentTime;
+    // if (vid.pause()) {
+    //   audio.pause();
+    // }
+    // if (vid.play()) {
+    //   audio.play();
+    // }
     if (this.video && (min !== oldMin || max !== oldMax)) {
       this.updateSlider();
       if (isVideoSleek) {
@@ -244,13 +254,15 @@ class VideoView extends React.Component {
       this.setState({
         isBufferingVideo: true
       });
-      audio.pause()
+      audio.pause();
     };
     vid.oncanplay = () => {
       this.setState({
         isBufferingVideo: false
       });
-      audio.play()
+      if (this.props.isPlaying) {
+        audio.play();
+      }
     };
   }
   /**
@@ -505,14 +517,20 @@ class VideoView extends React.Component {
                               onClick={handlePlayPause}
                               className={"cursor_pointer"}
                             >
-                              <i className={"fa fa-pause cursor_pointer"} onClick={handlePlayPause}></i>
+                              <i
+                                className={"fa fa-pause cursor_pointer"}
+                                onClick={handlePlayPause}
+                              ></i>
                             </span>
                           ) : (
                             <span
                               onClick={handlePlayPause}
                               className={"cursor_pointer"}
                             >
-                              <i className={"fa fa-play cursor_pointer"} onClick={handlePlayPause}></i>
+                              <i
+                                className={"fa fa-play cursor_pointer"}
+                                onClick={handlePlayPause}
+                              ></i>
                             </span>
                           )}
                         </div>
@@ -586,7 +604,13 @@ class VideoView extends React.Component {
                     </div>
                   </div>
                 </div>
-                <audio id={"audio-trimmer"} className={"d-none"} controls autoPlay loop>
+                <audio
+                  id={"audio-trimmer"}
+                  className={"d-none"}
+                  controls
+                  autoPlay
+                  loop
+                >
                   <source src={moveDetails.audioUrl} type="audio/ogg" />
                 </audio>
               </div>
