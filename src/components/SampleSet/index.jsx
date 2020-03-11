@@ -406,6 +406,7 @@ class SampleSet extends React.Component {
   videoPlayHandler = (indexNumber) => {
     const videoPlay = document.getElementById("webm-video-"+indexNumber);
       videoPlay.play();
+      videoPlay.volume = 0.2;
   };
   videoPlayPause = (indexNumber) => {
     const videoPlay = document.getElementById("webm-video-"+indexNumber);
@@ -457,6 +458,7 @@ class SampleSet extends React.Component {
                             width={"100%"}
                             id={`webm-video-${index}`}
                             muted={true}
+                            
                             onMouseEnter={()=>{this.videoPlayHandler(index)}}
                             onMouseLeave={()=>{this.videoPlayPause(index)}}
                           >
