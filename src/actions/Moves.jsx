@@ -47,7 +47,8 @@ export const MovesAction = {
   VIDEO_UNSELECT_REQUEST: "Video Unselect Request",
   VIDEO_CANCEL_REQUEST: "Video Cancel Request",
   VIDEO_CANCEL_SUCCESS: "Video Cancel Success",
-  I_AM_DONE_REQUEST: "I Am Done Request"
+  I_AM_DONE_REQUEST: "I Am Done Request",
+  VIDEO_UPLOAD_PROGRESS_CHANGE: "Video progress changed!"
 };
 
 export const downloadYoutubeVideoRequest = createAction(
@@ -147,7 +148,6 @@ export const getMoveBySearchRequest = createAction(
 export const getMoveBySearchSuccess = createAction(
   MovesAction.GET_MOVE_BY_SEARCH_SUCCESS
 );
-
 export const addTagsInTagModalRequest = createAction(
   MovesAction.ADD_TAGS_IN_TAGMODAL_REQUEST
 );
@@ -183,3 +183,7 @@ export const videoCancelSuccess = createAction(
   MovesAction.VIDEO_CANCEL_SUCCESS
 );
 export const noIAmDoneRequest = createAction(MovesAction.I_AM_DONE_REQUEST);
+
+export const onVideoUploadProgressChange = createAction(
+  MovesAction.VIDEO_UPLOAD_PROGRESS_CHANGE
+);
