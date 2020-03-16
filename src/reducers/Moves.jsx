@@ -36,7 +36,9 @@ const initialState = {
   isMoveDone: false,
   isIosDevice: false,
   creatingAnother: {},
-  alreadyExist: false
+  alreadyExist: false,
+  uploaded: 0,
+  videoSize: 0
 };
 
 export const moveReducer = handleActions(
@@ -215,6 +217,11 @@ export const moveReducer = handleActions(
       isMoveDone: true,
       alreadyExist: false,
       creatingAnother: {}
+    }),
+    [MovesAction.VIDEO_UPLOAD_PROGRESS_CHANGE]: (state, { payload }) => ({
+      ...state,
+      uploaded: payload.uploaded,
+      videoSize: payload.videoSize
     }),
     [loginAction.DETECT_BROWSER_REQUEST]: (state, { payload }) => ({
       ...state,

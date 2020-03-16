@@ -183,7 +183,7 @@ class MoveComponent extends React.Component {
       } else {
         let video = document.createElement("video");
         video.setAttribute("src", window.URL.createObjectURL(files[0]));
-        video.onloadeddata = async function(event) {
+        video.onloadeddata = event => {
           const { duration } = event.srcElement;
           // videoDuration = duration;
           if (duration >= 3600) {
@@ -200,7 +200,8 @@ class MoveComponent extends React.Component {
           scope.setState(
             {
               url: files[0].name,
-              errors: ""
+              errors: "",
+              fileSize: files[0].size
             },
             () => {
               scope.props.downloadVideo({
@@ -223,13 +224,15 @@ class MoveComponent extends React.Component {
   };
 
   handleCancel = () => {
+    this.setState({
+      isYouTubeUrl: false
+    });
     this.props.videoCancelRequest();
   };
-
   render() {
-    const { errors, url, fileErr } = this.state;
+    const { errors, url, fileErr, isYouTubeUrl } = this.state;
     const { moveReducer } = this.props;
-    const { isVideoDownloading } = moveReducer;
+    const { isVideoDownloading, uploaded } = moveReducer;
     const location = window.location.href;
     const stemp = location.split("?");
     return (
@@ -260,8 +263,19 @@ class MoveComponent extends React.Component {
                 <div className="create-set-tile">
                   {isVideoDownloading ? (
                     <div className="url-update-wrap text-center download-process-container">
-                      <Progress animated value={100} />
-                      <h5>Please wait while we upload your video.</h5>
+                      <Progress
+                        animated
+                        value={isYouTubeUrl ? 100 : uploaded}
+                      />
+                      <h5>
+                        Please wait while we upload your video.{" "}
+                        {!isYouTubeUrl ? (
+                          <>
+                            {" "}
+                            <b>{uploaded}%</b> of 100% uploaded.{" "}
+                          </>
+                        ) : null}
+                      </h5>
                       <p>
                         Please do not refresh or close this page while we are
                         processing.
