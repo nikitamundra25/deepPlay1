@@ -5,6 +5,7 @@ import bodyParser from "body-parser";
 import router from "./routes";
 import path from "path";
 import cors from "cors";
+import http from "http";
 // Create a new express application instance
 const app: express.Application = express();
 
@@ -41,11 +42,9 @@ app.use("/api/v1", router);
  *
  */
 app.get("/", (req: express.Request, res: express.Response) => {
-  req.connection.setTimeout(300000) // no timeout
   return res.sendFile(path.join(__dirname, "public", "index.html"));
 });
 app.get("/*", (req: express.Request, res: express.Response) => {
-  req.connection.setTimeout(300000)  // no timeout
   return res.sendFile(path.join(__dirname, "public", "index.html"));
 });
 
@@ -56,6 +55,10 @@ const port: number = Number(process.env.PORT) || Port;
 /**
  *
  */
-app.listen(port, (): void => {
+const server = http.createServer(app);
+server.listen(port, (): void => {
   console.log(`App running on port ${port}!`);
+});
+server.on("connection", serverApp => {
+  serverApp.setTimeout(600 * 60 * 1000);
 });

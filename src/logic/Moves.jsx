@@ -26,6 +26,7 @@ import { completeVideoEditingSuccess } from "actions/Moves";
 import { addTagsSuccess } from "actions/Moves";
 import { updateMoveSuccess } from "actions/Moves";
 import { addTagsInTagModalSuccess } from "actions/Moves";
+import { onVideoUploadProgressChange } from "actions/Moves";
 
 let toastId = null;
 let api = new ApiHelper();
@@ -35,7 +36,6 @@ const downloadVideoLogic = createLogic({
   async process({ action, getState }, dispatch, done) {
     let api = new ApiHelper();
     let result;
-
     if (action.payload.isYoutubeUrl) {
       result = await api.FetchFromServer(
         "move",
@@ -46,24 +46,21 @@ const downloadVideoLogic = createLogic({
         action.payload
       );
     } else {
-      // const config = {
-      //   onUploadProgress: (progressEvent: (loaded, total)) => {
-      //     const percent=
-      //       Math.round(
-      //         (progressEvent.loaded / progressEvent.total) * 100 * 100
-      //       ) / 100;
-      //     dispatch(onPresentationUploadProgressEvent(percent));
-      //   }
-      // };
-
-      const config = {
-        onUploadProgress: e => console.log("oooooooohhhhhh", e)
-      };
       result = await api.UploadVideo(
         "move",
         "/download-video",
         action.payload,
-        config
+        progressEvent => {
+          const percent =
+            Math.round(
+              (progressEvent.loaded / progressEvent.total) * 100 * 100
+            ) / 100;
+          dispatch(
+            onVideoUploadProgressChange({
+              uploaded: percent
+            })
+          );
+        }
       );
     }
     if (result.isError) {
