@@ -19,7 +19,8 @@ import {
   getMoveBySearch,
   addTags,
   getTagListByUserId,
-  updateMoveDetailsFromYouTubeAndTrim
+  updateMoveDetailsFromYouTubeAndTrim,
+  processVideoTrmiming
 } from "../controllers";
 import { ValidateAdminToken } from "../common";
 import { storageFile } from "../common/video";
@@ -51,7 +52,8 @@ MoveRouter.post("/update", ValidateAdminToken, updateMoveDetailsAndTrimVideo);
 MoveRouter.post(
   "/update-youtube-video",
   ValidateAdminToken,
-  updateMoveDetailsFromYouTubeAndTrim
+  processVideoTrmiming
+  //updateMoveDetailsFromYouTubeAndTrim
 );
 MoveRouter.put("/copy-move", copyMove);
 MoveRouter.put("/starred-move", ValidateAdminToken, isStarredMove);

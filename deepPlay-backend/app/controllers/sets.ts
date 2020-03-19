@@ -216,7 +216,7 @@ const getAllSetById = async (req: Request, res: Response): Promise<void> => {
     if (result && result.length) {
       for (let index = 0; index < result.length; index++) {
         const setData = result[index];
-        moveCount = await MoveModel.count({
+        moveCount = await MoveModel.countDocuments({
           setId: setData._id,
           isDeleted: false,
           moveURL: { $ne: null }
@@ -276,7 +276,7 @@ const getRecentSetById = async (req: Request, res: Response): Promise<any> => {
     if (result && result.length) {
       for (let index = 0; index < result.length; index++) {
         const setData = result[index];
-        moveCount = await MoveModel.count({
+        moveCount = await MoveModel.countDocuments({
           setId: setData._id,
           isDeleted: false,
           moveURL: { $ne: null }
@@ -349,7 +349,7 @@ const getSetsForFolder = async (req: Request, res: Response): Promise<any> => {
     if (result && result.length) {
       for (let index = 0; index < result.length; index++) {
         const setData = result[index];
-        moveCount = await MoveModel.count({
+        moveCount = await MoveModel.countDocuments({
           setId: setData._id,
           isDeleted: false,
           moveURL: { $ne: null }
@@ -375,7 +375,7 @@ const getSetsForFolder = async (req: Request, res: Response): Promise<any> => {
       folderId: query.folderId,
       $or: [{ folderId: query.folderId }],
       isDeleted: false
-    }).count();
+    }).countDocuments();
 
     res.status(200).json({
       data: setResult,
@@ -518,7 +518,7 @@ const getSetDetailsById = async (req: Request, res: Response): Promise<any> => {
 
     let moveCount: Document | any;
     if (result) {
-      moveCount = await MoveModel.count({
+      moveCount = await MoveModel.countDocuments({
         setId: Mongoose.Types.ObjectId(result._id),
         isDeleted: false,
         moveURL: { $ne: null }
@@ -592,7 +592,7 @@ const publicUrlsetDetails = async (
       if (result && result.length) {
         for (let index = 0; index < result.length; index++) {
           const setData = result[index];
-          moveCount = await MoveModel.count({
+          moveCount = await MoveModel.countDocuments({
             setId: setData._id,
             userId: decryptedUserId,
             isDeleted: false,
@@ -619,7 +619,7 @@ const publicUrlsetDetails = async (
         folderId: decryptedFolderId,
         userId: decryptedUserId,
         isDeleted: false
-      }).count();
+      }).countDocuments();
     } else {
       return res.status(400).json({
         message: {
@@ -676,7 +676,7 @@ const publicAccessSetInfoById = async (
         isDeleted: false
       }).populate("folderId");
 
-      const moveCount: Document | any = await MoveModel.count({
+      const moveCount: Document | any = await MoveModel.countDocuments({
         setId: result._id,
         isDeleted: false,
         moveURL: { $ne: null }

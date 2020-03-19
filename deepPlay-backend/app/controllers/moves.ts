@@ -6,16 +6,16 @@ import { MoveModel, SetModel, TagModel } from "../models";
 import fs from "fs";
 import path from "path";
 import ffmpeg from "ffmpeg";
+import FFMpeg from "fluent-ffmpeg";
 import { decrypt } from "../common";
 import { IMoveCopy, IUpdateMove } from "../interfaces";
 import moment from "moment";
 import { s3BucketUpload } from "../common/awsBucket";
 import { algoliaAppId, algoliaAPIKey } from "../config/app";
-// import cheerio from "cheerio";
 import request from "request";
 import youtubedl from "youtube-dl";
-import https from "https";
 import ThumbnailGenerator from "video-thumbnail-generator";
+import JobQueue from "../common/Queue";
 const instagramUtil = require("../common/instagramUtil");
 var CronJob = require("cron").CronJob;
 const algoliasearch = require("algoliasearch");
@@ -179,7 +179,6 @@ const downloadYoutubeVideo = async (
               success: false
             });
           }
-          console.log("infoinfo", youTubeAudio);
 
           const thumbImg =
             info.thumbnails && info.thumbnails.length
@@ -391,7 +390,7 @@ const getMoveBySetId = async (req: Request, res: Response): Promise<any> => {
     );
     let totalMoves: Document | any | null;
     if (query.isStarred === "true") {
-      totalMoves = await MoveModel.count({
+      totalMoves = await MoveModel.countDocuments({
         setId: query.setId,
         userId: headToken.id,
         isDeleted: false,
@@ -399,7 +398,7 @@ const getMoveBySetId = async (req: Request, res: Response): Promise<any> => {
         moveURL: { $ne: null }
       });
     } else {
-      totalMoves = await MoveModel.count({
+      totalMoves = await MoveModel.countDocuments({
         setId: query.setId,
         userId: headToken.id,
         isDeleted: false,
@@ -479,7 +478,7 @@ const publicUrlMoveDetails = async (
         .limit(limitNumber)
         .sort({ sortIndex: 1 });
 
-      totalMove = await MoveModel.count({
+      totalMove = await MoveModel.countDocuments({
         setId: decryptedSetId,
         userId: decryptedUserId,
         isDeleted: false,
@@ -596,7 +595,7 @@ const updateMoveDetailsFromYouTubeAndTrim = async (
     //   console.log('size: ' + info.size)
     // })
     console.log("Video", video);
-    
+
     video.pipe(fs.createWriteStream(originalVideoPath));
     // ytdl(result.sourceUrl, { quality: "highest" }).pipe(
     //   (videoStream = fs.createWriteStream(originalVideoPath)) .size('1920x1080')
@@ -1181,13 +1180,13 @@ const filterMove = async (req: Request, res: Response): Promise<any> => {
           .skip(pageNumber)
           .limit(limitNumber)
           .sort({ sortIndex: 1 });
-        totalMoves = await MoveModel.count(conditionCheck);
+        totalMoves = await MoveModel.countDocuments(conditionCheck);
       } else {
         searchData = await MoveModel.find(condition)
           .skip(pageNumber)
           .limit(limitNumber)
           .sort({ sortIndex: 1 });
-        totalMoves = await MoveModel.count(condition);
+        totalMoves = await MoveModel.countDocuments(condition);
       }
     }
 
@@ -1508,7 +1507,7 @@ const getMoveBySearch = async (req: Request, res: Response): Promise<any> => {
           .skip(pageNumber)
           .limit(limitNumber)
           .sort({ sortIndex: 1 });
-        totalMoves = await MoveModel.count(conditionCheck);
+        totalMoves = await MoveModel.countDocuments(conditionCheck);
       } else {
         movesData = await MoveModel.find(condition)
           .populate({
@@ -1519,7 +1518,7 @@ const getMoveBySearch = async (req: Request, res: Response): Promise<any> => {
           .limit(limitNumber)
           .sort({ sortIndex: 1 });
 
-        totalMoves = await MoveModel.count(condition);
+        totalMoves = await MoveModel.countDocuments(condition);
       }
 
       moveList = await MoveModel.populate(movesData, {
@@ -1569,7 +1568,7 @@ const getMoveBySearch = async (req: Request, res: Response): Promise<any> => {
     //     match: { isDeleted: false }
     //   });
 
-    //   totalMoves = await MoveModel.count({
+    //   totalMoves = await MoveModel.countDocuments({
     //     title: {
     //       $regex: new RegExp(search.trim(), "i")
     //     },
@@ -1831,7 +1830,323 @@ const generateThumbanail = async (fileName: any) => {
     });
   });
 };
+/**
+ * Process video trimming
+ */
+const processVideoTrmiming = async (
+  { body, currentUser }: Request,
+  res: Response
+) => {
+  try {
+    const { timer, moveId, tags, setId, title, description } = body;
+    const { id: userId } = currentUser || {};
+    const moveDetails: Document | any = await MoveModel.findOne({
+      _id: moveId,
+      userId
+    });
+    if (!moveDetails) {
+      throw new Error("This tag doesn't belogs to the logged in user.");
+    }
+    // update sort index of all other moves
+    await MoveModel.updateMany(
+      {
+        setId,
+        _id: {
+          $ne: moveId
+        }
+      },
+      {
+        $inc: {
+          sortIndex: 1
+        }
+      }
+    );
 
+    // set move details
+    moveDetails.set("tags", tags);
+    moveDetails.set("title", title);
+    moveDetails.set("description", description);
+    moveDetails.set("startTime", timer.min);
+    moveDetails.set("endTime", timer.max);
+    moveDetails.set("setId", setId);
+    moveDetails.set("sortIndex", 0);
+    moveDetails.set("isMoveProcessing", true);
+    moveDetails.set("moveURL", "");
+    // save the set details
+    moveDetails.save();
+    // push the process in JobQueue
+    JobQueue.push(callback => {
+      downloadAndTrimVideo(moveDetails, callback);
+    });
+    return res.status(200).json({
+      responsecode: 200,
+      data: moveDetails,
+      setId: setId,
+      videoThumbnail: moveDetails.videoThumbnail
+    });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).send({
+      message: error.message || "Unkown error"
+    });
+  }
+};
+/**
+ *
+ * @param sourceUrl
+ * @param originalVideoPath
+ * @param callback
+ */
+const downloadVideoUsingYTDL = async (
+  sourceUrl: string,
+  originalVideoPath: string,
+  callback: (err?: any) => void
+) => {
+  const video = youtubedl(
+    sourceUrl,
+    ["--format=bestvideo[height<=1080]", "--merge-output-format=webm"],
+    {}
+  );
+  video.pipe(fs.createWriteStream(originalVideoPath));
+  video.on("info", info => {
+    console.log("Download started");
+    console.log("filename: " + info._filename);
+    console.log("size: " + info.size);
+  });
+
+  video.on("close", callback);
+};
+/**
+ *
+ * @param sourceUrl
+ * @param originalAudioPath
+ * @param callback
+ */
+const downloadAudioUsingYTDL = async (
+  sourceUrl: string,
+  originalAudioPath: string,
+  callback: (err?: any) => void
+) => {
+  const audio = youtubedl(sourceUrl, ["--format=bestaudio"], {});
+  audio.pipe(fs.createWriteStream(originalAudioPath));
+  audio.on("close", callback);
+};
+/**
+ *
+ * @param videoPath
+ * @param audioPath
+ * @param outputPath
+ * @param callback
+ */
+const mergeVideoAndAudio = async (
+  videoPath: string,
+  audioPath: string,
+  outputPath: string,
+  callback: (err?: any) => void
+) => {
+  FFMpeg(videoPath)
+    .addInput(audioPath)
+    .output(outputPath)
+    .on("error", callback)
+    .on("end", callback)
+    .run();
+};
+/**
+ *
+ * @param start
+ * @param duration
+ * @param videoPath
+ * @param outputPath
+ * @param callback
+ */
+const trimVideo = (
+  start: number,
+  duration: number,
+  videoPath: string,
+  outputPath: string,
+  callback: (err?: any) => void
+) => {
+  FFMpeg(videoPath)
+    .setStartTime(toHHMMSS(start))
+    .setDuration(duration)
+    .output(outputPath)
+    .on("error", callback)
+    .on("end", callback)
+    .run();
+};
+/**
+ *
+ * @param moveDetails
+ * @param callback
+ */
+const downloadAndTrimVideo = (moveDetails: any, callback: any) => {
+  const { _id: moveId, sourceUrl, startTime, endTime } = moveDetails;
+  let originalVideoPath: string = "",
+    originalAudioPath: string = "",
+    trimmedVideoPath: string = "",
+    trimmedAudioPath: string = "",
+    mergedVideoPath: string = "",
+    trimmedFilePath: string = "",
+    timeStamp = moment().unix();
+  const videoName = [timeStamp, "_", "deep_play_video", ".mp4"].join(""),
+    audioName = [timeStamp, "_", "deep_play_audio", ".mp3"].join(""),
+    mergedName = [timeStamp, "_", "deep_play_merged", ".mp4"].join(""),
+    trimmedFile = [
+      timeStamp,
+      "_",
+      "trimmed",
+      "_",
+      "deep_play_video",
+      ".mp4"
+    ].join("");
+  if (IsProductionMode) {
+    originalVideoPath = path.join(
+      __dirname,
+      "uploads",
+      "youtube-videos",
+      videoName
+    );
+    trimmedVideoPath = path.join(
+      __dirname,
+      "uploads",
+      "youtube-videos",
+      `trimmed_${videoName}`
+    );
+    originalAudioPath = path.join(
+      __dirname,
+      "uploads",
+      "youtube-videos",
+      audioName
+    );
+    trimmedAudioPath = path.join(
+      __dirname,
+      "uploads",
+      "youtube-videos",
+      `trimmed_${audioName}`
+    );
+    mergedVideoPath = path.join(
+      __dirname,
+      "uploads",
+      "youtube-videos",
+      mergedName
+    );
+    trimmedFilePath = path.join(
+      __dirname,
+      "uploads",
+      "youtube-videos",
+      trimmedFile
+    );
+  } else {
+    originalVideoPath = path.join(
+      __basedir,
+      "..",
+      "uploads",
+      "youtube-videos",
+      videoName
+    );
+    trimmedVideoPath = path.join(
+      __basedir,
+      "..",
+      "uploads",
+      "youtube-videos",
+      `trimmed_${videoName}`
+    );
+    originalAudioPath = path.join(
+      __basedir,
+      "..",
+      "uploads",
+      "youtube-videos",
+      audioName
+    );
+    trimmedAudioPath = path.join(
+      __basedir,
+      "..",
+      "uploads",
+      "youtube-videos",
+      `trimmed_${audioName}`
+    );
+    mergedVideoPath = path.join(
+      __basedir,
+      "..",
+      "uploads",
+      "youtube-videos",
+      mergedName
+    );
+    trimmedFilePath = path.join(
+      __basedir,
+      "..",
+      "uploads",
+      "youtube-videos",
+      trimmedFile
+    );
+  }
+  console.time("VideoDownloadTime");
+  downloadVideoUsingYTDL(sourceUrl, originalVideoPath, () => {
+    console.log("Video Downloaded Successfully");
+    console.timeEnd("VideoDownloadTime");
+    console.time("AudioDownloadTime");
+    downloadAudioUsingYTDL(sourceUrl, originalAudioPath, () => {
+      console.timeEnd("AudioDownloadTime");
+      console.log("Audio Downloaded Successfully");
+      trimVideo(
+        startTime,
+        endTime - startTime,
+        originalVideoPath,
+        trimmedVideoPath,
+        err => {
+          console.log(err, "Video trimmed Successfully");
+          trimVideo(
+            startTime,
+            endTime - startTime,
+            originalAudioPath,
+            trimmedAudioPath,
+            err => {
+              console.log(err, "Audio trimmed Successfully");
+              mergeVideoAndAudio(
+                trimmedVideoPath,
+                trimmedAudioPath,
+                mergedVideoPath,
+                async err => {
+                  console.log(err, "Video and Audio merged successfully");
+                  fs.unlinkSync(originalVideoPath);
+                  fs.unlinkSync(originalAudioPath);
+                  fs.unlinkSync(trimmedAudioPath);
+                  fs.unlinkSync(trimmedVideoPath);
+                  // move the trimmed video to s3 bucket
+                  const s3VideoUrl = await s3BucketUpload(
+                    mergedVideoPath,
+                    "deep-play.webm",
+                    "moves"
+                  );
+                  moveDetails.set("moveURL", s3VideoUrl);
+                  moveDetails.set("isMoveProcessing", false);
+                  await moveDetails.save();
+                  fs.unlinkSync(mergedVideoPath);
+                  callback();
+                }
+              );
+            }
+          );
+        }
+      );
+    });
+  });
+};
+/**
+ *
+ * @param {number} secs
+ */
+const toHHMMSS = (secs: number) => {
+  const sec_num = parseInt(secs.toString(), 10),
+    hours = Math.floor(sec_num / 3600),
+    minutes = Math.floor(sec_num / 60) % 60,
+    seconds = sec_num % 60;
+
+  return [hours, minutes, seconds].map(v => (v < 10 ? "0" + v : v)).join(":");
+};
+/**
+ *
+ */
 export {
   downloadVideo,
   getMoveBySetId,
@@ -1852,5 +2167,6 @@ export {
   getMoveBySearch,
   addTags,
   getTagListByUserId,
-  updateMoveDetailsFromYouTubeAndTrim
+  updateMoveDetailsFromYouTubeAndTrim,
+  processVideoTrmiming
 };

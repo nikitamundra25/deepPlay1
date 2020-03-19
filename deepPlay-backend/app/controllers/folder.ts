@@ -236,7 +236,7 @@ const getAllFolder = async (req: Request, res: Response): Promise<void> => {
     if (result && result.length) {
       for (let index = 0; index < result.length; index++) {
         const folderData = result[index];
-        setCount = await SetModel.count({
+        setCount = await SetModel.countDocuments({
           folderId: folderData._id,
           isDeleted: false
         });
@@ -283,7 +283,7 @@ const getRecentFolder = async (req: Request, res: Response): Promise<any> => {
     if (result && result.length) {
       for (let index = 0; index < result.length; index++) {
         const folderData = result[index];
-        setCount = await SetModel.count({
+        setCount = await SetModel.countDocuments({
           folderId: folderData._id,
           isDeleted: false
         });

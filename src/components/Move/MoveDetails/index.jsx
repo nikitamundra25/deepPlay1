@@ -112,7 +112,7 @@ class MoveDetails extends React.Component {
     modelInfoReducer,
     location,
     moveReducer,
-    setReducer,
+    setReducer
   }) => {
     const path = this.props.location.pathname;
     const moveId = path.split("/");
@@ -170,24 +170,12 @@ class MoveDetails extends React.Component {
           }
         }
         const { allSetList } = this.props.setReducer;
-        let selectOption;
         console.log("setId", allSetList);
 
         if (allSetList && allSetList.length) {
           // eslint-disable-next-line
           allSetList.map(data => {
             if (setId) {
-              if (setId === data._id) {
-                selectOption = {
-                  label:
-                    data && data.isCopy
-                      ? `${data.title} ${
-                          data.copyCount > 0 ? `(${data.copyCount})` : ""
-                        }`
-                      : data.title,
-                  value: data._id
-                };
-              }
               this.setState({
                 selectedSetId: setId
               });
@@ -200,12 +188,6 @@ class MoveDetails extends React.Component {
           description,
           tags,
           timer: { min: 0.1, max: 15.1 }
-          // selectSetOptions: selectOption
-          //   ? selectOption
-          //   : {
-          //       label: "Type to select sets",
-          //       value: ""
-          //     }
         });
       }
       if (this.video) {
@@ -401,8 +383,8 @@ class MoveDetails extends React.Component {
           })
         : this.props.completeYouTubeVideoEditing({
             timer: {
-              min: parseInt(timer.min),
-              max: parseInt(timer.max)
+              min: parseFloat(timer.min),
+              max: parseFloat(timer.max)
             },
             moveId,
             tags,
@@ -584,7 +566,9 @@ class MoveDetails extends React.Component {
     }
     console.groupEnd();
   };
-
+  /**
+   *
+   */
   handleChange = e => {
     const { name, value } = e.target;
     const error =
