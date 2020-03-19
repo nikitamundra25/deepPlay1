@@ -35,7 +35,6 @@ class MoveSuccessModal extends React.Component {
       isYoutubeUrl,
       timer
     } = this.props;
-
     const { videoCanPlay } = this.state;
 
     return (
