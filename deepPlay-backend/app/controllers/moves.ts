@@ -148,21 +148,32 @@ const downloadYoutubeVideo = async (
           if (element.format === "251 - audio only (tiny)") {
             youTubeAudio = info.formats[0].url;
           }
-          if (element.format === "248 - 1920x1080 (1080p)") {
+          if (
+            element.format === "248 - 1920x1080 (1080p)" ||
+            element.format === "137 - 1920x1080 (1080p)"
+          ) {
             const temp = element.url.split("manifest.googlevideo.com");
             if (temp[1]) {
               youTubeUrl = info.formats[0].url;
             } else {
               youTubeUrl = element.url;
             }
-          } else if (element.format === "247 - 1280x720 (720p)") {
+          } else if (
+            element.format === "247 - 1280x720 (720p)" ||
+            element.format === "247 - 1280x576 (720p)" ||
+            element.format === "136 - 1280x576 (720p)"
+          ) {
             const temp = element.url.split("manifest.googlevideo.com");
             if (temp[1]) {
               youTubeUrl = info.formats[0].url;
             } else {
               youTubeUrl = element.url;
             }
-          } else if (element.format === "135 - 854x480 (480p)") {
+          } else if (
+            element.format === "244 - 854x384 (480p)" ||
+            element.format === "397 - 854x384 (480p)" ||
+            element.format === "135 - 854x480 (480p)"
+          ) {
             const temp = element.url.split("manifest.googlevideo.com");
             if (temp[1]) {
               youTubeUrl = info.formats[0].url;
@@ -267,7 +278,8 @@ const createMove = async (req: Request, res: Response): Promise<any> => {
       sourceUrl,
       isYoutubeUrl,
       videoThumbnail,
-      setId
+      setId,
+      audioUrl
     } = body;
 
     let headToken: Request | any = currentUser;
@@ -285,7 +297,8 @@ const createMove = async (req: Request, res: Response): Promise<any> => {
       videoThumbnail: videoThumbnail ? videoThumbnail : null,
       videoName: videoName ? videoName : null,
       setId: setId ? setId : null,
-      isYoutubeUrl: isYoutubeUrl ? isYoutubeUrl : false
+      isYoutubeUrl: isYoutubeUrl ? isYoutubeUrl : false,
+      audioUrl: audioUrl
     });
     await moveResult.save();
 
@@ -596,7 +609,7 @@ const updateMoveDetailsFromYouTubeAndTrim = async (
     //   console.log('size: ' + info.size)
     // })
     console.log("Video", video);
-    
+
     video.pipe(fs.createWriteStream(originalVideoPath));
     // ytdl(result.sourceUrl, { quality: "highest" }).pipe(
     //   (videoStream = fs.createWriteStream(originalVideoPath)) .size('1920x1080')
