@@ -112,7 +112,7 @@ class MoveDetails extends React.Component {
     modelInfoReducer,
     location,
     moveReducer,
-    setReducer,
+    setReducer
   }) => {
     const path = this.props.location.pathname;
     const moveId = path.split("/");
@@ -535,7 +535,8 @@ class MoveDetails extends React.Component {
       videoName,
       sourceUrl,
       isYoutubeUrl,
-      videoThumbnail
+      videoThumbnail,
+      audioUrl
     } = moveDetails;
     // this.handleMoveSuccessModal();
     this.setState({
@@ -560,7 +561,8 @@ class MoveDetails extends React.Component {
       setId,
       sourceUrl,
       isYoutubeUrl,
-      videoName: videoName
+      videoName: videoName,
+      audioUrl: audioUrl
     });
   };
   /**
