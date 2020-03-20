@@ -202,12 +202,12 @@ class WebmView extends Component {
           for (let index = 0; index < duration; index = index + duration / 20) {
             timeDuration.push(index);
           }
-          this.video.currentTime = this.props.videoData.startTime;
           if (
             this.audio &&
             this.props.videoData.isYoutubeUrl &&
             this.props.videoData.isMoveProcessing
           ) {
+            this.video.currentTime = this.props.videoData.startTime;
             this.audio.currentTime = this.props.videoData.startTime;
           }
           const data = {

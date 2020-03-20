@@ -1887,6 +1887,7 @@ const processVideoTrmiming = async (
     moveDetails.set("moveURL", "");
     // save the set details
     moveDetails.save();
+
     // push the process in JobQueue
     JobQueue.push(callback => {
       downloadAndTrimVideo(moveDetails, callback);
@@ -2122,20 +2123,71 @@ const downloadAndTrimVideo = (moveDetails: any, callback: any) => {
                 async err => {
                   console.log(err, "Video and Audio merged successfully");
                   fs.unlinkSync(originalVideoPath);
+                  console.log("Removed video file: %s", originalVideoPath);
                   fs.unlinkSync(originalAudioPath);
+                  console.log("Removed Audio file: %s", originalAudioPath);
                   fs.unlinkSync(trimmedAudioPath);
+                  console.log(
+                    "Removed trimmed video file: %s",
+                    trimmedAudioPath
+                  );
                   fs.unlinkSync(trimmedVideoPath);
+                  console.log(
+                    "Removed trimmed audio file: %s",
+                    trimmedVideoPath
+                  );
                   // move the trimmed video to s3 bucket
                   const s3VideoUrl = await s3BucketUpload(
                     mergedVideoPath,
                     "deep-play.webm",
                     "moves"
                   );
-                  moveDetails.set("moveURL", s3VideoUrl);
-                  moveDetails.set("isMoveProcessing", false);
-                  await moveDetails.save();
-                  fs.unlinkSync(mergedVideoPath);
-                  callback();
+                  console.log("WebM file Moved to S3 Bucket.");
+
+                  // save data to algolia
+                  const moveDataForAlgolia = {
+                    _id: moveId,
+                    moveURL: s3VideoUrl,
+                    title: moveDetails.title,
+                    description: moveDetails.title,
+                    startTime: moveDetails.min,
+                    sourceUrl: moveDetails.sourceUrl,
+                    tags: moveDetails.tags,
+                    sortIndex: 0,
+                    setId: moveDetails.setId,
+                    isYoutubeUrl: true,
+                    userId: moveDetails.userId,
+                    isDeleted: false,
+                    createdAt: new Date(),
+                    videoMetaData: {},
+                    searchType: "move"
+                  };
+
+                  index.addObjects(
+                    [moveDataForAlgolia],
+                    async (err: string, content: any) => {
+                      console.log("Move details saved to algolia.");
+                      // set movedetail's updated data
+                      moveDetails.set("moveURL", s3VideoUrl);
+                      moveDetails.set("isMoveProcessing", false);
+                      if (
+                        content &&
+                        content.objectIDs &&
+                        content.objectIDs[0]
+                      ) {
+                        // set algolia object Id
+                        moveDetails.set("objectId", content.objectIDs[0]);
+                      }
+                      await moveDetails.save();
+                      console.log("Move details updated successfully!");
+                      fs.unlinkSync(mergedVideoPath);
+                      console.log(
+                        "Removed trimmed Move file: %s",
+                        mergedVideoPath
+                      );
+                      callback();
+                    }
+                  );
                 }
               );
             }
