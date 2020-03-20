@@ -156,20 +156,31 @@ class WebmView extends Component {
       this.customVideo = document.getElementById("custom_video_control");
       if (this.video) {
         this.video.addEventListener("timeupdate", () => {
-          const currentVideoTime = parseFloat(
-            this.video
-              ? this.props.videoData.isYoutubeUrl
-                ? this.video.currentTime -
-                  Number(this.props.videoData.startTime)
-                : this.video.currentTime
-              : 0
-          ).toFixed(2);
+          let currentVideoTime;
           if (
-            Number(this.props.videoData.endTime) - this.video.currentTime <
-            0.3
+            this.audio &&
+            this.props.videoData.isYoutubeUrl &&
+            this.props.videoData.isMoveProcessing
           ) {
-            this.video.currentTime = Number(this.props.videoData.startTime);
-            this.audio.currentTime = Number(this.props.videoData.startTime);
+            currentVideoTime = parseFloat(
+              this.video
+                ? this.props.videoData.isYoutubeUrl
+                  ? this.video.currentTime -
+                    Number(this.props.videoData.startTime)
+                  : this.video.currentTime
+                : 0
+            ).toFixed(2);
+            if (
+              Number(this.props.videoData.endTime) - this.video.currentTime <
+              0.3
+            ) {
+              this.video.currentTime = Number(this.props.videoData.startTime);
+              this.audio.currentTime = Number(this.props.videoData.startTime);
+            }
+          } else {
+            currentVideoTime = parseFloat(
+              this.video ? this.video.currentTime : 0
+            ).toFixed(2);
           }
           this.setState({
             currentTime: currentVideoTime
