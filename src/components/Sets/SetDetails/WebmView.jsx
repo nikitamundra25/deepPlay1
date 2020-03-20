@@ -143,8 +143,19 @@ class WebmView extends Component {
       if (this.video) {
         this.video.addEventListener("timeupdate", () => {
           const currentVideoTime = parseFloat(
-            this.video ? this.video.currentTime : 0
+            this.video
+              ? this.props.videoData.isYoutubeUrl
+                ? this.video.currentTime -
+                  Number(this.props.videoData.startTime)
+                : this.video.currentTime
+              : 0
           ).toFixed(2);
+          if (
+            Number(this.props.videoData.endTime) - this.video.currentTime <
+            0.3
+          ) {
+            this.video.currentTime = Number(this.props.videoData.startTime);
+          }
           this.setState({
             currentTime: currentVideoTime
           });
@@ -158,10 +169,14 @@ class WebmView extends Component {
         this.video.load();
         let timeDuration = [];
         this.video.onloadeddata = () => {
-          const { duration, videoHeight, videoWidth } = this.video;
+          const { videoHeight, videoWidth } = this.video;
+          const duration =
+            Number(this.props.videoData.endTime) -
+            Number(this.props.videoData.startTime);
           for (let index = 0; index < duration; index = index + duration / 20) {
             timeDuration.push(index);
           }
+          this.video.currentTime = this.props.videoData.startTime;
           const data = {
             timeDuration: timeDuration,
             videoMaxDuration: duration
@@ -185,6 +200,12 @@ class WebmView extends Component {
           const currentVideoTime = parseFloat(this.video.currentTime).toFixed(
             2
           );
+          if (
+            Number(this.props.videoData.endTime) - this.video.currentTime <
+            0.3
+          ) {
+            this.video.currentTime = Number(this.props.videoData.startTime);
+          }
           this.setState({
             currentTime: currentVideoTime
           });
@@ -202,6 +223,8 @@ class WebmView extends Component {
           for (let index = 0; index < duration; index = index + duration / 20) {
             timeDuration.push(index);
           }
+          console.log(this.video.currentTime, "this.video.currentTime");
+          this.video.currentTime = this.props.videoData.startTime;
           const data = {
             timeDuration: timeDuration,
             videoMaxDuration: duration
@@ -663,22 +686,11 @@ class WebmView extends Component {
 
     if (isFullScreenMode1) {
       if (isFullScreenMode && !isPlaying && playScreen) {
-        // console.log("inisdee");
         this.playVideo();
       }
     }
 
     playScreen = !isFullScreenMode ? (isFullScreenMode1 ? true : false) : true;
-
-    // if (!isPlaying) {
-    //   if (isFullScreenMode) {
-    //     isFullScreenMode1 = true;
-    //   }
-    // }
-
-    // if (!isFullScreenMode && !isPlaying) {
-    //   isFullScreenMode1 = false;
-    // }
 
     if (isFullScreenMode1) {
       let control = document.getElementsByClassName("controls");
@@ -713,7 +725,6 @@ class WebmView extends Component {
                 });
                 handleVideoModal(videoData, null);
               }}
-              // onClick={handleVideoModal}
             >
               <span aria-hidden="true">
                 <img src={closeBtn} alt="close-ic" />
@@ -747,32 +758,6 @@ class WebmView extends Component {
                 }
               >
                 {videoData && videoData.title ? videoData.title : "Unnamed"}
-
-                {/* {doubleClick
-                  ? videoData.title
-                    ? videoData.title
-                    : videoData.title
-                  : "unnamed"} */}
-                {/* {doubleClick ? (
-                  <>
-                    <FormGroup>
-                      <Input
-                        id="title"
-                        type="text"
-                        placeholder="Enter a title"
-                        name="title"
-                        onChange={this.handleChangeTitle}
-                        value={title}
-                        onBlur={() => this.handleonBlur(videoData)}
-                      />
-                    </FormGroup>
-                    {errorTitle ? errorTitle : null}
-                  </>
-                ) : videoData && videoData.title ? (
-                  videoData.title
-                ) : (
-                  "Unnamed"
-                )} */}
               </div>
 
               {!isShareable ? (
@@ -797,26 +782,10 @@ class WebmView extends Component {
                               videoData ? videoData._id : video._id
                             )
                           }
-                          // onClick={() =>
-                          //   this.props.onEditMove(
-                          //     videoData ? videoData._id : video._id
-                          //   )
-                          // }
                         >
                           Edit Move Details
                         </DropdownItem>
-                        {/* <DropdownItem
-                          onClick={() =>
-                            this.handleStarred(
-                              videoData ? videoData._id : video._id,
-                              videoData.isStarred
-                            )
-                          }
-                        >
-                          {videoData && videoData.isStarred
-                            ? "Unstar"
-                            : "Mark Star"}
-                        </DropdownItem> */}
+
                         <DropdownItem
                           onClick={() =>
                             videoData
@@ -841,18 +810,6 @@ class WebmView extends Component {
                         >
                           Transfer
                         </DropdownItem>
-                        {/* <DropdownItem
-                          onClick={() =>
-                            videoData
-                              ? this.handleMoveDelete(
-                                  videoData._id,
-                                  videoData.setId
-                                )
-                              : this.handleMoveDelete(video._id)
-                          }
-                        >
-                          Remove
-                        </DropdownItem> */}
                       </DropdownMenu>
                     </UncontrolledDropdown>
                   </div>
@@ -893,7 +850,7 @@ class WebmView extends Component {
                     <img src={videoLoading} alt="" />
                   </div>
                 ) : null}
-                  {!isVideoLoading ? (
+                {!isVideoLoading ? (
                   <video
                     width={"100%"}
                     id="webm-video"
@@ -904,7 +861,7 @@ class WebmView extends Component {
                         : "video-loading-tag cursor_pointer"
                     }
                     loop
-                    // preload="auto"
+                    preload="auto"
                     playsInline
                     autoPlay
                     onCanPlay={() => {
@@ -925,7 +882,9 @@ class WebmView extends Component {
                   >
                     <source
                       src={`${
-                        videoData && videoData.moveURL
+                        videoData && videoData.isYoutubeUrl
+                          ? videoData.videoUrl
+                          : videoData.moveURL
                           ? videoData.moveURL
                           : moveURL
                       }`}

@@ -7,6 +7,7 @@ import videoLoading from "../../../assets/img/icons/video-poster.svg";
 import moveLoader from "../../../assets/img/loder/moveLoad.gif";
 
 class MoveListDetails extends React.Component {
+  video;
   constructor(props) {
     super(props);
     this.state = {
@@ -71,7 +72,26 @@ class MoveListDetails extends React.Component {
       document.execCommand("insertText", false, content);
     }
   };
-
+  onHover = (video, index) => {
+    if (this.video) {
+      this.video.play();
+    }
+    this.props.handleVideoHover(index);
+  };
+  initializeVideoPlayer = (video, index) => {
+    this.video = document.getElementById(`webm-video-${index}`);
+    if (video.isYoutubeUrl) {
+      this.video.currentTime = Number(video.startTime);
+      this.video.addEventListener("timeupdate", () => {
+        if (Number(video.endTime) - this.video.currentTime < 0.3) {
+          this.video.currentTime = Number(video.startTime);
+        }
+      });
+    }
+    this.setState({
+      videoCanPlay: false
+    });
+  };
   render() {
     const {
       index,
@@ -79,9 +99,7 @@ class MoveListDetails extends React.Component {
       selectedMoves,
       video,
       handleVideoHoverLeave,
-      handleVideoHover,
       handleVideoPause,
-      handleVideoPlay,
       onDoubleClick,
       isVideoModalOpen,
       handleMovesSelect,
@@ -110,7 +128,9 @@ class MoveListDetails extends React.Component {
     } else {
       processingData = false;
     }
-
+    // get video details
+    const { isYoutubeUrl } = video;
+    console.log(video);
     return (
       <div
         className={
@@ -121,11 +141,7 @@ class MoveListDetails extends React.Component {
         key={index}
       >
         <div
-          onClick={
-            !video.isMoveProcessing
-              ? () => this.props.handleShowVideo(index)
-              : null
-          }
+          onClick={() => this.props.handleShowVideo(index)}
           onMouseLeave={
             !video.isMoveProcessing
               ? () => {
@@ -142,13 +158,12 @@ class MoveListDetails extends React.Component {
                   ? "video-full-selection"
                   : ""
               }`}
-              onMouseOver={() => handleVideoHover(index)}
+              onMouseOver={() => this.onHover(video, index)}
               onMouseLeave={() => {
                 handleVideoPause(index);
               }}
             >
               <div
-                onMouseOver={() => handleVideoPlay(index)}
                 onClick={
                   !video.isMoveProcessing
                     ? isVideoChecked && !isVideoModalOpen
@@ -171,10 +186,8 @@ class MoveListDetails extends React.Component {
                 <div
                   className="video-move-layer"
                   onClick={
-                    !video.isMoveProcessing
-                      ? !isVideoChecked && isVideoModalOpen
-                        ? () => this.props.handleVideoModal(video, index)
-                        : null
+                    !isVideoChecked && isVideoModalOpen
+                      ? () => this.props.handleVideoModal(video, index)
                       : null
                   }
                 ></div>
@@ -250,9 +263,7 @@ class MoveListDetails extends React.Component {
                       }
                       muted={true}
                       onLoadedData={() => {
-                        this.setState({
-                          videoCanPlay: false
-                        });
+                        this.initializeVideoPlayer(video, index);
                       }}
                       draggable="true"
                       onContextMenu={e => e.preventDefault()}
@@ -263,51 +274,16 @@ class MoveListDetails extends React.Component {
                       }}
                       key={video._id}
                     >
-                      <source src={`${video.moveURL}`} type="video/webm" />
+                      <source
+                        src={`${isYoutubeUrl ? video.videoUrl : video.moveURL}`}
+                        type="video/webm"
+                      />
                     </video>
                   </div>
                 </>
                 <div className="blur-img" />
               </div>
               <div className="play-list-text">
-                {/* <div
-                  ref={this.myRef}
-                  tabIndex="0"
-                  suppressContentEditableWarning={true}
-                  id={`video-title-${index}`}
-                  className={
-                    video.title !== "Unnamed" && video.title
-                      ? "text-capitalize play-list-heading h6 m-0 "
-                      : "text-capitalize play-list-heading h6 m-0 text-untitled"
-                  }
-                  contentEditable={
-                    doubleClick && doubleClickIndex === index ? true : false
-                  }
-                  onDoubleClick={
-                    !isVideoChecked
-                      ? !video.isMoveProcessing
-                        ? () => this.onDoubleClick(index, video.title)
-                        : null
-                      : null
-                  }
-                  onPaste={doubleClick ? this.onpaste : null}
-                  onInput={this.inputText}
-                  onBlur={
-                    doubleClick ? e => handleonBlur(e, video, index) : null
-                  }
-                  onKeyPress={
-                    doubleClick
-                      ? e => this.handleKeyPress(e, video, index)
-                      : null
-                  }
-                >
-                  {(isSortIndexUpdate &&
-                    doubleClick &&
-                    doubleClickIndex === index) ||
-                  video.title
-                    ? video.title
-                    : "unnamed"}
-                </div> */}
                 <div
                   className={
                     video.title !== "Unnamed" && video.title

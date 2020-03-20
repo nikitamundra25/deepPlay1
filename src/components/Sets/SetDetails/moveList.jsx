@@ -308,8 +308,12 @@ class MoveList extends React.Component {
    */
   handleVideoPlay = index => {
     let myVideo = document.getElementById(`webm-video-${index}`);
-    if (!this.props.isSortIndexUpdate) {
-      // myVideo.currentTime = 0;
+
+    if (!this.props.isSortIndexUpdate && myVideo) {
+      console.log(myVideo.currentTime);
+      if (myVideo.currentTime === 0) {
+        myVideo.currentTime = Number(this.props.movesOfSet[index].startTime);
+      }
       myVideo.play();
     }
   };
@@ -317,7 +321,7 @@ class MoveList extends React.Component {
    */
   handleVideoPause = index => {
     let myVideo = document.getElementById(`webm-video-${index}`);
-    if (!this.props.isSortIndexUpdate) {
+    if (!this.props.isSortIndexUpdate && myVideo) {
       myVideo.pause();
     }
   };
