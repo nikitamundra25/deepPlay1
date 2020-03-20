@@ -129,7 +129,7 @@ class MoveListDetails extends React.Component {
       processingData = false;
     }
     // get video details
-    const { isYoutubeUrl } = video;
+    const { isYoutubeUrl, isMoveProcessing } = video;
     console.log(video);
     return (
       <div
@@ -275,7 +275,11 @@ class MoveListDetails extends React.Component {
                       key={video._id}
                     >
                       <source
-                        src={`${isYoutubeUrl ? video.videoUrl : video.moveURL}`}
+                        src={`${
+                          isYoutubeUrl && isMoveProcessing
+                            ? video.videoUrl
+                            : video.moveURL
+                        }`}
                         type="video/webm"
                       />
                     </video>
