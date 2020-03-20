@@ -56,8 +56,10 @@ const moveSchema: Mongoose.Schema = new Schema({
     default: false
   },
   startTime: {
-    type: Number,
-    default: 0
+    type: String
+  },
+  endTime: {
+    type: String
   },
   audioUrl: {
     type: String

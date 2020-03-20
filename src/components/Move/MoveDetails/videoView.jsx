@@ -169,11 +169,7 @@ class VideoView extends React.Component {
   /**
    *
    */
-  componentDidUpdate({
-    timer: oldTimer,
-    moveReducer,
-    isFullScreenMode,
-  }) {
+  componentDidUpdate({ timer: oldTimer, moveReducer, isFullScreenMode }) {
     const prevMoveData = moveReducer.isCreatingAnotherMove;
     const newMoveData = this.props.moveReducer
       ? this.props.moveReducer.isCreatingAnotherMove

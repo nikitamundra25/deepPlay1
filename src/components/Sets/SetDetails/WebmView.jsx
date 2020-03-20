@@ -65,6 +65,7 @@ class WebmView extends Component {
     isVideoFromSearch
   }) => {
     const vid = document.getElementById("webm-video");
+    this.audio = document.getElementById("audio-trimmer");
     if (vid) {
       document.onkeydown = event => {
         this.handleKeyEvent(event);
@@ -74,11 +75,17 @@ class WebmView extends Component {
         this.setState({
           isBufferingVideo: true
         });
+        if (this.audio) {
+          this.audio.pause();
+        }
       };
       vid.oncanplay = () => {
         this.setState({
           isBufferingVideo: false
         });
+        if (this.audio) {
+          this.audio.play();
+        }
       };
     }
     if (isFullScreenMode !== this.props.isFullScreenMode) {
@@ -104,11 +111,17 @@ class WebmView extends Component {
           this.setState({
             isPlaying: false
           });
+          if (this.audio) {
+            this.audio.pause();
+          }
         });
         this.video.addEventListener("play", () => {
           this.setState({
             isPlaying: true
           });
+          if (this.audio) {
+            this.audio.play();
+          }
         });
 
         if (this.props.isFullScreenMode && videoFullScreen) {
@@ -139,12 +152,25 @@ class WebmView extends Component {
     }
     if (videoData !== this.props.videoData) {
       this.video = document.getElementById("webm-video");
+      this.audio = document.getElementById("audio-trimmer");
       this.customVideo = document.getElementById("custom_video_control");
       if (this.video) {
         this.video.addEventListener("timeupdate", () => {
           const currentVideoTime = parseFloat(
-            this.video ? this.video.currentTime : 0
+            this.video
+              ? this.props.videoData.isYoutubeUrl
+                ? this.video.currentTime -
+                  Number(this.props.videoData.startTime)
+                : this.video.currentTime
+              : 0
           ).toFixed(2);
+          if (
+            Number(this.props.videoData.endTime) - this.video.currentTime <
+            0.3
+          ) {
+            this.video.currentTime = Number(this.props.videoData.startTime);
+            this.audio.currentTime = Number(this.props.videoData.startTime);
+          }
           this.setState({
             currentTime: currentVideoTime
           });
@@ -158,9 +184,20 @@ class WebmView extends Component {
         this.video.load();
         let timeDuration = [];
         this.video.onloadeddata = () => {
-          const { duration, videoHeight, videoWidth } = this.video;
+          const { videoHeight, videoWidth } = this.video;
+          const duration =
+            Number(this.props.videoData.endTime) -
+            Number(this.props.videoData.startTime);
           for (let index = 0; index < duration; index = index + duration / 20) {
             timeDuration.push(index);
+          }
+          this.video.currentTime = this.props.videoData.startTime;
+          if (
+            this.audio &&
+            this.props.videoData.isYoutubeUrl &&
+            this.props.videoData.isMoveProcessing
+          ) {
+            this.audio.currentTime = this.props.videoData.startTime;
           }
           const data = {
             timeDuration: timeDuration,
@@ -185,6 +222,12 @@ class WebmView extends Component {
           const currentVideoTime = parseFloat(this.video.currentTime).toFixed(
             2
           );
+          if (
+            Number(this.props.videoData.endTime) - this.video.currentTime <
+            0.3
+          ) {
+            this.video.currentTime = Number(this.props.videoData.startTime);
+          }
           this.setState({
             currentTime: currentVideoTime
           });
@@ -202,6 +245,8 @@ class WebmView extends Component {
           for (let index = 0; index < duration; index = index + duration / 20) {
             timeDuration.push(index);
           }
+          console.log(this.video.currentTime, "this.video.currentTime");
+          this.video.currentTime = this.props.videoData.startTime;
           const data = {
             timeDuration: timeDuration,
             videoMaxDuration: duration
@@ -223,10 +268,40 @@ class WebmView extends Component {
    */
   labelValueChange = value => {
     this.video = document.getElementById("webm-video");
-    this.video.currentTime = value;
-    this.setState({
-      currentTime: parseFloat(value)
-    });
+
+    const { videoData } = this.props;
+    if (videoData.isYoutubeUrl && videoData.isMoveProcessing) {
+      let timeDuration = [];
+      const duration =
+        Number(this.props.videoData.endTime) -
+        (Number(this.props.videoData.startTime) + Number(value));
+      const videoMaxDuration =
+        Number(this.props.videoData.endTime) -
+        Number(this.props.videoData.startTime);
+      for (let index = 0; index < duration; index = index + duration / 20) {
+        timeDuration.push(index);
+      }
+      this.video.currentTime =
+        Number(this.props.videoData.startTime) + Number(value);
+      if (this.audio) {
+        this.audio.currentTime =
+          Number(this.props.videoData.startTime) + Number(value);
+      }
+      const data = {
+        timeDuration: timeDuration,
+        videoMaxDuration: videoMaxDuration
+      };
+
+      this.setState({
+        currentTime: parseFloat(value),
+        videoDuration: data
+      });
+    } else {
+      this.video.currentTime = value;
+      this.setState({
+        currentTime: parseFloat(value)
+      });
+    }
   };
   /**
    *
@@ -238,6 +313,9 @@ class WebmView extends Component {
         isPlaying: true
       });
       this.video.play();
+      if (this.audio) {
+        this.audio.play();
+      }
     }
   };
   /**
@@ -248,6 +326,9 @@ class WebmView extends Component {
       isPlaying: false
     });
     this.video.pause();
+    if (this.audio) {
+      this.audio.pause();
+    }
   };
   /**
    *
@@ -259,12 +340,20 @@ class WebmView extends Component {
       isMuted: value === 0
     });
     this.video.volume = value;
+    if (this.audio) {
+      this.audio.volume = value;
+    }
   };
   /**
    *
    */
   toggleMute = () => {
     const { isMuted } = this.state;
+    if (this.audio && !isMuted) {
+      this.audio.volume = 0;
+    } else if (this.audio && isMuted) {
+      this.audio.volume = 1;
+    }
     this.setState({
       isMuted: !isMuted
     });
@@ -322,6 +411,9 @@ class WebmView extends Component {
    */
   handleSpeed = speed => {
     this.video.playbackRate = speed;
+    if (this.audio) {
+      this.audio.playbackRate = speed;
+    }
     this.setState({
       playBackSpeed: speed
     });
@@ -663,22 +755,11 @@ class WebmView extends Component {
 
     if (isFullScreenMode1) {
       if (isFullScreenMode && !isPlaying && playScreen) {
-        // console.log("inisdee");
         this.playVideo();
       }
     }
 
     playScreen = !isFullScreenMode ? (isFullScreenMode1 ? true : false) : true;
-
-    // if (!isPlaying) {
-    //   if (isFullScreenMode) {
-    //     isFullScreenMode1 = true;
-    //   }
-    // }
-
-    // if (!isFullScreenMode && !isPlaying) {
-    //   isFullScreenMode1 = false;
-    // }
 
     if (isFullScreenMode1) {
       let control = document.getElementsByClassName("controls");
@@ -693,7 +774,6 @@ class WebmView extends Component {
         control[0].classList.remove("hide-controls");
       }
     }
-
     return (
       <>
         <Modal
@@ -713,7 +793,6 @@ class WebmView extends Component {
                 });
                 handleVideoModal(videoData, null);
               }}
-              // onClick={handleVideoModal}
             >
               <span aria-hidden="true">
                 <img src={closeBtn} alt="close-ic" />
@@ -747,32 +826,6 @@ class WebmView extends Component {
                 }
               >
                 {videoData && videoData.title ? videoData.title : "Unnamed"}
-
-                {/* {doubleClick
-                  ? videoData.title
-                    ? videoData.title
-                    : videoData.title
-                  : "unnamed"} */}
-                {/* {doubleClick ? (
-                  <>
-                    <FormGroup>
-                      <Input
-                        id="title"
-                        type="text"
-                        placeholder="Enter a title"
-                        name="title"
-                        onChange={this.handleChangeTitle}
-                        value={title}
-                        onBlur={() => this.handleonBlur(videoData)}
-                      />
-                    </FormGroup>
-                    {errorTitle ? errorTitle : null}
-                  </>
-                ) : videoData && videoData.title ? (
-                  videoData.title
-                ) : (
-                  "Unnamed"
-                )} */}
               </div>
 
               {!isShareable ? (
@@ -797,26 +850,10 @@ class WebmView extends Component {
                               videoData ? videoData._id : video._id
                             )
                           }
-                          // onClick={() =>
-                          //   this.props.onEditMove(
-                          //     videoData ? videoData._id : video._id
-                          //   )
-                          // }
                         >
                           Edit Move Details
                         </DropdownItem>
-                        {/* <DropdownItem
-                          onClick={() =>
-                            this.handleStarred(
-                              videoData ? videoData._id : video._id,
-                              videoData.isStarred
-                            )
-                          }
-                        >
-                          {videoData && videoData.isStarred
-                            ? "Unstar"
-                            : "Mark Star"}
-                        </DropdownItem> */}
+
                         <DropdownItem
                           onClick={() =>
                             videoData
@@ -841,18 +878,6 @@ class WebmView extends Component {
                         >
                           Transfer
                         </DropdownItem>
-                        {/* <DropdownItem
-                          onClick={() =>
-                            videoData
-                              ? this.handleMoveDelete(
-                                  videoData._id,
-                                  videoData.setId
-                                )
-                              : this.handleMoveDelete(video._id)
-                          }
-                        >
-                          Remove
-                        </DropdownItem> */}
                       </DropdownMenu>
                     </UncontrolledDropdown>
                   </div>
@@ -893,45 +918,64 @@ class WebmView extends Component {
                     <img src={videoLoading} alt="" />
                   </div>
                 ) : null}
-                  {!isVideoLoading ? (
-                  <video
-                    width={"100%"}
-                    id="webm-video"
-                    muted={isMuted}
-                    className={
-                      isFullScreenMode
-                        ? "full-video-mode video-loading-tag cursor_pointer"
-                        : "video-loading-tag cursor_pointer"
-                    }
-                    loop
-                    // preload="auto"
-                    playsInline
-                    autoPlay
-                    onCanPlay={() => {
-                      this.setState({
-                        videoCanPlay: true
-                      });
-                    }}
-                    onLoadedData={() => {
-                      this.setState({
-                        videoCanPlay: false
-                      });
-                    }}
-                    disablecontrols="true"
-                    disablepictureinpicture="true"
-                    controlsList="nodownload"
-                    onContextMenu={e => e.preventDefault()}
-                    onClick={isPlaying ? this.pauseVideo : this.playVideo}
-                  >
-                    <source
-                      src={`${
-                        videoData && videoData.moveURL
-                          ? videoData.moveURL
-                          : moveURL
-                      }`}
-                      type="video/webm"
-                    />
-                  </video>
+                {!isVideoLoading ? (
+                  <>
+                    <video
+                      width={"100%"}
+                      id="webm-video"
+                      muted={isMuted}
+                      className={
+                        isFullScreenMode
+                          ? "full-video-mode video-loading-tag cursor_pointer"
+                          : "video-loading-tag cursor_pointer"
+                      }
+                      loop
+                      preload="auto"
+                      playsInline
+                      autoPlay
+                      onCanPlay={() => {
+                        this.setState({
+                          videoCanPlay: true
+                        });
+                      }}
+                      onLoadedData={() => {
+                        this.setState({
+                          videoCanPlay: false
+                        });
+                      }}
+                      disablecontrols="true"
+                      disablepictureinpicture="true"
+                      controlsList="nodownload"
+                      onContextMenu={e => e.preventDefault()}
+                      onClick={isPlaying ? this.pauseVideo : this.playVideo}
+                    >
+                      <source
+                        src={`${
+                          videoData &&
+                          videoData.isYoutubeUrl &&
+                          videoData.isMoveProcessing
+                            ? videoData.videoUrl
+                            : videoData.moveURL
+                            ? videoData.moveURL
+                            : moveURL
+                        }`}
+                        type="video/webm"
+                      />
+                    </video>
+                    {videoData &&
+                    videoData.isYoutubeUrl &&
+                    videoData.isMoveProcessing ? (
+                      <audio
+                        id={"audio-trimmer"}
+                        className={"d-none"}
+                        controls
+                        autoPlay
+                        loop
+                      >
+                        <source src={videoData.audioUrl} type="audio/ogg" />
+                      </audio>
+                    ) : null}
+                  </>
                 ) : (
                   <div className="video-loader">
                     <Loader videoLoader={true} />
