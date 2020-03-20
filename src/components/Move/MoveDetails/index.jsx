@@ -46,6 +46,7 @@ import qs from "query-string";
 import { AppRoutes } from "../../../config/AppRoutes";
 import CreateSetComponent from "../../Sets/createSet";
 import { toast } from "react-toastify";
+import { DefaultMoveLength } from "config/Constants";
 
 // core components
 class MoveDetails extends React.Component {
@@ -64,7 +65,7 @@ class MoveDetails extends React.Component {
       isUpdateDescription: false,
       timer: {
         min: 0,
-        max: 15
+        max: DefaultMoveLength
       },
       videoMaxDuration: 1,
       setMoveCount: 0,
@@ -77,9 +78,9 @@ class MoveDetails extends React.Component {
       videoError: false,
       isPlaying: false,
       currentTime: 0,
-      totalOutput: 15,
+      totalOutput: DefaultMoveLength,
       isChange: true,
-      maxLengthError: "Move can't be allow more than 15 sec."
+      maxLengthError: `Move can't be allow more than ${DefaultMoveLength} sec.`
     };
     this.videoDetails = React.createRef();
   }
@@ -187,7 +188,7 @@ class MoveDetails extends React.Component {
           title,
           description,
           tags,
-          timer: { min: 0.1, max: 15.1 }
+          timer: { min: 0, max: DefaultMoveLength }
         });
       }
       if (this.video) {
@@ -313,9 +314,9 @@ class MoveDetails extends React.Component {
       totalOutput: difference
     });
 
-    if (difference.toFixed(2) > 15) {
+    if (difference.toFixed(2) > DefaultMoveLength) {
       this.setState({
-        maxLengthError: "Move can't be allow more than 15 sec."
+        maxLengthError: `Move can't be allow more than ${DefaultMoveLength} sec.`
       });
     } else if (difference === 1) {
       this.setState({
@@ -533,7 +534,7 @@ class MoveDetails extends React.Component {
       videoMaxDuration: 0,
       createNew: true,
       totalOutput: this.state.videoDuration,
-      maxLengthError: "Move can't be allow more than 15 sec."
+      maxLengthError: `Move can't be allow more than ${DefaultMoveLength} sec.`
     });
     this.props.createAnotherMoveRequest({
       moveUrl: moveDetails.videoUrl,

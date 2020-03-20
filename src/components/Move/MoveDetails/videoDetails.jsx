@@ -8,6 +8,7 @@ import replayIc from "../../../assets/img/icons/replay.svg";
 import pauseIc from "../../../assets/img/icons/pause.svg";
 import { SecondsToMMSSMM } from "helper/Time";
 import { toast } from "react-toastify";
+import { DefaultMoveLength } from "config/Constants";
 // core components
 class VideoDetails extends React.Component {
   constructor(props) {
@@ -35,15 +36,15 @@ class VideoDetails extends React.Component {
   addCutHandler = () => {
     const cutCount = this.state.trimTime;
     const { totalOutput, videoMaxDuration } = this.props;
-    if (parseInt(totalOutput) >= 15) {
+    if (parseInt(totalOutput) >= DefaultMoveLength) {
       if (!toast.isActive(this.toastId)) {
         this.toastId = toast.warn(
-          "Max limit exceeds, You cannot trim more than 15 sec video."
+          `Max limit exceeds, You cannot trim more than ${DefaultMoveLength} sec video.`
         );
       }
       return;
     }
-    let difference = 15 - totalOutput;
+    let difference = DefaultMoveLength - totalOutput;
     let minValue = cutCount[cutCount.length - 1].max + 0.1;
     let data;
     if (minValue + difference < videoMaxDuration) {
@@ -426,8 +427,8 @@ class VideoDetails extends React.Component {
           <div className="video-right-section">
             <div className={"font-weight-bold h4"}>Trim your video</div>
             <span>
-              Use sliders below to trim your video (15 secs max). Or use your
-              arrow keys on timestamps to get really precise.
+              Use sliders below to trim your video ({DefaultMoveLength} secs
+              max). Or use your arrow keys on timestamps to get really precise.
             </span>
             <div className="triming-section">
               <div className="triming-wrap">
