@@ -192,7 +192,13 @@ class WebmView extends Component {
             timeDuration.push(index);
           }
           this.video.currentTime = this.props.videoData.startTime;
-          this.audio.currentTime = this.props.videoData.startTime;
+          if (
+            this.audio &&
+            this.props.videoData.isYoutubeUrl &&
+            this.props.videoData.isMoveProcessing
+          ) {
+            this.audio.currentTime = this.props.videoData.startTime;
+          }
           const data = {
             timeDuration: timeDuration,
             videoMaxDuration: duration
@@ -945,7 +951,9 @@ class WebmView extends Component {
                     >
                       <source
                         src={`${
-                          videoData && videoData.isYoutubeUrl && videoData.isMoveProcessing
+                          videoData &&
+                          videoData.isYoutubeUrl &&
+                          videoData.isMoveProcessing
                             ? videoData.videoUrl
                             : videoData.moveURL
                             ? videoData.moveURL
@@ -954,7 +962,9 @@ class WebmView extends Component {
                         type="video/webm"
                       />
                     </video>
-                    {videoData && videoData.isYoutubeUrl && videoData.isMoveProcessing ? (
+                    {videoData &&
+                    videoData.isYoutubeUrl &&
+                    videoData.isMoveProcessing ? (
                       <audio
                         id={"audio-trimmer"}
                         className={"d-none"}
