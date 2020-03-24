@@ -23,7 +23,7 @@ const client = algoliasearch(algoliaAppId, algoliaAPIKey);
 const index: any = client.initIndex("deep_play_data");
 const __basedir = path.join(__dirname, "../public");
 let ObjectId = require("mongoose").Types.ObjectId;
-
+import { exec } from "child_process";
 /**
  * Title:- Download Video to local server
  * Prams:- valid youtube video url
@@ -98,129 +98,64 @@ const downloadYoutubeVideo = async (
 ): Promise<any> => {
   const { body, currentUser } = req;
   try {
-    let headToken: Request | any = currentUser;
-    if (!headToken.id) {
-      res.status(400).json({
-        message: "User id not found"
-      });
-    }
+    const headToken: Request | any = currentUser;
+    // execute command instead of calling the youtubedl method to speed up the process
+    const ex = exec(
+      `youtube-dl "${body.url}" --skip-download --get-thumbnail --get-url --format=best`
+    );
+    let youTubeUrl = "";
+    let thumbImg = "";
 
-    let videoURL: string;
-    const fileName = [
-      headToken.id + Date.now() + "deep_play_video" + ".webm"
-    ].join("");
-
-    videoURL = path.join("uploads", "youtube-videos", fileName);
-    if (
-      body.url ===
-      "https://www.youtube.com/embed/rp4UwPZfRis?autoplay=0&enablejsapi=1"
-    ) {
-      return res.status(400).json({
-        message: "Video Url Not Supported",
-        success: false
-      });
-    }
-    /* Download youtube videos on localserver */
-    const trueYoutubeUrl = ytdl.validateURL(body.url);
-    let youTubeUrl = "",
-      youTubeAudio = "";
-    if (trueYoutubeUrl) {
-      youtubedl.getInfo(body.url, async function(err: any, info: any) {
-        if (err) {
-          console.log("err", err);
-
-          return res.status(400).json({
-            message: "This Video is not available.",
-            success: false
-          });
-        }
-
-        // ytdl.getInfo(body.url, async (err, info) => {
-        //   if (err) {
-        //     return res.status(400).json({
-        //       message: "This Video is not available.",
-        //       success: false
-        //     });
-        //   }
-
-        for (let index = 0; index < info.formats.length; index++) {
-          const element = info.formats[index];
-          if (element.format === "251 - audio only (tiny)") {
-            youTubeAudio = info.formats[0].url;
-          }
-          if (
-            element.format === "248 - 1920x1080 (1080p)" ||
-            element.format === "137 - 1920x1080 (1080p)"
-          ) {
-            const temp = element.url.split("manifest.googlevideo.com");
-            if (temp[1]) {
-              youTubeUrl = info.formats[0].url;
-            } else {
-              youTubeUrl = element.url;
+    !ex.stdout
+      ? undefined
+      : ex.stdout
+          .on("data", (message: string) => {
+            if (message && message.startsWith("https")) {
+              youTubeUrl = message.split("\n")[0];
+              thumbImg = message.split("\n")[1];
             }
-          } else if (
-            element.format === "247 - 1280x720 (720p)" ||
-            element.format === "247 - 1280x576 (720p)" ||
-            element.format === "136 - 1280x576 (720p)"
-          ) {
-            const temp = element.url.split("manifest.googlevideo.com");
-            if (temp[1]) {
-              youTubeUrl = info.formats[0].url;
-            } else {
-              youTubeUrl = element.url;
-            }
-          } else if (
-            element.format === "244 - 854x384 (480p)" ||
-            element.format === "397 - 854x384 (480p)" ||
-            element.format === "135 - 854x480 (480p)"
-          ) {
-            const temp = element.url.split("manifest.googlevideo.com");
-            if (temp[1]) {
-              youTubeUrl = info.formats[0].url;
-            } else {
-              youTubeUrl = element.url;
-            }
-          }
-        }
-
-        if (info) {
-          if (info._duration_raw >= 3600) {
+            console.log(message);
+          })
+          .on("error", err => {
+            console.log("Error", err);
             return res.status(400).json({
-              message: "Video duration should be less than 60m.",
+              message: "This Video is not available.",
               success: false
             });
-          }
-
-          const thumbImg =
-            info.thumbnails && info.thumbnails.length
-              ? info.thumbnails[0].url
-              : [];
-
-          // youTubeUrl = info.url;
-          const moveResult: Document | any = new MoveModel({
-            videoUrl: youTubeUrl,
-            sourceUrl: body.url,
-            isYoutubeUrl: true,
-            userId: headToken.id,
-            videoThumbnail: thumbImg,
-            audioUrl: youTubeAudio ? youTubeAudio : "",
-            setId: body.setId !== "undefined" ? body.setId : null
+          })
+          // once the process is end
+          .on("end", async () => {
+            if (!youTubeUrl) {
+              return res.status(400).json({
+                message: "This Video is not available.",
+                success: false
+              });
+            }
+            console.log("youTubeUrl", youTubeUrl, thumbImg);
+            const moveResult: Document | any = new MoveModel({
+              videoUrl: youTubeUrl,
+              sourceUrl: body.url,
+              isYoutubeUrl: true,
+              userId: headToken.id,
+              videoThumbnail: thumbImg,
+              setId: body.setId !== "undefined" ? body.setId : null
+            });
+            await moveResult.save();
+            return res.status(200).json({
+              message: "Video uploaded successfully!",
+              videoUrl: youTubeUrl,
+              moveData: moveResult
+            });
           });
-          await moveResult.save();
-          return res.status(200).json({
-            message: "Video uploaded successfully!",
-            videoUrl: videoURL,
-            moveData: moveResult
-          });
-        }
-      });
-    } else {
+    // on error
+    ex.on("error", () => {
       return res.status(400).json({
-        message: "Enter a valid youtube url"
+        message: "This Video is not available.",
+        success: false
       });
-    }
+    });
   } catch (error) {
-    res.status(500).send({
+    return res.status(500).send({
       message: error.msg,
       success: false
     });
