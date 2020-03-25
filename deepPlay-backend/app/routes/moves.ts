@@ -19,8 +19,9 @@ import {
   getMoveBySearch,
   addTags,
   getTagListByUserId,
-  updateMoveDetailsFromYouTubeAndTrim,
-  processVideoTrmiming
+  processVideoTrmiming,
+  uploadVideo,
+  updateDetailsAndTrimVideo
 } from "../controllers";
 import { ValidateAdminToken } from "../common";
 import { storageFile } from "../common/video";
@@ -30,10 +31,10 @@ const upload: multer.Instance = multer({ storage: storageFile });
 const MoveRouter: express.Router = express.Router();
 
 MoveRouter.post(
-  "/download-video",
+  "/upload-video",
   ValidateAdminToken,
   upload.single("url"),
-  downloadVideo
+  uploadVideo
 );
 MoveRouter.post(
   "/download-youtube-video",
@@ -48,7 +49,7 @@ MoveRouter.get(
   getMoveDetailsById
 );
 MoveRouter.get("/public-url-move-details", publicUrlMoveDetails);
-MoveRouter.post("/update", ValidateAdminToken, updateMoveDetailsAndTrimVideo);
+MoveRouter.post("/update", ValidateAdminToken, updateDetailsAndTrimVideo);
 MoveRouter.post(
   "/update-youtube-video",
   ValidateAdminToken,

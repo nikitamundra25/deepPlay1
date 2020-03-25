@@ -9,12 +9,13 @@ import ffmpeg from "ffmpeg";
 import FFMpeg from "fluent-ffmpeg";
 import { decrypt } from "../common";
 import { IMoveCopy, IUpdateMove } from "../interfaces";
-import moment from "moment";
+import moment, { min } from "moment";
 import { s3BucketUpload } from "../common/awsBucket";
 import { algoliaAppId, algoliaAPIKey } from "../config/app";
 import request from "request";
 import youtubedl from "youtube-dl";
 import ThumbnailGenerator from "video-thumbnail-generator";
+import { exec } from "child_process";
 import JobQueue from "../common/Queue";
 const instagramUtil = require("../common/instagramUtil");
 var CronJob = require("cron").CronJob;
@@ -23,7 +24,6 @@ const client = algoliasearch(algoliaAppId, algoliaAPIKey);
 const index: any = client.initIndex("deep_play_data");
 const __basedir = path.join(__dirname, "../public");
 let ObjectId = require("mongoose").Types.ObjectId;
-import { exec } from "child_process";
 /**
  * Title:- Download Video to local server
  * Prams:- valid youtube video url
@@ -33,12 +33,7 @@ import { exec } from "child_process";
 const downloadVideo = async (req: Request, res: Response): Promise<any> => {
   const { file, currentUser, body } = req;
   try {
-    let headToken: Request | any = currentUser;
-    if (!headToken.id) {
-      res.status(400).json({
-        message: "User id not found"
-      });
-    }
+    const headToken: Request | any = currentUser;
     let videoURL: string;
     const fileName = file.filename;
     videoURL = path.join("uploads", "youtube-videos", fileName);
@@ -46,16 +41,16 @@ const downloadVideo = async (req: Request, res: Response): Promise<any> => {
     /* Generate thumbnail and upload on s3 start
      */
     let s3VideoThumbnailUrl: any | null,
-      videoFile: String | any,
-      videoThumbnail: String | any;
+      videoFile: string,
+      videoThumbnail: string;
 
-    const videoRes = await generateThumbanail(fileName);
+    const videoRes: string = await generateThumbanail(fileName);
     if (IsProductionMode) {
       videoFile = path.join(__dirname, videoURL);
-      videoThumbnail = videoRes ? videoRes : null;
+      videoThumbnail = videoRes ? videoRes : "";
     } else {
       videoFile = path.join(__basedir, "..", videoURL);
-      videoThumbnail = videoRes ? videoRes : null;
+      videoThumbnail = videoRes ? videoRes : "";
     }
     if (videoThumbnail) {
       s3VideoThumbnailUrl = await s3BucketUpload(
@@ -83,6 +78,36 @@ const downloadVideo = async (req: Request, res: Response): Promise<any> => {
     });
   } catch (error) {
     res.status(500).send({
+      message: error.message
+    });
+  }
+};
+/**
+ * Saves a move after uploading the video
+ * @param {Request} req
+ * @param {Response} res
+ */
+const uploadVideo = async (req: Request, res: Response): Promise<any> => {
+  try {
+    const { body, currentUser, file } = req;
+    const { id } = currentUser || {};
+    const { setId } = body;
+    const { filename } = file;
+    const videoURL: string = `${ServerURL}/uploads/youtube-videos/${filename}`;
+    const moveResult: Document = await MoveModel.create({
+      videoUrl: videoURL,
+      userId: id,
+      sourceUrl: videoURL,
+      isYoutubeUrl: false,
+      setId: setId && setId != "undefined" ? setId : null
+    });
+    return res.status(200).json({
+      message: "Video uploaded successfully!",
+      videoUrl: videoURL,
+      moveData: moveResult
+    });
+  } catch (error) {
+    return res.status(500).send({
       message: error.message
     });
   }
@@ -921,7 +946,141 @@ const updateMoveDetailsAndTrimVideo = async (
     });
   }
 };
+/**
+ *
+ * @param {Request} req
+ * @param {Response} res
+ */
+const updateDetailsAndTrimVideo = async (
+  req: Request,
+  res: Response
+): Promise<any> => {
+  try {
+    const { body, currentUser } = req;
+    const { timer, moveId, title, description, tags, setId } = body;
+    const { id: userId } = currentUser || {};
+    const moveDetails: Document | any = await MoveModel.findOne({
+      _id: moveId,
+      userId
+    });
+    if (!moveDetails) {
+      throw new Error("This tag doesn't belogs to the logged in user.");
+    }
+    // update sort index of all other moves
+    await MoveModel.updateMany(
+      {
+        setId,
+        _id: {
+          $ne: moveId
+        }
+      },
+      {
+        $inc: {
+          sortIndex: 1
+        }
+      }
+    );
 
+    // set move details
+    moveDetails.set("tags", tags);
+    moveDetails.set("title", title);
+    moveDetails.set("description", description);
+    moveDetails.set("startTime", timer.min);
+    moveDetails.set("endTime", timer.max);
+    moveDetails.set("setId", setId);
+    moveDetails.set("sortIndex", 0);
+    moveDetails.set("isMoveProcessing", true);
+    moveDetails.set("moveURL", "");
+    // save the set details
+    moveDetails.save();
+    const videoPath: string = path.join(
+      moveDetails.videoUrl.replace(ServerURL, "")
+    );
+    // push the process in JobQueue
+    JobQueue.push(callback => {
+      processLocalVideo(moveDetails, callback);
+    });
+    return res.status(200).json({
+      responsecode: 200,
+      data: moveDetails,
+      setId: setId,
+      videoThumbnail: moveDetails.videoThumbnail
+    });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).send({
+      message: error.message
+    });
+  }
+};
+const processLocalVideo = async (moveDetails: any, callback: any) => {
+  const { videoUrl, startTime, endTime } = moveDetails;
+  let videoFilePath: string = videoUrl.replace(ServerURL, ""),
+    videoFile: string = "",
+    outputFile: string = "";
+  const fileName = path.basename(videoFilePath);
+  if (IsProductionMode) {
+    videoFile = path.join(__basedir, videoFilePath);
+    outputFile = path.join(
+      __basedir,
+      videoFilePath.replace(fileName, ""),
+      `trimmed_${fileName}`
+    );
+  } else {
+    videoFile = path.join(__basedir, "..", videoFilePath);
+    outputFile = path.join(
+      __basedir,
+      "..",
+      videoFilePath.replace(fileName, ""),
+      `trimmed_${fileName}`
+    );
+  }
+  console.log("Trimming process start for: %s", videoFile);
+  trimVideo(startTime, endTime - startTime, videoFile, outputFile, err => {
+    console.log(err);
+    if (err) {
+      console.log(err);
+      return callback(err);
+    }
+    // generate thumbnail from the trimmed file
+    getThumbnail(outputFile, async (err: any, videoThumbnail: string) => {
+      console.log("err", err);
+      console.log("====================================");
+      console.log("videoThumbnail", videoThumbnail);
+      console.log("====================================");
+      const s3VideoThumbnailUrl = await s3BucketUpload(
+        videoThumbnail,
+        "deep-play.png",
+        "moves-thumbnail"
+      );
+      moveDetails.set("videoThumbnail", s3VideoThumbnailUrl);
+      // move clip to s3 and update details and save on algolia
+      moveToS3AndSetDetails(outputFile, moveDetails, callback);
+    });
+  });
+};
+/**
+ *
+ * @param videPath
+ */
+const getThumbnail = async (videoPath: string, callback: any) => {
+  let fileNames: string[] = [];
+  const dir = path.join(path.dirname(videoPath), "..", "images-thumbnail");
+  FFMpeg(videoPath)
+    .takeScreenshots({
+      count: 1,
+      filename: `${moment().unix()}_${
+        path.parse(videoPath).name
+      }_thumbnail.png`,
+      folder: dir
+    })
+    .on("filenames", (filenames: string[]) => {
+      fileNames = filenames.map(file => `${dir}/${file}`);
+    })
+    .on("error", callback)
+    .on("end", () => callback(null, fileNames[0]))
+    .run();
+};
 /**
  *
  */
@@ -1736,7 +1895,7 @@ const getInstagramVideoUrl = (
 /* 
 Generate thumbnail for bulk upload data
 */
-const generateThumbanail = async (fileName: any) => {
+const generateThumbanail = async (fileName: any): Promise<string> => {
   let videourl1: string;
   if (IsProductionMode) {
     videourl1 = path.join(__dirname, "uploads", "youtube-videos", fileName);
@@ -1757,7 +1916,7 @@ const generateThumbanail = async (fileName: any) => {
     "uploads",
     "bulk-upload-thumbnail/"
   );
-  let videoRes: any = "";
+  let videoRes: string = "";
   return await new Promise((resolve, reject) => {
     const tg: any = new ThumbnailGenerator({
       sourcePath: videourl1,
@@ -1925,29 +2084,68 @@ const trimVideo = (
 };
 /**
  *
+ * @param videoPath
+ * @param moveDetails
+ * @param callback
+ */
+const moveToS3AndSetDetails = async (
+  videoPath: string,
+  moveDetails: any,
+  callback: any
+) => {
+  const s3VideoUrl = await s3BucketUpload(videoPath, "deep-play.webm", "moves");
+  console.log("WebM file Moved to S3 Bucket.");
+  // save data to algolia
+  const moveDataForAlgolia = {
+    _id: moveDetails._id,
+    moveURL: s3VideoUrl,
+    title: moveDetails.title,
+    description: moveDetails.title,
+    startTime: moveDetails.min,
+    sourceUrl: moveDetails.sourceUrl,
+    tags: moveDetails.tags,
+    sortIndex: 0,
+    setId: moveDetails.setId,
+    isYoutubeUrl: true,
+    userId: moveDetails.userId,
+    isDeleted: false,
+    createdAt: new Date(),
+    videoMetaData: {},
+    searchType: "move"
+  };
+
+  index.addObjects([moveDataForAlgolia], async (err: string, content: any) => {
+    console.log("Move details saved to algolia.");
+    // set movedetail's updated data
+    moveDetails.set("moveURL", s3VideoUrl);
+    moveDetails.set("isMoveProcessing", false);
+    if (!err && content && content.objectIDs && content.objectIDs[0]) {
+      // set algolia object Id
+      moveDetails.set("objectId", content.objectIDs[0]);
+    }
+    await moveDetails.save();
+    console.log("Move details updated successfully!");
+    fs.unlinkSync(videoPath);
+    console.log("Removed trimmed Move file: %s", videoPath);
+    callback();
+  });
+};
+/**
+ *
  * @param moveDetails
  * @param callback
  */
 const downloadAndTrimVideo = (moveDetails: any, callback: any) => {
-  const { _id: moveId, sourceUrl, startTime, endTime } = moveDetails;
+  const { sourceUrl, startTime, endTime } = moveDetails;
   let originalVideoPath: string = "",
     originalAudioPath: string = "",
     trimmedVideoPath: string = "",
     trimmedAudioPath: string = "",
     mergedVideoPath: string = "",
-    trimmedFilePath: string = "",
     timeStamp = moment().unix();
   const videoName = [timeStamp, "_", "deep_play_video", ".mp4"].join(""),
     audioName = [timeStamp, "_", "deep_play_audio", ".mp3"].join(""),
-    mergedName = [timeStamp, "_", "deep_play_merged", ".mp4"].join(""),
-    trimmedFile = [
-      timeStamp,
-      "_",
-      "trimmed",
-      "_",
-      "deep_play_video",
-      ".mp4"
-    ].join("");
+    mergedName = [timeStamp, "_", "deep_play_merged", ".mp4"].join("");
   if (IsProductionMode) {
     originalVideoPath = path.join(
       __dirname,
@@ -1978,12 +2176,6 @@ const downloadAndTrimVideo = (moveDetails: any, callback: any) => {
       "uploads",
       "youtube-videos",
       mergedName
-    );
-    trimmedFilePath = path.join(
-      __dirname,
-      "uploads",
-      "youtube-videos",
-      trimmedFile
     );
   } else {
     originalVideoPath = path.join(
@@ -2020,13 +2212,6 @@ const downloadAndTrimVideo = (moveDetails: any, callback: any) => {
       "uploads",
       "youtube-videos",
       mergedName
-    );
-    trimmedFilePath = path.join(
-      __basedir,
-      "..",
-      "uploads",
-      "youtube-videos",
-      trimmedFile
     );
   }
   console.time("VideoDownloadTime");
@@ -2071,58 +2256,8 @@ const downloadAndTrimVideo = (moveDetails: any, callback: any) => {
                     "Removed trimmed audio file: %s",
                     trimmedVideoPath
                   );
-                  // move the trimmed video to s3 bucket
-                  const s3VideoUrl = await s3BucketUpload(
-                    mergedVideoPath,
-                    "deep-play.webm",
-                    "moves"
-                  );
-                  console.log("WebM file Moved to S3 Bucket.");
-
-                  // save data to algolia
-                  const moveDataForAlgolia = {
-                    _id: moveId,
-                    moveURL: s3VideoUrl,
-                    title: moveDetails.title,
-                    description: moveDetails.title,
-                    startTime: moveDetails.min,
-                    sourceUrl: moveDetails.sourceUrl,
-                    tags: moveDetails.tags,
-                    sortIndex: 0,
-                    setId: moveDetails.setId,
-                    isYoutubeUrl: true,
-                    userId: moveDetails.userId,
-                    isDeleted: false,
-                    createdAt: new Date(),
-                    videoMetaData: {},
-                    searchType: "move"
-                  };
-
-                  index.addObjects(
-                    [moveDataForAlgolia],
-                    async (err: string, content: any) => {
-                      console.log("Move details saved to algolia.");
-                      // set movedetail's updated data
-                      moveDetails.set("moveURL", s3VideoUrl);
-                      moveDetails.set("isMoveProcessing", false);
-                      if (
-                        content &&
-                        content.objectIDs &&
-                        content.objectIDs[0]
-                      ) {
-                        // set algolia object Id
-                        moveDetails.set("objectId", content.objectIDs[0]);
-                      }
-                      await moveDetails.save();
-                      console.log("Move details updated successfully!");
-                      fs.unlinkSync(mergedVideoPath);
-                      console.log(
-                        "Removed trimmed Move file: %s",
-                        mergedVideoPath
-                      );
-                      callback();
-                    }
-                  );
+                  // move the trimmed video to s3 bucket & update details & set on algolia
+                  moveToS3AndSetDetails(mergedVideoPath, moveDetails, callback);
                 }
               );
             }
@@ -2168,5 +2303,7 @@ export {
   addTags,
   getTagListByUserId,
   updateMoveDetailsFromYouTubeAndTrim,
-  processVideoTrmiming
+  processVideoTrmiming,
+  uploadVideo,
+  updateDetailsAndTrimVideo
 };

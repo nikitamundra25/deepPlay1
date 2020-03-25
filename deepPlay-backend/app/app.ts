@@ -23,6 +23,7 @@ Mongoose.connect(
     if (err) throw err;
   }
 );
+console.log(path.join(__dirname, "uploads"));
 // parse application/x-www-form-urlencoded
 app.use(bodyParser.urlencoded({ extended: false }));
 // parse application/json

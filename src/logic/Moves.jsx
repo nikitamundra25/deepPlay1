@@ -48,7 +48,7 @@ const downloadVideoLogic = createLogic({
     } else {
       result = await api.UploadVideo(
         "move",
-        "/download-video",
+        "/upload-video",
         action.payload,
         progressEvent => {
           const percent =
