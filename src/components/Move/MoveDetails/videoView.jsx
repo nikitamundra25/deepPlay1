@@ -10,7 +10,6 @@ import {
 import CreatableSelect from "react-select/creatable";
 import "react-tagsinput/react-tagsinput.css";
 import AsyncSelect from "react-select/async";
-import { AppConfig } from "../../../config/Appconfig";
 import videoLoading from "../../../assets/img/loder/loader.svg";
 import { AppRoutes } from "config/AppRoutes";
 import InputRange from "react-input-range";
@@ -336,7 +335,6 @@ class VideoView extends React.Component {
   render() {
     const {
       moveReducer,
-      isYoutubeUrl,
       playbackFailed,
       videoError,
       selectSetOptions,
@@ -351,7 +349,7 @@ class VideoView extends React.Component {
     const { allSetList, recentSetAdded } = setReducer;
 
     const {
-      /* isBufferingVideo */ videoCanPlay,
+      videoCanPlay,
       audioSpeed,
       isMuted,
       videoDuration,
@@ -418,11 +416,6 @@ class VideoView extends React.Component {
         <Col lg={4} className="trim-video-view">
           {moveDetails && moveDetails.videoUrl ? (
             <div className={"video-player"}>
-              {/* {isBufferingVideo === true ? (
-                <div className="video-spinner z-">
-                  <img src={videoLoading} alt="" />
-                </div>
-              ) : null} */}
               <div
                 className="video-player-inner-wrap custom-video-player"
                 id="custom_video_control"
@@ -474,13 +467,7 @@ class VideoView extends React.Component {
                   controlsList="nodownload"
                   preload={"auto"}
                 >
-                  <source
-                    src={
-                      !isYoutubeUrl
-                        ? `${AppConfig.API_ENDPOINT}${moveDetails.videoUrl}`
-                        : moveDetails.videoUrl
-                    }
-                  />
+                  <source src={moveDetails.videoUrl} />
                 </video>
                 <div>
                   <div

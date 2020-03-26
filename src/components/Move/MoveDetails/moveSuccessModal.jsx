@@ -1,6 +1,5 @@
 import React from "react";
 import { ModalHeader, Modal, ModalBody, Button } from "reactstrap";
-import { AppConfig } from "../../../config/Appconfig";
 import videoLoading from "../../../assets/img/loder/loader.svg";
 
 // core components
@@ -31,9 +30,7 @@ class MoveSuccessModal extends React.Component {
       isMoveSuccessModal,
       moveUrlDetails,
       isCreatingAnotherMove,
-      moveDetails,
-      isYoutubeUrl,
-      timer
+      moveDetails
     } = this.props;
     const { videoCanPlay } = this.state;
 
@@ -78,19 +75,7 @@ class MoveSuccessModal extends React.Component {
                       id={"video-trimmer"}
                       playsinline
                     >
-                      <source
-                        src={
-                          !isYoutubeUrl
-                            ? `${AppConfig.API_ENDPOINT}${
-                                moveDetails && moveDetails.videoUrl
-                                  ? moveDetails.videoUrl +
-                                    `#t=${timer.min},${timer.max}`
-                                  : ""
-                              }`
-                            : moveDetails.videoUrl +
-                              `#t=${timer.min},${timer.max}`
-                        }
-                      />
+                      <source src={moveDetails.videoUrl} />
                     </video>
                   </div>
                   <p className="font-weight-bold my-3 text-center h5 mb">

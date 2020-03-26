@@ -157,11 +157,7 @@ class WebmView extends Component {
       if (this.video) {
         this.video.addEventListener("timeupdate", () => {
           let currentVideoTime;
-          if (
-            this.audio &&
-            this.props.videoData.isYoutubeUrl &&
-            this.props.videoData.isMoveProcessing
-          ) {
+          if (this.audio && this.props.videoData.isMoveProcessing) {
             currentVideoTime = parseFloat(
               this.video
                 ? this.props.videoData.isYoutubeUrl
@@ -202,11 +198,7 @@ class WebmView extends Component {
           for (let index = 0; index < duration; index = index + duration / 20) {
             timeDuration.push(index);
           }
-          if (
-            this.audio &&
-            this.props.videoData.isYoutubeUrl &&
-            this.props.videoData.isMoveProcessing
-          ) {
+          if (this.audio && this.props.videoData.isMoveProcessing) {
             this.video.currentTime = this.props.videoData.startTime;
             this.audio.currentTime = this.props.videoData.startTime;
           }
@@ -281,7 +273,7 @@ class WebmView extends Component {
     this.video = document.getElementById("webm-video");
 
     const { videoData } = this.props;
-    if (videoData.isYoutubeUrl && videoData.isMoveProcessing) {
+    if (videoData.isMoveProcessing) {
       let timeDuration = [];
       const duration =
         Number(this.props.videoData.endTime) -
@@ -962,9 +954,7 @@ class WebmView extends Component {
                     >
                       <source
                         src={`${
-                          videoData &&
-                          videoData.isYoutubeUrl &&
-                          videoData.isMoveProcessing
+                          videoData && videoData.isMoveProcessing
                             ? videoData.videoUrl
                             : videoData.moveURL
                             ? videoData.moveURL
@@ -973,9 +963,7 @@ class WebmView extends Component {
                         type="video/webm"
                       />
                     </video>
-                    {videoData &&
-                    videoData.isYoutubeUrl &&
-                    videoData.isMoveProcessing ? (
+                    {videoData && videoData.isMoveProcessing ? (
                       <audio
                         id={"audio-trimmer"}
                         className={"d-none"}
