@@ -26,6 +26,7 @@ import GoogleLogin from "react-google-login";
 import { toast } from "react-toastify";
 import { logger } from "helper/Logger";
 import { AppRoutes } from "config/AppRoutes";
+import closeIc from "../../assets/img/close-modal1.svg";
 
 class SignupComponent extends React.Component {
   constructor(props) {
@@ -227,7 +228,11 @@ class SignupComponent extends React.Component {
           // backdrop={"static"}
           size={"sm"}
         >
-          <ModalHeader toggle={handleSignupModel} />
+           <ModalHeader >
+            <span onClick={handleSignupModel} className="close close-with-img">
+              <img src={closeIc} />
+            </span>
+          </ModalHeader>
           <ModalBody className="modal-body p-0">
             <Card className="bg-secondaryborder-0 pb-0 sign">
               <CardHeader>
