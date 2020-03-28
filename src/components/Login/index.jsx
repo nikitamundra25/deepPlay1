@@ -148,9 +148,9 @@ class LoginComponent extends React.Component {
           toggle={handleLoginModel}
           size={"sm"}
         >
-     <ModalHeader >
+          <ModalHeader >
             <span onClick={handleLoginModel} className="close close-with-img">
-              <img src={closeIc} />
+              <img src={closeIc} alt={""} />
             </span>
           </ModalHeader>
           <ModalBody className="modal-body p-0 ">
@@ -202,10 +202,10 @@ class LoginComponent extends React.Component {
                         name={"email"}
                         value={email}
                         type="text"
-                        // title="Please Provide A Valid Email Address !"
-                        // oninvalid={() =>
-                        //   this.setCustomValidity("Enter User Name Here")
-                        // }
+                      // title="Please Provide A Valid Email Address !"
+                      // oninvalid={() =>
+                      //   this.setCustomValidity("Enter User Name Here")
+                      // }
                       />
                       <FormFeedback>
                         {errors.email ? errors.email : null}

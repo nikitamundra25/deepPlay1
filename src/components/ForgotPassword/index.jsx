@@ -99,7 +99,7 @@ class ForgotPasswordComponent extends React.Component {
         >
           <ModalHeader >
             <span onClick={handleForgotPasswordModel} className="close close-with-img">
-              <img src={closeIc} />
+              <img src={closeIc} alt={""} />
             </span>
           </ModalHeader>
           <ModalBody className="modal-body p-0">

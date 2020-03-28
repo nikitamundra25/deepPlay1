@@ -228,9 +228,9 @@ class SignupComponent extends React.Component {
           // backdrop={"static"}
           size={"sm"}
         >
-           <ModalHeader >
+          <ModalHeader >
             <span onClick={handleSignupModel} className="close close-with-img">
-              <img src={closeIc} />
+              <img src={closeIc} alt={""} />
             </span>
           </ModalHeader>
           <ModalBody className="modal-body p-0">
@@ -283,7 +283,7 @@ class SignupComponent extends React.Component {
                         onChange={this.handleChange}
                         placeholder="First Name"
                         type="text"
-                        // invalid={errors.firstName}
+                      // invalid={errors.firstName}
                       />
                       <FormFeedback>
                         {errors.firstName || !firstName
@@ -361,7 +361,7 @@ class SignupComponent extends React.Component {
                               passwordStrength === "weak"
                                 ? "text-danger"
                                 : "text-success"
-                            } font-weight-700`}
+                              } font-weight-700`}
                           >
                             {passwordStrength}
                           </span>
