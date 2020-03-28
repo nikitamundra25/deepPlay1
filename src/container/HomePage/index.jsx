@@ -42,7 +42,7 @@ const image = [
   {
     id: 5,
     title: "Painting_ Styling Hacks",
-    image: "http://www.ritmoflamenco.ca/wp-content/uploads/flamencomusic.jpg"
+    image: "https://cdn.junglecreations.com/wp/junglecms/2019/02/fcea106e-wordpress-template.jpg"
   },
   {
     id: 6,
