@@ -21,7 +21,7 @@ import EditMoveModal from "./editMoveModal";
 import { ConfirmBox } from "helper/SweetAleart";
 import { toast } from "react-toastify";
 import videoLoading from "../../../assets/img/loder/loader.svg";
-
+let videoDelay = false
 class WebmView extends Component {
   video;
   constructor(props) {
@@ -52,7 +52,7 @@ class WebmView extends Component {
       videoCanPlay: false,
       isBufferingVideo: false,
       isMouseMove: false,
-      mouseOnControls: false
+      mouseOnControls: false,
     };
   }
   /**
@@ -67,6 +67,16 @@ class WebmView extends Component {
     const vid = document.getElementById("webm-video");
     this.audio = document.getElementById("audio-trimmer");
     if (vid) {
+      const { videoMaxDuration } = this.state.videoDuration
+      if (parseInt(videoMaxDuration) === parseInt(vid.currentTime)) {
+        vid.pause()
+        videoDelay = true
+        setTimeout(() => {
+          vid.play()
+          videoDelay = false
+        }, 2000);
+      }
+
       document.onkeydown = event => {
         this.handleKeyEvent(event);
       };
@@ -162,7 +172,7 @@ class WebmView extends Component {
               this.video
                 ? this.props.videoData.isYoutubeUrl
                   ? this.video.currentTime -
-                    Number(this.props.videoData.startTime)
+                  Number(this.props.videoData.startTime)
                   : this.video.currentTime
                 : 0
             ).toFixed(2);
@@ -187,7 +197,6 @@ class WebmView extends Component {
             isPlaying: true
           });
         });
-
         this.video.load();
         let timeDuration = [];
         this.video.onloadeddata = () => {
@@ -777,6 +786,7 @@ class WebmView extends Component {
         control[0].classList.remove("hide-controls");
       }
     }
+
     return (
       <>
         <Modal
@@ -873,9 +883,9 @@ class WebmView extends Component {
                           onClick={() =>
                             videoData
                               ? this.openTransferToModal(
-                                  videoData._id,
-                                  videoData.setId
-                                )
+                                videoData._id,
+                                videoData.setId
+                              )
                               : this.openTransferToModal(video._id, video.setId)
                           }
                         >
@@ -911,12 +921,12 @@ class WebmView extends Component {
                     </div>
                   ) : null}
                 </div>
-                {isBufferingVideo === true ? (
+                {isBufferingVideo === true || videoDelay ? (
                   <div className="video-spinner z-">
                     <img src={videoLoading} alt="" />
                   </div>
                 ) : null}
-                {!videoCanPlay ? (
+                {!videoCanPlay || videoDelay ? (
                   <div className="video-spinner z-">
                     <img src={videoLoading} alt="" />
                   </div>
@@ -957,9 +967,9 @@ class WebmView extends Component {
                           videoData && videoData.isMoveProcessing
                             ? videoData.videoUrl
                             : videoData.moveURL
-                            ? videoData.moveURL
-                            : moveURL
-                        }`}
+                              ? videoData.moveURL
+                              : moveURL
+                          }`}
                         type="video/webm"
                       />
                     </video>
@@ -976,10 +986,10 @@ class WebmView extends Component {
                     ) : null}
                   </>
                 ) : (
-                  <div className="video-loader">
-                    <Loader videoLoader={true} />
-                  </div>
-                )}
+                    <div className="video-loader">
+                      <Loader videoLoader={true} />
+                    </div>
+                  )}
 
                 <div
                   className={"controls"}
@@ -987,9 +997,9 @@ class WebmView extends Component {
                   onMouseLeave={
                     isFullScreenMode1
                       ? () =>
-                          this.setState({
-                            mouseOnControls: false
-                          })
+                        this.setState({
+                          mouseOnControls: false
+                        })
                       : null
                   }
                 >
@@ -1014,13 +1024,13 @@ class WebmView extends Component {
                             <i className={"fa fa-pause"}></i>
                           </span>
                         ) : (
-                          <span
-                            onClick={this.playVideo}
-                            className={"cursor_pointer"}
-                          >
-                            <i className={"fa fa-play"}></i>
-                          </span>
-                        )}
+                            <span
+                              onClick={this.playVideo}
+                              className={"cursor_pointer"}
+                            >
+                              <i className={"fa fa-play"}></i>
+                            </span>
+                          )}
                       </div>
                       <div className="video-time-wrap control-tile">
                         {SecondsToMMSS(parseInt(currentTime))} /{" "}
@@ -1038,11 +1048,11 @@ class WebmView extends Component {
                             audioSpeed > 0.6 ? (
                               <i className="fas fa-volume-up"></i>
                             ) : (
-                              <i className="fas fa-volume-down"></i>
-                            )
+                                <i className="fas fa-volume-down"></i>
+                              )
                           ) : (
-                            <i className="fas fa-volume-mute"></i>
-                          )}
+                                <i className="fas fa-volume-mute"></i>
+                              )}
                         </span>
                       </div>
                       <div className="volume-range cursor_pointer control-tile">
@@ -1103,7 +1113,7 @@ class WebmView extends Component {
                       <div className="speed-wrap control-tile">
                         <UncontrolledDropdown
                           className="header-dropdown custom-dropdown"
-                          // direction="auto"
+                        // direction="auto"
                         >
                           <DropdownToggle
                             color={" "}
@@ -1175,13 +1185,13 @@ class WebmView extends Component {
                           <i className="fas fa-expand" />
                         </span>
                       ) : (
-                        <span
-                          onClick={() => this.handleVideoResizeScreen()}
-                          className="control-tile cursor_pointer"
-                        >
-                          <i className="fa fa-arrows-alt" aria-hidden="true" />
-                        </span>
-                      )}
+                          <span
+                            onClick={() => this.handleVideoResizeScreen()}
+                            className="control-tile cursor_pointer"
+                          >
+                            <i className="fa fa-arrows-alt" aria-hidden="true" />
+                          </span>
+                        )}
                     </div>
                   </div>
                 </div>
@@ -1190,14 +1200,14 @@ class WebmView extends Component {
             <div className="text-right pr-4">
               {((videoData && videoData.tags && videoData.tags.length) ||
                 (videoData && videoData.description)) &&
-              !isShareable ? (
-                <span
-                  className="cursor_pointer"
-                  onClick={() => this.openAddTagsModal(videoData._id, "edit")}
-                >
-                  Edit
-                </span>
-              ) : null}
+                !isShareable ? (
+                  <span
+                    className="cursor_pointer"
+                    onClick={() => this.openAddTagsModal(videoData._id, "edit")}
+                  >
+                    Edit
+                  </span>
+                ) : null}
             </div>
             <div className="pt-3 d-flex video-tag-wrap">
               {videoData && videoData.tags && videoData.tags.length ? (

@@ -130,7 +130,6 @@ class MoveListDetails extends React.Component {
     }
     // get video details
     const { isMoveProcessing } = video;
-    console.log(video);
     return (
       <div
         className={
