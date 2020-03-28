@@ -21,6 +21,7 @@ import {
   ForgetPasswordValidationsMessaages
 } from "../../validations";
 import { logger } from "helper/Logger";
+import closeIc from "../../assets/img/close-modal1.svg";
 
 // core components
 class ForgotPasswordComponent extends React.Component {
@@ -96,7 +97,11 @@ class ForgotPasswordComponent extends React.Component {
           toggle={handleForgotPasswordModel}
           backdrop={"static"}
         >
-          <ModalHeader toggle={handleForgotPasswordModel}></ModalHeader>
+          <ModalHeader >
+            <span onClick={handleForgotPasswordModel} className="close close-with-img">
+              <img src={closeIc} alt={""} />
+            </span>
+          </ModalHeader>
           <ModalBody className="modal-body p-0">
             <Card className="bg-secondary shadow border-0 pb-0">
               <CardHeader className={"text-center p-2 "}>

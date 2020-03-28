@@ -18,43 +18,37 @@ import {
 const image = [
   {
     id: 1,
-    title: "Rumba",
+    title: "Basketball_ 5 Basic Moves",
     image:
-      "https://www.rushlake-media.com/wp-content/uploads/2018/11/victor-Anastacia-1080p.jpg"
+      "https://gameonfamily.com/wp-content/uploads/2017/02/Depositphotos_59344433_original-1030x687.jpg"
   },
   {
     id: 2,
-    title: "Zumba",
+    title: "Martial Arts_ MMA Takedowns",
     image:
-      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQmW2LRpRoa11a0iFmo5cbyagU92VXVAtLqZt1Y4sT0dQ1jMfUeUQ"
+      "https://blackbeltmag.com/uploads/century-photo-tyler-weaver-kick.jpg"
   },
   {
     id: 3,
-    title: "Tango",
+    title: "Choreography_ Boogaloo Tutorial",
     image:
-      "https://static.wixstatic.com/media/727c8f_9d251f742b3c44538dbf2f2c7552192d~mv2_d_1600_1200_s_2.jpg"
+      "https://res.cloudinary.com/danceninspire/image/upload/q_auto:eco/v1506580764/tags/animation/introduction_1.jpg"
   },
   {
     id: 4,
-    title: "Ballroom Dancing",
-    image: "https://vistapointe.net/images/ballroom-dancing-wallpaper-5.jpg"
+    title: "Guitar_ Hallelujah Tutorial (Easy Version)",
+    image: "https://i.ytimg.com/vi/BoOGNuJsEzU/maxresdefault.jpg"
   },
   {
     id: 5,
-    title: "Flamenco",
-    image: "https://cdn.getyourguide.com/img/tour_img-1877577-148.jpg"
+    title: "Painting_ Styling Hacks",
+    image: "https://cdn.junglecreations.com/wp/junglecms/2019/02/fcea106e-wordpress-template.jpg"
   },
   {
     id: 6,
-    title: "Folk",
+    title: "Soccer_ Moves to Trick Opponents",
     image:
-      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcStpQd89lkIsaKUSKqNhvMfNJ0_zAUb-iovWT2zhtPrqs685k6eXA&s"
-  },
-  {
-    id: 7,
-    title: "Contemporary",
-    image:
-      "https://image.freepik.com/free-photo/modern-dancer-jumping_1163-3789.jpg"
+      "https://lh3.googleusercontent.com/proxy/HqqsKNWWYuwsN4SqAJXzpDAz-ymdQgmOPQOz_60QxLTInabbm6T87QYuSYa1qzk30z9Z5GJUW0HOooOeoXFbaN-2prhSfAcXrCS2KZav0smoW_24DZWm1dgKmDDIkQ"
   }
 ];
 // core components
@@ -185,13 +179,13 @@ class HomePage extends React.Component {
                       <img src={pauseIc} alt={"img"} />
                     </span>
                   ) : (
-                    <span
-                      onClick={this.videoPlayHandler}
-                      className="play-ic-wrap"
-                    >
-                      <img src={playIc} alt={"img"} />
-                    </span>
-                  )}
+                      <span
+                        onClick={this.videoPlayHandler}
+                        className="play-ic-wrap"
+                      >
+                        <img src={playIc} alt={"img"} />
+                      </span>
+                    )}
 
                   <video width="100%" id="webm-video-0" playsinline>
                     <source
@@ -239,7 +233,7 @@ class HomePage extends React.Component {
                     <div
                       className="play-sub-block cursor_pointer"
                       onClick={() =>
-                        this.props.redirectTo(AppRoutes.SAMPLE_SET.url)
+                        this.props.redirectTo(AppRoutes.SAMPLE_SET.url + `?title=${images.title}`)
                       }
                     >
                       <div className="play-list-img blur-img-wrap">

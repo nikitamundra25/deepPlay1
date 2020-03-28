@@ -21,6 +21,7 @@ import { logger } from "helper/Logger";
 import FacebookLogin from "react-facebook-login";
 import GoogleLogin from "react-google-login";
 import { toast } from "react-toastify";
+import closeIc from "../../assets/img/close-modal1.svg"
 // core components
 class LoginComponent extends React.Component {
   constructor(props) {
@@ -147,7 +148,11 @@ class LoginComponent extends React.Component {
           toggle={handleLoginModel}
           size={"sm"}
         >
-          <ModalHeader toggle={handleLoginModel}></ModalHeader>
+          <ModalHeader >
+            <span onClick={handleLoginModel} className="close close-with-img">
+              <img src={closeIc} alt={""} />
+            </span>
+          </ModalHeader>
           <ModalBody className="modal-body p-0 ">
             <Card className="bg-secondary shadow border-0 pb-0">
               <CardHeader>
@@ -197,10 +202,10 @@ class LoginComponent extends React.Component {
                         name={"email"}
                         value={email}
                         type="text"
-                        // title="Please Provide A Valid Email Address !"
-                        // oninvalid={() =>
-                        //   this.setCustomValidity("Enter User Name Here")
-                        // }
+                      // title="Please Provide A Valid Email Address !"
+                      // oninvalid={() =>
+                      //   this.setCustomValidity("Enter User Name Here")
+                      // }
                       />
                       <FormFeedback>
                         {errors.email ? errors.email : null}
