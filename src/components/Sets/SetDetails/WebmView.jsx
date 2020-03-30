@@ -282,7 +282,7 @@ class WebmView extends Component {
     this.video = document.getElementById("webm-video");
 
     const { videoData } = this.props;
-    if (videoData.isMoveProcessing) {
+    if (videoData.isMoveProcessing && videoData.isYoutubeUrl) {
       let timeDuration = [];
       const duration =
         Number(this.props.videoData.endTime) -
