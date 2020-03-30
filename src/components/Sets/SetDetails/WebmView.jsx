@@ -966,7 +966,7 @@ class WebmView extends Component {
                         src={`${
                           videoData && videoData.isMoveProcessing
                             ? videoData.videoUrl
-                            : videoData.moveURL
+                            : videoData.moveURL 
                               ? videoData.moveURL
                               : moveURL
                           }`}

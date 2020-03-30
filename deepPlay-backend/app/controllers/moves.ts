@@ -1020,9 +1020,9 @@ const processLocalVideo = async (moveDetails: any, callback: any) => {
     outputFile: string = "";
   const fileName = path.basename(videoFilePath);
   if (IsProductionMode) {
-    videoFile = path.join(__basedir, videoFilePath);
+    videoFile = path.join(__dirname, videoFilePath);
     outputFile = path.join(
-      __basedir,
+      __dirname,
       videoFilePath.replace(fileName, ""),
       `trimmed_${fileName}`
     );
