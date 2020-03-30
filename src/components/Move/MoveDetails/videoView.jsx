@@ -92,20 +92,25 @@ class VideoView extends React.Component {
    */
   onVolumeChange = value => {
     this.audio = document.getElementById("audio-trimmer");
+    this.video = document.getElementById("video-trimmer")
     this.setState({
       audioSpeed: value,
       isMuted: value === 0
     });
     this.audio.volume = value;
+    this.video.volume = value;
   };
 
   toggleMute = () => {
     const { isMuted } = this.state;
     this.audio = document.getElementById("audio-trimmer");
+    this.video = document.getElementById("video-trimmer")
     if (isMuted === false) {
       this.audio.muted = true;
+      this.video.muted = true;
     } else {
       this.audio.muted = false;
+      this.video.muted = false;
     }
     this.setState({
       isMuted: !isMuted
@@ -364,8 +369,8 @@ class VideoView extends React.Component {
           label:
             data && data.isCopy
               ? `${data.title} ${
-                  data.copyCount > 0 ? `(${data.copyCount})` : ""
-                }`
+              data.copyCount > 0 ? `(${data.copyCount})` : ""
+              }`
               : data.title,
           value: data._id,
           moveCount: data.moveCount
@@ -428,26 +433,26 @@ class VideoView extends React.Component {
                     </div>
                   ) : null
                 ) : (
-                  <>
-                    <span className="video-spinner">
-                      <div className="h2">Access Denied</div>
-                      <br />
+                    <>
+                      <span className="video-spinner">
+                        <div className="h2">Access Denied</div>
+                        <br />
                       You don't have authorisation to view this video.
                       <br />
-                      <div>Try with another one!</div>
-                      <br />
-                      <Button
-                        color={"default"}
-                        className={"btn-line-black btn "}
-                        onClick={() => {
-                          this.props.redirectTo(AppRoutes.MOVE.url);
-                        }}
-                      >
-                        Create Another Move
+                        <div>Try with another one!</div>
+                        <br />
+                        <Button
+                          color={"default"}
+                          className={"btn-line-black btn "}
+                          onClick={() => {
+                            this.props.redirectTo(AppRoutes.MOVE.url);
+                          }}
+                        >
+                          Create Another Move
                       </Button>
-                    </span>
-                  </>
-                )}
+                      </span>
+                    </>
+                  )}
                 <video
                   width={"100%"}
                   autoPlay
@@ -476,9 +481,9 @@ class VideoView extends React.Component {
                     onMouseLeave={
                       isFullScreenMode1
                         ? () =>
-                            this.setState({
-                              mouseOnControls: false
-                            })
+                          this.setState({
+                            mouseOnControls: false
+                          })
                         : null
                     }
                   >
@@ -506,16 +511,16 @@ class VideoView extends React.Component {
                               ></i>
                             </span>
                           ) : (
-                            <span
-                              onClick={handlePlayPause}
-                              className={"cursor_pointer"}
-                            >
-                              <i
-                                className={"fa fa-play cursor_pointer"}
+                              <span
                                 onClick={handlePlayPause}
-                              ></i>
-                            </span>
-                          )}
+                                className={"cursor_pointer"}
+                              >
+                                <i
+                                  className={"fa fa-play cursor_pointer"}
+                                  onClick={handlePlayPause}
+                                ></i>
+                              </span>
+                            )}
                         </div>
                         <div className="video-time-wrap control-tile">
                           {SecondsToMMSS(parseInt(currentTime))} /{" "}
@@ -539,11 +544,11 @@ class VideoView extends React.Component {
                               audioSpeed > 0.6 ? (
                                 <i className="fas fa-volume-up"></i>
                               ) : (
-                                <i className="fas fa-volume-down"></i>
-                              )
+                                  <i className="fas fa-volume-down"></i>
+                                )
                             ) : (
-                              <i className="fas fa-volume-mute"></i>
-                            )}
+                                  <i className="fas fa-volume-mute"></i>
+                                )}
                           </span>
                         </div>
                         <div className="volume-range cursor_pointer control-tile">
@@ -573,16 +578,16 @@ class VideoView extends React.Component {
                             <i className="fas fa-expand" />
                           </span>
                         ) : (
-                          <span
-                            onClick={() => this.handleVideoResizeScreen()}
-                            className="control-tile cursor_pointer"
-                          >
-                            <i
-                              className="fa fa-arrows-alt"
-                              aria-hidden="true"
-                            />
-                          </span>
-                        )}
+                            <span
+                              onClick={() => this.handleVideoResizeScreen()}
+                              className="control-tile cursor_pointer"
+                            >
+                              <i
+                                className="fa fa-arrows-alt"
+                                aria-hidden="true"
+                              />
+                            </span>
+                          )}
                       </div>
                     </div>
                   </div>
@@ -638,8 +643,8 @@ class VideoView extends React.Component {
                       onChange={e => this.props.handleInputChange(e)}
                       value={
                         recentAddedSet &&
-                        recentAddedSet.label &&
-                        recentAddedSet.value
+                          recentAddedSet.label &&
+                          recentAddedSet.value
                           ? recentAddedSet
                           : selectSetOptions
                       }
@@ -652,8 +657,8 @@ class VideoView extends React.Component {
               </FormGroup>
             </div>
           ) : (
-            <span>No video available for trimming</span>
-          )}
+              <span>No video available for trimming</span>
+            )}
         </Col>
       </>
     );
