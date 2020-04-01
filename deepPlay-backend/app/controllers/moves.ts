@@ -17,6 +17,7 @@ import youtubedl from "youtube-dl";
 import ThumbnailGenerator from "video-thumbnail-generator";
 import { exec } from "child_process";
 import JobQueue from "../common/Queue";
+import url from "url";
 const instagramUtil = require("../common/instagramUtil");
 var CronJob = require("cron").CronJob;
 const algoliasearch = require("algoliasearch");
@@ -126,20 +127,22 @@ const downloadYoutubeVideo = async (
     const headToken: Request | any = currentUser;
     // execute command instead of calling the youtubedl method to speed up the process
     const ex = exec(
-      `youtube-dl "${body.url}" --skip-download --get-thumbnail --get-url --format=best`
+      `youtube-dl "${body.url}" --skip-download --get-url --format=best`
     );
     let youTubeUrl = "";
-    let thumbImg = "";
+    const source: any = url.parse(body.url);
+    const sourcePathnameArr = source.pathname.split("/");
+    const youtubeId = sourcePathnameArr[sourcePathnameArr.length - 1];
+    let thumbImg = `https://i.ytimg.com/vi/${youtubeId}/maxresdefault.jpg`;
 
     !ex.stdout
       ? undefined
       : ex.stdout
           .on("data", (message: string) => {
             if (message && message.startsWith("https")) {
-              youTubeUrl = message.split("\n")[0];
-              thumbImg = message.split("\n")[1];
+              youTubeUrl = message;
+              console.log("youTubeUrl", youTubeUrl);
             }
-            console.log(message);
           })
           .on("error", err => {
             console.log("Error", err);

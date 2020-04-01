@@ -14,7 +14,7 @@ const corsOption = {
   credentials: true,
   exposedHeaders: ["x-auth-token", "authorization", "Content-Type"]
 };
-const url: string = `${DBProtocol}://${DBHost}/${DBName}`;
+const url: string = `${DBProtocol}://${DBHost}/${DBName}?retryWrites=true&w=majority`;
 
 Mongoose.connect(
   url,
