@@ -80,7 +80,7 @@ class MoveDetails extends React.Component {
       currentTime: 0,
       totalOutput: DefaultMoveLength,
       isChange: true,
-      maxLengthError: `Move can't be allow more than ${DefaultMoveLength} sec.`
+      maxLengthError: ``
     };
     this.videoDetails = React.createRef();
   }
@@ -173,16 +173,16 @@ class MoveDetails extends React.Component {
         const { allSetList } = this.props.setReducer;
         console.log("setId", allSetList);
 
-        if (allSetList && allSetList.length) {
-          // eslint-disable-next-line
-          allSetList.map(data => {
-            if (setId) {
-              this.setState({
-                selectedSetId: setId
-              });
-            }
-          });
-        }
+        // if (allSetList && allSetList.length) {
+        //   // eslint-disable-next-line
+        //   allSetList.map(data => {
+        //     if (setId) {
+        //       this.setState({
+        //         selectedSetId: setId
+        //       });
+        //     }
+        //   });
+        // }
 
         this.setState({
           title,
@@ -203,14 +203,17 @@ class MoveDetails extends React.Component {
       }
     }
     if (setReducer !== this.props.setReducer) {
-      const {
-        setId,
-      } = this.props.moveReducer.moveDetails;
+      // const {
+      //   setId,
+      // } = this.props.moveReducer.moveDetails;
       const { allSetList } = this.props.setReducer;
+      console.log("++++++++++++++", allSetList);
+      const setId = this.props.moveReducer.moveDetails.setId
       let selectedSet
       if (allSetList && allSetList.length) {
         selectedSet = allSetList.filter((data) => data._id === setId)
       }
+      console.log("++++++++++++++selectedSet", selectedSet);
       let selectOption;
       if (selectedSet && selectedSet.length) {
         selectOption = {
@@ -223,7 +226,9 @@ class MoveDetails extends React.Component {
           value: selectedSet[0]._id
         };
       }
+      console.log("++++++++++++++selectOption", selectOption);
       const { selectedSetId } = this.state
+      console.log("++++++********+++++selectedSetId", selectedSetId);
       if (!selectedSetId) {
         this.setState({
           selectSetOptions: selectOption
@@ -233,6 +238,9 @@ class MoveDetails extends React.Component {
               value: ""
             }
         })
+        this.setState({
+          selectedSetId: setId
+        });
       }
     }
     if (

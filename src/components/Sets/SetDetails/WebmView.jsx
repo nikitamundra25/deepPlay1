@@ -74,7 +74,7 @@ class WebmView extends Component {
         setTimeout(() => {
           vid.play()
           videoDelay = false
-        }, 2000);
+        }, 2500);
       }
 
       document.onkeydown = event => {
