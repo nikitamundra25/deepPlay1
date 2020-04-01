@@ -12,7 +12,7 @@ class MoveSuccessModal extends React.Component {
     };
   }
 
-  componentDidMount = () => {};
+  componentDidMount = () => { };
 
   handleVideoPlay = () => {
     this.video = document.getElementById("video-trimmer");
@@ -30,7 +30,8 @@ class MoveSuccessModal extends React.Component {
       isMoveSuccessModal,
       moveUrlDetails,
       isCreatingAnotherMove,
-      moveDetails
+      moveDetails,
+      timer
     } = this.props;
     const { videoCanPlay } = this.state;
 
@@ -75,7 +76,7 @@ class MoveSuccessModal extends React.Component {
                       id={"video-trimmer"}
                       playsinline
                     >
-                      <source src={moveDetails.videoUrl} />
+                      <source src={`${moveDetails.videoUrl}#t=${timer.min},${timer.max}`} />
                     </video>
                   </div>
                   <p className="font-weight-bold my-3 text-center h5 mb">

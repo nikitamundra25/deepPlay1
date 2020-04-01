@@ -202,42 +202,39 @@ class MoveDetails extends React.Component {
         });
       }
     }
-    // if(setReducer !== this.props.setReducer){
-    //   const {
-    //     setId,
-    //   } = this.props.moveReducer.moveDetails;
-    //   const { allSetList } = this.props.setReducer;
-    //   let selectOption;
-    //   if (allSetList && allSetList.length) {
-    //     // eslint-disable-next-line
-    //     allSetList.map(data => {
-    //       if (setId) {
-    //         if (setId === data._id) {
-    //           selectOption = {
-    //             label:
-    //               data && data.isCopy
-    //                 ? `${data.title} ${
-    //                     data.copyCount > 0 ? `(${data.copyCount})` : ""
-    //                   }`
-    //                 : data.title,
-    //             value: data._id
-    //           };
-    //         }
-    //         this.setState({
-    //           selectedSetId: setId
-    //         });
-    //       }
-    //     });
-    //     this.setState({
-    //       selectSetOptions: selectOption
-    //       ? selectOption
-    //       : {
-    //           label: "Type to select sets",
-    //           value: ""
-    //         }
-    //     })
-    //   }
-    // }
+    if (setReducer !== this.props.setReducer) {
+      const {
+        setId,
+      } = this.props.moveReducer.moveDetails;
+      const { allSetList } = this.props.setReducer;
+      let selectedSet
+      if (allSetList && allSetList.length) {
+        selectedSet = allSetList.filter((data) => data._id === setId)
+      }
+      let selectOption;
+      if (selectedSet && selectedSet.length) {
+        selectOption = {
+          label:
+            selectedSet[0] && selectedSet[0].isCopy
+              ? `${selectedSet[0].title} ${
+              selectedSet[0].copyCount > 0 ? `(${selectedSet[0].copyCount})` : ""
+              }`
+              : selectedSet[0].title,
+          value: selectedSet[0]._id
+        };
+      }
+      const { selectedSetId } = this.state
+      if (!selectedSetId) {
+        this.setState({
+          selectSetOptions: selectOption
+            ? selectOption
+            : {
+              label: "Type to select sets",
+              value: ""
+            }
+        })
+      }
+    }
     if (
       this.props.setReducer &&
       this.props.setReducer.recentSetAdded !== setReducer.recentSetAdded
@@ -369,32 +366,32 @@ class MoveDetails extends React.Component {
     {
       !isYoutubeUrl
         ? this.props.completeVideoEditing({
-            timer: {
-              min: parseInt(timer.min),
-              max: parseInt(timer.max)
-            },
-            moveId,
-            tags,
-            setId,
-            title: title,
-            description: description,
-            videoThumbnail: videoThumbnail,
-            isEdit: parsed.isEdit ? true : false,
-            setMoveCount
-          })
+          timer: {
+            min: parseInt(timer.min),
+            max: parseInt(timer.max)
+          },
+          moveId,
+          tags,
+          setId,
+          title: title,
+          description: description,
+          videoThumbnail: videoThumbnail,
+          isEdit: parsed.isEdit ? true : false,
+          setMoveCount
+        })
         : this.props.completeYouTubeVideoEditing({
-            timer: {
-              min: parseFloat(timer.min),
-              max: parseFloat(timer.max)
-            },
-            moveId,
-            tags,
-            setId,
-            title: title,
-            description: description,
-            isEdit: parsed.isEdit ? true : false,
-            setMoveCount
-          });
+          timer: {
+            min: parseFloat(timer.min),
+            max: parseFloat(timer.max)
+          },
+          moveId,
+          tags,
+          setId,
+          title: title,
+          description: description,
+          isEdit: parsed.isEdit ? true : false,
+          setMoveCount
+        });
     }
     this.handleMoveSuccessModal();
   };
@@ -867,10 +864,10 @@ class MoveDetails extends React.Component {
                       />
                     </>
                   ) : (
-                    <Col sm={12} className="loader-col video-loader-wrap">
-                      <Loader fullLoader={true} />
-                    </Col>
-                  )}
+                      <Col sm={12} className="loader-col video-loader-wrap">
+                        <Loader fullLoader={true} />
+                      </Col>
+                    )}
                 </Row>
               </>
             </CardBody>
