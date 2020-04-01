@@ -167,7 +167,7 @@ class WebmView extends Component {
       if (this.video) {
         this.video.addEventListener("timeupdate", () => {
           let currentVideoTime;
-          if (this.audio && this.props.videoData.isMoveProcessing) {
+          if (this.audio && this.props.videoData.isMoveProcessing && this.props.videoData.isYoutubeUrl) {
             currentVideoTime = parseFloat(
               this.video
                 ? this.props.videoData.isYoutubeUrl
