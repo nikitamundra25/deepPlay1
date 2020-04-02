@@ -68,7 +68,7 @@ class WebmView extends Component {
     this.audio = document.getElementById("audio-trimmer");
     if (vid) {
       const { videoMaxDuration } = this.state.videoDuration
-      if (parseInt(videoMaxDuration) === parseInt(vid.currentTime)) {
+      if (parseFloat(videoMaxDuration - vid.currentTime) < 0.2) {
         vid.pause()
         videoDelay = true
         setTimeout(() => {
@@ -966,7 +966,7 @@ class WebmView extends Component {
                         src={`${
                           videoData && videoData.isMoveProcessing
                             ? videoData.videoUrl
-                            : videoData.moveURL 
+                            : videoData.moveURL
                               ? videoData.moveURL
                               : moveURL
                           }`}

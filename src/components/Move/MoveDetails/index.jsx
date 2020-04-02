@@ -754,7 +754,7 @@ class MoveDetails extends React.Component {
                   <span
                     className="cursor_pointer back-arrow create-move-back"
                     onClick={() => {
-                      window.history.back();
+                      this.props.redirectTo(AppRoutes.MOVE.url)
                     }}
                   >
                     {" "}
