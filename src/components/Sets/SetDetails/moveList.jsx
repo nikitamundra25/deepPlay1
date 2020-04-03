@@ -18,6 +18,7 @@ import { DebounceInput } from "react-debounce-input";
 import MoveListDetails from "./moveListdetails";
 import { toast } from "react-toastify";
 import qs from "query-string";
+import { ReactSortable } from "react-sortablejs";
 
 // a little function to help us with reordering the result
 const reorder = (list, startIndex, endIndex) => {
@@ -132,7 +133,7 @@ class MoveList extends React.Component {
           prevState.selectedMoveIds.length &&
         this.state.selectedMoveIds === 0)
     ) {
-      this.handleDragAndDrop();
+      
     }
     if (
       prevProps.isMoveStarLoading &&
@@ -160,33 +161,6 @@ class MoveList extends React.Component {
         "selected-moves selected-detail-page"
       );
     }
-  };
-  handleDragAndDrop = () => {
-    const { $ } = window;
-    if ($("#sortable").hasClass("ui-sortable"))
-      $("#sortable").sortable("destroy");
-
-    $("#sortable").sortable({
-      forcePlaceholderSize: true,
-      update: (event, ui) => {
-        const itemPrevIndex = $(ui.item).data("index");
-        let newIndex = itemPrevIndex;
-        $("#sortable")
-          .find("li")
-          .each(function(index, ele) {
-            if ($(this).data("index") === itemPrevIndex) {
-              newIndex = index;
-            }
-          });
-        this.reorderList(itemPrevIndex, newIndex);
-      }
-    });
-    $("#sortable").disableSelection();
-    setTimeout(() => {
-      this.setState({
-        test: "fasdf"
-      });
-    }, 200);
   };
   /*
    */
@@ -254,9 +228,6 @@ class MoveList extends React.Component {
         selectedMoves: [],
         selectedMoveIds: [],
         isMarkingStar: -1
-      },
-      () => {
-        this.handleDragAndDrop();
       }
     );
   };
@@ -509,15 +480,23 @@ class MoveList extends React.Component {
           index: -1,
           isChanging: false
         }
-      },
-      () => {
-        console.log(data);
-        this.handleDragAndDrop();
       }
     );
     this.props.updateSortIndexRequest(data);
   };
-
+  reorderListNew = (newOrderedList) => {
+    if (this.props.setIdPathName && newOrderedList.length) {
+      let parsed = qs.parse(this.props.location.search);
+      const data = {
+        setId: this.props.setIdPathName,
+        parsed,
+        sortIndex: 0,
+        sourceIndex: 1,
+        movesOfSet: newOrderedList
+      };
+      this.props.updateSortIndexRequest(data);
+    }
+  };
   handleTagChange = (newValue, actionMeta) => {
     //const { tagsList } = this.props.moveReducer
 
@@ -876,7 +855,22 @@ class MoveList extends React.Component {
                         );
                       })
                     ) : (
-                      <ul id="sortable">
+                      // <ul id="">
+                      <ReactSortable
+                        // here they are!
+                        group="groupName"
+                        animation={200}
+                        delayOnTouchStart={true}
+                        delay={2}
+                        list={movesOfSet.map((v, index) => ({
+                          id: `list-item-${v._id}-${index}`,
+                          ...v
+                        }))}
+                        setList={this.reorderListNew}
+                        tag="ul"
+                        id="sortable"
+                        swapThreshold={1}
+                      >
                         {movesOfSet.map((video, index) => {
                           return (
                             <li
@@ -923,7 +917,8 @@ class MoveList extends React.Component {
                             </li>
                           );
                         })}
-                      </ul>
+                      </ReactSortable>
+                      // </ul>
                     )}
                   </div>
                 </div>
