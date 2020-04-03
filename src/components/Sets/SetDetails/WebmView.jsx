@@ -70,10 +70,8 @@ class WebmView extends Component {
       const { videoMaxDuration } = this.state.videoDuration
       if (parseFloat(videoMaxDuration - vid.currentTime) < 0.1) {
         vid.pause()
-        videoDelay = true
         setTimeout(() => {
           vid.play()
-          videoDelay = false
         }, 2500);
       }
 
