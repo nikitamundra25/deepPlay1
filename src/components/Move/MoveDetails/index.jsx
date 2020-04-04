@@ -359,9 +359,9 @@ class MoveDetails extends React.Component {
       });
       return;
     }
-    if (maxLengthError) {
+    if (maxLengthError || parseInt(timer.max) > DefaultMoveLength) {
       if (!toast.isActive(this.toastId)) {
-        this.toastId = toast.error(maxLengthError);
+        this.toastId = toast.error(maxLengthError ? maxLengthError : `Move can't be allow more than ${DefaultMoveLength} sec.`);
       }
       return;
     }
