@@ -1037,10 +1037,10 @@ class WebmView extends Component {
                           )}
                       </div>
                       <div className="video-time-wrap control-tile">
-                        {SecondsToMMSS(parseInt(currentTime))} /{" "}
+                        {SecondsToMMSS(parseInt(currentTime)) >= 0 ? SecondsToMMSS(parseInt(currentTime)) : SecondsToMMSS(parseInt(0))} /{" "}
                         {SecondsToMMSS(
                           parseInt(
-                            videoDuration ? videoDuration.videoMaxDuration : 0
+                            videoDuration && videoDuration.videoMaxDuration ? videoDuration.videoMaxDuration : 0
                           )
                         )}
                       </div>
