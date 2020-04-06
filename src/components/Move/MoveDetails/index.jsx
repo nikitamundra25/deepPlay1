@@ -359,7 +359,7 @@ class MoveDetails extends React.Component {
       });
       return;
     }
-    if (maxLengthError || parseInt(timer.max) > DefaultMoveLength) {
+    if (maxLengthError || parseInt(timer.max - timer.min) > DefaultMoveLength) {
       if (!toast.isActive(this.toastId)) {
         this.toastId = toast.error(maxLengthError ? maxLengthError : `Move can't be allow more than ${DefaultMoveLength} sec.`);
       }
@@ -375,8 +375,8 @@ class MoveDetails extends React.Component {
       !isYoutubeUrl
         ? this.props.completeVideoEditing({
           timer: {
-            min: parseInt(timer.min),
-            max: parseInt(timer.max)
+            min: parseFloat(timer.min),
+            max: parseFloat(timer.max)
           },
           moveId,
           tags,
