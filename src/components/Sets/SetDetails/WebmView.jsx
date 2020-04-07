@@ -67,19 +67,13 @@ class WebmView extends Component {
     const vid = document.getElementById("webm-video");
     this.audio = document.getElementById("audio-trimmer");
     if (vid) {
-      vid.addEventListener('ended', function () {
-        console.count('loop restart');
-        vid.pause()
-        setTimeout(() => {
-          vid.play()
-        }, 1500);
-      })
-      // if (parseFloat(videoMaxDuration - vid.currentTime) <= 0.2) {
-      //   vid.pause()
-      //   setTimeout(() => {
-      //     vid.play()
-      //   }, 2500);
-      // }
+//       vid.addEventListener('ended', function () {
+//         console.count('loop restart');
+//         vid.pause()
+//         setTimeout(() => {
+//           vid.play()
+//         }, 1500);
+//       })
 
       document.onkeydown = event => {
         this.handleKeyEvent(event);
@@ -946,7 +940,7 @@ class WebmView extends Component {
                           ? "full-video-mode video-loading-tag cursor_pointer"
                           : "video-loading-tag cursor_pointer"
                       }
-                      // loop
+                      loop
                       preload="auto"
                       playsInline
                       autoPlay
