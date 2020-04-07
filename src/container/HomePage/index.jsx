@@ -189,8 +189,8 @@ class HomePage extends React.Component {
 
                   <video width="100%" id="webm-video-0" playsinline>
                     <source
-                      src="https://drive.google.com/file/d/1huyUvkXmZ0symwN5PbZbNyBzG0X0c0Oq/view?usp=sharing"
-                      type="video/webm"
+                      src="https://deepplay-video.s3.ca-central-1.amazonaws.com/Sample+Videos/Explainer+Videos/Explainer+Video+for+Alpha+1.mp4"
+                      type="video/mp4"
                     />
                   </video>
                 </div>
