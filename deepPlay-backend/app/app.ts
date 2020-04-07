@@ -29,6 +29,7 @@ app.use(bodyParser.urlencoded({ extended: false }));
 // parse application/json
 app.use(bodyParser.json({ limit: "50mb" }));
 app.use("/", express.static(path.join(__dirname, "public")));
+app.use("/superadmin", express.static(path.join(__dirname, "superadmin")));
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 app.use(cors(corsOption));
 app.use("/api/v1", router);
@@ -38,6 +39,21 @@ app.use("/api/v1", router);
 app.get("/", (req: express.Request, res: express.Response) => {
   return res.sendFile(path.join(__dirname, "public", "index.html"));
 });
+/**
+ *
+ */
+app.get("/superadmin", (req: express.Request, res: express.Response) => {
+  return res.sendFile(path.join(__dirname, "superadmin", "index.html"));
+});
+/**
+ *
+ */
+app.get("/superadmin/*", (req: express.Request, res: express.Response) => {
+  return res.sendFile(path.join(__dirname, "superadmin", "index.html"));
+});
+/**
+ *
+ */
 app.get("/*", (req: express.Request, res: express.Response) => {
   return res.sendFile(path.join(__dirname, "public", "index.html"));
 });
