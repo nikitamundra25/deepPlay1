@@ -293,10 +293,8 @@ class MoveListDetails extends React.Component {
                   }
                   onDoubleClick={
                     !isVideoChecked
-                      ? !video.isMoveProcessing
-                        ? () => onDoubleClick(index, video.title)
+                      ?  () => onDoubleClick(index, video.title)
                         : null
-                      : null
                   }
                 >
                   {doubleClick && doubleClickIndex === index ? (
