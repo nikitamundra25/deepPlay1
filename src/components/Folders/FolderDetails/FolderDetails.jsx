@@ -244,6 +244,7 @@ class RecentFolderComponent extends React.Component {
   };
 
   handleSetDetails = setId => {
+    this.props.handleRecentTime(setId);
     this.props.redirectTo(AppRoutes.SET_DETAILS.url.replace(":id", setId));
   };
 
