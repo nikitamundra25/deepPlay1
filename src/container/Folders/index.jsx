@@ -33,6 +33,14 @@ class Folder extends React.Component {
     this.props.updateRecentTime(data);
   };
 
+  handleRecentTime = setId => {
+    const data = {
+      isSetId: setId ? setId : null,
+      isFolderId: null
+    };
+    this.props.updateRecentTime(data);
+  };
+
   createFolder = data => {
     this.props.onFolderCreation(data);
   };
@@ -72,6 +80,7 @@ class Folder extends React.Component {
           isFolderLoading={folderReducer.isFolderLoading}
           onDelete={this.onDelete}
           onPageChange={this.onPageChange}
+          handleRecentTime={this.handleRecentTime}
           handleResetSearch={this.handleResetSearch}
           {...this.props}
         />
