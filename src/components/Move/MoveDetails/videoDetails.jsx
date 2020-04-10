@@ -573,7 +573,9 @@ class VideoDetails extends React.Component {
                               />
                             </FormGroup>
                           </Col>
-                          {this.state.focusTip ? (
+                         <div
+                         className={`video-tip-block ${this.state.focusTip ? "video-tip-show" : null }`}
+                         >
                             <Col sm={12}>
                               <label className="">
                                 <b>Tip:</b> Use the{" "}
@@ -582,7 +584,7 @@ class VideoDetails extends React.Component {
                                 for finer adjustments
                               </label>
                             </Col>
-                          ) : null}
+                            </div>
                           <Col sm={12} className="p-3 video-maxlength-error">
                             <span className="">
                               {maxLengthError ? maxLengthError : ""}
