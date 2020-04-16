@@ -69,17 +69,17 @@ const downloadVideo = async (req: Request, res: Response): Promise<any> => {
       sourceUrl: videoURL,
       isYoutubeUrl: false,
       setId: body.setId !== "undefined" ? body.setId : null,
-      videoThumbnail: s3VideoThumbnailUrl ? s3VideoThumbnailUrl : null
+      videoThumbnail: s3VideoThumbnailUrl ? s3VideoThumbnailUrl : null,
     });
     await moveResult.save();
     res.status(200).json({
       message: "Video uploaded successfully!",
       videoUrl: videoURL,
-      moveData: moveResult
+      moveData: moveResult,
     });
   } catch (error) {
     res.status(500).send({
-      message: error.message
+      message: error.message,
     });
   }
 };
@@ -100,16 +100,16 @@ const uploadVideo = async (req: Request, res: Response): Promise<any> => {
       userId: id,
       sourceUrl: videoURL,
       isYoutubeUrl: false,
-      setId: setId && setId != "undefined" ? setId : null
+      setId: setId && setId != "undefined" ? setId : null,
     });
     return res.status(200).json({
       message: "Video uploaded successfully!",
       videoUrl: videoURL,
-      moveData: moveResult
+      moveData: moveResult,
     });
   } catch (error) {
     return res.status(500).send({
-      message: error.message
+      message: error.message,
     });
   }
 };
@@ -144,11 +144,11 @@ const downloadYoutubeVideo = async (
               console.log("youTubeUrl", youTubeUrl);
             }
           })
-          .on("error", err => {
+          .on("error", (err) => {
             console.log("Error", err);
             return res.status(400).json({
               message: "This Video is not available.",
-              success: false
+              success: false,
             });
           })
           // once the process is end
@@ -156,7 +156,7 @@ const downloadYoutubeVideo = async (
             if (!youTubeUrl) {
               return res.status(400).json({
                 message: "This Video is not available.",
-                success: false
+                success: false,
               });
             }
             console.log("youTubeUrl", youTubeUrl, thumbImg);
@@ -166,26 +166,26 @@ const downloadYoutubeVideo = async (
               isYoutubeUrl: true,
               userId: headToken.id,
               videoThumbnail: thumbImg,
-              setId: body.setId !== "undefined" ? body.setId : null
+              setId: body.setId !== "undefined" ? body.setId : null,
             });
             await moveResult.save();
             return res.status(200).json({
               message: "Video uploaded successfully!",
               videoUrl: youTubeUrl,
-              moveData: moveResult
+              moveData: moveResult,
             });
           });
     // on error
     ex.on("error", () => {
       return res.status(400).json({
         message: "This Video is not available.",
-        success: false
+        success: false,
       });
     });
   } catch (error) {
     return res.status(500).send({
       message: error.msg,
-      success: false
+      success: false,
     });
   }
 };
@@ -213,7 +213,7 @@ const getVideoFrames = async (videoName: string): Promise<any> => {
       `${dirName.split(".")[0]}_frames`,
       {
         start_time: 0,
-        frame_rate: 20 / videoDuration
+        frame_rate: 20 / videoDuration,
       },
       (error: any, file: any) => {
         if (error) {
@@ -241,13 +241,13 @@ const createMove = async (req: Request, res: Response): Promise<any> => {
       isYoutubeUrl,
       videoThumbnail,
       setId,
-      audioUrl
+      audioUrl,
     } = body;
 
     let headToken: Request | any = currentUser;
     if (!headToken.id) {
       res.status(400).json({
-        message: "User id not found"
+        message: "User id not found",
       });
     }
     let moveResult: Document | any;
@@ -260,7 +260,7 @@ const createMove = async (req: Request, res: Response): Promise<any> => {
       videoName: videoName ? videoName : null,
       setId: setId ? setId : null,
       isYoutubeUrl: isYoutubeUrl ? isYoutubeUrl : false,
-      audioUrl: audioUrl
+      audioUrl: audioUrl,
     });
     await moveResult.save();
 
@@ -270,12 +270,12 @@ const createMove = async (req: Request, res: Response): Promise<any> => {
       videoUrl: moveUrl,
       moveData: moveResult,
       videoName,
-      success: true
+      success: true,
     });
   } catch (error) {
     res.status(500).send({
       message: error.message,
-      success: false
+      success: false,
     });
   }
 };
@@ -290,14 +290,14 @@ const getMoveBySetId = async (req: Request, res: Response): Promise<any> => {
     let headToken: Request | any = currentUser;
     if (!headToken.id) {
       res.status(400).json({
-        message: "User id not found"
+        message: "User id not found",
       });
     }
 
     if (!ObjectId.isValid(query.setId)) {
       res.status(400).json({
         message: "Set id not found",
-        success: false
+        success: false,
       });
     }
     const pageNumber: number = ((parseInt(page) || 1) - 1) * (limit || 20);
@@ -308,7 +308,7 @@ const getMoveBySetId = async (req: Request, res: Response): Promise<any> => {
         setId: query.setId,
         userId: headToken.id,
         isDeleted: false,
-        isStarred: true
+        isStarred: true,
       })
         .populate("setId")
         .skip(pageNumber)
@@ -352,7 +352,7 @@ const getMoveBySetId = async (req: Request, res: Response): Promise<any> => {
         setId: query.setId,
         userId: headToken.id,
         isDeleted: false,
-        moveURL: { $ne: null }
+        moveURL: { $ne: null },
       })
         .populate("setId")
         .skip(pageNumber)
@@ -371,24 +371,24 @@ const getMoveBySetId = async (req: Request, res: Response): Promise<any> => {
         userId: headToken.id,
         isDeleted: false,
         isStarred: true,
-        moveURL: { $ne: null }
+        moveURL: { $ne: null },
       });
     } else {
       totalMoves = await MoveModel.countDocuments({
         setId: query.setId,
         userId: headToken.id,
         isDeleted: false,
-        moveURL: { $ne: null }
+        moveURL: { $ne: null },
       });
     }
     return res.status(200).json({
       movesData: moveList,
-      totalMoves: totalMoves
+      totalMoves: totalMoves,
     });
   } catch (error) {
     console.log(error);
     res.status(500).send({
-      message: error.message
+      message: error.message,
     });
   }
 };
@@ -402,17 +402,17 @@ const getMoveDetailsById = async (
     let headToken: Request | any = currentUser;
     if (!headToken.id) {
       res.status(400).json({
-        message: "User id not found"
+        message: "User id not found",
       });
     }
     const movesData: Document | any = await MoveModel.findById(query.moveId);
     return res.status(200).json({
-      movesData: movesData
+      movesData: movesData,
     });
   } catch (error) {
     console.log(error);
     res.status(500).send({
-      message: error.message
+      message: error.message,
     });
   }
 };
@@ -433,12 +433,12 @@ const publicUrlMoveDetails = async (
     const limitNumber: number = parseInt(limit) || 20;
     if (fromFolder) {
       temp = {
-        isPublic: true
+        isPublic: true,
       };
     }
     if (decryptedSetId && !fromFolder) {
       temp = await SetModel.findOne({
-        _id: decryptedSetId
+        _id: decryptedSetId,
       });
     }
 
@@ -447,7 +447,7 @@ const publicUrlMoveDetails = async (
         setId: decryptedSetId,
         userId: decryptedUserId,
         isDeleted: false,
-        moveURL: { $ne: null }
+        moveURL: { $ne: null },
       })
         .populate("setId")
         .skip(pageNumber)
@@ -458,26 +458,26 @@ const publicUrlMoveDetails = async (
         setId: decryptedSetId,
         userId: decryptedUserId,
         isDeleted: false,
-        moveURL: { $ne: null }
+        moveURL: { $ne: null },
       });
     } else {
       return res.status(400).json({
         message: {
           message: "Public access link is not enabled.",
-          setId: decryptedSetId
-        }
+          setId: decryptedSetId,
+        },
       });
     }
     return res.status(200).json({
       responsecode: 200,
       data: result,
       totalMoves: totalMove,
-      success: true
+      success: true,
     });
   } catch (error) {
     console.log(error);
     res.status(500).send({
-      message: error.message
+      message: error.message,
     });
   }
 };
@@ -499,10 +499,10 @@ const updateMoveDetailsFromYouTubeAndTrim = async (
     setData.push({ isLoading: true, index: temp.isVideoProcessing.length });
     const resp: Document | null | any = await SetModel.updateOne(
       {
-        _id: setId
+        _id: setId,
       },
       {
-        isVideoProcessing: setData
+        isVideoProcessing: setData,
       }
     );
 
@@ -510,7 +510,7 @@ const updateMoveDetailsFromYouTubeAndTrim = async (
     const moveListData: Document | any = await MoveModel.find({
       setId: setId,
       isDeleted: false,
-      moveURL: { $ne: null }
+      moveURL: { $ne: null },
     }).sort({ sortIndex: 1 });
 
     for (let index = 0; index < moveListData.length; index++) {
@@ -525,7 +525,7 @@ const updateMoveDetailsFromYouTubeAndTrim = async (
 
     await MoveModel.updateOne(
       {
-        _id: result._id
+        _id: result._id,
       },
       {
         title,
@@ -539,13 +539,13 @@ const updateMoveDetailsFromYouTubeAndTrim = async (
         sortIndex: 0,
         isMoveProcessing: true,
         userId: headToken.id,
-        moveURL: ""
+        moveURL: "",
       }
     );
 
     let originalVideoPath: string = "";
     const fileName = [
-      headToken.id + Date.now() + "deep_play_video" + ".webm"
+      headToken.id + Date.now() + "deep_play_video" + ".webm",
     ].join("");
 
     if (IsProductionMode) {
@@ -577,7 +577,7 @@ const updateMoveDetailsFromYouTubeAndTrim = async (
     //   (videoStream = fs.createWriteStream(originalVideoPath)) .size('1920x1080')
     // );
 
-    video.on("close", async function() {
+    video.on("close", async function () {
       const videoUrlFileName = originalVideoPath.split("uploads");
       const videoUrl = `uploads/${videoUrlFileName[1]}`;
       const fileName = `${videoUrl.split(".")[0]}_clip_${moment().unix()}.webm`;
@@ -609,10 +609,10 @@ const updateMoveDetailsFromYouTubeAndTrim = async (
           if (err) {
             await MoveModel.updateOne(
               {
-                _id: result._id
+                _id: result._id,
               },
               {
-                isDeleted: true
+                isDeleted: true,
               }
             );
 
@@ -621,16 +621,16 @@ const updateMoveDetailsFromYouTubeAndTrim = async (
             setData1.pop();
             await SetModel.updateOne(
               {
-                _id: setId
+                _id: setId,
               },
               {
-                isVideoProcessing: setData1
+                isVideoProcessing: setData1,
               }
             );
 
             return res.status(400).json({
               message:
-                "We are having an issue while creating webm for you. Please try again."
+                "We are having an issue while creating webm for you. Please try again.",
             });
           }
 
@@ -657,7 +657,7 @@ const updateMoveDetailsFromYouTubeAndTrim = async (
             isDeleted: result.isDeleted,
             createdAt: result.createdAt,
             videoMetaData: {},
-            searchType: "move"
+            searchType: "move",
           };
           let temp: any;
 
@@ -670,7 +670,7 @@ const updateMoveDetailsFromYouTubeAndTrim = async (
                 { _id: result._id },
                 {
                   objectId: temp,
-                  videoThumbnail: result.videoThumbnail
+                  videoThumbnail: result.videoThumbnail,
                 }
               );
             }
@@ -678,7 +678,7 @@ const updateMoveDetailsFromYouTubeAndTrim = async (
           /*  */
           await MoveModel.updateOne(
             {
-              _id: result._id
+              _id: result._id,
             },
             {
               moveURL: s3VideoUrl,
@@ -689,7 +689,7 @@ const updateMoveDetailsFromYouTubeAndTrim = async (
               sortIndex: 0,
               isMoveProcessing: false,
               startTime: timer.min ? timer.min : 0,
-              videoMetaData: {}
+              videoMetaData: {},
             }
           );
 
@@ -698,10 +698,10 @@ const updateMoveDetailsFromYouTubeAndTrim = async (
           setData1.pop();
           await SetModel.updateOne(
             {
-              _id: setId
+              _id: setId,
             },
             {
-              isVideoProcessing: setData1
+              isVideoProcessing: setData1,
             }
           );
 
@@ -712,14 +712,14 @@ const updateMoveDetailsFromYouTubeAndTrim = async (
             videoOriginalFile: videoOriginalFile,
             videoFileMain: videoFileMain,
             s3VideoUrl: s3VideoUrl,
-            videoThumbnail: result.videoThumbnail
+            videoThumbnail: result.videoThumbnail,
           });
         });
     });
   } catch (error) {
     console.log(error);
     return res.status(500).send({
-      message: error.message
+      message: error.message,
     });
   }
 };
@@ -742,10 +742,10 @@ const updateMoveDetailsAndTrimVideo = async (
     setData.push({ isLoading: true, index: temp.isVideoProcessing.length });
     const resp: Document | null | any = await SetModel.updateOne(
       {
-        _id: setId
+        _id: setId,
       },
       {
-        isVideoProcessing: setData
+        isVideoProcessing: setData,
       }
     );
 
@@ -753,7 +753,7 @@ const updateMoveDetailsAndTrimVideo = async (
     const moveListData: Document | any = await MoveModel.find({
       setId: setId,
       isDeleted: false,
-      moveURL: { $ne: null }
+      moveURL: { $ne: null },
     }).sort({ sortIndex: 1 });
 
     for (let index = 0; index < moveListData.length; index++) {
@@ -766,7 +766,7 @@ const updateMoveDetailsAndTrimVideo = async (
 
     await MoveModel.updateOne(
       {
-        _id: result._id
+        _id: result._id,
       },
       {
         title,
@@ -780,7 +780,7 @@ const updateMoveDetailsAndTrimVideo = async (
         videoMetaData: {},
         isMoveProcessing: true,
         moveURL: "",
-        sortIndex: 0
+        sortIndex: 0,
       }
     );
     let thumbnailPath: any[] = [];
@@ -821,10 +821,10 @@ const updateMoveDetailsAndTrimVideo = async (
           if (err) {
             await MoveModel.updateOne(
               {
-                _id: result._id
+                _id: result._id,
               },
               {
-                isDeleted: true
+                isDeleted: true,
               }
             );
 
@@ -833,16 +833,16 @@ const updateMoveDetailsAndTrimVideo = async (
             setData1.pop();
             await SetModel.updateOne(
               {
-                _id: setId
+                _id: setId,
               },
               {
-                isVideoProcessing: setData1
+                isVideoProcessing: setData1,
               }
             );
 
             return res.status(400).json({
               message:
-                "We are having an issue while creating webm for you. Please try again."
+                "We are having an issue while creating webm for you. Please try again.",
             });
           }
 
@@ -878,7 +878,7 @@ const updateMoveDetailsAndTrimVideo = async (
             videoThumbnail: result.videoThumbnail
               ? result.videoThumbnail
               : null,
-            searchType: "move"
+            searchType: "move",
           };
           let temp: any;
 
@@ -893,7 +893,7 @@ const updateMoveDetailsAndTrimVideo = async (
                   objectId: temp,
                   videoThumbnail: result.videoThumbnail
                     ? result.videoThumbnail
-                    : null
+                    : null,
                 }
               );
             }
@@ -901,7 +901,7 @@ const updateMoveDetailsAndTrimVideo = async (
           /*  */
           await MoveModel.updateOne(
             {
-              _id: result._id
+              _id: result._id,
             },
             {
               moveURL: s3VideoUrl,
@@ -911,7 +911,7 @@ const updateMoveDetailsAndTrimVideo = async (
               setId,
               sortIndex: 0,
               isMoveProcessing: false,
-              startTime: timer.min ? timer.min : 0
+              startTime: timer.min ? timer.min : 0,
             }
           );
 
@@ -920,10 +920,10 @@ const updateMoveDetailsAndTrimVideo = async (
           setData1.pop();
           await SetModel.updateOne(
             {
-              _id: setId
+              _id: setId,
             },
             {
-              isVideoProcessing: setData1
+              isVideoProcessing: setData1,
             }
           );
 
@@ -934,18 +934,18 @@ const updateMoveDetailsAndTrimVideo = async (
             videoOriginalFile: videoOriginalFile,
             videoFileMain: videoFileMain,
             s3VideoUrl: s3VideoUrl,
-            videoThumbnail: result.videoThumbnail
+            videoThumbnail: result.videoThumbnail,
           });
         });
     } else {
       return res.status(400).json({
-        message: "You've requested to update an unknown move."
+        message: "You've requested to update an unknown move.",
       });
     }
   } catch (error) {
     console.log(error);
     return res.status(500).send({
-      message: error.message
+      message: error.message,
     });
   }
 };
@@ -964,7 +964,7 @@ const updateDetailsAndTrimVideo = async (
     const { id: userId } = currentUser || {};
     const moveDetails: Document | any = await MoveModel.findOne({
       _id: moveId,
-      userId
+      userId,
     });
     if (!moveDetails) {
       throw new Error("This tag doesn't belogs to the logged in user.");
@@ -974,13 +974,13 @@ const updateDetailsAndTrimVideo = async (
       {
         setId,
         _id: {
-          $ne: moveId
-        }
+          $ne: moveId,
+        },
       },
       {
         $inc: {
-          sortIndex: 1
-        }
+          sortIndex: 1,
+        },
       }
     );
 
@@ -1000,19 +1000,19 @@ const updateDetailsAndTrimVideo = async (
       moveDetails.videoUrl.replace(ServerURL, "")
     );
     // push the process in JobQueue
-    JobQueue.push(callback => {
+    JobQueue.push((callback) => {
       processLocalVideo(moveDetails, callback);
     });
     return res.status(200).json({
       responsecode: 200,
       data: moveDetails,
       setId: setId,
-      videoThumbnail: moveDetails.videoThumbnail
+      videoThumbnail: moveDetails.videoThumbnail,
     });
   } catch (error) {
     console.log(error);
     return res.status(500).send({
-      message: error.message
+      message: error.message,
     });
   }
 };
@@ -1039,7 +1039,7 @@ const processLocalVideo = async (moveDetails: any, callback: any) => {
     );
   }
   console.log("Trimming process start for: %s", videoFile);
-  trimVideo(startTime, endTime - startTime, videoFile, outputFile, err => {
+  trimVideo(startTime, endTime - startTime, videoFile, outputFile, (err) => {
     console.log(err);
     if (err) {
       console.log(err);
@@ -1075,10 +1075,10 @@ const getThumbnail = async (videoPath: string, callback: any) => {
       filename: `${moment().unix()}_${
         path.parse(videoPath).name
       }_thumbnail.png`,
-      folder: dir
+      folder: dir,
     })
     .on("filenames", (filenames: string[]) => {
-      fileNames = filenames.map(file => `${dir}/${file}`);
+      fileNames = filenames.map((file) => `${dir}/${file}`);
     })
     .on("error", callback)
     .on("end", () => callback(null, fileNames[0]))
@@ -1105,23 +1105,23 @@ const copyMove = async (req: Request, res: Response): Promise<any> => {
       videoMetaData: body.videoMetaData ? body.videoMetaData : "",
       videoName: body.videoName,
       videoUrl: body.videoUrl,
-      isCopy: body.isCopy
+      isCopy: body.isCopy,
     };
     const moveData: Document | any = new MoveModel(moveDetails);
     await moveData.save();
     if (!moveData) {
       res.status(400).json({
-        message: "Failed to create a copy! Please try again."
+        message: "Failed to create a copy! Please try again.",
       });
     }
     res.status(200).json({
       data: moveData,
-      message: "Move Copy has been created successfully!"
+      message: "Move Copy has been created successfully!",
     });
   } catch (error) {
     console.log(error);
     return res.status(500).send({
-      message: error.message
+      message: error.message,
     });
   }
 };
@@ -1133,7 +1133,7 @@ const isStarredMove = async (req: Request, res: Response): Promise<any> => {
     const { moveId, isStarred } = query;
     if (!moveId) {
       res.status(400).json({
-        message: "MoveId not found"
+        message: "MoveId not found",
       });
     }
 
@@ -1141,19 +1141,19 @@ const isStarredMove = async (req: Request, res: Response): Promise<any> => {
       { _id: { $in: moveId } },
       {
         $set: {
-          isStarred: isStarred
-        }
+          isStarred: isStarred,
+        },
       }
     );
     return res.status(200).json({
       message: `Move has been ${
         isStarred === "true" ? "starred" : "Unstarred"
-      } successfully!`
+      } successfully!`,
     });
   } catch (error) {
     console.log(error);
     return res.status(500).send({
-      message: error.message
+      message: error.message,
     });
   }
 };
@@ -1165,7 +1165,7 @@ const deleteMove = async (req: Request, res: Response): Promise<any> => {
     const { moveId } = query;
     if (!moveId) {
       res.status(400).json({
-        message: "MoveId not found"
+        message: "MoveId not found",
       });
     }
 
@@ -1173,8 +1173,8 @@ const deleteMove = async (req: Request, res: Response): Promise<any> => {
       { _id: { $in: moveId } },
       {
         $set: {
-          isDeleted: true
-        }
+          isDeleted: true,
+        },
       }
     );
 
@@ -1197,12 +1197,12 @@ const deleteMove = async (req: Request, res: Response): Promise<any> => {
       message:
         moveId.length > 1
           ? "Moves has been deleted successfully!"
-          : "Move has been deleted successfully!"
+          : "Move has been deleted successfully!",
     });
   } catch (error) {
     console.log(error);
     return res.status(500).send({
-      message: error.message
+      message: error.message,
     });
   }
 };
@@ -1214,7 +1214,7 @@ const transferMove = async (req: Request, res: Response): Promise<any> => {
     const { setId, moveId } = body;
     if (!setId) {
       res.status(400).json({
-        message: "SetId not found"
+        message: "SetId not found",
       });
     }
 
@@ -1222,18 +1222,18 @@ const transferMove = async (req: Request, res: Response): Promise<any> => {
       { _id: { $in: moveId } },
       {
         $set: {
-          setId: setId
-        }
+          setId: setId,
+        },
       }
     );
 
     return res.status(200).json({
-      message: "Move has been transferred successfully!"
+      message: "Move has been transferred successfully!",
     });
   } catch (error) {
     console.log(error);
     return res.status(500).send({
-      message: error.message
+      message: error.message,
     });
   }
 };
@@ -1250,17 +1250,17 @@ const filterMove = async (req: Request, res: Response): Promise<any> => {
     let headToken: Request | any = currentUser;
     if (!headToken.id) {
       res.status(400).json({
-        message: "User id not found"
+        message: "User id not found",
       });
     }
     let condition: any = {
-      $and: []
+      $and: [],
     };
     condition.$and.push({
       isDeleted: false,
       setId: setId,
       userId: headToken.id,
-      moveURL: { $ne: null }
+      moveURL: { $ne: null },
     });
 
     if (search) {
@@ -1268,20 +1268,20 @@ const filterMove = async (req: Request, res: Response): Promise<any> => {
         $or: [
           {
             title: {
-              $regex: new RegExp(search.trim(), "i")
-            }
+              $regex: new RegExp(search.trim(), "i"),
+            },
           },
           {
             description: {
-              $regex: new RegExp(search.trim(), "i")
-            }
+              $regex: new RegExp(search.trim(), "i"),
+            },
           },
           {
             "tags.label": {
-              $regex: new RegExp(search.trim(), "i")
-            }
-          }
-        ]
+              $regex: new RegExp(search.trim(), "i"),
+            },
+          },
+        ],
       });
 
       if (isStarred === "true") {
@@ -1303,12 +1303,12 @@ const filterMove = async (req: Request, res: Response): Promise<any> => {
     return res.status(200).json({
       message: "Move has been searched successfully",
       data: searchData,
-      totalMoves: totalMoves
+      totalMoves: totalMoves,
     });
   } catch (error) {
     console.log(error);
     return res.status(500).send({
-      message: error.message
+      message: error.message,
     });
   }
 };
@@ -1321,14 +1321,14 @@ const addTagsInMove = async (req: Request, res: Response): Promise<any> => {
     const { tags, moveId, fromMoveList, description, edit } = data;
     if (!moveId) {
       res.status(400).json({
-        message: "MoveId not found"
+        message: "MoveId not found",
       });
     }
     if (fromMoveList) {
       for (let i = 0; i < moveId.length; i++) {
         const moveid = moveId[i];
         const result: Document | null | any = await MoveModel.findById(moveid, {
-          tags: 1
+          tags: 1,
         });
         const tagArr: Document | any | null = result.tags;
         if (tagArr && tagArr.length) {
@@ -1345,8 +1345,8 @@ const addTagsInMove = async (req: Request, res: Response): Promise<any> => {
             { _id: moveid },
             {
               $set: {
-                tags: array3
-              }
+                tags: array3,
+              },
             }
           );
 
@@ -1356,7 +1356,7 @@ const addTagsInMove = async (req: Request, res: Response): Promise<any> => {
             index.partialUpdateObject(
               {
                 tags: array3,
-                objectID: stemp
+                objectID: stemp,
               },
               (err: string, content: any) => {
                 if (err) throw err;
@@ -1369,8 +1369,8 @@ const addTagsInMove = async (req: Request, res: Response): Promise<any> => {
             { _id: moveid },
             {
               $set: {
-                tags: tags
-              }
+                tags: tags,
+              },
             }
           );
           const result1: any = await MoveModel.find({ _id: moveid });
@@ -1379,7 +1379,7 @@ const addTagsInMove = async (req: Request, res: Response): Promise<any> => {
             index.partialUpdateObject(
               {
                 tags: tags,
-                objectID: stemp
+                objectID: stemp,
               },
               (err: string, content: any) => {
                 if (err) throw err;
@@ -1395,8 +1395,8 @@ const addTagsInMove = async (req: Request, res: Response): Promise<any> => {
         {
           $set: {
             tags: tags,
-            description: description
-          }
+            description: description,
+          },
         }
       );
 
@@ -1407,7 +1407,7 @@ const addTagsInMove = async (req: Request, res: Response): Promise<any> => {
           {
             description: description,
             tags: tags,
-            objectID: stemp
+            objectID: stemp,
           },
           (err: string, content: any) => {
             if (err) throw err;
@@ -1418,25 +1418,25 @@ const addTagsInMove = async (req: Request, res: Response): Promise<any> => {
     }
     if (fromMoveList) {
       return res.status(200).json({
-        message: "Tags have been updated successfully"
+        message: "Tags have been updated successfully",
       });
     } else if (!fromMoveList && !edit) {
       return res.status(200).json({
-        message: "Tags have been updated for this move successfully"
+        message: "Tags have been updated for this move successfully",
       });
     } else if (edit) {
       return res.status(200).json({
-        message: "Move details have been updated successfully"
+        message: "Move details have been updated successfully",
       });
     } else {
       return res.status(200).json({
-        message: "Tags have been updated for this move successfully"
+        message: "Tags have been updated for this move successfully",
       });
     }
   } catch (error) {
     console.log(error);
     return res.status(500).send({
-      message: error.message
+      message: error.message,
     });
   }
 };
@@ -1460,7 +1460,7 @@ const updateMoveIndex = async (req: Request, res: Response): Promise<any> => {
         index.partialUpdateObject(
           {
             sortIndex: i + 1,
-            objectID: stemp
+            objectID: stemp,
           },
           (err: string, content: any) => {
             if (err) throw err;
@@ -1474,28 +1474,28 @@ const updateMoveIndex = async (req: Request, res: Response): Promise<any> => {
         setId: setId,
         isDeleted: false,
         isStarred: true,
-        moveURL: { $ne: null }
+        moveURL: { $ne: null },
       }).sort({
-        sortIndex: 1
+        sortIndex: 1,
       });
     } else {
       resp = await MoveModel.find({
         setId: setId,
         isDeleted: false,
-        moveURL: { $ne: null }
+        moveURL: { $ne: null },
       }).sort({
-        sortIndex: 1
+        sortIndex: 1,
       });
     }
 
     return res.status(200).json({
       message: "SortIndex have been updated successfully!",
-      data: resp
+      data: resp,
     });
   } catch (error) {
     console.log(error);
     return res.status(500).send({
-      message: error.message
+      message: error.message,
     });
   }
 };
@@ -1508,12 +1508,12 @@ const removeVideolocalServer = (req: Request, res: Response) => {
     fs.unlinkSync(videoOriginalFile);
     fs.unlinkSync(videoFileMain);
     return res.status(200).json({
-      success: true
+      success: true,
     });
   } else {
     return res.status(400).json({
       message: "Video url not provided",
-      success: false
+      success: false,
     });
   }
 };
@@ -1526,16 +1526,16 @@ const updateMove = async (req: Request, res: Response): Promise<any> => {
     let updateMove: IUpdateMove = {
       title,
       description,
-      tags
+      tags,
     };
 
     if (!moveId) {
       res.status(400).json({
-        message: "MoveId not found"
+        message: "MoveId not found",
       });
     }
     await MoveModel.findByIdAndUpdate(moveId, {
-      $set: { ...updateMove, updatedAt: Date.now() }
+      $set: { ...updateMove, updatedAt: Date.now() },
     });
 
     const result1: any = await MoveModel.find({ _id: moveId });
@@ -1546,7 +1546,7 @@ const updateMove = async (req: Request, res: Response): Promise<any> => {
           title: title,
           description: description,
           tags: tags,
-          objectID: stemp
+          objectID: stemp,
         },
         (err: string, content: any) => {
           if (err) throw err;
@@ -1555,12 +1555,12 @@ const updateMove = async (req: Request, res: Response): Promise<any> => {
       );
     }
     return res.status(200).json({
-      message: "Move details updated successfully."
+      message: "Move details updated successfully.",
     });
   } catch (error) {
     console.log(error);
     res.status(500).send({
-      message: error.message
+      message: error.message,
     });
   }
 };
@@ -1573,7 +1573,7 @@ const getMoveBySearch = async (req: Request, res: Response): Promise<any> => {
     let headToken: Request | any = currentUser;
     if (!headToken.id) {
       res.status(400).json({
-        message: "User id not found"
+        message: "User id not found",
       });
     }
 
@@ -1583,12 +1583,12 @@ const getMoveBySearch = async (req: Request, res: Response): Promise<any> => {
       moveList: Document | any | null,
       totalMoves: Document | any | null;
     let condition: any = {
-      $and: []
+      $and: [],
     };
     condition.$and.push({
       userId: headToken.id,
       isDeleted: false,
-      moveURL: { $ne: null }
+      moveURL: { $ne: null },
     });
 
     if (search) {
@@ -1596,15 +1596,15 @@ const getMoveBySearch = async (req: Request, res: Response): Promise<any> => {
         $or: [
           {
             title: {
-              $regex: new RegExp(search.trim(), "i")
-            }
+              $regex: new RegExp(search.trim(), "i"),
+            },
           },
           {
             "tags.label": {
-              $regex: new RegExp(search.trim(), "i")
-            }
-          }
-        ]
+              $regex: new RegExp(search.trim(), "i"),
+            },
+          },
+        ],
       });
 
       if (query.isStarred === "true") {
@@ -1612,7 +1612,7 @@ const getMoveBySearch = async (req: Request, res: Response): Promise<any> => {
         movesData = await MoveModel.find(conditionCheck)
           .populate({
             path: "setId",
-            match: { isDeleted: false }
+            match: { isDeleted: false },
           })
           .skip(pageNumber)
           .limit(limitNumber)
@@ -1622,7 +1622,7 @@ const getMoveBySearch = async (req: Request, res: Response): Promise<any> => {
         movesData = await MoveModel.find(condition)
           .populate({
             path: "setId",
-            match: { isDeleted: false }
+            match: { isDeleted: false },
           })
           .skip(pageNumber)
           .limit(limitNumber)
@@ -1633,7 +1633,7 @@ const getMoveBySearch = async (req: Request, res: Response): Promise<any> => {
 
       moveList = await MoveModel.populate(movesData, {
         path: "setId.folderId",
-        match: { isDeleted: false }
+        match: { isDeleted: false },
       });
     }
 
@@ -1689,12 +1689,12 @@ const getMoveBySearch = async (req: Request, res: Response): Promise<any> => {
     // }
     return res.status(200).json({
       movesData: moveList,
-      totalMoves: totalMoves
+      totalMoves: totalMoves,
     });
   } catch (error) {
     console.log(error);
     res.status(500).send({
-      message: error.message
+      message: error.message,
     });
   }
 };
@@ -1706,13 +1706,13 @@ const addTags = async (req: Request, res: Response): Promise<void> => {
     let tagData: Document | any;
     if (!headToken.id) {
       res.status(400).json({
-        message: "User id not found"
+        message: "User id not found",
       });
     }
     if (body.tags) {
       const tagDetails = {
         tags: body.tags ? body.tags : "",
-        userId: headToken.id
+        userId: headToken.id,
       };
       tagData = new TagModel(tagDetails);
       await tagData.save();
@@ -1720,12 +1720,12 @@ const addTags = async (req: Request, res: Response): Promise<void> => {
     res.status(200).json({
       data: tagData,
       message: "Tags have been added successfully",
-      success: true
+      success: true,
     });
   } catch (error) {
     console.log(error);
     res.status(500).send({
-      message: error.message
+      message: error.message,
     });
   }
 };
@@ -1742,11 +1742,11 @@ const getTagListByUserId = async (
 
     if (!headToken.id) {
       res.status(400).json({
-        message: "User id not found"
+        message: "User id not found",
       });
     }
     const result: Document | any = await TagModel.find({
-      userId: Mongoose.Types.ObjectId(headToken.id)
+      userId: Mongoose.Types.ObjectId(headToken.id),
     });
 
     for (let index = 0; index < result.length; index++) {
@@ -1756,12 +1756,12 @@ const getTagListByUserId = async (
 
     res.status(200).json({
       data: tagList,
-      success: true
+      success: true,
     });
   } catch (error) {
     console.log(error);
     res.status(500).send({
-      message: error.message
+      message: error.message,
     });
   }
 };
@@ -1795,7 +1795,7 @@ new CronJob(
               );
               fs.readdir(folderPath, (err, files) => {
                 if (files && files.length) {
-                  fs.unlink(path.join(folderPath, file), err => {
+                  fs.unlink(path.join(folderPath, file), (err) => {
                     if (err) throw err;
                   });
                 } else {
@@ -1812,7 +1812,7 @@ new CronJob(
               fs.readdir(folderPath, (err, files) => {
                 if (files && files.length) {
                   for (const file of files) {
-                    fs.unlink(path.join(folderPath, file), err => {
+                    fs.unlink(path.join(folderPath, file), (err) => {
                       if (err) throw err;
                     });
                   }
@@ -1822,7 +1822,7 @@ new CronJob(
               });
             }
           } else {
-            fs.unlink(path.join(dirPath, file), err => {
+            fs.unlink(path.join(dirPath, file), (err) => {
               if (err) throw err;
             });
           }
@@ -1867,14 +1867,14 @@ const getInstagramVideoUrl = (
           info.list = [
             {
               image:
-                data.entry_data.PostPage[0].graphql.shortcode_media.display_url
-            }
+                data.entry_data.PostPage[0].graphql.shortcode_media.display_url,
+            },
           ];
         } else if (type === "GraphSidecar") {
           info.list = data.entry_data.PostPage[0].graphql.shortcode_media.edge_sidecar_to_children.edges.map(
             (item: object | any) => ({
               image: item.node.display_url,
-              video: item.node.video_url
+              video: item.node.video_url,
             })
           );
         } else if (type === "GraphVideo") {
@@ -1883,8 +1883,8 @@ const getInstagramVideoUrl = (
               image:
                 data.entry_data.PostPage[0].graphql.shortcode_media.display_url,
               video:
-                data.entry_data.PostPage[0].graphql.shortcode_media.video_url
-            }
+                data.entry_data.PostPage[0].graphql.shortcode_media.video_url,
+            },
           ];
         }
         callback(null, info);
@@ -1924,7 +1924,7 @@ const generateThumbanail = async (fileName: any): Promise<string> => {
     const tg: any = new ThumbnailGenerator({
       sourcePath: videourl1,
       thumbnailPath: path1,
-      tmpDir: path1
+      tmpDir: path1,
     });
 
     tg.generateOneByPercentCb(90, async (err: any, result: any) => {
@@ -1952,7 +1952,7 @@ const processVideoTrmiming = async (
     const { id: userId } = currentUser || {};
     const moveDetails: Document | any = await MoveModel.findOne({
       _id: moveId,
-      userId
+      userId,
     });
     if (!moveDetails) {
       throw new Error("This tag doesn't belogs to the logged in user.");
@@ -1962,13 +1962,13 @@ const processVideoTrmiming = async (
       {
         setId,
         _id: {
-          $ne: moveId
-        }
+          $ne: moveId,
+        },
       },
       {
         $inc: {
-          sortIndex: 1
-        }
+          sortIndex: 1,
+        },
       }
     );
 
@@ -1986,19 +1986,19 @@ const processVideoTrmiming = async (
     moveDetails.save();
 
     // push the process in JobQueue
-    JobQueue.push(callback => {
+    JobQueue.push((callback) => {
       downloadAndTrimVideo(moveDetails, callback);
     });
     return res.status(200).json({
       responsecode: 200,
       data: moveDetails,
       setId: setId,
-      videoThumbnail: moveDetails.videoThumbnail
+      videoThumbnail: moveDetails.videoThumbnail,
     });
   } catch (error) {
     console.log(error);
     return res.status(500).send({
-      message: error.message || "Unkown error"
+      message: error.message || "Unkown error",
     });
   }
 };
@@ -2013,7 +2013,7 @@ const downloadVideoUsingYTDL = async (
   originalVideoPath: string,
   callback: (err?: any) => void
 ) => {
-  const video = youtubedl(
+  /* const video = youtubedl(
     sourceUrl,
     ["--format=bestvideo[height<=1080]", "--merge-output-format=webm"],
     {}
@@ -2025,7 +2025,13 @@ const downloadVideoUsingYTDL = async (
     console.log("size: " + info.size);
   });
 
-  video.on("close", callback);
+  video.on("close", callback); */
+
+  const video = exec(
+    `youtube-dl ${sourceUrl} --format 'bestvideo[height<=1080]' --merge-output-format 'webm' -o "${originalVideoPath}"`
+  );
+  video.on("close", () => callback());
+  video.on("error", callback);
 };
 /**
  *
@@ -2038,9 +2044,14 @@ const downloadAudioUsingYTDL = async (
   originalAudioPath: string,
   callback: (err?: any) => void
 ) => {
-  const audio = youtubedl(sourceUrl, ["--format=bestaudio"], {});
-  audio.pipe(fs.createWriteStream(originalAudioPath));
-  audio.on("close", callback);
+  // const audio = youtubedl(sourceUrl, ["--format=bestaudio"], {});
+  // audio.pipe(fs.createWriteStream(originalAudioPath));
+  // audio.on("close", callback);
+  const audio = exec(
+    `youtube-dl ${sourceUrl} --format 'bestaudio' -o "${originalAudioPath}"`
+  );
+  audio.on("close", () => callback());
+  audio.on("error", callback);
 };
 /**
  *
@@ -2114,7 +2125,7 @@ const moveToS3AndSetDetails = async (
     isDeleted: false,
     createdAt: new Date(),
     videoMetaData: {},
-    searchType: "move"
+    searchType: "move",
   };
 
   index.addObjects([moveDataForAlgolia], async (err: string, content: any) => {
@@ -2218,11 +2229,19 @@ const downloadAndTrimVideo = (moveDetails: any, callback: any) => {
     );
   }
   console.time("VideoDownloadTime");
-  downloadVideoUsingYTDL(sourceUrl, originalVideoPath, () => {
+  downloadVideoUsingYTDL(sourceUrl, originalVideoPath, (err) => {
+    if (err) {
+      console.log("Error in fetching video", err);
+      return;
+    }
     console.log("Video Downloaded Successfully");
     console.timeEnd("VideoDownloadTime");
     console.time("AudioDownloadTime");
-    downloadAudioUsingYTDL(sourceUrl, originalAudioPath, () => {
+    downloadAudioUsingYTDL(sourceUrl, originalAudioPath, (err) => {
+      if (err) {
+        console.log("Error in fetching audio", err);
+        return;
+      }
       console.timeEnd("AudioDownloadTime");
       console.log("Audio Downloaded Successfully");
       trimVideo(
@@ -2230,21 +2249,33 @@ const downloadAndTrimVideo = (moveDetails: any, callback: any) => {
         endTime - startTime,
         originalVideoPath,
         trimmedVideoPath,
-        err => {
-          console.log(err, "Video trimmed Successfully");
+        (err) => {
+          if (err) {
+            console.log("Error in trimming video", err);
+            return;
+          }
+          console.log("Video trimmed Successfully");
           trimVideo(
             startTime,
             endTime - startTime,
             originalAudioPath,
             trimmedAudioPath,
-            err => {
-              console.log(err, "Audio trimmed Successfully");
+            (err) => {
+              if (err) {
+                console.log("Error in trimming audio", err);
+                return;
+              }
+              console.log("Audio trimmed Successfully");
               mergeVideoAndAudio(
                 trimmedVideoPath,
                 trimmedAudioPath,
                 mergedVideoPath,
-                async err => {
-                  console.log(err, "Video and Audio merged successfully");
+                async (err) => {
+                  if (err) {
+                    console.log("Error in merging audio and video", err);
+                    return;
+                  }
+                  console.log("Video and Audio merged successfully");
                   fs.unlinkSync(originalVideoPath);
                   console.log("Removed video file: %s", originalVideoPath);
                   fs.unlinkSync(originalAudioPath);
@@ -2280,7 +2311,7 @@ const toHHMMSS = (secs: number) => {
     minutes = Math.floor(sec_num / 60) % 60,
     seconds = sec_num % 60;
 
-  return [hours, minutes, seconds].map(v => (v < 10 ? "0" + v : v)).join(":");
+  return [hours, minutes, seconds].map((v) => (v < 10 ? "0" + v : v)).join(":");
 };
 /**
  *
@@ -2308,5 +2339,5 @@ export {
   updateMoveDetailsFromYouTubeAndTrim,
   processVideoTrmiming,
   uploadVideo,
-  updateDetailsAndTrimVideo
+  updateDetailsAndTrimVideo,
 };
