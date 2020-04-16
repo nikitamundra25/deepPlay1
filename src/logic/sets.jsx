@@ -54,7 +54,8 @@ const createSetLogic = createLogic({
           modelDetails: {
             // addSetModalOpen: false,
             createSetOpen: false,
-            createSetModalOpen: false
+            createSetModalOpen: false,
+            addSetModalOpen: false
           }
         })
       );

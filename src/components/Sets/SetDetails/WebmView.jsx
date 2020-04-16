@@ -67,15 +67,13 @@ class WebmView extends Component {
     const vid = document.getElementById("webm-video");
     this.audio = document.getElementById("audio-trimmer");
     if (vid) {
-      const { videoMaxDuration } = this.state.videoDuration
-      if (parseInt(videoMaxDuration) === parseInt(vid.currentTime)) {
-        vid.pause()
-        videoDelay = true
-        setTimeout(() => {
-          vid.play()
-          videoDelay = false
-        }, 2000);
-      }
+//       vid.addEventListener('ended', function () {
+//         console.count('loop restart');
+//         vid.pause()
+//         setTimeout(() => {
+//           vid.play()
+//         }, 1500);
+//       })
 
       document.onkeydown = event => {
         this.handleKeyEvent(event);
@@ -167,7 +165,7 @@ class WebmView extends Component {
       if (this.video) {
         this.video.addEventListener("timeupdate", () => {
           let currentVideoTime;
-          if (this.audio && this.props.videoData.isMoveProcessing) {
+          if (this.audio && this.props.videoData.isMoveProcessing && this.props.videoData.isYoutubeUrl) {
             currentVideoTime = parseFloat(
               this.video
                 ? this.props.videoData.isYoutubeUrl
@@ -966,7 +964,7 @@ class WebmView extends Component {
                         src={`${
                           videoData && videoData.isMoveProcessing
                             ? videoData.videoUrl
-                            : videoData.moveURL 
+                            : videoData.moveURL
                               ? videoData.moveURL
                               : moveURL
                           }`}
@@ -1036,7 +1034,7 @@ class WebmView extends Component {
                         {SecondsToMMSS(parseInt(currentTime))} /{" "}
                         {SecondsToMMSS(
                           parseInt(
-                            videoDuration ? videoDuration.videoMaxDuration : 0
+                            videoDuration && videoDuration.videoMaxDuration ? videoDuration.videoMaxDuration : 0
                           )
                         )}
                       </div>

@@ -80,7 +80,7 @@ class MoveDetails extends React.Component {
       currentTime: 0,
       totalOutput: DefaultMoveLength,
       isChange: true,
-      maxLengthError: `Move can't be allow more than ${DefaultMoveLength} sec.`
+      maxLengthError: ``
     };
     this.videoDetails = React.createRef();
   }
@@ -173,16 +173,16 @@ class MoveDetails extends React.Component {
         const { allSetList } = this.props.setReducer;
         console.log("setId", allSetList);
 
-        if (allSetList && allSetList.length) {
-          // eslint-disable-next-line
-          allSetList.map(data => {
-            if (setId) {
-              this.setState({
-                selectedSetId: setId
-              });
-            }
-          });
-        }
+        // if (allSetList && allSetList.length) {
+        //   // eslint-disable-next-line
+        //   allSetList.map(data => {
+        //     if (setId) {
+        //       this.setState({
+        //         selectedSetId: setId
+        //       });
+        //     }
+        //   });
+        // }
 
         this.setState({
           title,
@@ -202,42 +202,47 @@ class MoveDetails extends React.Component {
         });
       }
     }
-    // if(setReducer !== this.props.setReducer){
-    //   const {
-    //     setId,
-    //   } = this.props.moveReducer.moveDetails;
-    //   const { allSetList } = this.props.setReducer;
-    //   let selectOption;
-    //   if (allSetList && allSetList.length) {
-    //     // eslint-disable-next-line
-    //     allSetList.map(data => {
-    //       if (setId) {
-    //         if (setId === data._id) {
-    //           selectOption = {
-    //             label:
-    //               data && data.isCopy
-    //                 ? `${data.title} ${
-    //                     data.copyCount > 0 ? `(${data.copyCount})` : ""
-    //                   }`
-    //                 : data.title,
-    //             value: data._id
-    //           };
-    //         }
-    //         this.setState({
-    //           selectedSetId: setId
-    //         });
-    //       }
-    //     });
-    //     this.setState({
-    //       selectSetOptions: selectOption
-    //       ? selectOption
-    //       : {
-    //           label: "Type to select sets",
-    //           value: ""
-    //         }
-    //     })
-    //   }
-    // }
+    if (setReducer !== this.props.setReducer) {
+      // const {
+      //   setId,
+      // } = this.props.moveReducer.moveDetails;
+      const { allSetList } = this.props.setReducer;
+      console.log("++++++++++++++", allSetList);
+      const setId = this.props.moveReducer.moveDetails.setId
+      let selectedSet
+      if (allSetList && allSetList.length) {
+        selectedSet = allSetList.filter((data) => data._id === setId)
+      }
+      console.log("++++++++++++++selectedSet", selectedSet);
+      let selectOption;
+      if (selectedSet && selectedSet.length) {
+        selectOption = {
+          label:
+            selectedSet[0] && selectedSet[0].isCopy
+              ? `${selectedSet[0].title} ${
+              selectedSet[0].copyCount > 0 ? `(${selectedSet[0].copyCount})` : ""
+              }`
+              : selectedSet[0].title,
+          value: selectedSet[0]._id
+        };
+      }
+      console.log("++++++++++++++selectOption", selectOption);
+      const { selectedSetId } = this.state
+      console.log("++++++********+++++selectedSetId", selectedSetId);
+      if (!selectedSetId) {
+        this.setState({
+          selectSetOptions: selectOption
+            ? selectOption
+            : {
+              label: "Type to select sets",
+              value: ""
+            }
+        })
+        this.setState({
+          selectedSetId: setId
+        });
+      }
+    }
     if (
       this.props.setReducer &&
       this.props.setReducer.recentSetAdded !== setReducer.recentSetAdded
@@ -354,9 +359,9 @@ class MoveDetails extends React.Component {
       });
       return;
     }
-    if (maxLengthError) {
+    if (maxLengthError || parseInt(timer.max - timer.min) > DefaultMoveLength) {
       if (!toast.isActive(this.toastId)) {
-        this.toastId = toast.error(maxLengthError);
+        this.toastId = toast.error(maxLengthError ? maxLengthError : `Move can't be allow more than ${DefaultMoveLength} sec.`);
       }
       return;
     }
@@ -369,32 +374,32 @@ class MoveDetails extends React.Component {
     {
       !isYoutubeUrl
         ? this.props.completeVideoEditing({
-            timer: {
-              min: parseInt(timer.min),
-              max: parseInt(timer.max)
-            },
-            moveId,
-            tags,
-            setId,
-            title: title,
-            description: description,
-            videoThumbnail: videoThumbnail,
-            isEdit: parsed.isEdit ? true : false,
-            setMoveCount
-          })
+          timer: {
+            min: parseFloat(timer.min),
+            max: parseFloat(timer.max)
+          },
+          moveId,
+          tags,
+          setId,
+          title: title,
+          description: description,
+          videoThumbnail: videoThumbnail,
+          isEdit: parsed.isEdit ? true : false,
+          setMoveCount
+        })
         : this.props.completeYouTubeVideoEditing({
-            timer: {
-              min: parseFloat(timer.min),
-              max: parseFloat(timer.max)
-            },
-            moveId,
-            tags,
-            setId,
-            title: title,
-            description: description,
-            isEdit: parsed.isEdit ? true : false,
-            setMoveCount
-          });
+          timer: {
+            min: parseFloat(timer.min),
+            max: parseFloat(timer.max)
+          },
+          moveId,
+          tags,
+          setId,
+          title: title,
+          description: description,
+          isEdit: parsed.isEdit ? true : false,
+          setMoveCount
+        });
     }
     this.handleMoveSuccessModal();
   };
@@ -749,7 +754,7 @@ class MoveDetails extends React.Component {
                   <span
                     className="cursor_pointer back-arrow create-move-back"
                     onClick={() => {
-                      window.history.back();
+                      this.props.redirectTo(AppRoutes.MOVE.url)
                     }}
                   >
                     {" "}
@@ -867,10 +872,10 @@ class MoveDetails extends React.Component {
                       />
                     </>
                   ) : (
-                    <Col sm={12} className="loader-col video-loader-wrap">
-                      <Loader fullLoader={true} />
-                    </Col>
-                  )}
+                      <Col sm={12} className="loader-col video-loader-wrap">
+                        <Loader fullLoader={true} />
+                      </Col>
+                    )}
                 </Row>
               </>
             </CardBody>

@@ -364,6 +364,11 @@ class VideoView extends React.Component {
     let recentAddedSet,
       defaultSetoptions = [];
     if (allSetList && allSetList.length) {
+      const addNewOption = {
+        label: "+ Create New Set",
+        value: ""
+      };
+      defaultSetoptions.push(addNewOption);
       allSetList.map(data => {
         const defaultSetoptionsValue = {
           label:
@@ -375,15 +380,9 @@ class VideoView extends React.Component {
           value: data._id,
           moveCount: data.moveCount
         };
-
         defaultSetoptions.push(defaultSetoptionsValue);
         return true;
       });
-      const addNewOption = {
-        label: "+ Create New Set",
-        value: ""
-      };
-      defaultSetoptions.push(addNewOption);
     } else {
       const addNewOption = {
         label: "+ Create New Set",
@@ -466,7 +465,7 @@ class VideoView extends React.Component {
                   muted={false}
                   onClick={handlePlayPause}
                   playsInline
-                  onError={e => playbackFailed(e)}
+                  // onError={e => playbackFailed(e)}
                   // onContextMenu={e => e.preventDefault()}
                   disablepictureinpicture="true"
                   controlsList="nodownload"

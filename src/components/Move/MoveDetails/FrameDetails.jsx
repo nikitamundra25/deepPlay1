@@ -586,7 +586,7 @@ class FrameDetails extends Component {
             </Row>
             <Label>
               <b>Tip:</b> Use the <i className="fas fa-arrow-up"></i> or{" "}
-              <i className="fas fa-arrow-down"></i> arrow keys for finer
+              <i className="fas fa-arrow-down"></i> arrow keys for finerdfsdfs
               adjustments
             </Label>
           </Col>

@@ -250,7 +250,7 @@ class SetComponent extends React.Component {
                                     this.props.OnCreateSetCopy(setList)
                                   }
                                   color=" "
-                                  disabled={setList.isVideoProcessing.length}
+                                  // disabled={setList.isVideoProcessing.length}
                                 >
                                   Copy
                                 </Button>
@@ -262,7 +262,7 @@ class SetComponent extends React.Component {
                                     )
                                   }
                                   color=" "
-                                  disabled={setList.isVideoProcessing.length}
+                                  // disabled={setList.isVideoProcessing.length}
                                 >
                                   Transfer
                                 </Button>
