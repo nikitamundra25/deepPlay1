@@ -2013,19 +2013,6 @@ const downloadVideoUsingYTDL = async (
   originalVideoPath: string,
   callback: (err?: any, data?: any) => void
 ) => {
-  /* const video = youtubedl(
-    sourceUrl,
-    ["--format=bestvideo[height<=1080]", "--merge-output-format=webm"],
-    {}
-  );
-  video.pipe(fs.createWriteStream(originalVideoPath));
-  video.on("info", info => {
-    console.log("Download started");
-    console.log("filename: " + info._filename);
-    console.log("size: " + info.size);
-  });
-
-  video.on("close", callback); */
   const video = exec(
     `youtube-dl "${sourceUrl}" --format 'bestvideo[height<=1080]' --merge-output-format 'webm' -o "${originalVideoPath}"`
   );
@@ -2049,9 +2036,6 @@ const downloadAudioUsingYTDL = async (
   originalAudioPath: string,
   callback: (err?: any, data?: any) => void
 ) => {
-  // const audio = youtubedl(sourceUrl, ["--format=bestaudio"], {});
-  // audio.pipe(fs.createWriteStream(originalAudioPath));
-  // audio.on("close", callback);
   const audio = exec(
     `youtube-dl "${sourceUrl}" --format 'bestaudio' -o "${originalAudioPath}"`
   );
@@ -2096,6 +2080,8 @@ const trimVideo = (
   outputPath: string,
   callback: (err?: any) => void
 ) => {
+  console.log("Start Time", toHHMMSS(start));
+  console.log("duration", duration);
   FFMpeg(videoPath)
     .setStartTime(toHHMMSS(start))
     .setDuration(duration)
@@ -2309,17 +2295,25 @@ const downloadAndTrimVideo = (moveDetails: any, callback: any) => {
     });
   });
 };
+const pad = function (num: number, size: number) {
+  return ("000" + num).slice(size * -1);
+};
+
 /**
  *
  * @param {number} secs
  */
 const toHHMMSS = (secs: number) => {
-  const sec_num = parseInt(secs.toString(), 10),
-    hours = Math.floor(sec_num / 3600),
-    minutes = Math.floor(sec_num / 60) % 60,
-    seconds = sec_num % 60;
+  const time = parseFloat(parseFloat(secs.toString()).toFixed(3)),
+    hours = Math.floor(time / 60 / 60),
+    minutes = Math.floor(time / 60) % 60,
+    seconds = Math.floor(time - minutes * 60),
+    milliseconds = time.toString().slice(-3);
 
-  return [hours, minutes, seconds].map((v) => (v < 10 ? "0" + v : v)).join(":");
+  return `${pad(hours, 2)}:${pad(minutes, 2)}:${pad(seconds, 2)}.${pad(
+    parseInt(milliseconds),
+    3
+  )}`;
 };
 /**
  *
