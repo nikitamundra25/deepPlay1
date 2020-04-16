@@ -2011,7 +2011,7 @@ const processVideoTrmiming = async (
 const downloadVideoUsingYTDL = async (
   sourceUrl: string,
   originalVideoPath: string,
-  callback: (err?: any) => void
+  callback: (err?: any, data?: any) => void
 ) => {
   /* const video = youtubedl(
     sourceUrl,
@@ -2026,12 +2026,17 @@ const downloadVideoUsingYTDL = async (
   });
 
   video.on("close", callback); */
-
   const video = exec(
-    `youtube-dl ${sourceUrl} --format 'bestvideo[height<=1080]' --merge-output-format 'webm' -o "${originalVideoPath}"`
+    `youtube-dl "${sourceUrl}" --format 'bestvideo[height<=1080]' --merge-output-format 'webm' -o "${originalVideoPath}"`
   );
-  video.on("close", () => callback());
-  video.on("error", callback);
+  video.on("close", (data) => {
+    console.log("video data", data);
+    callback(null, data);
+  });
+  video.on("error", (err) => {
+    console.log("err", err);
+    callback(err);
+  });
 };
 /**
  *
@@ -2042,15 +2047,18 @@ const downloadVideoUsingYTDL = async (
 const downloadAudioUsingYTDL = async (
   sourceUrl: string,
   originalAudioPath: string,
-  callback: (err?: any) => void
+  callback: (err?: any, data?: any) => void
 ) => {
   // const audio = youtubedl(sourceUrl, ["--format=bestaudio"], {});
   // audio.pipe(fs.createWriteStream(originalAudioPath));
   // audio.on("close", callback);
   const audio = exec(
-    `youtube-dl ${sourceUrl} --format 'bestaudio' -o "${originalAudioPath}"`
+    `youtube-dl "${sourceUrl}" --format 'bestaudio' -o "${originalAudioPath}"`
   );
-  audio.on("close", () => callback());
+  audio.on("close", (data) => {
+    console.log("video data", data);
+    callback(null, data);
+  });
   audio.on("error", callback);
 };
 /**
