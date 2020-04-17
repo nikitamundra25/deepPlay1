@@ -2295,7 +2295,7 @@ const downloadAndTrimVideo = (moveDetails: any, callback: any) => {
     });
   });
 };
-const pad = function (num: number, size: number) {
+const pad = function (num: number | string, size: number) {
   return ("000" + num).slice(size * -1);
 };
 
@@ -2309,9 +2309,8 @@ const toHHMMSS = (secs: number) => {
     minutes = Math.floor(time / 60) % 60,
     seconds = Math.floor(time - minutes * 60),
     milliseconds = time.toString().slice(-3);
-
-  return `${pad(hours, 2)}:${pad(minutes, 2)}:${pad(seconds, 2)}.${pad(
-    parseInt(milliseconds),
+  return `${pad(hours, 2)}:${pad(minutes, 2)}:${pad(seconds, 2)}${pad(
+    milliseconds,
     3
   )}`;
 };
