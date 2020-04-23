@@ -67,13 +67,13 @@ class WebmView extends Component {
     const vid = document.getElementById("webm-video");
     this.audio = document.getElementById("audio-trimmer");
     if (vid) {
-//       vid.addEventListener('ended', function () {
-//         console.count('loop restart');
-//         vid.pause()
-//         setTimeout(() => {
-//           vid.play()
-//         }, 1500);
-//       })
+      //       vid.addEventListener('ended', function () {
+      //         console.count('loop restart');
+      //         vid.pause()
+      //         setTimeout(() => {
+      //           vid.play()
+      //         }, 1500);
+      //       })
 
       document.onkeydown = event => {
         this.handleKeyEvent(event);
@@ -165,13 +165,11 @@ class WebmView extends Component {
       if (this.video) {
         this.video.addEventListener("timeupdate", () => {
           let currentVideoTime;
-          if (this.audio && this.props.videoData.isMoveProcessing && this.props.videoData.isYoutubeUrl) {
+          if (this.audio && this.props.videoData.isMoveProcessing) {
             currentVideoTime = parseFloat(
               this.video
-                ? this.props.videoData.isYoutubeUrl
-                  ? this.video.currentTime -
-                  Number(this.props.videoData.startTime)
-                  : this.video.currentTime
+                ? this.video.currentTime -
+                Number(this.props.videoData.startTime)
                 : 0
             ).toFixed(2);
             if (
@@ -280,11 +278,13 @@ class WebmView extends Component {
     this.video = document.getElementById("webm-video");
 
     const { videoData } = this.props;
-    if (videoData.isMoveProcessing && videoData.isYoutubeUrl) {
+    if (videoData.isMoveProcessing) {
+      console.log("in Video Processing")
       let timeDuration = [];
       const duration =
         Number(this.props.videoData.endTime) -
         (Number(this.props.videoData.startTime) + Number(value));
+      console.log(">>>>>>>>>>>>>>", duration)
       const videoMaxDuration =
         Number(this.props.videoData.endTime) -
         Number(this.props.videoData.startTime);
