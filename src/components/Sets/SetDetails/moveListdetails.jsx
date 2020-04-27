@@ -142,11 +142,10 @@ class MoveListDetails extends React.Component {
         <div
           onClick={() => this.props.handleShowVideo(index)}
           onMouseLeave={
-            !video.isMoveProcessing
-              ? () => {
+             () => {
                   handleVideoHoverLeave();
                 }
-              : null
+            
           }
           key={index}
         >
@@ -164,8 +163,7 @@ class MoveListDetails extends React.Component {
             >
               <div
                 onClick={
-                  !video.isMoveProcessing
-                    ? isVideoChecked && !isVideoModalOpen
+                     isVideoChecked && !isVideoModalOpen
                       ? () =>
                           handleMovesSelect(
                             !selectedMoves[index],
@@ -174,7 +172,7 @@ class MoveListDetails extends React.Component {
                             video._id
                           )
                       : null
-                    : null
+                    
                 }
                 className={
                   isVideoChecked && selectedMoves[index]
@@ -202,9 +200,7 @@ class MoveListDetails extends React.Component {
                       className="custom-control-input"
                       id={`selected-video-${index}`}
                       onChange={
-                        !video.isMoveProcessing
-                          ? e => handleMovesSelect(null, e, index, video._id)
-                          : null
+                         e => handleMovesSelect(null, e, index, video._id)
                       }
                       type="checkbox"
                       checked={selectedMoves[index] ? true : false}
@@ -230,10 +226,8 @@ class MoveListDetails extends React.Component {
                           className="custom-control-input"
                           id={`selected-video-${index}`}
                           onChange={
-                            !video.isMoveProcessing
-                              ? e =>
+                             e =>
                                   handleMovesSelect(null, e, index, video._id)
-                              : null
                           }
                           type="checkbox"
                           checked={selectedMoves[index] ? true : false}
@@ -323,9 +317,8 @@ class MoveListDetails extends React.Component {
                 <div
                   className="star-wrap"
                   onClick={
-                    !video.isMoveProcessing
-                      ? () => handleStarred(video._id, video.isStarred, index)
-                      : null
+                    () => handleStarred(video._id, video.isStarred, index)
+                      
                   }
                 >
                   {video.isStarred ? (
