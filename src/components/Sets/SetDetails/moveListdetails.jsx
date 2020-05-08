@@ -285,7 +285,7 @@ class MoveListDetails extends React.Component {
                       ? "text-capitalize play-list-heading h6 m-0"
                       : "text-capitalize play-list-heading h6 m-0 text-untitled"
                   }
-                  onDoubleClick={
+                  onClick={
                     !isVideoChecked
                       ?  () => onDoubleClick(index, video.title)
                         : null
