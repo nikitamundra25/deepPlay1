@@ -138,43 +138,43 @@ const downloadYoutubeVideo = async (
     !ex.stdout
       ? undefined
       : ex.stdout
-          .on("data", (message: string) => {
-            if (message && message.startsWith("https")) {
-              youTubeUrl = message;
-              console.log("youTubeUrl", youTubeUrl);
-            }
-          })
-          .on("error", (err) => {
-            console.log("Error", err);
+        .on("data", (message: string) => {
+          if (message && message.startsWith("https")) {
+            youTubeUrl = message;
+            console.log("youTubeUrl", youTubeUrl);
+          }
+        })
+        .on("error", (err) => {
+          console.log("Error", err);
+          return res.status(400).json({
+            message: "This Video is not available.",
+            success: false,
+          });
+        })
+        // once the process is end
+        .on("end", async () => {
+          if (!youTubeUrl) {
             return res.status(400).json({
               message: "This Video is not available.",
               success: false,
             });
-          })
-          // once the process is end
-          .on("end", async () => {
-            if (!youTubeUrl) {
-              return res.status(400).json({
-                message: "This Video is not available.",
-                success: false,
-              });
-            }
-            console.log("youTubeUrl", youTubeUrl, thumbImg);
-            const moveResult: Document | any = new MoveModel({
-              videoUrl: youTubeUrl,
-              sourceUrl: body.url,
-              isYoutubeUrl: true,
-              userId: headToken.id,
-              videoThumbnail: thumbImg,
-              setId: body.setId !== "undefined" ? body.setId : null,
-            });
-            await moveResult.save();
-            return res.status(200).json({
-              message: "Video uploaded successfully!",
-              videoUrl: youTubeUrl,
-              moveData: moveResult,
-            });
+          }
+          console.log("youTubeUrl", youTubeUrl, thumbImg);
+          const moveResult: Document | any = new MoveModel({
+            videoUrl: youTubeUrl,
+            sourceUrl: body.url,
+            isYoutubeUrl: true,
+            userId: headToken.id,
+            videoThumbnail: thumbImg,
+            setId: body.setId !== "undefined" ? body.setId : null,
           });
+          await moveResult.save();
+          return res.status(200).json({
+            message: "Video uploaded successfully!",
+            videoUrl: youTubeUrl,
+            moveData: moveResult,
+          });
+        });
     // on error
     ex.on("error", () => {
       return res.status(400).json({
@@ -795,7 +795,7 @@ const updateMoveDetailsAndTrimVideo = async (
 
       const fileName = `${
         result.videoUrl.split(".")[0]
-      }_clip_${moment().unix()}.webm`;
+        }_clip_${moment().unix()}.webm`;
 
       let videoFileMain: String | any, videoOriginalFile: String | any;
       if (IsProductionMode) {
@@ -1074,7 +1074,7 @@ const getThumbnail = async (videoPath: string, callback: any) => {
       count: 1,
       filename: `${moment().unix()}_${
         path.parse(videoPath).name
-      }_thumbnail.png`,
+        }_thumbnail.png`,
       folder: dir,
     })
     .on("filenames", (filenames: string[]) => {
@@ -1148,7 +1148,7 @@ const isStarredMove = async (req: Request, res: Response): Promise<any> => {
     return res.status(200).json({
       message: `Move has been ${
         isStarred === "true" ? "starred" : "Unstarred"
-      } successfully!`,
+        } successfully!`,
     });
   } catch (error) {
     console.log(error);
@@ -1950,8 +1950,8 @@ const processVideoTrmiming = async (
   try {
     const { timer, moveId, tags, setId, title, description } = body;
     const { id: userId } = currentUser || {};
-    console.log(">>>>>>>>>>>>>>>>>>>>>trimming time",timer);
-    
+    console.log(">>>>>>>>>>>>>>>>>>>>>trimming time", timer);
+
     const moveDetails: Document | any = await MoveModel.findOne({
       _id: moveId,
       userId,
@@ -2085,7 +2085,7 @@ const trimVideo = (
   console.log("Start Time", toHHMMSS(start));
   console.log("duration", duration);
   FFMpeg(videoPath)
-    .setStartTime(toHHMMSS(start))
+    .setStartTime(start === 0 ? "00:00:00.00" : toHHMMSS(start))
     .setDuration(duration)
     .output(outputPath)
     .on("error", callback)
