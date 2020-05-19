@@ -64,7 +64,7 @@ class MoveDetails extends React.Component {
       videoFrames: [],
       isUpdateDescription: false,
       timer: {
-        min: 0,
+        min: 0.0,
         max: DefaultMoveLength
       },
       videoMaxDuration: 1,
@@ -375,7 +375,7 @@ class MoveDetails extends React.Component {
       !isYoutubeUrl
         ? this.props.completeVideoEditing({
           timer: {
-            min: parseFloat(timer.min),
+            min: timer.min !== 0 ? parseFloat(timer.min) : 0.0,
             max: parseFloat(timer.max)
           },
           moveId,
@@ -389,7 +389,7 @@ class MoveDetails extends React.Component {
         })
         : this.props.completeYouTubeVideoEditing({
           timer: {
-            min: parseFloat(timer.min),
+            min: timer.min !== 0 ? parseFloat(timer.min) : 0.0,
             max: parseFloat(timer.max)
           },
           moveId,
