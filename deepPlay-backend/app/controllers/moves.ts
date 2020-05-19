@@ -1950,6 +1950,8 @@ const processVideoTrmiming = async (
   try {
     const { timer, moveId, tags, setId, title, description } = body;
     const { id: userId } = currentUser || {};
+    console.log(">>>>>>>>>>>>>>>>>>>>>trimming time",timer);
+    
     const moveDetails: Document | any = await MoveModel.findOne({
       _id: moveId,
       userId,
