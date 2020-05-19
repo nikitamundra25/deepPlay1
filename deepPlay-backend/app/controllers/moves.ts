@@ -2083,6 +2083,7 @@ const trimVideo = (
   callback: (err?: any) => void
 ) => {
   console.log("Start Time", toHHMMSS(start));
+  console.log("Initial Start time", start);
   console.log("duration", duration);
   FFMpeg(videoPath)
     .setStartTime(start === 0 ? "00:00:00.00" : toHHMMSS(start))
