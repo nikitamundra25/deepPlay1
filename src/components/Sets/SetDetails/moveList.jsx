@@ -73,15 +73,6 @@ class MoveList extends React.Component {
   componentDidMount() {
     window.addEventListener("scroll", this.listenScrollEvent);
   }
-  /*  */
-  componentDidUpdate = ({ movesOfSet }) => {
-    // if (movesOfSet !== this.props.movesOfSet) {
-    //   this.setState({
-    //     isFromSearch: false
-    //   })
-    // }
-  }
-
   /*
   /*
   */
@@ -444,8 +435,7 @@ class MoveList extends React.Component {
   handleInputChange = (e) => {
     const { value } = e.target;
     let parsed = qs.parse(this.props.location.search);
-    console.log("(((((((((((((((((((((((((");
-
+    this.props.changeisMoveData()
     this.setState({
       isFromSearch: true
     });
@@ -460,6 +450,9 @@ class MoveList extends React.Component {
       };
       this.props.searchMove(data);
     } else {
+      // this.setState({
+      //   search: null,
+      // });
       const data = {
         search: null,
         setId: this.props.setIdPathName,
@@ -500,7 +493,7 @@ class MoveList extends React.Component {
     this.props.updateSortIndexRequest(data);
   };
   reorderListNew = (newOrderedList) => {
-    if (this.props.setIdPathName && newOrderedList.length && !this.state.search) {
+    if (this.props.setIdPathName && newOrderedList.length && !this.props.isMoveData) {
       let parsed = qs.parse(this.props.location.search);
       const data = {
         setId: this.props.setIdPathName,
@@ -669,7 +662,6 @@ class MoveList extends React.Component {
     if (isStarred && isStarred.length && isStarred[1] === "true") {
       starredtVideos = movesOfSet.filter((video) => video.isStarred === true);
     }
-
     return (
       <section className="play-list-collection set-detail-section set-detail-editble">
         <InfiniteScroll
@@ -891,7 +883,7 @@ class MoveList extends React.Component {
                                   id: `list-item-${v._id}-${index}`,
                                   ...v,
                                 }))}
-                                setList={(newState) => this.reorderListNew(newState)}
+                                setList={this.reorderListNew}
                                 tag="ul"
                                 id="sortable"
                                 swapThreshold={1}

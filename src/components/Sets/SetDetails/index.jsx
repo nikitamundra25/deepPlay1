@@ -65,7 +65,8 @@ class SetDetails extends React.Component {
       setToTransfer: "",
       folderId: "",
       moveListItem: [],
-      videoClose: false
+      videoClose: false,
+      isMoveData: false
     };
   }
   componentDidMount = () => {
@@ -107,7 +108,8 @@ class SetDetails extends React.Component {
       this.setState({
         moveListItem: this.props.moveReducer
           ? this.props.moveReducer.movesOfSet
-          : []
+          : [],
+        isMoveData: false
       });
     }
   };
@@ -537,6 +539,10 @@ class SetDetails extends React.Component {
                     show={show}
                     isMoveListLoading={isMoveList}
                     setIndex={setIndex}
+                    changeisMoveData={() => this.setState({
+                      isMoveData: true
+                    })}
+                    isMoveData={this.state.isMoveData}
                     closePopOver={this.closePopOver}
                     showPopOver={this.showPopOver}
                     moveCount={setDetails ? setDetails.moveCount : 0}
