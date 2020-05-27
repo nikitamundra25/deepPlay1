@@ -38,7 +38,7 @@ const initialState = {
   creatingAnother: {},
   alreadyExist: false,
   uploaded: 0,
-  videoSize: 0
+  videoSize: 0,
 };
 
 export const moveReducer = handleActions(
@@ -64,7 +64,8 @@ export const moveReducer = handleActions(
     [MovesAction.GET_MOVES_OF_SET_REQUEST]: (state, { payload }) => ({
       ...state,
       isMoveofSetLoading: payload.isInfiniteScroll ? false : true,
-      isMoveList: payload.isMoveList ? true : false
+      isMoveList: payload.isMoveList ? true : false,
+      isGetMoveLoading: true
     }),
     [MovesAction.GET_MOVES_OF_SET_SUCCESS]: (state, { payload }) => ({
       ...state,
@@ -74,7 +75,8 @@ export const moveReducer = handleActions(
         : payload.movesOfSet,
       totalMoves: payload.totalMoves,
       isMoveofSetLoading: false,
-      isMoveList: false
+      isMoveList: false,
+      isGetMoveLoading: payload.movesOfSet && payload.movesOfSet.length ? false : true
     }),
     [MovesAction.GET_MOVE_DETAILS_REQUEST]: (state, { payload }) => ({
       ...state,
