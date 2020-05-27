@@ -1303,6 +1303,7 @@ const filterMove = async (req: Request, res: Response): Promise<any> => {
         setId: query.setId,
         userId: headToken.id,
         isDeleted: false,
+        moveURL: { $ne: null },
         isStarred: isStarred === "true" ? true : false,
       })
         .populate("setId")
