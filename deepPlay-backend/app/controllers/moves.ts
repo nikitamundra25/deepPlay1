@@ -1303,8 +1303,12 @@ const filterMove = async (req: Request, res: Response): Promise<any> => {
         setId: query.setId,
         userId: headToken.id,
         isDeleted: false,
-        isStarred: isStarred === "true"? true: false,
+        isStarred: isStarred === "true" ? true : false,
       })
+        .populate("setId")
+        .skip(pageNumber)
+        .limit(limitNumber)
+        .sort({ sortIndex: 1 });
     }
 
     return res.status(200).json({
