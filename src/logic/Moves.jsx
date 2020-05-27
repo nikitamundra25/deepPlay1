@@ -680,7 +680,7 @@ const addTagsLogic = createLogic({
 //Update sort index
 const updateSortIndexLogic = createLogic({
   type: MovesAction.UPDATE_SORT_INDEX_REQUEST,
-  async process({ action }, dispatch, done) {
+  async process({ action, getState }, dispatch, done) {
     dispatch(
       updateSortIndexSuccess({
         movesOfSet: action.payload.movesOfSet

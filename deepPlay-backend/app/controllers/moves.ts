@@ -286,7 +286,7 @@ const createMove = async (req: Request, res: Response): Promise<any> => {
 const getMoveBySetId = async (req: Request, res: Response): Promise<any> => {
   try {
     const { currentUser, query } = req;
-    const { page, limit, sortIndex } = query;
+    const { page, limit, sortIndex }: any = query;
     let headToken: Request | any = currentUser;
     if (!headToken.id) {
       res.status(400).json({
@@ -424,7 +424,7 @@ const publicUrlMoveDetails = async (
 ): Promise<any> => {
   try {
     const { query } = req;
-    const { setId, isPublic, fromFolder, page, limit, userId } = query;
+    const { setId, isPublic, fromFolder, page, limit, userId }: any = query;
     const decryptedSetId = decrypt(setId);
     const decryptedUserId = decrypt(userId);
     let result: Document | any | null, totalMove: Document | any | null;
@@ -1162,7 +1162,7 @@ const isStarredMove = async (req: Request, res: Response): Promise<any> => {
 const deleteMove = async (req: Request, res: Response): Promise<any> => {
   try {
     const { query } = req;
-    const { moveId } = query;
+    const { moveId }: any = query;
     if (!moveId) {
       res.status(400).json({
         message: "MoveId not found",
@@ -1242,7 +1242,7 @@ const transferMove = async (req: Request, res: Response): Promise<any> => {
 const filterMove = async (req: Request, res: Response): Promise<any> => {
   try {
     const { query, currentUser } = req;
-    const { search, setId, page, limit, isStarred } = query;
+    const { search, setId, page, limit, isStarred }: any = query;
     let searchData: Document | any | null, totalMoves: Number | any | null;
     const pageNumber: number = ((parseInt(page) || 1) - 1) * (limit || 20);
     const limitNumber: number = parseInt(limit) || 20;
@@ -1298,6 +1298,13 @@ const filterMove = async (req: Request, res: Response): Promise<any> => {
           .sort({ sortIndex: 1 });
         totalMoves = await MoveModel.countDocuments(condition);
       }
+    } else {
+      searchData = await await MoveModel.find({
+        setId: query.setId,
+        userId: headToken.id,
+        isDeleted: false,
+        isStarred: isStarred === "true"? true: false,
+      })
     }
 
     return res.status(200).json({
@@ -1569,7 +1576,7 @@ const updateMove = async (req: Request, res: Response): Promise<any> => {
 const getMoveBySearch = async (req: Request, res: Response): Promise<any> => {
   try {
     const { currentUser, query } = req;
-    const { page, limit, search } = query;
+    const { page, limit, search }: any = query;
     let headToken: Request | any = currentUser;
     if (!headToken.id) {
       res.status(400).json({
@@ -2076,15 +2083,17 @@ const mergeVideoAndAudio = async (
  * @param callback
  */
 const trimVideo = (
-  start: any,
+  start: number,
   duration: number,
   videoPath: string,
   outputPath: string,
   callback: (err?: any) => void
 ) => {
-
+  console.log("Start Time", toHHMMSS(start));
+  console.log("Initial Start time", start);
+  console.log("duration", duration);
   FFMpeg(videoPath)
-    .setStartTime(start === "0" ? "00:00:00.00" : toHHMMSS(start))
+    .setStartTime(start === 0 ? "00:00:00.00" : toHHMMSS(start))
     .setDuration(duration)
     .output(outputPath)
     .on("error", callback)

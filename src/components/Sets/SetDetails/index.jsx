@@ -392,7 +392,8 @@ class SetDetails extends React.Component {
       isVideoSelected,
       isSavingWebM,
       isSortIndexUpdate,
-      isIosDevice
+      isIosDevice,
+      isGetMoveLoading
     } = moveReducer;
     const { userEncryptedInfo } = shareLinkReducer;
     const {
@@ -420,7 +421,7 @@ class SetDetails extends React.Component {
         return true;
       });
     }
-
+    console.log("isGetMoveLoading>>>>>>>>>>>>>>>>>>>", isGetMoveLoading);
     return (
       <>
         <div className="set-main-section">
@@ -430,10 +431,10 @@ class SetDetails extends React.Component {
                 {setDetails
                   ? setDetails && setDetails.isCopy
                     ? `${setDetails.title} ${
-                        setDetails.copyCount > 0
-                          ? `(${setDetails.copyCount})`
-                          : ""
-                      }`
+                    setDetails.copyCount > 0
+                      ? `(${setDetails.copyCount})`
+                      : ""
+                    }`
                     : setDetails.title
                   : "MySets"}
               </div>
@@ -517,6 +518,7 @@ class SetDetails extends React.Component {
                   isFullScreenMode={isFullScreenMode}
                   videoFullscreenReq={videoFullscreenReq}
                   videoFullscreenExit={videoFullscreenExit}
+                  isGetMoveLoading={isGetMoveLoading}
                   isIosDevice={isIosDevice}
                   // addTagsInTagModalRequest={addTagsInTagModalRequest}
                   tagsList={tagsList}
@@ -562,6 +564,7 @@ class SetDetails extends React.Component {
                     searchMove={data => this.props.searchMoveRequest(data)}
                     isMoveStarLoading={isMoveStarLoading}
                     videoSelectRequest={videoSelectRequest}
+                    isMoveofSetLoading={isMoveofSetLoading}
                     videoUnSelectRequest={videoUnSelectRequest}
                     addTagsInTagModalRequest={data =>
                       this.props.addTagsInTagModalRequest(data)
@@ -570,18 +573,19 @@ class SetDetails extends React.Component {
                     editMove={this.editMove}
                     isSavingWebM={isSavingWebM}
                     isIosDevice={isIosDevice}
+                    isGetMoveLoading={isGetMoveLoading}
                     {...this.props}
                   />
                 </div>
               </Card>
             </>
           ) : (
-            <Row>
-              <Col md="12">
-                <Loader />
-              </Col>
-            </Row>
-          )}
+              <Row>
+                <Col md="12">
+                  <Loader />
+                </Col>
+              </Row>
+            )}
         </div>
         <SharableLinkModal
           modal={sharableLinkModalOpen}
