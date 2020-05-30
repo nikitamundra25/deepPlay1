@@ -447,7 +447,7 @@ class SignupComponent extends React.Component {
                       color=" "
                       type="submit"
                       disabled={
-                        termsService ? (isSignupLoading ? true : false) : true
+                        isSignupLoading ? true : false
                       }
                     >
                       {isSignupLoading ? "Please wait..." : "Create account"}
