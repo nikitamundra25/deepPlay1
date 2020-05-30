@@ -140,12 +140,12 @@ const downloadYoutubeVideo = async (
       : ex.stdout
         .on("data", (message: string) => {
           if (message && message.startsWith("https")) {
+            console.log(">>>>>>>>>>>>message", message);
             youTubeUrl = message;
             console.log("youTubeUrl", youTubeUrl);
           }
         })
         .on("error", (err) => {
-          console.log("Error", err);
           return res.status(400).json({
             message: "This Video is not available.",
             success: false,
@@ -153,27 +153,67 @@ const downloadYoutubeVideo = async (
         })
         // once the process is end
         .on("end", async () => {
+          console.log(">>>>>>>>>>>>Error", youTubeUrl);
           if (!youTubeUrl) {
-            return res.status(400).json({
-              message: "This Video is not available.",
-              success: false,
+            youtubedl.exec(body.url, ['--skip-download', '--get-url'], {},
+              async function (err: any, output: any) {
+                if (err) {
+                  return res.status(400).json({
+                    message: "This Video is not available.",
+                    success: false,
+                  });
+                } else {
+                  try {
+                    const outputVideoUrl = output[0].split("manifest")
+                    if (outputVideoUrl && outputVideoUrl.length <= 1) {
+                      const moveResult: Document | any = new MoveModel({
+                        videoUrl: output[0],
+                        sourceUrl: body.url,
+                        audioUrl: output[1],
+                        isYoutubeUrl: true,
+                        userId: headToken.id,
+                        videoThumbnail: thumbImg,
+                        setId: body.setId !== "undefined" ? body.setId : null,
+                      });
+                      await moveResult.save();
+                      return res.status(200).json({
+                        message: "Video uploaded successfully!",
+                        videoUrl: output[0],
+                        moveData: moveResult,
+                      });
+                    } else {
+                      return res.status(400).json({
+                        message: "Improper Video details.",
+                        success: false
+                      });
+                    }
+                  } catch (error) {
+                    console.log("*************Catch Error", error);
+                    return res.status(400).json({
+                      message: "Problem Uploading Video",
+                      success: false,
+                      error: error
+                    });
+                  }
+                }
+              })
+          } else {
+            console.log("youTubeUrl", youTubeUrl, thumbImg);
+            const moveResult: Document | any = new MoveModel({
+              videoUrl: youTubeUrl,
+              sourceUrl: body.url,
+              isYoutubeUrl: true,
+              userId: headToken.id,
+              videoThumbnail: thumbImg,
+              setId: body.setId !== "undefined" ? body.setId : null,
+            });
+            await moveResult.save();
+            return res.status(200).json({
+              message: "Video uploaded successfully!",
+              videoUrl: youTubeUrl,
+              moveData: moveResult,
             });
           }
-          console.log("youTubeUrl", youTubeUrl, thumbImg);
-          const moveResult: Document | any = new MoveModel({
-            videoUrl: youTubeUrl,
-            sourceUrl: body.url,
-            isYoutubeUrl: true,
-            userId: headToken.id,
-            videoThumbnail: thumbImg,
-            setId: body.setId !== "undefined" ? body.setId : null,
-          });
-          await moveResult.save();
-          return res.status(200).json({
-            message: "Video uploaded successfully!",
-            videoUrl: youTubeUrl,
-            moveData: moveResult,
-          });
         });
     // on error
     ex.on("error", () => {
@@ -594,7 +634,7 @@ const updateMoveDetailsFromYouTubeAndTrim = async (
       } else {
         videoOriginalFile = path.join(__dirname, "..", `${result.videoUrl}`);
       }
-
+      console.log("????????????????????", videoOriginalFile)
       const video = await new ffmpeg(originalVideoPath);
       const duration = timer.max - timer.min;
       video

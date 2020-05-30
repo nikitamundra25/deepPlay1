@@ -71,7 +71,9 @@ class VideoView extends React.Component {
       });
     }
     let timeDuration = [];
-
+    this.video.canplay = () =>{
+      console.log("************Video Can play")
+    }
     this.video.onloadeddata = () => {
       const { duration } = this.video;
       for (let index = 0; index < duration; index = index + duration / 20) {
