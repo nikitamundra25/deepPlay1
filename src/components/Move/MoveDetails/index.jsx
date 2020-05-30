@@ -811,7 +811,7 @@ class MoveDetails extends React.Component {
               {!isSavingWebM ? <div></div> : null}
               <>
                 <Row className={" "}>
-                  {moveDetails && moveDetails.videoUrl ? (
+                  {moveDetails && ((!moveDetails.isYoutubeUrl && moveDetails.sourceUrl) || moveDetails.videoUrl) ? (
                     <>
                       <VideoView
                         ref={this.videoDetails}

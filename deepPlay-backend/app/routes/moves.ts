@@ -20,7 +20,8 @@ import {
   addTags,
   getTagListByUserId,
   processVideoTrmiming,
-  uploadVideo,
+  createFromFile,
+  updateSourceVideo,
   updateDetailsAndTrimVideo
 } from "../controllers";
 import { ValidateAdminToken } from "../common";
@@ -31,10 +32,15 @@ const upload: multer.Instance = multer({ storage: storageFile });
 const MoveRouter: express.Router = express.Router();
 
 MoveRouter.post(
+  "/create-from-file",
+  ValidateAdminToken,
+  createFromFile
+);
+MoveRouter.post(
   "/upload-video",
   ValidateAdminToken,
   upload.single("url"),
-  uploadVideo
+  updateSourceVideo
 );
 MoveRouter.post(
   "/download-youtube-video",

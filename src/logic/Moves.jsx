@@ -46,10 +46,21 @@ const downloadVideoLogic = createLogic({
         action.payload
       );
     } else {
-      result = await api.UploadVideo(
+      result = await api.FetchFromServer(
+        "move",
+        "/create-from-file",
+        "POST",
+        true,
+        undefined,
+        {
+          ...action.payload,
+          fileUrl: URL.createObjectURL(action.payload.url)
+        }
+      );
+      api.UploadVideo(
         "move",
         "/upload-video",
-        action.payload,
+        {...action.payload, moveId: result.data.moveData._id},
         progressEvent => {
           const percent =
             Math.round(
