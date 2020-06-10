@@ -1,7 +1,39 @@
-
 .content-body-title {
   margin: 0 auto;
   font-size: 50px;
   font-weight: 800;
   text-align: center;
+}
+
+.home-video {
+  padding: 56.25% 0 0 0;
+  position: relative;
+  .video-wrapper {
+    height: 100%;
+    left: 0;
+    position: absolute;
+    top: 0;
+    width: 100%;
+    .video-meta-data {
+      height: 100%;
+      position: relative;
+      width: 100%;
+      .image-overview {
+        height: 100%;
+        left: 0;
+        opacity: 0;
+        overflow: hidden;
+        position: absolute;
+        top: 0;
+        transition: opacity 200ms;
+        width: 100%;
+        img {
+          filter: blur(5px);
+          height: 100%;
+          object-fit: contain;
+          width: 100%;
+        }
+      }
+    }
+  }
 }

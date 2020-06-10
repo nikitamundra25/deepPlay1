@@ -1,245 +1,307 @@
 <!DOCTYPE html>
 <html lang="en" class="perfect-scrollbar-off nav-open">
-
-<head>
+  <head>
     <!-- <meta charset="utf-8" /> -->
 
     <!-- <meta name="theme-color" content="#000000" /> -->
     <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
     <link rel="shortcut icon" href="%PUBLIC_URL%/favicon.ico" />
-    <link rel="apple-touch-icon" sizes="76x76" href="%PUBLIC_URL%/apple-icon.png" />
+    <link
+      rel="apple-touch-icon"
+      sizes="76x76"
+      href="%PUBLIC_URL%/apple-icon.png"
+    />
     <!-- Fonts -->
-    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700" rel="stylesheet" />
-    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous" />
+    <link
+      href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://use.fontawesome.com/releases/v5.8.1/css/all.css"
+      integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf"
+      crossorigin="anonymous"
+    />
     <title>%REACT_APP_NAME%</title>
-    <script async src="https://www.googletagmanager.com/gtag/js?id=AW-663086746"></script>
+    <script
+      async
+      src="https://www.googletagmanager.com/gtag/js?id=AW-663086746"
+    ></script>
     <script>
-        window.dataLayer = window.dataLayer || [];
+      window.dataLayer = window.dataLayer || [];
 
-        function gtag() {
-            dataLayer.push(arguments);
-        }
-        gtag('js', new Date());
-        gtag('config', 'AW-663086746');
+      function gtag() {
+        dataLayer.push(arguments);
+      }
+      gtag("js", new Date());
+      gtag("config", "AW-663086746");
     </script>
     <script>
-        gtag('event', 'conversion', {
-            'send_to': 'AW-663086746/ke5XCO-ouccBEJrNl7wC'
-        });
+      gtag("event", "conversion", {
+        send_to: "AW-663086746/ke5XCO-ouccBEJrNl7wC",
+      });
     </script>
-    <script async custom-element="amp-analytics" src="https://cdn.ampproject.org/v0/amp-analytics-0.1.js"></script>
+    <script
+      async
+      custom-element="amp-analytics"
+      src="https://cdn.ampproject.org/v0/amp-analytics-0.1.js"
+    ></script>
     <script>
-        ! function(f, b, e, v, n, t, s) {
-            if (f.fbq) return;
-            n = f.fbq = function() {
-                n.callMethod ?
-                    n.callMethod.apply(n, arguments) : n.queue.push(arguments)
-            };
-            if (!f._fbq) f._fbq = n;
-            n.push = n;
-            n.loaded = !0;
-            n.version = '2.0';
-            n.queue = [];
-            t = b.createElement(e);
-            t.async = !0;
-            t.src = v;
-            s = b.getElementsByTagName(e)[0];
-            s.parentNode.insertBefore(t, s)
-        }(window, document, 'script',
-            'https://connect.facebook.net/en_US/fbevents.js');
-        fbq('init', '547571035871009');
-        fbq('track', 'PageView');
+      !(function (f, b, e, v, n, t, s) {
+        if (f.fbq) return;
+        n = f.fbq = function () {
+          n.callMethod
+            ? n.callMethod.apply(n, arguments)
+            : n.queue.push(arguments);
+        };
+        if (!f._fbq) f._fbq = n;
+        n.push = n;
+        n.loaded = !0;
+        n.version = "2.0";
+        n.queue = [];
+        t = b.createElement(e);
+        t.async = !0;
+        t.src = v;
+        s = b.getElementsByTagName(e)[0];
+        s.parentNode.insertBefore(t, s);
+      })(
+        window,
+        document,
+        "script",
+        "https://connect.facebook.net/en_US/fbevents.js"
+      );
+      fbq("init", "547571035871009");
+      fbq("track", "PageView");
     </script>
     <noscript>
-      <img height="1" width="1" 
-    src="https://www.facebook.com/tr?id=547571035871009&ev=PageView
-    &noscript=1"/>
+      <img
+        height="1"
+        width="1"
+        src="https://www.facebook.com/tr?id=547571035871009&ev=PageView
+    &noscript=1"
+      />
     </noscript>
     <script>
-        (function(h, o, t, j, a, r) {
-            h.hj = h.hj || function() {
-                (h.hj.q = h.hj.q || []).push(arguments)
-            };
-            h._hjSettings = {
-                hjid: 1700741,
-                hjsv: 6
-            };
-            a = o.getElementsByTagName('head')[0];
-            r = o.createElement('script');
-            r.async = 1;
-            r.src = t + h._hjSettings.hjid + j + h._hjSettings.hjsv;
-            a.appendChild(r);
-        })(window, document, 'https://static.hotjar.com/c/hotjar-', '.js?sv=');
+      (function (h, o, t, j, a, r) {
+        h.hj =
+          h.hj ||
+          function () {
+            (h.hj.q = h.hj.q || []).push(arguments);
+          };
+        h._hjSettings = {
+          hjid: 1700741,
+          hjsv: 6,
+        };
+        a = o.getElementsByTagName("head")[0];
+        r = o.createElement("script");
+        r.async = 1;
+        r.src = t + h._hjSettings.hjid + j + h._hjSettings.hjsv;
+        a.appendChild(r);
+      })(window, document, "https://static.hotjar.com/c/hotjar-", ".js?sv=");
     </script>
     <script>
-        (function() {
-            window.satismeter = window.satismeter || function() {
-                (window.satismeter.q = window.satismeter.q || []).push(arguments);
-            };
-            window.satismeter.l = 1 * new Date();
-            var script = document.createElement("script");
-            var parent = document.getElementsByTagName("script")[0].parentNode;
-            script.async = 1;
-            script.src = "https://app.satismeter.com/satismeter.js";
-            parent.appendChild(script);
-        })();
+      (function () {
+        window.satismeter =
+          window.satismeter ||
+          function () {
+            (window.satismeter.q = window.satismeter.q || []).push(arguments);
+          };
+        window.satismeter.l = 1 * new Date();
+        var script = document.createElement("script");
+        var parent = document.getElementsByTagName("script")[0].parentNode;
+        script.async = 1;
+        script.src = "https://app.satismeter.com/satismeter.js";
+        parent.appendChild(script);
+      })();
 
-        satismeter({
-            writeKey: "qZ8aMTMqzpA8nPTz"
-        });
+      satismeter({
+        writeKey: "qZ8aMTMqzpA8nPTz",
+      });
     </script>
     <!-- Google Tag Manager -->
     <script>
-        (function(w, d, s, l, i) {
-            w[l] = w[l] || [];
-            w[l].push({
-                'gtm.start': new Date().getTime(),
-                event: 'gtm.js'
-            });
-            var f = d.getElementsByTagName(s)[0],
-                j = d.createElement(s),
-                dl = l != 'dataLayer' ? '&l=' + l : '';
-            j.async = true;
-            j.src =
-                'https://www.googletagmanager.com/gtm.js?id=' + i + dl;
-            f.parentNode.insertBefore(j, f);
-        })(window, document, 'script', 'dataLayer', 'GTM-KMJH44C');
+      (function (w, d, s, l, i) {
+        w[l] = w[l] || [];
+        w[l].push({
+          "gtm.start": new Date().getTime(),
+          event: "gtm.js",
+        });
+        var f = d.getElementsByTagName(s)[0],
+          j = d.createElement(s),
+          dl = l != "dataLayer" ? "&l=" + l : "";
+        j.async = true;
+        j.src = "https://www.googletagmanager.com/gtm.js?id=" + i + dl;
+        f.parentNode.insertBefore(j, f);
+      })(window, document, "script", "dataLayer", "GTM-KMJH44C");
     </script>
     <!-- End Google Tag Manager -->
 
     <script>
-        (function() {
-            window.satismeter = window.satismeter || function() {
-                (window.satismeter.q = window.satismeter.q || []).push(arguments);
+      (function () {
+        window.satismeter =
+          window.satismeter ||
+          function () {
+            (window.satismeter.q = window.satismeter.q || []).push(arguments);
+          };
+        window.satismeter.l = 1 * new Date();
+        var script = document.createElement("script");
+        var parent = document.getElementsByTagName("script")[0].parentNode;
+        script.async = 1;
+        script.src = "https://app.satismeter.com/satismeter.js";
+        parent.appendChild(script);
+      })();
+
+      satismeter({
+        writeKey: "qZ8aMTMqzpA8nPTz",
+      });
+    </script>
+
+    <script>
+      !(function () {
+        var analytics = (window.analytics = window.analytics || []);
+        if (!analytics.initialize)
+          if (analytics.invoked)
+            window.console &&
+              console.error &&
+              console.error("Segment snippet included twice.");
+          else {
+            analytics.invoked = !0;
+            analytics.methods = [
+              "trackSubmit",
+              "trackClick",
+              "trackLink",
+              "trackForm",
+              "pageview",
+              "identify",
+              "reset",
+              "group",
+              "track",
+              "ready",
+              "alias",
+              "debug",
+              "page",
+              "once",
+              "off",
+              "on",
+            ];
+            analytics.factory = function (t) {
+              return function () {
+                var e = Array.prototype.slice.call(arguments);
+                e.unshift(t);
+                analytics.push(e);
+                return analytics;
+              };
             };
-            window.satismeter.l = 1 * new Date();
-            var script = document.createElement("script");
-            var parent = document.getElementsByTagName("script")[0].parentNode;
-            script.async = 1;
-            script.src = "https://app.satismeter.com/satismeter.js";
-            parent.appendChild(script);
-        })();
-
-        satismeter({
-            writeKey: "qZ8aMTMqzpA8nPTz"
-        });
-    </script>
-
-    <script>
-        ! function() {
-            var analytics = window.analytics = window.analytics || [];
-            if (!analytics.initialize)
-                if (analytics.invoked) window.console && console.error && console.error("Segment snippet included twice.");
-                else {
-                    analytics.invoked = !0;
-                    analytics.methods = ["trackSubmit", "trackClick", "trackLink", "trackForm", "pageview", "identify", "reset", "group", "track", "ready", "alias", "debug", "page", "once", "off", "on"];
-                    analytics.factory = function(t) {
-                        return function() {
-                            var e = Array.prototype.slice.call(arguments);
-                            e.unshift(t);
-                            analytics.push(e);
-                            return analytics
-                        }
-                    };
-                    for (var t = 0; t < analytics.methods.length; t++) {
-                        var e = analytics.methods[t];
-                        analytics[e] = analytics.factory(e)
-                    }
-                    analytics.load = function(t, e) {
-                        var n = document.createElement("script");
-                        n.type = "text/javascript";
-                        n.async = !0;
-                        n.src = "https://cdn.segment.com/analytics.js/v1/" + t + "/analytics.min.js";
-                        var a = document.getElementsByTagName("script")[0];
-                        a.parentNode.insertBefore(n, a);
-                        analytics._loadOptions = e
-                    };
-                    analytics.SNIPPET_VERSION = "4.1.0";
-                    analytics.load("Mtr9vsJhCOuvFZjZgOD4FxKLXlpSAfrm");
-                    analytics.page();
-                }
-        }();
-    </script>
-    <script>
-        window["_fs_debug"] = false;
-        window["_fs_host"] = "fullstory.com";
-        window["_fs_script"] = "edge.fullstory.com/s/fs.js";
-        window["_fs_org"] = "RBE2D";
-        window["_fs_namespace"] = "FS";
-        (function(m, n, e, t, l, o, g, y) {
-            if (e in m) {
-                if (m.console && m.console.log) {
-                    m.console.log(
-                        'FullStory namespace conflict. Please set window["_fs_namespace"].'
-                    );
-                }
-                return;
+            for (var t = 0; t < analytics.methods.length; t++) {
+              var e = analytics.methods[t];
+              analytics[e] = analytics.factory(e);
             }
-            g = m[e] = function(a, b, s) {
-                g.q ? g.q.push([a, b, s]) : g._api(a, b, s);
+            analytics.load = function (t, e) {
+              var n = document.createElement("script");
+              n.type = "text/javascript";
+              n.async = !0;
+              n.src =
+                "https://cdn.segment.com/analytics.js/v1/" +
+                t +
+                "/analytics.min.js";
+              var a = document.getElementsByTagName("script")[0];
+              a.parentNode.insertBefore(n, a);
+              analytics._loadOptions = e;
             };
-            g.q = [];
-            o = n.createElement(t);
-            o.async = 1;
-            o.crossOrigin = "anonymous";
-            o.src = "https://" + _fs_script;
-            y = n.getElementsByTagName(t)[0];
-            y.parentNode.insertBefore(o, y);
-            g.identify = function(i, v, s) {
-                g(l, {
-                    uid: i
-                }, s);
-                if (v) g(l, v, s);
-            };
-            g.setUserVars = function(v, s) {
-                g(l, v, s);
-            };
-            g.event = function(i, v, s) {
-                g("event", {
-                    n: i,
-                    p: v
-                }, s);
-            };
-            g.shutdown = function() {
-                g("rec", !1);
-            };
-            g.restart = function() {
-                g("rec", !0);
-            };
-            g.log = function(a, b) {
-                g("log", [a, b]);
-            };
-            g.consent = function(a) {
-                g("consent", !arguments.length || a);
-            };
-            g.identifyAccount = function(i, v) {
-                o = "account";
-                v = v || {};
-                v.acctId = i;
-                g(o, v);
-            };
-            g.clearUserCookie = function() {};
-        })(window, document, window["_fs_namespace"], "script", "user");
+            analytics.SNIPPET_VERSION = "4.1.0";
+            analytics.load("Mtr9vsJhCOuvFZjZgOD4FxKLXlpSAfrm");
+            analytics.page();
+          }
+      })();
     </script>
-</head>
+    <script>
+      window["_fs_debug"] = false;
+      window["_fs_host"] = "fullstory.com";
+      window["_fs_script"] = "edge.fullstory.com/s/fs.js";
+      window["_fs_org"] = "RBE2D";
+      window["_fs_namespace"] = "FS";
+      (function (m, n, e, t, l, o, g, y) {
+        if (e in m) {
+          if (m.console && m.console.log) {
+            m.console.log(
+              'FullStory namespace conflict. Please set window["_fs_namespace"].'
+            );
+          }
+          return;
+        }
+        g = m[e] = function (a, b, s) {
+          g.q ? g.q.push([a, b, s]) : g._api(a, b, s);
+        };
+        g.q = [];
+        o = n.createElement(t);
+        o.async = 1;
+        o.crossOrigin = "anonymous";
+        o.src = "https://" + _fs_script;
+        y = n.getElementsByTagName(t)[0];
+        y.parentNode.insertBefore(o, y);
+        g.identify = function (i, v, s) {
+          g(
+            l,
+            {
+              uid: i,
+            },
+            s
+          );
+          if (v) g(l, v, s);
+        };
+        g.setUserVars = function (v, s) {
+          g(l, v, s);
+        };
+        g.event = function (i, v, s) {
+          g(
+            "event",
+            {
+              n: i,
+              p: v,
+            },
+            s
+          );
+        };
+        g.shutdown = function () {
+          g("rec", !1);
+        };
+        g.restart = function () {
+          g("rec", !0);
+        };
+        g.log = function (a, b) {
+          g("log", [a, b]);
+        };
+        g.consent = function (a) {
+          g("consent", !arguments.length || a);
+        };
+        g.identifyAccount = function (i, v) {
+          o = "account";
+          v = v || {};
+          v.acctId = i;
+          g(o, v);
+        };
+        g.clearUserCookie = function () {};
+      })(window, document, window["_fs_namespace"], "script", "user");
+    </script>
+  </head>
 
-<body>
+  <body>
     <noscript> You need to enable JavaScript to run this app. </noscript>
     <div id="root"></div>
     <amp-analytics type="gtag" data-credentials="include">
-        <script type="application/json">
-            {
-                "vars": {
-                    "gtag_id": "AW-663086746",
-                    "config": {
-                        "AW-663086746": {
-                            "groups": "default"
-                        }
-                    }
-                },
-                "triggers": {}
+      <script type="application/json">
+        {
+          "vars": {
+            "gtag_id": "AW-663086746",
+            "config": {
+              "AW-663086746": {
+                "groups": "default"
+              }
             }
-        </script>
+          },
+          "triggers": {}
+        }
+      </script>
     </amp-analytics>
     <!--
       This HTML file is a template.
@@ -251,8 +313,8 @@
       To begin the development, run `npm start` or `yarn start`.
       To create a production bundle, use `npm run build` or `yarn build`.
     -->
-</body>
-<!--  <script>
+  </body>
+  <!--  <script>
     function initFreshChat() {
       window.fcWidget.init({
         token: "1444c874-0d2d-49ed-af92-aada237bc2ce",
@@ -276,5 +338,4 @@
       ? window.addEventListener("load", initiateCall, !1)
       : window.attachEvent("load", initiateCall, !1);
   </script> -->
-
 </html>
