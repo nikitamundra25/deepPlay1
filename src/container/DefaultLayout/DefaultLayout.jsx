@@ -28,7 +28,7 @@ import {
   videoFullscreenReq,
   videoFullscreenExit,
   videoDataFromSearch,
-  detectBrowserRequest
+  detectBrowserRequest,
 } from "../../actions/index.jsx";
 import { AppRoutes } from "../../config/AppRoutes";
 import Loader from "components/comman/Loader/Loader";
@@ -68,10 +68,10 @@ class DefaultLayout extends React.Component {
     return "browser";
   };
 
-  onFolderCreation = data => {
+  onFolderCreation = (data) => {
     this.props.onFolderCreation(data);
   };
-  onSetsCreation = data => {
+  onSetsCreation = (data) => {
     this.props.onSetsCreation(data);
   };
   handleSetting = () => {
@@ -108,13 +108,13 @@ class DefaultLayout extends React.Component {
       addTagsRequest,
       videoFullscreenReq,
       videoFullscreenExit,
-      videoDataFromSearch
+      videoDataFromSearch,
     } = this.props;
     const {
       videoData,
       tagsList,
       isFullScreenMode,
-      isVideoFromSearch
+      isVideoFromSearch,
     } = moveReducer;
 
     let isLoggedIn;
@@ -152,14 +152,14 @@ class DefaultLayout extends React.Component {
             videoFullscreenReq={videoFullscreenReq}
             videoFullscreenExit={videoFullscreenExit}
             loadVideoDataRequest={loadVideoDataRequest}
-            deleteMoveRequest={data => deleteMovesRequest(data)}
-            isStarredRequest={data => starredMovesRequest(data)}
+            deleteMoveRequest={(data) => deleteMovesRequest(data)}
+            isStarredRequest={(data) => starredMovesRequest(data)}
             getTagListRequest={() => getTagListRequest()}
             addTagsInTagModalRequest={() => addTagsInTagModalRequest()}
-            updateMoveRequest={data => updateMoveRequest(data)}
-            getSetList={data => getSetList(data)}
-            transferMove={data => transferMovesRequest(data)}
-            addTagsRequest={data => addTagsRequest(data)}
+            updateMoveRequest={(data) => updateMoveRequest(data)}
+            getSetList={(data) => getSetList(data)}
+            transferMove={(data) => transferMovesRequest(data)}
+            addTagsRequest={(data) => addTagsRequest(data)}
             tagsList={tagsList}
             videoDataFromSearch={videoDataFromSearch}
             isVideoFromSearch={isVideoFromSearch}
@@ -242,7 +242,7 @@ class DefaultLayout extends React.Component {
                                 path={route.path}
                                 exact={route.exact}
                                 name={route.name}
-                                render={props => (
+                                render={(props) => (
                                   <route.component {...props} {...this.props} />
                                 )}
                               />
@@ -270,7 +270,7 @@ class DefaultLayout extends React.Component {
                             path={route.path}
                             exact={route.exact}
                             name={route.name}
-                            render={props => (
+                            render={(props) => (
                               <route.component {...props} {...this.props} />
                             )}
                           />
@@ -303,54 +303,54 @@ class DefaultLayout extends React.Component {
   }
 }
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state) => ({
   modelInfoReducer: state.modelInfoReducer,
   loginReducer: state.loginReducer,
   profileInfoReducer: state.profileInfoReducer,
   allSearchReducer: state.allSearchReducer,
   shareLinkReducer: state.shareLinkReducer,
   moveReducer: state.moveReducer,
-  allSetList: state.setReducer.allSetList
+  allSetList: state.setReducer.allSetList,
 });
-const mapDispatchToProps = dispatch => ({
-  modelOperate: data => dispatch(modelOpenRequest(data)),
-  loginRequest: data => dispatch(loginRequest(data)),
-  logoutRequest: data => dispatch(logoutRequest(data)),
-  signupRequest: data => dispatch(signupRequest(data)),
-  socialLoginRequest: data => dispatch(socialLoginRequest(data)),
-  forgotPasswordRequest: data => dispatch(forgotPasswordRequest(data)),
+const mapDispatchToProps = (dispatch) => ({
+  modelOperate: (data) => dispatch(modelOpenRequest(data)),
+  loginRequest: (data) => dispatch(loginRequest(data)),
+  logoutRequest: (data) => dispatch(logoutRequest(data)),
+  signupRequest: (data) => dispatch(signupRequest(data)),
+  socialLoginRequest: (data) => dispatch(socialLoginRequest(data)),
+  forgotPasswordRequest: (data) => dispatch(forgotPasswordRequest(data)),
   getProfile: () => dispatch(profileRequest()),
-  onFolderCreation: data => dispatch(createFolderRequest(data)),
-  allSearchRequest: data => dispatch(allSearchRequest(data)),
-  onSetsCreation: data => dispatch(createSetRequest(data)),
-  loadVideoDataRequest: data => dispatch(loadVideoDataRequest(data)),
-  deleteMoveRequest: data => dispatch(deleteMovesRequest(data)),
-  isStarredRequest: data => dispatch(starredMovesRequest(data)),
+  onFolderCreation: (data) => dispatch(createFolderRequest(data)),
+  allSearchRequest: (data) => dispatch(allSearchRequest(data)),
+  onSetsCreation: (data) => dispatch(createSetRequest(data)),
+  loadVideoDataRequest: (data) => dispatch(loadVideoDataRequest(data)),
+  deleteMoveRequest: (data) => dispatch(deleteMovesRequest(data)),
+  isStarredRequest: (data) => dispatch(starredMovesRequest(data)),
   getTagListRequest: () => {
     dispatch(getTagListRequest());
   },
-  addTagsInTagModalRequest: data => {
+  addTagsInTagModalRequest: (data) => {
     dispatch(addTagsInTagModalRequest(data));
   },
-  updateMoveRequest: data => {
+  updateMoveRequest: (data) => {
     dispatch(updateMoveRequest(data));
   },
-  getSetList: data => {
+  getSetList: (data) => {
     dispatch(getAllSetRequest(data));
   },
-  transferMovesRequest: data => dispatch(transferMovesRequest(data)),
-  addTagsRequest: data => dispatch(addTagsRequest(data)),
-  videoFullscreenReq: data => {
+  transferMovesRequest: (data) => dispatch(transferMovesRequest(data)),
+  addTagsRequest: (data) => dispatch(addTagsRequest(data)),
+  videoFullscreenReq: (data) => {
     dispatch(videoFullscreenReq(data));
   },
-  videoFullscreenExit: data => {
+  videoFullscreenExit: (data) => {
     dispatch(videoFullscreenExit(data));
   },
-  videoDataFromSearch: data => {
+  videoDataFromSearch: (data) => {
     dispatch(videoDataFromSearch(data));
   },
   detectBrowserRequest: () => {
     dispatch(detectBrowserRequest());
-  }
+  },
 });
 export default connect(mapStateToProps, mapDispatchToProps)(DefaultLayout);

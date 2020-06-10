@@ -7,7 +7,7 @@ import {
   Modal,
   ModalBody,
   UncontrolledTooltip,
-  ModalHeader
+  ModalHeader,
 } from "reactstrap";
 import { logger } from "helper/Logger";
 import InputRange from "react-input-range";
@@ -21,7 +21,7 @@ import EditMoveModal from "./editMoveModal";
 import { ConfirmBox } from "helper/SweetAleart";
 import { toast } from "react-toastify";
 import videoLoading from "../../../assets/img/loder/loader.svg";
-let videoDelay = false
+let videoDelay = false;
 class WebmView extends Component {
   video;
   constructor(props) {
@@ -62,10 +62,12 @@ class WebmView extends Component {
     isVideoModalOpen,
     videoData,
     isFullScreenMode,
-    isVideoFromSearch
+    isVideoFromSearch,
+    isHomePage,
   }) => {
     const vid = document.getElementById("webm-video");
     this.audio = document.getElementById("audio-trimmer");
+
     if (vid) {
       //       vid.addEventListener('ended', function () {
       //         console.count('loop restart');
@@ -75,13 +77,13 @@ class WebmView extends Component {
       //         }, 1500);
       //       })
 
-      document.onkeydown = event => {
+      document.onkeydown = (event) => {
         this.handleKeyEvent(event);
       };
 
       vid.onwaiting = () => {
         this.setState({
-          isBufferingVideo: true
+          isBufferingVideo: true,
         });
         if (this.audio) {
           this.audio.pause();
@@ -89,7 +91,7 @@ class WebmView extends Component {
       };
       vid.oncanplay = () => {
         this.setState({
-          isBufferingVideo: false
+          isBufferingVideo: false,
         });
         if (this.audio) {
           this.audio.play();
@@ -106,18 +108,18 @@ class WebmView extends Component {
           ) {
             this.setState({
               isMuted: true,
-              audioSpeed: 0
+              audioSpeed: 0,
             });
           } else {
             this.setState({
               isMuted: false,
-              audioSpeed: this.video.volume
+              audioSpeed: this.video.volume,
             });
           }
         });
         this.video.addEventListener("pause", () => {
           this.setState({
-            isPlaying: false
+            isPlaying: false,
           });
           if (this.audio) {
             this.audio.pause();
@@ -125,7 +127,7 @@ class WebmView extends Component {
         });
         this.video.addEventListener("play", () => {
           this.setState({
-            isPlaying: true
+            isPlaying: true,
           });
           if (this.audio) {
             this.audio.play();
@@ -136,7 +138,7 @@ class WebmView extends Component {
           let isVideoScreenChange = false;
           this.customVideo.addEventListener("fullscreenchange ", () => {
             this.setState({
-              isFullScreenMode: false
+              isFullScreenMode: false,
             });
             if (!isVideoScreenChange) {
               this.props.videoFullscreenExit();
@@ -155,7 +157,7 @@ class WebmView extends Component {
         exactCurrentTime: 0,
         audioSpeed: 5,
         isMuted: this.props.videoClose ? true : false,
-        playBackSpeed: 1
+        playBackSpeed: 1,
       });
     }
     if (videoData !== this.props.videoData) {
@@ -169,7 +171,7 @@ class WebmView extends Component {
             currentVideoTime = parseFloat(
               this.video
                 ? this.video.currentTime -
-                Number(this.props.videoData.startTime)
+                    Number(this.props.videoData.startTime)
                 : 0
             ).toFixed(2);
             if (
@@ -185,12 +187,12 @@ class WebmView extends Component {
             ).toFixed(2);
           }
           this.setState({
-            currentTime: currentVideoTime
+            currentTime: currentVideoTime,
           });
         });
         this.video.addEventListener("ended", () => {
           this.setState({
-            isPlaying: true
+            isPlaying: true,
           });
         });
         this.video.load();
@@ -209,15 +211,15 @@ class WebmView extends Component {
           }
           const data = {
             timeDuration: timeDuration,
-            videoMaxDuration: duration
+            videoMaxDuration: duration,
           };
           this.setState({
             videoDuration: data,
             videoDimentions: {
               videoHeight,
-              videoWidth
+              videoWidth,
             },
-            isPlaying: true
+            isPlaying: true,
           });
         };
       }
@@ -237,12 +239,12 @@ class WebmView extends Component {
             this.video.currentTime = Number(this.props.videoData.startTime);
           }
           this.setState({
-            currentTime: currentVideoTime
+            currentTime: currentVideoTime,
           });
         });
         this.video.addEventListener("ended", () => {
           this.setState({
-            isPlaying: true
+            isPlaying: true,
           });
         });
 
@@ -257,15 +259,15 @@ class WebmView extends Component {
           this.video.currentTime = this.props.videoData.startTime;
           const data = {
             timeDuration: timeDuration,
-            videoMaxDuration: duration
+            videoMaxDuration: duration,
           };
           this.setState({
             videoDuration: data,
             videoDimentions: {
               videoHeight,
-              videoWidth
+              videoWidth,
             },
-            isPlaying: true
+            isPlaying: true,
           });
         };
       }
@@ -274,17 +276,17 @@ class WebmView extends Component {
   /**
    *
    */
-  labelValueChange = value => {
+  labelValueChange = (value) => {
     this.video = document.getElementById("webm-video");
 
     const { videoData } = this.props;
     if (videoData.isMoveProcessing) {
-      console.log("in Video Processing")
+      console.log("in Video Processing");
       let timeDuration = [];
       const duration =
         Number(this.props.videoData.endTime) -
         (Number(this.props.videoData.startTime) + Number(value));
-      console.log(">>>>>>>>>>>>>>", duration)
+      console.log(">>>>>>>>>>>>>>", duration);
       const videoMaxDuration =
         Number(this.props.videoData.endTime) -
         Number(this.props.videoData.startTime);
@@ -299,17 +301,17 @@ class WebmView extends Component {
       }
       const data = {
         timeDuration: timeDuration,
-        videoMaxDuration: videoMaxDuration
+        videoMaxDuration: videoMaxDuration,
       };
 
       this.setState({
         currentTime: parseFloat(value),
-        videoDuration: data
+        videoDuration: data,
       });
     } else {
       this.video.currentTime = value;
       this.setState({
-        currentTime: parseFloat(value)
+        currentTime: parseFloat(value),
       });
     }
   };
@@ -320,7 +322,7 @@ class WebmView extends Component {
     this.video = document.getElementById("webm-video");
     if (this.video) {
       this.setState({
-        isPlaying: true
+        isPlaying: true,
       });
       this.video.play();
       if (this.audio) {
@@ -333,7 +335,7 @@ class WebmView extends Component {
    */
   pauseVideo = () => {
     this.setState({
-      isPlaying: false
+      isPlaying: false,
     });
     this.video.pause();
     if (this.audio) {
@@ -343,11 +345,11 @@ class WebmView extends Component {
   /**
    *
    */
-  onVolumeChange = value => {
+  onVolumeChange = (value) => {
     logger(value);
     this.setState({
       audioSpeed: value,
-      isMuted: value === 0
+      isMuted: value === 0,
     });
     this.video.volume = value;
     if (this.audio) {
@@ -365,7 +367,7 @@ class WebmView extends Component {
       this.audio.volume = 1;
     }
     this.setState({
-      isMuted: !isMuted
+      isMuted: !isMuted,
     });
   };
 
@@ -386,13 +388,13 @@ class WebmView extends Component {
 
       this.customVideo.webkitRequestFullScreen();
       this.setState({
-        isFullScreenMode: true
+        isFullScreenMode: true,
       });
     } else if (this.customVideo.webkitEnterFullscreen) {
       this.props.videoFullscreenReq();
       this.customVideo.webkitEnterFullscreen();
       this.setState({
-        isFullScreenMode: true
+        isFullScreenMode: true,
       });
     }
   };
@@ -405,12 +407,12 @@ class WebmView extends Component {
       } else if (this.customVideo.webkitExitFullscreen) {
         document.exitFullscreen();
         this.setState({
-          isFullScreenMode: false
+          isFullScreenMode: false,
         });
       } else {
         document.exitFullscreen();
         this.setState({
-          isFullScreenMode: false
+          isFullScreenMode: false,
         });
       }
     }
@@ -419,13 +421,13 @@ class WebmView extends Component {
   /**
    *
    */
-  handleSpeed = speed => {
+  handleSpeed = (speed) => {
     this.video.playbackRate = speed;
     if (this.audio) {
       this.audio.playbackRate = speed;
     }
     this.setState({
-      playBackSpeed: speed
+      playBackSpeed: speed,
     });
   };
   /**
@@ -438,10 +440,10 @@ class WebmView extends Component {
       setId: this.props.setIdPathName ? this.props.setIdPathName : setId,
       fromMoveSearch: this.props.fromMoveSearch
         ? this.props.fromMoveSearch
-        : null
+        : null,
     };
     const { value } = await ConfirmBox({
-      text: "You want to remove this move! "
+      text: "You want to remove this move! ",
     });
     if (value) {
       this.props.deleteMove(data);
@@ -453,32 +455,55 @@ class WebmView extends Component {
     const { modelDetails } = modelInfoReducer;
     this.setState({
       moveToTransfer: id,
-      setId: setId
+      setId: setId,
     });
     this.props.modelOperate({
       modelDetails: {
-        transferMoveModalOpen: !modelDetails.transferMoveModalOpen
-      }
+        transferMoveModalOpen: !modelDetails.transferMoveModalOpen,
+      },
     });
   };
 
-  handleMoveTransfer = async data => {
+  handleMoveTransfer = async (data) => {
     const { value } = await ConfirmBox({
-      text: "You want to transfer this move!"
+      text: "You want to transfer this move!",
     });
     if (value) {
       this.props.transferMove(data);
     }
   };
 
-  handlePreviousVideoPlay = isSkipable => {
+  handlePreviousVideoPlay = (isSkipable) => {
     const { movesOfSet } = this.props;
     const { videoIndex } = this.state;
-    this.props.loadVideoDataRequest(
-      isSkipable
-        ? movesOfSet[videoIndex - 2 < 0 ? 0 : videoIndex - 2]
-        : movesOfSet[videoIndex - 1]
-    );
+    if (this.props.isHomePage) {
+      this.props.loadVideoDataRequest(
+        isSkipable
+          ? {
+              moveURL:
+                movesOfSet[videoIndex - 2 < 0 ? 0 : videoIndex - 2].video,
+              isMoveProcessing: false,
+              title: movesOfSet[videoIndex - 2 < 0 ? 0 : videoIndex - 2].title,
+              startTime:
+                movesOfSet[videoIndex - 2 < 0 ? 0 : videoIndex - 2].startTime,
+              endTime:
+                movesOfSet[videoIndex - 2 < 0 ? 0 : videoIndex - 2].endTime,
+            }
+          : {
+              moveURL: movesOfSet[videoIndex - 1].video,
+              isMoveProcessing: false,
+              title: movesOfSet[videoIndex - 1].title,
+              startTime: movesOfSet[videoIndex - 1].startTime,
+              endTime: movesOfSet[videoIndex - 1].endTime,
+            }
+      );
+    } else {
+      this.props.loadVideoDataRequest(
+        isSkipable
+          ? movesOfSet[videoIndex - 2 < 0 ? 0 : videoIndex - 2]
+          : movesOfSet[videoIndex - 1]
+      );
+    }
     const highlightText = document.getElementById("video-title");
     if (highlightText) {
       highlightText.classList.remove("text-selected");
@@ -486,14 +511,25 @@ class WebmView extends Component {
     this.setState({
       videoIndex: videoIndex - 1,
       doubleClick: false,
-      playBackSpeed: 1
+      playBackSpeed: 1,
     });
   };
 
   handleNextVideoPlay = () => {
     const { movesOfSet } = this.props;
     const { videoIndex } = this.state;
-    this.props.loadVideoDataRequest(movesOfSet[videoIndex + 1]);
+    console.log("Next video Data", movesOfSet[videoIndex + 1]);
+    if (this.props.isHomePage) {
+      this.props.loadVideoDataRequest({
+        moveURL: movesOfSet[videoIndex + 1].video,
+        isMoveProcessing: false,
+        title: movesOfSet[videoIndex + 1].title,
+        startTime: movesOfSet[videoIndex + 1].startTime,
+        endTime: movesOfSet[videoIndex + 1].endTime,
+      });
+    } else {
+      this.props.loadVideoDataRequest(movesOfSet[videoIndex + 1]);
+    }
     const highlightText = document.getElementById("video-title");
     if (highlightText) {
       highlightText.classList.remove("text-selected");
@@ -501,7 +537,7 @@ class WebmView extends Component {
     this.setState({
       videoIndex: videoIndex + 1,
       doubleClick: false,
-      playBackSpeed: 1
+      playBackSpeed: 1,
     });
   };
 
@@ -510,8 +546,8 @@ class WebmView extends Component {
     const { modelDetails } = modelInfoReducer;
     this.props.modelOperate({
       modelDetails: {
-        viewInfoModalOpen: !modelDetails.viewInfoModalOpen
-      }
+        viewInfoModalOpen: !modelDetails.viewInfoModalOpen,
+      },
     });
   };
 
@@ -526,7 +562,7 @@ class WebmView extends Component {
       moveId: id,
       isStarred: isStarred ? false : true,
       setId: this.props.setIdPathName,
-      videoData: videoData
+      videoData: videoData,
     };
     this.props.isStarred(data);
   };
@@ -539,25 +575,25 @@ class WebmView extends Component {
       moveIdToAddTags: id,
       tags: videoData.tags ? videoData.tags : [],
       edit: name === "edit" ? true : false,
-      description: videoData ? videoData.description : null
+      description: videoData ? videoData.description : null,
     });
     this.props.modelOperate({
       modelDetails: {
-        addTagModalOpenReq: !modelDetails.addTagModalOpenReq
-      }
+        addTagModalOpenReq: !modelDetails.addTagModalOpenReq,
+      },
     });
   };
 
-  editMoveModalOpen = id => {
+  editMoveModalOpen = (id) => {
     const { modelInfoReducer } = this.props;
     const { modelDetails } = modelInfoReducer;
     this.setState({
-      moveIdToEdit: id
+      moveIdToEdit: id,
     });
     this.props.modelOperate({
       modelDetails: {
-        editMoveModalOpen: !modelDetails.editMoveModalOpen
-      }
+        editMoveModalOpen: !modelDetails.editMoveModalOpen,
+      },
     });
   };
 
@@ -565,33 +601,33 @@ class WebmView extends Component {
     //const { tagsList } = this.props.moveReducer
     if (newValue) {
       this.setState({
-        tags: newValue
+        tags: newValue,
       });
     } else {
       this.setState({
-        tags: []
+        tags: [],
       });
     }
     if (actionMeta.action === "create-option") {
       this.props.addTagsInTagModalRequest({
-        tags: newValue[newValue.length - 1]
+        tags: newValue[newValue.length - 1],
       });
     }
     console.groupEnd();
   };
 
-  onDoubleClick = title => {
+  onDoubleClick = (title) => {
     const highlightText = document.getElementById("video-title");
     if (highlightText) {
       highlightText.classList.add("text-selected");
     }
     this.setState({
       doubleClick: true,
-      title: title
+      title: title,
     });
   };
 
-  onpaste = e => {
+  onpaste = (e) => {
     e.preventDefault();
     if (window.clipboardData) {
       let content = window.clipboardData.getData("Text");
@@ -641,18 +677,18 @@ class WebmView extends Component {
           tags: videoData ? videoData.tags : null,
           setId: videoData && videoData.setId ? videoData.setId._id : null,
           videoData: videoData ? videoData : null,
-          fromMoveList: false
+          fromMoveList: false,
         };
         this.setState({
           doubleClick: false,
-          title: ""
+          title: "",
         });
         this.props.editMove(data);
       }
     }
   };
 
-  handleChange = e => {
+  handleChange = (e) => {
     const { name, value } = e.target;
     const error =
       value && value.length > 250
@@ -660,30 +696,30 @@ class WebmView extends Component {
         : "";
     this.setState({
       [name]: value,
-      error
+      error,
     });
   };
 
   handleVideoModal = () => {
     this.setState({
-      isMuted: true
+      isMuted: true,
     });
   };
 
-  onmousemove = e => {
+  onmousemove = (e) => {
     this.setState({
-      isMouseMove: true
+      isMouseMove: true,
     });
     setTimeout(() => {
       this.setState({
-        isMouseMove: false
+        isMouseMove: false,
       });
     }, 2000);
   };
 
   onMouseOver = () => {
     this.setState({
-      mouseOnControls: true
+      mouseOnControls: true,
     });
   };
 
@@ -691,7 +727,7 @@ class WebmView extends Component {
     this.props.handleVideoModal();
   };
 
-  handleKeyEvent = e => {
+  handleKeyEvent = (e) => {
     if (e.which === 32 || e.keyCode === 32) {
       if (this.state.isPlaying) {
         this.pauseVideo();
@@ -715,14 +751,14 @@ class WebmView extends Component {
       videoData,
       tagsList,
       fromMoveSearch,
-      showVideoIndex
+      showVideoIndex,
     } = this.props;
     const { modelDetails } = modelInfoReducer;
     const {
       viewInfoModalOpen,
       addTagModalOpenReq,
       editMoveModalOpen,
-      transferMoveModalOpen
+      transferMoveModalOpen,
     } = modelDetails;
     const { moveURL } = video;
     const {
@@ -748,7 +784,7 @@ class WebmView extends Component {
       error,
       videoCanPlay,
       isBufferingVideo,
-      isMouseMove
+      isMouseMove,
     } = this.state;
     let isFullScreenMode1 =
       document.fullscreenElement ||
@@ -784,6 +820,7 @@ class WebmView extends Component {
         control[0].classList.remove("hide-controls");
       }
     }
+    console.log("videoData++++++++++++++", videoData);
 
     return (
       <>
@@ -800,7 +837,7 @@ class WebmView extends Component {
               type="button"
               onClick={() => {
                 this.setState({
-                  doubleClick: false
+                  doubleClick: false,
                 });
                 handleVideoModal(videoData, null);
               }}
@@ -828,11 +865,11 @@ class WebmView extends Component {
                 }
                 onPaste={doubleClick ? this.onpaste : null}
                 onBlur={
-                  doubleClick ? e => this.handleonBlur(e, videoData) : null
+                  doubleClick ? (e) => this.handleonBlur(e, videoData) : null
                 }
                 onKeyPress={
                   doubleClick
-                    ? e => this.handleKeyPress(e, videoData, showVideoIndex)
+                    ? (e) => this.handleKeyPress(e, videoData, showVideoIndex)
                     : null
                 }
               >
@@ -881,9 +918,9 @@ class WebmView extends Component {
                           onClick={() =>
                             videoData
                               ? this.openTransferToModal(
-                                videoData._id,
-                                videoData.setId
-                              )
+                                  videoData._id,
+                                  videoData.setId
+                                )
                               : this.openTransferToModal(video._id, video.setId)
                           }
                         >
@@ -946,18 +983,18 @@ class WebmView extends Component {
                       autoPlay
                       onCanPlay={() => {
                         this.setState({
-                          videoCanPlay: true
+                          videoCanPlay: true,
                         });
                       }}
                       onLoadedData={() => {
                         this.setState({
-                          videoCanPlay: false
+                          videoCanPlay: false,
                         });
                       }}
                       disablecontrols="true"
                       disablepictureinpicture="true"
                       controlsList="nodownload"
-                      onContextMenu={e => e.preventDefault()}
+                      onContextMenu={(e) => e.preventDefault()}
                       onClick={isPlaying ? this.pauseVideo : this.playVideo}
                     >
                       <source
@@ -965,9 +1002,9 @@ class WebmView extends Component {
                           videoData && videoData.isMoveProcessing
                             ? videoData.videoUrl
                             : videoData.moveURL
-                              ? videoData.moveURL
-                              : moveURL
-                          }`}
+                            ? videoData.moveURL
+                            : moveURL
+                        }`}
                         type="video/webm"
                       />
                     </video>
@@ -984,10 +1021,10 @@ class WebmView extends Component {
                     ) : null}
                   </>
                 ) : (
-                    <div className="video-loader">
-                      <Loader videoLoader={true} />
-                    </div>
-                  )}
+                  <div className="video-loader">
+                    <Loader videoLoader={true} />
+                  </div>
+                )}
 
                 <div
                   className={"controls"}
@@ -995,9 +1032,9 @@ class WebmView extends Component {
                   onMouseLeave={
                     isFullScreenMode1
                       ? () =>
-                        this.setState({
-                          mouseOnControls: false
-                        })
+                          this.setState({
+                            mouseOnControls: false,
+                          })
                       : null
                   }
                 >
@@ -1007,7 +1044,7 @@ class WebmView extends Component {
                     maxValue={videoDuration.videoMaxDuration}
                     minValue={0}
                     step={0.05}
-                    formatLabel={value => ``}
+                    formatLabel={(value) => ``}
                     value={currentTime}
                     onChange={this.labelValueChange}
                   />
@@ -1022,19 +1059,21 @@ class WebmView extends Component {
                             <i className={"fa fa-pause"}></i>
                           </span>
                         ) : (
-                            <span
-                              onClick={this.playVideo}
-                              className={"cursor_pointer"}
-                            >
-                              <i className={"fa fa-play"}></i>
-                            </span>
-                          )}
+                          <span
+                            onClick={this.playVideo}
+                            className={"cursor_pointer"}
+                          >
+                            <i className={"fa fa-play"}></i>
+                          </span>
+                        )}
                       </div>
                       <div className="video-time-wrap control-tile">
                         {SecondsToMMSS(parseInt(currentTime))} /{" "}
                         {SecondsToMMSS(
                           parseInt(
-                            videoDuration && videoDuration.videoMaxDuration ? videoDuration.videoMaxDuration : 0
+                            videoDuration && videoDuration.videoMaxDuration
+                              ? videoDuration.videoMaxDuration
+                              : 0
                           )
                         )}
                       </div>
@@ -1046,17 +1085,17 @@ class WebmView extends Component {
                             audioSpeed > 0.6 ? (
                               <i className="fas fa-volume-up"></i>
                             ) : (
-                                <i className="fas fa-volume-down"></i>
-                              )
+                              <i className="fas fa-volume-down"></i>
+                            )
                           ) : (
-                                <i className="fas fa-volume-mute"></i>
-                              )}
+                            <i className="fas fa-volume-mute"></i>
+                          )}
                         </span>
                       </div>
                       <div className="volume-range cursor_pointer control-tile">
                         <div
                           style={{
-                            width: 100
+                            width: 100,
                           }}
                         >
                           <InputRange
@@ -1064,7 +1103,7 @@ class WebmView extends Component {
                             maxValue={1}
                             minValue={0}
                             step={0.1}
-                            formatLabel={value => ``}
+                            formatLabel={(value) => ``}
                             value={audioSpeed}
                             onChange={this.onVolumeChange}
                           />
@@ -1111,7 +1150,7 @@ class WebmView extends Component {
                       <div className="speed-wrap control-tile">
                         <UncontrolledDropdown
                           className="header-dropdown custom-dropdown"
-                        // direction="auto"
+                          // direction="auto"
                         >
                           <DropdownToggle
                             color={" "}
@@ -1183,13 +1222,13 @@ class WebmView extends Component {
                           <i className="fas fa-expand" />
                         </span>
                       ) : (
-                          <span
-                            onClick={() => this.handleVideoResizeScreen()}
-                            className="control-tile cursor_pointer"
-                          >
-                            <i className="fa fa-arrows-alt" aria-hidden="true" />
-                          </span>
-                        )}
+                        <span
+                          onClick={() => this.handleVideoResizeScreen()}
+                          className="control-tile cursor_pointer"
+                        >
+                          <i className="fa fa-arrows-alt" aria-hidden="true" />
+                        </span>
+                      )}
                     </div>
                   </div>
                 </div>
@@ -1198,14 +1237,14 @@ class WebmView extends Component {
             <div className="text-right pr-4">
               {((videoData && videoData.tags && videoData.tags.length) ||
                 (videoData && videoData.description)) &&
-                !isShareable ? (
-                  <span
-                    className="cursor_pointer"
-                    onClick={() => this.openAddTagsModal(videoData._id, "edit")}
-                  >
-                    Edit
-                  </span>
-                ) : null}
+              !isShareable ? (
+                <span
+                  className="cursor_pointer"
+                  onClick={() => this.openAddTagsModal(videoData._id, "edit")}
+                >
+                  Edit
+                </span>
+              ) : null}
             </div>
             <div className="pt-3 d-flex video-tag-wrap">
               {videoData && videoData.tags && videoData.tags.length ? (
@@ -1256,7 +1295,7 @@ class WebmView extends Component {
           modal={addTagModalOpenReq}
           handleOpen={this.openAddTagsModal}
           moveIdToAddTag={moveIdToAddTags ? moveIdToAddTags : video._id}
-          addTagstoMove={data => this.props.addTagstoMove(data)}
+          addTagstoMove={(data) => this.props.addTagstoMove(data)}
           tagsList={tagsList}
           handleTagChange={this.handleTagChange}
           tags={tags}
@@ -1279,7 +1318,7 @@ class WebmView extends Component {
           handleOpen={this.editMoveModalOpen}
           videoData={videoData}
           moveIdToEdit={moveIdToEdit}
-          editMove={data => this.props.editMove(data)}
+          editMove={(data) => this.props.editMove(data)}
         />
       </>
     );
