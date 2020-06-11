@@ -27,6 +27,8 @@ class SampleSet extends React.Component {
       showVideoIndex: -1,
       videoIndex: -1,
       showVideo: {},
+      setTitle: "",
+      totalMoves: 0,
     };
   }
 
@@ -35,30 +37,44 @@ class SampleSet extends React.Component {
     if (parsed.title === "Basketball_ 5 Basic Moves") {
       this.setState({
         sampleSet: Basketball,
+        setTitle: "Basketball: 5 Basic Moves",
+        totalMoves: 6,
       });
     } else if (parsed.title === "Martial Arts_ MMA Takedowns") {
       this.setState({
         sampleSet: MartialArts,
+        setTitle: "Martial Arts: MMA Takedowns",
+        totalMoves: 8,
       });
     } else if (parsed.title === "Choreography_ Boogaloo Tutorial") {
       this.setState({
         sampleSet: Choreography,
+        setTitle: "Choreography: Boogaloo Tutorial",
+        totalMoves: 12,
       });
     } else if (parsed.title === "Guitar_ Hallelujah Tutorial (Easy Version)") {
       this.setState({
         sampleSet: Guitar,
+        setTitle: "Guitar: Hallelujah Tutorial (Easy Version)",
+        totalMoves: 7,
       });
     } else if (parsed.title === "Painting_ Styling Hacks") {
       this.setState({
         sampleSet: Painting,
+        setTitle: "Painting: Styling Hacks",
+        totalMoves: 11,
       });
     } else if (parsed.title === "Soccer_ Moves to Trick Opponents") {
       this.setState({
         sampleSet: Soccer,
+        setTitle: "Soccer: Moves to Trick Opponents",
+        totalMoves: 16,
       });
     } else if (parsed.title === "Massage Basics_ Reflexology 101") {
       this.setState({
         sampleSet: Massage,
+        setTitle: "Massage Basics: Reflexology 101",
+        totalMoves: 13,
       });
     }
   };
@@ -82,7 +98,7 @@ class SampleSet extends React.Component {
           isMoveProcessing: false,
           title: data.title,
           startTime: data.startTime,
-          endTime: data.endTime
+          endTime: data.endTime,
         },
         showVideoIndex: index,
       },
@@ -102,7 +118,7 @@ class SampleSet extends React.Component {
     const { modelDetails } = modelInfoReducer;
     const { isVideoModalOpen } = modelDetails;
     const { videoData, isFullScreenMode } = moveReducer;
-    const { showVideo, showVideoIndex } = this.state;
+    const { showVideo, showVideoIndex, setTitle, totalMoves } = this.state;
     console.log(">>>>>>>>>>>>>>>>>>>>>>>", showVideo);
 
     return (
@@ -112,10 +128,8 @@ class SampleSet extends React.Component {
             <Col md="12 p-3">
               <div className="content-header">
                 <span className="content-title">
-                  <div className="h4 theme-heading main-title">
-                    Dance Cheoreography for Uptown Funk
-                  </div>
-                  <div className="sub-title">5 moves</div>
+                  <div className="h4 theme-heading main-title">{setTitle}</div>
+                  <div className="sub-title">{totalMoves} moves</div>
                 </span>
               </div>
             </Col>
