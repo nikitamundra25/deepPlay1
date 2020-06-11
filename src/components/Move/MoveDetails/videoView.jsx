@@ -417,10 +417,11 @@ class VideoView extends React.Component {
         control[0].classList.remove("hide-controls");
       }
     }
+    const videoUrl = moveDetails && ((!moveDetails.isYoutubeUrl && moveDetails.sourceUrl) || moveDetails.videoUrl);
     return (
       <>
         <Col lg={4} className="trim-video-view">
-          {moveDetails && moveDetails.videoUrl ? (
+          {videoUrl ? (
             <div className={"video-player"}>
               <div
                 className="video-player-inner-wrap custom-video-player"
@@ -473,7 +474,7 @@ class VideoView extends React.Component {
                   controlsList="nodownload"
                   preload={"auto"}
                 >
-                  <source src={moveDetails.videoUrl} />
+                  <source src={videoUrl} />
                 </video>
                 <div>
                   <div

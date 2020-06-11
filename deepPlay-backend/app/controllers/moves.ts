@@ -83,25 +83,48 @@ const downloadVideo = async (req: Request, res: Response): Promise<any> => {
     });
   }
 };
+
+/**
+ * Create a move before uploading the video
+ * @param {Request} req
+ * @param {Response} res
+ */
+const createFromFile = async (req: Request, res: Response): Promise<any> => {
+  try {
+    const { body, currentUser } = req;
+    const { id } = currentUser || {};
+    const { setId, fileUrl } = body;
+    const moveResult: Document = await MoveModel.create({
+      userId: id,
+      sourceUrl: fileUrl,
+      isYoutubeUrl: false,
+      setId: setId && setId != "undefined" ? setId : null,
+    });
+    return res.status(200).json({
+      message: "Move created successfully!",
+      videoUrl: fileUrl,
+      moveData: moveResult,
+    });
+  } catch (error) {
+    return res.status(500).send({
+      message: error.message,
+    });
+  }
+};
+
 /**
  * Saves a move after uploading the video
  * @param {Request} req
  * @param {Response} res
  */
-const uploadVideo = async (req: Request, res: Response): Promise<any> => {
+
+const updateSourceVideo = async (req: Request, res: Response): Promise<any> => {
   try {
-    const { body, currentUser, file } = req;
-    const { id } = currentUser || {};
-    const { setId } = body;
+    const { body, file } = req;
+    const { moveId } = body;
     const { filename } = file;
     const videoURL: string = `${ServerURL}/uploads/youtube-videos/${filename}`;
-    const moveResult: Document = await MoveModel.create({
-      videoUrl: videoURL,
-      userId: id,
-      sourceUrl: videoURL,
-      isYoutubeUrl: false,
-      setId: setId && setId != "undefined" ? setId : null,
-    });
+    const moveResult: Document = await MoveModel.findByIdAndUpdate(moveId, {videoUrl: videoURL});
     return res.status(200).json({
       message: "Video uploaded successfully!",
       videoUrl: videoURL,
@@ -1890,8 +1913,8 @@ new CronJob(
   "America/Los_Angeles"
 );
 
-/* 
-/* 
+/*
+/*
  */
 const getInstagramVideoUrl = (
   url: string,
@@ -1947,7 +1970,7 @@ const getInstagramVideoUrl = (
   });
 };
 
-/* 
+/*
 Generate thumbnail for bulk upload data
 */
 const generateThumbanail = async (fileName: any): Promise<string> => {
@@ -2394,6 +2417,7 @@ export {
   getTagListByUserId,
   updateMoveDetailsFromYouTubeAndTrim,
   processVideoTrmiming,
-  uploadVideo,
+  updateSourceVideo,
+  createFromFile,
   updateDetailsAndTrimVideo,
 };
